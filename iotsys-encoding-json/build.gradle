@@ -1,0 +1,15 @@
+// Variables
+description = 'Common classes for the IoTSyS project'
+
+jar {
+	manifest {
+		attributes("Manifest-Version": "1.0",
+				   "Bundle-Name": "IoTSyS-Encoding-JSON",
+				   "Bundle-Description": "JSON Encoding for the IoTSyS gateway project",
+				   "Bundle-Vendor": "Vienna University of Technology, Automation Systems Group, www.auto.tuwien.ac.at",
+				   "Bundle-Version": "0.1",
+				   "Bundle-Classpath": ".",
+				    "Export-Package": "org.json"
+				)
+	}
+}

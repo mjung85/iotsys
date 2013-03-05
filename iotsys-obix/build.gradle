@@ -1,0 +1,18 @@
+// Variables
+description = 'Modified and extended oBIX Toolkit 1.1.0'
+
+jar {
+	manifest {
+		attributes("Manifest-Version": "1.0",
+				   "Bundle-Name": "IoTSyS-oBIX",
+				   "Bundle-Description": "Modified and extended oBIX Toolkit 1.1.0",
+				   "Bundle-Vendor": "Vienna University of Technology, Automation Systems Group, www.auto.tuwien.ac.at",
+				   "Bundle-Version": "0.1",
+				   "Bundle-Classpath": ".",
+				   "Export-Package": "obix, obix.asm, obix.contracts, obix.io, obix.net, obix.test, obix.toos, obix.ui, obix.ui.fields, obix.ui.views, obix.xml, at.ac.tuwien.auto.iotsys.gateway.obix.observer",
+				   "Import-Package": "at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot, at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators, at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl, at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors, at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl"
+				   )
+	}
+}
+
+
