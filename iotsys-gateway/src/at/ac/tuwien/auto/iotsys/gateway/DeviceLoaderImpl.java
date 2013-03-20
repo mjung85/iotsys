@@ -104,7 +104,7 @@ public class DeviceLoaderImpl implements DeviceLoader {
 			
 			try {
 				DeviceLoader devLoader = (DeviceLoader) Class.forName(deviceLoaderName).newInstance();				
-				devLoader.initDevices(objectBroker);			
+				connectors.addAll(devLoader.initDevices(objectBroker));			
 			} catch (InstantiationException e) {
 				e.printStackTrace();
 			} catch (IllegalAccessException e) {
