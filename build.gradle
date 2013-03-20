@@ -61,15 +61,39 @@ repositories {
 	mavenLocal()
 }
 
-task setupFelix << {
-	println "Setting up the Felix 4.2 OSGI container at " + felix.absolutePath
-	println "This task copies the IoTSyS gateway configuration and resource files."
-	println "It overides also the OSGI configuration to make required system libraries available!\n\n"
-	
+task deployOsgi << {
 	File dstConfigDir = new File(felix.absolutePath + '/config')
 	File dstResDir = new File(felix.absolutePath + '/res')
 	
+	if(dstConfigDir.exists()){
+		
+		println "Copying configuration from " + configDir.absolutePath + " to " + dstConfigDir.absolutePath
+		
+		ant.copy(todir:dstConfigDir){
+			fileset(dir:configDir)
+		}
+		
+	}
+		
+	if(dstResDir.exists()){
+		println "Resource directory already available at " + dstResDir.absolutePath 
 	
+		println "Copying configuration from " + resDir.absolutePath + " to " + dstResDir.absolutePath 
+		ant.copy(todir:dstResDir){
+			fileset(dir:resDir)
+		
+		}
+	}
+}
+
+task setupFelix << {
+	println "Setting up the Felix 4.2 OSGI container at " + felix.absolutePath
+	println "This task copies the IoTSyS gateway configuration and resource files."
+	println "It overrides also the OSGI configuration to make required system libraries available!\n\n"
+	
+	File dstConfigDir = new File(felix.absolutePath + '/config')
+	File dstResDir = new File(felix.absolutePath + '/res')
+		
 	if(!felix.exists()){
 		println "Need to download felix 4.2.0 distribution"
 		ant.get(src:"http://ftp.udc.es/apache/felix/org.apache.felix.main.distribution-4.2.0.zip", dest:"org.apache.felix.main.distribution-4.2.0.zip", verbose:true)
@@ -109,10 +133,4 @@ task setupFelix << {
 					"javax.xml.validation, javax.xml.datatype, org.xml.sax, org.xml.sax.helpers, org.xml.sax.ext," + "com.sun.org.apache.xalan.internal, com.sun.org.apache.xalan.internal.res," + "com.sun.org.apache.xml.internal.utils, com.sun.org.apache.xpath.internal," + "com.sun.org.apache.xpath.internal.jaxp, com.sun.org.apache.xpath.internal.objects," + "com.sun.org.apache.xml.internal, org.w3c.dom, org.w3c.dom.traversal, org.w3c.dom.ls, javax.sql," + "javax.transaction, sun.misc")}	
 	
 }
-
-//task mytask {
-//	println "Mytask"
-//	println distLib.absolutePath
-//	println felix4_2.absolutePath
-//}
 
