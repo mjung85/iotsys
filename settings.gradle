@@ -1,1 +1,1 @@
-include 'iotsys-obix', 'iotsys-common', 'iotsys-encoding-json', 'iotsys-gateway', 'iotsys-calimero', 'iotsys-knx', 'iotsys-bacnet4j', 'iotsys-bacnet', 'iotsys-wmbus'
+include 'iotsys-obix', 'iotsys-common', 'iotsys-encoding-json', 'iotsys-gateway', 'iotsys-calimero', 'iotsys-knx', 'iotsys-bacnet4j', 'iotsys-bacnet', 'iotsys-wmbus', 'iotsys-virtual'

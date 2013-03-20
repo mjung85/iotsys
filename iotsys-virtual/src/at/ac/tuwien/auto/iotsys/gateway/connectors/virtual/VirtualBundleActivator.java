@@ -1,24 +1,4 @@
-/*
-  	Copyright (c) 2013 - IotSyS KNX Connector
- 	Institute of Computer Aided Automation, Automation Systems Group, TU Wien.
-  	All rights reserved.
-
-    This program is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program; if not, write to the Free Software
-    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
-
-package at.ac.tuwien.auto.iotsys.gateway.connectors.knx;
+package at.ac.tuwien.auto.iotsys.gateway.connectors.virtual;
 
 import java.util.ArrayList;
 import java.util.logging.Logger;
@@ -33,11 +13,12 @@ import at.ac.tuwien.auto.iotsys.commons.Connector;
 import at.ac.tuwien.auto.iotsys.commons.DeviceLoader;
 import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
 
-public class KNXBundleActivator implements BundleActivator, ServiceListener {
-	private static final Logger log = Logger.getLogger(KNXBundleActivator.class
+
+public class VirtualBundleActivator implements ServiceListener, BundleActivator {
+	private static final Logger log = Logger.getLogger(VirtualBundleActivator.class
 			.getName());
 
-	private DeviceLoader deviceLoader = new KNXDeviceLoaderImpl();
+	private DeviceLoader deviceLoader = new VirtualDeviceLoaderImpl();
 	private ArrayList<Connector> connectors = null;
 
 	private volatile boolean registered = false;
@@ -45,7 +26,7 @@ public class KNXBundleActivator implements BundleActivator, ServiceListener {
 	private BundleContext context = null;
 
 	public void start(BundleContext context) throws Exception {
-		log.info("Starting KNX connector");
+		log.info("Starting Virtual connector");
 		this.context = context;
 		ServiceReference<ObjectBroker> serviceReference = context
 				.getServiceReference(ObjectBroker.class);
@@ -54,7 +35,7 @@ public class KNXBundleActivator implements BundleActivator, ServiceListener {
 
 		} else {
 			synchronized (this) {
-				log.info("Initiating KNX devices.");
+				log.info("Initiating Virtual devices.");
 				ObjectBroker objectBroker = (ObjectBroker) context
 						.getService(serviceReference);
 				connectors = deviceLoader.initDevices(objectBroker);
@@ -67,13 +48,13 @@ public class KNXBundleActivator implements BundleActivator, ServiceListener {
 	}
 
 	public void stop(BundleContext context) throws Exception {
-		log.info("Stopping KNX connector");
+		log.info("Stopping virtual connector");
 		ServiceReference<ObjectBroker> serviceReference = context
 				.getServiceReference(ObjectBroker.class);
 		if (serviceReference == null) {
 			log.severe("Could not find a running object broker to unregister devices!");
 		} else {
-			log.info("Removing KNX Devices.");
+			log.info("Removing virtual devices.");
 			ObjectBroker objectBroker = (ObjectBroker) context
 					.getService(serviceReference);
 			deviceLoader.removeDevices(objectBroker);

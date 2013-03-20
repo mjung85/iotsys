@@ -12,7 +12,7 @@
     </device-loader>
     <device-loader>at.ac.tuwien.auto.iotsys.gateway.connector.wmbus.WMBusDeviceLoaderImpl
     </device-loader>
-    <device-loader>at.ac.tuwien.auto.iotsys.gateway.connectors.zigbee.ZigBeeDeviceLoaderImpl
+    <device-loader>at.ac.tuwien.auto.iotsys.gateway.connectors.virtual.VirtualDeviceLoaderImpl
     </device-loader>
   </deviceloaders>
 
@@ -137,7 +137,7 @@
 
     <connector>
       <name>KNX A-Lab</name>
-      <enabled>true</enabled>
+      <enabled>false</enabled>
       <router>
         <ip>128.130.56.140</ip>
         <port>3671</port>
@@ -254,7 +254,7 @@
 
     <connector>
       <name>BACnet A-Lab</name>
-      <enabled>true</enabled>
+      <enabled>false</enabled>
       <localDeviceID>12345</localDeviceID>
       <broadcastAddress>128.130.56.255</broadcastAddress>
       <localPort>47808</localPort>
@@ -358,7 +358,7 @@
   <virtual>
     <connector>
       <name>Virtual Devices</name>
-      <enabled>false</enabled>
+      <enabled>true</enabled>
 
       <!-- SENSOREN -->
 
@@ -502,8 +502,6 @@
         <href>virtualBoilerActuatorImpl</href>
         <historyEnabled>false</historyEnabled>
       </device>
-
-
     </connector>
   </virtual>
 </devices>
