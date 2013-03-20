@@ -23,6 +23,7 @@
 package at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.bacnet;
 
 import at.ac.tuwien.auto.iotsys.gateway.connectors.bacnet.BACnetConnector;
+import at.ac.tuwien.auto.iotsys.gateway.connectors.bacnet.BacnetDataPointInfo;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.TemperatureSensorImpl;
 
 import com.serotonin.bacnet4j.exception.BACnetException;
@@ -32,19 +33,16 @@ import com.serotonin.bacnet4j.type.enumerated.PropertyIdentifier;
 import com.serotonin.bacnet4j.type.primitive.ObjectIdentifier;
 import com.serotonin.bacnet4j.type.primitive.Real;
 
-
 public class TemperatureSensorImplBacnet extends TemperatureSensorImpl {
 	private int deviceID;
 	private ObjectIdentifier objectIdentifier;
 	private PropertyIdentifier propertyIdentifier;
 	private BACnetConnector bacnetConnector;
 
-	public TemperatureSensorImplBacnet(BACnetConnector bacnetConnector,
-			int deviceID, ObjectIdentifier objectIdentifier,
-			PropertyIdentifier propertyIdentifier) {
-		this.deviceID = deviceID;
-		this.objectIdentifier = objectIdentifier;
-		this.propertyIdentifier = propertyIdentifier;
+	public TemperatureSensorImplBacnet(BACnetConnector bacnetConnector, BacnetDataPointInfo dataPointInfo) {
+		this.deviceID = dataPointInfo.getDeviceIdentifier();
+		this.objectIdentifier = dataPointInfo.getObjectIdentifier();
+		this.propertyIdentifier = dataPointInfo.getPropertyIdentifier();
 		this.bacnetConnector = bacnetConnector;
 	}
 

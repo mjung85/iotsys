@@ -25,6 +25,7 @@ package at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.bacnet;
 import obix.Obj;
 
 import at.ac.tuwien.auto.iotsys.gateway.connectors.bacnet.BACnetConnector;
+import at.ac.tuwien.auto.iotsys.gateway.connectors.bacnet.BacnetDataPointInfo;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.BrightnessActuatorImpl;
 
 import com.serotonin.bacnet4j.exception.BACnetException;
@@ -43,11 +44,10 @@ public class BrightnessActuatorImplBacnet extends BrightnessActuatorImpl{
 	private BACnetConnector bacnetConnector;
 
 	public BrightnessActuatorImplBacnet(BACnetConnector bacnetConnector,
-			int deviceID, ObjectIdentifier objectIdentifier,
-			PropertyIdentifier propertyIdentifier) {
-		this.deviceID = deviceID;
-		this.objectIdentifier = objectIdentifier;
-		this.propertyIdentifier = propertyIdentifier;
+			BacnetDataPointInfo dataPointInfo ) {
+		this.deviceID = dataPointInfo.getDeviceIdentifier();
+		this.objectIdentifier = dataPointInfo.getObjectIdentifier();
+		this.propertyIdentifier = dataPointInfo.getPropertyIdentifier();
 		this.bacnetConnector = bacnetConnector;
 	}
 

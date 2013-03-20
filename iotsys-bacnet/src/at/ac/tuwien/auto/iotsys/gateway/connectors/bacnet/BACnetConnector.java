@@ -66,12 +66,13 @@ public class BACnetConnector implements Connector{
 	}
 
 	private LocalDevice localDevice;
+	private static final int BACNET_PORT = 0xBAC0;
 
 	private final Hashtable<Integer, RemoteDevice> remoteDevices = new Hashtable<Integer, RemoteDevice>();
 
 	private int localDeviceID = (int) ((Math.random() * 10000) + 10000);
 	private String broadCastIP = "128.130.56.255";
-	private int localDevicePort = 0xBAC0;
+	private int localDevicePort = BACNET_PORT;
 	
 	public static final UnsignedInteger BACNET_PRIORITY = new UnsignedInteger(10);
 
@@ -100,7 +101,7 @@ public class BACnetConnector implements Connector{
 
 			// discover all devices
 			try {
-				localDevice.sendBroadcast(47808, null, new WhoIsRequest());
+				localDevice.sendBroadcast(BACNET_PORT, null, new WhoIsRequest());
 			} catch (BACnetException e2) {
 
 				e2.printStackTrace();

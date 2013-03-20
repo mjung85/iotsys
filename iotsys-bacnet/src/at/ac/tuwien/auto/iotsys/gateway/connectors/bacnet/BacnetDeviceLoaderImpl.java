@@ -123,37 +123,42 @@ public class BacnetDeviceLoaderImpl implements DeviceLoader {
 									+ i + ").historyCount", 0);
 
 							if (type != null && address != null) {
-								String remoteDeviceID = (String) address.get(0);
+								
 								// now follow possible multiple data points
 								// identitied through
-								// the object type, the instance number and the
-								// property identifier
-
+								// the device Id, object type, the instance number and the
+								// property identifier, which shall be packaged into on BacnetDatapointInfo object
+								
 								ObjectIdentifier[] objectIdentifier = new ObjectIdentifier[(address
-										.size() - 1) / 3];
+										.size() ) / 4];
 								PropertyIdentifier[] propertyIdentifier = new PropertyIdentifier[(address
-										.size() - 1) / 3];
+										.size() ) / 4];
+								
+								BacnetDataPointInfo[] bacnetDataPointInfo = new BacnetDataPointInfo[(address
+										.size() ) / 4];
 
 								int q = 0;
-								for (int p = 1; p <= address.size() - 3; p += 3) {
+								for (int p = 0; p <= address.size() - 4; p += 4) {
+									int remoteDeviceID = Integer.parseInt((String)address.get(p));
 									ObjectIdentifier objIdentifier = new ObjectIdentifier(
 											new ObjectType(
 													Integer.parseInt((String) address
-															.get(p))),
-											Integer.parseInt((String) address
-													.get(p + 1)));
-									PropertyIdentifier propIdentifier = new PropertyIdentifier(
+															.get(p+1))),
 											Integer.parseInt((String) address
 													.get(p + 2)));
+									PropertyIdentifier propIdentifier = new PropertyIdentifier(
+											Integer.parseInt((String) address
+													.get(p + 3)));
 									objectIdentifier[q] = objIdentifier;
-									propertyIdentifier[q++] = propIdentifier;
+									propertyIdentifier[q] = propIdentifier;
+									bacnetDataPointInfo[q] = new BacnetDataPointInfo(remoteDeviceID, objIdentifier, propIdentifier);
+									q = q + 1;
 								}
-								Object[] args = new Object[q * 2 + 2];
+								Object[] args = new Object[q  + 1];
 								args[0] = bacnetConnector;
-								args[1] = Integer.parseInt(remoteDeviceID);
-								for (int p = 0; p < objectIdentifier.length; p++) {
-									args[2 + p * 2] = objectIdentifier[p];
-									args[3 + p * 2] = propertyIdentifier[p];
+//								args[1] = Integer.parseInt(remoteDeviceID);
+								for (int p = 0; p < bacnetDataPointInfo.length; p++) {
+									args[1 + p] = bacnetDataPointInfo[p];		
 								}
 
 								try {
