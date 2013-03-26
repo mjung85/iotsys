@@ -309,7 +309,10 @@ public class NanoHTTPD {
 				}
 			}
 
-			fixHref(requestUri, obixResponse);
+			// in case of a method call don't fix the HREF
+			if(!method.equals("POST")){
+				fixHref(requestUri, obixResponse);
+			}
 
 			if (exiRequested || exiSchemaRequested) {
 				try {
