@@ -42,14 +42,18 @@ import obix.contracts.Lobby;
 
 public class LobbyImpl extends Obj implements Lobby {
 	private final Hashtable<String, Ref> references = new Hashtable<String, Ref>();
+	private Ref about = new Ref();
 	
 	public LobbyImpl(){
 		this.setHref(new Uri("http://localhost/obix"));
+		about.setName("about");
+		about.setHref(new Uri("about"));
+		this.add(about);
 	}
 
 	@Override
 	public Ref about() {
-		return null;
+		return about;
 	}
 
 	@Override
