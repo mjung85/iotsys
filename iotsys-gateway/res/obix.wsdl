@@ -38,7 +38,7 @@
 
 			<xsd:element name="read" type="obixWS:ReadReq" />
 			<xsd:element name="response" type="obixWS:ResponseType"/>
-			<xsd:element name="write" type="obixWS:WriteReq" />
+			<xsd:element name="write" type="obixWS:WriteReq" />      
 			<xsd:element name="invoke" type="obixWS:InvokeReq" />
 		</xsd:schema>
 	</wsdl:types>

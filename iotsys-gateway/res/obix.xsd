@@ -131,10 +131,11 @@
 	</xs:simpleType>
 
 	<xs:complexType name="list">
+        <xs:group ref="objGroup" minOccurs="0" maxOccurs="unbounded" />
 		<xs:attribute name="of" type="xs:string" />
 		<xs:attribute name="min" type="xs:int" />
 		<xs:attribute name="max" type="xs:int" />
-
+        
 		<xs:attributeGroup ref="objAttr" />
 		<xs:attributeGroup ref="facets" />
 	</xs:complexType>
