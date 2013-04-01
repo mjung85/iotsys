@@ -456,7 +456,8 @@
         <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.BrightnessActuatorImpl
         </type>
         <href>virtualBrightnessActuator</href>
-        <historyEnabled>false</historyEnabled>
+        <historyEnabled>true</historyEnabled>
+        <historyCount>100</historyCount>
       </device>
       <device>
         <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.HVACvalveActuatorImpl

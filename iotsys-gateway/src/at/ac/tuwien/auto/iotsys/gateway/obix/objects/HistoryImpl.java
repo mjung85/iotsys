@@ -265,7 +265,7 @@ public class HistoryImpl extends Obj implements History, Observer {
 		
 		// last interval
 		if(currentInterval.size() > 0 ){
-			HistoryRollupRecordImpl rollupRecord = createRecord(currentInterval, curInterval - ival, curInterval, start.getTimeZone());
+			HistoryRollupRecordImpl rollupRecord = createRecord(currentInterval, curInterval , curInterval + ival, start.getTimeZone());
 			rollups.add(rollupRecord);
 		}
 		

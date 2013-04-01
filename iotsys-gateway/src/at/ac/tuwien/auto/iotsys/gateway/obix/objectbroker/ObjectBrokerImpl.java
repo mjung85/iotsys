@@ -56,6 +56,8 @@ public class ObjectBrokerImpl implements ObjectBroker{
 	private LobbyImpl iotLobby = null;
 
 	private WatchServiceImpl watchServiceImpl = null;
+	
+	private AboutImpl aboutImpl = null;
 
 	private final Hashtable<String, OperationHandler> operationHandler = new Hashtable<String, OperationHandler>();
 
@@ -73,6 +75,10 @@ public class ObjectBrokerImpl implements ObjectBroker{
 		// _ml = new MappingLogic();
 		_objects = new HashMap<String, Obj>();
 		iotLobby = new LobbyImpl();
+		
+		
+		aboutImpl = new AboutImpl();
+		
 		watchServiceImpl = new WatchServiceImpl(this);
 		initInternals();
 	}
@@ -87,6 +93,7 @@ public class ObjectBrokerImpl implements ObjectBroker{
 
 	private void initInternals() {
 		addObj(watchServiceImpl);
+		addObj(aboutImpl,false); // About is added directly in lobby as local reference
 	}
 
 
