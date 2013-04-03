@@ -17,6 +17,79 @@
   </deviceloaders>
 
   <knx>
+   <connector>
+      <name>KNX EIBD</name>
+      <enabled>false</enabled>
+      <router>
+        <ip>128.130.56.77</ip>
+        <port>3671</port>
+      </router>
+      <localIP>auto</localIP>
+      
+      <device>
+        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.knx.LightSwitchActuatorImplKnx
+        </type>
+        <address>null, 0/0/1</address>
+        <href>light1</href>
+        <historyEnabled>false</historyEnabled>
+      </device>
+	  
+	   <device>
+        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.knx.LightSwitchActuatorImplKnx
+        </type>
+        <address>null, 0/0/2</address>
+        <href>light2</href>
+        <historyEnabled>false</historyEnabled>
+      </device>
+	  
+	  <device>
+        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.knx.LightSwitchActuatorImplKnx
+        </type>
+        <address>null, 0/0/3</address>
+        <href>light3</href>
+        <historyEnabled>false</historyEnabled>
+      </device>
+	  	  
+	  <device>
+        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.knx.LightSwitchActuatorImplKnx
+        </type>
+        <address>null, 0/0/4</address>
+        <href>light4</href>
+        <historyEnabled>false</historyEnabled>
+      </device>
+	  
+	   <device>
+        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.knx.LightSwitchActuatorImplKnx
+        </type>
+        <address>null, 0/0/5</address>
+        <href>light5</href>
+        <historyEnabled>false</historyEnabled>
+      </device>
+	  
+	   <device>
+        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.knx.LightSwitchActuatorImplKnx
+        </type>
+        <address>null, 0/0/6</address>
+        <href>light6</href>
+        <historyEnabled>false</historyEnabled>
+      </device>
+	  
+	  <device>
+        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.knx.LightSwitchActuatorImplKnx
+        </type>
+        <address>null, 0/0/7</address>
+        <href>light7</href>
+        <historyEnabled>false</historyEnabled>
+      </device>
+	  
+	  <device>
+        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.knx.LightSwitchActuatorImplKnx
+        </type>
+        <address>null, 0/0/8</address>
+        <href>light8</href>
+        <historyEnabled>false</historyEnabled>
+      </device>
+    </connector>
     <connector>
       <name>KNX E-Lab</name>
       <enabled>false</enabled>
@@ -329,8 +402,7 @@
       <device>
         <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.wmbus.SmartMeterImplWMBus
         </type>
-        <address>15004474, 66 77 66 77 66 77 66 77 66 77 66 77 66 77 66
-          77
+        <address>15004474, 66 77 66 77 66 77 66 77 66 77 66 77 66 77 66 77
         </address>
         <href>smartmeter</href>
         <historyEnabled>true</historyEnabled>
@@ -345,8 +417,7 @@
       <device>
         <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.wmbus.SmartMeterImplWMBus
         </type>
-        <address>15004474, 66 77 66 77 66 77 66 77 66 77 66 77 66 77 66
-          77
+        <address>15004474, 66 77 66 77 66 77 66 77 66 77 66 77 66 77 66 77
         </address>
         <href>smartmeter</href>
         <historyEnabled>true</historyEnabled>
