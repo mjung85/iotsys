@@ -17,7 +17,7 @@ ext{
 	resDir = file('iotsys-gateway/res')
 	distLib = file('iotsys-gateway/dist/lib')
 	
-	String felixDir = "felix-framework-4.2.0"
+	String felixDir = "felix-framework-4.2.1"
 	
 	felix = file(felixDir)
 	felixConfFile = file(felixDir + '/conf/config.properties')
@@ -95,9 +95,9 @@ task setupFelix << {
 	File dstResDir = new File(felix.absolutePath + '/res')
 		
 	if(!felix.exists()){
-		println "Need to download felix 4.2.0 distribution"
-		ant.get(src:"http://ftp.udc.es/apache/felix/org.apache.felix.main.distribution-4.2.0.zip", dest:"org.apache.felix.main.distribution-4.2.0.zip", verbose:true)
-		ant.unzip(src:"org.apache.felix.main.distribution-4.2.0.zip", dest:file('.').absolutePath)
+		println "Need to download felix 4.2.1 distribution"
+		ant.get(src:"http://ftp.udc.es/apache/felix/org.apache.felix.main.distribution-4.2.1.zip", dest:"org.apache.felix.main.distribution-4.2.1.zip", verbose:true)
+		ant.unzip(src:"org.apache.felix.main.distribution-4.2.1.zip", dest:file('.').absolutePath)
 	}
 	
 		if(dstConfigDir.exists()){
