@@ -66,6 +66,8 @@ public class ObjectBrokerImpl implements ObjectBroker{
 	private final ArrayList<Obj> orderedObjects = new ArrayList<Obj>();
 	
 	private static final ObjectBroker instance = new ObjectBrokerImpl();
+	
+	private ObjectRefresher objectRefresher = new ObjectRefresher();
 
 	/**
 	 * Constructor for non-existing mapping logic
@@ -94,6 +96,9 @@ public class ObjectBrokerImpl implements ObjectBroker{
 	private void initInternals() {
 		addObj(watchServiceImpl);
 		addObj(aboutImpl,false); // About is added directly in lobby as local reference
+		
+		Thread t = new Thread(objectRefresher);
+		t.start();
 	}
 
 
@@ -304,9 +309,9 @@ public class ObjectBrokerImpl implements ObjectBroker{
 		}
 		
 		orderedObjects.remove(toRemove);
+		objectRefresher.removeObject(toRemove);
 		
-		iotLobby.removeReference(href);
-		
+		iotLobby.removeReference(href);		
 	}
 
 	/* (non-Javadoc)
@@ -363,6 +368,21 @@ public class ObjectBrokerImpl implements ObjectBroker{
 	@Override
 	public void addHistoryToDatapoints(Obj obj, int countMax) {
 		HistoryHelper.addHistoryToDatapoints(obj, countMax);	
+	}
+
+	@Override
+	public void enableObjectRefresh(Obj obj) {
+		objectRefresher.addObject(obj);	
+	}
+
+	@Override
+	public void disableObjectRefresh(Obj obj) {
+		objectRefresher.removeObject(obj);
+	}
+	
+	@Override
+	public void shutdown(){
+		objectRefresher.stop();
 	}
 
 }

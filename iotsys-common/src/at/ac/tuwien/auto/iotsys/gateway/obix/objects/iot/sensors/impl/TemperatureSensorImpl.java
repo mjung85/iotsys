@@ -31,6 +31,8 @@
 
 package at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl;
 
+import java.util.logging.Logger;
+
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.TemperatureSensor;
 import obix.Real;
 import obix.Contract;
@@ -40,6 +42,7 @@ import obix.Uri;
 public class TemperatureSensorImpl extends SensorImpl implements
 		TemperatureSensor {
 	protected Real value = new Real(0);	
+	private static final Logger log = Logger.getLogger(TemperatureSensorImpl.class.getName());
 
 	public TemperatureSensorImpl() {
 		setIs(new Contract(TemperatureSensor.CONTRACT));
@@ -63,5 +66,10 @@ public class TemperatureSensorImpl extends SensorImpl implements
 	@Override
 	public void initialize(){
 		super.initialize();	
+	}
+	
+	@Override
+	public void refreshObject(){
+		log.finest("refreshing temperature sensor.");
 	}
 }

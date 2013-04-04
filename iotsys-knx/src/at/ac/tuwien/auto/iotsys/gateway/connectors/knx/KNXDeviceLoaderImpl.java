@@ -112,6 +112,8 @@ public class KNXDeviceLoaderImpl implements DeviceLoader {
 
 							Integer historyCount = subConfig.getInt("device("
 									+ i + ").historyCount", 0);
+							
+							Boolean refreshEnabled = subConfig.getBoolean("device(" + i + ").refreshEnabled", false);
 
 							if (type != null && address != null) {
 								int addressCount = address.size();
@@ -189,6 +191,10 @@ public class KNXDeviceLoaderImpl implements DeviceLoader {
 														objectBroker
 																.addHistoryToDatapoints(knxDevice);
 													}
+												}
+												
+												if(refreshEnabled != null && refreshEnabled){
+													objectBroker.enableObjectRefresh(knxDevice);
 												}
 
 											} catch (IllegalArgumentException e) {

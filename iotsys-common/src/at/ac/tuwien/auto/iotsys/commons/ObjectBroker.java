@@ -3,14 +3,11 @@ package at.ac.tuwien.auto.iotsys.commons;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
-
-
-
 import obix.Obj;
 import obix.Uri;
 
 public interface ObjectBroker {
-
+	
 	public abstract HashMap<String, String> get_ipv6MappingTable();
 
 	public abstract Obj pullObj(Uri href);
@@ -43,4 +40,10 @@ public interface ObjectBroker {
 	public void addHistoryToDatapoints(Obj obj);
 	
 	public void addHistoryToDatapoints(Obj obj, int countMax);
+	
+	public void enableObjectRefresh(Obj obj);
+	
+	public void disableObjectRefresh(Obj obj);
+
+	public void shutdown();
 }

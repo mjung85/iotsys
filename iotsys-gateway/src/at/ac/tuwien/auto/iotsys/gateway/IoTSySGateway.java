@@ -109,6 +109,7 @@ public class IoTSySGateway {
 	}
 
 	public void stopGateway() {
+		objectBroker.shutdown();
 		closeConnectors();
 	}
 

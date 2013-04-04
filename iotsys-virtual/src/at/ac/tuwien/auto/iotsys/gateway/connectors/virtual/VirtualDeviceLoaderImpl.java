@@ -150,6 +150,8 @@ public class VirtualDeviceLoaderImpl implements DeviceLoader {
 					.getProperty("device.type");
 			String connectorName = subConfig.getString("name");
 			Boolean enabled = subConfig.getBoolean("enabled", false);
+			
+			
 
 			if (enabled) {
 				try {
@@ -171,6 +173,8 @@ public class VirtualDeviceLoaderImpl implements DeviceLoader {
 
 							Boolean historyEnabled = subConfig.getBoolean(
 									"device(" + i + ").historyEnabled", false);
+							
+							Boolean refreshEnabled = subConfig.getBoolean("device(" + i + ").refreshEnabled", false);
 
 							Integer historyCount = subConfig.getInt("device("
 									+ i + ").historyCount", 0);
@@ -204,6 +208,11 @@ public class VirtualDeviceLoaderImpl implements DeviceLoader {
 											objectBroker
 													.addHistoryToDatapoints(virtualObj);
 										}
+									}
+									
+
+									if(refreshEnabled != null && refreshEnabled){
+										objectBroker.enableObjectRefresh(virtualObj);
 									}
 
 								} catch (SecurityException e) {

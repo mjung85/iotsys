@@ -49,15 +49,14 @@ public class TemperatureSensorImplBacnet extends TemperatureSensorImpl {
 	public void refreshObject() {
 		try {
 			Encodable property = bacnetConnector.readProperty(deviceID, objectIdentifier,propertyIdentifier);
-			
+			float newValue = ((Real) property).floatValue();
 			if(property instanceof Real){
-				value.set(((Real) property).floatValue());
+				if(value.get() != newValue)
+					value.set(newValue);
 			}		
 		} catch (BACnetException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (PropertyValueException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

@@ -118,6 +118,8 @@ public class BacnetDeviceLoaderImpl implements DeviceLoader {
 
 							Boolean historyEnabled = subConfig.getBoolean(
 									"device(" + i + ").historyEnabled", false);
+							
+							Boolean refreshEnabled = subConfig.getBoolean("device(" + i + ").refreshEnabled", false);
 
 							Integer historyCount = subConfig.getInt("device("
 									+ i + ").historyCount", 0);
@@ -216,6 +218,10 @@ public class BacnetDeviceLoaderImpl implements DeviceLoader {
 													objectBroker
 															.addHistoryToDatapoints(bacnetDevice);
 												}
+											}
+											
+											if(refreshEnabled != null && refreshEnabled){
+												objectBroker.enableObjectRefresh(bacnetDevice);
 											}
 										}
 									}
