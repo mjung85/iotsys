@@ -266,6 +266,7 @@ public class DPTXlator2ByteFloat extends DPTXlator
 		if (offset < 0 || offset > data.length)
 			throw new KNXIllegalArgumentException("illegal offset " + offset);
 		final int size = (data.length - offset) & ~0x01;
+		
 		if (size == 0)
 			throw new KNXIllegalArgumentException("data length " + size
 				+ " < KNX data type width " + Math.max(1, getTypeSize()));
@@ -276,6 +277,7 @@ public class DPTXlator2ByteFloat extends DPTXlator
 
 	/* (non-Javadoc)
 	 * @see tuwien.auto.calimero.dptxlator.DPTXlator#getData(byte[], int)
+	 * 
 	 */
 	public byte[] getData(byte[] dst, int offset)
 	{

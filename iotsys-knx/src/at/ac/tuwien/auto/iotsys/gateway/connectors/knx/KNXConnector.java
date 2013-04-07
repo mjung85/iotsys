@@ -110,6 +110,7 @@ public class KNXConnector implements Connector {
 					new InetSocketAddress(
 							InetAddress.getByName(routerHostname), routerPort),
 					false, new TPSettings(false));
+			log.info("My individiual KNX address is: " + nl.getKNXMedium().getDeviceAddress());
 			pc = new ProcessCommunicatorImpl(nl);
 
 			connected = true;
@@ -156,6 +157,7 @@ public class KNXConnector implements Connector {
 			}
 			int ret = pc.readUnsigned(a, scaled);
 			log.finest("Read " + ret + " from " + a);
+			return ret;
 		} catch (KNXException e) {
 
 			e.printStackTrace();
@@ -163,6 +165,21 @@ public class KNXConnector implements Connector {
 		return 0;
 	}
 	
+	public float readFloat(GroupAddress a) {
+		try {
+			if (!isConnected()) {
+				return 0;
+			}
+		
+			float ret = pc.readFloat(a);
+			log.finest("Read " + ret + " from " + a);
+			return ret;
+		} catch (KNXException e) {
+			e.printStackTrace();
+		}
+		return 0;
+	}	
+
 	public String read(Datapoint dp){
 		try{
 			return pc.read(dp);
@@ -189,6 +206,7 @@ public class KNXConnector implements Connector {
 			}
 			boolean ret = pc.readBool(a);
 			log.finest("Read " + ret + " from " + a);
+			return ret;
 		} catch (KNXException e) {
 			e.printStackTrace();
 		}
@@ -252,5 +270,13 @@ public class KNXConnector implements Connector {
 			}
 		}
 		return i;
+	}
+	
+	public void addNetworkListener(NetworkLinkListener listener){
+		nl.addLinkListener(listener);
+	}
+	
+	public void removeNetworkListener(NetworkLinkListener listener){
+		nl.removeLinkListener(listener);
 	}
 }

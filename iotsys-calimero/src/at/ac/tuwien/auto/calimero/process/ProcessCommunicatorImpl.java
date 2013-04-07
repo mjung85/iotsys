@@ -438,10 +438,13 @@ public class ProcessCommunicatorImpl implements ProcessCommunicator
 						// ok, got response we're waiting for
 						if (d.length >= minAPDU && d.length <= maxAPDU)
 							return d;
-						final String s = "APDU response length " + d.length +
-							" bytes, expected "	+ minAPDU + " to " + maxAPDU;
-						logger.error("received group read response with " + s);
-						throw new KNXInvalidResponseException(s);
+						else{
+							// lets wait
+							final String s = "APDU response length " + d.length +
+									" bytes, expected "	+ minAPDU + " to " + maxAPDU;
+							logger.warn("received group read response with " + s + " continuing waiting!");
+						}
+					
 					}
 					indications.wait(remaining);
 				}
