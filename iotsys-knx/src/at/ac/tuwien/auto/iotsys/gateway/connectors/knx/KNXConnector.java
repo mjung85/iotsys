@@ -35,6 +35,8 @@ import java.util.logging.Logger;
 import at.ac.tuwien.auto.calimero.CloseEvent;
 import at.ac.tuwien.auto.calimero.GroupAddress;
 import at.ac.tuwien.auto.calimero.cemi.CEMILData;
+import at.ac.tuwien.auto.calimero.datapoint.Datapoint;
+import at.ac.tuwien.auto.calimero.datapoint.StateDP;
 import at.ac.tuwien.auto.calimero.exception.KNXException;
 import at.ac.tuwien.auto.calimero.link.KNXNetworkLinkIP;
 import at.ac.tuwien.auto.calimero.link.event.NetworkLinkListener;
@@ -147,7 +149,6 @@ public class KNXConnector implements Connector {
 		}
 	}
 
-	// public int readInt(GroupAddress a, boolean scaled) {
 	public int readInt(GroupAddress a, String scaled) {
 		try {
 			if (!isConnected()) {
@@ -160,6 +161,25 @@ public class KNXConnector implements Connector {
 			e.printStackTrace();
 		}
 		return 0;
+	}
+	
+	public String read(Datapoint dp){
+		try{
+			return pc.read(dp);
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
+		return "";
+	}
+	
+	public void write(Datapoint dp, String value){
+		try{
+			pc.write(dp, value);
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
 	}
 
 	public boolean readBool(GroupAddress a) {

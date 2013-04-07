@@ -347,7 +347,7 @@ public final class TranslatorTypes
 	{
 		try {
 			map.put(new Integer(main), new MainType(main,
-				Class.forName("tuwien.auto.calimero.dptxlator." + className), desc));
+				Class.forName("at.ac.tuwien.auto.calimero.dptxlator." + className), desc));
 			DPTXlator.logger.trace(desc + " loaded");
 		}
 		catch (final ClassNotFoundException e) {}
