@@ -32,40 +32,61 @@
 
 package at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl;
 
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.BoilerActuator;
 import obix.Bool;
 import obix.Contract;
-import obix.Obj;
+import obix.Real;
 import obix.Uri;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.TemperatureControlActuator;
 
-public class BoilerActuatorImpl extends ActuatorImpl implements BoilerActuator {
-	protected Bool enabled = new Bool();
+public class TemperatureControlActuatorImpl extends ActuatorImpl implements TemperatureControlActuator{
+	protected Real actualValue = new Real(0);
+	protected Real targetValue = new Real(0);
+	protected Real actualTargetValue = new Real(0);
+	protected Bool active = new Bool(false);
 	
-	public BoilerActuatorImpl(){
-		setIs(new Contract(BoilerActuator.CONTRACT));
-		enabled.setWritable(true);
-		enabled.setHref(new Uri("enabled"));
-		enabled.setName("enabled");				
-		add(enabled);
-	}
-	
-	public void writeObject(Obj input){
-		// A write on this object was received, update the according data point.		
-		boolean newVal = false;
-		if(input instanceof BoilerActuator){
-			BoilerActuator in = (BoilerActuator) input;		
-			newVal = in.enabled().get();
+	public TemperatureControlActuatorImpl(){
+		this.setIs(new Contract(TemperatureControlActuatorImpl.CONTRACT));
+		
+		actualValue.setName(TemperatureControlActuator.ACTUAL_VALUE_NAME);
+		actualValue.setHref(new Uri(TemperatureControlActuator.ACTUAL_VALUE_HREF));
+		actualValue.setUnit(new Uri(TemperatureControlActuator.ACTUAL_VALUE_UNIT));
+		
+		targetValue.setName(TemperatureControlActuator.TARGET_VALUE_NAME);
+		targetValue.setHref(new Uri(TemperatureControlActuator.TARGET_VALUE_HREF));
+		targetValue.setUnit(new Uri(TemperatureControlActuator.TARGET_VALUE_UNIT));
+		targetValue.setWritable(true);
+		
+		actualTargetValue.setName(TemperatureControlActuator.ACTUAL_TARGET_VALUE_NAME);
+		actualTargetValue.setHref(new Uri(TemperatureControlActuator.ACTUAL_TARGET_VALUE_HREF));
+		actualTargetValue.setUnit(new Uri(TemperatureControlActuator.ACTUAL_TARGET_VALUE_UNIT));
+		
+		active.setName(TemperatureControlActuator.ACTIVE_NAME);
+		active.setHref(new Uri(TemperatureControlActuator.ACTIVE_HREF));
 			
-		}
-		else if(input instanceof Bool){
-			newVal = ((Bool) input).getBool();
-		}
-		this.enabled.set(newVal);
+		this.add(actualValue);
+		this.add(targetValue);
+		this.add(actualTargetValue);
+		this.add(active);
 	}
 
 	@Override
-	public Bool enabled() {
-		return this.enabled;
+	public Real actualValue() {	
+		return actualValue;
+	}
+
+	@Override
+	public Real targetValue() {		
+		return targetValue;
+	}
+
+	@Override
+	public Real actualTargetValue() {		
+		return actualTargetValue;
+	}
+
+	@Override
+	public Bool active() {
+		return active;
 	}
 
 }

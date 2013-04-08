@@ -40,30 +40,31 @@ import obix.Uri;
 
 public class CoolerActuatorImpl extends ActuatorImpl implements CoolerActuator {
 
-	protected Bool switchState = new Bool();
+	protected Bool enabled = new Bool();
 	
 	public CoolerActuatorImpl(){
 		setIs(new Contract(CoolerActuator.CONTRACT));
-		switchState.setHref(new Uri("switchState"));
-		switchState.setName("switchState");
-		add(switchState);	
+		enabled.setHref(new Uri("enabled"));
+		enabled.setName("enabled");
+		add(enabled);	
 	}
 	
 	public void writeObject(Obj input){
 		// A write on this object was received, update the according data point.		
 		boolean newVal = false;
-		if(input instanceof BoilerActuatorImpl){
-			BoilerActuatorImpl in = (BoilerActuatorImpl) input;
-			newVal = in.switchState().get();
+		if(input instanceof CoolerActuatorImpl){
+			CoolerActuatorImpl in = (CoolerActuatorImpl) input;
+			newVal = in.enabled().get();
 			
 		}
 		else if(input instanceof Bool){
 			newVal = ((Bool) input).get();
 		}
-		this.switchState.set(newVal);
+		this.enabled.set(newVal);
 	}
 	
-	public Bool switchState() {
-		return switchState;
+	@Override
+	public Bool enabled() {
+		return enabled;
 	}
 }

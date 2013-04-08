@@ -30,12 +30,26 @@
  * This file is part of the IoTSyS project.
  ******************************************************************************/
 
-package at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators;
+package at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl;
 
 import obix.Bool;
+import obix.Contract;
+import obix.Uri;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.ChillerActuator;
 
-public interface BoilerActuator extends Actuator{
-	public static final String CONTRACT="iot:Boiler";
-	public static final String enabledContract = "<bool name='enabled' href='enabled' val='false'/>";
-	public Bool enabled();
+public class ChillerActuatorImpl extends ActuatorImpl implements ChillerActuator {
+	private Bool enabled = new Bool(false);
+	
+	public ChillerActuatorImpl(){
+		setIs(new Contract(ChillerActuator.class.getName()));
+		enabled.setName(ChillerActuator.CHILLER_ENABLED_NAME);
+		enabled.setHref(new Uri(ChillerActuator.CHILLER_ENABLED_HREF));
+		enabled.setWritable(true);
+		this.add(enabled);
+	}
+
+	@Override
+	public Bool enabled() {
+		return enabled;
+	}
 }

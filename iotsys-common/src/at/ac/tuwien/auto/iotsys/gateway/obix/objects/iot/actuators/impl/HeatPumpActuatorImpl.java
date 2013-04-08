@@ -30,12 +30,34 @@
  * This file is part of the IoTSyS project.
  ******************************************************************************/
 
-package at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators;
+package at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl;
 
 import obix.Bool;
+import obix.Contract;
+import obix.Uri;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.HeatPumpActuator;
 
-public interface BoilerActuator extends Actuator{
-	public static final String CONTRACT="iot:Boiler";
-	public static final String enabledContract = "<bool name='enabled' href='enabled' val='false'/>";
-	public Bool enabled();
+public class HeatPumpActuatorImpl extends ActuatorImpl implements HeatPumpActuator {
+	protected Bool enabled = new Bool(false);
+	protected Bool influenceTargetValue = new Bool(false);
+	
+	public HeatPumpActuatorImpl(){
+		setIs(new Contract(HeatPumpActuator.CONTRACT));
+		
+		enabled.setHref(new Uri(HeatPumpActuator.ENABLED_HREF));
+		enabled.setName(HeatPumpActuator.ENABLED_NAME);
+		
+		enabled.setHref(new Uri(HeatPumpActuator.TARGET_VALUE_INFLUENCE_HREF));
+		enabled.setName(HeatPumpActuator.TARGET_VALUE_INFLUENCE_NAME);	
+	}
+	
+	@Override
+	public Bool enabled() {	
+		return null;
+	}
+
+	@Override
+	public Bool targetValueInfluence() {
+		return null;
+	}
 }
