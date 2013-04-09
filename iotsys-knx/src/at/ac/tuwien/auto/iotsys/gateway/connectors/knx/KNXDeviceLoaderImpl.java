@@ -106,6 +106,9 @@ public class KNXDeviceLoaderImpl implements DeviceLoader {
 									+ ").ipv6");
 							String href = subConfig.getString("device(" + i
 									+ ").href");
+							
+							String name = subConfig.getString("device(" + i
+									+ ").name");
 
 							Boolean historyEnabled = subConfig.getBoolean(
 									"device(" + i + ").historyEnabled", false);
@@ -159,14 +162,16 @@ public class KNXDeviceLoaderImpl implements DeviceLoader {
 												// specified KNX device
 												Obj knxDevice = (Obj) declaredConstructors[k]
 														.newInstance(args);
-
-												// Obj knxDevice = new
-												// LightSwitchActuatorImplKnx(knxConnector,
-												// groupAddress,...);
+											
 												knxDevice
 														.setHref(new Uri(href));
+												
+												if(name != null && name.length() > 0){
+													knxDevice.setName(name);
+												}
 
 												ArrayList<String> assignedHrefs = null;
+												
 												if (ipv6 != null) {
 													assignedHrefs = objectBroker.addObj(
 															knxDevice, ipv6);

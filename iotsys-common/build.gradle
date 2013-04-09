@@ -7,6 +7,7 @@ jar {
 	manifest {
 		attributes("Manifest-Version": "1.0",
 				   "Bundle-Name": "IoTSyS-Common",
+				   "Bundle-SymbolicName": "at.ac.tuwien.auto.iotsys.commons",
 				   "Bundle-Description": "Common classes for the IoTSyS project",
 				   "Bundle-Vendor": "Vienna University of Technology, Automation Systems Group, www.auto.tuwien.ac.at",
 				   "Bundle-Version": "0.1",

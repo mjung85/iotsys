@@ -29,6 +29,7 @@ jar {
 	manifest {
 		attributes("Manifest-Version": "1.0",
 				   "Bundle-Name": "IoTSyS-KNX",
+				   "Bundle-SymbolicName": "at.ac.tuwien.auto.iotsys.knx",
 				   "Bundle-Description": "KNX bundle based on Calimero including IoTSyS specific oBIX object implementations.",
 				   "Bundle-Vendor": "Vienna University of Technology, Automation Systems Group, www.auto.tuwien.ac.at",
 				   "Bundle-Version": "0.1",

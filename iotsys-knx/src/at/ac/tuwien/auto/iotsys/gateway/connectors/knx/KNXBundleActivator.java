@@ -112,7 +112,6 @@ public class KNXBundleActivator implements BundleActivator, ServiceListener {
 					}
 				}
 			}
-
 		} 
 	}
 }

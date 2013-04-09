@@ -65,6 +65,10 @@ task deployOsgi << {
 	File dstConfigDir = new File(felix.absolutePath + '/config')
 	File dstResDir = new File(felix.absolutePath + '/res')
 	
+	ant.delete (includeemptydirs:"true") {
+		fileset (dir:felixCache, includes:"**/*")
+	}
+	
 	if(dstConfigDir.exists()){
 		
 		println "Copying configuration from " + configDir.absolutePath + " to " + dstConfigDir.absolutePath

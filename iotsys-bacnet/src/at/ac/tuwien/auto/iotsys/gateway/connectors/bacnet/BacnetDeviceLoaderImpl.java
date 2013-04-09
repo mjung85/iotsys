@@ -119,6 +119,10 @@ public class BacnetDeviceLoaderImpl implements DeviceLoader {
 							Boolean historyEnabled = subConfig.getBoolean(
 									"device(" + i + ").historyEnabled", false);
 							
+							String name = subConfig.getString("device(" + i
+									+ ").name");
+
+							
 							Boolean refreshEnabled = subConfig.getBoolean("device(" + i + ").refreshEnabled", false);
 
 							Integer historyCount = subConfig.getInt("device("
@@ -191,6 +195,9 @@ public class BacnetDeviceLoaderImpl implements DeviceLoader {
 																		// KNX
 																		// device
 											bacnetDevice.setHref(new Uri(href));
+											if(name != null && name.length() > 0){
+												bacnetDevice.setName(name);
+											}
 											
 											ArrayList<String> assignedHrefs = null;
 

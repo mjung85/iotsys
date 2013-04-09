@@ -32,6 +32,7 @@ jar {
 	manifest {
 		attributes("Manifest-Version": "1.0",
 				   "Bundle-Name": "IoTSyS-BACnet",
+				   "Bundle-SymbolicName": "at.ac.tuwien.auto.iotsys.bacnet",
 				   "Bundle-Description": "BACnet/IP connector for the IoTSyS gateway project based on BACnet4J",
 				   "Bundle-Vendor": "Vienna University of Technology, Automation Systems Group, www.auto.tuwien.ac.at",
 				   "Bundle-Version": "0.1",

@@ -27,6 +27,7 @@ jar {
 	manifest {
 		attributes("Manifest-Version": "1.0",
 				   "Bundle-Name": "IoTSyS-WMBus",
+				   "Bundle-SymbolicName": "at.ac.tuwien.auto.iotsys.wmbus",
 				   "Bundle-Description": "Wireless M-Bus connector for the IoTSyS Gateway project",
 				   "Bundle-Vendor": "Vienna University of Technology, Automation Systems Group, www.auto.tuwien.ac.at",
 				   "Bundle-Version": "0.1",

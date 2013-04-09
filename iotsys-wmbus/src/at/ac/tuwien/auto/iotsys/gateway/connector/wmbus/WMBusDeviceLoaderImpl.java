@@ -48,7 +48,6 @@ import org.apache.commons.configuration.XMLConfiguration;
 import at.ac.tuwien.auto.iotsys.commons.Connector;
 import at.ac.tuwien.auto.iotsys.commons.DeviceLoader;
 import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
-import at.ac.tuwien.auto.iotsys.commons.PropertiesLoader;
 
 public class WMBusDeviceLoaderImpl implements DeviceLoader {
 	
@@ -127,6 +126,9 @@ public class WMBusDeviceLoaderImpl implements DeviceLoader {
 								+ ").ipv6");
 						String href = subConfig.getString("device(" + i
 								+ ").href");
+						
+						String name = subConfig.getString("device(" + i
+								+ ").name");
 
 						Boolean historyEnabled = subConfig.getBoolean("device("
 								+ i + ").historyEnabled", false);
@@ -178,6 +180,10 @@ public class WMBusDeviceLoaderImpl implements DeviceLoader {
 													ipv6);
 										} else {
 											assignedHrefs = objectBroker.addObj(smartMeter);
+										}
+										
+										if(name != null && name.length() > 0){
+											smartMeter.setName(name);
 										}
 										
 										synchronized(myObjects){

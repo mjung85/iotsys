@@ -15,10 +15,6 @@ public interface ObjectBroker {
 	public abstract Obj pushObj(Uri href, Obj input, boolean isOp)
 			throws Exception;
 
-	public abstract void loadObjects(File file) throws Exception;
-
-	public abstract void saveObjects(File file) throws Exception;
-
 	public abstract ArrayList<String> addObj(Obj o, String ipv6Address);
 
 	public abstract String getIPv6LinkedHref(String ipv6Address);
@@ -46,4 +42,8 @@ public interface ObjectBroker {
 	public void disableObjectRefresh(Obj obj);
 
 	public void shutdown();
+	
+	public Obj pullObByName(String name);
+
+	public ArrayList<String> getObjNames();
 }

@@ -85,40 +85,40 @@ public class VirtualDeviceLoaderImpl implements DeviceLoader {
 
 			// add virtual devices
 
-			TemperatureSensorImpl virtualTemp1 = new TemperatureSensorImplVirtual(
-					virtualConnector, new Object());
-			virtualTemp1.setHref(new Uri("virtualTemp1"));
-			virtualTemp1.setName("virtualTemp1");
+//			TemperatureSensorImpl virtualTemp1 = new TemperatureSensorImplVirtual(
+//					virtualConnector, new Object());
+//			virtualTemp1.setHref(new Uri("virtualTemp1"));
+//			virtualTemp1.setName("virtualTemp1");
 
 			// add virtual devices to object broker and remember all assigned
 			// URIs, due to child objects there could be one or many
-			synchronized (myObjects) {
-				myObjects.addAll(objectBroker.addObj(virtualTemp1));
-			}
+//			synchronized (myObjects) {
+//				myObjects.addAll(objectBroker.addObj(virtualTemp1));
+//			}
 
 			// add obj with IPv6 address
 			// String ipv6 = "fe80::1"
 			// myObjects.addAll(objectBroker.addObj(virtualTemp1, ipv6));
 
 			// enable history yes/no?
-			objectBroker.addHistoryToDatapoints(virtualTemp1, 100);
-
-			LightSwitchActuatorImpl virtualLight1 = new LightSwitchActuatorImplVirtual(
-					virtualConnector, new Object());
-			virtualLight1.setHref(new Uri("virtualLight1"));
-			virtualLight1.setName("virtualLight1");
+//			objectBroker.addHistoryToDatapoints(virtualTemp1, 100);
+//
+//			LightSwitchActuatorImpl virtualLight1 = new LightSwitchActuatorImplVirtual(
+//					virtualConnector, new Object());
+//			virtualLight1.setHref(new Uri("virtualLight1"));
+//			virtualLight1.setName("virtualLight1");
 
 			// add virtual devices to object broker
-			synchronized (myObjects) {
-				myObjects.addAll(objectBroker.addObj(virtualLight1));
-			}
+//			synchronized (myObjects) {
+//				myObjects.addAll(objectBroker.addObj(virtualLight1));
+//			}
 
 			// add obj with IPv6 address
 			// String ipv6 = "fe80::1"
 			// objectBroker.addObj(virtualTemp1, ipv6);
 
 			// enable history yes/no?
-			objectBroker.addHistoryToDatapoints(virtualLight1, 100);
+//			objectBroker.addHistoryToDatapoints(virtualLight1, 100);
 
 		} catch (Exception e) {
 
@@ -133,7 +133,7 @@ public class VirtualDeviceLoaderImpl implements DeviceLoader {
 		Object virtualConnectors = devicesConfig
 				.getProperty("virtual.connector.name");
 		if (virtualConnectors != null) {
-			connectorsSize = 1;
+			connectorsSize = ((Collection<?>) virtualConnectors).size();;
 		} else {
 			connectorsSize = 0;
 		}
@@ -170,6 +170,9 @@ public class VirtualDeviceLoaderImpl implements DeviceLoader {
 									+ ").ipv6");
 							String href = subConfig.getString("device(" + i
 									+ ").href");
+							
+							String name = subConfig.getString("device(" + i
+									+ ").name");
 
 							Boolean historyEnabled = subConfig.getBoolean(
 									"device(" + i + ").historyEnabled", false);
@@ -185,6 +188,10 @@ public class VirtualDeviceLoaderImpl implements DeviceLoader {
 									Obj virtualObj = (Obj) Class.forName(type)
 											.newInstance();
 									virtualObj.setHref(new Uri(href));
+									
+									if(name != null && name.length() > 0){
+										virtualObj.setName(name);
+									}
 
 									if (ipv6 != null) {
 										myObjects.addAll(objectBroker.addObj(
@@ -193,6 +200,8 @@ public class VirtualDeviceLoaderImpl implements DeviceLoader {
 										myObjects.addAll(objectBroker
 												.addObj(virtualObj));
 									}
+									
+								
 
 									virtualObj.initialize();
 

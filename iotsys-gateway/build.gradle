@@ -40,6 +40,7 @@ jar {
 		attributes("Main-Class": "at.ac.tuwien.auto.iotsys.gateway.IoTSySGateway",
 				   "Manifest-Version": "1.0",
 				   "Bundle-Name": "IoTSyS-Gateway", 
+				   "Bundle-SymbolicName": "at.ac.tuwien.auto.iotsys.gateway",
 				   "Bundle-Description": "IPv6 multi-protocol gateway for integration building automation systems into an IoT based on constrained RESTful environments.",
 				   "Bundle-Vendor": "Vienna University of Technology, Automation Systems Group, www.auto.tuwien.ac.at",
 				   "Bundle-Version": "0.1", 
@@ -70,6 +71,7 @@ dependencies {
 	provided project(':iotsys-obix')
 	provided project(':iotsys-common')
 	provided project(':iotsys-encoding-json')
+	provided project(':iotsys-control');
 	
 	//provided group: 'org.apache.felix', name: 'org.apache.felix.framework', version: '4.2.0'
 	provided group: 'org.apache.felix', name: 'org.osgi.core', version: '1.4.0'
