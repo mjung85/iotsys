@@ -59,6 +59,7 @@ import at.ac.tuwien.auto.iotsys.gateway.obix.server.ObixServerImpl;
 import at.ac.tuwien.auto.iotsys.commons.Connector;
 import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
 import at.ac.tuwien.auto.iotsys.commons.PropertiesLoader;
+import at.ac.tuwien.auto.iotsys.control.TestClient;
 
 /**
  * Standalone class to launch the gateway.
@@ -118,6 +119,9 @@ public class IoTSySGateway {
 		final IoTSySGateway iotsys = new IoTSySGateway();
 
 		iotsys.startGateway();
+		
+		TestClient testClient = new TestClient(iotsys.objectBroker);
+		testClient.runTests();
 		
 		//EvaluationUtil.evaluation();
 				
