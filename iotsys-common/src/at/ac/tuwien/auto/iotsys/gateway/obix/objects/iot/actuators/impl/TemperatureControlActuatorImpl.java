@@ -32,8 +32,11 @@
 
 package at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl;
 
+import java.util.logging.Logger;
+
 import obix.Bool;
 import obix.Contract;
+import obix.Obj;
 import obix.Real;
 import obix.Uri;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.TemperatureControlActuator;
@@ -43,6 +46,8 @@ public class TemperatureControlActuatorImpl extends ActuatorImpl implements Temp
 	protected Real targetValue = new Real(0);
 	protected Real actualTargetValue = new Real(0);
 	protected Bool active = new Bool(false);
+	
+	private static final Logger log = Logger.getLogger(TemperatureControlActuatorImpl.class.getName());
 	
 	public TemperatureControlActuatorImpl(){
 		this.setIs(new Contract(TemperatureControlActuatorImpl.CONTRACT));
@@ -87,6 +92,20 @@ public class TemperatureControlActuatorImpl extends ActuatorImpl implements Temp
 	@Override
 	public Bool active() {
 		return active;
+	}
+	
+	@Override
+	public void writeObject(Obj input){
+		if(input instanceof TemperatureControlActuator){
+			TemperatureControlActuator in = (TemperatureControlActuator) input;
+			log.finer("Writing on TemperatureControl: " + in);
+			targetValue.set(in.targetValue().get());
+		}	
+		else if(input instanceof Real){
+			// can only write on target value
+			Real in =  (Real) input;
+			targetValue.set(in.get());
+		}
 	}
 
 }

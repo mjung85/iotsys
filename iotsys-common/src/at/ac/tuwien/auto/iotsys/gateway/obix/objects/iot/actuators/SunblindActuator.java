@@ -33,7 +33,7 @@
 package at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators;
 
 import obix.Bool;
-import obix.Int;
+
 
 public interface SunblindActuator extends Actuator {
 	public static final String CONTRACT="iot:SunblindActuator";

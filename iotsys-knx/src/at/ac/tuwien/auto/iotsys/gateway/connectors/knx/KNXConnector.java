@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ */
 
 package at.ac.tuwien.auto.iotsys.gateway.connectors.knx;
 
@@ -73,44 +73,49 @@ public class KNXConnector implements Connector {
 		synchronized (this) {
 			log.info("Connecting KNX tunnel - Tunnel, " + localIP + ", "
 					+ routerHostname + ", " + routerPort);
-			
-			
-			if("auto".equals(localIP)){
+
+			if ("auto".equals(localIP)) {
 				log.finest("auto detetecting local IP.");
 				String detectedLocalIP = "";
 				int curSimilarity = 0;
-				InetAddress routerAddress = InetAddress.getByName(routerHostname);
-				
-				
+				InetAddress routerAddress = InetAddress
+						.getByName(routerHostname);
+
 				try {
-					Enumeration<NetworkInterface> networkInterfaces = NetworkInterface.getNetworkInterfaces();
-					
-					while(networkInterfaces.hasMoreElements()){
+					Enumeration<NetworkInterface> networkInterfaces = NetworkInterface
+							.getNetworkInterfaces();
+
+					while (networkInterfaces.hasMoreElements()) {
 						NetworkInterface ni = networkInterfaces.nextElement();
-						Enumeration<InetAddress> inetAddresses = ni.getInetAddresses();
-						while(inetAddresses.hasMoreElements()){
-							InetAddress inetAddress = inetAddresses.nextElement();
-							String hostAddress = inetAddress.getHostAddress();			
-							int sim = similarity(routerAddress.getHostAddress(), hostAddress);
-							if ( sim >= curSimilarity){
+						Enumeration<InetAddress> inetAddresses = ni
+								.getInetAddresses();
+						while (inetAddresses.hasMoreElements()) {
+							InetAddress inetAddress = inetAddresses
+									.nextElement();
+							String hostAddress = inetAddress.getHostAddress();
+							int sim = similarity(
+									routerAddress.getHostAddress(), hostAddress);
+							if (sim >= curSimilarity) {
 								curSimilarity = sim;
 								detectedLocalIP = hostAddress;
 							}
-											
+
 						}
 					}
 				} catch (SocketException e) {
 					e.printStackTrace();
 				}
 				localIP = detectedLocalIP;
-				log.finest("detectedLocalIP: " + localIP  + " with similarity " + curSimilarity);
+				log.finest("detectedLocalIP: " + localIP + " with similarity "
+						+ curSimilarity);
 			}
 			nl = new KNXNetworkLinkIP(KNXNetworkLinkIP.TUNNEL,
 					new InetSocketAddress(InetAddress.getByName(localIP), 0),
 					new InetSocketAddress(
 							InetAddress.getByName(routerHostname), routerPort),
 					false, new TPSettings(false));
-			log.info("My individiual KNX address is: " + nl.getKNXMedium().getDeviceAddress());
+			log.info("My individiual KNX address is: "
+					+ nl.getKNXMedium().getDeviceAddress());
 			pc = new ProcessCommunicatorImpl(nl);
 
 			connected = true;
@@ -150,6 +155,18 @@ public class KNXConnector implements Connector {
 		}
 	}
 
+	public void write(GroupAddress a, float value) {
+		try {
+			if (!isConnected()) {
+				return;
+			}
+			log.finest("Writing " + value + " on " + a);
+			pc.write(a, value);
+		} catch (KNXException e) {
+			e.printStackTrace();
+		}
+	}
+
 	public int readInt(GroupAddress a, String scaled) {
 		try {
 			if (!isConnected()) {
@@ -164,13 +181,13 @@ public class KNXConnector implements Connector {
 		}
 		return 0;
 	}
-	
+
 	public float readFloat(GroupAddress a) {
 		try {
 			if (!isConnected()) {
 				return 0;
 			}
-		
+
 			float ret = pc.readFloat(a);
 			log.finest("Read " + ret + " from " + a);
 			return ret;
@@ -178,23 +195,21 @@ public class KNXConnector implements Connector {
 			e.printStackTrace();
 		}
 		return 0;
-	}	
+	}
 
-	public String read(Datapoint dp){
-		try{
+	public String read(Datapoint dp) {
+		try {
 			return pc.read(dp);
-		}
-		catch(Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return "";
 	}
-	
-	public void write(Datapoint dp, String value){
-		try{
+
+	public void write(Datapoint dp, String value) {
+		try {
 			pc.write(dp, value);
-		}
-		catch(Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
@@ -261,22 +276,22 @@ public class KNXConnector implements Connector {
 
 		}
 	}
-	
-	private int similarity(String s1, String s2){
+
+	private int similarity(String s1, String s2) {
 		int i = 0;
-		for(i=0; i< Math.min(s1.length(),s2.length()); i++){
-			if(s1.charAt(i) != s2.charAt(i)){
+		for (i = 0; i < Math.min(s1.length(), s2.length()); i++) {
+			if (s1.charAt(i) != s2.charAt(i)) {
 				break;
 			}
 		}
 		return i;
 	}
-	
-	public void addNetworkListener(NetworkLinkListener listener){
+
+	public void addNetworkListener(NetworkLinkListener listener) {
 		nl.addLinkListener(listener);
 	}
-	
-	public void removeNetworkListener(NetworkLinkListener listener){
+
+	public void removeNetworkListener(NetworkLinkListener listener) {
 		nl.removeLinkListener(listener);
 	}
 }

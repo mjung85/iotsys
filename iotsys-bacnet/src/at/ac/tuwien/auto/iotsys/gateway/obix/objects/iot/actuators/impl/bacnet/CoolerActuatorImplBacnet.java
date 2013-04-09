@@ -52,7 +52,7 @@ public class CoolerActuatorImplBacnet extends CoolerActuatorImpl {
 					switchDP.getPropertyIdentifier());
 
 			if (property instanceof  com.serotonin.bacnet4j.type.primitive.Boolean) {
-				switchState.set(((com.serotonin.bacnet4j.type.primitive.Boolean) property).booleanValue());
+				enabled.set(((com.serotonin.bacnet4j.type.primitive.Boolean) property).booleanValue());
 			}			
 
 		} catch (BACnetException e) {			
@@ -68,7 +68,7 @@ public class CoolerActuatorImplBacnet extends CoolerActuatorImpl {
 	
 		try {
 			bacnetConnector.writeProperty(switchDP.getDeviceIdentifier(), switchDP.getObjectIdentifier(),
-					switchDP.getPropertyIdentifier(), new com.serotonin.bacnet4j.type.primitive.Enumerated(switchState.get()?1:0), BACNET_PRIORITY);			
+					switchDP.getPropertyIdentifier(), new com.serotonin.bacnet4j.type.primitive.Enumerated(enabled.get()?1:0), BACNET_PRIORITY);			
 		} catch (BACnetException e) {			
 			e.printStackTrace();
 		} catch (PropertyValueException e) {

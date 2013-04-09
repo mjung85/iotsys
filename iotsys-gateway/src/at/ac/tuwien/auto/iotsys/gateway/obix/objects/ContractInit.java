@@ -29,18 +29,20 @@
  * 
  * This file is part of the IoTSyS project.
  ******************************************************************************/
-
 package at.ac.tuwien.auto.iotsys.gateway.obix.objects;
 
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.AirDamperActuator;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.BoilerActuator;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.BrightnessActuator;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.ChillerActuator;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.CoolerActuator;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.FanSpeedActuator;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.HVACvalveActuator;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.HeatPumpActuator;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.LightSwitchActuator;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.PumpActuator;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.SunblindActuator;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.TemperatureControlActuator;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.PresenceDetectorSensor;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.PushButton;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.RoomRelativeHumiditySensor;
@@ -75,6 +77,10 @@ public class ContractInit
 	  ContractRegistry.put(CoolerActuator.CONTRACT, CoolerActuator.class.getName());
 	  ContractRegistry.put(PumpActuator.CONTRACT, PumpActuator.class.getName());
 	  ContractRegistry.put(SunblindActuator.CONTRACT, SunblindActuator.class.getName());
+	  ContractRegistry.put(TemperatureControlActuator.CONTRACT, TemperatureControlActuator.class.getName());
+	  ContractRegistry.put(ChillerActuator.CONTRACT, ChillerActuator.class.getName());
+	  ContractRegistry.put(HeatPumpActuator.CONTRACT, HeatPumpActuator.class.getName());
+	  
 	  
 	  ContractRegistry.buildReverseMap();
   }

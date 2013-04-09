@@ -55,7 +55,7 @@ public class BoilerActuatorImplBacnet extends BoilerActuatorImpl {
 					switchDP.getPropertyIdentifier());
 
 			if (property instanceof  com.serotonin.bacnet4j.type.primitive.Boolean) {
-				switchState.set(((com.serotonin.bacnet4j.type.primitive.Boolean) property).booleanValue());
+				enabled.set(((com.serotonin.bacnet4j.type.primitive.Boolean) property).booleanValue());
 			}			
 
 		} catch (BACnetException e) {
@@ -70,10 +70,10 @@ public class BoilerActuatorImplBacnet extends BoilerActuatorImpl {
 	public void writeObject(Obj input) {
 		// A write on this object was received, update the according data point.
 		super.writeObject(input);
-		log.finest("Writing on boiler: " + switchDP + " value: " + switchState.get());
+		log.finest("Writing on boiler: " + switchDP + " value: " + enabled.get());
 		try {
 			bacnetConnector.writeProperty(switchDP.getDeviceIdentifier(), switchDP.getObjectIdentifier(),
-					switchDP.getPropertyIdentifier(), new com.serotonin.bacnet4j.type.primitive.Enumerated(switchState.get()?1:0), BACNET_PRIORITY);			
+					switchDP.getPropertyIdentifier(), new com.serotonin.bacnet4j.type.primitive.Enumerated(enabled.get()?1:0), BACNET_PRIORITY);			
 		} catch (BACnetException e) {
 			e.printStackTrace();
 		} catch (PropertyValueException e) {

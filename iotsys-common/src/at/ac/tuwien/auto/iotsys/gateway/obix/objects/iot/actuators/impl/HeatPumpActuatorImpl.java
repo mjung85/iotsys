@@ -34,30 +34,56 @@ package at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl;
 
 import obix.Bool;
 import obix.Contract;
+import obix.Obj;
 import obix.Uri;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.HeatPumpActuator;
 
 public class HeatPumpActuatorImpl extends ActuatorImpl implements HeatPumpActuator {
-	protected Bool enabled = new Bool(false);
-	protected Bool influenceTargetValue = new Bool(false);
+	protected Bool disabled = new Bool(false);
+	protected Bool targetValueInfluence = new Bool(false);
 	
 	public HeatPumpActuatorImpl(){
 		setIs(new Contract(HeatPumpActuator.CONTRACT));
 		
-		enabled.setHref(new Uri(HeatPumpActuator.ENABLED_HREF));
-		enabled.setName(HeatPumpActuator.ENABLED_NAME);
+		disabled.setHref(new Uri(HeatPumpActuator.DISABLED_HREF));
+		disabled.setName(HeatPumpActuator.DISABLED_NAME);
+
 		
-		enabled.setHref(new Uri(HeatPumpActuator.TARGET_VALUE_INFLUENCE_HREF));
-		enabled.setName(HeatPumpActuator.TARGET_VALUE_INFLUENCE_NAME);	
+		targetValueInfluence.setHref(new Uri(HeatPumpActuator.TARGET_VALUE_INFLUENCE_HREF));
+		targetValueInfluence.setName(HeatPumpActuator.TARGET_VALUE_INFLUENCE_NAME);
+		
+		add(disabled);
+		add(targetValueInfluence);
 	}
 	
 	@Override
-	public Bool enabled() {	
-		return null;
+	public Bool disabled() {	
+		return disabled;
 	}
 
 	@Override
 	public Bool targetValueInfluence() {
-		return null;
+		return targetValueInfluence;
+	}
+	
+	@Override
+	public void writeObject(Obj input){
+		if(input instanceof HeatPumpActuator){
+			HeatPumpActuator in = (HeatPumpActuator) input;
+			this.targetValueInfluence.set(in.targetValueInfluence().get());
+			this.disabled.set(in.disabled().get());
+		}
+		else if(input instanceof Bool){
+			Bool in = (Bool) input;
+			String resourceUriPath = input.getInvokedHref().substring(input.getInvokedHref().lastIndexOf('/') + 1);
+			
+			if(HeatPumpActuator.DISABLED_HREF.equals(resourceUriPath)){
+				this.disabled.set(in.get());
+			}
+			
+			if(HeatPumpActuator.TARGET_VALUE_INFLUENCE_HREF.equals(resourceUriPath)){
+				this.targetValueInfluence.set(in.get());
+			}
+		}
 	}
 }

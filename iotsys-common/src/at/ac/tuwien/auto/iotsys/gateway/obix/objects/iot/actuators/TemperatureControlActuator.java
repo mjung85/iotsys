@@ -35,7 +35,7 @@ package at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators;
 import obix.Bool;
 import obix.Real;
 
-public interface TemperatureControlActuator {
+public interface TemperatureControlActuator extends Actuator{
 	public static final String CONTRACT="iot:TemperatureControlActuator";
 	
 	public static final String ACT_POS_SETP_FRESH_AIR_CONTRACT_NAME="actPosSetpFreshAirValue";

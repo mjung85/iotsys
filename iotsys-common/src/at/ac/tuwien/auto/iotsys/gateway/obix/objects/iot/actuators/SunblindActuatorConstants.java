@@ -32,7 +32,7 @@
 
 package at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators;
 
-public class SunblindActuatorConstants {
+public interface SunblindActuatorConstants{
 	public static final String MOVE_UP_DOWN_CONTRACT_NAME="moveUpDown";
 	public static final String STOP_STEP_UP_DOWN_CONTRACT="stopStepUpDown";
 }

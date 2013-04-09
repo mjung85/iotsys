@@ -576,6 +576,22 @@
         <href>virtualBoilerActuatorImpl</href>
         <historyEnabled>false</historyEnabled>
       </device>
+      
+      <device>
+      	<type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.TemperatureControlActuatorImpl</type>
+      	<href>kuehlhaus</href>
+      </device>
+      
+      <device>
+      	<type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.ChillerActuatorImpl</type>
+      	<href>chillerActuator</href>
+      </device>
+      
+      <device>
+      	<type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.HeatPumpActuatorImpl
+      	</type>
+      	<href>heatpumpActuator</href>
+      </device>
     </connector>
   </virtual>
 </devices>
