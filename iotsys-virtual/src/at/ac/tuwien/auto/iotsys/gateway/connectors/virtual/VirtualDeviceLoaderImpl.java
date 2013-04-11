@@ -133,7 +133,12 @@ public class VirtualDeviceLoaderImpl implements DeviceLoader {
 		Object virtualConnectors = devicesConfig
 				.getProperty("virtual.connector.name");
 		if (virtualConnectors != null) {
-			connectorsSize = ((Collection<?>) virtualConnectors).size();;
+			if(virtualConnectors instanceof String){
+				connectorsSize = 1;
+			}
+			else{
+				connectorsSize = ((Collection<?>) virtualConnectors).size();
+			}
 		} else {
 			connectorsSize = 0;
 		}
