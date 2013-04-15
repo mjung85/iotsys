@@ -68,7 +68,7 @@ import at.ac.tuwien.auto.iotsys.control.TestClient;
 public class IoTSySGateway {
 	private ObjectBroker objectBroker;
 	private DeviceLoaderImpl deviceLoader;
-	
+
 	
 	private ArrayList<Connector> connectors = new ArrayList<Connector>();
 

@@ -61,7 +61,7 @@ public class VirtualConnector implements Connector {
 	}
 
 	public Double readDouble(Object busAddress) {
-		return 0.0;
+		return Math.random();
 	}
 
 	public void writeDouble(Object busAddress, Double value) {
