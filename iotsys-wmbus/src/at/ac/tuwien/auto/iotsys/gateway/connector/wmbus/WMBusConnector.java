@@ -61,6 +61,10 @@ public class WMBusConnector implements TelegramManagerInterface, Connector{
 	
 	private String serialPort;
 	
+	public WMBusConnector(){
+		
+	}
+	
 	public WMBusConnector(String serialPort ){
 		this.serialPort = serialPort;		
 	}		

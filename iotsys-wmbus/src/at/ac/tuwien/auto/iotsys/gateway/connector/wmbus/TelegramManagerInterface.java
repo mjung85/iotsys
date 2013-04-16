@@ -39,5 +39,7 @@ public interface TelegramManagerInterface {
 	public abstract void addTelegram(String telegramString);
 
 	public abstract void addTelegram(Telegram telegram);
+	
+	public void registerAESKey(String serialNr, String aesKey);
 
 }

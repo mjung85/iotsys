@@ -32,21 +32,51 @@
 
 package at.ac.tuwien.auto.iotsys.gateway.connector.wmbus.test;
 
-//import at.ac.tuwien.auto.iotsys.gateway.connector.wmbus.TelegramManagerInterface;
+import java.util.logging.Logger;
+
+import at.ac.tuwien.auto.iotsys.gateway.connector.wmbus.TelegramManagerInterface;
+import at.ac.tuwien.auto.iotsys.gateway.connector.wmbus.WMBusConnector;
+import at.ac.tuwien.auto.iotsys.gateway.connector.wmbus.telegrams.SimpleTelegram;
+import at.ac.tuwien.auto.iotsys.gateway.connector.wmbus.telegrams.Telegram;
+import at.ac.tuwien.auto.iotsys.gateway.connector.wmbus.telegrams.util.Measure_Unit;
 
 public class TelegramTest {
+	private static final Logger log = Logger.getLogger(TelegramTest.class.getName());
 
 	/**
 	 * @param args
 	 */
 	public static void main(String[] args) {
-//		String telString = "3E 44 2D 4C 74 44 00 15 1E 02 7A 60 00 30 85 73 07 81 86 84 19 FA 7E DF 1F 2E 12 73 B8 15 7B AC 90 98 B0 DE 57 8F E2 26 DA B6 45 BB F7 D9 1A 38 AB B5 64 4C EA 11 5A B4 B6 A8 E6 0F 53 CE BE";
-//
-//		TelegramManagerInterface manager = new ();
-//		manager.addTelegram(telString);
-//		
-//		telString = "3E 44 2D 4C 74 44 00 15 1E 02 7A 8A 00 30 85 47 4E AB 1A ED 7B 9A C4 82 B2 FE 31 45 03 1A B3 41 5A 69 F2 75 B3 9B D6 04 11 53 EB BE 67 76 CA 08 4F 46 04 18 2B AD 13 21 FA FB 9B 7E 12 02 30";
-//		manager.addTelegram(telString);
+		String telegramString = "";
+		TelegramManagerInterface manager = new WMBusConnector();
+		
+		String aesKey =  "66 77 66 77 66 77 66 77 66 77 66 77 66 77 66 77";
+	
+		telegramString = "3E 44 2D 4C 74 44 00 15 1E 02 7A 04 00 30 85 16 D9 B7 3C F2 A6 6B 34 2A 49 E3 7B 80 5A A7 86 D3 E8 9F 3E BD CD E2 0D 7E DC 79 B8 CD 45 37 CB 95 50 1F 55 4B EE 52 F6 0A F5 F1 EA D3 82 54 E3";
+		
+		Telegram telegram = new Telegram();
+		telegram.createTelegram(telegramString, false);
+		if(telegram.decryptTelegram(aesKey) == false) {
+			log.severe("Decryption of AES telegram not possible.");
+			return;
+		}
+		telegram.parse();
+		
+		String serialNr = telegram.getSerialNr();		
+		log.fine("Serial number: " + serialNr);
+		
+		SimpleTelegram simpleTelegram = null;
+		
+		simpleTelegram = new SimpleTelegram();
+		
+		simpleTelegram.setEnergy(new Double(telegram.getEnergyValue()));
+		simpleTelegram.setEnergyUnit(Measure_Unit.WH);
+		log.fine("Energy is: " + telegram.getEnergyValue());
+		simpleTelegram.setPower(Double.parseDouble(telegram.getPowerValue()));
+		simpleTelegram.setEnergyUnit(Measure_Unit.W);
+		log.fine("Power is: " + telegram.getPowerValue());
+				
+		telegram.debugOutput();
 	}
 
 }
