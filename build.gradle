@@ -100,7 +100,7 @@ task setupFelix << {
 		
 	if(!felix.exists()){
 		println "Need to download felix 4.2.1 distribution"
-		ant.get(src:"http://ftp.udc.es/apache/felix/org.apache.felix.main.distribution-4.2.1.zip", dest:"org.apache.felix.main.distribution-4.2.1.zip", verbose:true)
+		ant.get(src:"http://www.auto.tuwien.ac.at/~mjung/org.apache.felix.main.distribution-4.2.1.zip", dest:"org.apache.felix.main.distribution-4.2.1.zip", verbose:true)
 		ant.unzip(src:"org.apache.felix.main.distribution-4.2.1.zip", dest:file('.').absolutePath)
 	}
 	
