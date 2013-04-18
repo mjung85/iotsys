@@ -23,37 +23,29 @@
 package at.ac.tuwien.auto.iotsys.gateway.connectors.bacnet;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.logging.Logger;
 
+import obix.Obj;
+import obix.Uri;
 import at.ac.tuwien.auto.iotsys.commons.Connector;
 
 import com.serotonin.bacnet4j.LocalDevice;
 import com.serotonin.bacnet4j.RemoteDevice;
 import com.serotonin.bacnet4j.RemoteObject;
-import com.serotonin.bacnet4j.event.DeviceEventListener;
+import com.serotonin.bacnet4j.event.DefaultDeviceEventListener;
 import com.serotonin.bacnet4j.exception.BACnetException;
 import com.serotonin.bacnet4j.exception.PropertyValueException;
-import com.serotonin.bacnet4j.obj.BACnetObject;
 import com.serotonin.bacnet4j.service.acknowledgement.AcknowledgementService;
-import com.serotonin.bacnet4j.service.confirmed.ReinitializeDeviceRequest.ReinitializedStateOfDevice;
 import com.serotonin.bacnet4j.service.unconfirmed.WhoIsRequest;
 import com.serotonin.bacnet4j.type.Encodable;
-import com.serotonin.bacnet4j.type.constructed.Choice;
-import com.serotonin.bacnet4j.type.constructed.DateTime;
 import com.serotonin.bacnet4j.type.constructed.PropertyReference;
-import com.serotonin.bacnet4j.type.constructed.PropertyValue;
 import com.serotonin.bacnet4j.type.constructed.SequenceOf;
-import com.serotonin.bacnet4j.type.constructed.TimeStamp;
-import com.serotonin.bacnet4j.type.enumerated.EventState;
-import com.serotonin.bacnet4j.type.enumerated.EventType;
-import com.serotonin.bacnet4j.type.enumerated.MessagePriority;
-import com.serotonin.bacnet4j.type.enumerated.NotifyType;
+import com.serotonin.bacnet4j.type.enumerated.ObjectType;
 import com.serotonin.bacnet4j.type.enumerated.PropertyIdentifier;
 import com.serotonin.bacnet4j.type.enumerated.Segmentation;
-import com.serotonin.bacnet4j.type.notificationParameters.NotificationParameters;
-import com.serotonin.bacnet4j.type.primitive.Boolean;
-import com.serotonin.bacnet4j.type.primitive.CharacterString;
 import com.serotonin.bacnet4j.type.primitive.ObjectIdentifier;
 import com.serotonin.bacnet4j.type.primitive.UnsignedInteger;
 import com.serotonin.bacnet4j.util.PropertyReferences;
@@ -69,6 +61,8 @@ public class BACnetConnector implements Connector{
 	private static final int BACNET_PORT = 0xBAC0;
 
 	private final Hashtable<Integer, RemoteDevice> remoteDevices = new Hashtable<Integer, RemoteDevice>();
+	private final List<DeviceDiscoveryListener> discoveryListeners = new ArrayList<DeviceDiscoveryListener>();
+	private final Obj root = new Obj();
 
 	private int localDeviceID = (int) ((Math.random() * 10000) + 10000);
 	private String broadCastIP = "128.130.56.255";
@@ -87,32 +81,15 @@ public class BACnetConnector implements Connector{
 		this.localDevicePort = localDevicePort;
 		log.info("Creating BACnet connector - localDeviceID: " + localDeviceID + ", broadCastIP: "+ broadCastIP + ", localDevicePort: " + localDevicePort);
 		localDevice = new LocalDevice(this.localDeviceID, this.broadCastIP);
-
 		localDevice.setPort(this.localDevicePort);
 
 		localDevice.getEventHandler().addListener(new DeviceListener());
-
 	}
-
+	
 	public void connect() {
 		try {
 			log.info("Initializing BACnet connector.");
 			localDevice.initialize();
-
-			// discover all devices
-			try {
-				localDevice.sendBroadcast(BACNET_PORT, null, new WhoIsRequest());
-			} catch (BACnetException e2) {
-
-				e2.printStackTrace();
-			}
-
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-
-				e.printStackTrace();
-			}			
 
 		} catch (IOException e1) {
 
@@ -125,73 +102,13 @@ public class BACnetConnector implements Connector{
 		localDevice.terminate();
 	}
 
-	class DeviceListener implements DeviceEventListener {
-		public void listenerException(Throwable e) {
-
-		}
-
+	class DeviceListener extends DefaultDeviceEventListener {
 		public void iAmReceived(RemoteDevice d) {
-			log.fine("BACnet device discovered - instance number "
-					+ d.getInstanceNumber());
-			
-			remoteDevices.put(d.getInstanceNumber(), d);
-		}
-
-		public boolean allowPropertyWrite(BACnetObject obj, PropertyValue pv) {
-			return true;
-		}
-
-		public void propertyWritten(BACnetObject obj, PropertyValue pv) {
-
+			deviceDiscovered(d);
 		}
 
 		public void iHaveReceived(RemoteDevice d, RemoteObject o) {
-
-			synchronized (BACnetConnector.this.remoteDevices) {
-				BACnetConnector.this.remoteDevices
-						.put(d.getInstanceNumber(), d);
-			}
-		}
-
-		public void covNotificationReceived(
-				UnsignedInteger subscriberProcessIdentifier,
-				RemoteDevice initiatingDevice,
-				ObjectIdentifier monitoredObjectIdentifier,
-				UnsignedInteger timeRemaining,
-				SequenceOf<PropertyValue> listOfValues) {
-		}
-
-		public void eventNotificationReceived(
-				UnsignedInteger processIdentifier,
-				RemoteDevice initiatingDevice,
-				ObjectIdentifier eventObjectIdentifier, TimeStamp timeStamp,
-				UnsignedInteger notificationClass, UnsignedInteger priority,
-				EventType eventType, CharacterString messageText,
-				NotifyType notifyType, Boolean ackRequired,
-				EventState fromState, EventState toState,
-				NotificationParameters eventValues) {
-
-		}
-
-		public void textMessageReceived(RemoteDevice textMessageSourceDevice,
-				Choice messageClass, MessagePriority messagePriority,
-				CharacterString message) {
-
-		}
-
-		public void privateTransferReceived(UnsignedInteger vendorId,
-				UnsignedInteger serviceNumber, Encodable serviceParameters) {
-
-		}
-
-		public void reinitializeDevice(
-				ReinitializedStateOfDevice reinitializedStateOfDevice) {
-
-		}
-
-		@Override
-		public void synchronizeTime(DateTime dateTime, boolean utc) {
-
+			deviceDiscovered(d);
 		}
 	}
 
@@ -228,6 +145,7 @@ public class BACnetConnector implements Connector{
 			PropertyIdentifier propertyIdentifier, Encodable property,
 			UnsignedInteger priority) throws BACnetException,
 			PropertyValueException {
+		
 		synchronized (remoteDevices) {
 			RemoteDevice remoteDev = remoteDevices.get(deviceInstanceNumber);
 
@@ -247,7 +165,79 @@ public class BACnetConnector implements Connector{
 
 			AcknowledgementService ack = localDevice.setProperty(remoteDev,
 					objectIdentifier, propertyIdentifier, property, priority);
-
+			
 		}
+	}
+	
+	private List<RemoteObject> fetchObjects(RemoteDevice device) throws BACnetException, PropertyValueException {
+		Encodable objlist = readProperty(device.getInstanceNumber(), new ObjectIdentifier(new ObjectType(8), device.getInstanceNumber()), new PropertyIdentifier(76));
+		device.clearObjects();
+		
+		if (objlist instanceof SequenceOf<?>) {
+			List<?> objects = ((SequenceOf<?>) objlist).getValues();
+			for (int i = 0; i < objects.size(); i++) {
+				if (!(objects.get(i) instanceof ObjectIdentifier)) continue;
+				device.setObject(new RemoteObject((ObjectIdentifier) objects.get(i)));
+			}
+		}
+		
+		return device.getObjects();
+	}
+	
+	public interface DeviceDiscoveryListener {
+		public void deviceDiscovered(Obj device);
+	}
+
+	public void discover(DeviceDiscoveryListener discoveryListener) {
+		synchronized (discoveryListeners) {
+			if (discoveryListener != null && !discoveryListeners.contains(discoveryListener))
+				discoveryListeners.add(discoveryListener);
+		}
+		
+		// discover all devices
+		try {
+			localDevice.sendBroadcast(BACNET_PORT, null, new WhoIsRequest());
+		} catch (BACnetException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private void deviceDiscovered(RemoteDevice device) {
+		log.fine("BACnet device discovered - instance number "
+				+ device.getInstanceNumber());
+		
+		synchronized (remoteDevices) {
+			remoteDevices.put(device.getInstanceNumber(), device);
+		}
+		
+		try {
+			List<RemoteObject> objects = fetchObjects(device);
+			for (RemoteObject object : objects) {
+				ObjectIdentifier objIdentifier = object.getObjectIdentifier();
+				
+				String href = "bacnet_" + root.getName() + "_" + device.getInstanceNumber() + "_" + objIdentifier.toString().replaceAll(" ", "");
+				if (objIdentifier.getObjectType().intValue() > 5) continue;
+				
+				Obj bacnetDevice = BacnetDeviceFactory.createDevice(this, device, objIdentifier);
+				if (bacnetDevice == null) continue;
+				bacnetDevice.setHref(new Uri(href));
+				
+				synchronized (discoveryListeners) {
+					for (DeviceDiscoveryListener listener : discoveryListeners) {
+						listener.deviceDiscovered(bacnetDevice);
+					}
+				}
+				
+				root.add(bacnetDevice);
+			}
+		} catch (BACnetException e) {
+			e.printStackTrace();
+		} catch (PropertyValueException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public Obj getRootObj() {
+		return root;
 	}
 }

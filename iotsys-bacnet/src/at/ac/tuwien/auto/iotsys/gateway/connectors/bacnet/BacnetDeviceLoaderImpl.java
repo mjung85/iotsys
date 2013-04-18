@@ -35,13 +35,13 @@ import obix.Uri;
 import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.commons.configuration.XMLConfiguration;
 
-import com.serotonin.bacnet4j.type.enumerated.ObjectType;
-import com.serotonin.bacnet4j.type.enumerated.PropertyIdentifier;
-import com.serotonin.bacnet4j.type.primitive.ObjectIdentifier;
-
 import at.ac.tuwien.auto.iotsys.commons.Connector;
 import at.ac.tuwien.auto.iotsys.commons.DeviceLoader;
 import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
+
+import com.serotonin.bacnet4j.type.enumerated.ObjectType;
+import com.serotonin.bacnet4j.type.enumerated.PropertyIdentifier;
+import com.serotonin.bacnet4j.type.primitive.ObjectIdentifier;
 
 public class BacnetDeviceLoaderImpl implements DeviceLoader {
 
@@ -51,7 +51,7 @@ public class BacnetDeviceLoaderImpl implements DeviceLoader {
 	private XMLConfiguration devicesConfig = new XMLConfiguration();
 	
 	private ArrayList<String> myObjects = new ArrayList<String>();
-
+	
 	public BacnetDeviceLoaderImpl() {
 		String devicesConfigFile = DEVICE_CONFIGURATION_LOCATION;
 
@@ -96,7 +96,12 @@ public class BacnetDeviceLoaderImpl implements DeviceLoader {
 				try {
 					BACnetConnector bacnetConnector = new BACnetConnector(
 							localDeviceID, broadcastAddress, localPort);
+					bacnetConnector.getRootObj().setName(connectorName.replaceAll(" ", ""));
 					bacnetConnector.connect();
+					
+					Boolean discoveryEnabled = subConfig.getBoolean("discovery-enabled", false);
+					if (discoveryEnabled) bacnetConnector.discover(new DeviceDiscoveryListener(objectBroker));
+					
 					connectors.add(bacnetConnector);
 
 					if (bacnetConfiguredDevices instanceof Collection<?>) {
@@ -131,9 +136,9 @@ public class BacnetDeviceLoaderImpl implements DeviceLoader {
 							if (type != null && address != null) {
 								
 								// now follow possible multiple data points
-								// identitied through
+								// identified through
 								// the device Id, object type, the instance number and the
-								// property identifier, which shall be packaged into on BacnetDatapointInfo object
+								// property identifier, which shall be packaged into an BacnetDatapointInfo object
 								
 								ObjectIdentifier[] objectIdentifier = new ObjectIdentifier[(address
 										.size() ) / 4];
@@ -252,7 +257,7 @@ public class BacnetDeviceLoaderImpl implements DeviceLoader {
 
 		return connectors;
 	}
-
+	
 	@Override
 	public void removeDevices(ObjectBroker objectBroker) {
 		synchronized(myObjects){
@@ -260,5 +265,22 @@ public class BacnetDeviceLoaderImpl implements DeviceLoader {
 				objectBroker.removeObj(href);
 			}
 		}
+	}
+	
+	private class DeviceDiscoveryListener implements BACnetConnector.DeviceDiscoveryListener {
+		private ObjectBroker objectBroker;
+	
+		public DeviceDiscoveryListener(ObjectBroker objectBroker) {
+			this.objectBroker = objectBroker;
+		}
+		
+		@Override
+		public void deviceDiscovered(Obj device) {
+			ArrayList<String> assignedHrefs = objectBroker.addObj(device);
+			myObjects.addAll(assignedHrefs);
+			
+			device.initialize();
+		}
+		
 	}
 }
