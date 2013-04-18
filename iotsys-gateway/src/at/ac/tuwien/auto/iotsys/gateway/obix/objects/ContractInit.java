@@ -31,6 +31,13 @@
  ******************************************************************************/
 package at.ac.tuwien.auto.iotsys.gateway.obix.objects;
 
+import obix.ContractRegistry;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.bacnet.AnalogInput;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.bacnet.AnalogOutput;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.bacnet.AnalogValue;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.bacnet.BinaryInput;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.bacnet.BinaryOutput;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.bacnet.BinaryValue;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.AirDamperActuator;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.BoilerActuator;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.BrightnessActuator;
@@ -50,7 +57,6 @@ import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.ShuttersAndBlin
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.SmartMeter;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.SunIntensitySensor;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.TemperatureSensor;
-import obix.*;
 
 public class ContractInit
 {
@@ -77,10 +83,18 @@ public class ContractInit
 	  ContractRegistry.put(CoolerActuator.CONTRACT, CoolerActuator.class.getName());
 	  ContractRegistry.put(PumpActuator.CONTRACT, PumpActuator.class.getName());
 	  ContractRegistry.put(SunblindActuator.CONTRACT, SunblindActuator.class.getName());
+
 //	  ContractRegistry.put(TemperatureControlActuator.CONTRACT, TemperatureControlActuator.class.getName());
 //	  ContractRegistry.put(ChillerActuator.CONTRACT, ChillerActuator.class.getName());
 //	  ContractRegistry.put(HeatPumpActuator.CONTRACT, HeatPumpActuator.class.getName());
-//	  
+	  
+	  //Generic
+	  ContractRegistry.put(AnalogInput.CONTRACT, AnalogInput.class.getName());
+	  ContractRegistry.put(AnalogOutput.CONTRACT, AnalogOutput.class.getName());
+	  ContractRegistry.put(AnalogValue.CONTRACT, AnalogValue.class.getName());
+	  ContractRegistry.put(BinaryInput.CONTRACT, BinaryInput.class.getName());
+	  ContractRegistry.put(BinaryOutput.CONTRACT, BinaryOutput.class.getName());
+	  ContractRegistry.put(BinaryValue.CONTRACT, BinaryValue.class.getName());
 	  
 	  ContractRegistry.buildReverseMap();
   }
