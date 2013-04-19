@@ -37,6 +37,7 @@ import java.net.Inet6Address;
 import java.net.SocketException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.logging.Logger;
 
 import org.json.JSONException;
 
@@ -66,6 +67,7 @@ import ch.ethz.inf.vs.californium.layers.MulticastUDPLayer.REQUEST_TYPE;
 import ch.ethz.inf.vs.californium.util.Properties;
 
 public class CoAPServer extends Endpoint {
+	private static final Logger log = Logger.getLogger(CoAPServer.class.getName());
 
 	public static final String COAP_URL_PROTOCOL = "coap";
 
@@ -180,7 +182,7 @@ public class CoAPServer extends Endpoint {
 		// handle multicast requests first
 
 		if (MulticastUDPLayer.getRequestType() == REQUEST_TYPE.MULTICAST_REQUEST) {
-			System.out.println("### Handle multicast request!");
+			log.finest("Handle multicast request!");
 			Obj obj = ObixDecoder.fromString(payloadString);
 			GroupCommServiceImpl.getInstance().handleRequest(
 					MulticastUDPLayer.getMulticastAddress(), obj);

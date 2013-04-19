@@ -30,7 +30,7 @@ public class GroupCommServiceImpl implements GroupCommService {
 
 	@Override
 	public void handleRequest(Inet6Address group, Obj payload) {
-		System.out.println("Handle request");
+	
 		log.finest("Handle request for " + group + ", " + payload);
 		synchronized (groupObjectPerAddress) {
 			Hashtable<String, Obj> groupObjects = groupObjectPerAddress
