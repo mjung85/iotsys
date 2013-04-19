@@ -46,6 +46,10 @@ public class TemperatureSensorImplVirtual extends TemperatureSensorImpl {
 	private VirtualConnector virtualConnector;
 	private Object busAddress; // dummy Object, modify it according to your technology
 	
+	public TemperatureSensorImplVirtual(VirtualConnector virtualConnector){
+		this(virtualConnector, null);
+	}
+	
 	// Add further constructor parameters for bus address information for this temperature sensor
 	public TemperatureSensorImplVirtual(VirtualConnector virtualConnector, Object busAddress){
 		// technology specific initialization

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013
+# * Copyright (c) 2013
  * Institute of Computer Aided Automation, Automation Systems Group, TU Wien.
  * All rights reserved.
  * 
@@ -31,6 +31,7 @@
  ******************************************************************************/
 package at.ac.tuwien.auto.iotsys.gateway.obix.objects;
 
+import at.ac.tuwien.auto.iotsys.gateway.obix.groupcomm.GroupComm;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.AirDamperActuator;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.BoilerActuator;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.BrightnessActuator;
@@ -77,6 +78,8 @@ public class ContractInit
 	  ContractRegistry.put(CoolerActuator.CONTRACT, CoolerActuator.class.getName());
 	  ContractRegistry.put(PumpActuator.CONTRACT, PumpActuator.class.getName());
 	  ContractRegistry.put(SunblindActuator.CONTRACT, SunblindActuator.class.getName());
+	  
+	  ContractRegistry.put(GroupComm.CONTRACT, GroupComm.class.getName());
 //	  ContractRegistry.put(TemperatureControlActuator.CONTRACT, TemperatureControlActuator.class.getName());
 //	  ContractRegistry.put(ChillerActuator.CONTRACT, ChillerActuator.class.getName());
 //	  ContractRegistry.put(HeatPumpActuator.CONTRACT, HeatPumpActuator.class.getName());

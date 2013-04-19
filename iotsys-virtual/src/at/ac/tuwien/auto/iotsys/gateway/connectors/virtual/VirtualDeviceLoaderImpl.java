@@ -32,6 +32,7 @@
 
 package at.ac.tuwien.auto.iotsys.gateway.connectors.virtual;
 
+import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -47,10 +48,6 @@ import obix.Uri;
 import at.ac.tuwien.auto.iotsys.commons.Connector;
 import at.ac.tuwien.auto.iotsys.commons.DeviceLoader;
 import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
-import at.ac.tuwien.auto.iotsys.gateway.obix.object.iot.actuators.impl.LightSwitchActuatorImplVirtual;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.LightSwitchActuatorImpl;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.TemperatureSensorImpl;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.virtual.TemperatureSensorImplVirtual;
 
 public class VirtualDeviceLoaderImpl implements DeviceLoader {
 	private final ArrayList<String> myObjects = new ArrayList<String>();
@@ -160,6 +157,7 @@ public class VirtualDeviceLoaderImpl implements DeviceLoader {
 
 			if (enabled) {
 				try {
+					VirtualConnector vConn = new VirtualConnector();
 					if (virtualConfiguredDevices instanceof Collection<?>) {
 						Collection<?> wmbusDevice = (Collection<?>) virtualConfiguredDevices;
 						log.info(wmbusDevice.size()
@@ -182,6 +180,9 @@ public class VirtualDeviceLoaderImpl implements DeviceLoader {
 							Boolean historyEnabled = subConfig.getBoolean(
 									"device(" + i + ").historyEnabled", false);
 							
+							Boolean groupCommEnabled = subConfig.getBoolean(
+									"device(" + i + ").groupCommEnabled", false);
+							
 							Boolean refreshEnabled = subConfig.getBoolean("device(" + i + ").refreshEnabled", false);
 
 							Integer historyCount = subConfig.getInt("device("
@@ -190,8 +191,24 @@ public class VirtualDeviceLoaderImpl implements DeviceLoader {
 							if (type != null && address != null) {
 								try {
 
-									Obj virtualObj = (Obj) Class.forName(type)
-											.newInstance();
+									Constructor<?>[] declaredConstructors = Class
+											.forName(type)
+											.getDeclaredConstructors();
+									
+									Object[] args = new Object[1];
+									args[0] = vConn;
+									Obj virtualObj = null;
+									for (int k = 0; k < declaredConstructors.length; k++) {
+										if (declaredConstructors[k]
+												.getParameterTypes().length == 0) { 
+											virtualObj = (Obj) Class.forName(type)
+													.newInstance();
+										}
+										else if(declaredConstructors[k].getParameterTypes().length == 1){
+											virtualObj = (Obj) declaredConstructors[k].newInstance(args);
+										}
+									}
+									
 									virtualObj.setHref(new Uri(href));
 									
 									if(name != null && name.length() > 0){
@@ -224,7 +241,10 @@ public class VirtualDeviceLoaderImpl implements DeviceLoader {
 										}
 									}
 									
-
+									if(groupCommEnabled){
+										objectBroker.enableGroupComm(virtualObj);
+									}
+									
 									if(refreshEnabled != null && refreshEnabled){
 										objectBroker.enableObjectRefresh(virtualObj);
 									}

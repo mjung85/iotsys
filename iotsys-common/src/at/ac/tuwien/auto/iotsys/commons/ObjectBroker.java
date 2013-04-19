@@ -1,12 +1,11 @@
 package at.ac.tuwien.auto.iotsys.commons;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import obix.Obj;
 import obix.Uri;
 
-public interface ObjectBroker {
+public interface ObjectBroker{
 	
 	public abstract HashMap<String, String> get_ipv6MappingTable();
 
@@ -34,6 +33,8 @@ public interface ObjectBroker {
 	public abstract String getCoRELinks();
 	
 	public void addHistoryToDatapoints(Obj obj);
+	
+	public void enableGroupComm(Obj obj);
 	
 	public void addHistoryToDatapoints(Obj obj, int countMax);
 	

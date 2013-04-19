@@ -40,14 +40,15 @@ import java.net.URISyntaxException;
 
 import org.json.JSONException;
 
+import at.ac.tuwien.auto.iotsys.gateway.service.impl.GroupCommServiceImpl;
 import at.ac.tuwien.auto.iotsys.gateway.util.ExiUtil;
 import at.ac.tuwien.auto.iotsys.gateway.util.JsonUtil;
 
+import obix.Obj;
 import obix.io.BinObixDecoder;
 import obix.io.BinObixEncoder;
 import obix.io.ObixDecoder;
 import obix.io.ObixEncoder;
-
 
 import ch.ethz.inf.vs.californium.coap.CodeRegistry;
 import ch.ethz.inf.vs.californium.coap.Communicator;
@@ -60,6 +61,8 @@ import ch.ethz.inf.vs.californium.coap.Request;
 import ch.ethz.inf.vs.californium.coap.Response;
 import ch.ethz.inf.vs.californium.endpoint.Endpoint;
 import ch.ethz.inf.vs.californium.endpoint.LocalResource;
+import ch.ethz.inf.vs.californium.layers.MulticastUDPLayer;
+import ch.ethz.inf.vs.californium.layers.MulticastUDPLayer.REQUEST_TYPE;
 import ch.ethz.inf.vs.californium.util.Properties;
 
 public class CoAPServer extends Endpoint {
@@ -88,11 +91,10 @@ public class CoAPServer extends Endpoint {
 	public CoAPServer(ObixServer obixServer) throws IOException {
 		this.obixServer = obixServer;
 		this.soapHandler = new SOAPHandler(obixServer);
-		
+
 		InitCoAPServer();
 	}
 
-	
 	@Override
 	public void execute(Request request) throws IOException {
 
@@ -175,6 +177,16 @@ public class CoAPServer extends Endpoint {
 		payloadString = payloadString.replaceFirst(COAP_URL_PROTOCOL,
 				obixServer.DEFAULT_OBIX_URL_PROTOCOL);
 
+		// handle multicast requests first
+
+		if (MulticastUDPLayer.getRequestType() == REQUEST_TYPE.MULTICAST_REQUEST) {
+			System.out.println("### Handle multicast request!");
+			Obj obj = ObixDecoder.fromString(payloadString);
+			GroupCommServiceImpl.getInstance().handleRequest(
+					MulticastUDPLayer.getMulticastAddress(), obj);
+			return;
+		}
+
 		String obixMessage = "";
 
 		try {
@@ -182,14 +194,12 @@ public class CoAPServer extends Endpoint {
 			if (resourcePath.endsWith("/soap")) {
 				obixResponse = new StringBuffer(soapHandler.process(
 						payloadString, null));
-			} 
-			else if (resourcePath.endsWith(".well-known/core")) {
-				obixResponse = new StringBuffer(obixServer.getCoRELinks());				
+			} else if (resourcePath.endsWith(".well-known/core")) {
+				obixResponse = new StringBuffer(obixServer.getCoRELinks());
 				request.respond(CodeRegistry.RESP_CONTENT,
-								obixResponse.toString(),
-								MediaTypeRegistry.APPLICATION_LINK_FORMAT);
-			} 
-			else {
+						obixResponse.toString(),
+						MediaTypeRegistry.APPLICATION_LINK_FORMAT);
+			} else {
 
 				if (request instanceof GETRequest) {
 
@@ -226,39 +236,38 @@ public class CoAPServer extends Endpoint {
 					byte[] exiData = ExiUtil.encodeEXI(obixResponse.toString());
 					request.respond(CodeRegistry.RESP_CONTENT, exiData,
 							MediaTypeRegistry.APPLICATION_EXI);
-					
+
 				} catch (Exception e) {
 					e.printStackTrace();
 					request.respond(CodeRegistry.RESP_CONTENT,
 							obixResponse.toString(), MediaTypeRegistry.TEXT_XML);
 				}
-			} else if(request.getFirstAccept() == MediaTypeRegistry.APPLICATION_OCTET_STREAM){
+			} else if (request.getFirstAccept() == MediaTypeRegistry.APPLICATION_OCTET_STREAM) {
 				try {
-					byte[] exiData = ExiUtil.encodeEXI(obixResponse.toString(), true);
+					byte[] exiData = ExiUtil.encodeEXI(obixResponse.toString(),
+							true);
 					request.respond(CodeRegistry.RESP_CONTENT, exiData,
 							MediaTypeRegistry.APPLICATION_EXI);
-				
+
 				} catch (Exception e) {
 					e.printStackTrace();
 					request.respond(CodeRegistry.RESP_CONTENT,
 							obixResponse.toString(), MediaTypeRegistry.TEXT_XML);
 				}
-			}			
-			else if (request.getFirstAccept() == MediaTypeRegistry.APPLICATION_X_OBIX_BINARY) {
+			} else if (request.getFirstAccept() == MediaTypeRegistry.APPLICATION_X_OBIX_BINARY) {
 				try {
 					byte[] exiData = BinObixEncoder.toBytes(ObixDecoder
 							.fromString(obixResponse.toString()));
 					request.respond(CodeRegistry.RESP_CONTENT, exiData,
 							MediaTypeRegistry.APPLICATION_X_OBIX_BINARY);
-				
+
 				} catch (Exception e) {
 					e.printStackTrace();
 					request.respond(CodeRegistry.RESP_CONTENT,
 							obixResponse.toString(), MediaTypeRegistry.TEXT_XML);
 				}
-			} 
-			
-			
+			}
+
 			else if (request.getFirstAccept() == MediaTypeRegistry.APPLICATION_JSON) {
 				try {
 					request.respond(CodeRegistry.RESP_CONTENT,
@@ -275,7 +284,7 @@ public class CoAPServer extends Endpoint {
 					request.respond(CodeRegistry.RESP_CONTENT,
 							obixResponse.toString(),
 							MediaTypeRegistry.APPLICATION_LINK_FORMAT);
-					
+
 				} else {
 					request.respond(CodeRegistry.RESP_CONTENT,
 							obixResponse.toString(), MediaTypeRegistry.TEXT_XML);
@@ -296,8 +305,8 @@ public class CoAPServer extends Endpoint {
 
 		request.sendResponse();
 	}
-	
-	private void fixHref(String href, StringBuffer obixResponse) {		
+
+	private void fixHref(String href, StringBuffer obixResponse) {
 		int hrefIndex = obixResponse.indexOf("href");
 		// get index of first quota - " - this is the start of the href
 		int firstQuota = obixResponse.indexOf("\"", hrefIndex);
@@ -311,13 +320,13 @@ public class CoAPServer extends Endpoint {
 			obixResponse.delete(firstQuota + 1, secondQuota);
 
 			// put the IPv6 address there instead
-			obixResponse.insert(firstQuota +1 , href);
-		}	
+			obixResponse.insert(firstQuota + 1, href);
+		}
 	}
 
 	@Override
 	public void handleResponse(Response response) {
-	
+
 	}
 
 	@Override

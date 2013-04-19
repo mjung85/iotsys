@@ -43,8 +43,7 @@ public class HistoryHelper {
 	 * @param obj
 	 */
 	public static void addHistoryToDatapoints(Obj obj){
-		addHistoryToDatapoints(obj, HISTORY_COUNT_DEFAULT);
-		
+		addHistoryToDatapoints(obj, HISTORY_COUNT_DEFAULT);	
 	}
 	
 	/**
