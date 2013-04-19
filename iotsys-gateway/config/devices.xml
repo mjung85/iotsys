@@ -92,7 +92,7 @@
     </connector>
     <connector>
       <name>KNX E-Lab</name>
-      <enabled>false</enabled>
+      <enabled>true</enabled>
       <router>
         <ip>192.168.161.53</ip>
         <port>3671</port>
@@ -115,6 +115,7 @@
         <href>light1</href>
         <ipv6>2001:629:2500:570::102</ipv6>
         <historyEnabled>false</historyEnabled>
+        <groupCommEnabled>true</groupCommEnabled>
       </device>
 
       <device>
@@ -124,6 +125,7 @@
         <href>light2</href>
         <ipv6>2001:629:2500:570::103</ipv6>
         <historyEnabled>false</historyEnabled>
+        <groupCommEnabled>true</groupCommEnabled>
       </device>
 
       <device>
@@ -133,6 +135,7 @@
         <href>light3</href>
         <ipv6>2001:629:2500:570::104</ipv6>
         <historyEnabled>false</historyEnabled>
+        <groupCommEnabled>true</groupCommEnabled>
       </device>
 
       <device>
@@ -142,6 +145,7 @@
         <href>light4</href>
         <ipv6>2001:629:2500:570::105</ipv6>
         <historyEnabled>false</historyEnabled>
+        <groupCommEnabled>true</groupCommEnabled>
       </device>
 
       <device>
@@ -602,10 +606,19 @@
         <groupCommEnabled>true</groupCommEnabled>
       </device>
       
-          <device>
+      <device>
         <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.LightSwitchActuatorImpl
         </type>
         <href>virtualLight</href>
+        <historyEnabled>true</historyEnabled>
+        <refreshEnabled>false</refreshEnabled>
+        <groupCommEnabled>true</groupCommEnabled>
+      </device>
+      
+      <device>
+        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.LightSwitchActuatorImpl
+        </type>
+        <href>virtualLight2</href>
         <historyEnabled>true</historyEnabled>
         <refreshEnabled>false</refreshEnabled>
         <groupCommEnabled>true</groupCommEnabled>
