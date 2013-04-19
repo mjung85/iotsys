@@ -92,7 +92,7 @@
     </connector>
     <connector>
       <name>KNX E-Lab</name>
-      <enabled>true</enabled>
+      <enabled>false</enabled>
       <router>
         <ip>192.168.161.53</ip>
         <port>3671</port>
@@ -609,7 +609,7 @@
       <device>
         <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.LightSwitchActuatorImpl
         </type>
-        <href>virtualLight</href>
+        <href>virtualLight1</href>
         <historyEnabled>true</historyEnabled>
         <refreshEnabled>false</refreshEnabled>
         <groupCommEnabled>true</groupCommEnabled>

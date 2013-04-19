@@ -178,6 +178,7 @@ public class GroupCommImpl extends Obj implements GroupComm, Observer{
 					try {
 						Inet6Address groupAddr = (Inet6Address) Inet6Address.getByName(str.get());
 						GroupCommServiceImpl.getInstance().unregisterObject(groupAddr, this.datapoint);
+						
 					} catch (UnknownHostException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -189,10 +190,28 @@ public class GroupCommImpl extends Obj implements GroupComm, Observer{
 	}
 
 	@Override
-	public void update(Object state) {
+	public synchronized void update(Object state) {
 		log.finest("Object updated: " + state);	
 		log.finest("Request type: " + MulticastUDPLayer.getRequestType());
-		log.finest("Group addr: " + MulticastUDPLayer.getMulticastAddress());	
+		log.finest("Group addr: " + MulticastUDPLayer.getMulticastAddress());
+		
+		Obj[] list = groups.list();
+		for(Obj obj : list){
+			if(obj instanceof Str){
+				Str strObj = (Str) obj;
+				Inet6Address group;
+				try {
+					group = (Inet6Address) Inet6Address.getByName(strObj.get());
+					if(!group.equals(MulticastUDPLayer.getMulticastAddress())){
+						log.finest("Sending out update of " + datapoint.getFullContextPath() + " to group " + group);
+						GroupCommServiceImpl.getInstance().sendUpdate(group, state);
+					}
+				} catch (UnknownHostException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+				
 	}
 
 	@Override

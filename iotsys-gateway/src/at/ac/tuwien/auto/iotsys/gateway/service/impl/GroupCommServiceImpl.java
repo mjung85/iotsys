@@ -1,13 +1,20 @@
 package at.ac.tuwien.auto.iotsys.gateway.service.impl;
 
+import java.io.IOException;
 import java.net.Inet6Address;
 import java.net.SocketException;
 import java.util.Hashtable;
 import java.util.logging.Logger;
 
 import ch.ethz.inf.vs.californium.coap.Communicator;
+import ch.ethz.inf.vs.californium.coap.Message.messageType;
+import ch.ethz.inf.vs.californium.coap.PUTRequest;
 
+import obix.Bool;
+import obix.Int;
 import obix.Obj;
+import obix.Real;
+import obix.io.ObixEncoder;
 import at.ac.tuwien.auto.iotsys.gateway.service.GroupCommService;
 
 /**
@@ -87,11 +94,48 @@ public class GroupCommServiceImpl implements GroupCommService {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-					groupObjectPerAddress.remove(group);
-					
+					groupObjectPerAddress.remove(group);				
 				}
 			}
 		}
+	}
+
+	@Override
+	public void sendUpdate(Inet6Address group, Object state) {
+		log.finest("Sending new state of object " + state + " to group " + group.getHostAddress());
+		PUTRequest putRequest = new PUTRequest();
+		putRequest.setType(messageType.NON);
+		putRequest
+				.setURI("coap://[" + group.getHostAddress() + "]/");
+		
+		if(state instanceof Bool){
+			Bool bool = (Bool) state;
+			Bool b = new Bool();
+			b.set(bool.get());
+			String payload = ObixEncoder.toString(b);
+			putRequest.setPayload(payload);
+		}
+		else if(state instanceof Real){
+			Real real = (Real) state;
+			Real r = new Real();
+			r.set(real.get());
+			String payload = ObixEncoder.toString(r);
+			putRequest.setPayload(payload);
+		} else if(state instanceof Int){
+			Int intObj = (Int) state;
+			Int i = new Int();
+			i.set(intObj.get());
+			String payload = ObixEncoder.toString(i);
+			putRequest.setPayload(payload);
+		} 
+	
+		putRequest.enableResponseQueue(true);
+		try {
+			putRequest.execute();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
 	}
 }
 

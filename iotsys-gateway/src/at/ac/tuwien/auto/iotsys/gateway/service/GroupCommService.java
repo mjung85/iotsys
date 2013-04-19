@@ -12,4 +12,6 @@ public interface GroupCommService {
 	
 	public void unregisterObject(Inet6Address group, Obj obj);
 
+	public void sendUpdate(Inet6Address group, Object state);
+
 }
