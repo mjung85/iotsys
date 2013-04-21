@@ -167,7 +167,7 @@ public class NanoHTTPD {
 				Byte[] payload = (Byte[]) parms.get("payload");
 
 				try {
-					data = ExiUtil.decodeEXI(unbox(payload));
+					data = ExiUtil.getInstance().decodeEXI(unbox(payload));
 				} catch (Exception e1) {
 					e1.printStackTrace();
 					data = parms.getProperty("data");
@@ -178,7 +178,7 @@ public class NanoHTTPD {
 				Byte[] payload = (Byte[]) parms.get("payload");
 
 				try {
-					data = ExiUtil.decodeEXI(unbox(payload), true);
+					data = ExiUtil.getInstance().decodeEXI(unbox(payload), true);
 				} catch (Exception e1) {
 					e1.printStackTrace();
 					data = parms.getProperty("data");
@@ -316,7 +316,7 @@ public class NanoHTTPD {
 
 			if (exiRequested || exiSchemaRequested) {
 				try {
-					byte[] exiData = ExiUtil.encodeEXI(XML_HEADER
+					byte[] exiData = ExiUtil.getInstance().encodeEXI(XML_HEADER
 							+ obixResponse, exiSchemaRequested);
 					// try to decode it immediately
 
@@ -538,7 +538,7 @@ public class NanoHTTPD {
 	 */
 	public NanoHTTPD(int port, ObixServer obixServer) throws IOException {
 		try {
-			this.exiUtil = new ExiUtil();
+			this.exiUtil = ExiUtil.getInstance();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

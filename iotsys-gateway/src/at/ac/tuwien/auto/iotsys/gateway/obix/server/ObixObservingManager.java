@@ -133,7 +133,7 @@ public class ObixObservingManager implements ExternalObserver{
 				// check for application/exi content
 				if (request.getContentType() == MediaTypeRegistry.APPLICATION_EXI) {
 					try {
-						payloadString = ExiUtil.decodeEXI(request.getPayload());
+						payloadString = ExiUtil.getInstance().decodeEXI(request.getPayload());
 					} catch (Exception e) {
 						e.printStackTrace();
 						payloadString = request.getPayloadString();
@@ -163,7 +163,7 @@ public class ObixObservingManager implements ExternalObserver{
 
 					if (request.getFirstAccept() == MediaTypeRegistry.APPLICATION_EXI) {
 						try {
-							byte[] exiData = ExiUtil.encodeEXI(obixResponse.toString());
+							byte[] exiData = ExiUtil.getInstance().encodeEXI(obixResponse.toString());
 							request.respond(CodeRegistry.RESP_CONTENT, exiData,
 									MediaTypeRegistry.APPLICATION_EXI);						
 						} catch (Exception e) {

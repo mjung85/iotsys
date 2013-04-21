@@ -143,14 +143,14 @@ public class CoAPServer extends Endpoint {
 		// check for application/exi content
 		if (request.getContentType() == MediaTypeRegistry.APPLICATION_EXI) {
 			try {
-				payloadString = ExiUtil.decodeEXI(request.getPayload());
+				payloadString = ExiUtil.getInstance().decodeEXI(request.getPayload());
 			} catch (Exception e) {
 				e.printStackTrace();
 				payloadString = request.getPayloadString();
 			}
 		} else if (request.getContentType() == MediaTypeRegistry.APPLICATION_OCTET_STREAM) {
 			try {
-				payloadString = ExiUtil.decodeEXI(request.getPayload(), true);
+				payloadString = ExiUtil.getInstance().decodeEXI(request.getPayload(), true);
 			} catch (Exception e) {
 				e.printStackTrace();
 				payloadString = request.getPayloadString();
@@ -235,7 +235,7 @@ public class CoAPServer extends Endpoint {
 
 			if (request.getFirstAccept() == MediaTypeRegistry.APPLICATION_EXI) {
 				try {
-					byte[] exiData = ExiUtil.encodeEXI(obixResponse.toString());
+					byte[] exiData = ExiUtil.getInstance().encodeEXI(obixResponse.toString());
 					request.respond(CodeRegistry.RESP_CONTENT, exiData,
 							MediaTypeRegistry.APPLICATION_EXI);
 
@@ -246,7 +246,7 @@ public class CoAPServer extends Endpoint {
 				}
 			} else if (request.getFirstAccept() == MediaTypeRegistry.APPLICATION_OCTET_STREAM) {
 				try {
-					byte[] exiData = ExiUtil.encodeEXI(obixResponse.toString(),
+					byte[] exiData = ExiUtil.getInstance().encodeEXI(obixResponse.toString(),
 							true);
 					request.respond(CodeRegistry.RESP_CONTENT, exiData,
 							MediaTypeRegistry.APPLICATION_EXI);

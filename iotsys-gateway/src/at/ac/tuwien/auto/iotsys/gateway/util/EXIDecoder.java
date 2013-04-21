@@ -33,14 +33,12 @@
 package at.ac.tuwien.auto.iotsys.gateway.util;
 
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.io.StringReader;
 import java.io.StringWriter;
 
 import javax.xml.parsers.SAXParserFactory;
@@ -53,30 +51,53 @@ import org.openexi.proc.common.EXIOptionsException;
 import org.openexi.proc.common.GrammarOptions;
 import org.openexi.proc.grammars.GrammarCache;
 import org.openexi.sax.EXIReader;
-import org.openexi.sax.Transmogrifier;
-import org.openexi.sax.TransmogrifierException;
 import org.openexi.schema.EXISchema;
+import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
+import org.xml.sax.helpers.DefaultHandler;
 
-/**
- * Simple EXI util that uses Nagasena for EXI encoding and decoding.
+import obix.Bool;
+import obix.Int;
+import obix.Obj;
+import obix.Real;
 
- */
-public class ExiUtil {
-	private GrammarCache schemaGrammarCache;
-	private GrammarCache defaultGrammarCache;
-	private SAXTransformerFactory saxTransformerFactory;
+public class EXIDecoder {
+	private static GrammarCache schemaGrammarCache;
+	private static GrammarCache defaultGrammarCache;
+
+	private static final EXIDecoder instance = new EXIDecoder();
 	
-	private static final ExiUtil instance = new ExiUtil();
+	
+	public static void main(String[] args) {
+		File inputFile = new File("out.exi");
+		try {
+			FileInputStream in = new FileInputStream(inputFile);
+			// Read the file into a byte array.
+			byte fileContent[] = new byte[(int) inputFile.length()];
+			in.read(fileContent);
+			Obj obj = getInstance().fromBytes(fileContent, true);
+			System.out.println("FileContent length: " + fileContent.length);
+			System.out.println(obj);
+		} catch (FileNotFoundException e) {	
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (TransformerConfigurationException e) {
+			e.printStackTrace();
+		} catch (SAXException e) {
+			e.printStackTrace();
+		} catch (EXIOptionsException e) {
+			e.printStackTrace();
+		}
 
-	private ExiUtil() {
+	}
+
+	private EXIDecoder() {
 		short options = GrammarOptions.DEFAULT_OPTIONS;
 
 		defaultGrammarCache = new GrammarCache(null, options);
 
-		saxTransformerFactory = (SAXTransformerFactory) SAXTransformerFactory
-				.newInstance();
 		SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();
 		saxParserFactory.setNamespaceAware(true);
 
@@ -87,60 +108,23 @@ public class ExiUtil {
 			DataInputStream dis = new DataInputStream(fis);
 			schema = (EXISchema) EXISchema.readIn(dis);
 			schemaGrammarCache = new GrammarCache(schema, options);
+			fis.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+			// fall back to default grammarCache
+			schemaGrammarCache = defaultGrammarCache;
 		} catch (IOException e) {
 			e.printStackTrace();
-			// fall back to default grammar cache
+			// fall back to default grammarCache
 			schemaGrammarCache = defaultGrammarCache;
 		}
-
 	}
 
-	public byte[] encodeEXI(String source)
-			throws TransmogrifierException, EXIOptionsException, IOException {
-		return encodeEXI(source, false);
-	}
-
-	public byte[] encodeEXI(String source, boolean useEXISchema)
-			throws TransmogrifierException, EXIOptionsException, IOException {
-		ByteArrayOutputStream outBytes = new ByteArrayOutputStream();
-
-		Transmogrifier transmogrifier = new Transmogrifier();
-
-		if (useEXISchema) {
-			// if a schema should be used, the default namespace need to be
-			// added
-			int firstSpace = source.indexOf(' '); // first space of the first
-													// element
-			StringBuffer buffer = new StringBuffer(source);
-			buffer.insert(firstSpace + 1,
-					"xmlns=\"http://obix.org/ns/schema/1.1\" ");
-			source = buffer.toString();
-			transmogrifier.setEXISchema(schemaGrammarCache);
-		} else {
-			transmogrifier.setEXISchema(defaultGrammarCache);
-		}
-
-		transmogrifier.setOutputStream(outBytes);
-
-		transmogrifier.encode(new InputSource(new ByteArrayInputStream(source
-				.getBytes())));
-
-		return outBytes.toByteArray();
-
-	}
-
-	public String decodeEXI(byte[] source) throws FileNotFoundException,
-			IOException, SAXException, EXIOptionsException,
-			TransformerConfigurationException {
-		return decodeEXI(source, false);
-	}
-
-	public String decodeEXI(byte[] source, boolean useEXISchema)
-			throws FileNotFoundException, IOException, SAXException,
-			EXIOptionsException, TransformerConfigurationException {
-
-		StringWriter stringWriter = new StringWriter();
-
+	public Obj fromBytes(byte[] payload, boolean useEXISchema)
+			throws IOException, SAXException,
+			TransformerConfigurationException, EXIOptionsException {
+		
+		// EXIReader infers and reconstructs the XML file structure.
 		EXIReader reader = new EXIReader();
 
 		if (useEXISchema) {
@@ -148,48 +132,58 @@ public class ExiUtil {
 		} else {
 			reader.setEXISchema(defaultGrammarCache);
 		}
-		TransformerHandler transformerHandler = saxTransformerFactory.newTransformerHandler();
-	
-		transformerHandler.setResult(new StreamResult(stringWriter));
 
-		reader.setContentHandler(transformerHandler);
+		// Assign the transformer handler to interpret XML content.
+		ObixHandler obixHandler = new ObixHandler();
+		reader.setContentHandler(obixHandler);
 
-		reader.parse(new InputSource(new ByteArrayInputStream(source)));
+		// Parse the file information.
+		reader.parse(new InputSource(new ByteArrayInputStream(payload)));
 
-		final String reconstitutedString;
-		reconstitutedString = stringWriter.getBuffer().toString();
-
-		return reconstitutedString;
+		return obixHandler.getObj();
 	}
 	
-	public static ExiUtil getInstance(){
+	public static EXIDecoder getInstance(){
 		return instance;
 	}
+
 }
 
-class StringBufferOutputStream extends OutputStream {
-	private StringBuffer textBuffer = new StringBuffer();
+class ObixHandler extends DefaultHandler {
 
-	/**
-     * 
-     */
-	public StringBufferOutputStream() {
-		super();
+	// Obj to be returned
+	private Obj obj = new Obj();
+	
+	public ObixHandler(){
+		
 	}
 
-	/*
-	 * @see java.io.OutputStream#write(int)
-	 */
-	public void write(int b) throws IOException {
-		char a = (char) b;
-		textBuffer.append(a);
+	public void startElement(String uri, String localName, String qName,
+			Attributes attributes) throws SAXException {
+		
+		if("bool".equals(localName)){
+			obj = new Bool();
+			if("true".equals(attributes.getValue(0))){
+				obj.setBool(true);
+			}
+			else{
+				obj.setBool(false);
+			}
+		}
+		else if("real".equals(localName)) {
+			obj = new Real();
+			obj.setReal(Double.parseDouble(attributes.getValue(0)));
+		} 
+		else if("int".equals(localName)){
+			obj = new Int();
+			obj.setInt(Integer.parseInt(attributes.getValue(0)));
+		}
 	}
 
-	public String toString() {
-		return textBuffer.toString();
+	public Obj getObj() {
+		return obj;
 	}
+	
+	
 
-	public void clear() {
-		textBuffer.delete(0, textBuffer.length());
-	}
 }
