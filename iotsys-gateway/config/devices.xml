@@ -392,6 +392,15 @@
         <historyEnabled>false</historyEnabled>
       </device>
     </connector>
+  
+    <connector>
+        <name>BACnet A-Lab (Auto)</name>
+        <enabled>true</enabled>
+        <discovery-enabled>true</discovery-enabled>
+        <localDeviceID>54321</localDeviceID>
+        <broadcastAddress>128.130.56.255</broadcastAddress>
+        <localPort>47808</localPort>
+    </connector>
   </bacnet>
 
 
@@ -432,7 +441,7 @@
   <virtual>
     <connector>
       <name>Virtual Devices</name>
-      <enabled>true</enabled>
+      <enabled>false</enabled>
 
       <!-- SENSOREN -->
 
