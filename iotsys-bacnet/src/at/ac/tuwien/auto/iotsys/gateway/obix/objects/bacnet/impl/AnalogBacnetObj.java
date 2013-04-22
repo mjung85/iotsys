@@ -45,7 +45,7 @@ public abstract class AnalogBacnetObj extends BacnetObj {
 	public AnalogBacnetObj(BACnetConnector bacnetConnector, BacnetDataPointInfo dataPointInfo) {
 		super(bacnetConnector, dataPointInfo);
 		
-		Uri valueUri = new Uri("value");
+		Uri valueUri = new Uri("/value");
 		
 		value.setHref(valueUri);
 		value.setName("value");
