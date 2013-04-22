@@ -119,6 +119,10 @@ public class BacnetDeviceLoaderImpl implements DeviceLoader {
 							Boolean historyEnabled = subConfig.getBoolean(
 									"device(" + i + ").historyEnabled", false);
 							
+
+							Boolean groupCommEnabled = subConfig.getBoolean(
+									"device(" + i + ").groupCommEnabled", false);
+							
 							String name = subConfig.getString("device(" + i
 									+ ").name");
 
@@ -229,6 +233,10 @@ public class BacnetDeviceLoaderImpl implements DeviceLoader {
 											
 											if(refreshEnabled != null && refreshEnabled){
 												objectBroker.enableObjectRefresh(bacnetDevice);
+											}
+											
+											if(groupCommEnabled != null && groupCommEnabled){
+												objectBroker.enableGroupComm(bacnetDevice);
 											}
 										}
 									}

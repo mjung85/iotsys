@@ -144,7 +144,7 @@ public class SunblindActuatorImplKnx extends SunblindActuatorImpl {
 
 	}
 	
-	public void changeDirektion(GroupAddress stopAddress, GroupAddress newAddressContraryDirektion){
+	public void changeDirection(GroupAddress stopAddress, GroupAddress newAddressContraryDirektion){
 		sunblindStop(stopAddress);
 		timer = new Timer();
 		timer.schedule(new ChangeMoveStateTask(newAddressContraryDirektion), 1000);
@@ -185,38 +185,8 @@ public class SunblindActuatorImplKnx extends SunblindActuatorImpl {
 				}
 		
 		}
-//		else if(input instanceof Bool){
-//			if(input.getHref() == null){
-//				String resourceUriPath = input.getInvokedHref().substring(input.getInvokedHref().lastIndexOf('/') + 1);
-//				
-//				if(SunblindActuator.MOVE_DOWN_CONTRACT_HREF.equals(resourceUriPath)){
-//					//newMoveDownValue = ((Bool) input).get();
-//					//this.moveDownValue.set(newMoveDownValue);
-//				}
-//			}
-//			else{
-//				if (SunblindActuator.MOVE_DOWN_CONTRACT_HREF.equals(input.getHref().toString())){
-//					//newMoveDownValue = ((Bool) input).get();
-//					if((((Bool) input).get()) && this.moveUpValue.get()){
-//						((Bool) input).set(false);
-//					}
-//					else{
-//						//do nothing
-//					}
-//				}
-//				else if (SunblindActuator.MOVE_UP_CONTRACT_HREF.equals(input.getHref().toString())){
-//					if((((Bool) input).get()) && this.moveDownValue.get()){
-//						this.moveDownValue.set(false);
-//					}
-//					else{
-//						//do nothing
-//					}			
-//				}
-//			}
-//		}
 
 		super.writeObject(input);
-
 
 		log.info("myState:" + myState);
 		switch (myState) {
@@ -228,10 +198,7 @@ public class SunblindActuatorImplKnx extends SunblindActuatorImpl {
 			} else if (this.moveUpValue().get()) {
 				myState = STATE_TYPE.STATE_MOVE_UP;
 				sunblindUp();
-			} else {
-//				myState = STATE_TYPE.STATE_STOP;
-//				sunblindStop();
-			}
+			} 
 			break;
 
 		case STATE_MOVE_DOWN: // DOWN
@@ -239,9 +206,8 @@ public class SunblindActuatorImplKnx extends SunblindActuatorImpl {
 
 			if (this.moveUpValue().get()) {				
 				myState = STATE_TYPE.STATE_MOVE_UP;
-				changeDirektion(moveDown,moveUp);
-//				sunblindStop(moveDown);
-//				sunblindUp();
+				changeDirection(moveDown,moveUp);
+
 			} else if (this.moveDownValue().get()) {
 //				myState = STATE_TYPE.STATE_MOVE_DOWN;
 //				sunblindDown();
@@ -258,7 +224,7 @@ public class SunblindActuatorImplKnx extends SunblindActuatorImpl {
 //				sunblindUp();
 			} else if (this.moveDownValue().get()) {
 				myState = STATE_TYPE.STATE_MOVE_DOWN;
-				changeDirektion(moveUp,moveDown);
+				changeDirection(moveUp,moveDown);
 				//sunblindStop(moveUp);
 				//sunblindDown();
 			} else {
