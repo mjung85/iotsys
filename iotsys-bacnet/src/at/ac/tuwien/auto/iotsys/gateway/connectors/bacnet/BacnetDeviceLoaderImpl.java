@@ -96,7 +96,10 @@ public class BacnetDeviceLoaderImpl implements DeviceLoader {
 				try {
 					BACnetConnector bacnetConnector = new BACnetConnector(
 							localDeviceID, broadcastAddress, localPort);
-					bacnetConnector.getRootObj().setName(connectorName.replaceAll(" ", ""));
+					Obj bacRoot = bacnetConnector.getRootObj();
+					bacRoot.setName(connectorName);
+					bacRoot.setHref(new Uri(connectorName.replaceAll("[^a-zA-Z0-9-~\\(\\)]", "")));
+					objectBroker.addObj(bacRoot);
 					bacnetConnector.connect();
 					
 					Boolean discoveryEnabled = subConfig.getBoolean("discovery-enabled", false);
@@ -284,7 +287,7 @@ public class BacnetDeviceLoaderImpl implements DeviceLoader {
 		
 		@Override
 		public void deviceDiscovered(Obj device) {
-			ArrayList<String> assignedHrefs = objectBroker.addObj(device);
+			ArrayList<String> assignedHrefs = objectBroker.addObj(device, false);
 			myObjects.addAll(assignedHrefs);
 			
 			device.initialize();

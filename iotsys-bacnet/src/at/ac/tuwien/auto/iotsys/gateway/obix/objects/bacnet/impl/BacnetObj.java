@@ -51,13 +51,13 @@ public abstract class BacnetObj extends Obj {
 		this.bacnetConnector = bacnetConnector;
 		
 		name = new Str();
-		name.setHref(new Uri("name"));
+		name.setHref(new Uri("/name"));
 		name.setName("name");
 		name.setWritable(false);
 		add(name);
 		
 		description = new Str();
-		description.setHref(new Uri("description"));
+		description.setHref(new Uri("/description"));
 		description.setName("description");
 		description.setWritable(false);
 		add(description);

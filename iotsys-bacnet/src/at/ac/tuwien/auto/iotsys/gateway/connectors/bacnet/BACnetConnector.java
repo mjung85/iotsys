@@ -24,11 +24,13 @@ package at.ac.tuwien.auto.iotsys.gateway.connectors.bacnet;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.logging.Logger;
 
 import obix.Obj;
+import obix.Ref;
 import obix.Uri;
 import at.ac.tuwien.auto.iotsys.commons.Connector;
 
@@ -63,6 +65,7 @@ public class BACnetConnector implements Connector{
 	private final Hashtable<Integer, RemoteDevice> remoteDevices = new Hashtable<Integer, RemoteDevice>();
 	private final List<DeviceDiscoveryListener> discoveryListeners = new ArrayList<DeviceDiscoveryListener>();
 	private final Obj root = new Obj();
+	private final HashMap<Integer, Obj> devices = new HashMap<Integer, Obj>();
 
 	private int localDeviceID = (int) ((Math.random() * 10000) + 10000);
 	private String broadCastIP = "128.130.56.255";
@@ -215,25 +218,44 @@ public class BACnetConnector implements Connector{
 			for (RemoteObject object : objects) {
 				ObjectIdentifier objIdentifier = object.getObjectIdentifier();
 				
-				String href = "bacnet_" + root.getName() + "_" + device.getInstanceNumber() + "_" + objIdentifier.toString().replaceAll(" ", "");
 				if (objIdentifier.getObjectType().intValue() > 5) continue;
-				
 				Obj bacnetDevice = BacnetDeviceFactory.createDevice(this, device, objIdentifier);
 				if (bacnetDevice == null) continue;
+				
+				String name = objIdentifier.toString().replaceAll(" ", "");
+				String href = root.getHref().getPath() + "/" + device.getInstanceNumber() + "/" + name;
+				bacnetDevice.setName(name);
 				bacnetDevice.setHref(new Uri(href));
 				
-				synchronized (discoveryListeners) {
-					for (DeviceDiscoveryListener listener : discoveryListeners) {
-						listener.deviceDiscovered(bacnetDevice);
-					}
-				}
+				notifyDiscoveryListeners(bacnetDevice);
 				
-				root.add(bacnetDevice);
+				
+				// device ID node
+				Obj devRoot;
+				if (!devices.containsKey(device.getInstanceNumber())) {
+					devRoot = new Obj();
+					devRoot.setHref(new Uri(root.getHref().getPath() + "/" + device.getInstanceNumber()));
+					root.add(new Ref(String.valueOf(device.getInstanceNumber()), devRoot.getHref()));
+					devices.put(device.getInstanceNumber(), devRoot);
+					notifyDiscoveryListeners(devRoot);
+				} else {
+					devRoot = devices.get(device.getInstanceNumber());
+				}
+
+				devRoot.add(new Ref(name, new Uri(href)));
 			}
 		} catch (BACnetException e) {
 			e.printStackTrace();
 		} catch (PropertyValueException e) {
 			e.printStackTrace();
+		}
+	}
+	
+	private void notifyDiscoveryListeners(Obj device) {
+		synchronized (discoveryListeners) {
+			for (DeviceDiscoveryListener listener : discoveryListeners) {
+				listener.deviceDiscovered(device);
+			}
 		}
 	}
 

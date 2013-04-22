@@ -43,7 +43,7 @@ public abstract class BinaryBacnetObj extends BacnetObj {
 	public BinaryBacnetObj(BACnetConnector bacnetConnector, BacnetDataPointInfo dataPointInfo) {
 		super(bacnetConnector, dataPointInfo);
 		
-		Uri valueUri = new Uri("value");
+		Uri valueUri = new Uri("/value");
 		
 		value.setHref(valueUri);
 		value.setName("value");
