@@ -92,7 +92,7 @@
     </connector>
     <connector>
       <name>KNX E-Lab</name>
-      <enabled>false</enabled>
+      <enabled>true</enabled>
       <router>
         <ip>192.168.161.53</ip>
         <port>3671</port>
@@ -154,6 +154,7 @@
         <address>null, 2/1/0</address>
         <href>brightness1</href>
         <ipv6>2001:629:2500:570::106</ipv6>
+        <groupCommEnabled>true</groupCommEnabled>
       </device>
 
       <device>
@@ -163,6 +164,7 @@
         <href>brightness2</href>
         <ipv6>2001:629:2500:570::107</ipv6>
         <historyEnabled>false</historyEnabled>
+        <groupCommEnabled>true</groupCommEnabled>
       </device>
 
       <device>
@@ -173,6 +175,7 @@
         <ipv6>2001:629:2500:570::108</ipv6>
         <historyEnabled>true</historyEnabled>
         <historyCount>200</historyCount>
+        <groupCommEnabled>true</groupCommEnabled>s
       </device>
 
       <device>
@@ -182,6 +185,7 @@
         <href>button1</href>
         <ipv6>2001:629:2500:570::109</ipv6>
         <historyEnabled>false</historyEnabled>
+        <groupCommEnabled>true</groupCommEnabled>
       </device>
 
       <device>
@@ -191,6 +195,7 @@
         <href>button2</href>
         <ipv6>2001:629:2500:570::109</ipv6>
         <historyEnabled>false</historyEnabled>
+        <groupCommEnabled>true</groupCommEnabled>
       </device>
 
       <device>
@@ -200,6 +205,7 @@
         <href>button3</href>
         <ipv6>2001:629:2500:570::10a</ipv6>
         <historyEnabled>false</historyEnabled>
+        <groupCommEnabled>true</groupCommEnabled>
       </device>
 
       <device>
@@ -209,12 +215,13 @@
         <href>button4</href>
         <ipv6>2001:629:2500:570::10b</ipv6>
         <historyEnabled>false</historyEnabled>
+        <groupCommEnabled>true</groupCommEnabled>
       </device>
     </connector>
 
     <connector>
       <name>KNX A-Lab</name>
-      <enabled>false</enabled>
+      <enabled>true</enabled>
       <router>
         <ip>128.130.56.140</ip>
         <port>3671</port>
@@ -229,6 +236,7 @@
         <ipv6>2001:629:2500:570::10c</ipv6>
         <historyEnabled>true</historyEnabled>
         <historyCount>200</historyCount>
+        <groupCommEnabled>true</groupCommEnabled>
       </device>
 
       <device>
@@ -239,6 +247,7 @@
         <ipv6>2001:629:2500:570::10d</ipv6>
         <historyEnabled>true</historyEnabled>
         <historyCount>200</historyCount>
+        <groupCommEnabled>true</groupCommEnabled>
       </device>
 
       <device>
@@ -248,6 +257,7 @@
         <href>lightA</href>
         <ipv6>2001:629:2500:570::10e</ipv6>
         <historyEnabled>false</historyEnabled>
+        <groupCommEnabled>true</groupCommEnabled>
       </device>
 
       <device>
@@ -258,6 +268,7 @@
         <ipv6>2001:629:2500:570::10f</ipv6>
         <historyEnabled>true</historyEnabled>
         <historyCount>200</historyCount>
+        <groupCommEnabled>true</groupCommEnabled>s
       </device>
 
       <device>
@@ -268,6 +279,7 @@
         <ipv6>2001:629:2500:570::11a</ipv6>
         <historyEnabled>true</historyEnabled>
         <historyCount>200</historyCount>
+         <groupCommEnabled>true</groupCommEnabled>
       </device>
 
       <device>
@@ -278,6 +290,7 @@
         <ipv6>2001:629:2500:570::11b</ipv6>
         <historyEnabled>true</historyEnabled>
         <historyCount>200</historyCount>
+         <groupCommEnabled>true</groupCommEnabled>
       </device>
 
       <device>
@@ -288,6 +301,7 @@
         <ipv6>2001:629:2500:570::11c</ipv6>
         <historyEnabled>true</historyEnabled>
         <historyCount>200</historyCount>
+         <groupCommEnabled>true</groupCommEnabled>
       </device>
 
       <device>
@@ -298,6 +312,7 @@
         <ipv6>2001:629:2500:570::11d</ipv6>
         <historyEnabled>true</historyEnabled>
         <historyCount>200</historyCount>
+        <groupCommEnabled>true</groupCommEnabled>
       </device>
     </connector>
   </knx>
@@ -331,7 +346,7 @@
 
     <connector>
       <name>BACnet A-Lab</name>
-      <enabled>false</enabled>
+      <enabled>true</enabled>
       <discovery-enabled>true</discovery-enabled>
       <localDeviceID>92345</localDeviceID>
       <broadcastAddress>128.130.56.255</broadcastAddress>
@@ -345,6 +360,7 @@
         <href>temperatureBA</href>
         <historyEnabled>false</historyEnabled>
         <refreshEnabled>true</refreshEnabled>
+        <groupCommEnabled>true</groupCommEnabled>
       </device>
       
        <device>
@@ -353,6 +369,7 @@
         <address>2098177, 1, 3, 85, 2098177, 4, 3, 85</address>
         <href>fanAirIn</href>
         <historyEnabled>false</historyEnabled>
+        <groupCommEnabled>true</groupCommEnabled>
       </device>
       
       <device>
@@ -361,6 +378,7 @@
         <address>2098177, 1, 4, 85, 2098177, 4, 4, 85</address>
         <href>fanAirOut</href>
         <historyEnabled>false</historyEnabled>
+        <groupCommEnabled>true</groupCommEnabled>
       </device>
       
       <device>
@@ -369,6 +387,7 @@
         <address>2098177, 1, 2, 85</address>
         <href>heatPump</href>
         <historyEnabled>false</historyEnabled>
+        <groupCommEnabled>true</groupCommEnabled>
       </device>
       
       <device>
@@ -378,6 +397,7 @@
         <href>coolingPump</href>
         <ipv6>2001:629:2500:570::10d</ipv6>
         <historyEnabled>false</historyEnabled>
+        <groupCommEnabled>true</groupCommEnabled>
       </device>
       
       <device>
@@ -386,6 +406,7 @@
         <address>2098177, 4, 1, 85</address>
         <href>cooler</href>
         <historyEnabled>false</historyEnabled>
+        <groupCommEnabled>true</groupCommEnabled>
       </device>
       
       <device>
@@ -394,6 +415,7 @@
         <address>2098177, 4, 2, 85</address>
         <href>boiler</href>
         <historyEnabled>false</historyEnabled>
+        <groupCommEnabled>true</groupCommEnabled>
       </device>
     </connector>
   
@@ -529,6 +551,7 @@
         <ipv6>2001:629:2500:570::11b</ipv6>
         <historyEnabled>false</historyEnabled>
         <historyCount>200</historyCount>
+        <groupCommEnabled>true</groupCommEnabled>
       </device>
       <device>
         <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.FanSpeedActuatorImpl

@@ -42,6 +42,7 @@ import java.util.logging.Logger;
 import org.json.JSONException;
 
 import at.ac.tuwien.auto.iotsys.gateway.service.impl.GroupCommServiceImpl;
+import at.ac.tuwien.auto.iotsys.gateway.util.EXIDecoder;
 import at.ac.tuwien.auto.iotsys.gateway.util.ExiUtil;
 import at.ac.tuwien.auto.iotsys.gateway.util.JsonUtil;
 
@@ -99,6 +100,29 @@ public class CoAPServer extends Endpoint {
 
 	@Override
 	public void execute(Request request) throws IOException {
+		
+		// handle multicast requests first
+		if (MulticastUDPLayer.getRequestType() == REQUEST_TYPE.MULTICAST_REQUEST) {
+			log.finest("Handle multicast request!");
+			Obj obj = null;
+			if(request.getContentType() == MediaTypeRegistry.APPLICATION_EXI ||
+					request.getContentType() == MediaTypeRegistry.APPLICATION_OCTET_STREAM){
+				try {
+					log.finest("Received EXI encoded multicast.");
+					obj = EXIDecoder.getInstance().fromBytes(request.getPayload(), request.getContentType() == MediaTypeRegistry.APPLICATION_OCTET_STREAM);
+				} catch (Exception e){
+					e.printStackTrace();
+				}
+				
+			}
+			else{
+				// try to decode from string
+				obj = ObixDecoder.fromString(request.getPayloadString());
+			}
+			GroupCommServiceImpl.getInstance().handleRequest(
+							MulticastUDPLayer.getMulticastAddress(), obj);
+			return;
+		}
 
 		String resourcePath = request.getUriPath();
 
@@ -111,9 +135,6 @@ public class CoAPServer extends Endpoint {
 		if (lastIndex > 0) {
 			localSocketSplitted = localSocket.substring(0, lastIndex);
 		}
-
-		String[] splitedpeerAddress = request.getNetworkInterface()
-				.getHostAddress().toString().split("%");
 
 		if (!localSocketSplitted.startsWith("/")) {
 			localSocketSplitted = "/" + localSocketSplitted;
@@ -179,15 +200,7 @@ public class CoAPServer extends Endpoint {
 		payloadString = payloadString.replaceFirst(COAP_URL_PROTOCOL,
 				obixServer.DEFAULT_OBIX_URL_PROTOCOL);
 
-		// handle multicast requests first
-
-		if (MulticastUDPLayer.getRequestType() == REQUEST_TYPE.MULTICAST_REQUEST) {
-			log.finest("Handle multicast request!");
-			Obj obj = ObixDecoder.fromString(payloadString);
-			GroupCommServiceImpl.getInstance().handleRequest(
-					MulticastUDPLayer.getMulticastAddress(), obj);
-			return;
-		}
+		
 
 		String obixMessage = "";
 

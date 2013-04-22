@@ -7,6 +7,7 @@ import java.util.Hashtable;
 import java.util.logging.Logger;
 
 import ch.ethz.inf.vs.californium.coap.Communicator;
+import ch.ethz.inf.vs.californium.coap.MediaTypeRegistry;
 import ch.ethz.inf.vs.californium.coap.Message.messageType;
 import ch.ethz.inf.vs.californium.coap.PUTRequest;
 
@@ -16,6 +17,7 @@ import obix.Obj;
 import obix.Real;
 import obix.io.ObixEncoder;
 import at.ac.tuwien.auto.iotsys.gateway.service.GroupCommService;
+import at.ac.tuwien.auto.iotsys.gateway.util.EXIEncoder;
 
 /**
  * This class takes care for the group communication.
@@ -45,6 +47,7 @@ public class GroupCommServiceImpl implements GroupCommService {
 
 			if (groupObjects != null) {
 				for (Obj obj : groupObjects.values()) {
+					payload.setHref(obj.getHref());
 					obj.writeObject(payload);
 				}
 			} 
@@ -103,6 +106,7 @@ public class GroupCommServiceImpl implements GroupCommService {
 	@Override
 	public void sendUpdate(Inet6Address group, Object state) {
 		log.finest("Sending new state of object " + state + " to group " + group.getHostAddress());
+		
 		PUTRequest putRequest = new PUTRequest();
 		putRequest.setType(messageType.NON);
 		putRequest
@@ -112,21 +116,49 @@ public class GroupCommServiceImpl implements GroupCommService {
 			Bool bool = (Bool) state;
 			Bool b = new Bool();
 			b.set(bool.get());
-			String payload = ObixEncoder.toString(b);
-			putRequest.setPayload(payload);
+			try {
+				byte[] payload =  EXIEncoder.getInstance().toBytes(b, true);
+				// work around application octet stream
+				putRequest.setContentType(MediaTypeRegistry.APPLICATION_OCTET_STREAM);
+				putRequest.setPayload(payload);
+			} catch (Exception e){
+				// fall back to XML encoding
+				e.printStackTrace();
+				String payload = ObixEncoder.toString(b);
+				putRequest.setPayload(payload);
+			}
+						
 		}
 		else if(state instanceof Real){
 			Real real = (Real) state;
 			Real r = new Real();
 			r.set(real.get());
-			String payload = ObixEncoder.toString(r);
-			putRequest.setPayload(payload);
+			try {
+				byte[] payload =  EXIEncoder.getInstance().toBytes(r, true);
+				// work around application octet stream
+				putRequest.setContentType(MediaTypeRegistry.APPLICATION_OCTET_STREAM);
+				putRequest.setPayload(payload);
+			} catch (Exception e){
+				// fall back to XML encoding
+				e.printStackTrace();
+				String payload = ObixEncoder.toString(r);
+				putRequest.setPayload(payload);
+			}
 		} else if(state instanceof Int){
 			Int intObj = (Int) state;
 			Int i = new Int();
 			i.set(intObj.get());
-			String payload = ObixEncoder.toString(i);
-			putRequest.setPayload(payload);
+			try {
+				byte[] payload =  EXIEncoder.getInstance().toBytes(i, true);
+				// work around application octet stream
+				putRequest.setContentType(MediaTypeRegistry.APPLICATION_OCTET_STREAM);
+				putRequest.setPayload(payload);
+			} catch (Exception e){
+				// fall back to XML encoding
+				e.printStackTrace();
+				String payload = ObixEncoder.toString(i);
+				putRequest.setPayload(payload);
+			}
 		} 
 	
 		putRequest.enableResponseQueue(true);

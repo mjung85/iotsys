@@ -49,6 +49,8 @@ public class SunblindActuatorImpl extends ActuatorImpl implements SunblindActuat
 	protected Bool moveUpValue = new Bool(false);
 	protected Bool stopStepUpDownValue = new Bool(false);
 	protected Bool dedicatedStopValue  = new Bool(false);
+	
+	
 	private static final Logger log = Logger.getLogger(SunblindActuatorImpl.class.getName());
 	
 	
@@ -68,20 +70,7 @@ public class SunblindActuatorImpl extends ActuatorImpl implements SunblindActuat
 		moveUpValue.setHref(moveUpValueUri);
 		moveUpValue.setName(SunblindActuator.MOVE_UP_CONTRACT_NAME);			
 		add(moveUpValue);
-				
-//		//dedicatedStopValue
-//		dedicatedStopValue.setWritable(true);
-//		Uri dedicatedStopValueUri = new Uri(SunblindActuator.DEDICATED_STOP_CONTRACT_HREF);	
-//		dedicatedStopValue.setHref(dedicatedStopValueUri);
-//		dedicatedStopValue.setName(SunblindActuator.DEDICATED_STOP_CONTRACT_NAME);			
-//		add(dedicatedStopValue);
-//				
-//		//stopStepUpDownValue - not mandatory
-//		stopStepUpDownValue.setWritable(true);
-//		Uri stopStepUpDownValueUri = new Uri(SunblindActuator.STOP_STEP_UP_DOWN_CONTRACT_HREF);	
-//		stopStepUpDownValue.setHref(stopStepUpDownValueUri);
-//		stopStepUpDownValue.setName(SunblindActuator.STOP_STEP_UP_DOWN_CONTRACT_NAME);			
-//		add(stopStepUpDownValue);				
+						
 	}
 	
 	//gehoert noch ausgemistet
@@ -91,70 +80,50 @@ public class SunblindActuatorImpl extends ActuatorImpl implements SunblindActuat
 		boolean newMoveDownValue = false;
 		boolean newMoveUpValue = false;
 		
-//		boolean newStopStepUpDownValue = false;
-//		boolean newDedicatedStopValue = false;
 		
 		if(input instanceof SunblindActuator){
 			SunblindActuator in = (SunblindActuator) input;
 			log.finer("Writing on SunblindActuator: " + in.moveDownValue().get());
 			
 			newMoveDownValue = in.moveDownValue().get();
-			//this.moveDownValue.set(newMoveDownValue);
 			
 			newMoveUpValue = in.moveUpValue().get();
-			//this.moveUpValue.set(newMoveUpValue);
-			
-//			newDedicatedStopValue = in.dedicatedStopValue().get();
-//			//this.dedicatedStopValue.set(newDedicatedStopValue);
-//			
-//			newStopStepUpDownValue = in.stopStepUpDownValue().get();
-//			//this.stopStepUpDownValue.set(newStopStepUpDownValue);
 		}
 		
 		else if(input instanceof Bool){
+			
+			
 			if(input.getHref() == null){
-				String resourceUriPath = input.getInvokedHref().substring(input.getInvokedHref().lastIndexOf('/') + 1);
-				
-				if(SunblindActuator.MOVE_DOWN_CONTRACT_HREF.equals(resourceUriPath)){
-					newMoveDownValue = ((Bool) input).get();
-					//this.moveDownValue.set(newMoveDownValue);
+				if(input.getInvokedHref() != null && input.getInvokedHref().length() > 0){
+					String resourceUriPath = input.getInvokedHref().substring(input.getInvokedHref().lastIndexOf('/') + 1);
+					
+					if(SunblindActuator.MOVE_DOWN_CONTRACT_HREF.equals(resourceUriPath)){
+						newMoveDownValue = ((Bool) input).get();
+					}
+					else if (SunblindActuator.MOVE_UP_CONTRACT_HREF.equals(resourceUriPath)){
+						newMoveUpValue = ((Bool) input).get();
+					}
+
 				}
-				else if (SunblindActuator.MOVE_UP_CONTRACT_HREF.equals(resourceUriPath)){
-					newMoveUpValue = ((Bool) input).get();
-					//this.moveUpValue.set(newMoveUpValue);
-				}
-//				else if (SunblindActuator.DEDICATED_STOP_CONTRACT_HREF.equals(resourceUriPath)){
-//					newDedicatedStopValue = ((Bool) input).get();
-//					//this.dedicatedStopValue.set(newDedicatedStopValue);				
-//				}
-//				else if (SunblindActuator.STOP_STEP_UP_DOWN_CONTRACT_HREF.equals(resourceUriPath)){
-//					newStopStepUpDownValue = ((Bool) input).get();
-//					//this.stopStepUpDownValue .set(newStopStepUpDownValue);				
-//				}	
 			}
 			else{
 				if (SunblindActuator.MOVE_DOWN_CONTRACT_HREF.equals(input.getHref().toString())){
 					newMoveDownValue = ((Bool) input).get();
-				//	this.moveDownValue.set(newMoveDownValue);				
+			
 				}
 				else if (SunblindActuator.MOVE_UP_CONTRACT_HREF.equals(input.getHref().toString())){
 					newMoveUpValue = ((Bool) input).get();
-				//	this.moveUpValue.set(newMoveUpValue);				
+		
 				}
-//				else if (SunblindActuator.DEDICATED_STOP_CONTRACT_HREF.equals(input.getHref().toString())){
-//					newDedicatedStopValue = ((Bool) input).get();
-//				//	this.dedicatedStopValue.set(newDedicatedStopValue);				
-//				}
-//				else if (SunblindActuator.STOP_STEP_UP_DOWN_CONTRACT_HREF.equals(input.getHref().toString())){
-//					newStopStepUpDownValue = ((Bool) input).get();
-//				//	this.stopStepUpDownValue .set(newStopStepUpDownValue);				
-//				}
+
 			}
 		}
-		this.moveDownValue.set(newMoveDownValue);
-		this.moveUpValue.set(newMoveUpValue);
-//		this.dedicatedStopValue.set(newDedicatedStopValue);	
-//		this.stopStepUpDownValue .set(newStopStepUpDownValue);
+		
+		if(moveDownValue.get() != newMoveDownValue)
+			this.moveDownValue.set(newMoveDownValue);
+		if(moveUpValue.get() != newMoveUpValue)
+			this.moveUpValue.set(newMoveUpValue);
+
 	}
 
 
