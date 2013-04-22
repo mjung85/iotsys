@@ -46,6 +46,7 @@ import java.util.logging.Logger;
 
 import at.ac.tuwien.auto.iotsys.gateway.util.EvaluationGenerateContracts;
 import at.ac.tuwien.auto.iotsys.gateway.util.EvaluationUtil;
+import at.ac.tuwien.auto.iotsys.gateway.util.ExiUtil;
 
 import com.csvreader.CsvWriter;
 
@@ -85,6 +86,10 @@ public class IoTSySGateway {
 
 		Log.init();
 		log.info("Server starting.");
+		
+		// init exi util
+		ExiUtil.getInstance();
+		// init contracts
 		at.ac.tuwien.auto.iotsys.gateway.obix.objects.ContractInit.init();
 
 		String httpPort = PropertiesLoader.getInstance().getProperties()

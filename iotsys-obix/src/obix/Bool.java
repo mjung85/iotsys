@@ -171,7 +171,10 @@ public class Bool
 		}
 		else{
 			if(input instanceof Bool){
-				this.set(((Bool) input).get());
+				Bool inputBool = (Bool) input;
+				if(this.get() != inputBool.get()){
+					this.set(((Bool) input).get());
+				}
 			}
 		}
 	}

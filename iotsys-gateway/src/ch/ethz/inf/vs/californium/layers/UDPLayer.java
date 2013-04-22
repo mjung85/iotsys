@@ -34,11 +34,9 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.net.NetworkInterface;
 import java.net.SocketException;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Enumeration;
+import java.util.logging.Logger;
 
 import ch.ethz.inf.vs.californium.coap.EndpointAddress;
 import ch.ethz.inf.vs.californium.coap.Message;
@@ -69,6 +67,8 @@ public class UDPLayer extends Layer {
 
 	// explicitly bound server address
 	private InetAddress inetAddress;
+	
+	private static final Logger log = Logger.getLogger(UDPLayer.class.getName());
 
 	// Inner Classes ///////////////////////////////////////////////////////////////
 
@@ -118,6 +118,7 @@ public class UDPLayer extends Layer {
 	
 		
 		this.socket = new DatagramSocket(port);
+		this.socket.setReuseAddress(true);
 		
 		this.inetAddress = socket.getLocalAddress();
 		this.receiverThread = new ReceiverThread();
@@ -138,11 +139,12 @@ public class UDPLayer extends Layer {
 	 * @param daemon True if receiver thread should terminate with main thread
 	 */
 	public UDPLayer(InetAddress inetAddress, int port, boolean daemon) throws SocketException {
-		// initialize members
-		
+		// initialize members	
 		this.inetAddress = inetAddress;
 			
 		this.socket = new DatagramSocket(port, inetAddress);
+		log.finest("Socket reuse address enabled: " + socket.getReuseAddress());
+		this.socket.setReuseAddress(true);
 		this.receiverThread = new ReceiverThread();
 
 		// decide if receiver thread terminates with main thread
