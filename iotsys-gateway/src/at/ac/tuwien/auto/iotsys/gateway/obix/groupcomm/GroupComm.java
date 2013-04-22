@@ -30,36 +30,22 @@
  * This file is part of the IoTSyS project.
  ******************************************************************************/
 
-package at.ac.tuwien.auto.iotsys.gateway.obix.objects;
+package at.ac.tuwien.auto.iotsys.gateway.obix.groupcomm;
 
-import obix.Obj;
+import obix.List;
+import obix.Op;
 
-public class HistoryHelper {
-	public static final int HISTORY_COUNT_DEFAULT = 10;
+public interface GroupComm {
+	public static final String joinGroupContract = "<op name='joinGroup' in='obix:Str' out='obix:List'/>";
+	public Op joinGroup();
 	
-	/**
-	 * Adds the history to all value data points (bool, real, int) of an oBIX object
-	 * This method required the passed oBIX object to be completely initialized (href,...)
-	 * @param obj
-	 */
-	public static void addHistoryToDatapoints(Obj obj){
-		addHistoryToDatapoints(obj, HISTORY_COUNT_DEFAULT);	
-	}
+	public static final String leaveGroupContract = "<op name='leaveGroup' in='obix:Str' out='obix:List'/>";
+	public Op leaveGroup();
 	
-	/**
-	 * Adds the history to all value data points (bool, real, int) of an oBIX object
-	 * This method required the passed oBIX object to be completely initialized (href,...)
-	 * @param obj
-	 * @param countMax 
-	 */
-	public static void addHistoryToDatapoints(Obj obj, int countMax){
-		if(obj.isInt() || obj.isStr() || obj.isBool() || obj.isReal()){
-			HistoryImpl impl = new HistoryImpl(obj, countMax);
-			impl.initialize();
-		}
-		
-		for(Obj child : obj.list()){
-			addHistoryToDatapoints(child, countMax);
-		}
-	}
+	public static final String GROUPS_HREF ="groups";
+	public static final String GROUPS_NAME="groups";
+	
+	public static final String CONTRACT="iot:GroupComm";
+	public static final String GROUPS_CONTRACT = "<list name='"+ GROUPS_NAME +"' href='"+ GROUPS_HREF + "'/>";
+	public List groups();  
 }

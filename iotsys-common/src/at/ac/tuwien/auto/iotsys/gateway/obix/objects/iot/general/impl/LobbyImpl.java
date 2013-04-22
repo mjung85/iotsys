@@ -30,7 +30,7 @@
  * This file is part of the IoTSyS project.
  ******************************************************************************/
 
-package at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot;
+package at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.general.impl;
 
 import java.util.Hashtable;
 

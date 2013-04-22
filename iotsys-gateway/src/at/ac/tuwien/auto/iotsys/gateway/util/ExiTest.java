@@ -61,7 +61,6 @@ import org.xml.sax.SAXException;
 
 public class ExiTest {
 	public static void main(String[] args) {
-
 		try {
 			encodeEXI("in.xml", "out.exi", true);
 			decodeEXI("out.exi", "out.xml", true);

@@ -69,7 +69,9 @@ public class LightSwitchActuatorImpl extends ActuatorImpl implements LightSwitch
 		else if(input instanceof Bool){
 			newVal = ((Bool) input).get();
 		}
-		this.value.set(newVal);
+		
+		if(this.value.get() != newVal)
+			this.value.set(newVal);
 	}
 
 	public Bool value() {

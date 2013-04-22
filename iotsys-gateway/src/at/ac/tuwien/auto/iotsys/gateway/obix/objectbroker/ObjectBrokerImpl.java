@@ -41,7 +41,8 @@ import java.util.logging.Logger;
 import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
 import at.ac.tuwien.auto.iotsys.commons.OperationHandler;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.*;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.LobbyImpl;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.general.impl.LobbyImpl;
+import at.ac.tuwien.auto.iotsys.gateway.service.GroupCommHelper;
 
 import obix.*;
 
@@ -263,6 +264,8 @@ public class ObjectBrokerImpl implements ObjectBroker {
 		}
 
 		iotLobby.removeReference(href);
+		
+		// TODO deal with group comm objects.
 	}
 
 	@Override
@@ -345,6 +348,11 @@ public class ObjectBrokerImpl implements ObjectBroker {
 			}
 		}
 		return ret;
+	}
+
+	@Override
+	public void enableGroupComm(Obj obj) {
+		GroupCommHelper.enableGroupCommForObject(obj);
 	}
 
 }
