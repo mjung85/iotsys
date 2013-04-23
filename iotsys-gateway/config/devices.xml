@@ -92,7 +92,7 @@
     </connector>
     <connector>
       <name>KNX E-Lab</name>
-      <enabled>true</enabled>
+      <enabled>false</enabled>
       <router>
         <ip>192.168.161.53</ip>
         <port>3671</port>
@@ -221,7 +221,7 @@
 
     <connector>
       <name>KNX A-Lab</name>
-      <enabled>true</enabled>
+      <enabled>false</enabled>
       <router>
         <ip>128.130.56.140</ip>
         <port>3671</port>
@@ -346,7 +346,7 @@
 
     <connector>
       <name>BACnet A-Lab</name>
-      <enabled>true</enabled>
+      <enabled>false</enabled>
       <discovery-enabled>true</discovery-enabled>
       <localDeviceID>92345</localDeviceID>
       <broadcastAddress>128.130.56.255</broadcastAddress>
@@ -467,7 +467,7 @@
   <virtual>
     <connector>
       <name>Virtual Devices</name>
-      <enabled>false</enabled>
+      <enabled>true</enabled>
 
       <!-- SENSOREN -->
 
@@ -618,7 +618,7 @@
     </connector>
     <connector>
       <name>Virtual Devices 2</name>
-      <enabled>false</enabled>
+      <enabled>true</enabled>
 
       <!-- SENSOREN -->
       <device>
