@@ -9,6 +9,9 @@ allprojects {
 	
 	repositories(){
 		mavenCentral()
+		mavenRepo url: 'https://repository.jboss.org/nexus/content/repositories/releases/', name: 'JBoss Releases'
+		mavenRepo url: 'https://repository.jboss.org/nexus/content/groups/public/', name: 'JBoss Public'
+
 	}
 }
 

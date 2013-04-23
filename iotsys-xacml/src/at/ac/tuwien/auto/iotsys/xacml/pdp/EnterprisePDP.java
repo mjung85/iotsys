@@ -2,55 +2,27 @@ package at.ac.tuwien.auto.iotsys.xacml.pdp;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
+import java.util.logging.Logger;
 
-import an.config.*;
-import an.xacml.engine.*;
-import an.xacml.adapter.file.*;
-import an.xacml.context.*;
-import an.xacml.policy.*;
-import an.xml.XMLGeneralException;
-import an.log.*;
-
+import an.xacml.adapter.file.XACMLParser;
+import an.xacml.context.Decision;
+import an.xacml.context.Request;
+import an.xacml.context.Response;
+import an.xacml.context.Result;
+import an.xacml.engine.EvaluationContext;
+import an.xacml.policy.AbstractPolicy;
+import an.xacml.policy.Effect;
 import at.ac.tuwien.auto.iotsys.commons.interceptor.Parameter;
 import at.ac.tuwien.auto.iotsys.util.FileHelper;
 
 public class EnterprisePDP {
-
-	private Logger log;
-
-	public enum RequestParam {
-		SUBJECT,
-		SUBJECT_IP_ADDRESS,
-		RESOURCE,
-		RESOURCE_PROTOCOL,
-		RESOURCE_IP_ADDRESS,
-		RESOURCE_HOSTNAME,
-		RESOURCE_PATH,
-		ACTION
-	}
 	
-	private org.apache.log4j.Logger log4j = org.apache.log4j.Logger
-			.getLogger(getClass());
-
+	private Logger log = Logger.getLogger(EnterprisePDP.class.getName());
+	
 	public EnterprisePDP() {
-		// log4j.info(System.getProperty("java.class.path"));
-
-		// Configuration config = new Configuration("config/pdp.xml");
-		// ConfigElement rootConfig = config.getConfigurationElement();
-		//
-		// ConfigElement logConfig = (ConfigElement) rootConfig
-		// .getSingleXMLElementByType(Logger.ELEMTYPE_LOG);
-		// LogFactory.initialize(logConfig);
-		log = LogFactory.getLogger();
-
-		// ConfigElement pdpConfig = (ConfigElement) rootConfig
-		// .getXMLElementsByName(PDP.ELEM_PDP)[0];
 
 	}
 
@@ -68,9 +40,9 @@ public class EnterprisePDP {
 	 */
 	public boolean evaluate(String resource, String subject, String action,
 			Map<Parameter, String> params) {
-		log4j.info("Resource: " + resource);
-		log4j.info("Subject: " + subject);
-		log4j.info("Action: " + action);
+		log.info("Resource: " + resource);
+		log.info("Subject: " + subject);
+		log.info("Action: " + action);
 
 		if (params == null) {
 			params = new HashMap<Parameter, String>();
@@ -99,7 +71,7 @@ public class EnterprisePDP {
 			// log4j.info("Dump actual response: " + tempOut.toString());
 			Decision d = result.getDecision();
 
-			log4j.info(d);
+			log.info(d.toString());
 			if (!d.equals(Effect.Permit)) {
 				return false;
 			}
@@ -109,8 +81,8 @@ public class EnterprisePDP {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (Exception e) {
-			log4j.error(e.getMessage());
-			log4j.error(e.getClass().getSimpleName());
+			log.severe(e.getMessage());
+			log.severe(e.getClass().getSimpleName());
 			e.printStackTrace();
 		}
 

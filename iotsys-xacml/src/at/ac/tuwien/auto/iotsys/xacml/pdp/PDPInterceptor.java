@@ -1,5 +1,7 @@
 package at.ac.tuwien.auto.iotsys.xacml.pdp;
 
+import java.util.logging.Logger;
+
 import at.ac.tuwien.auto.iotsys.commons.interceptor.AbstractResponse;
 import at.ac.tuwien.auto.iotsys.commons.interceptor.Interceptor;
 import at.ac.tuwien.auto.iotsys.commons.interceptor.InterceptorRequest;
@@ -9,9 +11,12 @@ import at.ac.tuwien.auto.iotsys.commons.interceptor.Parameter;
 
 public class PDPInterceptor implements Interceptor {
 
+	private Logger log = Logger.getLogger(PDPInterceptor.class.getName());
+	
 	@Override
 	public InterceptorResponse handleRequest(InterceptorRequest request) {
-
+		log.info("Incoming request to PDPInteceptor");
+		
 		EnterprisePDP pdp = new EnterprisePDP();
 		String resource = request.getInterceptorParam(Parameter.RESOURCE);
 		String subject = request.getInterceptorParam(Parameter.SUBJECT);
