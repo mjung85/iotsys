@@ -16,6 +16,8 @@ eclipse{
 				node.appendNode('classpathentry', [kind: 'src', path: '/iotsys-wmbus', exported:'true'])
 				node.appendNode('classpathentry', [kind: 'src', path: '/iotsys-virtual', exported:'true'])
 				node.appendNode('classpathentry', [kind: 'src', path: '/iotsys-control', exported:'true'])
+
+				node.appendNode('classpathentry', [kind: 'src', path: '/iotsys-xacml', exported:'true'])
 			}
 		}
 	}
@@ -73,6 +75,8 @@ dependencies {
 	provided project(':iotsys-common')
 	provided project(':iotsys-encoding-json')
 	provided project(':iotsys-control');
+
+	provided project(':iotsys-xacml')
 	
 	//provided group: 'org.apache.felix', name: 'org.apache.felix.framework', version: '4.2.0'
 	provided group: 'org.apache.felix', name: 'org.osgi.core', version: '1.4.0'
