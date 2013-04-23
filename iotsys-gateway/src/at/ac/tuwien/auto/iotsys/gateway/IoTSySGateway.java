@@ -41,16 +41,20 @@ import java.util.logging.Logger;
 
 import at.ac.tuwien.auto.iotsys.gateway.util.ExiUtil;
 
+import at.ac.tuwien.auto.iotsys.gateway.interceptor.InterceptorBrokerImpl;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objectbroker.ObjectBrokerImpl;
 import at.ac.tuwien.auto.iotsys.gateway.obix.server.CoAPServer;
 import at.ac.tuwien.auto.iotsys.gateway.obix.server.NanoHTTPD;
 import at.ac.tuwien.auto.iotsys.gateway.obix.server.ObixObservingManager;
 import at.ac.tuwien.auto.iotsys.gateway.obix.server.ObixServer;
 import at.ac.tuwien.auto.iotsys.gateway.obix.server.ObixServerImpl;
+import at.ac.tuwien.auto.iotsys.xacml.pdp.PDPInterceptor;
 
 import at.ac.tuwien.auto.iotsys.commons.Connector;
 import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
 import at.ac.tuwien.auto.iotsys.commons.PropertiesLoader;
+import at.ac.tuwien.auto.iotsys.commons.interceptor.ClassAlreadyRegisteredException;
+import at.ac.tuwien.auto.iotsys.commons.interceptor.InterceptorBroker;
 //import at.ac.tuwien.auto.iotsys.control.TestClient;
 
 /**
@@ -60,7 +64,7 @@ import at.ac.tuwien.auto.iotsys.commons.PropertiesLoader;
 public class IoTSySGateway {
 	private ObjectBroker objectBroker;
 	private DeviceLoaderImpl deviceLoader;
-
+	private InterceptorBroker interceptorBroker;
 	
 	private ArrayList<Connector> connectors = new ArrayList<Connector>();
 
@@ -93,6 +97,15 @@ public class IoTSySGateway {
 		// add initial objects to the database
 		deviceLoader = new DeviceLoaderImpl();
 		connectors = deviceLoader.initDevices(objectBroker);
+		
+		// initialize interceptor broker
+		interceptorBroker = InterceptorBrokerImpl.getInstance();
+		// temporarly register interceptor
+		try {
+			interceptorBroker.register(new PDPInterceptor());
+		} catch (ClassAlreadyRegisteredException e) {
+			// silent exceptionhandling
+		}
 
 		ObixObservingManager.getInstance().setObixServer(obixServer);
 

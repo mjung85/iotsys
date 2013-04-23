@@ -39,6 +39,8 @@ import org.osgi.framework.BundleContext;
 
 import at.ac.tuwien.auto.iotsys.commons.DeviceLoader;
 import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
+import at.ac.tuwien.auto.iotsys.commons.interceptor.InterceptorBroker;
+import at.ac.tuwien.auto.iotsys.gateway.interceptor.InterceptorBrokerImpl;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objectbroker.ObjectBrokerImpl;
 
 /**
@@ -58,6 +60,8 @@ public class IoTSySGatewayActivator implements BundleActivator{
 		iotsysGateway = new IoTSySGateway();
 		iotsysGateway.startGateway();	
 		bundleContext.registerService(ObjectBroker.class.getName(), ObjectBrokerImpl.getInstance(), null);
+		bundleContext.registerService(InterceptorBroker.class,
+				InterceptorBrokerImpl.getInstance(), null);
 	}
 
 	@Override
