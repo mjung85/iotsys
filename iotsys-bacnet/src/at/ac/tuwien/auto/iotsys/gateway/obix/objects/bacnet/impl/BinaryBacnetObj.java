@@ -34,7 +34,7 @@ import com.serotonin.bacnet4j.exception.BACnetException;
 import com.serotonin.bacnet4j.exception.PropertyValueException;
 import com.serotonin.bacnet4j.type.Encodable;
 import com.serotonin.bacnet4j.type.enumerated.BinaryPV;
-import com.serotonin.bacnet4j.type.primitive.UnsignedInteger;
+import com.serotonin.bacnet4j.type.primitive.Null;
 
 public abstract class BinaryBacnetObj extends BacnetObj {
 	private static final Logger log = Logger.getLogger(BinaryBacnetObj.class.getName());
@@ -53,20 +53,27 @@ public abstract class BinaryBacnetObj extends BacnetObj {
 	public void writeObject(Obj input) {
 		if (!value.isWritable()) return;
 		
-		if (input instanceof Bool) {
+		Encodable val;
+		if (input.isNull()) {
+			val = new Null();
+		} else if (input instanceof Bool) {
+			int active = input.getBool() ? 1 : 0;
+			val = new BinaryPV(active);
 			value.setBool(input.getBool());
-		
-			try {
-				int active = (this.value.get()) ? 1 : 0;
-				bacnetConnector.writeProperty(deviceID, objectIdentifier, propertyIdentifier,
-						new BinaryPV(active), new UnsignedInteger(10));
-			} catch (BACnetException e) {
-				e.printStackTrace();
-			} catch (PropertyValueException e) {
-				e.printStackTrace();
-			}
+		} else {
+			return;
 		}
-
+		
+		try {
+			bacnetConnector.writeProperty(deviceID, objectIdentifier, propertyIdentifier,
+					val, BACnetConnector.BACNET_PRIORITY);
+		} catch (BACnetException e) {
+			e.printStackTrace();
+		} catch (PropertyValueException e) {
+			e.printStackTrace();
+		}
+		
+		if (input.isNull()) refreshObject();
 	}
 	
 	public Bool value() {
