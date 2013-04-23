@@ -2,7 +2,7 @@
 description = 'IoTSyS XACML PEP/PDP'
 
 repositories {	
-	mavenRepo url: 'http://repository.jboss.org/nexus/content/repositories/releases/', name: 'JBoss Releases'
+	mavenRepo url: 'https://repository.jboss.org/nexus/content/repositories/releases/', name: 'JBoss Releases'
 	mavenRepo url: 'https://repository.jboss.org/nexus/content/groups/public/', name: 'JBoss Public'
 }
 
@@ -56,10 +56,11 @@ configurations {
 
 dependencies {
 	compile project(':iotsys-common')
+
+	compile group: 'org.apache.felix', name: 'org.osgi.core', version: '1.4.0'
 	
 	compile group: 'org.picketlink', name: 'picketlink-core', version: '2.1.5.Final'
 	compile group: 'log4j', name: 'log4j', version: '1.2.17'
-	compile group: 'org.osgi', name: 'org.osgi.core', version: '4.1.0'
 //	compile group: 'javax.xml.stream', name: 'stax-api', version: '1.0'
 //	compile group: 'stax', name: 'stax', version: '1.2.0'
 }

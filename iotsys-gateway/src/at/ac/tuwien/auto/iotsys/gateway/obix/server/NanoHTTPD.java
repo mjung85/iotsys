@@ -20,6 +20,7 @@ import java.net.URISyntaxException;
 import java.net.URLEncoder;
 import java.util.Date;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Locale;
 import java.util.Properties;
@@ -36,6 +37,13 @@ import obix.io.ObixEncoder;
 
 import org.json.JSONException;
 
+import at.ac.tuwien.auto.iotsys.commons.interceptor.InterceptorBroker;
+import at.ac.tuwien.auto.iotsys.commons.interceptor.InterceptorRequest;
+import at.ac.tuwien.auto.iotsys.commons.interceptor.InterceptorRequestImpl;
+import at.ac.tuwien.auto.iotsys.commons.interceptor.InterceptorResponse;
+import at.ac.tuwien.auto.iotsys.commons.interceptor.InterceptorResponse.StatusCode;
+import at.ac.tuwien.auto.iotsys.commons.interceptor.Parameter;
+import at.ac.tuwien.auto.iotsys.gateway.interceptor.InterceptorBrokerImpl;
 import at.ac.tuwien.auto.iotsys.gateway.util.ExiUtil;
 import at.ac.tuwien.auto.iotsys.gateway.util.JsonUtil;
 
@@ -110,6 +118,10 @@ public class NanoHTTPD {
 												// xmlns:knx='http://localhost/def/'/>\n";
 
 	private ExiUtil exiUtil = null;
+	
+	private InterceptorBroker interceptors = InterceptorBrokerImpl
+			.getInstance();
+
 
 	/**
 	 * Override this to customize the server.
@@ -136,6 +148,8 @@ public class NanoHTTPD {
 		log.finest("Serve: " + uri);
 
 		String host = header.getProperty("host");
+		String resource = "http://" + host + uri;
+		String subject = mySocket.getInetAddress().getHostAddress();
 
 		if (uri.endsWith("soap") && parms.containsKey("wsdl")) {
 			// serve wsdl file
@@ -157,6 +171,46 @@ public class NanoHTTPD {
 			return r;
 		}	
 
+		if (interceptors != null && interceptors.hasInterceptors()) {
+			log.info("Interceptors found ... starting to prepare.");
+			
+			InterceptorRequest interceptorRequest = new InterceptorRequestImpl();
+			HashMap<Parameter, String> interceptorParams = new HashMap<Parameter, String>();
+			
+			interceptorParams.put(Parameter.SUBJECT, subject);
+			interceptorParams.put(Parameter.SUBJECT_IP_ADDRESS, mySocket
+					.getInetAddress().getHostAddress());
+			interceptorParams.put(Parameter.RESOURCE, resource);
+			interceptorParams.put(Parameter.RESOURCE_PROTOCOL, "http");
+			interceptorParams.put(Parameter.RESOURCE_IP_ADDRESS, mySocket
+					.getLocalAddress().getHostAddress());
+			interceptorParams.put(Parameter.RESOURCE_HOSTNAME, mySocket
+					.getLocalAddress().getHostName());
+			interceptorParams.put(Parameter.RESOURCE_PATH, uri);
+			interceptorParams.put(Parameter.ACTION, method);
+			
+			interceptorRequest.setInterceptorParams(interceptorParams);
+			
+			for (Object k: header.keySet()) {
+				interceptorRequest.setHeader((String) k, header.getProperty((String) k));
+			}
+			for (Object k: parms.keySet()) {
+				interceptorRequest.setRequestParam((String) k, header.getProperty((String) k));
+			}
+			log.info("Calling interceptions ...");
+			InterceptorResponse resp = interceptors
+					.handleRequest(interceptorRequest);
+			
+			if (!resp.getStatus().equals(StatusCode.OK)) {
+				if (resp.forward()) {
+					return new Response(HTTP_FORBIDDEN, MIME_PLAINTEXT,
+							resp.getMessage());
+				}
+			}
+			log.info("... interceptions finished.");
+
+		}
+		
 		String data = "";
 
 		// check for EXI content
