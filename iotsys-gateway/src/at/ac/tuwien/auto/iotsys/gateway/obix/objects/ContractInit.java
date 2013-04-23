@@ -33,12 +33,12 @@ package at.ac.tuwien.auto.iotsys.gateway.obix.objects;
 
 import obix.ContractRegistry;
 import at.ac.tuwien.auto.iotsys.gateway.obix.groupcomm.GroupComm;
-import at.ac.tuwien.auto.iotsys.gateway.obix.object.bacnet.AnalogInput;
-import at.ac.tuwien.auto.iotsys.gateway.obix.object.bacnet.AnalogOutput;
-import at.ac.tuwien.auto.iotsys.gateway.obix.object.bacnet.AnalogValue;
-import at.ac.tuwien.auto.iotsys.gateway.obix.object.bacnet.BinaryInput;
-import at.ac.tuwien.auto.iotsys.gateway.obix.object.bacnet.BinaryOutput;
-import at.ac.tuwien.auto.iotsys.gateway.obix.object.bacnet.BinaryValue;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.bacnet.AnalogInput;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.bacnet.AnalogOutput;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.bacnet.AnalogValue;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.bacnet.BinaryInput;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.bacnet.BinaryOutput;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.bacnet.BinaryValue;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.AirDamperActuator;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.BoilerActuator;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.BrightnessActuator;
