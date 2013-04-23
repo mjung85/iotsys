@@ -48,7 +48,8 @@ jar {
 				   "Bundle-Activator": "at.ac.tuwien.auto.iotsys.gateway.IoTSySGatewayActivator",
 				   "Import-Package": "org.osgi.framework, at.ac.tuwien.auto.iotsys.commons, org.json, obix, obix.asm, obix.contracts, " +
 				   					"obix.io, obix.net, obix.test, obix.toos, obix.ui, obix.ui.fields, obix.ui.views, obix.xml, " +
-									   "at.ac.tuwien.auto.iotsys.gateway.obix.observer, at.ac.tuwien.auto.iotsys.gateway.obix.objects.bacnet, at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot, " +
+									   "at.ac.tuwien.auto.iotsys.gateway.obix.observer, at.ac.tuwien.auto.iotsys.gateway.obix.objects.bacnet, at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot," +
+									   "at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.general.impl,"+
 									   "at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators, at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl, " +
 									   "at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors, at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl, " +
 									   "org.xml.sax, org.xml.sax.helpers, org.xml.sax.ext,  com.sun.org.apache.xalan.internal, com.sun.org.apache.xalan.internal.res, " +
