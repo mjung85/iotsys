@@ -61,7 +61,6 @@ public class IoTSySGateway {
 	private ObjectBroker objectBroker;
 	private DeviceLoaderImpl deviceLoader;
 
-	
 	private ArrayList<Connector> connectors = new ArrayList<Connector>();
 
 	private static final Logger log = Logger.getLogger(IoTSySGateway.class
