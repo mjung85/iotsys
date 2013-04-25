@@ -5,3 +5,5 @@ build
 .settings
 .metadata
 .gradle
+felix-framework*
+org.apache.felix.main.distribution-4.2.1.zip

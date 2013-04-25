@@ -1,7 +1,6 @@
 package at.ac.tuwien.auto.iotsys.util;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -17,7 +16,7 @@ public class FileHelper {
 		if (in == null) {
 			in = new FileInputStream(path);
 		}
-		// System.out.println(path);
+		System.out.println(path);
 		
 		try {
 			BufferedReader br = new BufferedReader(new InputStreamReader(in));

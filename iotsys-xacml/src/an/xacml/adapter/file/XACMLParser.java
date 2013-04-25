@@ -140,7 +140,9 @@ public class XACMLParser {
 
     static DataAdapter createContextDataAdapterFromXMLElement(Element elem) throws Exception {
         // Get the element's type
+    	System.out.println("createContextDataAdapterFromXMLElement: " + elem.getClass().getName());
         String elemType = elem.getSchemaTypeInfo().getTypeName();
+        System.out.println(elemType);
         Class<?> adapterClass = getContextDataAdapterClassByXMLType(elemType);
         // All file adapters should have a constructor with a parameter that type is "Element"
         Constructor<?> constructor = adapterClass.getConstructor(Element.class);
