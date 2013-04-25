@@ -22,8 +22,14 @@ public class EnterprisePDP {
 
 	private Logger log = Logger.getLogger(EnterprisePDP.class.getName());
 
+	private String resourcePrefix = "";
+	
 	public EnterprisePDP() {
 
+	}
+	
+	public EnterprisePDP(String resourcePrefix) {
+		this.resourcePrefix = resourcePrefix;
 	}
 
 	/**
@@ -44,9 +50,9 @@ public class EnterprisePDP {
 	 */
 	public boolean evaluate(String resource, String subject, String action,
 			Map<Parameter, String> params) {
-		log.info("Resource: " + resource);
-		log.info("Subject: " + subject);
-		log.info("Action: " + action);
+		log.fine("Resource: " + resource);
+		log.fine("Subject: " + subject);
+		log.fine("Action: " + action);
 
 		if (params == null) {
 			params = new HashMap<Parameter, String>();
@@ -56,8 +62,11 @@ public class EnterprisePDP {
 		params.put(Parameter.ACTION, action);
 
 		try {
+			System.setProperty(XACMLParser.CONTEXT_KEY_DEFAULT_SCHEMA_FILE, resourcePrefix + "xacml-2.0-context.xsd");
+			System.setProperty(XACMLParser.POLICY_KEY_DEFAULT_SCHEMA_FILE, resourcePrefix + "xacml-2.0-policy.xsd");
+			
 			String xacmlRequest = FileHelper
-					.readFile("res/request/request.xml");
+					.readFile(resourcePrefix + "request/request.xml");
 
 			xacmlRequest = replaceParams(xacmlRequest, params);
 			// log.info(xacmlRequest);
@@ -66,8 +75,8 @@ public class EnterprisePDP {
 					xacmlRequest.getBytes()));
 
 			String xacmlPolicy = FileHelper
-					.readFile("res/policies/xacml-policy.xml");
-			log.info(xacmlPolicy);
+					.readFile(resourcePrefix + "policies/xacml-policy.xml");
+			// log.info(xacmlPolicy);
 
 			AbstractPolicy policy = XACMLParser
 					.parsePolicy(new ByteArrayInputStream(xacmlPolicy.getBytes()));
@@ -77,10 +86,10 @@ public class EnterprisePDP {
 
 			ByteArrayOutputStream tempOut = new ByteArrayOutputStream();
 			XACMLParser.dumpResponse(actualResponse, tempOut);
-			log.info("Dump actual response: " + tempOut.toString());
+			log.finest("Dump actual response: " + tempOut.toString());
 			Decision d = result.getDecision();
 
-			log.info(d.toString());
+			log.fine(d.toString());
 			if (!d.equals(Effect.Permit)) {
 				return false;
 			}

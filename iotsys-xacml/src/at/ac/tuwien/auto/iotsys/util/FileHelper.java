@@ -16,7 +16,7 @@ public class FileHelper {
 		if (in == null) {
 			in = new FileInputStream(path);
 		}
-		System.out.println(path);
+		// System.out.println(path);
 		
 		try {
 			BufferedReader br = new BufferedReader(new InputStreamReader(in));

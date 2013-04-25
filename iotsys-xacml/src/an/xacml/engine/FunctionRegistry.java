@@ -58,12 +58,12 @@ public class FunctionRegistry {
      */
     @SuppressWarnings("unchecked")
     protected void initialize() throws IOException, ClassNotFoundException, BuiltInFunctionExistsException {
-        Set<Class<?>> providerClasses = new HashSet<Class<?>>();
+    	Set<Class<?>> providerClasses = new HashSet<Class<?>>();
 
         findClassesByPackage(XACML_FUNCTION_PACKAGE, true, providerClasses);
         // loop on function provider classes
         for (Class<?> provider : providerClasses) {
-            try {
+        	try {
                 if (provider.isAnnotationPresent(XACMLFunctionProvider.class)) {
                     Method[] methods = provider.getMethods();
                     // find the matching method on function provider class

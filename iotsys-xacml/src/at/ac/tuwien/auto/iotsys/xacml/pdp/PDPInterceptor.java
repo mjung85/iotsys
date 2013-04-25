@@ -9,13 +9,28 @@ import at.ac.tuwien.auto.iotsys.commons.interceptor.InterceptorResponse;
 import at.ac.tuwien.auto.iotsys.commons.interceptor.InterceptorResponse.StatusCode;
 import at.ac.tuwien.auto.iotsys.commons.interceptor.Parameter;
 
+/**
+ * 
+ * @author Thomas Hofer
+ *
+ */
 public class PDPInterceptor implements Interceptor {
 
 	private Logger log = Logger.getLogger(PDPInterceptor.class.getName());
 	
+	private String resourcePrefix = "";
+	
+	public PDPInterceptor() {
+		
+	}
+	
+	public PDPInterceptor(String resourcePrefix) {
+		this.resourcePrefix = resourcePrefix;
+	}
+	
 	@Override
-	public InterceptorResponse handleRequest(InterceptorRequest request) {
-		log.info("Incoming request to PDPInteceptor");
+	public synchronized InterceptorResponse handleRequest(InterceptorRequest request) {
+		log.fine("Incoming request to PDPInteceptor");
 		
 		EnterprisePDP pdp = new EnterprisePDP();
 		String resource = request.getInterceptorParam(Parameter.RESOURCE);
@@ -31,8 +46,7 @@ public class PDPInterceptor implements Interceptor {
 
 	@Override
 	public InterceptorResponse handleResponse(InterceptorResponse response) {
-		// TODO Auto-generated method stub
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
 	private class Response extends AbstractResponse implements InterceptorResponse {

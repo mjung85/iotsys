@@ -413,7 +413,7 @@ public abstract class CombiningAlgorithms {
      * @throws IndeterminateException
      */
     @XACMLFunction({
-        "urn:oasis:names:tc:xacml:1.0:policy-combining-algorithm:permit-overrides",
+    	"urn:oasis:names:tc:xacml:1.0:policy-combining-algorithm:permit-overrides",
         "urn:oasis:names:tc:xacml:1.1:policy-combining-algorithm:ordered-permit-overrides"
     })
     public static Result policyPermitOverrides(EvaluationContext ctx, Object[] params) throws IndeterminateException {

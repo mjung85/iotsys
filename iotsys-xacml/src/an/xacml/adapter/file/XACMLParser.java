@@ -75,7 +75,7 @@ public class XACMLParser {
         // parse request file
         // System.out.println(XACMLParser.class.getSimpleName() + ".parseRequest(): " + defaultSchema);
         
-        Element root = parse(in, defaultSchema);
+        Element root = parse(in, defaultSchema);        
         DataAdapter da = createContextDataAdapterFromXMLElement(root);
 
         return (Request)da.getEngineElement();
@@ -140,9 +140,11 @@ public class XACMLParser {
 
     static DataAdapter createContextDataAdapterFromXMLElement(Element elem) throws Exception {
         // Get the element's type
-    	System.out.println("createContextDataAdapterFromXMLElement: " + elem.getClass().getName());
+//    	System.out.println("createContextDataAdapterFromXMLElement: ClassName: " + elem.getClass().getName());
+//    	System.out.println("createContextDataAdapterFromXMLElement: LocalName: " + elem.getLocalName());
+//    	System.out.println("createContextDataAdapterFromXMLElement: SchemaTypeInfo: " + elem.getSchemaTypeInfo().toString());
+    	
         String elemType = elem.getSchemaTypeInfo().getTypeName();
-        System.out.println(elemType);
         Class<?> adapterClass = getContextDataAdapterClassByXMLType(elemType);
         // All file adapters should have a constructor with a parameter that type is "Element"
         Constructor<?> constructor = adapterClass.getConstructor(Element.class);

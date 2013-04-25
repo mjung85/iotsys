@@ -119,7 +119,7 @@ public class NanoHTTPD {
 
 	private ExiUtil exiUtil = null;
 	
-	private InterceptorBroker interceptors = InterceptorBrokerImpl
+	private InterceptorBroker interceptorBroker = InterceptorBrokerImpl
 			.getInstance();
 
 
@@ -171,8 +171,8 @@ public class NanoHTTPD {
 			return r;
 		}	
 
-		if (interceptors != null && interceptors.hasInterceptors()) {
-			log.info("Interceptors found ... starting to prepare.");
+		if (interceptorBroker != null && interceptorBroker.hasInterceptors()) {
+			log.fine("Interceptors found ... starting to prepare.");
 			
 			InterceptorRequest interceptorRequest = new InterceptorRequestImpl();
 			HashMap<Parameter, String> interceptorParams = new HashMap<Parameter, String>();
@@ -197,8 +197,8 @@ public class NanoHTTPD {
 			for (Object k: parms.keySet()) {
 				interceptorRequest.setRequestParam((String) k, header.getProperty((String) k));
 			}
-			log.info("Calling interceptions ...");
-			InterceptorResponse resp = interceptors
+			log.fine("Calling interceptions ...");
+			InterceptorResponse resp = interceptorBroker
 					.handleRequest(interceptorRequest);
 			
 			if (!resp.getStatus().equals(StatusCode.OK)) {
@@ -207,8 +207,6 @@ public class NanoHTTPD {
 							resp.getMessage());
 				}
 			}
-			log.info("... interceptions finished.");
-
 		}
 		
 		String data = "";
