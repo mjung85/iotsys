@@ -19,9 +19,9 @@ import at.ac.tuwien.auto.iotsys.commons.interceptor.Parameter;
 import at.ac.tuwien.auto.iotsys.util.FileHelper;
 
 public class EnterprisePDP {
-	
+
 	private Logger log = Logger.getLogger(EnterprisePDP.class.getName());
-	
+
 	public EnterprisePDP() {
 
 	}
@@ -31,10 +31,14 @@ public class EnterprisePDP {
 	 * three String attributes are mandatory. Additional parameters can be set
 	 * with the params Map.
 	 * 
-	 * @param resource	XACML resource-id
-	 * @param subject	XACML subject-id
-	 * @param action	XACML action-id
-	 * @param params	additional parameters 
+	 * @param resource
+	 *            XACML resource-id
+	 * @param subject
+	 *            XACML subject-id
+	 * @param action
+	 *            XACML action-id
+	 * @param params
+	 *            additional parameters
 	 * 
 	 * @return in case the request is evaluated to Permit true, false otherwise.
 	 */
@@ -52,23 +56,28 @@ public class EnterprisePDP {
 		params.put(Parameter.ACTION, action);
 
 		try {
-			String xacmlRequest = FileHelper.readFile("request/request.xml");
+			String xacmlRequest = FileHelper
+					.readFile("res/request/request.xml");
 
 			xacmlRequest = replaceParams(xacmlRequest, params);
-			// log4j.info(xacmlRequest);
+			// log.info(xacmlRequest);
 
 			Request req = XACMLParser.parseRequest(new ByteArrayInputStream(
 					xacmlRequest.getBytes()));
+
+			String xacmlPolicy = FileHelper
+					.readFile("res/policies/xacml-policy.xml");
+			log.info(xacmlPolicy);
+
 			AbstractPolicy policy = XACMLParser
-					.parsePolicy(new ByteArrayInputStream(FileHelper.readFile(
-							"policies/xacml-policy.xml").getBytes()));
+					.parsePolicy(new ByteArrayInputStream(xacmlPolicy.getBytes()));
 
 			Result result = policy.evaluate(new EvaluationContext(req));
 			Response actualResponse = new Response(new Result[] { result });
 
 			ByteArrayOutputStream tempOut = new ByteArrayOutputStream();
 			XACMLParser.dumpResponse(actualResponse, tempOut);
-			// log4j.info("Dump actual response: " + tempOut.toString());
+			log.info("Dump actual response: " + tempOut.toString());
 			Decision d = result.getDecision();
 
 			log.info(d.toString());
@@ -78,10 +87,9 @@ public class EnterprisePDP {
 			return true;
 
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (Exception e) {
-			log.severe(e.getMessage());
+			log.severe("Exception occured ....");
 			log.severe(e.getClass().getSimpleName());
 			e.printStackTrace();
 		}
@@ -92,7 +100,6 @@ public class EnterprisePDP {
 	private String replaceParams(String str, Map<Parameter, String> params) {
 		for (Parameter r : params.keySet()) {
 			str = str.replaceAll("\\{\\$" + r + "\\}", params.get(r).trim());
-			// log4j.info("\\{\\$" + r + "\\}");
 		}
 		str = str.replaceAll("\\{\\$(.)*\\}", "");
 		return str;

@@ -59,11 +59,6 @@ subprojects{
 sourceCompatibility = 1.6
 description = 'IoTSyS - Integration middleware for the Internet of Things'
 
-repositories {
-	mavenCentral()
-	mavenLocal()
-}
-
 task deployOsgi << {
 	File dstConfigDir = new File(felix.absolutePath + '/config')
 	File dstResDir = new File(felix.absolutePath + '/res')

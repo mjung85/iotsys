@@ -1,4 +1,4 @@
-package at.ac.tuwien.auto.iotsys.xacml.pdp.xacml;
+package at.ac.tuwien.auto.iotsys.xacml;
 
 import java.util.logging.Logger;
 
@@ -13,6 +13,11 @@ import at.ac.tuwien.auto.iotsys.commons.interceptor.Interceptor;
 import at.ac.tuwien.auto.iotsys.commons.interceptor.InterceptorBroker;
 import at.ac.tuwien.auto.iotsys.xacml.pdp.PDPInterceptor;
 
+/**
+ * 
+ * @author Thomas Hofer
+ *
+ */
 public class PDPBundleActivator implements BundleActivator, ServiceListener {
 
 	private Interceptor interceptor;
@@ -26,24 +31,40 @@ public class PDPBundleActivator implements BundleActivator, ServiceListener {
 	@Override
 	public void start(BundleContext context) throws Exception {
 		this.context = context;
-
+		
 		interceptor = new PDPInterceptor();
 		
-		InterceptorBroker iBroker = getBroker();
-		try {
-			iBroker.register(interceptor);
-		} catch (ClassAlreadyRegisteredException e) {
-			// silent exception handling ...
-			log.severe(interceptor.getClass().getSimpleName()
-					+ " is already registered!");
+		ServiceReference<InterceptorBroker> interceptorRef = context
+				.getServiceReference(InterceptorBroker.class);
+		
+		if (interceptorRef == null) {
+			log.severe("Could not find InterceptorBroker");
+		} else {
+			InterceptorBroker iBroker = (InterceptorBroker) context
+					.getService(interceptorRef);
+			try {
+				iBroker.register(interceptor);
+			} catch (ClassAlreadyRegisteredException e) {
+				// silent exception handling ...
+				log.severe(interceptor.getClass().getSimpleName()
+						+ " is already registered!");
+			}
 		}
 		context.addServiceListener(this);
 	}
 
 	@Override
 	public void stop(BundleContext context) throws Exception {
-		InterceptorBroker iBroker = getBroker();
-		iBroker.unregister(interceptor);
+		ServiceReference<InterceptorBroker> interceptorRef = context
+				.getServiceReference(InterceptorBroker.class);
+		
+		if (interceptorRef == null) {
+			log.severe("Could not find a running InterceptorBroker to unregister devices!");
+		} else {
+			InterceptorBroker iBroker = (InterceptorBroker) context
+					.getService(interceptorRef);
+			iBroker.unregister(interceptor);
+		}
 	}
 
 	@Override
@@ -75,15 +96,5 @@ public class PDPBundleActivator implements BundleActivator, ServiceListener {
 				}
 			}
 		}
-	}
-
-	private InterceptorBroker getBroker() {
-		ServiceReference<InterceptorBroker> interceptorRef = context
-				.getServiceReference(InterceptorBroker.class);
-		InterceptorBroker iBroker = (InterceptorBroker) context
-				.getService(interceptorRef);
-
-		return iBroker;
-
 	}
 }

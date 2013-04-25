@@ -48,7 +48,6 @@ import at.ac.tuwien.auto.iotsys.gateway.obix.server.NanoHTTPD;
 import at.ac.tuwien.auto.iotsys.gateway.obix.server.ObixObservingManager;
 import at.ac.tuwien.auto.iotsys.gateway.obix.server.ObixServer;
 import at.ac.tuwien.auto.iotsys.gateway.obix.server.ObixServerImpl;
-import at.ac.tuwien.auto.iotsys.xacml.pdp.PDPInterceptor;
 
 import at.ac.tuwien.auto.iotsys.commons.Connector;
 import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
@@ -99,13 +98,13 @@ public class IoTSySGateway {
 		connectors = deviceLoader.initDevices(objectBroker);
 		
 		// initialize interceptor broker
-		interceptorBroker = InterceptorBrokerImpl.getInstance();
-		// temporarly register interceptor
-		try {
-			interceptorBroker.register(new PDPInterceptor());
-		} catch (ClassAlreadyRegisteredException e) {
-			// silent exceptionhandling
-		}
+//		interceptorBroker = InterceptorBrokerImpl.getInstance();
+//		// temporarly register interceptor
+//		try {
+//			interceptorBroker.register(new PDPInterceptor());
+//		} catch (ClassAlreadyRegisteredException e) {
+//			// silent exceptionhandling
+//		}
 
 		ObixObservingManager.getInstance().setObixServer(obixServer);
 

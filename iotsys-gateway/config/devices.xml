@@ -175,7 +175,7 @@
         <ipv6>2001:629:2500:570::108</ipv6>
         <historyEnabled>true</historyEnabled>
         <historyCount>200</historyCount>
-        <groupCommEnabled>true</groupCommEnabled>s
+        <groupCommEnabled>true</groupCommEnabled>
       </device>
 
       <device>
@@ -516,7 +516,7 @@
         <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.TemperatureSensorImpl
         </type>
         <href>virtualTemperatureSensor</href>
-        <refreshEnabled>true</refreshEnabled>
+        <refreshEnabled>false</refreshEnabled>
       </device>
 
       <device>

@@ -60,8 +60,11 @@ public class IoTSySGatewayActivator implements BundleActivator{
 		iotsysGateway = new IoTSySGateway();
 		iotsysGateway.startGateway();	
 		bundleContext.registerService(ObjectBroker.class.getName(), ObjectBrokerImpl.getInstance(), null);
-		bundleContext.registerService(InterceptorBroker.class,
-				InterceptorBrokerImpl.getInstance(), null);
+
+		log.info("================================");
+		log.info("Register InterceptorBroker");
+
+		bundleContext.registerService(InterceptorBroker.class.getName(),InterceptorBrokerImpl.getInstance(), null);
 	}
 
 	@Override
