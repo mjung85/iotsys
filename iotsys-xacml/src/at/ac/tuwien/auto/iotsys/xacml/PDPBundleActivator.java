@@ -32,7 +32,7 @@ public class PDPBundleActivator implements BundleActivator, ServiceListener {
 	public void start(BundleContext context) throws Exception {
 		this.context = context;
 		
-		interceptor = new PDPInterceptor();
+		interceptor = new PDPInterceptor("res/");
 		
 		ServiceReference<InterceptorBroker> interceptorRef = context
 				.getServiceReference(InterceptorBroker.class);

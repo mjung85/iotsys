@@ -114,11 +114,7 @@ public abstract class XMLParserWrapper {
     }
 
     private synchronized static DocumentBuilder getDefaultDocumentBuilder(String ... schemaLocations)
-    throws ParserConfigurationException, MalformedURLException, SAXException, XMLGeneralException { 	
-    	for (String s: schemaLocations) {
-    		System.out.println("-- " + (new File(s)).getAbsolutePath());
-    	}
-    	
+    throws ParserConfigurationException, MalformedURLException, SAXException, XMLGeneralException { 	    	
     	if (schemaLocations == null || schemaLocations.length == 0) {
             return getDefaultDocumentBuilder();
         }
@@ -140,7 +136,8 @@ public abstract class XMLParserWrapper {
             DocumentBuilder builder = f.newDocumentBuilder();
             builder.setErrorHandler(errHandler);
             return builder;
-        }
+        } 
+
     }
 
     private synchronized static DocumentBuilder getDefaultDocumentBuilder()
@@ -167,9 +164,7 @@ public abstract class XMLParserWrapper {
             // Initialize the Source array for schema factory.
             Source[] sources = new Source[schemaLocations.length];
             for (int x = 0; x < sources.length; x ++) {
-            	File sf = new File(schemaLocations[x]);            	
-            	// System.out.println("Create schemafactory: " + schemaLocations[x]);
-                sources[x] = new StreamSource("file://" + sf.getAbsolutePath());
+                sources[x] = new StreamSource(schemaLocations[x]);
             }
             // The schema factory will combine all the given sources to a single Schema.
             Schema schema = getSchemaFactory().newSchema(sources);

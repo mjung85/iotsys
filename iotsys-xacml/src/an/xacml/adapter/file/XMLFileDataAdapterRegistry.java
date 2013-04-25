@@ -195,7 +195,7 @@ public abstract class XMLFileDataAdapterRegistry {
      * @return
      */
     public static Class<?> getContextDataAdapterClassByXMLType(String elemName) {
-    	System.out.println(elemName);
+    	// System.out.println("ElementName (getContextDataAdapterClassByXMLType): " + elemName);
         return contextByXMLTag.get(elemName);
     }
 
