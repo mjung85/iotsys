@@ -58,7 +58,9 @@ public class IoTSySGatewayActivator implements BundleActivator{
 	public void start(BundleContext bundleContext) throws Exception {
 		log.info("Starting IoTSySGateway.");
 		iotsysGateway = new IoTSySGateway();
+		iotsysGateway.setOsgiEnvironment(true);
 		iotsysGateway.startGateway();	
+		
 		bundleContext.registerService(ObjectBroker.class.getName(), ObjectBrokerImpl.getInstance(), null);
 
 		log.info("================================");

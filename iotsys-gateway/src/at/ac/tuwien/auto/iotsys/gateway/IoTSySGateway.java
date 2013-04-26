@@ -67,6 +67,8 @@ public class IoTSySGateway {
 	private DeviceLoaderImpl deviceLoader;
 	private InterceptorBroker interceptorBroker;
 	
+	private boolean osgiEnvironment = false;
+	
 	private ArrayList<Connector> connectors = new ArrayList<Connector>();
 
 	private static final Logger log = Logger.getLogger(IoTSySGateway.class
@@ -101,11 +103,13 @@ public class IoTSySGateway {
 		
 		// initialize interceptor broker
 		interceptorBroker = InterceptorBrokerImpl.getInstance();
-		// temporarly register interceptor
-		try {
-			interceptorBroker.register(new PDPInterceptor());
-		} catch (ClassAlreadyRegisteredException e) {
-			// silent exceptionhandling
+		if (!isOsgiEnvironment()) {
+			// temporarly register interceptor
+			try {
+				interceptorBroker.register(new PDPInterceptor());
+			} catch (ClassAlreadyRegisteredException e) {
+				// silent exceptionhandling
+			}
 		}
 
 		ObixObservingManager.getInstance().setObixServer(obixServer);
@@ -123,7 +127,6 @@ public class IoTSySGateway {
 		objectBroker.shutdown();
 		closeConnectors();
 	}
-
 		
 	public static void main(String[] args) {
 		final IoTSySGateway iotsys = new IoTSySGateway();
@@ -156,5 +159,13 @@ public class IoTSySGateway {
 				e.printStackTrace();
 			}
 		}
+	}
+
+	public boolean isOsgiEnvironment() {
+		return osgiEnvironment;
+	}
+
+	public void setOsgiEnvironment(boolean osgiEnvironment) {
+		this.osgiEnvironment = osgiEnvironment;
 	}
 }

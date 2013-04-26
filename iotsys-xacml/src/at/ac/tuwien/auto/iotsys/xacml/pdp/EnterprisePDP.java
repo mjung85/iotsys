@@ -69,7 +69,7 @@ public class EnterprisePDP {
 					.readFile(resourcePrefix + "request/request.xml");
 
 			xacmlRequest = replaceParams(xacmlRequest, params);
-			// log.info(xacmlRequest);
+			log.info(xacmlRequest);
 
 			Request req = XACMLParser.parseRequest(new ByteArrayInputStream(
 					xacmlRequest.getBytes()));

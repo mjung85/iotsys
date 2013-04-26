@@ -37,10 +37,18 @@ import java.net.Inet6Address;
 import java.net.SocketException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.HashMap;
 import java.util.logging.Logger;
 
 import org.json.JSONException;
 
+import at.ac.tuwien.auto.iotsys.commons.interceptor.InterceptorBroker;
+import at.ac.tuwien.auto.iotsys.commons.interceptor.InterceptorRequest;
+import at.ac.tuwien.auto.iotsys.commons.interceptor.InterceptorRequestImpl;
+import at.ac.tuwien.auto.iotsys.commons.interceptor.InterceptorResponse;
+import at.ac.tuwien.auto.iotsys.commons.interceptor.Parameter;
+import at.ac.tuwien.auto.iotsys.commons.interceptor.InterceptorResponse.StatusCode;
+import at.ac.tuwien.auto.iotsys.gateway.interceptor.InterceptorBrokerImpl;
 import at.ac.tuwien.auto.iotsys.gateway.service.impl.GroupCommServiceImpl;
 import at.ac.tuwien.auto.iotsys.gateway.util.EXIDecoder;
 import at.ac.tuwien.auto.iotsys.gateway.util.ExiUtil;
@@ -56,6 +64,7 @@ import ch.ethz.inf.vs.californium.coap.CodeRegistry;
 import ch.ethz.inf.vs.californium.coap.Communicator;
 import ch.ethz.inf.vs.californium.coap.GETRequest;
 import ch.ethz.inf.vs.californium.coap.MediaTypeRegistry;
+import ch.ethz.inf.vs.californium.coap.Option;
 import ch.ethz.inf.vs.californium.coap.OptionNumberRegistry;
 import ch.ethz.inf.vs.californium.coap.POSTRequest;
 import ch.ethz.inf.vs.californium.coap.PUTRequest;
@@ -68,12 +77,16 @@ import ch.ethz.inf.vs.californium.layers.MulticastUDPLayer.REQUEST_TYPE;
 import ch.ethz.inf.vs.californium.util.Properties;
 
 public class CoAPServer extends Endpoint {
-	private static final Logger log = Logger.getLogger(CoAPServer.class.getName());
+	private static final Logger log = Logger.getLogger(CoAPServer.class
+			.getName());
 
 	public static final String COAP_URL_PROTOCOL = "coap";
 
 	private ObixServer obixServer;
 	private SOAPHandler soapHandler;
+
+	private InterceptorBroker interceptorBroker = InterceptorBrokerImpl
+			.getInstance();
 
 	// exit codes for runtime errors
 	public static final int ERR_INIT_FAILED = 1;
@@ -100,34 +113,81 @@ public class CoAPServer extends Endpoint {
 
 	@Override
 	public void execute(Request request) throws IOException {
-		
+
+		String resourcePath = request.getUriPath();
+
+		/* INTERCEPTORS START */
+		if (interceptorBroker != null && interceptorBroker.hasInterceptors()) {
+			log.fine("Interceptors found ... starting to prepare.");
+
+			InterceptorRequest interceptorRequest = new InterceptorRequestImpl();
+			HashMap<Parameter, String> interceptorParams = new HashMap<Parameter, String>();
+
+			String resource = COAP_URL_PROTOCOL + "://"
+					+ request.getNetworkInterface().getCanonicalHostName()
+					+ ":" + Communicator.getInstance().port() + resourcePath;
+			LOG.info(resource);
+			String action = CodeRegistry.toString(request.getCode());
+
+			interceptorParams.put(Parameter.SUBJECT, request.getPeerAddress()
+					.toString());
+			interceptorParams.put(Parameter.SUBJECT_IP_ADDRESS, request
+					.getPeerAddress().toString());
+			interceptorParams.put(Parameter.RESOURCE, resource);
+			interceptorParams.put(Parameter.RESOURCE_PROTOCOL,
+					COAP_URL_PROTOCOL);
+			interceptorParams.put(Parameter.RESOURCE_IP_ADDRESS, request
+					.getNetworkInterface().getHostAddress());
+			interceptorParams.put(Parameter.RESOURCE_HOSTNAME, request
+					.getNetworkInterface().getHostName());
+			interceptorParams.put(Parameter.RESOURCE_PATH, resourcePath);
+			interceptorParams.put(Parameter.ACTION, action);
+
+			interceptorRequest.setInterceptorParams(interceptorParams);
+
+			log.fine("Calling interceptions ...");
+			InterceptorResponse resp = interceptorBroker
+					.handleRequest(interceptorRequest);
+
+			if (!resp.getStatus().equals(StatusCode.OK)) {
+				if (resp.forward()) {
+					request.respond(CodeRegistry.RESP_FORBIDDEN,
+							resp.getMessage(), MediaTypeRegistry.TEXT_PLAIN);
+					request.sendResponse();
+					return;
+				}
+			}
+		}
+		/* INTERCEPTORS END */
+
+		String localSocket = request.getNetworkInterface().getHostAddress()
+				.toString();
+
 		// handle multicast requests first
 		if (MulticastUDPLayer.getRequestType() == REQUEST_TYPE.MULTICAST_REQUEST) {
 			log.finest("Handle multicast request!");
 			Obj obj = null;
-			if(request.getContentType() == MediaTypeRegistry.APPLICATION_EXI ||
-					request.getContentType() == MediaTypeRegistry.APPLICATION_OCTET_STREAM){
+			if (request.getContentType() == MediaTypeRegistry.APPLICATION_EXI
+					|| request.getContentType() == MediaTypeRegistry.APPLICATION_OCTET_STREAM) {
 				try {
 					log.finest("Received EXI encoded multicast.");
-					obj = EXIDecoder.getInstance().fromBytes(request.getPayload(), request.getContentType() == MediaTypeRegistry.APPLICATION_OCTET_STREAM);
-				} catch (Exception e){
+					obj = EXIDecoder
+							.getInstance()
+							.fromBytes(
+									request.getPayload(),
+									request.getContentType() == MediaTypeRegistry.APPLICATION_OCTET_STREAM);
+				} catch (Exception e) {
 					e.printStackTrace();
 				}
-				
-			}
-			else{
+			} else {
 				// try to decode from string
 				obj = ObixDecoder.fromString(request.getPayloadString());
 			}
 			GroupCommServiceImpl.getInstance().handleRequest(
-							MulticastUDPLayer.getMulticastAddress(), obj);
+					MulticastUDPLayer.getMulticastAddress(), obj);
 			return;
 		}
 
-		String resourcePath = request.getUriPath();
-
-		String localSocket = request.getNetworkInterface().getHostAddress()
-				.toString();
 		int lastIndex = localSocket.lastIndexOf("%");
 		String localSocketSplitted = request.getNetworkInterface()
 				.getHostAddress().toString();
@@ -164,14 +224,16 @@ public class CoAPServer extends Endpoint {
 		// check for application/exi content
 		if (request.getContentType() == MediaTypeRegistry.APPLICATION_EXI) {
 			try {
-				payloadString = ExiUtil.getInstance().decodeEXI(request.getPayload());
+				payloadString = ExiUtil.getInstance().decodeEXI(
+						request.getPayload());
 			} catch (Exception e) {
 				e.printStackTrace();
 				payloadString = request.getPayloadString();
 			}
 		} else if (request.getContentType() == MediaTypeRegistry.APPLICATION_OCTET_STREAM) {
 			try {
-				payloadString = ExiUtil.getInstance().decodeEXI(request.getPayload(), true);
+				payloadString = ExiUtil.getInstance().decodeEXI(
+						request.getPayload(), true);
 			} catch (Exception e) {
 				e.printStackTrace();
 				payloadString = request.getPayloadString();
@@ -199,8 +261,6 @@ public class CoAPServer extends Endpoint {
 
 		payloadString = payloadString.replaceFirst(COAP_URL_PROTOCOL,
 				obixServer.DEFAULT_OBIX_URL_PROTOCOL);
-
-		
 
 		String obixMessage = "";
 
@@ -248,7 +308,8 @@ public class CoAPServer extends Endpoint {
 
 			if (request.getFirstAccept() == MediaTypeRegistry.APPLICATION_EXI) {
 				try {
-					byte[] exiData = ExiUtil.getInstance().encodeEXI(obixResponse.toString());
+					byte[] exiData = ExiUtil.getInstance().encodeEXI(
+							obixResponse.toString());
 					request.respond(CodeRegistry.RESP_CONTENT, exiData,
 							MediaTypeRegistry.APPLICATION_EXI);
 
@@ -259,8 +320,8 @@ public class CoAPServer extends Endpoint {
 				}
 			} else if (request.getFirstAccept() == MediaTypeRegistry.APPLICATION_OCTET_STREAM) {
 				try {
-					byte[] exiData = ExiUtil.getInstance().encodeEXI(obixResponse.toString(),
-							true);
+					byte[] exiData = ExiUtil.getInstance().encodeEXI(
+							obixResponse.toString(), true);
 					request.respond(CodeRegistry.RESP_CONTENT, exiData,
 							MediaTypeRegistry.APPLICATION_EXI);
 
