@@ -32,7 +32,7 @@ public class PDPInterceptor implements Interceptor {
 	public synchronized InterceptorResponse handleRequest(InterceptorRequest request) {
 		log.fine("Incoming request to PDPInteceptor");
 		
-		EnterprisePDP pdp = new EnterprisePDP();
+		EnterprisePDP pdp = new EnterprisePDP(resourcePrefix);
 		String resource = request.getInterceptorParam(Parameter.RESOURCE);
 		String subject = request.getInterceptorParam(Parameter.SUBJECT);
 		String method = request.getInterceptorParam(Parameter.ACTION);
