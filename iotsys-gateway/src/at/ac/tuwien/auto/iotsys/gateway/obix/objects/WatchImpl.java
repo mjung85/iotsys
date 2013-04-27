@@ -98,9 +98,20 @@ public class WatchImpl extends Obj implements Watch {
 		broker.addOperationHandler(new Uri(this.getNormalizedHref().getPath() + "/remove"), new OperationHandler(){
 			@Override
 			public Obj invoke(Obj in) {
-				// Perform add logic
-				
-				return new WatchOutImpl();
+				// Perform remove logic
+				if(in instanceof WatchIn){
+					WatchIn watchIn = (WatchIn) in;
+	
+					for(Obj u : watchIn.get("hrefs").list()){
+						Uri uri = (Uri) u;
+
+						ObjObserver observer = observers.get(uri.getPath());
+						observers.remove(uri.getPath());
+						Obj o = broker.pullObj(uri);
+						o.detach(observer);
+					}					
+				}		
+				return new NillImpl();
 			}			
 		});
 		
