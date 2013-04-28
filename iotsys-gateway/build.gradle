@@ -1,15 +1,5 @@
 // Variables
 description = 'IoTSyS Gateway'
-buildscript {
-    repositories {
-        mavenCentral()
-    }
-
-    dependencies {
-        classpath 'eu.appsatori:gradle-fatjar-plugin:0.2-rc1'
-    }
-}
-apply plugin: 'fatjar'
 
 eclipse{
 	classpath{
