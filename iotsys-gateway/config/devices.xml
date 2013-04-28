@@ -426,6 +426,8 @@
         <localDeviceID>54321</localDeviceID>
         <broadcastAddress>128.130.56.255</broadcastAddress>
         <localPort>47808</localPort>
+        <groupCommEnabled>true</groupCommEnabled>
+        <historyEnabled>false</historyEnabled>
     </connector>
   </bacnet>
 
@@ -516,7 +518,7 @@
         <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.TemperatureSensorImpl
         </type>
         <href>virtualTemperatureSensor</href>
-        <refreshEnabled>true</refreshEnabled>
+        <refreshEnabled>false</refreshEnabled>
       </device>
 
       <device>
@@ -569,7 +571,7 @@
         <href>virtualBrightnessActuator</href>
         <historyEnabled>true</historyEnabled>
         <historyCount>100</historyCount>
-        <refreshEnabled>true</refreshEnabled>
+        <refreshEnabled>false</refreshEnabled>
       </device>
       <device>
         <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.HVACvalveActuatorImpl
@@ -658,7 +660,5 @@
       </device>
     </connector>
   </virtual>
-  
-  
 </devices>
 	
