@@ -246,6 +246,7 @@ public class ObjectBrokerImpl implements ObjectBroker {
 			for (int i = 0; i < o.size(); i++)
 				if (kids[i].getHref() != null)
 					hrefs.addAll(addObj(kids[i]));
+			// FIXME: should we store kid's href as absolute rather than relative href?
 		}
 
 		return hrefs;
@@ -280,6 +281,11 @@ public class ObjectBrokerImpl implements ObjectBroker {
 	public synchronized void addOperationHandler(Uri uri,
 			OperationHandler handler) {
 		operationHandler.put(uri.toString(), handler);
+	}
+	
+	@Override
+	public void removeOperationHandler(Uri uri){
+		operationHandler.remove(uri.getPath());
 	}
 
 	@Override
