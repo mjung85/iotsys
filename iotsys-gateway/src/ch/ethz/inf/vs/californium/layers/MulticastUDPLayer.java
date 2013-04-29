@@ -127,7 +127,6 @@ public class MulticastUDPLayer extends Layer {
 		// initialize members
 
 		try {
-			System.out.println("###### New multicast socket! " + port);
 
 			// join IPv6 Multicast on all interfaces
 
@@ -231,8 +230,7 @@ public class MulticastUDPLayer extends Layer {
 	// ////////////////////////////////////////////////////////////////////
 
 	private void datagramReceived(DatagramPacket datagram) {
-		System.out
-				.println("DataGram Received!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+
 
 		if (datagram.getLength() > 0) {
 

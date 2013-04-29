@@ -39,6 +39,7 @@ import java.util.ArrayList;
 
 import java.util.logging.Logger;
 
+import at.ac.tuwien.auto.iotsys.gateway.util.CsvCreator;
 import at.ac.tuwien.auto.iotsys.gateway.util.ExiUtil;
 
 import at.ac.tuwien.auto.iotsys.gateway.obix.objectbroker.ObjectBrokerImpl;
@@ -106,7 +107,9 @@ public class IoTSySGateway {
 
 	public void stopGateway() {
 		objectBroker.shutdown();
+		CsvCreator.instance.close();
 		closeConnectors();
+		
 	}
 
 		

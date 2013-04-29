@@ -143,7 +143,6 @@ public class UDPLayer extends Layer {
 		this.inetAddress = inetAddress;
 			
 		this.socket = new DatagramSocket(port, inetAddress);
-		log.finest("Socket reuse address enabled: " + socket.getReuseAddress());
 		this.socket.setReuseAddress(true);
 		this.receiverThread = new ReceiverThread();
 
