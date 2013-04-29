@@ -1,0 +1,6 @@
+^.metadata$
+.*\.png
+.*\.html
+.*\.bin
+.*\.class
+.*\.lock
