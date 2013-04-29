@@ -28,6 +28,7 @@ import at.ac.tuwien.auto.calimero.exception.KNXException;
 import at.ac.tuwien.auto.iotsys.gateway.connectors.knx.KNXConnector;
 import at.ac.tuwien.auto.iotsys.gateway.connectors.knx.KNXWatchDog;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.LightSwitchActuatorImpl;
+import at.ac.tuwien.auto.iotsys.gateway.util.CsvCreator;
 import obix.Obj;
 
 /**
@@ -54,6 +55,8 @@ public class LightSwitchActuatorImplKnx extends LightSwitchActuatorImpl  {
 						DPTXlatorBoolean x = new DPTXlatorBoolean(DPTXlatorBoolean.DPT_SWITCH);
 											
 						x.setData(apdu);
+						
+						
 
 						if(x.getValueBoolean() != LightSwitchActuatorImplKnx.this.value.get()){
 							LightSwitchActuatorImplKnx.this.value.set(x.getValueBoolean());
@@ -70,8 +73,8 @@ public class LightSwitchActuatorImplKnx extends LightSwitchActuatorImpl  {
 	public void writeObject(Obj input){
 		// A write on this object was received, update the according data point.	
 		super.writeObject(input);
-	
 		knxConnector.write(switching, this.value().get());	
+		CsvCreator.instance.writeLine("" + System.currentTimeMillis() + ";" + switching.toString() + ";" + this.value().get());
 	}
 	
 	public void refreshObject(){

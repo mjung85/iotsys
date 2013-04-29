@@ -20,6 +20,7 @@ ext{
 	resDir = file('iotsys-gateway/res')
 	distLib = file('dist')
 	distLibRunFile = file('dist/rungateway.bat')
+	distLibRunFileSh = file('dist/rungateway.sh')
 	
 	String felixDir = "felix-framework-4.2.1"
 	
@@ -68,7 +69,9 @@ repositories {
 }
 
 task deploy << {
-	ant.echo(message:'java -cp "iotsys-bacnet-0.1.jar;iotsys-bacnet4j-0.1.jar;iotsys-calimero-0.1.jar;iotsys-common-0.1.jar;iotsys-control-0.1.jar;iotsys-encoding-json-0.1.jar;iotsys-gateway-0.1.jar;iotsys-knx-0.1.jar;iotsys-obix-0.1.jar;iotsys-virtual-0.1.jar;iotsys-wmbus-0.1.jar" at.ac.tuwien.auto.iotsys.gateway.IoTSySGateway', file:distLibRunFile)		
+	ant.echo(message:'java -cp "iotsys-bacnet-0.1.jar;iotsys-bacnet4j-0.1.jar;iotsys-calimero-0.1.jar;iotsys-common-0.1.jar;iotsys-control-0.1.jar;iotsys-encoding-json-0.1.jar;iotsys-gateway-0.1.jar;iotsys-knx-0.1.jar;iotsys-obix-0.1.jar;iotsys-virtual-0.1.jar;iotsys-wmbus-0.1.jar" at.ac.tuwien.auto.iotsys.gateway.IoTSySGateway', file:distLibRunFile)	
+
+	ant.echo(message:'java -cp "iotsys-bacnet-0.1.jar:iotsys-bacnet4j-0.1.jar:iotsys-calimero-0.1.jar:iotsys-common-0.1.jar:iotsys-control-0.1.jar:iotsys-encoding-json-0.1.jar:iotsys-gateway-0.1.jar:iotsys-knx-0.1.jar:iotsys-obix-0.1.jar:iotsys-virtual-0.1.jar:iotsys-wmbus-0.1.jar" at.ac.tuwien.auto.iotsys.gateway.IoTSySGateway', distLibRunFileSh)			
 		
 	File deployResDir = new File(distLib.absolutePath + '/res')
 	File deployConfDir = new File(distLib.absolutePath + '/config')
