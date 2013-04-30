@@ -20,6 +20,7 @@ import obix.Int;
 import obix.Obj;
 import obix.Real;
 import obix.Str;
+import obix.io.BinObixDecoder;
 import obix.io.BinObixEncoder;
 import obix.io.ObixDecoder;
 import obix.io.ObixEncoder;
@@ -69,9 +70,7 @@ public class CPUEval {
 		threadMXBean.setThreadContentionMonitoringEnabled(true);
 		long mainThreadId = 1;
 
-		CsvCreator.instance.writeLine("oBIX to XML");
-		CsvCreator.instance.writeLine("-----------");
-		CsvCreator.instance.writeLine("bool");
+		
 
 		String xml = "";
 		long startTime = 0;
@@ -85,758 +84,762 @@ public class CPUEval {
 		double timePerRequest = 0;
 		// oBIX to XML
 		// bool
-//		for (int x = 0; x < REPEAT; x++) {
-//			sTime = System.currentTimeMillis();
-//			startTime = threadMXBean.getThreadCpuTime(mainThreadId);
-//			
-//			for (int k = 0; k < RUNS_PER_OBJ_ENC; k++) {
-//				bool = new Bool(false);
-//				xml = ObixEncoder.toString(bool);
-//			}
-//			endTime = threadMXBean.getThreadCpuTime(mainThreadId);
-//			eTime = System.currentTimeMillis();
-//
-//			encTime = endTime - startTime;
-//			System.out.println("" + (eTime - sTime));
-//			cpuTime = ((double) encTime) / 1000;
-//
-//			timePerRequest = cpuTime / RUNS_PER_OBJ_ENC;
-//
-//			line = "oBIX to XML; bool; startTime;" + startTime + ";endTime;"
-//					+ endTime + ";encTime (ms);" + cpuTime + ";"
-//					+ timePerRequest;
-//			System.out.println(line);
-//			CsvCreator.instance.writeLine(line);
-//
-//		}
-//
-//		// int
-//		for (int x = 0; x < REPEAT; x++) {
-//			sTime = System.currentTimeMillis();
-//			startTime = threadMXBean.getThreadCpuTime(mainThreadId);
-//			
-//			for (int k = 0; k < RUNS_PER_OBJ_ENC; k++) {
-//				i = new Int(58);
-//				xml = ObixEncoder.toString(real);
-//			}
-//			endTime = threadMXBean.getThreadCpuTime(mainThreadId);
-//			eTime = System.currentTimeMillis();
-//
-//			encTime = endTime - startTime;
-//			System.out.println("" + (eTime - sTime));
-//			cpuTime = ((double) encTime) / 1000;
-//			timePerRequest = cpuTime / RUNS_PER_OBJ_ENC;
-//
-//			line = "oBIX to XML; int; startTime;" + startTime + ";endTime;"
-//					+ endTime + ";encTime (ms);" + cpuTime + ";"
-//					+ timePerRequest;
-//			System.out.println(line);
-//			CsvCreator.instance.writeLine(line);
-//		}
-//
-//		// real
-//		for (int x = 0; x < REPEAT; x++) {
-//			sTime = System.currentTimeMillis();
-//			startTime = threadMXBean.getThreadCpuTime(mainThreadId);
-//			
-//			for (int k = 0; k < RUNS_PER_OBJ_ENC; k++) {
-//				real = new Real(58.12);
-//				xml = ObixEncoder.toString(real);
-//			}
-//			endTime = threadMXBean.getThreadCpuTime(mainThreadId);
-//			eTime = System.currentTimeMillis();
-//
-//			encTime = endTime - startTime;
-//
-//			System.out.println("" + (eTime - sTime));
-//			cpuTime = ((double) encTime) / 1000;
-//			timePerRequest = cpuTime / RUNS_PER_OBJ_ENC;
-//
-//			line = "oBIX to XML; real; startTime;" + startTime + ";endTime;"
-//					+ endTime + ";encTime (ms);" + cpuTime + ";"
-//					+ timePerRequest;
-//			System.out.println(line);
-//			CsvCreator.instance.writeLine(line);
-//		}
-//
-//		// str
-//		for (int x = 0; x < REPEAT; x++) {
-//			sTime = System.currentTimeMillis();
-//			startTime = threadMXBean.getThreadCpuTime(mainThreadId);
-//			
-//			for (int k = 0; k < RUNS_PER_OBJ_ENC; k++) {
-//				str = new Str("helloworld");
-//				xml = ObixEncoder.toString(str);
-//			}
-//			endTime = threadMXBean.getThreadCpuTime(mainThreadId);
-//			eTime = System.currentTimeMillis();
-//			
-//			encTime = endTime - startTime;
-//			System.out.println("" + (eTime - sTime));
-//			cpuTime = ((double) encTime) / 1000;
-//			timePerRequest = cpuTime / RUNS_PER_OBJ_ENC;
-//			line = "oBIX to XML; str; startTime;" + startTime + ";endTime;"
-//					+ endTime + ";encTime (ms);" + cpuTime + ";"
-//					+ timePerRequest;
-//			System.out.println(line);
-//			CsvCreator.instance.writeLine(line);
-//		}
-//
-//		// oBIX to JSON
-//		// bool
-//		for (int x = 0; x < REPEAT; x++) {
-//			sTime = System.currentTimeMillis();
-//			startTime = threadMXBean.getThreadCpuTime(mainThreadId);
-//			
-//			for (int k = 0; k < RUNS_PER_OBJ_ENC; k++) {
-//				bool = new Bool(false);
-//				try {
-//					xml = JsonUtil.fromXMLtoJSON(ObixEncoder.toString(bool));
-//				} catch (JSONException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				}
-//			}
-//			endTime = threadMXBean.getThreadCpuTime(mainThreadId);
-//			eTime = System.currentTimeMillis();
-//
-//			encTime = endTime - startTime;
-//			System.out.println("" + (eTime - sTime));
-//			cpuTime = ((double) encTime) / 1000;
-//			timePerRequest = cpuTime / RUNS_PER_OBJ_ENC;
-//			line = "oBIX to JSON; bool; startTime;" + startTime + ";endTime;"
-//					+ endTime + ";encTime (ms);" + cpuTime + ";"
-//					+ timePerRequest;
-//			System.out.println(line);
-//			CsvCreator.instance.writeLine(line);
-//
-//		}
-//
-//		// int
-//		for (int x = 0; x < REPEAT; x++) {
-//			sTime = System.currentTimeMillis();
-//			startTime = threadMXBean.getThreadCpuTime(mainThreadId);
-//			
-//			for (int k = 0; k < RUNS_PER_OBJ_ENC; k++) {
-//				i = new Int(58);
-//				try {
-//					xml = JsonUtil.fromXMLtoJSON(ObixEncoder.toString(i));
-//				} catch (JSONException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				}
-//			}
-//			endTime = threadMXBean.getThreadCpuTime(mainThreadId);
-//			eTime = System.currentTimeMillis();
-//
-//			encTime = endTime - startTime;
-//			System.out.println("" + (eTime - sTime));
-//			cpuTime = ((double) encTime) / 1000;
-//			timePerRequest = cpuTime / RUNS_PER_OBJ_ENC;
-//			line = "oBIX to JSON; int; startTime;" + startTime + ";endTime;"
-//					+ endTime + ";encTime (ms);" + cpuTime + ";"
-//					+ timePerRequest;
-//			System.out.println(line);
-//			CsvCreator.instance.writeLine(line);
-//		}
-//
-//		// real
-//		for (int x = 0; x < REPEAT; x++) {
-//			sTime = System.currentTimeMillis();
-//			startTime = threadMXBean.getThreadCpuTime(mainThreadId);
-//			
-//			for (int k = 0; k < RUNS_PER_OBJ_ENC; k++) {
-//				real = new Real(58.12);
-//				try {
-//					xml = JsonUtil.fromXMLtoJSON(ObixEncoder.toString(real));
-//				} catch (JSONException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				}
-//			}
-//			endTime = threadMXBean.getThreadCpuTime(mainThreadId);
-//			eTime = System.currentTimeMillis();
-//
-//			encTime = endTime - startTime;
-//			System.out.println("" + (eTime - sTime));
-//			cpuTime = ((double) encTime) / 1000;
-//			timePerRequest = cpuTime / RUNS_PER_OBJ_ENC;
-//			line = "oBIX to JSON; real; startTime;" + startTime + ";endTime;"
-//					+ endTime + ";encTime (ms);" + cpuTime + ";"
-//					+ timePerRequest;
-//			System.out.println(line);
-//			CsvCreator.instance.writeLine(line);
-//		}
-//
-//		// str
-//		for (int x = 0; x < REPEAT; x++) {
-//			sTime = System.currentTimeMillis();
-//			startTime = threadMXBean.getThreadCpuTime(mainThreadId);
-//			
-//			for (int k = 0; k < RUNS_PER_OBJ_ENC; k++) {
-//				str = new Str("helloworld");
-//				try {
-//					xml = JsonUtil.fromXMLtoJSON(ObixEncoder.toString(str));
-//				} catch (JSONException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				}
-//			}
-//			endTime = threadMXBean.getThreadCpuTime(mainThreadId);
-//			eTime = System.currentTimeMillis();
-//
-//			encTime = endTime - startTime;
-//			System.out.println("" + (eTime - sTime));
-//			cpuTime = ((double) encTime) / 1000;
-//			timePerRequest = cpuTime / RUNS_PER_OBJ_ENC;
-//			line = "oBIX to JSON; str; startTime;" + startTime + ";endTime;"
-//					+ endTime + ";encTime (ms);" + cpuTime + ";"
-//					+ timePerRequest;
-//			System.out.println(line);
-//			CsvCreator.instance.writeLine(line);
-//		}
-//
-//		// oBIX to oBIX Binary
-//		// bool
-//		for (int x = 0; x < REPEAT; x++) {
-//			sTime = System.currentTimeMillis();
-//			startTime = threadMXBean.getThreadCpuTime(mainThreadId);
-//			
-//			for (int k = 0; k < RUNS_PER_OBJ_ENC; k++) {
-//				bool = new Bool(false);
-//
-//				payload = BinObixEncoder.toBytes(bool);
-//			}
-//			endTime = threadMXBean.getThreadCpuTime(mainThreadId);
-//			eTime = System.currentTimeMillis();
-//
-//			encTime = endTime - startTime;
-//			System.out.println("" + (eTime - sTime));
-//			cpuTime = ((double) encTime) / 1000;
-//			timePerRequest = cpuTime / RUNS_PER_OBJ_ENC;
-//			line = "oBIX to oBIX binary; bool; startTime;" + startTime
-//					+ ";endTime;" + endTime + ";encTime (ms);" + cpuTime + ";"
-//					+ timePerRequest;
-//			System.out.println(line);
-//			CsvCreator.instance.writeLine(line);
-//
-//		}
-//
-//		// int
-//		for (int x = 0; x < REPEAT; x++) {
-//			sTime = System.currentTimeMillis();
-//			startTime = threadMXBean.getThreadCpuTime(mainThreadId);
-//			
-//			for (int k = 0; k < RUNS_PER_OBJ_ENC; k++) {
-//				i = new Int(58);
-//
-//				payload = BinObixEncoder.toBytes(i);
-//			}
-//			endTime = threadMXBean.getThreadCpuTime(mainThreadId);
-//			eTime = System.currentTimeMillis();
-//
-//			encTime = endTime - startTime;
-//			System.out.println("" + (eTime - sTime));
-//			cpuTime = ((double) encTime) / 1000;
-//			timePerRequest = cpuTime / RUNS_PER_OBJ_ENC;
-//			line = "oBIX to oBIX binary; int; startTime;" + startTime
-//					+ ";endTime;" + endTime + ";encTime (ms);" + cpuTime + ";"
-//					+ timePerRequest;
-//			System.out.println(line);
-//			CsvCreator.instance.writeLine(line);
-//		}
-//
-//		// real
-//		for (int x = 0; x < REPEAT; x++) {
-//			sTime = System.currentTimeMillis();
-//			startTime = threadMXBean.getThreadCpuTime(mainThreadId);
-//			
-//			for (int k = 0; k < RUNS_PER_OBJ_ENC; k++) {
-//				real = new Real(58.12);
-//
-//				payload = BinObixEncoder.toBytes(real);
-//			}
-//			endTime = threadMXBean.getThreadCpuTime(mainThreadId);
-//			eTime = System.currentTimeMillis();
-//
-//			encTime = endTime - startTime;
-//			System.out.println("" + (eTime - sTime));
-//			cpuTime = ((double) encTime) / 1000;
-//			timePerRequest = cpuTime / RUNS_PER_OBJ_ENC;
-//			line = "oBIX to oBIX binary; real; startTime;" + startTime
-//					+ ";endTime;" + endTime + ";encTime (ms);" + cpuTime + ";"
-//					+ timePerRequest;
-//			System.out.println(line);
-//			CsvCreator.instance.writeLine(line);
-//		}
-//
-//		// str
-//		for (int x = 0; x < REPEAT; x++) {
-//			sTime = System.currentTimeMillis();
-//			startTime = threadMXBean.getThreadCpuTime(mainThreadId);
-//			
-//			for (int k = 0; k < RUNS_PER_OBJ_ENC; k++) {
-//				str = new Str("helloworld");
-//
-//				payload = BinObixEncoder.toBytes(str);
-//			}
-//			endTime = threadMXBean.getThreadCpuTime(mainThreadId);
-//			eTime = System.currentTimeMillis();
-//
-//			encTime = endTime - startTime;
-//			System.out.println("" + (eTime - sTime));
-//			cpuTime = ((double) encTime) / 1000;
-//			timePerRequest = cpuTime / RUNS_PER_OBJ_ENC;
-//			line = "oBIX to oBIX binary; str; startTime;" + startTime
-//					+ ";endTime;" + endTime + ";encTime (ms);" + cpuTime + ";"
-//					+ timePerRequest;
-//			System.out.println(line);
-//			CsvCreator.instance.writeLine(line);
-//		}
-//
-//		// oBIX to EXI
-//		// bool
-//		for (int x = 0; x < REPEAT; x++) {
-//			sTime = System.currentTimeMillis();
-//			startTime = threadMXBean.getThreadCpuTime(mainThreadId);
-//			
-//			for (int k = 0; k < RUNS_PER_OBJ_ENC_REDUCED; k++) {
-//				bool = new Bool(false);
-//
-//				try {
-//					payload = ExiUtil.getInstance().encodeEXI(
-//							ObixEncoder.toString(bool), false);
-//				} catch (TransmogrifierException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				} catch (EXIOptionsException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				} catch (IOException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				}
-//
-//			}
-//			endTime = threadMXBean.getThreadCpuTime(mainThreadId);
-//			eTime = System.currentTimeMillis();
-//
-//			encTime = endTime - startTime;
-//			System.out.println("" + (eTime - sTime));
-//			cpuTime = ((double) encTime) / 1000;
-//			timePerRequest = cpuTime / RUNS_PER_OBJ_ENC_REDUCED;
-//			line = "oBIX to EXI (non schema); bool; startTime;" + startTime
-//					+ ";endTime;" + endTime + ";encTime (ms);" + cpuTime + ";"
-//					+ timePerRequest;
-//			System.out.println(line);
-//			CsvCreator.instance.writeLine(line);
-//
-//		}
-//
-//		// int
-//		for (int x = 0; x < REPEAT; x++) {
-//			sTime = System.currentTimeMillis();
-//			startTime = threadMXBean.getThreadCpuTime(mainThreadId);
-//			
-//			for (int k = 0; k < RUNS_PER_OBJ_ENC_REDUCED; k++) {
-//				i = new Int(58);
-//				try {
-//					payload = ExiUtil.getInstance().encodeEXI(
-//							ObixEncoder.toString(i), false);
-//				} catch (TransmogrifierException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				} catch (EXIOptionsException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				} catch (IOException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				}
-//			}
-//			endTime = threadMXBean.getThreadCpuTime(mainThreadId);
-//			eTime = System.currentTimeMillis();
-//
-//			encTime = endTime - startTime;
-//			System.out.println("" + (eTime - sTime));
-//			cpuTime = ((double) encTime) / 1000;
-//			timePerRequest = cpuTime / RUNS_PER_OBJ_ENC_REDUCED;
-//			line = "oBIX to EXI (non schema); int; startTime;" + startTime
-//					+ ";endTime;" + endTime + ";encTime (ms);" + cpuTime + ";"
-//					+ timePerRequest;
-//			System.out.println(line);
-//			CsvCreator.instance.writeLine(line);
-//		}
-//
-//		// real
-//		for (int x = 0; x < REPEAT; x++) {
-//			sTime = System.currentTimeMillis();
-//			startTime = threadMXBean.getThreadCpuTime(mainThreadId);
-//			
-//			for (int k = 0; k < RUNS_PER_OBJ_ENC_REDUCED; k++) {
-//				real = new Real(58.12);
-//				try {
-//					payload = ExiUtil.getInstance().encodeEXI(
-//							ObixEncoder.toString(real), false);
-//				} catch (TransmogrifierException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				} catch (EXIOptionsException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				} catch (IOException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				}
-//			}
-//			endTime = threadMXBean.getThreadCpuTime(mainThreadId);
-//			eTime = System.currentTimeMillis();
-//
-//			encTime = endTime - startTime;
-//			System.out.println("" + (eTime - sTime));
-//			cpuTime = ((double) encTime) / 1000;
-//			timePerRequest = cpuTime / RUNS_PER_OBJ_ENC_REDUCED;
-//			line = "oBIX to EXI (non schema); real; startTime;" + startTime
-//					+ ";endTime;" + endTime + ";encTime (ms);" + cpuTime + ";"
-//					+ timePerRequest;
-//			System.out.println(line);
-//			CsvCreator.instance.writeLine(line);
-//		}
-//
-//		// str
-//		for (int x = 0; x < REPEAT; x++) {
-//			sTime = System.currentTimeMillis();
-//			startTime = threadMXBean.getThreadCpuTime(mainThreadId);
-//			
-//			for (int k = 0; k < RUNS_PER_OBJ_ENC_REDUCED; k++) {
-//				str = new Str("helloworld");
-//				try {
-//					payload = ExiUtil.getInstance().encodeEXI(
-//							ObixEncoder.toString(str), false);
-//				} catch (TransmogrifierException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				} catch (EXIOptionsException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				} catch (IOException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				}
-//			}
-//			endTime = threadMXBean.getThreadCpuTime(mainThreadId);
-//			eTime = System.currentTimeMillis();
-//
-//			encTime = endTime - startTime;
-//			System.out.println("" + (eTime - sTime));
-//			cpuTime = ((double) encTime) / 1000;
-//			timePerRequest = cpuTime / RUNS_PER_OBJ_ENC_REDUCED;
-//			line = "oBIX to EXI (non schema); str; startTime;" + startTime
-//					+ ";endTime;" + endTime + ";encTime (ms);" + cpuTime + ";"
-//					+ timePerRequest;
-//			System.out.println(line);
-//			CsvCreator.instance.writeLine(line);
-//		}
-//
-//		// oBIX to EXI
-//		// bool
-//		for (int x = 0; x < REPEAT; x++) {
-//			sTime = System.currentTimeMillis();
-//			startTime = threadMXBean.getThreadCpuTime(mainThreadId);
-//			
-//			for (int k = 0; k < RUNS_PER_OBJ_ENC_REDUCED; k++) {
-//				bool = new Bool(false);
-//
-//				try {
-//					payload = ExiUtil.getInstance().encodeEXI(
-//							ObixEncoder.toString(bool), true);
-//				} catch (TransmogrifierException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				} catch (EXIOptionsException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				} catch (IOException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				}
-//
-//			}
-//			endTime = threadMXBean.getThreadCpuTime(mainThreadId);
-//			eTime = System.currentTimeMillis();
-//
-//			encTime = endTime - startTime;
-//			System.out.println("" + (eTime - sTime));
-//			cpuTime = ((double) encTime) / 1000;
-//			timePerRequest = cpuTime / RUNS_PER_OBJ_ENC_REDUCED;
-//			line = "oBIX to EXI (schema); bool; startTime;" + startTime
-//					+ ";endTime;" + endTime + ";encTime (ms);" + cpuTime + ";"
-//					+ timePerRequest;
-//			System.out.println(line);
-//			CsvCreator.instance.writeLine(line);
-//
-//		}
-//
-//		// int
-//		for (int x = 0; x < REPEAT; x++) {
-//			sTime = System.currentTimeMillis();
-//			startTime = threadMXBean.getThreadCpuTime(mainThreadId);
-//			
-//			for (int k = 0; k < RUNS_PER_OBJ_ENC_REDUCED; k++) {
-//				i = new Int(58);
-//				try {
-//					payload = ExiUtil.getInstance().encodeEXI(
-//							ObixEncoder.toString(i), true);
-//				} catch (TransmogrifierException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				} catch (EXIOptionsException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				} catch (IOException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				}
-//			}
-//			endTime = threadMXBean.getThreadCpuTime(mainThreadId);
-//			eTime = System.currentTimeMillis();
-//
-//			encTime = endTime - startTime;
-//			System.out.println("" + (eTime - sTime));
-//			cpuTime = ((double) encTime) / 1000;
-//			timePerRequest = cpuTime / RUNS_PER_OBJ_ENC_REDUCED;
-//			line = "oBIX to EXI (schema); int; startTime;" + startTime
-//					+ ";endTime;" + endTime + ";encTime (ms);" + cpuTime + ";"
-//					+ timePerRequest;
-//			System.out.println(line);
-//			CsvCreator.instance.writeLine(line);
-//		}
-//
-//		// real
-//		for (int x = 0; x < REPEAT; x++) {
-//			
-//			sTime = System.currentTimeMillis();
-//			startTime = threadMXBean.getThreadCpuTime(mainThreadId);
-//			for (int k = 0; k < RUNS_PER_OBJ_ENC_REDUCED; k++) {
-//				real = new Real(58.12);
-//				try {
-//					payload = ExiUtil.getInstance().encodeEXI(
-//							ObixEncoder.toString(real), true);
-//				} catch (TransmogrifierException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				} catch (EXIOptionsException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				} catch (IOException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				}
-//			}
-//			endTime = threadMXBean.getThreadCpuTime(mainThreadId);
-//			eTime = System.currentTimeMillis();
-//
-//			encTime = endTime - startTime;
-//			System.out.println("" + (eTime - sTime));
-//			cpuTime = ((double) encTime) / 1000;
-//			timePerRequest = cpuTime / RUNS_PER_OBJ_ENC_REDUCED;
-//			line = "oBIX to EXI (schema); real; startTime;" + startTime
-//					+ ";endTime;" + endTime + ";encTime (ms);" + cpuTime + ";"
-//					+ timePerRequest;
-//			System.out.println(line);
-//			CsvCreator.instance.writeLine(line);
-//		}
-//
-//		// str
-//		for (int x = 0; x < REPEAT; x++) {
-//			
-//			sTime = System.currentTimeMillis();
-//			startTime = threadMXBean.getThreadCpuTime(mainThreadId);
-//			for (int k = 0; k < RUNS_PER_OBJ_ENC_REDUCED; k++) {
-//				str = new Str("helloworld");
-//				try {
-//					payload = ExiUtil.getInstance().encodeEXI(
-//							ObixEncoder.toString(str), true);
-//				} catch (TransmogrifierException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				} catch (EXIOptionsException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				} catch (IOException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				}
-//			}
-//			endTime = threadMXBean.getThreadCpuTime(mainThreadId);
-//			eTime = System.currentTimeMillis();
-//
-//			encTime = endTime - startTime;
-//			System.out.println("" + (eTime - sTime));
-//			cpuTime = ((double) encTime) / 1000;
-//			timePerRequest = cpuTime / RUNS_PER_OBJ_ENC_REDUCED;
-//			line = "oBIX to EXI (schema); str; startTime;" + startTime
-//					+ ";endTime;" + endTime + ";encTime (ms);" + cpuTime + ";"
-//					+ timePerRequest;
-//			System.out.println(line);
-//			CsvCreator.instance.writeLine(line);
-//		}
-//
-//		// oBIX to direct EXI
-//		// bool
-//		for (int x = 0; x < REPEAT; x++) {
-//			sTime = System.currentTimeMillis();
-//			startTime = threadMXBean.getThreadCpuTime(mainThreadId);
-//			for (int k = 0; k < RUNS_PER_OBJ_ENC_REDUCED; k++) {
-//				bool = new Bool(false);
-//
-//				try {
-//					payload = EXIEncoder.getInstance().toBytes(bool, true);
-//				} catch (EXIOptionsException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				} catch (IOException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				} catch (TransmogrifierException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				} catch (SAXException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				}
-//
-//			}
-//			endTime = threadMXBean.getThreadCpuTime(mainThreadId);
-//			eTime = System.currentTimeMillis();
-//
-//			encTime = endTime - startTime;
-//			System.out.println("" + (eTime - sTime));
-//			cpuTime = ((double) encTime) / 1000;
-//			timePerRequest = cpuTime / RUNS_PER_OBJ_ENC_REDUCED;
-//			line = "oBIX to EXI (direct); bool; startTime;" + startTime
-//					+ ";endTime;" + endTime + ";encTime (ms);" + cpuTime + ";"
-//					+ timePerRequest;
-//			System.out.println(line);
-//			CsvCreator.instance.writeLine(line);
-//
-//		}
-//
-//		// int
-//		for (int x = 0; x < REPEAT; x++) {
-//			sTime = System.currentTimeMillis();
-//			startTime = threadMXBean.getThreadCpuTime(mainThreadId);
-//			for (int k = 0; k < RUNS_PER_OBJ_ENC_REDUCED; k++) {
-//				i = new Int(58);
-//				try {
-//					payload = EXIEncoder.getInstance().toBytes(i, true);
-//				} catch (EXIOptionsException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				} catch (IOException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				} catch (TransmogrifierException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				} catch (SAXException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				}
-//			}
-//			endTime = threadMXBean.getThreadCpuTime(mainThreadId);
-//			eTime = System.currentTimeMillis();
-//
-//			encTime = endTime - startTime;
-//			System.out.println("" + (eTime - sTime));
-//			cpuTime = ((double) encTime) / 1000;
-//			timePerRequest = cpuTime / RUNS_PER_OBJ_ENC_REDUCED;
-//			line = "oBIX to EXI (direct); int; startTime;" + startTime
-//					+ ";endTime;" + endTime + ";encTime (ms);" + cpuTime + ";"
-//					+ timePerRequest;
-//			System.out.println(line);
-//			CsvCreator.instance.writeLine(line);
-//		}
-//
-//		// real
-//		for (int x = 0; x < REPEAT; x++) {
-//			
-//			sTime = System.currentTimeMillis();
-//			startTime = threadMXBean.getThreadCpuTime(mainThreadId);
-//			for (int k = 0; k < RUNS_PER_OBJ_ENC_REDUCED; k++) {
-//				real = new Real(58.12);
-//				try {
-//					payload = EXIEncoder.getInstance().toBytes(real, true);
-//				} catch (EXIOptionsException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				} catch (IOException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				} catch (TransmogrifierException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				} catch (SAXException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				}
-//			}
-//			endTime = threadMXBean.getThreadCpuTime(mainThreadId);
-//			eTime = System.currentTimeMillis();
-//
-//			encTime = endTime - startTime;
-//			System.out.println("" + (eTime - sTime));
-//			cpuTime = ((double) encTime) / 1000;
-//			timePerRequest = cpuTime / RUNS_PER_OBJ_ENC_REDUCED;
-//			line = "oBIX to EXI (direct); real; startTime;" + startTime
-//					+ ";endTime;" + endTime + ";encTime (ms);" + cpuTime + ";"
-//					+ timePerRequest;
-//			System.out.println(line);
-//			CsvCreator.instance.writeLine(line);
-//		}
-//
-//		// str
-//		for (int x = 0; x < REPEAT; x++) {
-//			sTime = System.currentTimeMillis();
-//			startTime = threadMXBean.getThreadCpuTime(mainThreadId);	
-//			for (int k = 0; k < RUNS_PER_OBJ_ENC_REDUCED; k++) {
-//				str = new Str("helloworld");
-//				try {
-//					payload = EXIEncoder.getInstance().toBytes(str, true);
-//				} catch (EXIOptionsException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				} catch (IOException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				} catch (TransmogrifierException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				} catch (SAXException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				}
-//			}
-//		
-//			endTime = threadMXBean.getThreadCpuTime(mainThreadId);
-//			eTime = System.currentTimeMillis();
-//
-//			encTime = endTime - startTime;
-//			System.out.println("" + (eTime - sTime));
-//			cpuTime = ((double) encTime) / 1000;
-//			timePerRequest = cpuTime / RUNS_PER_OBJ_ENC_REDUCED;
-//			line = "oBIX to EXI (direct); str; startTime;" + startTime
-//					+ ";endTime;" + endTime + ";encTime (ms);" + cpuTime + ";"
-//					+ timePerRequest;
-//			System.out.println(line);
-//			CsvCreator.instance.writeLine(line);
-//		}
+		// for (int x = 0; x < REPEAT; x++) {
+		// sTime = System.currentTimeMillis();
+		// startTime = threadMXBean.getThreadCpuTime(mainThreadId);
+		//
+		// for (int k = 0; k < RUNS_PER_OBJ_ENC; k++) {
+		// bool = new Bool(false);
+		// xml = ObixEncoder.toString(bool);
+		// }
+		// endTime = threadMXBean.getThreadCpuTime(mainThreadId);
+		// eTime = System.currentTimeMillis();
+		//
+		// encTime = endTime - startTime;
+		// System.out.println("" + (eTime - sTime));
+		// cpuTime = ((double) encTime) / 1000;
+		//
+		// timePerRequest = cpuTime / RUNS_PER_OBJ_ENC;
+		//
+		// line = "oBIX to XML; bool; startTime;" + startTime + ";endTime;"
+		// + endTime + ";encTime (ms);" + cpuTime + ";"
+		// + timePerRequest;
+		// System.out.println(line);
+		// CsvCreator.instance.writeLine(line);
+		//
+		// }
+		//
+		// // int
+		// for (int x = 0; x < REPEAT; x++) {
+		// sTime = System.currentTimeMillis();
+		// startTime = threadMXBean.getThreadCpuTime(mainThreadId);
+		//
+		// for (int k = 0; k < RUNS_PER_OBJ_ENC; k++) {
+		// i = new Int(58);
+		// xml = ObixEncoder.toString(real);
+		// }
+		// endTime = threadMXBean.getThreadCpuTime(mainThreadId);
+		// eTime = System.currentTimeMillis();
+		//
+		// encTime = endTime - startTime;
+		// System.out.println("" + (eTime - sTime));
+		// cpuTime = ((double) encTime) / 1000;
+		// timePerRequest = cpuTime / RUNS_PER_OBJ_ENC;
+		//
+		// line = "oBIX to XML; int; startTime;" + startTime + ";endTime;"
+		// + endTime + ";encTime (ms);" + cpuTime + ";"
+		// + timePerRequest;
+		// System.out.println(line);
+		// CsvCreator.instance.writeLine(line);
+		// }
+		//
+		// // real
+		// for (int x = 0; x < REPEAT; x++) {
+		// sTime = System.currentTimeMillis();
+		// startTime = threadMXBean.getThreadCpuTime(mainThreadId);
+		//
+		// for (int k = 0; k < RUNS_PER_OBJ_ENC; k++) {
+		// real = new Real(58.12);
+		// xml = ObixEncoder.toString(real);
+		// }
+		// endTime = threadMXBean.getThreadCpuTime(mainThreadId);
+		// eTime = System.currentTimeMillis();
+		//
+		// encTime = endTime - startTime;
+		//
+		// System.out.println("" + (eTime - sTime));
+		// cpuTime = ((double) encTime) / 1000;
+		// timePerRequest = cpuTime / RUNS_PER_OBJ_ENC;
+		//
+		// line = "oBIX to XML; real; startTime;" + startTime + ";endTime;"
+		// + endTime + ";encTime (ms);" + cpuTime + ";"
+		// + timePerRequest;
+		// System.out.println(line);
+		// CsvCreator.instance.writeLine(line);
+		// }
+		//
+		// // str
+		// for (int x = 0; x < REPEAT; x++) {
+		// sTime = System.currentTimeMillis();
+		// startTime = threadMXBean.getThreadCpuTime(mainThreadId);
+		//
+		// for (int k = 0; k < RUNS_PER_OBJ_ENC; k++) {
+		// str = new Str("helloworld");
+		// xml = ObixEncoder.toString(str);
+		// }
+		// endTime = threadMXBean.getThreadCpuTime(mainThreadId);
+		// eTime = System.currentTimeMillis();
+		//
+		// encTime = endTime - startTime;
+		// System.out.println("" + (eTime - sTime));
+		// cpuTime = ((double) encTime) / 1000;
+		// timePerRequest = cpuTime / RUNS_PER_OBJ_ENC;
+		// line = "oBIX to XML; str; startTime;" + startTime + ";endTime;"
+		// + endTime + ";encTime (ms);" + cpuTime + ";"
+		// + timePerRequest;
+		// System.out.println(line);
+		// CsvCreator.instance.writeLine(line);
+		// }
+		//
+		// // oBIX to JSON
+		// // bool
+		// for (int x = 0; x < REPEAT; x++) {
+		// sTime = System.currentTimeMillis();
+		// startTime = threadMXBean.getThreadCpuTime(mainThreadId);
+		//
+		// for (int k = 0; k < RUNS_PER_OBJ_ENC; k++) {
+		// bool = new Bool(false);
+		// try {
+		// xml = JsonUtil.fromXMLtoJSON(ObixEncoder.toString(bool));
+		// } catch (JSONException e) {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// }
+		// }
+		// endTime = threadMXBean.getThreadCpuTime(mainThreadId);
+		// eTime = System.currentTimeMillis();
+		//
+		// encTime = endTime - startTime;
+		// System.out.println("" + (eTime - sTime));
+		// cpuTime = ((double) encTime) / 1000;
+		// timePerRequest = cpuTime / RUNS_PER_OBJ_ENC;
+		// line = "oBIX to JSON; bool; startTime;" + startTime + ";endTime;"
+		// + endTime + ";encTime (ms);" + cpuTime + ";"
+		// + timePerRequest;
+		// System.out.println(line);
+		// CsvCreator.instance.writeLine(line);
+		//
+		// }
+		//
+		// // int
+		// for (int x = 0; x < REPEAT; x++) {
+		// sTime = System.currentTimeMillis();
+		// startTime = threadMXBean.getThreadCpuTime(mainThreadId);
+		//
+		// for (int k = 0; k < RUNS_PER_OBJ_ENC; k++) {
+		// i = new Int(58);
+		// try {
+		// xml = JsonUtil.fromXMLtoJSON(ObixEncoder.toString(i));
+		// } catch (JSONException e) {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// }
+		// }
+		// endTime = threadMXBean.getThreadCpuTime(mainThreadId);
+		// eTime = System.currentTimeMillis();
+		//
+		// encTime = endTime - startTime;
+		// System.out.println("" + (eTime - sTime));
+		// cpuTime = ((double) encTime) / 1000;
+		// timePerRequest = cpuTime / RUNS_PER_OBJ_ENC;
+		// line = "oBIX to JSON; int; startTime;" + startTime + ";endTime;"
+		// + endTime + ";encTime (ms);" + cpuTime + ";"
+		// + timePerRequest;
+		// System.out.println(line);
+		// CsvCreator.instance.writeLine(line);
+		// }
+		//
+		// // real
+		// for (int x = 0; x < REPEAT; x++) {
+		// sTime = System.currentTimeMillis();
+		// startTime = threadMXBean.getThreadCpuTime(mainThreadId);
+		//
+		// for (int k = 0; k < RUNS_PER_OBJ_ENC; k++) {
+		// real = new Real(58.12);
+		// try {
+		// xml = JsonUtil.fromXMLtoJSON(ObixEncoder.toString(real));
+		// } catch (JSONException e) {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// }
+		// }
+		// endTime = threadMXBean.getThreadCpuTime(mainThreadId);
+		// eTime = System.currentTimeMillis();
+		//
+		// encTime = endTime - startTime;
+		// System.out.println("" + (eTime - sTime));
+		// cpuTime = ((double) encTime) / 1000;
+		// timePerRequest = cpuTime / RUNS_PER_OBJ_ENC;
+		// line = "oBIX to JSON; real; startTime;" + startTime + ";endTime;"
+		// + endTime + ";encTime (ms);" + cpuTime + ";"
+		// + timePerRequest;
+		// System.out.println(line);
+		// CsvCreator.instance.writeLine(line);
+		// }
+		//
+		// // str
+		// for (int x = 0; x < REPEAT; x++) {
+		// sTime = System.currentTimeMillis();
+		// startTime = threadMXBean.getThreadCpuTime(mainThreadId);
+		//
+		// for (int k = 0; k < RUNS_PER_OBJ_ENC; k++) {
+		// str = new Str("helloworld");
+		// try {
+		// xml = JsonUtil.fromXMLtoJSON(ObixEncoder.toString(str));
+		// } catch (JSONException e) {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// }
+		// }
+		// endTime = threadMXBean.getThreadCpuTime(mainThreadId);
+		// eTime = System.currentTimeMillis();
+		//
+		// encTime = endTime - startTime;
+		// System.out.println("" + (eTime - sTime));
+		// cpuTime = ((double) encTime) / 1000;
+		// timePerRequest = cpuTime / RUNS_PER_OBJ_ENC;
+		// line = "oBIX to JSON; str; startTime;" + startTime + ";endTime;"
+		// + endTime + ";encTime (ms);" + cpuTime + ";"
+		// + timePerRequest;
+		// System.out.println(line);
+		// CsvCreator.instance.writeLine(line);
+		// }
+		//
+		// // oBIX to oBIX Binary
+		// // bool
+		// for (int x = 0; x < REPEAT; x++) {
+		// sTime = System.currentTimeMillis();
+		// startTime = threadMXBean.getThreadCpuTime(mainThreadId);
+		//
+		// for (int k = 0; k < RUNS_PER_OBJ_ENC; k++) {
+		// bool = new Bool(false);
+		//
+		// payload = BinObixEncoder.toBytes(bool);
+		// }
+		// endTime = threadMXBean.getThreadCpuTime(mainThreadId);
+		// eTime = System.currentTimeMillis();
+		//
+		// encTime = endTime - startTime;
+		// System.out.println("" + (eTime - sTime));
+		// cpuTime = ((double) encTime) / 1000;
+		// timePerRequest = cpuTime / RUNS_PER_OBJ_ENC;
+		// line = "oBIX to oBIX binary; bool; startTime;" + startTime
+		// + ";endTime;" + endTime + ";encTime (ms);" + cpuTime + ";"
+		// + timePerRequest;
+		// System.out.println(line);
+		// CsvCreator.instance.writeLine(line);
+		//
+		// }
+		//
+		// // int
+		// for (int x = 0; x < REPEAT; x++) {
+		// sTime = System.currentTimeMillis();
+		// startTime = threadMXBean.getThreadCpuTime(mainThreadId);
+		//
+		// for (int k = 0; k < RUNS_PER_OBJ_ENC; k++) {
+		// i = new Int(58);
+		//
+		// payload = BinObixEncoder.toBytes(i);
+		// }
+		// endTime = threadMXBean.getThreadCpuTime(mainThreadId);
+		// eTime = System.currentTimeMillis();
+		//
+		// encTime = endTime - startTime;
+		// System.out.println("" + (eTime - sTime));
+		// cpuTime = ((double) encTime) / 1000;
+		// timePerRequest = cpuTime / RUNS_PER_OBJ_ENC;
+		// line = "oBIX to oBIX binary; int; startTime;" + startTime
+		// + ";endTime;" + endTime + ";encTime (ms);" + cpuTime + ";"
+		// + timePerRequest;
+		// System.out.println(line);
+		// CsvCreator.instance.writeLine(line);
+		// }
+		//
+		// // real
+		// for (int x = 0; x < REPEAT; x++) {
+		// sTime = System.currentTimeMillis();
+		// startTime = threadMXBean.getThreadCpuTime(mainThreadId);
+		//
+		// for (int k = 0; k < RUNS_PER_OBJ_ENC; k++) {
+		// real = new Real(58.12);
+		//
+		// payload = BinObixEncoder.toBytes(real);
+		// }
+		// endTime = threadMXBean.getThreadCpuTime(mainThreadId);
+		// eTime = System.currentTimeMillis();
+		//
+		// encTime = endTime - startTime;
+		// System.out.println("" + (eTime - sTime));
+		// cpuTime = ((double) encTime) / 1000;
+		// timePerRequest = cpuTime / RUNS_PER_OBJ_ENC;
+		// line = "oBIX to oBIX binary; real; startTime;" + startTime
+		// + ";endTime;" + endTime + ";encTime (ms);" + cpuTime + ";"
+		// + timePerRequest;
+		// System.out.println(line);
+		// CsvCreator.instance.writeLine(line);
+		// }
+		//
+		// // str
+		// for (int x = 0; x < REPEAT; x++) {
+		// sTime = System.currentTimeMillis();
+		// startTime = threadMXBean.getThreadCpuTime(mainThreadId);
+		//
+		// for (int k = 0; k < RUNS_PER_OBJ_ENC; k++) {
+		// str = new Str("helloworld");
+		//
+		// payload = BinObixEncoder.toBytes(str);
+		// }
+		// endTime = threadMXBean.getThreadCpuTime(mainThreadId);
+		// eTime = System.currentTimeMillis();
+		//
+		// encTime = endTime - startTime;
+		// System.out.println("" + (eTime - sTime));
+		// cpuTime = ((double) encTime) / 1000;
+		// timePerRequest = cpuTime / RUNS_PER_OBJ_ENC;
+		// line = "oBIX to oBIX binary; str; startTime;" + startTime
+		// + ";endTime;" + endTime + ";encTime (ms);" + cpuTime + ";"
+		// + timePerRequest;
+		// System.out.println(line);
+		// CsvCreator.instance.writeLine(line);
+		// }
+		//
+		// // oBIX to EXI
+		// // bool
+		// for (int x = 0; x < REPEAT; x++) {
+		// sTime = System.currentTimeMillis();
+		// startTime = threadMXBean.getThreadCpuTime(mainThreadId);
+		//
+		// for (int k = 0; k < RUNS_PER_OBJ_ENC_REDUCED; k++) {
+		// bool = new Bool(false);
+		//
+		// try {
+		// payload = ExiUtil.getInstance().encodeEXI(
+		// ObixEncoder.toString(bool), false);
+		// } catch (TransmogrifierException e) {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// } catch (EXIOptionsException e) {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// } catch (IOException e) {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// }
+		//
+		// }
+		// endTime = threadMXBean.getThreadCpuTime(mainThreadId);
+		// eTime = System.currentTimeMillis();
+		//
+		// encTime = endTime - startTime;
+		// System.out.println("" + (eTime - sTime));
+		// cpuTime = ((double) encTime) / 1000;
+		// timePerRequest = cpuTime / RUNS_PER_OBJ_ENC_REDUCED;
+		// line = "oBIX to EXI (non schema); bool; startTime;" + startTime
+		// + ";endTime;" + endTime + ";encTime (ms);" + cpuTime + ";"
+		// + timePerRequest;
+		// System.out.println(line);
+		// CsvCreator.instance.writeLine(line);
+		//
+		// }
+		//
+		// // int
+		// for (int x = 0; x < REPEAT; x++) {
+		// sTime = System.currentTimeMillis();
+		// startTime = threadMXBean.getThreadCpuTime(mainThreadId);
+		//
+		// for (int k = 0; k < RUNS_PER_OBJ_ENC_REDUCED; k++) {
+		// i = new Int(58);
+		// try {
+		// payload = ExiUtil.getInstance().encodeEXI(
+		// ObixEncoder.toString(i), false);
+		// } catch (TransmogrifierException e) {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// } catch (EXIOptionsException e) {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// } catch (IOException e) {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// }
+		// }
+		// endTime = threadMXBean.getThreadCpuTime(mainThreadId);
+		// eTime = System.currentTimeMillis();
+		//
+		// encTime = endTime - startTime;
+		// System.out.println("" + (eTime - sTime));
+		// cpuTime = ((double) encTime) / 1000;
+		// timePerRequest = cpuTime / RUNS_PER_OBJ_ENC_REDUCED;
+		// line = "oBIX to EXI (non schema); int; startTime;" + startTime
+		// + ";endTime;" + endTime + ";encTime (ms);" + cpuTime + ";"
+		// + timePerRequest;
+		// System.out.println(line);
+		// CsvCreator.instance.writeLine(line);
+		// }
+		//
+		// // real
+		// for (int x = 0; x < REPEAT; x++) {
+		// sTime = System.currentTimeMillis();
+		// startTime = threadMXBean.getThreadCpuTime(mainThreadId);
+		//
+		// for (int k = 0; k < RUNS_PER_OBJ_ENC_REDUCED; k++) {
+		// real = new Real(58.12);
+		// try {
+		// payload = ExiUtil.getInstance().encodeEXI(
+		// ObixEncoder.toString(real), false);
+		// } catch (TransmogrifierException e) {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// } catch (EXIOptionsException e) {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// } catch (IOException e) {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// }
+		// }
+		// endTime = threadMXBean.getThreadCpuTime(mainThreadId);
+		// eTime = System.currentTimeMillis();
+		//
+		// encTime = endTime - startTime;
+		// System.out.println("" + (eTime - sTime));
+		// cpuTime = ((double) encTime) / 1000;
+		// timePerRequest = cpuTime / RUNS_PER_OBJ_ENC_REDUCED;
+		// line = "oBIX to EXI (non schema); real; startTime;" + startTime
+		// + ";endTime;" + endTime + ";encTime (ms);" + cpuTime + ";"
+		// + timePerRequest;
+		// System.out.println(line);
+		// CsvCreator.instance.writeLine(line);
+		// }
+		//
+		// // str
+		// for (int x = 0; x < REPEAT; x++) {
+		// sTime = System.currentTimeMillis();
+		// startTime = threadMXBean.getThreadCpuTime(mainThreadId);
+		//
+		// for (int k = 0; k < RUNS_PER_OBJ_ENC_REDUCED; k++) {
+		// str = new Str("helloworld");
+		// try {
+		// payload = ExiUtil.getInstance().encodeEXI(
+		// ObixEncoder.toString(str), false);
+		// } catch (TransmogrifierException e) {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// } catch (EXIOptionsException e) {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// } catch (IOException e) {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// }
+		// }
+		// endTime = threadMXBean.getThreadCpuTime(mainThreadId);
+		// eTime = System.currentTimeMillis();
+		//
+		// encTime = endTime - startTime;
+		// System.out.println("" + (eTime - sTime));
+		// cpuTime = ((double) encTime) / 1000;
+		// timePerRequest = cpuTime / RUNS_PER_OBJ_ENC_REDUCED;
+		// line = "oBIX to EXI (non schema); str; startTime;" + startTime
+		// + ";endTime;" + endTime + ";encTime (ms);" + cpuTime + ";"
+		// + timePerRequest;
+		// System.out.println(line);
+		// CsvCreator.instance.writeLine(line);
+		// }
+		//
+		// // oBIX to EXI
+		// // bool
+		// for (int x = 0; x < REPEAT; x++) {
+		// sTime = System.currentTimeMillis();
+		// startTime = threadMXBean.getThreadCpuTime(mainThreadId);
+		//
+		// for (int k = 0; k < RUNS_PER_OBJ_ENC_REDUCED; k++) {
+		// bool = new Bool(false);
+		//
+		// try {
+		// payload = ExiUtil.getInstance().encodeEXI(
+		// ObixEncoder.toString(bool), true);
+		// } catch (TransmogrifierException e) {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// } catch (EXIOptionsException e) {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// } catch (IOException e) {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// }
+		//
+		// }
+		// endTime = threadMXBean.getThreadCpuTime(mainThreadId);
+		// eTime = System.currentTimeMillis();
+		//
+		// encTime = endTime - startTime;
+		// System.out.println("" + (eTime - sTime));
+		// cpuTime = ((double) encTime) / 1000;
+		// timePerRequest = cpuTime / RUNS_PER_OBJ_ENC_REDUCED;
+		// line = "oBIX to EXI (schema); bool; startTime;" + startTime
+		// + ";endTime;" + endTime + ";encTime (ms);" + cpuTime + ";"
+		// + timePerRequest;
+		// System.out.println(line);
+		// CsvCreator.instance.writeLine(line);
+		//
+		// }
+		//
+		// // int
+		// for (int x = 0; x < REPEAT; x++) {
+		// sTime = System.currentTimeMillis();
+		// startTime = threadMXBean.getThreadCpuTime(mainThreadId);
+		//
+		// for (int k = 0; k < RUNS_PER_OBJ_ENC_REDUCED; k++) {
+		// i = new Int(58);
+		// try {
+		// payload = ExiUtil.getInstance().encodeEXI(
+		// ObixEncoder.toString(i), true);
+		// } catch (TransmogrifierException e) {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// } catch (EXIOptionsException e) {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// } catch (IOException e) {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// }
+		// }
+		// endTime = threadMXBean.getThreadCpuTime(mainThreadId);
+		// eTime = System.currentTimeMillis();
+		//
+		// encTime = endTime - startTime;
+		// System.out.println("" + (eTime - sTime));
+		// cpuTime = ((double) encTime) / 1000;
+		// timePerRequest = cpuTime / RUNS_PER_OBJ_ENC_REDUCED;
+		// line = "oBIX to EXI (schema); int; startTime;" + startTime
+		// + ";endTime;" + endTime + ";encTime (ms);" + cpuTime + ";"
+		// + timePerRequest;
+		// System.out.println(line);
+		// CsvCreator.instance.writeLine(line);
+		// }
+		//
+		// // real
+		// for (int x = 0; x < REPEAT; x++) {
+		//
+		// sTime = System.currentTimeMillis();
+		// startTime = threadMXBean.getThreadCpuTime(mainThreadId);
+		// for (int k = 0; k < RUNS_PER_OBJ_ENC_REDUCED; k++) {
+		// real = new Real(58.12);
+		// try {
+		// payload = ExiUtil.getInstance().encodeEXI(
+		// ObixEncoder.toString(real), true);
+		// } catch (TransmogrifierException e) {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// } catch (EXIOptionsException e) {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// } catch (IOException e) {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// }
+		// }
+		// endTime = threadMXBean.getThreadCpuTime(mainThreadId);
+		// eTime = System.currentTimeMillis();
+		//
+		// encTime = endTime - startTime;
+		// System.out.println("" + (eTime - sTime));
+		// cpuTime = ((double) encTime) / 1000;
+		// timePerRequest = cpuTime / RUNS_PER_OBJ_ENC_REDUCED;
+		// line = "oBIX to EXI (schema); real; startTime;" + startTime
+		// + ";endTime;" + endTime + ";encTime (ms);" + cpuTime + ";"
+		// + timePerRequest;
+		// System.out.println(line);
+		// CsvCreator.instance.writeLine(line);
+		// }
+		//
+		// // str
+		// for (int x = 0; x < REPEAT; x++) {
+		//
+		// sTime = System.currentTimeMillis();
+		// startTime = threadMXBean.getThreadCpuTime(mainThreadId);
+		// for (int k = 0; k < RUNS_PER_OBJ_ENC_REDUCED; k++) {
+		// str = new Str("helloworld");
+		// try {
+		// payload = ExiUtil.getInstance().encodeEXI(
+		// ObixEncoder.toString(str), true);
+		// } catch (TransmogrifierException e) {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// } catch (EXIOptionsException e) {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// } catch (IOException e) {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// }
+		// }
+		// endTime = threadMXBean.getThreadCpuTime(mainThreadId);
+		// eTime = System.currentTimeMillis();
+		//
+		// encTime = endTime - startTime;
+		// System.out.println("" + (eTime - sTime));
+		// cpuTime = ((double) encTime) / 1000;
+		// timePerRequest = cpuTime / RUNS_PER_OBJ_ENC_REDUCED;
+		// line = "oBIX to EXI (schema); str; startTime;" + startTime
+		// + ";endTime;" + endTime + ";encTime (ms);" + cpuTime + ";"
+		// + timePerRequest;
+		// System.out.println(line);
+		// CsvCreator.instance.writeLine(line);
+		// }
+		//
+		// // oBIX to direct EXI
+		// // bool
+		// for (int x = 0; x < REPEAT; x++) {
+		// sTime = System.currentTimeMillis();
+		// startTime = threadMXBean.getThreadCpuTime(mainThreadId);
+		// for (int k = 0; k < RUNS_PER_OBJ_ENC_REDUCED; k++) {
+		// bool = new Bool(false);
+		//
+		// try {
+		// payload = EXIEncoder.getInstance().toBytes(bool, true);
+		// } catch (EXIOptionsException e) {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// } catch (IOException e) {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// } catch (TransmogrifierException e) {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// } catch (SAXException e) {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// }
+		//
+		// }
+		// endTime = threadMXBean.getThreadCpuTime(mainThreadId);
+		// eTime = System.currentTimeMillis();
+		//
+		// encTime = endTime - startTime;
+		// System.out.println("" + (eTime - sTime));
+		// cpuTime = ((double) encTime) / 1000;
+		// timePerRequest = cpuTime / RUNS_PER_OBJ_ENC_REDUCED;
+		// line = "oBIX to EXI (direct); bool; startTime;" + startTime
+		// + ";endTime;" + endTime + ";encTime (ms);" + cpuTime + ";"
+		// + timePerRequest;
+		// System.out.println(line);
+		// CsvCreator.instance.writeLine(line);
+		//
+		// }
+		//
+		// // int
+		// for (int x = 0; x < REPEAT; x++) {
+		// sTime = System.currentTimeMillis();
+		// startTime = threadMXBean.getThreadCpuTime(mainThreadId);
+		// for (int k = 0; k < RUNS_PER_OBJ_ENC_REDUCED; k++) {
+		// i = new Int(58);
+		// try {
+		// payload = EXIEncoder.getInstance().toBytes(i, true);
+		// } catch (EXIOptionsException e) {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// } catch (IOException e) {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// } catch (TransmogrifierException e) {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// } catch (SAXException e) {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// }
+		// }
+		// endTime = threadMXBean.getThreadCpuTime(mainThreadId);
+		// eTime = System.currentTimeMillis();
+		//
+		// encTime = endTime - startTime;
+		// System.out.println("" + (eTime - sTime));
+		// cpuTime = ((double) encTime) / 1000;
+		// timePerRequest = cpuTime / RUNS_PER_OBJ_ENC_REDUCED;
+		// line = "oBIX to EXI (direct); int; startTime;" + startTime
+		// + ";endTime;" + endTime + ";encTime (ms);" + cpuTime + ";"
+		// + timePerRequest;
+		// System.out.println(line);
+		// CsvCreator.instance.writeLine(line);
+		// }
+		//
+		// // real
+		// for (int x = 0; x < REPEAT; x++) {
+		//
+		// sTime = System.currentTimeMillis();
+		// startTime = threadMXBean.getThreadCpuTime(mainThreadId);
+		// for (int k = 0; k < RUNS_PER_OBJ_ENC_REDUCED; k++) {
+		// real = new Real(58.12);
+		// try {
+		// payload = EXIEncoder.getInstance().toBytes(real, true);
+		// } catch (EXIOptionsException e) {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// } catch (IOException e) {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// } catch (TransmogrifierException e) {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// } catch (SAXException e) {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// }
+		// }
+		// endTime = threadMXBean.getThreadCpuTime(mainThreadId);
+		// eTime = System.currentTimeMillis();
+		//
+		// encTime = endTime - startTime;
+		// System.out.println("" + (eTime - sTime));
+		// cpuTime = ((double) encTime) / 1000;
+		// timePerRequest = cpuTime / RUNS_PER_OBJ_ENC_REDUCED;
+		// line = "oBIX to EXI (direct); real; startTime;" + startTime
+		// + ";endTime;" + endTime + ";encTime (ms);" + cpuTime + ";"
+		// + timePerRequest;
+		// System.out.println(line);
+		// CsvCreator.instance.writeLine(line);
+		// }
+		//
+		// // str
+		// for (int x = 0; x < REPEAT; x++) {
+		// sTime = System.currentTimeMillis();
+		// startTime = threadMXBean.getThreadCpuTime(mainThreadId);
+		// for (int k = 0; k < RUNS_PER_OBJ_ENC_REDUCED; k++) {
+		// str = new Str("helloworld");
+		// try {
+		// payload = EXIEncoder.getInstance().toBytes(str, true);
+		// } catch (EXIOptionsException e) {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// } catch (IOException e) {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// } catch (TransmogrifierException e) {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// } catch (SAXException e) {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// }
+		// }
+		//
+		// endTime = threadMXBean.getThreadCpuTime(mainThreadId);
+		// eTime = System.currentTimeMillis();
+		//
+		// encTime = endTime - startTime;
+		// System.out.println("" + (eTime - sTime));
+		// cpuTime = ((double) encTime) / 1000;
+		// timePerRequest = cpuTime / RUNS_PER_OBJ_ENC_REDUCED;
+		// line = "oBIX to EXI (direct); str; startTime;" + startTime
+		// + ";endTime;" + endTime + ";encTime (ms);" + cpuTime + ";"
+		// + timePerRequest;
+		// System.out.println(line);
+		// CsvCreator.instance.writeLine(line);
+		// }
+	
+	
 		
 		
+		/********************************************************************************************************************/
+		/********************************************************************************************************************/
+		/********************************************************************************************************************/
 		// oBIX from direct EXI
-		// bool
-		bool = new Bool(false);
-		
+	
+		CsvCreator.instance.writeLine("From EXI direct");
 		try {
 			payload = EXIEncoder.getInstance().toBytes(bool, true);
 		} catch (EXIOptionsException e1) {
@@ -852,20 +855,21 @@ public class CPUEval {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		
+
 		for (int x = 0; x < REPEAT; x++) {
 			startTime = threadMXBean.getThreadCpuTime(mainThreadId);
 			sTime = System.currentTimeMillis();
 			for (int k = 0; k < RUNS_PER_OBJ_ENC; k++) {
 				try {
-					Obj fromBytes = EXIDecoder.getInstance().fromBytes(payload, true);
+					Obj fromBytes = EXIDecoder.getInstance().fromBytesSchema(
+							payload);
 				} catch (EXIOptionsException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
-				}  catch (SAXException e) {
+				} catch (SAXException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} catch (TransformerConfigurationException e) {
@@ -889,11 +893,10 @@ public class CPUEval {
 
 		}
 		
-		// bool
-		bool = new Bool(false);
 		
+
 		try {
-			payload = ExiUtil.getInstance().encodeEXI(ObixEncoder.toString(bool), true);
+			payload = EXIEncoder.getInstance().toBytes(i, true);
 		} catch (EXIOptionsException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -903,21 +906,25 @@ public class CPUEval {
 		} catch (TransmogrifierException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
-		} 
-		
+		} catch (SAXException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+
 		for (int x = 0; x < REPEAT; x++) {
 			startTime = threadMXBean.getThreadCpuTime(mainThreadId);
 			sTime = System.currentTimeMillis();
 			for (int k = 0; k < RUNS_PER_OBJ_ENC; k++) {
 				try {
-					Obj fromBytes = ObixDecoder.fromString(ExiUtil.getInstance().decodeEXI(payload, true));
+					Obj fromBytes = EXIDecoder.getInstance().fromBytesSchema(
+							payload);
 				} catch (EXIOptionsException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
-				}  catch (SAXException e) {
+				} catch (SAXException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} catch (TransformerConfigurationException e) {
@@ -933,7 +940,343 @@ public class CPUEval {
 			System.out.println("" + (eTime - sTime));
 			cpuTime = ((double) encTime) / 1000;
 			timePerRequest = cpuTime / RUNS_PER_OBJ_ENC;
+			line = "oBIX from EXI (direct); int; startTime;" + startTime
+					+ ";endTime;" + endTime + ";encTime (ms);" + cpuTime + ";"
+					+ timePerRequest;
+			System.out.println(line);
+			CsvCreator.instance.writeLine(line);
+
+		}
+		
+		try {
+			payload = EXIEncoder.getInstance().toBytes(real, true);
+		} catch (EXIOptionsException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (TransmogrifierException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (SAXException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+
+		for (int x = 0; x < REPEAT; x++) {
+			startTime = threadMXBean.getThreadCpuTime(mainThreadId);
+			sTime = System.currentTimeMillis();
+			for (int k = 0; k < RUNS_PER_OBJ_ENC; k++) {
+				try {
+					Obj fromBytes = EXIDecoder.getInstance().fromBytesSchema(
+							payload);
+				} catch (EXIOptionsException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (SAXException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (TransformerConfigurationException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+			}
+			endTime = threadMXBean.getThreadCpuTime(mainThreadId);
+			eTime = System.currentTimeMillis();
+
+			encTime = endTime - startTime;
+			System.out.println("" + (eTime - sTime));
+			cpuTime = ((double) encTime) / 1000;
+			timePerRequest = cpuTime / RUNS_PER_OBJ_ENC;
+			line = "oBIX from EXI (direct); real; startTime;" + startTime
+					+ ";endTime;" + endTime + ";encTime (ms);" + cpuTime + ";"
+					+ timePerRequest;
+			System.out.println(line);
+			CsvCreator.instance.writeLine(line);
+
+		}
+		
+		
+		try {
+			payload = EXIEncoder.getInstance().toBytes(str, true);
+		} catch (EXIOptionsException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (TransmogrifierException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (SAXException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+
+		for (int x = 0; x < REPEAT; x++) {
+			startTime = threadMXBean.getThreadCpuTime(mainThreadId);
+			sTime = System.currentTimeMillis();
+			for (int k = 0; k < RUNS_PER_OBJ_ENC; k++) {
+				try {
+					Obj fromBytes = EXIDecoder.getInstance().fromBytesSchema(
+							payload);
+				} catch (EXIOptionsException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (SAXException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (TransformerConfigurationException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+			}
+			endTime = threadMXBean.getThreadCpuTime(mainThreadId);
+			eTime = System.currentTimeMillis();
+
+			encTime = endTime - startTime;
+			System.out.println("" + (eTime - sTime));
+			cpuTime = ((double) encTime) / 1000;
+			timePerRequest = cpuTime / RUNS_PER_OBJ_ENC;
+			line = "oBIX from EXI (direct); str; startTime;" + startTime
+					+ ";endTime;" + endTime + ";encTime (ms);" + cpuTime + ";"
+					+ timePerRequest;
+			System.out.println(line);
+			CsvCreator.instance.writeLine(line);
+
+		}
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+
+		
+		
+		
+		
+		
+		/***********************************************************************************************************/
+		/***********************************************************************************************************/
+		/***********************************************************************************************************/
+		// oBIX from EXI schema informed
+		CsvCreator.instance.writeLine("From EXI over XML (schema informed)");
+		
+		try {
+			payload = ExiUtil.getInstance().encodeEXI(
+					ObixEncoder.toString(bool), true);
+		} catch (EXIOptionsException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (TransmogrifierException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+
+		for (int x = 0; x < REPEAT; x++) {
+			startTime = threadMXBean.getThreadCpuTime(mainThreadId);
+			sTime = System.currentTimeMillis();
+			for (int k = 0; k < RUNS_PER_OBJ_ENC_REDUCED; k++) {
+				try {
+					Obj fromBytes = ObixDecoder.fromString(ExiUtil
+							.getInstance().decodeEXI(payload, true));
+				} catch (EXIOptionsException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (SAXException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (TransformerConfigurationException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+			}
+			endTime = threadMXBean.getThreadCpuTime(mainThreadId);
+			eTime = System.currentTimeMillis();
+
+			encTime = endTime - startTime;
+			System.out.println("" + (eTime - sTime));
+			cpuTime = ((double) encTime) / 1000;
+			timePerRequest = cpuTime / RUNS_PER_OBJ_ENC_REDUCED;
 			line = "oBIX from EXI (schema); bool; startTime;" + startTime
+					+ ";endTime;" + endTime + ";encTime (ms);" + cpuTime + ";"
+					+ timePerRequest;
+			System.out.println(line);
+			CsvCreator.instance.writeLine(line);
+
+		}
+		
+		try {
+			payload = ExiUtil.getInstance().encodeEXI(
+					ObixEncoder.toString(i), true);
+		} catch (EXIOptionsException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (TransmogrifierException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+
+		for (int x = 0; x < REPEAT; x++) {
+			startTime = threadMXBean.getThreadCpuTime(mainThreadId);
+			sTime = System.currentTimeMillis();
+			for (int k = 0; k < RUNS_PER_OBJ_ENC_REDUCED; k++) {
+				try {
+					Obj fromBytes = ObixDecoder.fromString(ExiUtil
+							.getInstance().decodeEXI(payload, true));
+				} catch (EXIOptionsException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (SAXException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (TransformerConfigurationException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+			}
+			endTime = threadMXBean.getThreadCpuTime(mainThreadId);
+			eTime = System.currentTimeMillis();
+
+			encTime = endTime - startTime;
+			System.out.println("" + (eTime - sTime));
+			cpuTime = ((double) encTime) / 1000;
+			timePerRequest = cpuTime / RUNS_PER_OBJ_ENC_REDUCED;
+			line = "oBIX from EXI (schema); int; startTime;" + startTime
+					+ ";endTime;" + endTime + ";encTime (ms);" + cpuTime + ";"
+					+ timePerRequest;
+			System.out.println(line);
+			CsvCreator.instance.writeLine(line);
+
+		}
+		
+		try {
+			payload = ExiUtil.getInstance().encodeEXI(
+					ObixEncoder.toString(real), true);
+		} catch (EXIOptionsException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (TransmogrifierException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+
+		for (int x = 0; x < REPEAT; x++) {
+			startTime = threadMXBean.getThreadCpuTime(mainThreadId);
+			sTime = System.currentTimeMillis();
+			for (int k = 0; k < RUNS_PER_OBJ_ENC_REDUCED; k++) {
+				try {
+					Obj fromBytes = ObixDecoder.fromString(ExiUtil
+							.getInstance().decodeEXI(payload, true));
+				} catch (EXIOptionsException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (SAXException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (TransformerConfigurationException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+			}
+			endTime = threadMXBean.getThreadCpuTime(mainThreadId);
+			eTime = System.currentTimeMillis();
+
+			encTime = endTime - startTime;
+			System.out.println("" + (eTime - sTime));
+			cpuTime = ((double) encTime) / 1000;
+			timePerRequest = cpuTime / RUNS_PER_OBJ_ENC_REDUCED;
+			line = "oBIX from EXI (schema); real; startTime;" + startTime
+					+ ";endTime;" + endTime + ";encTime (ms);" + cpuTime + ";"
+					+ timePerRequest;
+			System.out.println(line);
+			CsvCreator.instance.writeLine(line);
+
+		}
+		
+		try {
+			payload = ExiUtil.getInstance().encodeEXI(
+					ObixEncoder.toString(str), true);
+		} catch (EXIOptionsException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (TransmogrifierException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+
+		for (int x = 0; x < REPEAT; x++) {
+			startTime = threadMXBean.getThreadCpuTime(mainThreadId);
+			sTime = System.currentTimeMillis();
+			for (int k = 0; k < RUNS_PER_OBJ_ENC_REDUCED; k++) {
+				try {
+					Obj fromBytes = ObixDecoder.fromString(ExiUtil
+							.getInstance().decodeEXI(payload, true));
+				} catch (EXIOptionsException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (SAXException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (TransformerConfigurationException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+			}
+			endTime = threadMXBean.getThreadCpuTime(mainThreadId);
+			eTime = System.currentTimeMillis();
+
+			encTime = endTime - startTime;
+			System.out.println("" + (eTime - sTime));
+			cpuTime = ((double) encTime) / 1000;
+			timePerRequest = cpuTime / RUNS_PER_OBJ_ENC_REDUCED;
+			line = "oBIX from EXI (schema); str; startTime;" + startTime
 					+ ";endTime;" + endTime + ";encTime (ms);" + cpuTime + ";"
 					+ timePerRequest;
 			System.out.println(line);
@@ -942,9 +1285,655 @@ public class CPUEval {
 		}
 
 
+
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+        /*****************************************************************************/
+		/*****************************************************************************/
+		/*****************************************************************************/
+		// oBIX from EXI non-schema informed
+		CsvCreator.instance.writeLine("From EXI over XML (non schema informed)");
+	
+
+		try {
+			payload = ExiUtil.getInstance().encodeEXI(
+					ObixEncoder.toString(bool), false);
+		} catch (EXIOptionsException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (TransmogrifierException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+
+		for (int x = 0; x < REPEAT; x++) {
+			startTime = threadMXBean.getThreadCpuTime(mainThreadId);
+			sTime = System.currentTimeMillis();
+			for (int k = 0; k < RUNS_PER_OBJ_ENC_REDUCED; k++) {
+				try {
+					Obj fromBytes = ObixDecoder.fromString(ExiUtil
+							.getInstance().decodeEXI(payload, false));
+				} catch (EXIOptionsException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (SAXException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (TransformerConfigurationException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+			}
+			endTime = threadMXBean.getThreadCpuTime(mainThreadId);
+			eTime = System.currentTimeMillis();
+
+			encTime = endTime - startTime;
+			System.out.println("" + (eTime - sTime));
+			cpuTime = ((double) encTime) / 1000;
+			timePerRequest = cpuTime / RUNS_PER_OBJ_ENC_REDUCED;
+			line = "oBIX from EXI (non schema); bool; startTime;" + startTime
+					+ ";endTime;" + endTime + ";encTime (ms);" + cpuTime + ";"
+					+ timePerRequest;
+			System.out.println(line);
+			CsvCreator.instance.writeLine(line);
+
+		}
+		
+		try {
+			payload = ExiUtil.getInstance().encodeEXI(
+					ObixEncoder.toString(i), false);
+		} catch (EXIOptionsException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (TransmogrifierException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+
+		for (int x = 0; x < REPEAT; x++) {
+			startTime = threadMXBean.getThreadCpuTime(mainThreadId);
+			sTime = System.currentTimeMillis();
+			for (int k = 0; k < RUNS_PER_OBJ_ENC_REDUCED; k++) {
+				try {
+					Obj fromBytes = ObixDecoder.fromString(ExiUtil
+							.getInstance().decodeEXI(payload, false));
+				} catch (EXIOptionsException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (SAXException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (TransformerConfigurationException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+			}
+			endTime = threadMXBean.getThreadCpuTime(mainThreadId);
+			eTime = System.currentTimeMillis();
+
+			encTime = endTime - startTime;
+			System.out.println("" + (eTime - sTime));
+			cpuTime = ((double) encTime) / 1000;
+			timePerRequest = cpuTime / RUNS_PER_OBJ_ENC_REDUCED;
+			line = "oBIX from EXI (non schema); int; startTime;" + startTime
+					+ ";endTime;" + endTime + ";encTime (ms);" + cpuTime + ";"
+					+ timePerRequest;
+			System.out.println(line);
+			CsvCreator.instance.writeLine(line);
+
+		}
+		
+		try {
+			payload = ExiUtil.getInstance().encodeEXI(
+					ObixEncoder.toString(real), false);
+		} catch (EXIOptionsException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (TransmogrifierException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+
+		for (int x = 0; x < REPEAT; x++) {
+			startTime = threadMXBean.getThreadCpuTime(mainThreadId);
+			sTime = System.currentTimeMillis();
+			for (int k = 0; k < RUNS_PER_OBJ_ENC_REDUCED; k++) {
+				try {
+					Obj fromBytes = ObixDecoder.fromString(ExiUtil
+							.getInstance().decodeEXI(payload, false));
+				} catch (EXIOptionsException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (SAXException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (TransformerConfigurationException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+			}
+			endTime = threadMXBean.getThreadCpuTime(mainThreadId);
+			eTime = System.currentTimeMillis();
+
+			encTime = endTime - startTime;
+			System.out.println("" + (eTime - sTime));
+			cpuTime = ((double) encTime) / 1000;
+			timePerRequest = cpuTime / RUNS_PER_OBJ_ENC_REDUCED;
+			line = "oBIX from EXI (non schema); real; startTime;" + startTime
+					+ ";endTime;" + endTime + ";encTime (ms);" + cpuTime + ";"
+					+ timePerRequest;
+			System.out.println(line);
+			CsvCreator.instance.writeLine(line);
+
+		}
+		
+		try {
+			payload = ExiUtil.getInstance().encodeEXI(
+					ObixEncoder.toString(str), false);
+		} catch (EXIOptionsException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (TransmogrifierException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+
+		for (int x = 0; x < REPEAT; x++) {
+			startTime = threadMXBean.getThreadCpuTime(mainThreadId);
+			sTime = System.currentTimeMillis();
+			for (int k = 0; k < RUNS_PER_OBJ_ENC_REDUCED; k++) {
+				try {
+					Obj fromBytes = ObixDecoder.fromString(ExiUtil
+							.getInstance().decodeEXI(payload, false));
+				} catch (EXIOptionsException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (SAXException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (TransformerConfigurationException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+			}
+			endTime = threadMXBean.getThreadCpuTime(mainThreadId);
+			eTime = System.currentTimeMillis();
+
+			encTime = endTime - startTime;
+			System.out.println("" + (eTime - sTime));
+			cpuTime = ((double) encTime) / 1000;
+			timePerRequest = cpuTime / RUNS_PER_OBJ_ENC_REDUCED;
+			line = "oBIX from EXI (non schema); str; startTime;" + startTime
+					+ ";endTime;" + endTime + ";encTime (ms);" + cpuTime + ";"
+					+ timePerRequest;
+			System.out.println(line);
+			CsvCreator.instance.writeLine(line);
+
+		}
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		/********************************************************************************/
+		/********************************************************************************/
+		/********************************************************************************/
+		// oBIX from XML
+		CsvCreator.instance.writeLine("From XML");
+	
+
+		xml = ObixEncoder.toString(bool);
+
+		for (int x = 0; x < REPEAT; x++) {
+			startTime = threadMXBean.getThreadCpuTime(mainThreadId);
+			sTime = System.currentTimeMillis();
+			
+			for (int k = 0; k < RUNS_PER_OBJ_ENC; k++) {
+				Obj obj = ObixDecoder.fromString(xml);
+			}
+
+			endTime = threadMXBean.getThreadCpuTime(mainThreadId);
+			eTime = System.currentTimeMillis();
+
+			encTime = endTime - startTime;
+			System.out.println("" + (eTime - sTime));
+			cpuTime = ((double) encTime) / 1000;
+			timePerRequest = cpuTime / RUNS_PER_OBJ_ENC;
+			line = "oBIX from XML; bool; startTime;" + startTime + ";endTime;"
+					+ endTime + ";encTime (ms);" + cpuTime + ";"
+					+ timePerRequest;
+			System.out.println(line);
+			CsvCreator.instance.writeLine(line);
+		}
+		
+		xml = ObixEncoder.toString(i);
+
+		for (int x = 0; x < REPEAT; x++) {
+			startTime = threadMXBean.getThreadCpuTime(mainThreadId);
+			sTime = System.currentTimeMillis();
+			
+			for (int k = 0; k < RUNS_PER_OBJ_ENC; k++) {
+				Obj obj = ObixDecoder.fromString(xml);
+			}
+
+			endTime = threadMXBean.getThreadCpuTime(mainThreadId);
+			eTime = System.currentTimeMillis();
+
+			encTime = endTime - startTime;
+			System.out.println("" + (eTime - sTime));
+			cpuTime = ((double) encTime) / 1000;
+			timePerRequest = cpuTime / RUNS_PER_OBJ_ENC;
+			line = "oBIX from XML; int; startTime;" + startTime + ";endTime;"
+					+ endTime + ";encTime (ms);" + cpuTime + ";"
+					+ timePerRequest;
+			System.out.println(line);
+			CsvCreator.instance.writeLine(line);
+		}
+		
+		xml = ObixEncoder.toString(real);
+
+		for (int x = 0; x < REPEAT; x++) {
+			startTime = threadMXBean.getThreadCpuTime(mainThreadId);
+			sTime = System.currentTimeMillis();
+			
+			for (int k = 0; k < RUNS_PER_OBJ_ENC; k++) {
+				Obj obj = ObixDecoder.fromString(xml);
+			}
+
+			endTime = threadMXBean.getThreadCpuTime(mainThreadId);
+			eTime = System.currentTimeMillis();
+
+			encTime = endTime - startTime;
+			System.out.println("" + (eTime - sTime));
+			cpuTime = ((double) encTime) / 1000;
+			timePerRequest = cpuTime / RUNS_PER_OBJ_ENC;
+			line = "oBIX from XML; real; startTime;" + startTime + ";endTime;"
+					+ endTime + ";encTime (ms);" + cpuTime + ";"
+					+ timePerRequest;
+			System.out.println(line);
+			CsvCreator.instance.writeLine(line);
+		}
+		
+		xml = ObixEncoder.toString(str);
+
+		for (int x = 0; x < REPEAT; x++) {
+			startTime = threadMXBean.getThreadCpuTime(mainThreadId);
+			sTime = System.currentTimeMillis();
+			
+			for (int k = 0; k < RUNS_PER_OBJ_ENC; k++) {
+				Obj obj = ObixDecoder.fromString(xml);
+			}
+
+			endTime = threadMXBean.getThreadCpuTime(mainThreadId);
+			eTime = System.currentTimeMillis();
+
+			encTime = endTime - startTime;
+			System.out.println("" + (eTime - sTime));
+			cpuTime = ((double) encTime) / 1000;
+			timePerRequest = cpuTime / RUNS_PER_OBJ_ENC;
+			line = "oBIX from XML; str; startTime;" + startTime + ";endTime;"
+					+ endTime + ";encTime (ms);" + cpuTime + ";"
+					+ timePerRequest;
+			System.out.println(line);
+			CsvCreator.instance.writeLine(line);
+		}
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		/********************************************************************************/
+		/********************************************************************************/
+		/********************************************************************************/
+		// oBIX from JSON
+		CsvCreator.instance.writeLine("From JSON");
+		
+		try {
+			xml = JsonUtil.fromXMLtoJSON(ObixEncoder.toString(bool));
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		for (int x = 0; x < REPEAT; x++) {
+			startTime = threadMXBean.getThreadCpuTime(mainThreadId);
+			sTime = System.currentTimeMillis();
+			for (int k = 0; k < RUNS_PER_OBJ_ENC; k++) {
+				try {
+					Obj obj = ObixDecoder.fromString(JsonUtil
+							.fromJSONtoXML(xml));
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+
+			endTime = threadMXBean.getThreadCpuTime(mainThreadId);
+			eTime = System.currentTimeMillis();
+
+			encTime = endTime - startTime;
+			System.out.println("" + (eTime - sTime));
+			cpuTime = ((double) encTime) / 1000;
+			timePerRequest = cpuTime / RUNS_PER_OBJ_ENC;
+			line = "oBIX from JSON; bool; startTime;" + startTime + ";endTime;"
+					+ endTime + ";encTime (ms);" + cpuTime + ";"
+					+ timePerRequest;
+			System.out.println(line);
+			CsvCreator.instance.writeLine(line);
+		}
+		
+		try {
+			xml = JsonUtil.fromXMLtoJSON(ObixEncoder.toString(i));
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		for (int x = 0; x < REPEAT; x++) {
+			startTime = threadMXBean.getThreadCpuTime(mainThreadId);
+			sTime = System.currentTimeMillis();
+			for (int k = 0; k < RUNS_PER_OBJ_ENC; k++) {
+				try {
+					Obj obj = ObixDecoder.fromString(JsonUtil
+							.fromJSONtoXML(xml));
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+
+			endTime = threadMXBean.getThreadCpuTime(mainThreadId);
+			eTime = System.currentTimeMillis();
+
+			encTime = endTime - startTime;
+			System.out.println("" + (eTime - sTime));
+			cpuTime = ((double) encTime) / 1000;
+			timePerRequest = cpuTime / RUNS_PER_OBJ_ENC;
+			line = "oBIX from JSON; int; startTime;" + startTime + ";endTime;"
+					+ endTime + ";encTime (ms);" + cpuTime + ";"
+					+ timePerRequest;
+			System.out.println(line);
+			CsvCreator.instance.writeLine(line);
+		}
+		
+		try {
+			xml = JsonUtil.fromXMLtoJSON(ObixEncoder.toString(real));
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		for (int x = 0; x < REPEAT; x++) {
+			startTime = threadMXBean.getThreadCpuTime(mainThreadId);
+			sTime = System.currentTimeMillis();
+			for (int k = 0; k < RUNS_PER_OBJ_ENC; k++) {
+				try {
+					Obj obj = ObixDecoder.fromString(JsonUtil
+							.fromJSONtoXML(xml));
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+
+			endTime = threadMXBean.getThreadCpuTime(mainThreadId);
+			eTime = System.currentTimeMillis();
+
+			encTime = endTime - startTime;
+			System.out.println("" + (eTime - sTime));
+			cpuTime = ((double) encTime) / 1000;
+			timePerRequest = cpuTime / RUNS_PER_OBJ_ENC;
+			line = "oBIX from JSON; real; startTime;" + startTime + ";endTime;"
+					+ endTime + ";encTime (ms);" + cpuTime + ";"
+					+ timePerRequest;
+			System.out.println(line);
+			CsvCreator.instance.writeLine(line);
+		}
+		
+		try {
+			xml = JsonUtil.fromXMLtoJSON(ObixEncoder.toString(str));
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		for (int x = 0; x < REPEAT; x++) {
+			startTime = threadMXBean.getThreadCpuTime(mainThreadId);
+			sTime = System.currentTimeMillis();
+			for (int k = 0; k < RUNS_PER_OBJ_ENC; k++) {
+				try {
+					Obj obj = ObixDecoder.fromString(JsonUtil
+							.fromJSONtoXML(xml));
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+
+			endTime = threadMXBean.getThreadCpuTime(mainThreadId);
+			eTime = System.currentTimeMillis();
+
+			encTime = endTime - startTime;
+			System.out.println("" + (eTime - sTime));
+			cpuTime = ((double) encTime) / 1000;
+			timePerRequest = cpuTime / RUNS_PER_OBJ_ENC;
+			line = "oBIX from JSON; str; startTime;" + startTime + ";endTime;"
+					+ endTime + ";encTime (ms);" + cpuTime + ";"
+					+ timePerRequest;
+			System.out.println(line);
+			CsvCreator.instance.writeLine(line);
+		}
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		/***************************************************************************************/
+		/***************************************************************************************/
+		/***************************************************************************************/
+		/***************************************************************************************/
+		/***************************************************************************************/
+		// oBIX from oBIX Binary
+		CsvCreator.instance.writeLine("From oBIX Binary");
+		payload = BinObixEncoder.toBytes(bool);
+
+		for (int x = 0; x < REPEAT; x++) {
+			startTime = threadMXBean.getThreadCpuTime(mainThreadId);
+			sTime = System.currentTimeMillis();
+			for (int k = 0; k < RUNS_PER_OBJ_ENC; k++) {
+				Obj obj = BinObixDecoder.fromBytes(payload);
+			}
+
+			endTime = threadMXBean.getThreadCpuTime(mainThreadId);
+			eTime = System.currentTimeMillis();
+
+			encTime = endTime - startTime;
+			System.out.println("" + (eTime - sTime));
+			cpuTime = ((double) encTime) / 1000;
+			timePerRequest = cpuTime / RUNS_PER_OBJ_ENC;
+			line = "oBIX from oBIX Binary; bool; startTime;" + startTime
+					+ ";endTime;" + endTime + ";encTime (ms);" + cpuTime + ";"
+					+ timePerRequest;
+			System.out.println(line);
+			CsvCreator.instance.writeLine(line);
+		}
+			
+		payload = BinObixEncoder.toBytes(i);
+
+		for (int x = 0; x < REPEAT; x++) {
+			startTime = threadMXBean.getThreadCpuTime(mainThreadId);
+			sTime = System.currentTimeMillis();
+			for (int k = 0; k < RUNS_PER_OBJ_ENC; k++) {
+				Obj obj = BinObixDecoder.fromBytes(payload);
+			}
+
+			endTime = threadMXBean.getThreadCpuTime(mainThreadId);
+			eTime = System.currentTimeMillis();
+
+			encTime = endTime - startTime;
+			System.out.println("" + (eTime - sTime));
+			cpuTime = ((double) encTime) / 1000;
+			timePerRequest = cpuTime / RUNS_PER_OBJ_ENC;
+			line = "oBIX from oBIX Binary; int; startTime;" + startTime
+					+ ";endTime;" + endTime + ";encTime (ms);" + cpuTime + ";"
+					+ timePerRequest;
+			System.out.println(line);
+			CsvCreator.instance.writeLine(line);
+		}
+		
+		payload = BinObixEncoder.toBytes(real);
+
+		for (int x = 0; x < REPEAT; x++) {
+			startTime = threadMXBean.getThreadCpuTime(mainThreadId);
+			sTime = System.currentTimeMillis();
+			for (int k = 0; k < RUNS_PER_OBJ_ENC; k++) {
+				Obj obj = BinObixDecoder.fromBytes(payload);
+			}
+
+			endTime = threadMXBean.getThreadCpuTime(mainThreadId);
+			eTime = System.currentTimeMillis();
+
+			encTime = endTime - startTime;
+			System.out.println("" + (eTime - sTime));
+			cpuTime = ((double) encTime) / 1000;
+			timePerRequest = cpuTime / RUNS_PER_OBJ_ENC;
+			line = "oBIX from oBIX Binary; real; startTime;" + startTime
+					+ ";endTime;" + endTime + ";encTime (ms);" + cpuTime + ";"
+					+ timePerRequest;
+			System.out.println(line);
+			CsvCreator.instance.writeLine(line);
+		}
+
+		payload = BinObixEncoder.toBytes(str);
+
+		for (int x = 0; x < REPEAT; x++) {
+			startTime = threadMXBean.getThreadCpuTime(mainThreadId);
+			sTime = System.currentTimeMillis();
+			for (int k = 0; k < RUNS_PER_OBJ_ENC; k++) {
+				Obj obj = BinObixDecoder.fromBytes(payload);
+			}
+
+			endTime = threadMXBean.getThreadCpuTime(mainThreadId);
+			eTime = System.currentTimeMillis();
+
+			encTime = endTime - startTime;
+			System.out.println("" + (eTime - sTime));
+			cpuTime = ((double) encTime) / 1000;
+			timePerRequest = cpuTime / RUNS_PER_OBJ_ENC;
+			line = "oBIX from oBIX Binary; str; startTime;" + startTime
+					+ ";endTime;" + endTime + ";encTime (ms);" + cpuTime + ";"
+					+ timePerRequest;
+			System.out.println(line);
+			CsvCreator.instance.writeLine(line);
+		}
+
+
 	}
-	
-	
-	
-	
+
 }
