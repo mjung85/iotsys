@@ -68,6 +68,9 @@ public class EXIDecoder {
 
 	private static final EXIDecoder instance = new EXIDecoder();
 	
+	private EXIReader exiReaderSchema;
+	private EXIReader exiReaderDefault;
+	
 	
 	public static void main(String[] args) {
 		File inputFile = new File("out.exi");
@@ -118,21 +121,32 @@ public class EXIDecoder {
 			// fall back to default grammarCache
 			schemaGrammarCache = defaultGrammarCache;
 		}
+		
+		
+		try {
+			exiReaderSchema = new EXIReader();
+			exiReaderSchema.setEXISchema(schemaGrammarCache);
+			exiReaderDefault = new EXIReader();
+			exiReaderDefault.setEXISchema(defaultGrammarCache);
+		} catch (EXIOptionsException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
-	public Obj fromBytes(byte[] payload, boolean useEXISchema)
+	public synchronized Obj fromBytes(byte[] payload, boolean useEXISchema)
 			throws IOException, SAXException,
 			TransformerConfigurationException, EXIOptionsException {
 		
 		// EXIReader infers and reconstructs the XML file structure.
-		EXIReader reader = new EXIReader();
-
-		if (useEXISchema) {
-			reader.setEXISchema(schemaGrammarCache);
-		} else {
-			reader.setEXISchema(defaultGrammarCache);
+		
+		EXIReader reader;
+		if(useEXISchema){
+			reader = exiReaderSchema;
 		}
-
+		else{
+			reader = exiReaderDefault;
+		}
 		// Assign the transformer handler to interpret XML content.
 		ObixHandler obixHandler = new ObixHandler();
 		reader.setContentHandler(obixHandler);
