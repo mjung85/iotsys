@@ -56,9 +56,18 @@ import obix.io.ObixEncoder;
 
 public class CPUEval {
 	public static void main(String[] args) {
-		final int RUNS_PER_OBJ_ENC = 100000;
-		final int RUNS_PER_OBJ_ENC_REDUCED = 500;
-		final int REPEAT = 1;
+		int RUNS_PER_OBJ_ENC = 10000;
+		int RUNS_PER_OBJ_ENC_REDUCED = 500;
+		int REPEAT = 1;
+		
+		if(args.length == 3){
+			System.out.println("Modifying parameters: " + args[0] + " " + args[1] + " " + args[2]);
+			RUNS_PER_OBJ_ENC = Integer.parseInt(args[0]);
+			RUNS_PER_OBJ_ENC_REDUCED = Integer.parseInt(args[1]);
+			REPEAT = Integer.parseInt(args[2]);
+		}
+		
+		System.out.println("Starting eval: " + RUNS_PER_OBJ_ENC + ", " + RUNS_PER_OBJ_ENC_REDUCED + "," + REPEAT);
 
 		Bool bool = new Bool(false);
 		Int i = new Int(58);
@@ -69,8 +78,6 @@ public class CPUEval {
 		threadMXBean.setThreadCpuTimeEnabled(true);
 		threadMXBean.setThreadContentionMonitoringEnabled(true);
 		long mainThreadId = 1;
-
-		
 
 		String xml = "";
 		long startTime = 0;
@@ -102,7 +109,7 @@ public class CPUEval {
 		// timePerRequest = cpuTime / RUNS_PER_OBJ_ENC;
 		//
 		// line = "oBIX to XML; bool; startTime;" + startTime + ";endTime;"
-		// + endTime + ";encTime (ms);" + cpuTime + ";"
+		// + endTime + ";encTime (micro seconds);" + cpuTime + ";"
 		// + timePerRequest;
 		// System.out.println(line);
 		// CsvCreator.instance.writeLine(line);
@@ -127,7 +134,7 @@ public class CPUEval {
 		// timePerRequest = cpuTime / RUNS_PER_OBJ_ENC;
 		//
 		// line = "oBIX to XML; int; startTime;" + startTime + ";endTime;"
-		// + endTime + ";encTime (ms);" + cpuTime + ";"
+		// + endTime + ";encTime (micro seconds);" + cpuTime + ";"
 		// + timePerRequest;
 		// System.out.println(line);
 		// CsvCreator.instance.writeLine(line);
@@ -152,7 +159,7 @@ public class CPUEval {
 		// timePerRequest = cpuTime / RUNS_PER_OBJ_ENC;
 		//
 		// line = "oBIX to XML; real; startTime;" + startTime + ";endTime;"
-		// + endTime + ";encTime (ms);" + cpuTime + ";"
+		// + endTime + ";encTime (micro seconds);" + cpuTime + ";"
 		// + timePerRequest;
 		// System.out.println(line);
 		// CsvCreator.instance.writeLine(line);
@@ -175,7 +182,7 @@ public class CPUEval {
 		// cpuTime = ((double) encTime) / 1000;
 		// timePerRequest = cpuTime / RUNS_PER_OBJ_ENC;
 		// line = "oBIX to XML; str; startTime;" + startTime + ";endTime;"
-		// + endTime + ";encTime (ms);" + cpuTime + ";"
+		// + endTime + ";encTime (micro seconds);" + cpuTime + ";"
 		// + timePerRequest;
 		// System.out.println(line);
 		// CsvCreator.instance.writeLine(line);
@@ -204,7 +211,7 @@ public class CPUEval {
 		// cpuTime = ((double) encTime) / 1000;
 		// timePerRequest = cpuTime / RUNS_PER_OBJ_ENC;
 		// line = "oBIX to JSON; bool; startTime;" + startTime + ";endTime;"
-		// + endTime + ";encTime (ms);" + cpuTime + ";"
+		// + endTime + ";encTime (micro seconds);" + cpuTime + ";"
 		// + timePerRequest;
 		// System.out.println(line);
 		// CsvCreator.instance.writeLine(line);
@@ -233,7 +240,7 @@ public class CPUEval {
 		// cpuTime = ((double) encTime) / 1000;
 		// timePerRequest = cpuTime / RUNS_PER_OBJ_ENC;
 		// line = "oBIX to JSON; int; startTime;" + startTime + ";endTime;"
-		// + endTime + ";encTime (ms);" + cpuTime + ";"
+		// + endTime + ";encTime (micro seconds);" + cpuTime + ";"
 		// + timePerRequest;
 		// System.out.println(line);
 		// CsvCreator.instance.writeLine(line);
@@ -261,7 +268,7 @@ public class CPUEval {
 		// cpuTime = ((double) encTime) / 1000;
 		// timePerRequest = cpuTime / RUNS_PER_OBJ_ENC;
 		// line = "oBIX to JSON; real; startTime;" + startTime + ";endTime;"
-		// + endTime + ";encTime (ms);" + cpuTime + ";"
+		// + endTime + ";encTime (micro seconds);" + cpuTime + ";"
 		// + timePerRequest;
 		// System.out.println(line);
 		// CsvCreator.instance.writeLine(line);
@@ -289,7 +296,7 @@ public class CPUEval {
 		// cpuTime = ((double) encTime) / 1000;
 		// timePerRequest = cpuTime / RUNS_PER_OBJ_ENC;
 		// line = "oBIX to JSON; str; startTime;" + startTime + ";endTime;"
-		// + endTime + ";encTime (ms);" + cpuTime + ";"
+		// + endTime + ";encTime (micro seconds);" + cpuTime + ";"
 		// + timePerRequest;
 		// System.out.println(line);
 		// CsvCreator.instance.writeLine(line);
@@ -314,7 +321,7 @@ public class CPUEval {
 		// cpuTime = ((double) encTime) / 1000;
 		// timePerRequest = cpuTime / RUNS_PER_OBJ_ENC;
 		// line = "oBIX to oBIX binary; bool; startTime;" + startTime
-		// + ";endTime;" + endTime + ";encTime (ms);" + cpuTime + ";"
+		// + ";endTime;" + endTime + ";encTime (micro seconds);" + cpuTime + ";"
 		// + timePerRequest;
 		// System.out.println(line);
 		// CsvCreator.instance.writeLine(line);
@@ -339,7 +346,7 @@ public class CPUEval {
 		// cpuTime = ((double) encTime) / 1000;
 		// timePerRequest = cpuTime / RUNS_PER_OBJ_ENC;
 		// line = "oBIX to oBIX binary; int; startTime;" + startTime
-		// + ";endTime;" + endTime + ";encTime (ms);" + cpuTime + ";"
+		// + ";endTime;" + endTime + ";encTime (micro seconds);" + cpuTime + ";"
 		// + timePerRequest;
 		// System.out.println(line);
 		// CsvCreator.instance.writeLine(line);
@@ -363,7 +370,7 @@ public class CPUEval {
 		// cpuTime = ((double) encTime) / 1000;
 		// timePerRequest = cpuTime / RUNS_PER_OBJ_ENC;
 		// line = "oBIX to oBIX binary; real; startTime;" + startTime
-		// + ";endTime;" + endTime + ";encTime (ms);" + cpuTime + ";"
+		// + ";endTime;" + endTime + ";encTime (micro seconds);" + cpuTime + ";"
 		// + timePerRequest;
 		// System.out.println(line);
 		// CsvCreator.instance.writeLine(line);
@@ -387,7 +394,7 @@ public class CPUEval {
 		// cpuTime = ((double) encTime) / 1000;
 		// timePerRequest = cpuTime / RUNS_PER_OBJ_ENC;
 		// line = "oBIX to oBIX binary; str; startTime;" + startTime
-		// + ";endTime;" + endTime + ";encTime (ms);" + cpuTime + ";"
+		// + ";endTime;" + endTime + ";encTime (micro seconds);" + cpuTime + ";"
 		// + timePerRequest;
 		// System.out.println(line);
 		// CsvCreator.instance.writeLine(line);
@@ -425,7 +432,7 @@ public class CPUEval {
 		// cpuTime = ((double) encTime) / 1000;
 		// timePerRequest = cpuTime / RUNS_PER_OBJ_ENC_REDUCED;
 		// line = "oBIX to EXI (non schema); bool; startTime;" + startTime
-		// + ";endTime;" + endTime + ";encTime (ms);" + cpuTime + ";"
+		// + ";endTime;" + endTime + ";encTime (micro seconds);" + cpuTime + ";"
 		// + timePerRequest;
 		// System.out.println(line);
 		// CsvCreator.instance.writeLine(line);
@@ -461,7 +468,7 @@ public class CPUEval {
 		// cpuTime = ((double) encTime) / 1000;
 		// timePerRequest = cpuTime / RUNS_PER_OBJ_ENC_REDUCED;
 		// line = "oBIX to EXI (non schema); int; startTime;" + startTime
-		// + ";endTime;" + endTime + ";encTime (ms);" + cpuTime + ";"
+		// + ";endTime;" + endTime + ";encTime (micro seconds);" + cpuTime + ";"
 		// + timePerRequest;
 		// System.out.println(line);
 		// CsvCreator.instance.writeLine(line);
@@ -496,7 +503,7 @@ public class CPUEval {
 		// cpuTime = ((double) encTime) / 1000;
 		// timePerRequest = cpuTime / RUNS_PER_OBJ_ENC_REDUCED;
 		// line = "oBIX to EXI (non schema); real; startTime;" + startTime
-		// + ";endTime;" + endTime + ";encTime (ms);" + cpuTime + ";"
+		// + ";endTime;" + endTime + ";encTime (micro seconds);" + cpuTime + ";"
 		// + timePerRequest;
 		// System.out.println(line);
 		// CsvCreator.instance.writeLine(line);
@@ -531,7 +538,7 @@ public class CPUEval {
 		// cpuTime = ((double) encTime) / 1000;
 		// timePerRequest = cpuTime / RUNS_PER_OBJ_ENC_REDUCED;
 		// line = "oBIX to EXI (non schema); str; startTime;" + startTime
-		// + ";endTime;" + endTime + ";encTime (ms);" + cpuTime + ";"
+		// + ";endTime;" + endTime + ";encTime (micro seconds);" + cpuTime + ";"
 		// + timePerRequest;
 		// System.out.println(line);
 		// CsvCreator.instance.writeLine(line);
@@ -569,7 +576,7 @@ public class CPUEval {
 		// cpuTime = ((double) encTime) / 1000;
 		// timePerRequest = cpuTime / RUNS_PER_OBJ_ENC_REDUCED;
 		// line = "oBIX to EXI (schema); bool; startTime;" + startTime
-		// + ";endTime;" + endTime + ";encTime (ms);" + cpuTime + ";"
+		// + ";endTime;" + endTime + ";encTime (micro seconds);" + cpuTime + ";"
 		// + timePerRequest;
 		// System.out.println(line);
 		// CsvCreator.instance.writeLine(line);
@@ -605,7 +612,7 @@ public class CPUEval {
 		// cpuTime = ((double) encTime) / 1000;
 		// timePerRequest = cpuTime / RUNS_PER_OBJ_ENC_REDUCED;
 		// line = "oBIX to EXI (schema); int; startTime;" + startTime
-		// + ";endTime;" + endTime + ";encTime (ms);" + cpuTime + ";"
+		// + ";endTime;" + endTime + ";encTime (micro seconds);" + cpuTime + ";"
 		// + timePerRequest;
 		// System.out.println(line);
 		// CsvCreator.instance.writeLine(line);
@@ -640,7 +647,7 @@ public class CPUEval {
 		// cpuTime = ((double) encTime) / 1000;
 		// timePerRequest = cpuTime / RUNS_PER_OBJ_ENC_REDUCED;
 		// line = "oBIX to EXI (schema); real; startTime;" + startTime
-		// + ";endTime;" + endTime + ";encTime (ms);" + cpuTime + ";"
+		// + ";endTime;" + endTime + ";encTime (micro seconds);" + cpuTime + ";"
 		// + timePerRequest;
 		// System.out.println(line);
 		// CsvCreator.instance.writeLine(line);
@@ -675,7 +682,7 @@ public class CPUEval {
 		// cpuTime = ((double) encTime) / 1000;
 		// timePerRequest = cpuTime / RUNS_PER_OBJ_ENC_REDUCED;
 		// line = "oBIX to EXI (schema); str; startTime;" + startTime
-		// + ";endTime;" + endTime + ";encTime (ms);" + cpuTime + ";"
+		// + ";endTime;" + endTime + ";encTime (micro seconds);" + cpuTime + ";"
 		// + timePerRequest;
 		// System.out.println(line);
 		// CsvCreator.instance.writeLine(line);
@@ -714,7 +721,7 @@ public class CPUEval {
 		// cpuTime = ((double) encTime) / 1000;
 		// timePerRequest = cpuTime / RUNS_PER_OBJ_ENC_REDUCED;
 		// line = "oBIX to EXI (direct); bool; startTime;" + startTime
-		// + ";endTime;" + endTime + ";encTime (ms);" + cpuTime + ";"
+		// + ";endTime;" + endTime + ";encTime (micro seconds);" + cpuTime + ";"
 		// + timePerRequest;
 		// System.out.println(line);
 		// CsvCreator.instance.writeLine(line);
@@ -751,7 +758,7 @@ public class CPUEval {
 		// cpuTime = ((double) encTime) / 1000;
 		// timePerRequest = cpuTime / RUNS_PER_OBJ_ENC_REDUCED;
 		// line = "oBIX to EXI (direct); int; startTime;" + startTime
-		// + ";endTime;" + endTime + ";encTime (ms);" + cpuTime + ";"
+		// + ";endTime;" + endTime + ";encTime (micro seconds);" + cpuTime + ";"
 		// + timePerRequest;
 		// System.out.println(line);
 		// CsvCreator.instance.writeLine(line);
@@ -788,7 +795,7 @@ public class CPUEval {
 		// cpuTime = ((double) encTime) / 1000;
 		// timePerRequest = cpuTime / RUNS_PER_OBJ_ENC_REDUCED;
 		// line = "oBIX to EXI (direct); real; startTime;" + startTime
-		// + ";endTime;" + endTime + ";encTime (ms);" + cpuTime + ";"
+		// + ";endTime;" + endTime + ";encTime (micro seconds);" + cpuTime + ";"
 		// + timePerRequest;
 		// System.out.println(line);
 		// CsvCreator.instance.writeLine(line);
@@ -825,7 +832,7 @@ public class CPUEval {
 		// cpuTime = ((double) encTime) / 1000;
 		// timePerRequest = cpuTime / RUNS_PER_OBJ_ENC_REDUCED;
 		// line = "oBIX to EXI (direct); str; startTime;" + startTime
-		// + ";endTime;" + endTime + ";encTime (ms);" + cpuTime + ";"
+		// + ";endTime;" + endTime + ";encTime (micro seconds);" + cpuTime + ";"
 		// + timePerRequest;
 		// System.out.println(line);
 		// CsvCreator.instance.writeLine(line);
@@ -886,7 +893,7 @@ public class CPUEval {
 			cpuTime = ((double) encTime) / 1000;
 			timePerRequest = cpuTime / RUNS_PER_OBJ_ENC;
 			line = "oBIX from EXI (direct); bool; startTime;" + startTime
-					+ ";endTime;" + endTime + ";encTime (ms);" + cpuTime + ";"
+					+ ";endTime;" + endTime + ";encTime (micro seconds);" + cpuTime + ";"
 					+ timePerRequest;
 			System.out.println(line);
 			CsvCreator.instance.writeLine(line);
@@ -941,7 +948,7 @@ public class CPUEval {
 			cpuTime = ((double) encTime) / 1000;
 			timePerRequest = cpuTime / RUNS_PER_OBJ_ENC;
 			line = "oBIX from EXI (direct); int; startTime;" + startTime
-					+ ";endTime;" + endTime + ";encTime (ms);" + cpuTime + ";"
+					+ ";endTime;" + endTime + ";encTime (micro seconds);" + cpuTime + ";"
 					+ timePerRequest;
 			System.out.println(line);
 			CsvCreator.instance.writeLine(line);
@@ -994,7 +1001,7 @@ public class CPUEval {
 			cpuTime = ((double) encTime) / 1000;
 			timePerRequest = cpuTime / RUNS_PER_OBJ_ENC;
 			line = "oBIX from EXI (direct); real; startTime;" + startTime
-					+ ";endTime;" + endTime + ";encTime (ms);" + cpuTime + ";"
+					+ ";endTime;" + endTime + ";encTime (micro seconds);" + cpuTime + ";"
 					+ timePerRequest;
 			System.out.println(line);
 			CsvCreator.instance.writeLine(line);
@@ -1048,7 +1055,7 @@ public class CPUEval {
 			cpuTime = ((double) encTime) / 1000;
 			timePerRequest = cpuTime / RUNS_PER_OBJ_ENC;
 			line = "oBIX from EXI (direct); str; startTime;" + startTime
-					+ ";endTime;" + endTime + ";encTime (ms);" + cpuTime + ";"
+					+ ";endTime;" + endTime + ";encTime (micro seconds);" + cpuTime + ";"
 					+ timePerRequest;
 			System.out.println(line);
 			CsvCreator.instance.writeLine(line);
@@ -1124,7 +1131,7 @@ public class CPUEval {
 			cpuTime = ((double) encTime) / 1000;
 			timePerRequest = cpuTime / RUNS_PER_OBJ_ENC_REDUCED;
 			line = "oBIX from EXI (schema); bool; startTime;" + startTime
-					+ ";endTime;" + endTime + ";encTime (ms);" + cpuTime + ";"
+					+ ";endTime;" + endTime + ";encTime (micro seconds);" + cpuTime + ";"
 					+ timePerRequest;
 			System.out.println(line);
 			CsvCreator.instance.writeLine(line);
@@ -1175,7 +1182,7 @@ public class CPUEval {
 			cpuTime = ((double) encTime) / 1000;
 			timePerRequest = cpuTime / RUNS_PER_OBJ_ENC_REDUCED;
 			line = "oBIX from EXI (schema); int; startTime;" + startTime
-					+ ";endTime;" + endTime + ";encTime (ms);" + cpuTime + ";"
+					+ ";endTime;" + endTime + ";encTime (micro seconds);" + cpuTime + ";"
 					+ timePerRequest;
 			System.out.println(line);
 			CsvCreator.instance.writeLine(line);
@@ -1226,7 +1233,7 @@ public class CPUEval {
 			cpuTime = ((double) encTime) / 1000;
 			timePerRequest = cpuTime / RUNS_PER_OBJ_ENC_REDUCED;
 			line = "oBIX from EXI (schema); real; startTime;" + startTime
-					+ ";endTime;" + endTime + ";encTime (ms);" + cpuTime + ";"
+					+ ";endTime;" + endTime + ";encTime (micro seconds);" + cpuTime + ";"
 					+ timePerRequest;
 			System.out.println(line);
 			CsvCreator.instance.writeLine(line);
@@ -1277,7 +1284,7 @@ public class CPUEval {
 			cpuTime = ((double) encTime) / 1000;
 			timePerRequest = cpuTime / RUNS_PER_OBJ_ENC_REDUCED;
 			line = "oBIX from EXI (schema); str; startTime;" + startTime
-					+ ";endTime;" + endTime + ";encTime (ms);" + cpuTime + ";"
+					+ ";endTime;" + endTime + ";encTime (micro seconds);" + cpuTime + ";"
 					+ timePerRequest;
 			System.out.println(line);
 			CsvCreator.instance.writeLine(line);
@@ -1359,7 +1366,7 @@ public class CPUEval {
 			cpuTime = ((double) encTime) / 1000;
 			timePerRequest = cpuTime / RUNS_PER_OBJ_ENC_REDUCED;
 			line = "oBIX from EXI (non schema); bool; startTime;" + startTime
-					+ ";endTime;" + endTime + ";encTime (ms);" + cpuTime + ";"
+					+ ";endTime;" + endTime + ";encTime (micro seconds);" + cpuTime + ";"
 					+ timePerRequest;
 			System.out.println(line);
 			CsvCreator.instance.writeLine(line);
@@ -1410,7 +1417,7 @@ public class CPUEval {
 			cpuTime = ((double) encTime) / 1000;
 			timePerRequest = cpuTime / RUNS_PER_OBJ_ENC_REDUCED;
 			line = "oBIX from EXI (non schema); int; startTime;" + startTime
-					+ ";endTime;" + endTime + ";encTime (ms);" + cpuTime + ";"
+					+ ";endTime;" + endTime + ";encTime (micro seconds);" + cpuTime + ";"
 					+ timePerRequest;
 			System.out.println(line);
 			CsvCreator.instance.writeLine(line);
@@ -1461,7 +1468,7 @@ public class CPUEval {
 			cpuTime = ((double) encTime) / 1000;
 			timePerRequest = cpuTime / RUNS_PER_OBJ_ENC_REDUCED;
 			line = "oBIX from EXI (non schema); real; startTime;" + startTime
-					+ ";endTime;" + endTime + ";encTime (ms);" + cpuTime + ";"
+					+ ";endTime;" + endTime + ";encTime (micro seconds);" + cpuTime + ";"
 					+ timePerRequest;
 			System.out.println(line);
 			CsvCreator.instance.writeLine(line);
@@ -1512,7 +1519,7 @@ public class CPUEval {
 			cpuTime = ((double) encTime) / 1000;
 			timePerRequest = cpuTime / RUNS_PER_OBJ_ENC_REDUCED;
 			line = "oBIX from EXI (non schema); str; startTime;" + startTime
-					+ ";endTime;" + endTime + ";encTime (ms);" + cpuTime + ";"
+					+ ";endTime;" + endTime + ";encTime (micro seconds);" + cpuTime + ";"
 					+ timePerRequest;
 			System.out.println(line);
 			CsvCreator.instance.writeLine(line);
@@ -1561,7 +1568,7 @@ public class CPUEval {
 			cpuTime = ((double) encTime) / 1000;
 			timePerRequest = cpuTime / RUNS_PER_OBJ_ENC;
 			line = "oBIX from XML; bool; startTime;" + startTime + ";endTime;"
-					+ endTime + ";encTime (ms);" + cpuTime + ";"
+					+ endTime + ";encTime (micro seconds);" + cpuTime + ";"
 					+ timePerRequest;
 			System.out.println(line);
 			CsvCreator.instance.writeLine(line);
@@ -1585,7 +1592,7 @@ public class CPUEval {
 			cpuTime = ((double) encTime) / 1000;
 			timePerRequest = cpuTime / RUNS_PER_OBJ_ENC;
 			line = "oBIX from XML; int; startTime;" + startTime + ";endTime;"
-					+ endTime + ";encTime (ms);" + cpuTime + ";"
+					+ endTime + ";encTime (micro seconds);" + cpuTime + ";"
 					+ timePerRequest;
 			System.out.println(line);
 			CsvCreator.instance.writeLine(line);
@@ -1609,7 +1616,7 @@ public class CPUEval {
 			cpuTime = ((double) encTime) / 1000;
 			timePerRequest = cpuTime / RUNS_PER_OBJ_ENC;
 			line = "oBIX from XML; real; startTime;" + startTime + ";endTime;"
-					+ endTime + ";encTime (ms);" + cpuTime + ";"
+					+ endTime + ";encTime (micro seconds);" + cpuTime + ";"
 					+ timePerRequest;
 			System.out.println(line);
 			CsvCreator.instance.writeLine(line);
@@ -1633,7 +1640,7 @@ public class CPUEval {
 			cpuTime = ((double) encTime) / 1000;
 			timePerRequest = cpuTime / RUNS_PER_OBJ_ENC;
 			line = "oBIX from XML; str; startTime;" + startTime + ";endTime;"
-					+ endTime + ";encTime (ms);" + cpuTime + ";"
+					+ endTime + ";encTime (micro seconds);" + cpuTime + ";"
 					+ timePerRequest;
 			System.out.println(line);
 			CsvCreator.instance.writeLine(line);
@@ -1692,7 +1699,7 @@ public class CPUEval {
 			cpuTime = ((double) encTime) / 1000;
 			timePerRequest = cpuTime / RUNS_PER_OBJ_ENC;
 			line = "oBIX from JSON; bool; startTime;" + startTime + ";endTime;"
-					+ endTime + ";encTime (ms);" + cpuTime + ";"
+					+ endTime + ";encTime (micro seconds);" + cpuTime + ";"
 					+ timePerRequest;
 			System.out.println(line);
 			CsvCreator.instance.writeLine(line);
@@ -1726,7 +1733,7 @@ public class CPUEval {
 			cpuTime = ((double) encTime) / 1000;
 			timePerRequest = cpuTime / RUNS_PER_OBJ_ENC;
 			line = "oBIX from JSON; int; startTime;" + startTime + ";endTime;"
-					+ endTime + ";encTime (ms);" + cpuTime + ";"
+					+ endTime + ";encTime (micro seconds);" + cpuTime + ";"
 					+ timePerRequest;
 			System.out.println(line);
 			CsvCreator.instance.writeLine(line);
@@ -1760,7 +1767,7 @@ public class CPUEval {
 			cpuTime = ((double) encTime) / 1000;
 			timePerRequest = cpuTime / RUNS_PER_OBJ_ENC;
 			line = "oBIX from JSON; real; startTime;" + startTime + ";endTime;"
-					+ endTime + ";encTime (ms);" + cpuTime + ";"
+					+ endTime + ";encTime (micro seconds);" + cpuTime + ";"
 					+ timePerRequest;
 			System.out.println(line);
 			CsvCreator.instance.writeLine(line);
@@ -1794,7 +1801,7 @@ public class CPUEval {
 			cpuTime = ((double) encTime) / 1000;
 			timePerRequest = cpuTime / RUNS_PER_OBJ_ENC;
 			line = "oBIX from JSON; str; startTime;" + startTime + ";endTime;"
-					+ endTime + ";encTime (ms);" + cpuTime + ";"
+					+ endTime + ";encTime (micro seconds);" + cpuTime + ";"
 					+ timePerRequest;
 			System.out.println(line);
 			CsvCreator.instance.writeLine(line);
@@ -1858,7 +1865,7 @@ public class CPUEval {
 			cpuTime = ((double) encTime) / 1000;
 			timePerRequest = cpuTime / RUNS_PER_OBJ_ENC;
 			line = "oBIX from oBIX Binary; bool; startTime;" + startTime
-					+ ";endTime;" + endTime + ";encTime (ms);" + cpuTime + ";"
+					+ ";endTime;" + endTime + ";encTime (micro seconds);" + cpuTime + ";"
 					+ timePerRequest;
 			System.out.println(line);
 			CsvCreator.instance.writeLine(line);
@@ -1881,7 +1888,7 @@ public class CPUEval {
 			cpuTime = ((double) encTime) / 1000;
 			timePerRequest = cpuTime / RUNS_PER_OBJ_ENC;
 			line = "oBIX from oBIX Binary; int; startTime;" + startTime
-					+ ";endTime;" + endTime + ";encTime (ms);" + cpuTime + ";"
+					+ ";endTime;" + endTime + ";encTime (micro seconds);" + cpuTime + ";"
 					+ timePerRequest;
 			System.out.println(line);
 			CsvCreator.instance.writeLine(line);
@@ -1904,7 +1911,7 @@ public class CPUEval {
 			cpuTime = ((double) encTime) / 1000;
 			timePerRequest = cpuTime / RUNS_PER_OBJ_ENC;
 			line = "oBIX from oBIX Binary; real; startTime;" + startTime
-					+ ";endTime;" + endTime + ";encTime (ms);" + cpuTime + ";"
+					+ ";endTime;" + endTime + ";encTime (micro seconds);" + cpuTime + ";"
 					+ timePerRequest;
 			System.out.println(line);
 			CsvCreator.instance.writeLine(line);
@@ -1927,7 +1934,7 @@ public class CPUEval {
 			cpuTime = ((double) encTime) / 1000;
 			timePerRequest = cpuTime / RUNS_PER_OBJ_ENC;
 			line = "oBIX from oBIX Binary; str; startTime;" + startTime
-					+ ";endTime;" + endTime + ";encTime (ms);" + cpuTime + ";"
+					+ ";endTime;" + endTime + ";encTime (micro seconds);" + cpuTime + ";"
 					+ timePerRequest;
 			System.out.println(line);
 			CsvCreator.instance.writeLine(line);

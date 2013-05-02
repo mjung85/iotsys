@@ -71,6 +71,9 @@ public class EXIDecoder {
 	private EXIReader exiReaderSchema;
 	private EXIReader exiReaderDefault;
 	
+	private ObixHandler exiSchemaHandler;
+	private ObixHandler exiDefaultHandler;
+	
 	
 	public static void main(String[] args) {
 		File inputFile = new File("out.exi");
@@ -128,6 +131,11 @@ public class EXIDecoder {
 			exiReaderSchema.setEXISchema(schemaGrammarCache);
 			exiReaderDefault = new EXIReader();
 			exiReaderDefault.setEXISchema(defaultGrammarCache);
+			
+			exiSchemaHandler = new ObixHandler();
+			exiDefaultHandler = new ObixHandler();
+			exiReaderDefault.setContentHandler(exiSchemaHandler);
+			exiReaderSchema.setContentHandler(exiDefaultHandler);
 		} catch (EXIOptionsException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -137,24 +145,26 @@ public class EXIDecoder {
 	public synchronized Obj fromBytes(byte[] payload, boolean useEXISchema)
 			throws IOException, SAXException,
 			TransformerConfigurationException, EXIOptionsException {
-		
-		// EXIReader infers and reconstructs the XML file structure.
-		
-		EXIReader reader;
+
 		if(useEXISchema){
-			reader = exiReaderSchema;
+			exiReaderSchema.parse(new InputSource(new ByteArrayInputStream(payload)));
+			return exiSchemaHandler.getObj();
 		}
 		else{
-			reader = exiReaderDefault;
+			exiReaderDefault.parse(new InputSource(new ByteArrayInputStream(payload)));
+			return exiDefaultHandler.getObj();
 		}
-		// Assign the transformer handler to interpret XML content.
-		ObixHandler obixHandler = new ObixHandler();
-		reader.setContentHandler(obixHandler);
 
+	}
+	
+	public synchronized Obj fromBytesSchema(byte[] payload)
+			throws IOException, SAXException,
+			TransformerConfigurationException, EXIOptionsException {
+		
 		// Parse the file information.
-		reader.parse(new InputSource(new ByteArrayInputStream(payload)));
-
-		return obixHandler.getObj();
+		exiReaderSchema.parse(new InputSource(new ByteArrayInputStream(payload)));
+	
+		return exiSchemaHandler.getObj();
 	}
 	
 	public static EXIDecoder getInstance(){

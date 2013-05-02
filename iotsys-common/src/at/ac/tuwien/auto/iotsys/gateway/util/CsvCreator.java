@@ -46,7 +46,7 @@ public class CsvCreator {
 	private CsvCreator(){
 		
 		try {
-			fos = new FileOutputStream(new File("knx.csv"));
+			fos = new FileOutputStream(new File("eval.csv"));
 			out = new PrintWriter(fos);
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
