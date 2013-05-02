@@ -48,18 +48,12 @@ import org.xml.sax.InputSource;
  */
 public class ExiSchemaHelper {
 	public static void main(String[] args) {
-		try {
+	
 			fromXSDtoESD("res/obix.xsd", "res/obix.esd");
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (EXISchemaFactoryException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	
 	}
 
-	public static void fromXSDtoESD(String xsdFileName, String esdFileName) throws IOException, EXISchemaFactoryException {
+	public static void fromXSDtoESD(String xsdFileName, String esdFileName)  {
 		FileInputStream fis=null;
 		InputSource is;
 		EXISchema schema;
@@ -79,12 +73,14 @@ public class ExiSchemaHelper {
 			fos = new FileOutputStream(esdFileName);
 			dos = new DataOutputStream(fos);
 			schema.writeOut(dos);
-		}		
-		finally{
 			fos.close();
 			dos.close();
 			fis.close();
+		}		
+		catch(Exception e){
+			e.printStackTrace();
 		}
+		
 	}
 }
 
