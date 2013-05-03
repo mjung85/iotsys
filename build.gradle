@@ -10,6 +10,9 @@ allprojects {
 	
 	repositories(){
 		mavenCentral()
+		mavenRepo url: 'https://repository.jboss.org/nexus/content/repositories/releases/', name: 'JBoss Releases'
+		mavenRepo url: 'https://repository.jboss.org/nexus/content/groups/public/', name: 'JBoss Public'
+
 	}
 
 	
@@ -63,9 +66,6 @@ subprojects{
 sourceCompatibility = 1.6
 description = 'IoTSyS - Integration middleware for the Internet of Things'
 
-repositories {
-	mavenCentral()
-	mavenLocal()
 }
 
 task deploy << {
@@ -83,8 +83,6 @@ task deploy << {
 	ant.copy(todir:deployResDir){
 		fileset(dir:resDir)
 	}
-}
-
 task deployOsgi << {
 	File dstConfigDir = new File(felix.absolutePath + '/config')
 	File dstResDir = new File(felix.absolutePath + '/res')
@@ -160,7 +158,7 @@ task setupFelix << {
 					"javax.net.ssl, javax.crypto, javax.crypto.interfaces, javax.crypto.spec, javax.security.auth," +
 					"javax.security.auth.spi, javax.security.auth.callback, javax.security.auth.login," +
 					"javax.security.cert, javax.xml.parsers,  javax.xml.xpath, javax.xml.transform.sax," + "javax.xml.transform.dom, javax.xml.namespace, javax.xml.transform, javax.xml.transform.stream," +
-					"javax.xml.validation, javax.xml.datatype, org.xml.sax, org.xml.sax.helpers, org.xml.sax.ext," + "com.sun.org.apache.xalan.internal, com.sun.org.apache.xalan.internal.res," + "com.sun.org.apache.xml.internal.utils, com.sun.org.apache.xpath.internal," + "com.sun.org.apache.xpath.internal.jaxp, com.sun.org.apache.xpath.internal.objects," + "com.sun.org.apache.xml.internal, org.w3c.dom, org.w3c.dom.traversal, org.w3c.dom.ls, javax.sql," + "javax.transaction, sun.misc")}	
+					"javax.xml.validation, javax.xml.datatype, org.xml.sax, org.xml.sax.helpers, org.xml.sax.ext," + "com.sun.org.apache.xalan.internal, com.sun.org.apache.xalan.internal.res," + "com.sun.org.apache.xml.internal.utils, com.sun.org.apache.xpath.internal," + "com.sun.org.apache.xpath.internal.jaxp, com.sun.org.apache.xpath.internal.objects," + "com.sun.org.apache.xml.internal, org.w3c.dom, org.w3c.dom.traversal, org.w3c.dom.ls, javax.sql," + "javax.transaction, sun.misc, com.sun.org.apache.xerces.internal.jaxp.validation, com.sun.org.apache.xerces.internal.jaxp, javax.naming.ldap, javax.naming")}	
 	
 }
 
