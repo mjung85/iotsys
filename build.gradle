@@ -3,7 +3,6 @@ allprojects {
 	apply plugin: 'java'
 	apply plugin: 'maven-publish'
 	apply plugin: 'maven'
-	
 
 	group = 'at.ac.tuwien.auto.iotsys'
 	version = '0.1'
@@ -14,16 +13,12 @@ allprojects {
 		mavenRepo url: 'https://repository.jboss.org/nexus/content/groups/public/', name: 'JBoss Public'
 
 	}
-
-	
 }
 
 ext{
 	configDir = file('iotsys-gateway/config')
 	resDir = file('iotsys-gateway/res')
-	distLib = file('dist')
-	distLibRunFile = file('dist/rungateway.bat')
-	distLibRunFileSh = file('dist/rungateway.sh')
+	distLib = file('iotsys-gateway/dist/lib')
 	
 	String felixDir = "felix-framework-4.2.1"
 	
@@ -47,12 +42,10 @@ subprojects{
 			
 	task deploy(dependsOn: jar) << {
 		println "copying $jar.archivePath to $distLib"
-		
 		ant.copy(file:jar.archivePath, todir:distLib)
 	}
 	task deployOsgi(dependsOn: jar) << {
 		println "copying $jar.archivePath to $felixBundle"
-		
 		ant.copy(file:jar.archivePath, todir:felixBundle)
 	}
 	
@@ -66,23 +59,6 @@ subprojects{
 sourceCompatibility = 1.6
 description = 'IoTSyS - Integration middleware for the Internet of Things'
 
-}
-
-task deploy << {
-	ant.echo(message:'java -cp "iotsys-bacnet-0.1.jar;iotsys-bacnet4j-0.1.jar;iotsys-calimero-0.1.jar;iotsys-common-0.1.jar;iotsys-control-0.1.jar;iotsys-encoding-json-0.1.jar;iotsys-gateway-0.1.jar;iotsys-knx-0.1.jar;iotsys-obix-0.1.jar;iotsys-virtual-0.1.jar;iotsys-wmbus-0.1.jar" at.ac.tuwien.auto.iotsys.gateway.IoTSySGateway', file:distLibRunFile)	
-
-	ant.echo(message:'java -cp "iotsys-bacnet-0.1.jar:iotsys-bacnet4j-0.1.jar:iotsys-calimero-0.1.jar:iotsys-common-0.1.jar:iotsys-control-0.1.jar:iotsys-encoding-json-0.1.jar:iotsys-gateway-0.1.jar:iotsys-knx-0.1.jar:iotsys-obix-0.1.jar:iotsys-virtual-0.1.jar:iotsys-wmbus-0.1.jar" at.ac.tuwien.auto.iotsys.gateway.IoTSySGateway', file:distLibRunFileSh)			
-		
-	File deployResDir = new File(distLib.absolutePath + '/res')
-	File deployConfDir = new File(distLib.absolutePath + '/config')
-	
-	ant.copy(todir:deployConfDir){
-			fileset(dir:configDir)
-	}
-		
-	ant.copy(todir:deployResDir){
-		fileset(dir:resDir)
-	}
 task deployOsgi << {
 	File dstConfigDir = new File(felix.absolutePath + '/config')
 	File dstResDir = new File(felix.absolutePath + '/res')
