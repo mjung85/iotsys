@@ -100,7 +100,7 @@ public class CoAPServer extends Endpoint {
 
 	@Override
 	public void execute(Request request) throws IOException {
-		
+		System.out.println("Peer Address: " + request.getPeerAddress().getAddress());
 		// handle multicast requests first
 		if (MulticastUDPLayer.getRequestType() == REQUEST_TYPE.MULTICAST_REQUEST) {
 			log.finest("Handle multicast request!");

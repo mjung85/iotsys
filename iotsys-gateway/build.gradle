@@ -15,6 +15,7 @@ eclipse{
 				node.appendNode('classpathentry', [kind: 'src', path: '/iotsys-bacnet4j', exported:'true'])
 				node.appendNode('classpathentry', [kind: 'src', path: '/iotsys-wmbus', exported:'true'])
 				node.appendNode('classpathentry', [kind: 'src', path: '/iotsys-virtual', exported:'true'])
+				node.appendNode('classpathentry', [kind: 'src', path: '/iotsys-xbee', exported:'true'])
 
 			}
 		}
