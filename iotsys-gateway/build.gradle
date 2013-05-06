@@ -18,6 +18,7 @@ eclipse{
 
 
 				node.appendNode('classpathentry', [kind: 'src', path: '/iotsys-xacml', exported:'true'])
+				node.appendNode('classpathentry', [kind: 'lib', path: '/iotsys-xacml/res', exported:'true'])
 			}
 		}
 	}
