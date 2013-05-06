@@ -17,6 +17,9 @@ eclipse{
 				node.appendNode('classpathentry', [kind: 'src', path: '/iotsys-virtual', exported:'true'])
 				node.appendNode('classpathentry', [kind: 'src', path: '/iotsys-xbee', exported:'true'])
 
+
+				node.appendNode('classpathentry', [kind: 'src', path: '/iotsys-xacml', exported:'true'])
+				node.appendNode('classpathentry', [kind: 'lib', path: '/iotsys-xacml/res', exported:'true'])
 			}
 		}
 	}
@@ -47,7 +50,7 @@ jar {
 				   "Bundle-Version": "0.1", 
 				   "Bundle-Classpath": ".",
 				   "Bundle-Activator": "at.ac.tuwien.auto.iotsys.gateway.IoTSySGatewayActivator",
-				   "Import-Package": "org.osgi.framework, at.ac.tuwien.auto.iotsys.commons, org.json, obix, obix.asm, obix.contracts, " +
+				   "Import-Package": "org.osgi.framework, at.ac.tuwien.auto.iotsys.commons, at.ac.tuwien.auto.iotsys.commons.interceptor, org.json, obix, obix.asm, obix.contracts, " +
 				   					"obix.io, obix.net, obix.test, obix.toos, obix.ui, obix.ui.fields, obix.ui.views, obix.xml, " +
 									   "at.ac.tuwien.auto.iotsys.gateway.obix.observer, at.ac.tuwien.auto.iotsys.gateway.obix.objects.bacnet, at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot," +
 									   "at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.general.impl,"+
@@ -74,6 +77,8 @@ dependencies {
 	provided project(':iotsys-common')
 	provided project(':iotsys-encoding-json')
 	provided project(':iotsys-control');
+
+	provided project(':iotsys-xacml')
 	
 	//provided group: 'org.apache.felix', name: 'org.apache.felix.framework', version: '4.2.0'
 	provided group: 'org.apache.felix', name: 'org.osgi.core', version: '1.4.0'
@@ -92,5 +97,5 @@ dependencies {
 	
 	compile group: 'net.sourceforge.javacsv', name: 'javacsv', version: '2.0'
 	
-	compile ":nagasena:"	
+	compile ":nagasena:"
 }

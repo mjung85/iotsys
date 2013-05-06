@@ -42,16 +42,22 @@ import java.util.logging.Logger;
 import at.ac.tuwien.auto.iotsys.gateway.util.CsvCreator;
 import at.ac.tuwien.auto.iotsys.gateway.util.ExiUtil;
 
+import at.ac.tuwien.auto.iotsys.gateway.interceptor.InterceptorBrokerImpl;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objectbroker.ObjectBrokerImpl;
 import at.ac.tuwien.auto.iotsys.gateway.obix.server.CoAPServer;
 import at.ac.tuwien.auto.iotsys.gateway.obix.server.NanoHTTPD;
 import at.ac.tuwien.auto.iotsys.gateway.obix.server.ObixObservingManager;
 import at.ac.tuwien.auto.iotsys.gateway.obix.server.ObixServer;
 import at.ac.tuwien.auto.iotsys.gateway.obix.server.ObixServerImpl;
+import at.ac.tuwien.auto.iotsys.xacml.pdp.PDPInterceptor;
+// import at.ac.tuwien.auto.iotsys.xacml.pdp.PDPInterceptor;
 
 import at.ac.tuwien.auto.iotsys.commons.Connector;
 import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
 import at.ac.tuwien.auto.iotsys.commons.PropertiesLoader;
+import at.ac.tuwien.auto.iotsys.commons.interceptor.ClassAlreadyRegisteredException;
+import at.ac.tuwien.auto.iotsys.commons.interceptor.InterceptorBroker;
+
 //import at.ac.tuwien.auto.iotsys.control.TestClient;
 
 /**
@@ -61,7 +67,10 @@ import at.ac.tuwien.auto.iotsys.commons.PropertiesLoader;
 public class IoTSySGateway {
 	private ObjectBroker objectBroker;
 	private DeviceLoaderImpl deviceLoader;
+	private InterceptorBroker interceptorBroker;
 
+	private boolean osgiEnvironment = false;
+	
 	private ArrayList<Connector> connectors = new ArrayList<Connector>();
 
 	private static final Logger log = Logger.getLogger(IoTSySGateway.class
@@ -94,13 +103,27 @@ public class IoTSySGateway {
 		deviceLoader = new DeviceLoaderImpl();
 		connectors = deviceLoader.initDevices(objectBroker);
 
+		interceptorBroker = InterceptorBrokerImpl.getInstance();
+		// initialize interceptor broker
+		boolean enableXacml = Boolean.getBoolean(PropertiesLoader.getInstance()
+				.getProperties().getProperty("iotsys.gateway.xacml", "false"));
+
+		log.info("XACML?: " + enableXacml);
+		if (enableXacml && !isOsgiEnvironment()) {
+			// temporarly register interceptor
+			try {
+				interceptorBroker.register(new PDPInterceptor());
+			} catch (ClassAlreadyRegisteredException e) {
+				// silent exceptionhandling
+			}
+		}
+
 		ObixObservingManager.getInstance().setObixServer(obixServer);
 
-		try{
+		try {
 			new CoAPServer(obixServer);
 			new NanoHTTPD(Integer.parseInt(httpPort), obixServer);
-		}
-		catch(IOException ioe){
+		} catch (IOException ioe) {
 			ioe.printStackTrace();
 		}
 	}
@@ -112,17 +135,16 @@ public class IoTSySGateway {
 		
 	}
 
-		
 	public static void main(String[] args) {
 		final IoTSySGateway iotsys = new IoTSySGateway();
 
 		iotsys.startGateway();
-		
-//		TestClient testClient = new TestClient(iotsys.objectBroker);
-//		testClient.runTests();
-		
-		//EvaluationUtil.evaluation();
-				
+
+		// TestClient testClient = new TestClient(iotsys.objectBroker);
+		// testClient.runTests();
+
+		// EvaluationUtil.evaluation();
+
 		BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
 
 		try {
@@ -144,5 +166,13 @@ public class IoTSySGateway {
 				e.printStackTrace();
 			}
 		}
+	}
+
+	public boolean isOsgiEnvironment() {
+		return osgiEnvironment;
+	}
+
+	public void setOsgiEnvironment(boolean osgiEnvironment) {
+		this.osgiEnvironment = osgiEnvironment;
 	}
 }
