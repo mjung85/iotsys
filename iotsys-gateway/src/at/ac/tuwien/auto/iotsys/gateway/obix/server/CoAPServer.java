@@ -167,15 +167,13 @@ public class CoAPServer extends Endpoint {
 		if (MulticastUDPLayer.getRequestType() == REQUEST_TYPE.MULTICAST_REQUEST) {
 			log.finest("Handle multicast request!");
 			Obj obj = null;
-			if (request.getContentType() == MediaTypeRegistry.APPLICATION_EXI
-					|| request.getContentType() == MediaTypeRegistry.APPLICATION_OCTET_STREAM) {
+			if (request.getContentType() == MediaTypeRegistry.APPLICATION_OCTET_STREAM) {
 				try {
 					log.finest("Received EXI encoded multicast.");
 					obj = EXIDecoder
 							.getInstance()
-							.fromBytes(
-									request.getPayload(),
-									request.getContentType() == MediaTypeRegistry.APPLICATION_OCTET_STREAM);
+							.fromBytesSchema(
+									request.getPayload());
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
