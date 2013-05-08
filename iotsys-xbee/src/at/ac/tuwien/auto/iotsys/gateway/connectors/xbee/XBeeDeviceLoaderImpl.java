@@ -58,7 +58,7 @@ public class XBeeDeviceLoaderImpl implements DeviceLoader {
 		log.info("Found " + connectorsSize + " XBee connectors.");
 		for (int connector = 0; connector < connectorsSize; connector++) {
 			HierarchicalConfiguration subConfig = devicesConfig
-					.configurationAt("wmbus.connector(" + connector + ")");
+					.configurationAt("xbee.connector(" + connector + ")");
 
 			Object xbeeConfiguredDevices = subConfig.getProperty("device.type");
 			String connectorName = subConfig.getString("name");
@@ -68,13 +68,14 @@ public class XBeeDeviceLoaderImpl implements DeviceLoader {
 			// PropertyConfigurator.configure("log4j.properties");
 			if (enabled) {
 				try {
+					log.info("Connecting XBee connector to COM Port: " + serialPort);
 					XBeeConnector xBeeConnector = new XBeeConnector(serialPort,
 							9600);
 					xBeeConnector.connect();
 
 					connectors.add(xBeeConnector);
 
-					// add virtual devices
+					// add devices
 
 					IndoorBrightnessSensorImpl xBeeBrightness = new IndoorBrightnessSensorImplXBee(
 							xBeeConnector);
@@ -99,7 +100,7 @@ public class XBeeDeviceLoaderImpl implements DeviceLoader {
 					objectBroker.addHistoryToDatapoints(xBeeBrightness, 100);
 					objectBroker.addHistoryToDatapoints(xBeeTemperatureSensor,
 							100);
-					// objectBroker.enableObjectRefresh(xBeeTemperatureSensor);
+//					objectBroker.enableObjectRefresh(xBeeTemperatureSensor);
 
 				} catch (Exception e) {
 
@@ -110,7 +111,8 @@ public class XBeeDeviceLoaderImpl implements DeviceLoader {
 		}
 
 		/*
-		 * // parse XML configuration for connections and objects // NOTE: this
+		 * // parse XML configuration
+		 *  for connections and objects // NOTE: this
 		 * loader allow to directly instantiate the base oBIX objects // for
 		 * testing purposes int connectorsSize = 0; // virtual Object
 		 * virtualConnectors = devicesConfig
