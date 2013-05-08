@@ -79,7 +79,7 @@ public class MultiInterfaceUDPLayer extends Layer {
 		defaultUDPLayer.registerReceiver(this);
 		
 		try {
-			Inet6Address group = (Inet6Address) Inet6Address.getByName("FF01::1");
+			Inet6Address group = (Inet6Address) Inet6Address.getByName("FF02::1");
 			openMulticastSocket(group);
 		} catch (UnknownHostException e1) {
 			// TODO Auto-generated catch block

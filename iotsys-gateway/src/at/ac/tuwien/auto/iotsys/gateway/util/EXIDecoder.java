@@ -134,8 +134,8 @@ public class EXIDecoder {
 			
 			exiSchemaHandler = new ObixHandler();
 			exiDefaultHandler = new ObixHandler();
-			exiReaderDefault.setContentHandler(exiSchemaHandler);
-			exiReaderSchema.setContentHandler(exiDefaultHandler);
+			exiReaderDefault.setContentHandler(exiDefaultHandler);
+			exiReaderSchema.setContentHandler(exiSchemaHandler);
 		} catch (EXIOptionsException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
