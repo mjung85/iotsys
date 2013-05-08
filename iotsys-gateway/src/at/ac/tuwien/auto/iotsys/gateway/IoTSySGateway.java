@@ -49,13 +49,13 @@ import at.ac.tuwien.auto.iotsys.gateway.obix.server.NanoHTTPD;
 import at.ac.tuwien.auto.iotsys.gateway.obix.server.ObixObservingManager;
 import at.ac.tuwien.auto.iotsys.gateway.obix.server.ObixServer;
 import at.ac.tuwien.auto.iotsys.gateway.obix.server.ObixServerImpl;
-import at.ac.tuwien.auto.iotsys.xacml.pdp.PDPInterceptor;
 // import at.ac.tuwien.auto.iotsys.xacml.pdp.PDPInterceptor;
 
 import at.ac.tuwien.auto.iotsys.commons.Connector;
 import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
 import at.ac.tuwien.auto.iotsys.commons.PropertiesLoader;
 import at.ac.tuwien.auto.iotsys.commons.interceptor.ClassAlreadyRegisteredException;
+import at.ac.tuwien.auto.iotsys.commons.interceptor.Interceptor;
 import at.ac.tuwien.auto.iotsys.commons.interceptor.InterceptorBroker;
 
 //import at.ac.tuwien.auto.iotsys.control.TestClient;
@@ -112,7 +112,30 @@ public class IoTSySGateway {
 		if (enableXacml && !isOsgiEnvironment()) {
 			// temporarly register interceptor
 			try {
-				interceptorBroker.register(new PDPInterceptor());
+				// load PDP interceptor if available on class path
+				Class clazz = null;
+				try {
+					clazz = Class.forName("at.ac.tuwien.auto.iotsys.xacml.pdp.PDPInterceptor");
+				} catch (ClassNotFoundException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				
+				
+				if(clazz != null){
+					Interceptor interceptor;
+					try {
+						interceptor = (Interceptor) clazz.newInstance();
+						interceptorBroker.register(interceptor);
+					} catch (InstantiationException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (IllegalAccessException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					
+				}
 			} catch (ClassAlreadyRegisteredException e) {
 				// silent exceptionhandling
 			}
