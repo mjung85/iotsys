@@ -12,8 +12,8 @@
     </device-loader>
     <device-loader>at.ac.tuwien.auto.iotsys.gateway.connector.wmbus.WMBusDeviceLoaderImpl
     </device-loader>
-    <!--  <device-loader>at.ac.tuwien.auto.iotsys.gateway.connectors.xbee.XBeeDeviceLoaderImpl
-    </device-loader>-->
+	<device-loader>at.ac.tuwien.auto.iotsys.gateway.connectors.xbee.XBeeDeviceLoaderImpl
+    </device-loader>
      <device-loader>at.ac.tuwien.auto.iotsys.gateway.connectors.virtual.VirtualDeviceLoaderImpl
     </device-loader>
   </deviceloaders>
@@ -21,6 +21,8 @@
   <xbee>
     <connector>
         <name>XBee</name>
+        <enable>false</enable>
+        <serialPort>COM9</serialPort>
     </connector>
   </xbee>
 
@@ -477,7 +479,7 @@
   <virtual>
     <connector>
       <name>Virtual Devices</name>
-      <enabled>false</enabled>
+      <enabled>true</enabled>
 
       <!-- SENSOREN -->
 
@@ -628,7 +630,7 @@
     </connector>
     <connector>
       <name>Virtual Devices 2</name>
-      <enabled>false</enabled>
+      <enabled>true</enabled>
 
       <!-- SENSOREN -->
       <device>
