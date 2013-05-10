@@ -36,7 +36,6 @@ import at.ac.tuwien.auto.calimero.CloseEvent;
 import at.ac.tuwien.auto.calimero.GroupAddress;
 import at.ac.tuwien.auto.calimero.cemi.CEMILData;
 import at.ac.tuwien.auto.calimero.datapoint.Datapoint;
-import at.ac.tuwien.auto.calimero.datapoint.StateDP;
 import at.ac.tuwien.auto.calimero.exception.KNXException;
 import at.ac.tuwien.auto.calimero.link.KNXNetworkLinkIP;
 import at.ac.tuwien.auto.calimero.link.event.NetworkLinkListener;

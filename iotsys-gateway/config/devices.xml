@@ -12,7 +12,7 @@
     </device-loader>
     <device-loader>at.ac.tuwien.auto.iotsys.gateway.connector.wmbus.WMBusDeviceLoaderImpl
     </device-loader>
-	<device-loader>at.ac.tuwien.auto.iotsys.gateway.connectors.xbee.XBeeDeviceLoaderImpl
+    <device-loader>at.ac.tuwien.auto.iotsys.gateway.connectors.xbee.XBeeDeviceLoaderImpl
     </device-loader>
      <device-loader>at.ac.tuwien.auto.iotsys.gateway.connectors.virtual.VirtualDeviceLoaderImpl
     </device-loader>
@@ -102,7 +102,7 @@
     </connector>
     <connector>
       <name>KNX E-Lab</name>
-      <enabled>false</enabled>
+      <enabled>true</enabled>
       <router>
         <ip>192.168.161.53</ip>
         <port>3671</port>
@@ -356,7 +356,7 @@
 
     <connector>
       <name>BACnet A-Lab</name>
-      <enabled>false</enabled>
+      <enabled>true</enabled>
       <discovery-enabled>true</discovery-enabled>
       <localDeviceID>92345</localDeviceID>
       <broadcastAddress>128.130.56.255</broadcastAddress>
