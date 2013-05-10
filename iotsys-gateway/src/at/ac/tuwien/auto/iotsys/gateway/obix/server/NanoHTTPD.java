@@ -168,6 +168,9 @@ public class NanoHTTPD {
 			Response r = new Response(HTTP_OK, MIME_PLAINTEXT,
 					obixServer.getCoRELinks());
 			return r;
+		} else if (uri.equalsIgnoreCase("/") || uri.isEmpty() || uri.endsWith(".js") || uri.endsWith(".css")) {
+			if (uri.isEmpty()) uri = "/index.html"; 
+			return serveFile(uri, header,new File("res/obelix"), false);
 		}
 
 		if (interceptorBroker != null && interceptorBroker.hasInterceptors()) {
