@@ -1,0 +1,8 @@
+source 'https://rubygems.org'
+
+gem 'middleman', '~>3.0'
+gem 'middleman-sprockets'
+gem 'middleman-minify-html'
+gem 'rack-reverse-proxy'
+gem 'zurb-foundation'
+gem 'json', '~> 1.7.7'
