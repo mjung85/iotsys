@@ -21,8 +21,15 @@
   <xbee>
     <connector>
         <name>XBee</name>
-        <enabled>true</enabled>
-        <serialPort>COM9</serialPort>
+        <enabled>false</enabled>
+        <serialPort>COM9</serialPort>    
+        <device>
+        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.xbee.TemperatureSensorImplXBee</type>
+        <address>0013a200407c1715</address>
+        <href>temperatureXBee</href>
+        <historyEnabled>false</historyEnabled>
+        <groupCommEnabled>true</groupCommEnabled>
+     </device>
     </connector>
   </xbee>
 
