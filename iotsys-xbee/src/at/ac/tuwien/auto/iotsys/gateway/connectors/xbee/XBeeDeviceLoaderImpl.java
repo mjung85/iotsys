@@ -2,6 +2,7 @@ package at.ac.tuwien.auto.iotsys.gateway.connectors.xbee;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Hashtable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -13,8 +14,7 @@ import org.apache.commons.configuration.XMLConfiguration;
 import at.ac.tuwien.auto.iotsys.commons.Connector;
 import at.ac.tuwien.auto.iotsys.commons.DeviceLoader;
 import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.IndoorBrightnessSensorImpl;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.xbee.IndoorBrightnessSensorImplXBee;
+
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.xbee.TemperatureSensorImplXBee;
 
 public class XBeeDeviceLoaderImpl implements DeviceLoader {
@@ -22,7 +22,7 @@ public class XBeeDeviceLoaderImpl implements DeviceLoader {
 	private final ArrayList<String> myObjects = new ArrayList<String>();
 
 	private XMLConfiguration devicesConfig = new XMLConfiguration();
-
+	
 	private final static Logger log = Logger
 			.getLogger(XBeeDeviceLoaderImpl.class.getName());
 
@@ -76,14 +76,14 @@ public class XBeeDeviceLoaderImpl implements DeviceLoader {
 					connectors.add(xBeeConnector);
 
 					// add devices
-
-					IndoorBrightnessSensorImpl xBeeBrightness = new IndoorBrightnessSensorImplXBee(
-							xBeeConnector);
-					xBeeBrightness.setHref(new Uri("brightnessSensor"));
-					xBeeBrightness.setName("brightnessSensor");
+//
+//					IndoorBrightnessSensorImpl xBeeBrightness = new IndoorBrightnessSensorImplXBee(
+//							xBeeConnector);
+//					xBeeBrightness.setHref(new Uri("brightnessSensor"));
+//					xBeeBrightness.setName("brightnessSensor");
 
 					TemperatureSensorImplXBee xBeeTemperatureSensor = new TemperatureSensorImplXBee(
-							xBeeConnector);
+							xBeeConnector, "0013a200407c1715");
 					xBeeTemperatureSensor.setHref(new Uri("temperature"));
 					xBeeTemperatureSensor.setName("temperature");
 
@@ -91,15 +91,17 @@ public class XBeeDeviceLoaderImpl implements DeviceLoader {
 					// assigned
 					// URIs, due to child objects there could be one or many
 					synchronized (myObjects) {
-						myObjects.addAll(objectBroker.addObj(xBeeBrightness));
+//						myObjects.addAll(objectBroker.addObj(xBeeBrightness));
 						myObjects.addAll(objectBroker
 								.addObj(xBeeTemperatureSensor));
 					}
 
 					// enable history yes/no?
-					objectBroker.addHistoryToDatapoints(xBeeBrightness, 100);
+//					objectBroker.addHistoryToDatapoints(xBeeBrightness, 100);
 					objectBroker.addHistoryToDatapoints(xBeeTemperatureSensor,
 							100);
+					
+					objectBroker.enableGroupComm(xBeeTemperatureSensor);
 //					objectBroker.enableObjectRefresh(xBeeTemperatureSensor);
 
 				} catch (Exception e) {
