@@ -12,7 +12,7 @@
     </device-loader>
     <device-loader>at.ac.tuwien.auto.iotsys.gateway.connector.wmbus.WMBusDeviceLoaderImpl
     </device-loader>
-	<device-loader>at.ac.tuwien.auto.iotsys.gateway.connectors.xbee.XBeeDeviceLoaderImpl
+    <device-loader>at.ac.tuwien.auto.iotsys.gateway.connectors.xbee.XBeeDeviceLoaderImpl
     </device-loader>
      <device-loader>at.ac.tuwien.auto.iotsys.gateway.connectors.virtual.VirtualDeviceLoaderImpl
     </device-loader>
@@ -21,8 +21,15 @@
   <xbee>
     <connector>
         <name>XBee</name>
-        <enable>false</enable>
-        <serialPort>COM9</serialPort>
+        <enabled>false</enabled>
+        <serialPort>COM9</serialPort>    
+        <device>
+        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.xbee.TemperatureSensorImplXBee</type>
+        <address>0013a200407c1715</address>
+        <href>temperatureXBee</href>
+        <historyEnabled>false</historyEnabled>
+        <groupCommEnabled>true</groupCommEnabled>
+     </device>
     </connector>
   </xbee>
 
