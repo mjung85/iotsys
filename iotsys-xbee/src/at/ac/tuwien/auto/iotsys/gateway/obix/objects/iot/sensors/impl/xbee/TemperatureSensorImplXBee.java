@@ -28,7 +28,7 @@ public class TemperatureSensorImplXBee extends TemperatureSensorImpl {
 			@Override
 			public void notifyWatchDog(XBeeResponse response) {
 				if(response.getApiId() == ApiId.ZNET_IO_SAMPLE_RESPONSE){
-					
+					log.finest("Received temperature update.");
 					ZNetRxIoSampleResponse ioSample = (ZNetRxIoSampleResponse) response;
 					int[] addressArray = ioSample.getRemoteAddress64().getAddress();
 					String[] hexAddress = new String[addressArray.length];

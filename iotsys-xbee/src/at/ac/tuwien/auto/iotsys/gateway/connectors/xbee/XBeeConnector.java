@@ -4,6 +4,7 @@ package at.ac.tuwien.auto.iotsys.gateway.connectors.xbee;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.Set;
 import java.util.logging.Logger;
 
 import com.rapplogic.xbee.api.ApiId;
@@ -50,16 +51,19 @@ public class XBeeConnector implements Connector{
 					for(int i=0; i<addressArray.length; i++){
 						hexAddress.append(String.format("%02x", addressArray[i]));
 					}
-					
+					String source = hexAddress.toString();
 					log.finest("Received packet from: " + hexAddress);	
 					
 					synchronized (watchDogs) {
 
-						if (watchDogs.containsKey(hexAddress)) {
+						if (watchDogs.containsKey(source)) {
 							for (XBeeWatchdog dog : watchDogs
-									.get(hexAddress)) {
+									.get(source)) {
 								dog.notifyWatchDog(response);
 							}
+						}
+						else{
+							log.finest("There is no watchdog registered for " + hexAddress);
 						}
 					}
 				}
