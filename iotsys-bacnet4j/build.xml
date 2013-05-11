@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="IoTSyS-BACnet4J" basedir="." default="help">
+
+	<!-- HELP -->
+	<target name="help">
+		<echo>usage: ant [help] [compile] [run] [dist] [clean] [cleanAll]</echo>
+		<echo>
+		</echo>
+		<echo>  help    : (default) Prints this message </echo>
+		<echo>  compile : Compiles the project</echo>
+		<echo>  dist    : Packages artifacts into a deployable JAR (./dist/lib/CoAPGateway.jar)</echo>
+		<echo>  clean   : Deletes bin directory</echo>
+		<echo>  cleanAll: Deletes bin and dist (distribution) directories</echo>
+		<echo>
+		</echo>
+	</target>
+
+	<!-- INIT -->
+	<target name="init" description="Initialize settings.">
+		<property name="src.dir" value="src" />
+		<property name="build.dir" value="bin" />
+		<property name="dist.dir" value="dist" />
+		<property name="lib.dir" value="lib" />
+		<!--property name="lib.dir" value="lib"/-->
+
+		<path id="project.classpath">
+			<fileset dir="${lib.dir}">
+				<include name="**/*.jar" />
+			</fileset>
+			<pathelement location="${build.dir}" />
+		</path>
+	</target>
+
+	<!-- COMPILE -->
+	<target name="compile" depends="init" description="Compile project IoTSyS-BACnet4J">
+		<mkdir dir="${build.dir}" />
+		<javac srcdir="${src.dir}" destdir="${build.dir}" classpathref="project.classpath" debug="true" deprecation="true" includeantruntime="false">
+
+		</javac>
+		<copy todir="${build.dir}">
+			<fileset dir="${src.dir}" excludes="**/*.java" />
+		</copy>
+	</target>
+
+	<!-- CLEAN -->
+	<target name="clean" depends="init" description="Clean build products.">
+		<delete dir="${build.dir}" />
+	</target>
+
+	<!-- CLEAN ALL -->
+	<target name="cleanAll" depends="init" description="Clean build products.">
+		<delete dir="${build.dir}" />
+		<delete dir="${dist.dir}" />
+	</target>
+
+	<!-- DIST -->
+	<target name="dist" depends="compile" description="Create JAR file for binary distribution">
+		<mkdir dir="${dist.dir}/lib" />
+		<copy todir="${dist.dir}/lib">
+			<fileset dir="${lib.dir}">
+				<include name="*.jar" />
+			</fileset>
+		</copy>
+		<path id="dist-classpath">
+			<fileset dir="${dist.dir}/lib">
+				<include name="*.jar" />
+			</fileset>
+		</path>
+		<manifestclasspath property="lib.list" jarfile="${dist.dir}/lib/iotsys-bacnet4j.jar">
+			<classpath refid="dist-classpath" />
+		</manifestclasspath>
+		<jar destfile="${dist.dir}/lib/iotsys-bacnet4j.jar" basedir="${build.dir}">
+			<manifest>
+				<attribute name="Manifest-Version" value="1.0" />
+				<attribute name="Bundle-Name" value="IoTSyS-BACnet4J" />
+				<attribute name="Bundle-Description" value="OSGI wrapper for BACnet4J" />
+				<attribute name="Bundle-Vendor" value="Automation Systems Group, Vienna University of Technology, www.auto.tuwien.ac.at" />
+				<attribute name="Bundle-Version" value="0.1" />
+				<attribute name="Bundle-ClassPath" value="." />
+				<attribute name="Export-Package" value="com.serotonin.bacnet4j, com.serotonin.bacnet4j.apdu, com.serotonin.bacnet4j.base, com.serotonin.bacnet4j.enums, 
+					com.serotonin.bacnet4j.event, com.serotonin.bacnet4j.exception, com.serotonin.bacnet4j.npdu, 
+					com.serotonin.bacnet4j.npdu.ip, com.serotonin.bacnet4j.obj, com.serotonin.bacnet4j.service, 
+					com.serotonin.bacnet4j.service.acknowledgement, com.serotonin.bacnet4j.service.confirmed, 
+					com.serotonin.bacnet4j.service.unconfirmed, com.serotonin.bacnet4j.test, com.serotonin.bacnet4j.type,
+					com.serotonin.bacnet4j.type.constructed, com.serotonin.bacnet4j.type.enumerated, 
+					com.serotonin.bacnet4j.type.error, com.serotonin.bacnet4j.eventParameter, 
+					com.serotonin.bacnet4j.notificationParamater, 
+					com.serotonin.bacnet4j.type.primitive, com.serotonin.bacnet4j.util,
+					com.serotonin.bkgd, com.serotonin.cache, com.serotonin.db, com.serotonin.db.cache, com.serotonin.graphics, com.serotonin.graphics.graph, 
+					com.serotonin.io, com.serotonin.io.messaging, com.serotonin.io.serial, com.serotonin.json, com.serotonin.math, com.serotonin.messaging,
+					com.serotonin.monitor, com.serotonin.propertyEditor, com.serotonin.swing, com.serotonin.temporal, com.serotonin.timer,
+					com.serotonin.util, com.serotonin.util.collections, com.serotonin.util.concurrent, com.serotonin.util.image, com.serotonin.util.list, 
+					com.serotonin.util.queue, com.serotonin.util.retry, com.serotonin.web.content, com.serotonin.web.dwr, com.serotonin.web.email, 
+					com.serotonin.web.context, com.serotonin.web.filter, com.serotonin.web.http, com.serotonin.web.i18n, com.serotonin.web.listener,
+					com.serotonin.web.remote, com.serotonin.web.servlet, com.serotonin.web.spring, com.serotonin.taglib, com.serotonin.web.util" />
+				<attribute name="Import-Package" value="at.ac.tuwien.auto.iotsys.commons" />
+			</manifest>
+		</jar>
+	</target>
+
+
+	<target name="assembly" depends="compile">
+		<jar destfile="${dist.dir}/iotsys-bacnet4j-assembly.jar" basedir="${build.dir}">
+			<zipgroupfileset dir="lib/" includes="**/*.jar" excludes="iotsys-*" />
+			<!-- other options -->
+
+			<manifest>
+				<attribute name="Class-Path" value="${lib.list}" />
+				<attribute name="Manifest-Version" value="1.0" />
+				<attribute name="Bundle-Name" value="IoTSyS-BACnet4J" />
+				<attribute name="Bundle-Description" value="OSGI wrapper for BACnet4J" />
+				<attribute name="Bundle-Vendor" value="Automation Systems Group, Vienna University of Technology, www.auto.tuwien.ac.at" />
+				<attribute name="Bundle-Version" value="0.1" />
+				<attribute name="Bundle-ClassPath" value="." />
+				<attribute name="Export-Package" value="com.serotonin.bacnet4j, com.serotonin.bacnet4j.apdu, com.serotonin.bacnet4j.base, com.serotonin.bacnet4j.enums, 
+									com.serotonin.bacnet4j.event, com.serotonin.bacnet4j.exception, com.serotonin.bacnet4j.npdu, 
+									com.serotonin.bacnet4j.npdu.ip, com.serotonin.bacnet4j.obj, com.serotonin.bacnet4j.service, 
+									com.serotonin.bacnet4j.service.acknowledgement, com.serotonin.bacnet4j.service.confirmed, 
+									com.serotonin.bacnet4j.service.unconfirmed, com.serotonin.bacnet4j.test, com.serotonin.bacnet4j.type,
+									com.serotonin.bacnet4j.type.constructed, com.serotonin.bacnet4j.type.enumerated, 
+									com.serotonin.bacnet4j.type.error, com.serotonin.bacnet4j.eventParameter, 
+									com.serotonin.bacnet4j.notificationParamater, 
+									com.serotonin.bacnet4j.type.primitive, com.serotonin.bacnet4j.util,
+									com.serotonin.bkgd, com.serotonin.cache, com.serotonin.db, com.serotonin.db.cache, com.serotonin.graphics, com.serotonin.graphics.graph, 
+									com.serotonin.io, com.serotonin.io.messaging, com.serotonin.io.serial, com.serotonin.json, com.serotonin.math, com.serotonin.messaging,
+									com.serotonin.monitor, com.serotonin.propertyEditor, com.serotonin.swing, com.serotonin.temporal, com.serotonin.timer, 
+									com.serotonin.util, com.serotonin.util.collections, com.serotonin.util.concurrent, com.serotonin.util.image, com.serotonin.util.list, 
+									com.serotonin.util.queue, com.serotonin.util.retry, com.serotonin.web.content, com.serotonin.web.dwr, com.serotonin.web.email, 
+									com.serotonin.web.context, com.serotonin.web.filter, com.serotonin.web.http, com.serotonin.web.i18n, com.serotonin.web.listener,
+									com.serotonin.web.remote, com.serotonin.web.servlet, com.serotonin.web.spring, com.serotonin.taglib, com.serotonin.web.util" />
+				<attribute name="Import-Package" value="at.ac.tuwien.auto.iotsys.commons" />
+			</manifest>
+		</jar>
+	</target>
+
+	<!-- Deploy -->
+	<target name="deploy" depends="assembly" description="Deploy to target directory">
+		<copy file="${dist.dir}/iotsys-bacnet4j-assembly.jar" todir="../iotsys-bacnet/lib" />
+		<copy file="${dist.dir}/iotsys-bacnet4j-assembly.jar" todir="../iotsys-gateway/dist/lib" />
+	</target>
+
+	<target name="deploy-osgi" depends="assembly" description="Deploy to OSGI container">
+		<copy file="${dist.dir}/iotsys-bacnet4j-assembly.jar" todir="../felix-framework-4.2.0/bundle" />
+	</target>
+</project>
