@@ -1,0 +1,26 @@
+!!!
+%html(ng-app="Obelix" lang="en")
+  %head
+    %meta(charset="utf-8")
+    %title Obelix
+    = stylesheet_link_tag "app.css"
+    = javascript_include_tag "app.js"
+  %body(ng-controller="DevicesCtrl")
+    .row
+      %h1 Devices
+      %ul#devicelist
+        %li(ng-repeat="device in devices")
+          %div.device(ng-class="{fetching: device.fetching}")
+            .name
+              {{device.name}}
+            .bool(ng-repeat="bool in device.bools")
+              .row
+                .small-6.columns.name
+                  {{bool.name}}
+                .small-5.columns.pull-1
+                  .switch.tiny.round(ng-class="{disabled: bool.readonly}")
+                    %input(ng-disabled="bool.readonly" ng-change="bool.save()" ng-model="bool.value" value="false" name="switch-{{$parent.$index}}-{{bool.name}}" id="switch-{{$parent.$index}}-{{bool.name}}-on" type="radio")
+                    %label(for="switch-{{$parent.$index}}-{{bool.name}}-on") Off
+                    %input(ng-disabled="bool.readonly" ng-change="bool.save()" ng-model="bool.value" name="switch-{{$parent.$index}}-{{bool.name}}" id="switch-{{$parent.$index}}-{{bool.name}}-off" type="radio" value="true")
+                    %label(for="switch-{{$parent.$index}}-{{bool.name}}-off") On
+                    %span

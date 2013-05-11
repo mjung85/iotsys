@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang='en' ng-app='Obelix'>
+  <head>
+    <meta charset='utf-8'>
+    <title>Obelix</title>
+    <link href="stylesheets/app.css" media="screen" rel="stylesheet" type="text/css" />
+    <script src="javascripts/app.js" type="text/javascript"></script>
+  </head>
+  <body ng-controller='DevicesCtrl'>
+    <div class='row'>
+      <h1>Devices</h1>
+      <ul id='devicelist'>
+        <li ng-repeat='device in devices'>
+          <div class='device' ng-class='{fetching: device.fetching}'>
+            <div class='name'>
+              {{device.name}}
+            </div>
+            <div class='bool' ng-repeat='bool in device.bools'>
+              <div class='row'>
+                <div class='small-6 columns name'>
+                  {{bool.name}}
+                </div>
+                <div class='small-5 columns pull-1'>
+                  <div class='switch tiny round' ng-class='{disabled: bool.readonly}'>
+                    <input id='switch-{{$parent.$index}}-{{bool.name}}-on' name='switch-{{$parent.$index}}-{{bool.name}}' ng-change='bool.save()' ng-disabled='bool.readonly' ng-model='bool.value' type='radio' value='false'>
+                    <label for='switch-{{$parent.$index}}-{{bool.name}}-on'>Off</label>
+                    <input id='switch-{{$parent.$index}}-{{bool.name}}-off' name='switch-{{$parent.$index}}-{{bool.name}}' ng-change='bool.save()' ng-disabled='bool.readonly' ng-model='bool.value' type='radio' value='true'>
+                    <label for='switch-{{$parent.$index}}-{{bool.name}}-off'>On</label>
+                    <span></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </body>
+</html>
