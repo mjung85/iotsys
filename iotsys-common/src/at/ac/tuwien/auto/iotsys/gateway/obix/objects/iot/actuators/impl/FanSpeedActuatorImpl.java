@@ -64,23 +64,36 @@ public class FanSpeedActuatorImpl extends ActuatorImpl implements FanSpeedActuat
 	}
 		
 	public void writeObject(Obj input){
-		// A write on this object was received, update the according data point.		
-		long newFanSpeedSetpointValue = 0;
 		if(input instanceof FanSpeedActuator){
 			FanSpeedActuator in = (FanSpeedActuator) input;
 			log.finer("Writing on FanSpeedActuator: " + in.fanSpeedSetpointValue().get() + "," + in.enabled().get());
 			
-			newFanSpeedSetpointValue = in.fanSpeedSetpointValue().get();	
-			enabledValue.set(in.enabled().get());
+			this.fanSpeedSetpointValue.set(in.fanSpeedSetpointValue().get());	
+			this.enabledValue.set(in.enabled().get());
 			
 		}
 		else if(input instanceof Int){
-			newFanSpeedSetpointValue = ((Int) input).get();
+			if(input.getHref() == null){
+				String resourceUriPath = input.getInvokedHref().substring(input.getInvokedHref().lastIndexOf('/') + 1);
+				if(FanSpeedActuator.FAN_SPEED_SETPOINT_CONTRACT_HREF.equals(resourceUriPath)){
+					this.fanSpeedSetpointValue.set(((Int) input).get());
+				}else if(FanSpeedActuator.ENBALED_CONTRACT_HREF.equals(resourceUriPath)){
+					this.enabledValue.set(((Int) input).get());
+				}
+			}
+			
 		}
 		else if(input instanceof Bool){
-			this.enabledValue.set(((Bool) input).get());
+			if(input.getHref() == null){
+				String resourceUriPath = input.getInvokedHref().substring(input.getInvokedHref().lastIndexOf('/') + 1);
+				if(FanSpeedActuator.FAN_SPEED_SETPOINT_CONTRACT_HREF.equals(resourceUriPath)){
+					this.fanSpeedSetpointValue.set(((Bool) input).get());
+				}
+				else if(FanSpeedActuator.ENBALED_CONTRACT_HREF.equals(resourceUriPath)){
+					this.enabledValue.set(((Bool) input).get());
+				}
+			}	
 		}
-		this.fanSpeedSetpointValue.set(newFanSpeedSetpointValue);
 	}
 
 	

@@ -35,7 +35,9 @@ package at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.LightSwitchActuator;
 import obix.Bool;
 import obix.Contract;
+import obix.Int;
 import obix.Obj;
+import obix.Real;
 import obix.Uri;
 
 /**
@@ -56,22 +58,22 @@ public class LightSwitchActuatorImpl extends ActuatorImpl implements LightSwitch
 		add(value);
 	}
 	
-	public void writeObject(Obj input){
-		
-		// A write on this object was received, update the according data point.		
-		boolean newVal = false;
-		
+	public void writeObject(Obj input){	
 		if(input instanceof LightSwitchActuator){
 			LightSwitchActuator in = (LightSwitchActuator) input;
-			newVal = in.value().get();
+			this.value.set(in.value().get());
 			
 		}
 		else if(input instanceof Bool){
-			newVal = ((Bool) input).get();
+			this.value.set(((Bool) input).get());
 		}
-		
-		if(this.value.get() != newVal)
-			this.value.set(newVal);
+		else if(input instanceof Real){
+			this.value.set(((Real) input).get());
+		}
+		else if(input instanceof Int){
+			this.value.set(((Int) input).get());
+		}
+				
 	}
 
 	public Bool value() {

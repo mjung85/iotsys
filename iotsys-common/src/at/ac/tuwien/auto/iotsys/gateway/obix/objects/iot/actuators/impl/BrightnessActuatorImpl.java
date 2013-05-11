@@ -33,9 +33,11 @@
 package at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl;
 
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.BrightnessActuator;
+import obix.Bool;
 import obix.Contract;
 import obix.Int;
 import obix.Obj;
+import obix.Real;
 import obix.Uri;
 
 /**
@@ -63,13 +65,19 @@ public class BrightnessActuatorImpl extends ActuatorImpl implements BrightnessAc
 		long newVal = 0;
 		if(input instanceof BrightnessActuator){
 			BrightnessActuator in = (BrightnessActuator) input;
-			newVal = in.value().get();
+			this.value.set(in.value().get());
 			
 		}
 		else if(input instanceof Int){
-			newVal = ((Int) input).get();
+			this.value.set(((Int) input).get());
 		}
-		this.value.set(newVal);
+		else if(input instanceof Bool){
+			this.value.set( ((Bool) input).get());
+		}
+		else if(input instanceof Real){
+			this.value.set( ((Real) input).get());
+		}
+		
 	}
 	
 	@Override
