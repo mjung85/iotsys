@@ -185,8 +185,14 @@ public class Obj implements IObj, Subject {
 
 		Obj current = this;
 		while (current != null) {			
-			if (current.getNormalizedHref() != null) {
-				path = current.getNormalizedHref().getPath().toString() + path;
+			Uri normalizedHref = current.getNormalizedHref();
+			if (normalizedHref != null) {
+				if(normalizedHref.isAbsolute()){
+					String fullContextPath = current.getNormalizedHref().getPath().toString() + path;
+					return fullContextPath;
+				}else{
+					path = current.getNormalizedHref().getPath().toString() + path;
+				}
 			} else if (current.getHref() != null) {
 				path = current.getHref().toString() + path;
 			} else {
