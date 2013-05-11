@@ -68,8 +68,22 @@ public class Real extends Val {
 	 * Set value.
 	 */
 	public void set(double val) {
+		double oldVal = this.val;
 		this.val = val;
-		notifyObservers();
+		if(this.val != oldVal)
+			notifyObservers();
+	}
+	
+	/**
+	 * Auto cast for double
+	 */
+	public void set(boolean val){
+		if(val){
+			set(100);
+		}
+		else{
+			set(0);
+		}
 	}
 
 	// //////////////////////////////////////////////////////////////

@@ -51,6 +51,10 @@ import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.LightSwitchAc
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.PumpActuator;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.SunblindActuator;
 //import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.TemperatureControlActuator;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.logic.Comparator;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.logic.TemperatureController;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.IndoorBrightnessSensor;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.OutsideTemperatureSensor;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.PresenceDetectorSensor;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.PushButton;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.RoomRelativeHumiditySensor;
@@ -76,6 +80,8 @@ public class ContractInit
 	  ContractRegistry.put(RoomRelativeHumiditySensor.CONTRACT,RoomRelativeHumiditySensor.class.getName());
 	  ContractRegistry.put(SunIntensitySensor.CONTRACT,SunIntensitySensor.class.getName());
 	  ContractRegistry.put(SmartMeter.CONTRACT, SmartMeter.class.getName());
+	  ContractRegistry.put(IndoorBrightnessSensor.CONTRACT, IndoorBrightnessSensor.class.getName());
+	  ContractRegistry.put(OutsideTemperatureSensor.CONTRACT, OutsideTemperatureSensor.class.getName());
 	  
 	  //Actuator
 	  ContractRegistry.put(FanSpeedActuator.CONTRACT,FanSpeedActuator.class.getName());
@@ -91,13 +97,17 @@ public class ContractInit
 //	  ContractRegistry.put(ChillerActuator.CONTRACT, ChillerActuator.class.getName());
 //	  ContractRegistry.put(HeatPumpActuator.CONTRACT, HeatPumpActuator.class.getName());
 	  
-	  //Generic
+	  //Generic Bacnet
 	  ContractRegistry.put(AnalogInput.CONTRACT, AnalogInput.class.getName());
 	  ContractRegistry.put(AnalogOutput.CONTRACT, AnalogOutput.class.getName());
 	  ContractRegistry.put(AnalogValue.CONTRACT, AnalogValue.class.getName());
 	  ContractRegistry.put(BinaryInput.CONTRACT, BinaryInput.class.getName());
 	  ContractRegistry.put(BinaryOutput.CONTRACT, BinaryOutput.class.getName());
 	  ContractRegistry.put(BinaryValue.CONTRACT, BinaryValue.class.getName());
+	  
+	  // Generic logic
+	  ContractRegistry.put(Comparator.CONTRACT, Comparator.class.getName());
+	  ContractRegistry.put(TemperatureController.CONTRACT, TemperatureController.class.getName());
 	  
 	  ContractRegistry.buildReverseMap();
   }
