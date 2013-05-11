@@ -108,7 +108,7 @@ public class IoTSySGateway {
 		boolean enableXacml = Boolean.getBoolean(PropertiesLoader.getInstance()
 				.getProperties().getProperty("iotsys.gateway.xacml", "false"));
 
-		log.info("XACML?: " + enableXacml);
+		log.info("XACML module enabled: " + enableXacml);
 		if (enableXacml && !isOsgiEnvironment()) {
 			// temporarly register interceptor
 			try {
@@ -155,7 +155,6 @@ public class IoTSySGateway {
 		objectBroker.shutdown();
 		CsvCreator.instance.close();
 		closeConnectors();
-		
 	}
 
 	public static void main(String[] args) {
