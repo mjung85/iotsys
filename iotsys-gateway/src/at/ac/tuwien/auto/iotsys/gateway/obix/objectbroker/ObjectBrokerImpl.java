@@ -42,9 +42,13 @@ import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
 import at.ac.tuwien.auto.iotsys.commons.OperationHandler;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.*;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.general.impl.LobbyImpl;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.logic.Comparator;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.logic.impl.ComparatorImpl;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.logic.impl.TemperatureControllerImpl;
 import at.ac.tuwien.auto.iotsys.gateway.service.GroupCommHelper;
 
 import obix.*;
+import obix.List;
 
 public class ObjectBrokerImpl implements ObjectBroker {
 
@@ -69,12 +73,13 @@ public class ObjectBrokerImpl implements ObjectBroker {
 	private final ArrayList<Obj> orderedObjects = new ArrayList<Obj>();
 
 	private static final ObjectBroker instance = new ObjectBrokerImpl();
+	
+	static{
+		((ObjectBrokerImpl) instance).initInternals();
+	}
 
 	private ObjectRefresher objectRefresher = new ObjectRefresher();
 
-	/**
-	 * Constructor for non-existing mapping logic
-	 */
 	private ObjectBrokerImpl() {
 		objects = new HashMap<String, Obj>();
 		nameToHref = new HashMap<String, String>();
@@ -83,7 +88,7 @@ public class ObjectBrokerImpl implements ObjectBroker {
 		aboutImpl = new AboutImpl();
 
 		watchServiceImpl = new WatchServiceImpl(this);
-		initInternals();
+		
 	}
 
 	@Override
@@ -94,8 +99,61 @@ public class ObjectBrokerImpl implements ObjectBroker {
 	private void initInternals() {
 		addObj(watchServiceImpl);
 		addObj(aboutImpl, false); // About is added directly in lobby as local
-									// reference
 
+		Obj enums = new Obj();
+		enums.setName("enums");
+		enums.setHref(new Uri("enums"));
+
+		List compareTypes = new List();
+
+		compareTypes.setIs(new Contract("obix:Range"));
+		compareTypes.setHref(new Uri("compareTypes"));
+		compareTypes.setName("compareTypes");
+
+		Obj eq = new Obj();
+		eq.setName("eq");
+		Obj gte = new Obj();
+		gte.setName("gte");
+		Obj gt = new Obj();
+		gt.setName("gt");
+
+		Obj lt = new Obj();
+		lt.setName("lt");
+
+		Obj lte = new Obj();
+		lte.setName("lte");
+
+		compareTypes.add(eq);
+		compareTypes.add(lt);
+		compareTypes.add(lte);
+		compareTypes.add(gt);
+		compareTypes.add(gte);
+
+		enums.add(compareTypes);
+
+		addObj(enums);
+
+		// Static comperators
+
+		for (int i = 1; i <= 3; i++) {
+			ComparatorImpl comp = new ComparatorImpl();
+			comp.setName("comp" + i);
+			comp.setHref(new Uri("comp" + i));
+			addObj(comp);
+			enableGroupComm(comp);
+		}
+		
+		// Static temperature controllers
+		
+		for (int i = 1; i <= 3; i++) {
+			TemperatureControllerImpl tempControl = new TemperatureControllerImpl();
+			tempControl.setName("tempControl" + i);
+			tempControl.setHref(new Uri("tempControl" + i));
+			
+			addObj(tempControl);
+			enableGroupComm(tempControl);
+		}
+		
 		Thread t = new Thread(objectRefresher);
 		t.start();
 	}
@@ -224,9 +282,6 @@ public class ObjectBrokerImpl implements ObjectBroker {
 		objects.put(href, o);
 
 		orderedObjects.add(o);
-		
-	
-		
 
 		// add root objects (objects without parent to the KNX lobby)
 		if (listInLobby && !(o instanceof LobbyImpl) && o.getParent() == null) {
@@ -235,7 +290,7 @@ public class ObjectBrokerImpl implements ObjectBroker {
 			r.setIs(ContractRegistry.lookupContract(o.getClass()));
 			r.setHref(new Uri(o.getFullContextPath()));
 			iotLobby.addReference(href, r);
-			
+
 			// also allow to query them by name
 			nameToHref.put(o.getName(), href);
 		}
@@ -264,7 +319,7 @@ public class ObjectBrokerImpl implements ObjectBroker {
 		}
 
 		iotLobby.removeReference(href);
-		
+
 		// TODO deal with group comm objects.
 	}
 
@@ -332,7 +387,7 @@ public class ObjectBrokerImpl implements ObjectBroker {
 	@Override
 	public synchronized Obj pullObByName(String name) {
 		String href = nameToHref.get(name);
-		if(href != null){
+		if (href != null) {
 			return objects.get(href);
 		}
 		return null;
@@ -340,10 +395,10 @@ public class ObjectBrokerImpl implements ObjectBroker {
 
 	@Override
 	public synchronized ArrayList<String> getObjNames() {
-		
+
 		ArrayList<String> ret = new ArrayList<String>();
-		for(String name: nameToHref.keySet()){
-			if(name != null && name.length() > 0){
+		for (String name : nameToHref.keySet()) {
+			if (name != null && name.length() > 0) {
 				ret.add(name);
 			}
 		}
