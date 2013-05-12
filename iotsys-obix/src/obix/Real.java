@@ -221,5 +221,18 @@ public class Real extends Val {
 	private double max = MAX_DEFAULT;
 	private Uri unit = null;
 	private int precision = PRECISION_DEFAULT;
+	
+	public void writeObject(Obj input) {
+		if (this.getParent() != null) {
+			this.getParent().writeObject(input);
+		} else {
+			if (input instanceof Real) {
+				Real inputReal = (Real) input;
+				if (this.get() != inputReal.get()) {
+					this.set(inputReal.get());
+				}
+			}
+		}
+	}
 
 }

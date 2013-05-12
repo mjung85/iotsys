@@ -78,7 +78,8 @@ public class ObixServerImpl implements ObixServer{
 		try {
 			objectBroker.pushObj(new Uri(href.toASCIIString()), input, false);
 		} catch (Exception ex) {
-			Err e = new Err("Error writing object to network" + ex.getMessage());
+			ex.printStackTrace();
+			Err e = new Err("Error writing object to network: " + ex.getMessage());
 			return e;
 		}
 

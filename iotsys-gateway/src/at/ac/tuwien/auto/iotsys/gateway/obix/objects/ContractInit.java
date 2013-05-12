@@ -1,5 +1,5 @@
 /*******************************************************************************
-# * Copyright (c) 2013
+ * Copyright (c) 2013
  * Institute of Computer Aided Automation, Automation Systems Group, TU Wien.
  * All rights reserved.
  * 
@@ -50,6 +50,7 @@ import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.HVACvalveActu
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.LightSwitchActuator;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.PumpActuator;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.SunblindActuator;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.logic.BinaryOperation;
 //import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.TemperatureControlActuator;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.logic.Comparator;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.logic.TemperatureController;
@@ -105,9 +106,10 @@ public class ContractInit
 	  ContractRegistry.put(BinaryOutput.CONTRACT, BinaryOutput.class.getName());
 	  ContractRegistry.put(BinaryValue.CONTRACT, BinaryValue.class.getName());
 	  
-	  // Generic logic
+	  // Logic components
 	  ContractRegistry.put(Comparator.CONTRACT, Comparator.class.getName());
 	  ContractRegistry.put(TemperatureController.CONTRACT, TemperatureController.class.getName());
+	  ContractRegistry.put(BinaryOperation.CONTRACT, BinaryOperation.class.getName());
 	  
 	  ContractRegistry.buildReverseMap();
   }

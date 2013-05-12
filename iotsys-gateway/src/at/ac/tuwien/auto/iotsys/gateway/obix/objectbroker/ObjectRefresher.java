@@ -42,7 +42,7 @@ import obix.*;
  * @author Markus Jung
  */
 public class ObjectRefresher implements Runnable {
-	public static int REFRESH_INTERVAL_MS = 3000; // refresh every second the given object 
+	public static int REFRESH_INTERVAL_MS = 3000; // refresh objects
 	
 	private static final HashSet<Obj> objects = new HashSet<Obj>();
 	
