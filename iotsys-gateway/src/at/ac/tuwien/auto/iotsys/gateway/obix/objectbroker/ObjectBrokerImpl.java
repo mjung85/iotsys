@@ -43,8 +43,10 @@ import at.ac.tuwien.auto.iotsys.commons.OperationHandler;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.*;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.general.impl.LobbyImpl;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.logic.BinaryOperation;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.logic.LogicBinaryOperation;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.logic.impl.BinaryOperationImpl;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.logic.impl.ComparatorImpl;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.logic.impl.LogicBinaryOperationImpl;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.logic.impl.TemperatureControllerImpl;
 import at.ac.tuwien.auto.iotsys.gateway.service.GroupCommHelper;
 
@@ -164,6 +166,38 @@ public class ObjectBrokerImpl implements ObjectBroker {
 
 		enums.add(operationTypes);
 
+		// binary logic operations
+		// operation type enums
+
+		List logicOperationTypes = new List();
+
+		logicOperationTypes.setIs(new Contract("obix:Range"));
+		logicOperationTypes.setHref(new Uri("logicOperationTypes"));
+		logicOperationTypes.setName("logicOperationTypes");
+
+		Obj opAnd = new Obj();
+		opAnd.setName(LogicBinaryOperation.BIN_OP_AND);
+
+		Obj opOr = new Obj();
+		opOr.setName(LogicBinaryOperation.BIN_OP_OR);
+
+		Obj opXor = new Obj();
+		opXor.setName(LogicBinaryOperation.BIN_OP_XOR);
+
+		Obj opNand = new Obj();
+		opNand.setName(LogicBinaryOperation.BIN_OP_NAND);
+
+		Obj opNor = new Obj();
+		opNor.setName(LogicBinaryOperation.BIN_OP_NOR);
+
+		logicOperationTypes.add(opAnd);
+		logicOperationTypes.add(opOr);
+		logicOperationTypes.add(opXor);
+		logicOperationTypes.add(opNand);
+		logicOperationTypes.add(opNor);
+
+		enums.add(logicOperationTypes);
+
 		addObj(enums, true);
 
 		// Static comperators
@@ -196,6 +230,17 @@ public class ObjectBrokerImpl implements ObjectBroker {
 
 			addObj(binOperation);
 			enableGroupComm(binOperation);
+		}
+
+		// Static logic binary operation
+
+		for (int i = 1; i <= 3; i++) {
+			LogicBinaryOperationImpl logicBinOperation = new LogicBinaryOperationImpl();
+			logicBinOperation.setName("logicBinOp" + i);
+			logicBinOperation.setHref(new Uri("logicBinOp" + i));
+
+			addObj(logicBinOperation);
+			enableGroupComm(logicBinOperation);
 		}
 
 		Thread t = new Thread(objectRefresher);

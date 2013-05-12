@@ -53,6 +53,7 @@ import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.SunblindActua
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.logic.BinaryOperation;
 //import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.TemperatureControlActuator;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.logic.Comparator;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.logic.LogicBinaryOperation;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.logic.TemperatureController;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.IndoorBrightnessSensor;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.OutsideTemperatureSensor;
@@ -110,6 +111,7 @@ public class ContractInit
 	  ContractRegistry.put(Comparator.CONTRACT, Comparator.class.getName());
 	  ContractRegistry.put(TemperatureController.CONTRACT, TemperatureController.class.getName());
 	  ContractRegistry.put(BinaryOperation.CONTRACT, BinaryOperation.class.getName());
+	  ContractRegistry.put(LogicBinaryOperation.CONTRACT, LogicBinaryOperation.class.getName());
 	  
 	  ContractRegistry.buildReverseMap();
   }
