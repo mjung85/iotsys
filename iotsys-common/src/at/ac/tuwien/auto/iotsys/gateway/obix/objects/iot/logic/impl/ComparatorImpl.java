@@ -73,6 +73,7 @@ public class ComparatorImpl extends Obj implements Comparator {
 		this.add(input1);
 		this.add(input2);
 		this.add(enabled);
+		this.add(result);
 		this.add(compareType);
 
 	}
@@ -196,7 +197,7 @@ public class ComparatorImpl extends Obj implements Comparator {
 	@Override
 	public Bool result() {
 
-		return null;
+		return result;
 	}
 
 }

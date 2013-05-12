@@ -33,47 +33,56 @@
 package at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.logic.impl;
 
 import obix.Bool;
+import obix.Contract;
 import obix.Int;
 import obix.Obj;
 import obix.Real;
 import obix.Uri;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.logic.TemperatureController;
 
-public class TemperatureControllerImpl extends Obj implements TemperatureController{
+public class TemperatureControllerImpl extends Obj implements
+		TemperatureController {
 	protected Real setpoint = new Real();
 	protected Real temperature = new Real();
 	protected Real controlValue = new Real();
 	protected Bool enabled = new Bool();
 	protected Real tolerance = new Real();
-	
+
 	private ControllerState controllerState = ControllerState.INACTIVE;
-	
-	public TemperatureControllerImpl(){
+
+	public TemperatureControllerImpl() {
+		setIs(new Contract(TemperatureController.CONTRACT));
 		setpoint.setName("setpoint");
 		setpoint.setHref(new Uri("setpoint"));
 		setpoint.setUnit(new Uri("obix:units/celsius"));
 		setpoint.setWritable(true);
-		
+
 		temperature.setName("temperature");
 		temperature.setHref(new Uri("temperature"));
 		temperature.setUnit(new Uri("obix:units/celsius"));
 		temperature.setWritable(true);
-		
+
 		controlValue.setName("controlValue");
 		controlValue.setHref(new Uri("controlValue"));
 		controlValue.setMin(-100);
 		controlValue.setMax(100);
-		
+
 		tolerance.setName("tolerance");
 		tolerance.setHref(new Uri("tolerance"));
 		tolerance.setUnit(new Uri("obix:units/celsius"));
 		tolerance.setWritable(true);
+
+		enabled.setName("enabled");
+		enabled.setHref(new Uri("enabled"));
+		enabled.setWritable(true);
 		
+
 		this.add(setpoint);
 		this.add(temperature);
 		this.add(controlValue);
 		this.add(tolerance);
-		
+		this.add(enabled);
+
 	}
 
 	@Override
@@ -100,9 +109,16 @@ public class TemperatureControllerImpl extends Obj implements TemperatureControl
 	public Real tolerance() {
 		return tolerance;
 	}
-	
+
 	@Override
-	public void writeObject(Obj input){
+	public void writeObject(Obj input) {
+		String resourceUriPath = "";
+		if (input.getHref() == null) {
+			resourceUriPath = input.getInvokedHref().substring(
+					input.getInvokedHref().lastIndexOf('/') + 1);
+		} else {
+			resourceUriPath = input.getHref().get();
+		}
 		if (input instanceof TemperatureController) {
 			TemperatureController in = (TemperatureController) input;
 			this.setpoint.set(in.setpoint().get());
@@ -110,83 +126,77 @@ public class TemperatureControllerImpl extends Obj implements TemperatureControl
 			this.enabled.set(in.enabled().get());
 			this.tolerance.set(in.tolerance().get());
 		} else if (input instanceof Real) {
-			if (input.getHref() == null) {
-				String resourceUriPath = input.getInvokedHref().substring(
-						input.getInvokedHref().lastIndexOf('/') + 1);
-				if ("setpoint".equals(resourceUriPath)) {
-					setpoint.set(((Real) input).get());
-				} else if ("temperature".equals(resourceUriPath)) {
-					temperature.set(((Real) input).get());
-				} else if("enabled".equals(resourceUriPath)){
-					enabled.set(((Real) input).get());
-				} else if("tolerance".equals(resourceUriPath)){
-					tolerance.set(((Real) input).get());
-				}
+
+			if ("setpoint".equals(resourceUriPath)) {
+				setpoint.set(((Real) input).get());
+			} else if ("temperature".equals(resourceUriPath)) {
+				temperature.set(((Real) input).get());
+			} else if ("enabled".equals(resourceUriPath)) {
+				enabled.set(((Real) input).get());
+			} else if ("tolerance".equals(resourceUriPath)) {
+				tolerance.set(((Real) input).get());
 			}
+
 		} else if (input instanceof Bool) {
-			if (input.getHref() == null) {
-				String resourceUriPath = input.getInvokedHref().substring(
-						input.getInvokedHref().lastIndexOf('/') + 1);
 
-				if ("setpoint".equals(resourceUriPath)) {
-					setpoint.set(((Bool) input).get());
-				} else if ("temperature".equals(resourceUriPath)) {
-					temperature.set(((Bool) input).get());
-				} else if("enabled".equals(resourceUriPath)){
-					enabled.set(((Bool) input).get());
-				} else if("tolerance".equals(resourceUriPath)){
-					tolerance.set(((Bool) input).get());
-				}
+			if ("setpoint".equals(resourceUriPath)) {
+				setpoint.set(((Bool) input).get());
+			} else if ("temperature".equals(resourceUriPath)) {
+				temperature.set(((Bool) input).get());
+			} else if ("enabled".equals(resourceUriPath)) {
+				enabled.set(((Bool) input).get());
+			} else if ("tolerance".equals(resourceUriPath)) {
+				tolerance.set(((Bool) input).get());
 			}
-		}
-		else if (input instanceof Int) {
-			if (input.getHref() == null) {
-				String resourceUriPath = input.getInvokedHref().substring(
-						input.getInvokedHref().lastIndexOf('/') + 1);
 
-				if ("setpoint".equals(resourceUriPath)) {
-					setpoint.set(((Int) input).get());
-				} else if ("temperature".equals(resourceUriPath)) {
-					temperature.set(((Bool) input).get());
-				} else if("enabled".equals(resourceUriPath)){
-					enabled.set(((Int) input).get());
-				} else if("tolerance".equals(resourceUriPath)){
-					tolerance.set(((Int) input).get());
-				}
+		} else if (input instanceof Int) {
+
+			if ("setpoint".equals(resourceUriPath)) {
+				setpoint.set(((Int) input).get());
+			} else if ("temperature".equals(resourceUriPath)) {
+				temperature.set(((Bool) input).get());
+			} else if ("enabled".equals(resourceUriPath)) {
+				enabled.set(((Int) input).get());
+			} else if ("tolerance".equals(resourceUriPath)) {
+				tolerance.set(((Int) input).get());
 			}
+
 		}
 
 		// perform control logic
 		if (enabled.get()) {
-			if(temperature.get() < setpoint.get() - tolerance.get() && controllerState != ControllerState.HEATING){
+			if (temperature.get() < setpoint.get() - tolerance.get()
+					&& controllerState != ControllerState.HEATING) {
 				// we need to heat!
 				controlValue.set(100);
 				controllerState = ControllerState.HEATING;
-			}
-			else if(temperature.get() > setpoint.get() + tolerance.get() && controllerState != ControllerState.COOLING){
+			} else if (temperature.get() > setpoint.get() + tolerance.get()
+					&& controllerState != ControllerState.COOLING) {
 				controlValue.set(-100);
 				controllerState = ControllerState.COOLING;
-			}
-			else if(temperature.get() > setpoint.get() && controllerState == ControllerState.HEATING){
+			} else if (temperature.get() > setpoint.get()
+					&& controllerState == ControllerState.HEATING) {
 				// we have reached the target heating temp
 				controlValue.set(0);
 				controllerState = ControllerState.INACTIVE;
-			} else if(temperature.get() < setpoint.get() && controllerState == ControllerState.COOLING){
+			} else if (temperature.get() < setpoint.get()
+					&& controllerState == ControllerState.COOLING) {
 				// we have reached the target cooling temp
 				controlValue.set(0);
 				controllerState = ControllerState.INACTIVE;
 			}
-		}
-		else if(controllerState == ControllerState.HEATING || controllerState == ControllerState.COOLING){
+			
+			
+			
+		} else if (controllerState == ControllerState.HEATING
+				|| controllerState == ControllerState.COOLING) {
 			// we need to stop the controller
 			controlValue.set(0);
 			controllerState = ControllerState.INACTIVE;
 		}
 	}
-	
 }
 
-enum ControllerState{
+enum ControllerState {
 	INACTIVE, HEATING, COOLING
 }
-
