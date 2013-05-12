@@ -486,7 +486,7 @@
   <virtual>
     <connector>
       <name>Virtual Devices</name>
-      <enabled>true</enabled>
+      <enabled>false</enabled>
 
       <!-- SENSOREN -->
 
@@ -637,7 +637,7 @@
     </connector>
     <connector>
       <name>Virtual Devices 2</name>
-      <enabled>true</enabled>
+      <enabled>false</enabled>
 
       <!-- SENSOREN -->
       <device>
@@ -676,6 +676,73 @@
         <groupCommEnabled>true</groupCommEnabled>
       </device>
     </connector>
+    <connector>
+      <name>HVAC Simulation</name>
+      <enabled>true</enabled>
+
+      <!-- SENSOREN -->
+      <device>
+        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.virtual.TemperatureSensorImplVirtual
+        </type>
+        <href>simTemp</href>
+        <historyEnabled>true</historyEnabled>
+        <refreshEnabled>true</refreshEnabled>
+        <groupCommEnabled>true</groupCommEnabled>
+      </device>
+      
+      <device>
+        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.virtual.BoilerActuatorImplVirtual
+        </type>
+        <href>simBoiler</href>
+        <historyEnabled>true</historyEnabled>
+        <refreshEnabled>false</refreshEnabled>
+        <groupCommEnabled>true</groupCommEnabled>
+      </device>
+      
+      <device>
+        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.virtual.CoolerActuatorImplVirtual
+        </type>
+        <href>simCooler</href>
+        <historyEnabled>true</historyEnabled>
+        <refreshEnabled>false</refreshEnabled>
+        <groupCommEnabled>true</groupCommEnabled>
+      </device>
+      
+      <device>
+        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.virtual.FanSpeedActuatorImplVirtual
+        </type>
+        <href>simFanSpeedIn</href>
+        <historyEnabled>true</historyEnabled>
+        <refreshEnabled>false</refreshEnabled>
+        <groupCommEnabled>true</groupCommEnabled>
+      </device>
+      
+      <device>
+        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.virtual.FanSpeedActuatorImplVirtual
+        </type>
+        <href>simFanSpeedOut</href>
+        <historyEnabled>true</historyEnabled>
+        <refreshEnabled>false</refreshEnabled>
+        <groupCommEnabled>true</groupCommEnabled>
+      </device>
+      
+      <device>
+        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.virtual.PumpActuatorImplVirtual
+        </type>
+        <href>simHeatPump</href>
+        <historyEnabled>true</historyEnabled>
+        <refreshEnabled>false</refreshEnabled>
+        <groupCommEnabled>true</groupCommEnabled>
+      </device>
+       <device>
+        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.virtual.PumpActuatorImplVirtual
+        </type>
+        <href>simCoolPump</href>
+        <historyEnabled>true</historyEnabled>
+        <refreshEnabled>false</refreshEnabled>
+        <groupCommEnabled>true</groupCommEnabled>
+      </device>
+     </connector>  
   </virtual>
 </devices>
 	

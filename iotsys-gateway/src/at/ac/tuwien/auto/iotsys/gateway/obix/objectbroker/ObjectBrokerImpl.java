@@ -42,7 +42,8 @@ import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
 import at.ac.tuwien.auto.iotsys.commons.OperationHandler;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.*;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.general.impl.LobbyImpl;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.logic.Comparator;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.logic.BinaryOperation;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.logic.impl.BinaryOperationImpl;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.logic.impl.ComparatorImpl;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.logic.impl.TemperatureControllerImpl;
 import at.ac.tuwien.auto.iotsys.gateway.service.GroupCommHelper;
@@ -73,8 +74,8 @@ public class ObjectBrokerImpl implements ObjectBroker {
 	private final ArrayList<Obj> orderedObjects = new ArrayList<Obj>();
 
 	private static final ObjectBroker instance = new ObjectBrokerImpl();
-	
-	static{
+
+	static {
 		((ObjectBrokerImpl) instance).initInternals();
 	}
 
@@ -88,7 +89,7 @@ public class ObjectBrokerImpl implements ObjectBroker {
 		aboutImpl = new AboutImpl();
 
 		watchServiceImpl = new WatchServiceImpl(this);
-		
+
 	}
 
 	@Override
@@ -104,6 +105,7 @@ public class ObjectBrokerImpl implements ObjectBroker {
 		enums.setName("enums");
 		enums.setHref(new Uri("enums"));
 
+		// compareType enum
 		List compareTypes = new List();
 
 		compareTypes.setIs(new Contract("obix:Range"));
@@ -131,7 +133,38 @@ public class ObjectBrokerImpl implements ObjectBroker {
 
 		enums.add(compareTypes);
 
-		addObj(enums);
+		// operation type enums
+
+		List operationTypes = new List();
+
+		operationTypes.setIs(new Contract("obix:Range"));
+		operationTypes.setHref(new Uri("operationTypes"));
+		operationTypes.setName("operationTypes");
+
+		Obj opAdd = new Obj();
+		opAdd.setName(BinaryOperation.BIN_OP_ADD);
+
+		Obj opSub = new Obj();
+		opSub.setName(BinaryOperation.BIN_OP_SUB);
+
+		Obj opMul = new Obj();
+		opMul.setName(BinaryOperation.BIN_OP_MUL);
+
+		Obj opMod = new Obj();
+		opMod.setName(BinaryOperation.BIN_OP_MOD);
+
+		Obj opDiv = new Obj();
+		opDiv.setName(BinaryOperation.BIN_OP_DIV);
+
+		operationTypes.add(opAdd);
+		operationTypes.add(opSub);
+		operationTypes.add(opMul);
+		operationTypes.add(opDiv);
+		operationTypes.add(opMod);
+
+		enums.add(operationTypes);
+
+		addObj(enums, true);
 
 		// Static comperators
 
@@ -142,18 +175,29 @@ public class ObjectBrokerImpl implements ObjectBroker {
 			addObj(comp);
 			enableGroupComm(comp);
 		}
-		
+
 		// Static temperature controllers
-		
+
 		for (int i = 1; i <= 3; i++) {
 			TemperatureControllerImpl tempControl = new TemperatureControllerImpl();
 			tempControl.setName("tempControl" + i);
 			tempControl.setHref(new Uri("tempControl" + i));
-			
+
 			addObj(tempControl);
 			enableGroupComm(tempControl);
 		}
-		
+
+		// Static binary operation
+
+		for (int i = 1; i <= 3; i++) {
+			BinaryOperationImpl binOperation = new BinaryOperationImpl();
+			binOperation.setName("binOp" + i);
+			binOperation.setHref(new Uri("binOp" + i));
+
+			addObj(binOperation);
+			enableGroupComm(binOperation);
+		}
+
 		Thread t = new Thread(objectRefresher);
 		t.start();
 	}

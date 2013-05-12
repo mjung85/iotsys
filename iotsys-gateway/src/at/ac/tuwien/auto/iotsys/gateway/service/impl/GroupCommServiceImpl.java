@@ -80,6 +80,7 @@ public class GroupCommServiceImpl implements GroupCommService {
 			if (groupObjects != null) {
 				for (Obj obj : groupObjects.values()) {
 					payload.setHref(obj.getHref());
+					log.finest("Writing on " + obj.getHref());
 					obj.writeObject(payload);
 				}
 			} 
