@@ -31,7 +31,7 @@
  ******************************************************************************/
 
 
-package at.ac.tuwien.auto.iotsys.gateway.obix.object.iot.actuators.impl;
+package at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.virtual;
 
 import java.util.logging.Logger;
 
