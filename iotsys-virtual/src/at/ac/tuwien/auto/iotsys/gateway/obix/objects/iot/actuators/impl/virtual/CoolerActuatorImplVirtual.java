@@ -34,7 +34,7 @@ package at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.virtual
 
 import obix.Obj;
 import at.ac.tuwien.auto.iotsys.gateway.connectors.virtual.VirtualConnector;
-import at.ac.tuwien.auto.iotsys.gateway.connectors.virtual.simulation.HVACSimulation;
+import at.ac.tuwien.auto.iotsys.gateway.connectors.virtual.simulation.HVACSimulationImpl;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.CoolerActuatorImpl;
 
 public class CoolerActuatorImplVirtual extends CoolerActuatorImpl {
@@ -48,7 +48,8 @@ public class CoolerActuatorImplVirtual extends CoolerActuatorImpl {
 	public void writeObject(Obj obj) {
 		super.writeObject(obj);
 
-		HVACSimulation.instance.setCoolerActive(this.enabled().get());
+		if(HVACSimulationImpl.instance != null)
+			HVACSimulationImpl.instance.setCoolerActive(this.enabled().get());
 
 	}
 }

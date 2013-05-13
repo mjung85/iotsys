@@ -48,7 +48,7 @@ import obix.Uri;
 import at.ac.tuwien.auto.iotsys.commons.Connector;
 import at.ac.tuwien.auto.iotsys.commons.DeviceLoader;
 import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
-import at.ac.tuwien.auto.iotsys.gateway.connectors.virtual.simulation.HVACSimulation;
+import at.ac.tuwien.auto.iotsys.gateway.connectors.virtual.simulation.HVACSimulationImpl;
 
 public class VirtualDeviceLoaderImpl implements DeviceLoader {
 	private final ArrayList<String> myObjects = new ArrayList<String>();
@@ -266,9 +266,6 @@ public class VirtualDeviceLoaderImpl implements DeviceLoader {
 				}
 			}
 		}
-		
-		// start HVAC simulation
-		HVACSimulation.instance.getTemp();
 
 		return connectors;
 	}

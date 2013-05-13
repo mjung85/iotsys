@@ -1,4 +1,3 @@
-
 /*******************************************************************************
  * Copyright (c) 2013
  * Institute of Computer Aided Automation, Automation Systems Group, TU Wien.
@@ -36,23 +35,24 @@ package at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.virtual;
 import java.util.logging.Logger;
 
 import obix.Obj;
-
 import at.ac.tuwien.auto.iotsys.gateway.connectors.virtual.VirtualConnector;
 import at.ac.tuwien.auto.iotsys.gateway.connectors.virtual.simulation.HVACSimulationImpl;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.TemperatureSensorImpl;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.SmartMeterImpl;
 
-public class TemperatureSensorImplVirtual extends TemperatureSensorImpl {
-	private static final Logger log = Logger.getLogger(TemperatureSensorImplVirtual.class.getName());
+public class SmartMeterImplVirtual extends SmartMeterImpl {
+	
+
+	private static final Logger log = Logger.getLogger(SmartMeterImplVirtual.class.getName());
 	
 	private VirtualConnector virtualConnector;
 	private Object busAddress; // dummy Object, modify it according to your technology
 	
-	public TemperatureSensorImplVirtual(VirtualConnector virtualConnector){
+	public SmartMeterImplVirtual(VirtualConnector virtualConnector){
 		this(virtualConnector, null);
 	}
 	
 	// Add further constructor parameters for bus address information for this temperature sensor
-	public TemperatureSensorImplVirtual(VirtualConnector virtualConnector, Object busAddress){
+	public SmartMeterImplVirtual(VirtualConnector virtualConnector, Object busAddress){
 		// technology specific initialization
 		this.virtualConnector = virtualConnector;
 		this.busAddress = busAddress;
@@ -80,7 +80,32 @@ public class TemperatureSensorImplVirtual extends TemperatureSensorImpl {
 //			
 //			this.value().set(value); 
 //		}	
-		if(HVACSimulationImpl.instance != null)
-			this.value().set(HVACSimulationImpl.instance.getTemp()); 
+		if(HVACSimulationImpl.instance != null){
+			double curPower = 0;
+			if(HVACSimulationImpl.instance.boilerActive().get()){
+				curPower += 1000;
+			}
+			if(HVACSimulationImpl.instance.coolerActive().get()){
+				curPower += 300;
+			}
+			
+			if(HVACSimulationImpl.instance.coolPumpActive().get()){
+				curPower += 150;
+			}
+			
+			if(HVACSimulationImpl.instance.heatPumpActive().get()){
+				curPower += 150;
+			}
+			
+			if(HVACSimulationImpl.instance.fanInActive().get()){
+				curPower += 50;
+			}
+			
+			this.powerValue.set(curPower);
+			double curEnergy = this.energyValue().get();
+			curEnergy += curPower / 1000 / 60 / 60 * 3; // 3 s refresh interval
+			this.energyValue().set(curEnergy);
+		}
 	}
+
 }
