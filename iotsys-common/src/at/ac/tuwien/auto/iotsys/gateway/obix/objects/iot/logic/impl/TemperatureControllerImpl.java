@@ -47,6 +47,8 @@ public class TemperatureControllerImpl extends Obj implements
 	protected Real controlValue = new Real();
 	protected Bool enabled = new Bool();
 	protected Real tolerance = new Real();
+	protected Bool saveEnergyEnabled = new Bool();
+	protected Real saveEnergyFactor = new Real();
 
 	private ControllerState controllerState = ControllerState.INACTIVE;
 
@@ -76,13 +78,20 @@ public class TemperatureControllerImpl extends Obj implements
 		enabled.setHref(new Uri("enabled"));
 		enabled.setWritable(true);
 		
-
+		saveEnergyEnabled.setName("saveEnergyEnabled");
+		saveEnergyEnabled.setHref(new Uri("saveEnergyEnabled"));
+		enabled.setWritable(true);
+		
+		saveEnergyFactor.setName("saveEnergyFactor");
+		saveEnergyFactor.setHref(new Uri("saveEnergyFactor"));
+		saveEnergyFactor.setWritable(true);
+		
 		this.add(setpoint);
 		this.add(temperature);
 		this.add(controlValue);
 		this.add(tolerance);
 		this.add(enabled);
-
+		
 	}
 
 	@Override
@@ -168,11 +177,11 @@ public class TemperatureControllerImpl extends Obj implements
 			if (temperature.get() < setpoint.get() - tolerance.get()
 					&& controllerState != ControllerState.HEATING) {
 				// we need to heat!
-				controlValue.set(100);
+				controlValue.set(100 * (saveEnergyEnabled.get()?(saveEnergyFactor().get()):(1)));
 				controllerState = ControllerState.HEATING;
 			} else if (temperature.get() > setpoint.get() + tolerance.get()
 					&& controllerState != ControllerState.COOLING) {
-				controlValue.set(-100);
+				controlValue.set(-100 * (saveEnergyEnabled.get()?(saveEnergyFactor().get()):(1)));
 				controllerState = ControllerState.COOLING;
 			} else if (temperature.get() > setpoint.get()
 					&& controllerState == ControllerState.HEATING) {
@@ -184,16 +193,23 @@ public class TemperatureControllerImpl extends Obj implements
 				// we have reached the target cooling temp
 				controlValue.set(0);
 				controllerState = ControllerState.INACTIVE;
-			}
-			
-			
-			
+			}	
 		} else if (controllerState == ControllerState.HEATING
 				|| controllerState == ControllerState.COOLING) {
 			// we need to stop the controller
 			controlValue.set(0);
 			controllerState = ControllerState.INACTIVE;
 		}
+	}
+
+	@Override
+	public Real saveEnergyFactor() {
+		return saveEnergyFactor;
+	}
+
+	@Override
+	public Bool saveEnergyEnabled() {
+		return saveEnergyEnabled;
 	}
 }
 

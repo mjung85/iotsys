@@ -75,7 +75,6 @@ public class LogicBinaryOperationImpl extends Obj implements LogicBinaryOperatio
 		this.add(enabled);
 		this.add(result);
 		this.add(logicOperationType);
-
 	}
 
 	@Override
