@@ -64,6 +64,7 @@ import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.ShuttersAndBlin
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.SmartMeter;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.SunIntensitySensor;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.TemperatureSensor;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sim.HVACSimulation;
 import obix.*;
 
 public class ContractInit
@@ -112,6 +113,9 @@ public class ContractInit
 	  ContractRegistry.put(TemperatureController.CONTRACT, TemperatureController.class.getName());
 	  ContractRegistry.put(BinaryOperation.CONTRACT, BinaryOperation.class.getName());
 	  ContractRegistry.put(LogicBinaryOperation.CONTRACT, LogicBinaryOperation.class.getName());
+	  
+	  // Simulation
+	  ContractRegistry.put(HVACSimulation.CONTRACT, HVACSimulation.class.getName());
 	  
 	  ContractRegistry.buildReverseMap();
   }

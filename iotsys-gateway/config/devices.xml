@@ -469,7 +469,7 @@
     <connector>
       <name>W-MBus Smart Meter Windows</name>
       <enabled>false</enabled>
-      <serialPort>COM6</serialPort>
+      <serialPort>COM8</serialPort>
       <device>
         <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.wmbus.SmartMeterImplWMBus
         </type>
@@ -742,7 +742,133 @@
         <refreshEnabled>false</refreshEnabled>
         <groupCommEnabled>true</groupCommEnabled>
       </device>
+       <device>
+        <type>at.ac.tuwien.auto.iotsys.gateway.connectors.virtual.simulation.HVACSimulationImpl
+        </type>
+        <href>hvacSim</href>
+        <historyEnabled>false</historyEnabled>
+        <refreshEnabled>false</refreshEnabled>
+        <groupCommEnabled>false</groupCommEnabled>
+      </device>
+      <device>
+        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.virtual.SmartMeterImplVirtual
+        </type>
+        <href>simMeter</href>
+        <historyEnabled>false</historyEnabled>
+        <refreshEnabled>true</refreshEnabled>
+        <groupCommEnabled>true</groupCommEnabled>
+      </device>
      </connector>  
+ 
+    <connector>
+      <name>IoTSyS Logic</name>
+      <enabled>true</enabled>
+
+      <!-- Logic components -->
+      <device>
+        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.logic.impl.BinaryOperationImpl
+        </type>
+        <href>binOp1</href>
+        <historyEnabled>false</historyEnabled>
+        <refreshEnabled>false</refreshEnabled>
+        <groupCommEnabled>true</groupCommEnabled>
+      </device>
+      
+      <device>
+        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.logic.impl.BinaryOperationImpl
+        </type>
+        <href>binOp2</href>
+        <historyEnabled>false</historyEnabled>
+        <refreshEnabled>false</refreshEnabled>
+        <groupCommEnabled>true</groupCommEnabled>
+      </device>
+      
+      <device>
+        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.logic.impl.BinaryOperationImpl
+        </type>
+        <href>binOp3</href>
+        <historyEnabled>false</historyEnabled>
+        <refreshEnabled>false</refreshEnabled>
+        <groupCommEnabled>true</groupCommEnabled>
+      </device>
+      
+      <device>
+        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.logic.impl.ComparatorImpl
+        </type>
+        <href>comp1</href>
+        <historyEnabled>false</historyEnabled>
+        <refreshEnabled>false</refreshEnabled>
+        <groupCommEnabled>true</groupCommEnabled>
+      </device>
+      
+      <device>
+        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.logic.impl.ComparatorImpl
+        </type>
+        <href>comp2</href>
+        <historyEnabled>false</historyEnabled>
+        <refreshEnabled>false</refreshEnabled>
+        <groupCommEnabled>true</groupCommEnabled>
+      </device>
+      
+      <device>
+        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.logic.impl.ComparatorImpl
+        </type>
+        <href>comp3</href>
+        <historyEnabled>false</historyEnabled>
+        <refreshEnabled>false</refreshEnabled>
+        <groupCommEnabled>true</groupCommEnabled>
+      </device>
+      
+      <device>
+        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.logic.impl.LogicBinaryOperationImpl
+        </type>
+        <href>logicBinOp1</href>
+        <historyEnabled>false</historyEnabled>
+        <refreshEnabled>false</refreshEnabled>
+        <groupCommEnabled>true</groupCommEnabled>
+      </device>
+      <device>
+        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.logic.impl.LogicBinaryOperationImpl
+        </type>
+        <href>logicBinOp2</href>
+        <historyEnabled>false</historyEnabled>
+        <refreshEnabled>false</refreshEnabled>
+        <groupCommEnabled>true</groupCommEnabled>
+      </device>
+      <device>
+        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.logic.impl.LogicBinaryOperationImpl
+        </type>
+        <href>logicBinOp3</href>
+        <historyEnabled>false</historyEnabled>
+        <refreshEnabled>false</refreshEnabled>
+        <groupCommEnabled>true</groupCommEnabled>
+      </device>
+      <device>
+        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.logic.impl.TemperatureControllerImpl
+        </type>
+        <href>tempControl1</href>
+        <historyEnabled>false</historyEnabled>
+        <refreshEnabled>false</refreshEnabled>
+        <groupCommEnabled>true</groupCommEnabled>
+      </device>
+        <device>
+        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.logic.impl.TemperatureControllerImpl
+        </type>
+        <href>tempControl12</href>
+        <historyEnabled>false</historyEnabled>
+        <refreshEnabled>false</refreshEnabled>
+        <groupCommEnabled>true</groupCommEnabled>
+      </device>
+        <device>
+        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.logic.impl.TemperatureControllerImpl
+        </type>
+        <href>tempControl3</href>
+        <historyEnabled>false</historyEnabled>
+        <refreshEnabled>false</refreshEnabled>
+        <groupCommEnabled>true</groupCommEnabled>
+      </device>
+    </connector>
+      
   </virtual>
 </devices>
 	

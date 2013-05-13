@@ -200,48 +200,48 @@ public class ObjectBrokerImpl implements ObjectBroker {
 
 		addObj(enums, true);
 
-		// Static comperators
+//		// Static comperators
+//
+//		for (int i = 1; i <= 3; i++) {
+//			ComparatorImpl comp = new ComparatorImpl();
+//			comp.setName("comp" + i);
+//			comp.setHref(new Uri("comp" + i));
+//			addObj(comp);
+//			enableGroupComm(comp);
+//		}
 
-		for (int i = 1; i <= 3; i++) {
-			ComparatorImpl comp = new ComparatorImpl();
-			comp.setName("comp" + i);
-			comp.setHref(new Uri("comp" + i));
-			addObj(comp);
-			enableGroupComm(comp);
-		}
-
-		// Static temperature controllers
-
-		for (int i = 1; i <= 3; i++) {
-			TemperatureControllerImpl tempControl = new TemperatureControllerImpl();
-			tempControl.setName("tempControl" + i);
-			tempControl.setHref(new Uri("tempControl" + i));
-
-			addObj(tempControl);
-			enableGroupComm(tempControl);
-		}
-
-		// Static binary operation
-
-		for (int i = 1; i <= 3; i++) {
-			BinaryOperationImpl binOperation = new BinaryOperationImpl();
-			binOperation.setName("binOp" + i);
-			binOperation.setHref(new Uri("binOp" + i));
-
-			addObj(binOperation);
-			enableGroupComm(binOperation);
-		}
-
-		// Static logic binary operation
-
-		for (int i = 1; i <= 3; i++) {
-			LogicBinaryOperationImpl logicBinOperation = new LogicBinaryOperationImpl();
-			logicBinOperation.setName("logicBinOp" + i);
-			logicBinOperation.setHref(new Uri("logicBinOp" + i));
-
-			addObj(logicBinOperation);
-			enableGroupComm(logicBinOperation);
-		}
+//		// Static temperature controllers
+//
+//		for (int i = 1; i <= 3; i++) {
+//			TemperatureControllerImpl tempControl = new TemperatureControllerImpl();
+//			tempControl.setName("tempControl" + i);
+//			tempControl.setHref(new Uri("tempControl" + i));
+//
+//			addObj(tempControl);
+//			enableGroupComm(tempControl);
+//		}
+//
+//		// Static binary operation
+//
+//		for (int i = 1; i <= 3; i++) {
+//			BinaryOperationImpl binOperation = new BinaryOperationImpl();
+//			binOperation.setName("binOp" + i);
+//			binOperation.setHref(new Uri("binOp" + i));
+//
+//			addObj(binOperation);
+//			enableGroupComm(binOperation);
+//		}
+//
+//		// Static logic binary operation
+//
+//		for (int i = 1; i <= 3; i++) {
+//			LogicBinaryOperationImpl logicBinOperation = new LogicBinaryOperationImpl();
+//			logicBinOperation.setName("logicBinOp" + i);
+//			logicBinOperation.setHref(new Uri("logicBinOp" + i));
+//
+//			addObj(logicBinOperation);
+//			enableGroupComm(logicBinOperation);
+//		}
 
 		Thread t = new Thread(objectRefresher);
 		t.start();
