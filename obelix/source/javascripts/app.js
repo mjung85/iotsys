@@ -103,40 +103,40 @@ app.directive('ngModelOnblur', function() {
     };
 });
 
-app.directive('uiEvent', ['$parse',
-  function ($parse) {
-    return function (scope, elm, attrs) {
-      var events = scope.$eval(attrs.uiEvent);
-      angular.forEach(events, function (uiEvent, eventName) {
-        var fn = $parse(uiEvent);
-        elm.bind(eventName, function (evt) {
-          var params = Array.prototype.slice.call(arguments);
-          //Take out first paramater (event object);
-          params = params.splice(1);
-          scope.$apply(function () {
-            fn(scope, {$event: evt, $params: params});
-          });
-        });
-      });
-    };
-}]);
+// app.directive('uiEvent', ['$parse',
+//   function ($parse) {
+//     return function (scope, elm, attrs) {
+//       var events = scope.$eval(attrs.uiEvent);
+//       angular.forEach(events, function (uiEvent, eventName) {
+//         var fn = $parse(uiEvent);
+//         elm.bind(eventName, function (evt) {
+//           var params = Array.prototype.slice.call(arguments);
+//           //Take out first paramater (event object);
+//           params = params.splice(1);
+//           scope.$apply(function () {
+//             fn(scope, {$event: evt, $params: params});
+//           });
+//         });
+//       });
+//     };
+// }]);
 
-app.directive('bootstrapSwitch', function() {
-    return {
-        restrict: 'A',
-        link: function(scope, element, attrs) {
-          console.log("Linked");
-          $(element).bootstrapSwitch().on('switch-change', function(el) {
-            var iel = $(this).find('input');
-            console.log("Switch changed", iel);
-            console.log("Checked",iel.prop('checked'), iel[0].checked);
-            // $(this).find('input').trigger('click'); // so angular can pick this up in the binding
-            return;
-            scope.$apply(attrs.bootstrapSwitchChange);
-          });
-        }
-    };
-});
+// app.directive('bootstrapSwitch', function() {
+//     return {
+//         restrict: 'A',
+//         link: function(scope, element, attrs) {
+//           console.log("Linked");
+//           $(element).bootstrapSwitch().on('switch-change', function(el) {
+//             var iel = $(this).find('input');
+//             console.log("Switch changed", iel);
+//             console.log("Checked",iel.prop('checked'), iel[0].checked);
+//             // $(this).find('input').trigger('click'); // so angular can pick this up in the binding
+//             return;
+//             scope.$apply(attrs.bootstrapSwitchChange);
+//           });
+//         }
+//     };
+// });
 
 app.controller('DevicesCtrl', ['$scope','Lobby', function($scope, Lobby) {
   Lobby.getDevices(function(devices) {
