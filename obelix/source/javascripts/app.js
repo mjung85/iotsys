@@ -89,7 +89,7 @@ app.factory('Device', function($http, $timeout) {
         this.load(response);
         this.fetching = false;
         if (this.autofetching) {
-          $timeout(this.fetch.bind(this), 3000);
+          $timeout(this.fetch.bind(this), 1000);
         }
       }.bind(this));
     },
