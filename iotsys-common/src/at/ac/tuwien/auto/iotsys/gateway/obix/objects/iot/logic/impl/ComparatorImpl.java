@@ -69,6 +69,7 @@ public class ComparatorImpl extends Obj implements Comparator {
 		compareType.setName("compareType");
 		compareType.setRange(new Uri("/enums/compareTypes"));
 		compareType.set("eq");
+		compareType.setHref(new Uri("compareType"));
 
 		this.add(input1);
 		this.add(input2);
@@ -100,6 +101,13 @@ public class ComparatorImpl extends Obj implements Comparator {
 
 	@Override
 	public void writeObject(Obj input) {
+		String resourceUriPath = "";
+		if (input.getHref() == null) {
+			resourceUriPath = input.getInvokedHref().substring(
+					input.getInvokedHref().lastIndexOf('/') + 1);
+		} else {
+			resourceUriPath = input.getHref().get();
+		}
 		if (input instanceof Comparator) {
 			Comparator in = (Comparator) input;
 			this.input1.set(in.input1().get());
@@ -108,9 +116,7 @@ public class ComparatorImpl extends Obj implements Comparator {
 			this.enabled.set(in.enabled().get());
 		} else if (input instanceof Real) {
 			if (input.getHref() == null) {
-				String resourceUriPath = input.getInvokedHref().substring(
-						input.getInvokedHref().lastIndexOf('/') + 1);
-
+				
 				if ("input1".equals(resourceUriPath)) {
 					input1.set(((Real) input).get());
 				} else if ("input2".equals(resourceUriPath)) {
@@ -121,9 +127,6 @@ public class ComparatorImpl extends Obj implements Comparator {
 			}
 		} else if (input instanceof Bool) {
 			if (input.getHref() == null) {
-				String resourceUriPath = input.getInvokedHref().substring(
-						input.getInvokedHref().lastIndexOf('/') + 1);
-
 				if ("input1".equals(resourceUriPath)) {
 					input1.set(((Bool) input).get());
 				} else if ("input2".equals(resourceUriPath)) {
@@ -135,9 +138,6 @@ public class ComparatorImpl extends Obj implements Comparator {
 		}
 		else if (input instanceof Int) {
 			if (input.getHref() == null) {
-				String resourceUriPath = input.getInvokedHref().substring(
-						input.getInvokedHref().lastIndexOf('/') + 1);
-
 				if ("input1".equals(resourceUriPath)) {
 					input1.set(((Int) input).get());
 				} else if ("input2".equals(resourceUriPath)) {
@@ -146,6 +146,9 @@ public class ComparatorImpl extends Obj implements Comparator {
 					enabled.set(((Int) input).get());
 				}
 			}
+		}
+		else if (input instanceof obix.Enum){
+			this.compareType.set( ((obix.Enum) input).get() );
 		}
 
 		// perform control logic

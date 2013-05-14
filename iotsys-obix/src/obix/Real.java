@@ -69,7 +69,16 @@ public class Real extends Val {
 	 */
 	public void set(double val) {
 		double oldVal = this.val;
-		this.val = val;
+		
+		if(val < this.getMin()){
+			this.val = this.getMin();
+		}
+		else if(val > this.getMax()){
+			this.val = this.getMax();
+		}
+		else{
+			this.val = val;
+		}
 		if(this.val != oldVal)
 			notifyObservers();
 	}

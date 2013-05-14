@@ -125,6 +125,7 @@ public class HVACSimulationImpl extends Obj implements HVACSimulation {
 		
 		this.enabled.setName("enabled");
 		this.enabled.setHref(new Uri("enabled"));
+		this.enabled.setWritable(true);
 		this.add(enabled);
 		
 		this.fallImpact.setName("fallImpact");
@@ -353,7 +354,38 @@ public class HVACSimulationImpl extends Obj implements HVACSimulation {
 			this.springImpact.set(in.springImpact().get());
 			this.summerImpact.set(in.summerImpact().get());
 			this.winterImpact.set(in.winterImpact().get());
-		} 
+		} else if (input instanceof Bool) {
+
+			if ("enabled".equals(resourceUriPath)) {
+				enabled.set(((Bool) input).get());
+			} else if ("boilerActive".equals(resourceUriPath)) {
+				boilerActive.set(((Bool) input).get());
+			} else if ("coolerActive".equals(resourceUriPath)) {
+				coolerActive.set(((Bool) input).get());
+			} else if ("fanInActive".equals(resourceUriPath)) {
+				fanInActive.set(((Bool) input).get());
+			}  else if ("heatPumpActive".equals(resourceUriPath)) {
+				heatPumpActive.set(((Bool) input).get());
+			} 
+		} else if(input instanceof Real){
+			if ("temp".equals(resourceUriPath)) {
+				temp.set(((Real) input).get());
+			} else if ("heatingImpact".equals(resourceUriPath)) {
+				heatingImpact.set(((Real) input).get());
+			} else if ("springImpact".equals(resourceUriPath)) {
+				springImpact.set(((Real) input).get());
+			}else if ("winterImpact".equals(resourceUriPath)) {
+				winterImpact.set(((Real) input).get());
+			}else if ("coolingImpact".equals(resourceUriPath)) {
+				coolingImpact.set(((Real) input).get());
+			}else if ("fallImpact".equals(resourceUriPath)) {
+				fallImpact.set(((Real) input).get());
+			}
+		}
+		else if(input instanceof Str){
+			this.season.set( ((Str) input).get());
+		}
+		
 		
 		if(enabled().get() && !threadStarted){
 			synchronized(this){

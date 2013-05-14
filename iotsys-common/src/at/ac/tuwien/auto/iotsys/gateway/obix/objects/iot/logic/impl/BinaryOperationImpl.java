@@ -37,6 +37,7 @@ public class BinaryOperationImpl extends Obj implements BinaryOperation {
 		operationType.setName("operationType");
 		operationType.setRange(new Uri("/enums/operationTypes"));
 		operationType.set(BinaryOperation.BIN_OP_ADD);
+		operationType.setHref(new Uri("operationType"));
 
 		this.add(input1);
 		this.add(input2);
@@ -112,6 +113,9 @@ public class BinaryOperationImpl extends Obj implements BinaryOperation {
 				enabled.set(((Int) input).get());
 			}
 
+		}
+		else if (input instanceof obix.Enum){
+			this.operationType.set( ((obix.Enum) input).get() );
 		}
 
 		// perform control logic
