@@ -8,16 +8,51 @@ body {
 
 .device {
   background: white;
-  .name {
+  .header {
     color: #444;
     border-bottom: 1px solid #ddd;
     margin: 0px -5px;
     padding-left: 10px;
     padding-bottom: 3px;
     margin-bottom: 5px;
-    font-weight: bold;
+    .name {
+      font-weight: bold;
+    }
+    // .indicator {
+    //   float: left;
+    //   background: red;
+    //   border-radius: 999px;
+    //   height: 8px;
+    //   width: 8px;
+    //   margin-right: 8px;
+    //   margin-top: 6px;
+    //   input {
+    //     display: none;
+    //   }
+    // }
+    .autofetch {
+      input {
+        display: none;
+      }
+      input + div {
+        width: 10px;
+        height: 10px;
+        border-radius: 10px;
+        background: none;
+      }
+      input:checked + div {
+        background: #ccc;
+      }
+      float: left;
+      padding: 5px 10px 0 0px;
+    }
   }
   border: 2px solid #ccc;
+}
+
+.device.fetching .header .autofetch input + div {
+  background: #52be7f;
+  box-shadow: 0 0 2px #52be7f;
 }
 
 .form-horizontal .control-group {
