@@ -19,7 +19,7 @@
               %label.autofetch
                 %input(type="checkbox" ng-model="device.autofetching" ng-change="device.fetch()")
                 %div
-              .name
+              %a.name(href="{{device.url}}" target="_blank")
                 {{device.name}}
             .form-horizontal
               .control-group.bool(ng-repeat="bool in device.properties | filter: {type: 'bool'}")
