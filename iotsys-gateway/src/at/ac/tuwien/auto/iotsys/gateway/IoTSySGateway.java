@@ -153,7 +153,7 @@ public class IoTSySGateway {
 
 	public void stopGateway() {
 		objectBroker.shutdown();
-		CsvCreator.instance.close();
+//		CsvCreator.instance.close();
 		closeConnectors();
 	}
 
