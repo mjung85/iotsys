@@ -54,10 +54,9 @@ public class CoolerActuatorImpl extends ActuatorImpl implements CoolerActuator {
 	
 	public void writeObject(Obj input){
 		
-		if(input instanceof CoolerActuatorImpl){
-			CoolerActuatorImpl in = (CoolerActuatorImpl) input;
-			this.enabled.set(in.enabled().get());
-			
+		if(input instanceof CoolerActuator){
+			CoolerActuator in = (CoolerActuator) input;
+			this.enabled.set(in.enabled().get());	
 		}
 		else if(input instanceof Bool){
 			this.enabled.set(((Bool) input).get());

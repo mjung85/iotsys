@@ -61,7 +61,11 @@ public class Enum
   public void set(String val)
   {
     if (val == null) throw new IllegalArgumentException("val cannot be null");
+    String oldVal = this.val;
     this.val = val;
+    if(!this.val.equals(oldVal)){
+    	notifyObservers();
+    }
   }
 
 ////////////////////////////////////////////////////////////////
@@ -156,5 +160,16 @@ public class Enum
   
   private String val;
   private Uri range;
+  
+  
+  public void writeObject(Obj input) {
+		if (this.getParent() != null) {
+			this.getParent().writeObject(input);
+		} else {
+			if (input instanceof obix.Enum) {
+				this.set(((obix.Enum) input).get());
+			}
+		}
+	}
   
 }

@@ -69,6 +69,7 @@ public class LogicBinaryOperationImpl extends Obj implements LogicBinaryOperatio
 		logicOperationType.setName("logicOperationType");
 		logicOperationType.setRange(new Uri("/enums/logicOperationTypes"));
 		logicOperationType.set(LogicBinaryOperation.BIN_OP_AND);
+		logicOperationType.setHref(new Uri("logicOperationType"));
 
 		this.add(input1);
 		this.add(input2);
@@ -143,6 +144,9 @@ public class LogicBinaryOperationImpl extends Obj implements LogicBinaryOperatio
 				enabled.set(((Int) input).get());
 			}
 
+		}
+		else if (input instanceof obix.Enum){
+			this.logicOperationType.set( ((obix.Enum) input).get() );
 		}
 
 		// perform control logic
