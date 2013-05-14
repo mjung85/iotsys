@@ -80,7 +80,7 @@ public class TemperatureControllerImpl extends Obj implements
 		
 		saveEnergyEnabled.setName("saveEnergyEnabled");
 		saveEnergyEnabled.setHref(new Uri("saveEnergyEnabled"));
-		enabled.setWritable(true);
+		saveEnergyEnabled.setWritable(true);
 		
 		saveEnergyFactor.setName("saveEnergyFactor");
 		saveEnergyFactor.setHref(new Uri("saveEnergyFactor"));
@@ -91,7 +91,8 @@ public class TemperatureControllerImpl extends Obj implements
 		this.add(controlValue);
 		this.add(tolerance);
 		this.add(enabled);
-		
+		this.add(saveEnergyEnabled);
+		this.add(saveEnergyFactor);		
 	}
 
 	@Override
