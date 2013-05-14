@@ -15,17 +15,21 @@
       <h3>Obelix</h3>
       <ul class='thumbnails'>
         <li class='span4' ng-repeat='device in devices'>
-          <div class='thumbnail device'>
-            <div class='name'>
-              {{device.name}}
+          <div class='thumbnail device' ng-class='{fetching:device.fetching}'>
+            <div class='header'>
+              <label class='autofetch'>
+                <input ng-change='device.fetch()' ng-model='device.autofetching' type='checkbox'>
+                <div></div>
+              </label>
+              <div class='name'>
+                {{device.name}}
+              </div>
             </div>
             <div class='form-horizontal'>
               <div class='control-group bool' ng-repeat="bool in device.properties | filter: {type: 'bool'}">
                 <label class='control-label'>{{bool.name}}</label>
                 <div class='controls'>
-                  <div class='switch switch-small'>
-                    <input ng-change='device.update(bool)' ng-disabled='bool.readonly' ng-model='bool.value' type='checkbox'>
-                  </div>
+                  <input ng-change='device.update(bool)' ng-checked='bool.value' ng-disabled='bool.readonly' ng-model='bool.value' type='checkbox'>
                 </div>
               </div>
               <div class='control-group bool' ng-repeat='numeric in device.properties | filter: {numeric: true}'>
