@@ -19,7 +19,7 @@
               %label.autofetch
                 %input(type="checkbox" ng-model="device.autofetching" ng-change="device.fetch()")
                 %div
-              .name
+              %a.name(href="{{device.url}}" target="_blank")
                 {{device.name}}
             .form-horizontal
               .control-group.bool(ng-repeat="bool in device.properties | filter: {type: 'bool'}")
@@ -31,3 +31,7 @@
                 .controls
                   .numeric-value
                     %input.input-mini(ng-model="numeric.value" type="text" ng-model-onblur ng-disabled="numeric.readonly" ng-change="device.update(numeric)")
+              .control-group.bool(ng-repeat="enum in device.properties | filter: {type: 'enum'}")
+                %label.control-label {{enum.name}}
+                .controls
+                  %select.select-mini(ng-model="enum.value" ng-options="x for x in enum.validValues()" ng-change="device.update(enum)")

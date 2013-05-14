@@ -31,15 +31,33 @@ app.factory('Device', function($http, $timeout) {
     }
   };
 
+  Property.enumRanges = {
+    "/enums/operationTypes": ['+','-','*','/','%']
+  };
+
   Property.parse = function(el) {
-    if (el['tagName'] == 'bool' || el['tagName'] == 'int' || el['tagName'] == 'real') {
-      return new Property(el['href'], el['tagName'], el['name'], el['val'], !el['writable']);
+    if (el['tagName'] == 'bool' || el['tagName'] == 'int' || el['tagName'] == 'real' || el['tagName'] == 'enum') {
+      var p = new Property(el['href'], el['tagName'], el['name'], el['val'], !el['writable']);
+      if (p.type == 'enum') {
+        if (Property.enumRanges[el['range']]) {
+          p.range = el['range'];
+        } else {
+          return null; // not supported for now
+        }
+      }
+      return p;
     }
   };
 
   Property.prototype = {
+    validValues: function() {
+      if (this.type == 'enum') {
+        return Property.enumRanges[this.range];
+      }
+    },
     serialize: function() {
-      return {'tagName': this.type, 'href': this.href, 'val': this.value };
+      var result = {'tagName': this.type, 'href': this.href, 'val': this.value };
+      return result;
     }
   };
 
@@ -71,7 +89,7 @@ app.factory('Device', function($http, $timeout) {
         this.load(response);
         this.fetching = false;
         if (this.autofetching) {
-          $timeout(this.fetch.bind(this), 3000);
+          $timeout(this.fetch.bind(this), 1000);
         }
       }.bind(this));
     },

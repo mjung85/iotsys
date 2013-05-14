@@ -21,9 +21,9 @@
                 <input ng-change='device.fetch()' ng-model='device.autofetching' type='checkbox'>
                 <div></div>
               </label>
-              <div class='name'>
+              <a class='name' href='{{device.url}}' target='_blank'>
                 {{device.name}}
-              </div>
+              </a>
             </div>
             <div class='form-horizontal'>
               <div class='control-group bool' ng-repeat="bool in device.properties | filter: {type: 'bool'}">
@@ -38,6 +38,12 @@
                   <div class='numeric-value'>
                     <input class='input-mini' ng-change='device.update(numeric)' ng-disabled='numeric.readonly' ng-model-onblur ng-model='numeric.value' type='text'>
                   </div>
+                </div>
+              </div>
+              <div class='control-group bool' ng-repeat="enum in device.properties | filter: {type: 'enum'}">
+                <label class='control-label'>{{enum.name}}</label>
+                <div class='controls'>
+                  <select class='select-mini' ng-change='device.update(enum)' ng-model='enum.value' ng-options='x for x in enum.validValues()'></select>
                 </div>
               </div>
             </div>
