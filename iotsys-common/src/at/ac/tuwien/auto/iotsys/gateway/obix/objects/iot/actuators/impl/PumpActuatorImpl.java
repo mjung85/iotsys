@@ -48,6 +48,8 @@ public class PumpActuatorImpl extends ActuatorImpl implements PumpActuator{
 		value.setWritable(true);
 		value.setHref(new Uri("value"));
 		value.setName("value");		
+		value.setMin(0);
+		value.setMax(100);
 		this.add(value);
 	}
 	

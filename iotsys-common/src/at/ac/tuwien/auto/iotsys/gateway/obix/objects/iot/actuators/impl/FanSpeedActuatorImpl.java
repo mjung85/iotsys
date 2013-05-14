@@ -64,6 +64,8 @@ public class FanSpeedActuatorImpl extends ActuatorImpl implements
 
 		enabledValue.setHref(new Uri(FanSpeedActuator.ENBALED_CONTRACT_HREF));
 		enabledValue.setName(FanSpeedActuator.ENABLED_CONTRACT_NAME);
+		enabledValue.setWritable(true);
+		
 		add(fanSpeedSetpointValue);
 		add(enabledValue);
 	}

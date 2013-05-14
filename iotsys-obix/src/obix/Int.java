@@ -67,7 +67,17 @@ public class Int extends Val {
 	 */
 	public void set(long val) {
 		long oldVal = this.val;
-		this.val = val;
+		
+		if( val < this.getMin()){
+			this.val = (int) this.getMin();
+		}
+		else if(val > this.getMax()){
+			this.val = (int) this.getMax();
+		}
+		else{
+			this.val = val;
+		}
+		
 		if(oldVal != this.val)
 			notifyObservers();
 	}
