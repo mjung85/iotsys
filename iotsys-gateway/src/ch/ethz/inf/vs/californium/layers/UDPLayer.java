@@ -34,6 +34,7 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.SocketException;
 import java.util.Arrays;
 import java.util.logging.Logger;
@@ -117,8 +118,9 @@ public class UDPLayer extends Layer {
 		
 	
 		
-		this.socket = new DatagramSocket(port);
+		this.socket = new DatagramSocket(null);
 		this.socket.setReuseAddress(true);
+		this.socket.bind(new InetSocketAddress(port));
 		
 		this.inetAddress = socket.getLocalAddress();
 		this.receiverThread = new ReceiverThread();
@@ -142,8 +144,10 @@ public class UDPLayer extends Layer {
 		// initialize members	
 		this.inetAddress = inetAddress;
 			
-		this.socket = new DatagramSocket(port, inetAddress);
-		this.socket.setReuseAddress(true);
+		this.socket = new DatagramSocket(null);
+		this.socket.setReuseAddress(false);
+		InetSocketAddress sockAddr = new InetSocketAddress(inetAddress, port);
+		this.socket.bind(sockAddr);
 		this.receiverThread = new ReceiverThread();
 
 		// decide if receiver thread terminates with main thread

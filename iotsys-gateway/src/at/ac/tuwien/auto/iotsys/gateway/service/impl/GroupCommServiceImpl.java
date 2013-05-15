@@ -144,7 +144,7 @@ public class GroupCommServiceImpl implements GroupCommService {
 		PUTRequest putRequest = new PUTRequest();
 		putRequest.setType(messageType.NON);
 		putRequest
-				.setURI("coap://[" + group.getHostAddress() + "]/");
+				.setURI("coap://[" + group.getHostAddress() + "]:5684/");
 		
 		if(state instanceof Bool){
 			Bool bool = (Bool) state;

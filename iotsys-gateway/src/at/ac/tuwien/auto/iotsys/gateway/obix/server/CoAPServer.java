@@ -164,6 +164,7 @@ public class CoAPServer extends Endpoint {
 				.toString();
 
 		// handle multicast requests first
+		log.finest("Request type: " + MulticastUDPLayer.getRequestType());
 		if (MulticastUDPLayer.getRequestType() == REQUEST_TYPE.MULTICAST_REQUEST) {
 			log.finest("Handle multicast request!");
 			Obj obj = null;

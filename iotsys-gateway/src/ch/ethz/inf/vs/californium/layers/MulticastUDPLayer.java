@@ -5,6 +5,7 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.Inet6Address;
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.MulticastSocket;
 import java.net.SocketException;
 import java.util.Arrays;
@@ -138,9 +139,10 @@ public class MulticastUDPLayer extends Layer {
 			this.group = ipv6MulticastAddress;
 
 			
-			this.socket = new MulticastSocket(5683);
+			this.socket = new MulticastSocket(null);					
 			this.socket.setReuseAddress(true);
 			this.socket.joinGroup(group);
+			this.socket.bind(new InetSocketAddress(5684));
 
 			// Enumeration<NetworkInterface> networkInterfaces =
 			// NetworkInterface.getNetworkInterfaces();
@@ -230,7 +232,7 @@ public class MulticastUDPLayer extends Layer {
 	// ////////////////////////////////////////////////////////////////////
 
 	private void datagramReceived(DatagramPacket datagram) {
-
+		
 
 		if (datagram.getLength() > 0) {
 

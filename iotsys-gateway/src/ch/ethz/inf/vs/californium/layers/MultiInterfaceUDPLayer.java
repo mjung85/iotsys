@@ -74,17 +74,20 @@ public class MultiInterfaceUDPLayer extends Layer {
 
 		Enumeration<NetworkInterface> networkInterfaces = NetworkInterface
 				.getNetworkInterfaces();
-		defaultUDPLayer = new UDPLayer();
+		
+		
+		defaultUDPLayer = new UDPLayer(port, true);
 
 		defaultUDPLayer.registerReceiver(this);
 		
-		try {
-			Inet6Address group = (Inet6Address) Inet6Address.getByName("FF02::1");
-			openMulticastSocket(group);
-		} catch (UnknownHostException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
+//		try {
+//			Inet6Address group = (Inet6Address) Inet6Address.getByName("FF02:F::1");
+//			openMulticastSocket(group);
+//		} catch (UnknownHostException e1) {
+//			// TODO Auto-generated catch block
+//			e1.printStackTrace();
+//		}
+		
 //		
 //		try {
 //			Inet6Address group = (Inet6Address) Inet6Address.getByName("FF02:FFFF::2");
@@ -110,6 +113,7 @@ public class MultiInterfaceUDPLayer extends Layer {
 				}
 			}
 		}
+		
 	}
 
 	@Override
@@ -138,7 +142,9 @@ public class MultiInterfaceUDPLayer extends Layer {
 			if(!multicastUDPLayers.contains(addr)){
 				MulticastUDPLayer multicastUDPLayer = new MulticastUDPLayer(addr);
 				multicastUDPLayer.registerReceiver(this);
+				
 				multicastUDPLayers.put(addr, multicastUDPLayer);
+		
 			}
 		}
 	}
