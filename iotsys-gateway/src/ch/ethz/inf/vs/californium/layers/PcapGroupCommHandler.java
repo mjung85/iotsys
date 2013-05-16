@@ -43,7 +43,6 @@ public class PcapGroupCommHandler<String> extends Layer implements
 
 			if (udp.destination() == this.port && dest.isMulticastAddress()) {
 				{
-					System.out.println("Received IPv6 packet.");
 					RequestReceiver recv = new RequestReceiver(dest, src, udp.source(), udp.getPayload());
 					recv.start();
 				}
@@ -92,7 +91,6 @@ public class PcapGroupCommHandler<String> extends Layer implements
 
 				// protect against unknown exceptions
 				try {
-					System.out.println("calling receive message");
 					receiveMessage(msg);
 
 				} catch (Exception e) {
