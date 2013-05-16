@@ -43,7 +43,9 @@ public class PcapGroupCommHandler<String> extends Layer implements
 
 			if (udp.destination() == this.port && dest.isMulticastAddress()) {
 				{
-					new RequestReceiver(dest, src, udp.source(), udp.getPayload()).start();
+					System.out.println("Received IPv6 packet.");
+					RequestReceiver recv = new RequestReceiver(dest, src, udp.source(), udp.getPayload());
+					recv.start();
 				}
 			}
 		}
@@ -63,6 +65,12 @@ public class PcapGroupCommHandler<String> extends Layer implements
 			this.payload = payload;
 			this.src = src;
 			this.srcPort = srcPort;
+
+		}
+
+		public void run() {
+			MulticastUDPLayer.setMulticastAddress(groupAddress);
+			MulticastUDPLayer.setRequestType(REQUEST_TYPE.MULTICAST_REQUEST);
 
 			// get current time
 			long timestamp = System.nanoTime();
@@ -84,7 +92,7 @@ public class PcapGroupCommHandler<String> extends Layer implements
 
 				// protect against unknown exceptions
 				try {
-
+					System.out.println("calling receive message");
 					receiveMessage(msg);
 
 				} catch (Exception e) {
@@ -93,11 +101,6 @@ public class PcapGroupCommHandler<String> extends Layer implements
 			} else {
 				log.severe("Illeagal datagram received");
 			}
-		}
-
-		public void run() {
-			MulticastUDPLayer.setMulticastAddress(groupAddress);
-			MulticastUDPLayer.setRequestType(REQUEST_TYPE.MULTICAST_REQUEST);
 
 		}
 	}
