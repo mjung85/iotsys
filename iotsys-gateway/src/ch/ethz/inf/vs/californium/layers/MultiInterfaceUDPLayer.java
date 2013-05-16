@@ -36,13 +36,13 @@ import java.net.Inet6Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.jnetpcap.Pcap;
 import org.jnetpcap.PcapIf;
 
@@ -56,6 +56,8 @@ import static java.lang.System.out;
  * 
  */
 public class MultiInterfaceUDPLayer extends Layer {
+	
+	private static final Logger log = Logger.getLogger(MultiInterfaceUDPLayer.class.getName());
 
 	private int port = 0;
 
@@ -82,7 +84,6 @@ public class MultiInterfaceUDPLayer extends Layer {
 		this.port = port;
 		
 		defaultUDPLayer = new UDPLayer(port, true);
-
 		defaultUDPLayer.registerReceiver(this);
 		
 		
@@ -95,18 +96,16 @@ public class MultiInterfaceUDPLayer extends Layer {
 		if(PCAP_ENABLED){
 			int r = Pcap.findAllDevs(alldevs, errbuf);
 			if (r == Pcap.NOT_OK || alldevs.isEmpty()) {
-				System.out.println("No devs found");
+				log.info("No devs found");
 				return;
 			}
 
-			System.out.println("Network interfaces found.");
 			int i = 0;
 
 			for (PcapIf device : alldevs) {
 				String description = (device.getDescription() != null) ? device
 						.getDescription() : "No description available.";
-				System.out.printf("#%d: %s [%s]\n", i++, device.getName(),
-						description);
+				log.info("" + i + "#: " + device.getName() + " " + description);
 			}
 
 			PcapIf device = alldevs.get(6);
@@ -119,47 +118,26 @@ public class MultiInterfaceUDPLayer extends Layer {
 					errbuf);
 
 			if (pcap == null) {
-				System.out.println("Cannot listen.");
+				log.info("Cannot listen.");
 			}
+			final PcapGroupCommHandler<String> pcapGroupCommHandler = new PcapGroupCommHandler<String>(port);
+			pcapGroupCommHandler.registerReceiver(this);
 			
 			Thread packetlistener = new Thread(){
 				
 				@Override
 				public void run() {
-					// TODO Auto-generated method stub
-					PcapGroupCommHandler<String> pcapGroupCommHandler = new PcapGroupCommHandler<String>(port);
 					pcap.loop(0, pcapGroupCommHandler, "GroupCommListener");
 				}
 				
 			};
-			packetlistener.setDaemon(false);
+			packetlistener.setDaemon(true);
 			packetlistener.start();	
 		}
 		else{
 	
 			Enumeration<NetworkInterface> networkInterfaces = NetworkInterface
-					.getNetworkInterfaces();
-			
-			
-		
-			
-	//		try {
-	//			Inet6Address group = (Inet6Address) Inet6Address.getByName("FF02:F::1");
-	//			openMulticastSocket(group);
-	//		} catch (UnknownHostException e1) {
-	//			// TODO Auto-generated catch block
-	//			e1.printStackTrace();
-	//		}
-			
-	//		
-	//		try {
-	//			Inet6Address group = (Inet6Address) Inet6Address.getByName("FF02:FFFF::2");
-	//			openMulticastSocket(group);
-	//		} catch (UnknownHostException e1) {
-	//			// TODO Auto-generated catch block
-	//			e1.printStackTrace();
-	//		}
-			
+					.getNetworkInterfaces();	
 		
 	
 			while (networkInterfaces.hasMoreElements()) {
