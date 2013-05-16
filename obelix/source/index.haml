@@ -34,4 +34,4 @@
               .control-group.bool(ng-repeat="enum in device.properties | filter: {type: 'enum'}")
                 %label.control-label {{enum.name}}
                 .controls
-                  %select.select-mini(ng-model="enum.value" ng-options="x for x in enum.validValues()" ng-change="device.update(enum)")
+                  %select.select-mini(ng-model="enum.value" ng-options="x for x in enum.range" ng-change="device.update(enum)")

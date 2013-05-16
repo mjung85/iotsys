@@ -31,30 +31,32 @@ app.factory('Device', function($http, $timeout) {
     }
   };
 
-  Property.enumRanges = {
-    "/enums/operationTypes": ['+','-','*','/','%']
+  Property.Enum = {
+    ranges: {},
+    range: function(href) {
+      var result = this.ranges[href];
+      if (!result) {
+        result = [];
+        this.ranges[href] = result;
+        $http.get(href).success(function(response) {
+          angular.forEach(response['childNodes'], function(n) { result.push(n['name']) });
+        });
+      }
+      return result;
+    }
   };
 
   Property.parse = function(el) {
     if (el['tagName'] == 'bool' || el['tagName'] == 'int' || el['tagName'] == 'real' || el['tagName'] == 'enum') {
       var p = new Property(el['href'], el['tagName'], el['name'], el['val'], !el['writable']);
       if (p.type == 'enum') {
-        if (Property.enumRanges[el['range']]) {
-          p.range = el['range'];
-        } else {
-          return null; // not supported for now
-        }
+        p.range = Property.Enum.range(el['range']);
       }
       return p;
     }
   };
 
   Property.prototype = {
-    validValues: function() {
-      if (this.type == 'enum') {
-        return Property.enumRanges[this.range];
-      }
-    },
     serialize: function() {
       var result = {'tagName': this.type, 'href': this.href, 'val': this.value };
       return result;
