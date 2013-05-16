@@ -46,6 +46,8 @@ import java.util.logging.Logger;
 import org.jnetpcap.Pcap;
 import org.jnetpcap.PcapIf;
 
+import at.ac.tuwien.auto.iotsys.commons.PropertiesLoader;
+
 import ch.ethz.inf.vs.californium.coap.Message;
 
 /**
@@ -72,7 +74,7 @@ public class MultiInterfaceUDPLayer extends Layer {
 		this(0, true);
 	}
 	
-	private boolean PCAP_ENABLED = true;
+	private boolean PCAP_ENABLED = false;
 	
 	private Pcap pcap;
 	private List<PcapIf> alldevs = new ArrayList<PcapIf>();
@@ -85,6 +87,8 @@ public class MultiInterfaceUDPLayer extends Layer {
 		defaultUDPLayer = new UDPLayer(port, true);
 		defaultUDPLayer.registerReceiver(this);
 		
+		PCAP_ENABLED = Boolean.parseBoolean(PropertiesLoader.getInstance().getProperties()
+				.getProperty("iotsys.gateway.pcap", "false"));
 		
 		// for multicast group communication use
 		// pcap or multicast datagram sockets

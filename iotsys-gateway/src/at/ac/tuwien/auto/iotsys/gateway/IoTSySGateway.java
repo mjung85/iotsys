@@ -58,8 +58,6 @@ import at.ac.tuwien.auto.iotsys.commons.interceptor.ClassAlreadyRegisteredExcept
 import at.ac.tuwien.auto.iotsys.commons.interceptor.Interceptor;
 import at.ac.tuwien.auto.iotsys.commons.interceptor.InterceptorBroker;
 
-//import at.ac.tuwien.auto.iotsys.control.TestClient;
-
 /**
  * Standalone class to launch the gateway.
  * 
