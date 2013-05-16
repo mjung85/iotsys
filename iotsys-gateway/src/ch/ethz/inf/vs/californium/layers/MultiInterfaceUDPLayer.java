@@ -43,6 +43,9 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.List;
 
+import org.jnetpcap.Pcap;
+import org.jnetpcap.PcapIf;
+
 import ch.ethz.inf.vs.californium.coap.Message;
 import static java.lang.System.out;
 
@@ -67,49 +70,101 @@ public class MultiInterfaceUDPLayer extends Layer {
 	public MultiInterfaceUDPLayer() throws SocketException {
 		this(0, true);
 	}
+	
+	private boolean PCAP_ENABLED = true;
+	
+	private Pcap pcap;
+	private List<PcapIf> alldevs = new ArrayList<PcapIf>();
+	private StringBuilder errbuf = new StringBuilder();
 
 	public MultiInterfaceUDPLayer(int port, boolean runAsDaemon)
 			throws SocketException {
 		this.port = port;
-
-		Enumeration<NetworkInterface> networkInterfaces = NetworkInterface
-				.getNetworkInterfaces();
-		
 		
 		defaultUDPLayer = new UDPLayer(port, true);
 
 		defaultUDPLayer.registerReceiver(this);
 		
-//		try {
-//			Inet6Address group = (Inet6Address) Inet6Address.getByName("FF02:F::1");
-//			openMulticastSocket(group);
-//		} catch (UnknownHostException e1) {
-//			// TODO Auto-generated catch block
-//			e1.printStackTrace();
-//		}
 		
-//		
-//		try {
-//			Inet6Address group = (Inet6Address) Inet6Address.getByName("FF02:FFFF::2");
-//			openMulticastSocket(group);
-//		} catch (UnknownHostException e1) {
-//			// TODO Auto-generated catch block
-//			e1.printStackTrace();
-//		}
+		// for multicast group communication use
+		// pcap or multicast datagram sockets
+		// NOTE: in linux environments the mulicast mechanism
+		// on data points does not work properly because
+		// the target mulitcast address could not be 
+		// determined.
+		if(PCAP_ENABLED){
+			int r = Pcap.findAllDevs(alldevs, errbuf);
+			if (r == Pcap.NOT_OK || alldevs.isEmpty()) {
+				System.out.println("No devs found");
+				return;
+			}
 
-		while (networkInterfaces.hasMoreElements()) {
-			NetworkInterface iface = networkInterfaces.nextElement();
+			System.out.println("Network interfaces found.");
+			int i = 0;
 
-			Enumeration<InetAddress> inetAddresses = iface.getInetAddresses();
-			for (InetAddress inetAddress : Collections.list(inetAddresses)) {
+			for (PcapIf device : alldevs) {
+				String description = (device.getDescription() != null) ? device
+						.getDescription() : "No description available.";
+				System.out.printf("#%d: %s [%s]\n", i++, device.getName(),
+						description);
+			}
 
-				try {
-					UDPLayer udpLayer = new UDPLayer(inetAddress, port,
-							runAsDaemon);
-					udpLayer.registerReceiver(this);
-					udplayers.put(inetAddress, udpLayer);
-				} catch (Exception e) {
-					// do nothing. may conflict with default UDP layer
+			PcapIf device = alldevs.get(6);
+
+			int snaplen = 64 * 1024;
+			int flags = Pcap.MODE_NON_PROMISCUOUS;
+			int timeout = 10 * 1000;
+
+			Pcap pcap = Pcap.openLive(device.getName(), snaplen, flags, timeout,
+					errbuf);
+
+			if (pcap == null) {
+				System.out.println("Cannot listen.");
+			}
+			PcapGroupCommHandler<String> pcapGroupCommHandler = new PcapGroupCommHandler<String>(port);
+			pcap.loop(0, pcapGroupCommHandler, "GroupCommListener");
+		}
+		else{
+	
+			Enumeration<NetworkInterface> networkInterfaces = NetworkInterface
+					.getNetworkInterfaces();
+			
+			
+		
+			
+	//		try {
+	//			Inet6Address group = (Inet6Address) Inet6Address.getByName("FF02:F::1");
+	//			openMulticastSocket(group);
+	//		} catch (UnknownHostException e1) {
+	//			// TODO Auto-generated catch block
+	//			e1.printStackTrace();
+	//		}
+			
+	//		
+	//		try {
+	//			Inet6Address group = (Inet6Address) Inet6Address.getByName("FF02:FFFF::2");
+	//			openMulticastSocket(group);
+	//		} catch (UnknownHostException e1) {
+	//			// TODO Auto-generated catch block
+	//			e1.printStackTrace();
+	//		}
+			
+		
+	
+			while (networkInterfaces.hasMoreElements()) {
+				NetworkInterface iface = networkInterfaces.nextElement();
+	
+				Enumeration<InetAddress> inetAddresses = iface.getInetAddresses();
+				for (InetAddress inetAddress : Collections.list(inetAddresses)) {
+	
+					try {
+						UDPLayer udpLayer = new UDPLayer(inetAddress, port,
+								runAsDaemon);
+						udpLayer.registerReceiver(this);
+						udplayers.put(inetAddress, udpLayer);
+					} catch (Exception e) {
+						// do nothing. may conflict with default UDP layer
+					}
 				}
 			}
 		}
@@ -138,23 +193,27 @@ public class MultiInterfaceUDPLayer extends Layer {
 	}
 	
 	public void openMulticastSocket(Inet6Address addr) throws SocketException{
-		synchronized(multicastUDPLayers){
-			if(!multicastUDPLayers.contains(addr)){
-				MulticastUDPLayer multicastUDPLayer = new MulticastUDPLayer(addr);
-				multicastUDPLayer.registerReceiver(this);
-				
-				multicastUDPLayers.put(addr, multicastUDPLayer);
-		
+		if(!PCAP_ENABLED){
+			synchronized(multicastUDPLayers){
+				if(!multicastUDPLayers.contains(addr)){
+					MulticastUDPLayer multicastUDPLayer = new MulticastUDPLayer(addr);
+					multicastUDPLayer.registerReceiver(this);
+					
+					multicastUDPLayers.put(addr, multicastUDPLayer);
+			
+				}
 			}
 		}
 	}
 	
 	public void closeMulticastSocket(Inet6Address addr) throws SocketException{
-		synchronized(multicastUDPLayers){
-			MulticastUDPLayer multicastUDPLayer = multicastUDPLayers.get(addr);
-			if(multicastUDPLayer != null){
-				multicastUDPLayer.unregisterReceiver(this);
-				multicastUDPLayer.close();
+		if(!PCAP_ENABLED){
+			synchronized(multicastUDPLayers){
+				MulticastUDPLayer multicastUDPLayer = multicastUDPLayers.get(addr);
+				if(multicastUDPLayer != null){
+					multicastUDPLayer.unregisterReceiver(this);
+					multicastUDPLayer.close();
+				}
 			}
 		}
 	}

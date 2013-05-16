@@ -11,10 +11,8 @@ public class Multicasttest {
 			String msg = "Hello";
 			InetAddress group = InetAddress.getByName("FF02:FFFF::1");
 
-			MulticastSocket s = new MulticastSocket(null);
-		
+			MulticastSocket s = new MulticastSocket();
 			s.setReuseAddress(true);
-			s.bind(new InetSocketAddress(9999));
 			s.joinGroup(group);
 
 			DatagramPacket hi = new DatagramPacket(msg.getBytes(),
