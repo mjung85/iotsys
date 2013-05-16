@@ -41,13 +41,12 @@ import java.util.Collections;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.logging.Logger;
 
-import org.apache.log4j.Logger;
 import org.jnetpcap.Pcap;
 import org.jnetpcap.PcapIf;
 
 import ch.ethz.inf.vs.californium.coap.Message;
-import static java.lang.System.out;
 
 /**
  * UDP layer that is aware of multiple network interfaces

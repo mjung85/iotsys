@@ -8,6 +8,7 @@ import org.osgi.framework.ServiceEvent;
 import org.osgi.framework.ServiceListener;
 import org.osgi.framework.ServiceReference;
 
+import at.ac.tuwien.auto.iotsys.commons.PropertiesLoader;
 import at.ac.tuwien.auto.iotsys.commons.interceptor.ClassAlreadyRegisteredException;
 import at.ac.tuwien.auto.iotsys.commons.interceptor.Interceptor;
 import at.ac.tuwien.auto.iotsys.commons.interceptor.InterceptorBroker;
@@ -16,7 +17,7 @@ import at.ac.tuwien.auto.iotsys.xacml.pdp.PDPInterceptor;
 /**
  * 
  * @author Thomas Hofer
- *
+ * 
  */
 public class PDPBundleActivator implements BundleActivator, ServiceListener {
 
@@ -28,42 +29,56 @@ public class PDPBundleActivator implements BundleActivator, ServiceListener {
 
 	private Logger log = Logger.getLogger(PDPBundleActivator.class.getName());
 
+	private boolean enableXacml = false;
+
 	@Override
 	public void start(BundleContext context) throws Exception {
-		this.context = context;
-		
-		interceptor = new PDPInterceptor("res/");
-		
-		ServiceReference<InterceptorBroker> interceptorRef = context
-				.getServiceReference(InterceptorBroker.class);
-		
-		if (interceptorRef == null) {
-			log.severe("Could not find InterceptorBroker");
-		} else {
-			InterceptorBroker iBroker = (InterceptorBroker) context
-					.getService(interceptorRef);
-			try {
-				iBroker.register(interceptor);
-			} catch (ClassAlreadyRegisteredException e) {
-				// silent exception handling ...
-				log.severe(interceptor.getClass().getSimpleName()
-						+ " is already registered!");
+
+		// initialize interceptor broker
+
+		enableXacml = Boolean.getBoolean(PropertiesLoader.getInstance()
+				.getProperties().getProperty("iotsys.gateway.xacml", "false"));
+
+		log.info("XACML module enabled: " + enableXacml);
+
+		if (enableXacml) {
+			this.context = context;
+
+			interceptor = new PDPInterceptor("res/");
+
+			ServiceReference<InterceptorBroker> interceptorRef = context
+					.getServiceReference(InterceptorBroker.class);
+
+			if (interceptorRef == null) {
+				log.severe("Could not find InterceptorBroker");
+			} else {
+				InterceptorBroker iBroker = (InterceptorBroker) context
+						.getService(interceptorRef);
+				try {
+					iBroker.register(interceptor);
+				} catch (ClassAlreadyRegisteredException e) {
+					// silent exception handling ...
+					log.severe(interceptor.getClass().getSimpleName()
+							+ " is already registered!");
+				}
 			}
+			context.addServiceListener(this);
 		}
-		context.addServiceListener(this);
 	}
 
 	@Override
 	public void stop(BundleContext context) throws Exception {
-		ServiceReference<InterceptorBroker> interceptorRef = context
-				.getServiceReference(InterceptorBroker.class);
-		
-		if (interceptorRef == null) {
-			log.severe("Could not find a running InterceptorBroker to unregister devices!");
-		} else {
-			InterceptorBroker iBroker = (InterceptorBroker) context
-					.getService(interceptorRef);
-			iBroker.unregister(interceptor);
+		if (enableXacml) {
+			ServiceReference<InterceptorBroker> interceptorRef = context
+					.getServiceReference(InterceptorBroker.class);
+
+			if (interceptorRef == null) {
+				log.severe("Could not find a running InterceptorBroker to unregister devices!");
+			} else {
+				InterceptorBroker iBroker = (InterceptorBroker) context
+						.getService(interceptorRef);
+				iBroker.unregister(interceptor);
+			}
 		}
 	}
 
