@@ -77,7 +77,7 @@ public class MultiInterfaceUDPLayer extends Layer {
 	private List<PcapIf> alldevs = new ArrayList<PcapIf>();
 	private StringBuilder errbuf = new StringBuilder();
 
-	public MultiInterfaceUDPLayer(int port, boolean runAsDaemon)
+	public MultiInterfaceUDPLayer(final int port, boolean runAsDaemon)
 			throws SocketException {
 		this.port = port;
 		
@@ -115,14 +115,25 @@ public class MultiInterfaceUDPLayer extends Layer {
 			int flags = Pcap.MODE_NON_PROMISCUOUS;
 			int timeout = 10 * 1000;
 
-			Pcap pcap = Pcap.openLive(device.getName(), snaplen, flags, timeout,
+			final Pcap pcap = Pcap.openLive(device.getName(), snaplen, flags, timeout,
 					errbuf);
 
 			if (pcap == null) {
 				System.out.println("Cannot listen.");
 			}
-			PcapGroupCommHandler<String> pcapGroupCommHandler = new PcapGroupCommHandler<String>(port);
-			pcap.loop(0, pcapGroupCommHandler, "GroupCommListener");
+			
+			Thread packetlistener = new Thread(){
+				
+				@Override
+				public void run() {
+					// TODO Auto-generated method stub
+					PcapGroupCommHandler<String> pcapGroupCommHandler = new PcapGroupCommHandler<String>(port);
+					pcap.loop(0, pcapGroupCommHandler, "GroupCommListener");
+				}
+				
+			};
+			packetlistener.setDaemon(false);
+			packetlistener.start();	
 		}
 		else{
 	
