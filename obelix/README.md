@@ -8,7 +8,7 @@ Bundle:
   
   cd obelix && bundle
 
-Build:
+Build and sync:
 
   middleman build
 

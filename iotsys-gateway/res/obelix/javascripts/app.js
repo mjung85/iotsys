@@ -24828,6 +24828,7 @@ app.controller('DevicesCtrl', ['$scope','Lobby','Device', function($scope, Lobby
   });
 
   $scope.selectProperty = function(p) {
+    console.log("SELECT",p);
     if (!p.groupcomm) return;
     var index = $scope.selectedProperties.indexOf(p);
     if (index != -1) {

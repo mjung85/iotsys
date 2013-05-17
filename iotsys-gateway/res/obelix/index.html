@@ -29,18 +29,18 @@
               </a>
             </div>
             <div class='form-horizontal'>
-              <div class='control-group property bool' ng-class='{groupcomm: bool.groupcomm, selected:bool.selected}' ng-click='selectProperty(bool)' ng-repeat="bool in device.properties | filter: {type: 'bool'}">
+              <div class='control-group property bool' ng-repeat="bool in device.properties | filter: {type: 'bool'}">
                 <label class='control-label'>{{bool.name}}</label>
                 <div class='controls'>
                   <input ng-change='device.update(bool)' ng-checked='bool.value' ng-disabled='bool.readonly' ng-model='bool.value' type='checkbox'>
+                  <div class='groupcomm' ng-class='{selected:bool.selected, hidden:!bool.groupcomm}' ng-click='selectProperty(bool)'></div>
                 </div>
               </div>
-              <div class='control-group property numeric' ng-class='{groupcomm: numeric.groupcomm, selected:numeric.selected}' ng-click='selectProperty(numeric)' ng-repeat='numeric in device.properties | filter: {numeric: true}'>
+              <div class='control-group property numeric' ng-repeat='numeric in device.properties | filter: {numeric: true}'>
                 <label class='control-label'>{{numeric.name}}</label>
                 <div class='controls'>
-                  <div class='numeric-value'>
-                    <input class='input-mini' ng-change='device.update(numeric)' ng-disabled='numeric.readonly' ng-model-onblur ng-model='numeric.value' type='text'>
-                  </div>
+                  <input class='input-mini' ng-change='device.update(numeric)' ng-disabled='numeric.readonly' ng-model-onblur ng-model='numeric.value' type='text'>
+                  <div class='groupcomm' ng-class='{selected:numeric.selected, hidden:!numeric.groupcomm}' ng-click='selectProperty(numeric)'></div>
                 </div>
               </div>
               <div class='control-group property enum' ng-repeat="enum in device.properties | filter: {type: 'enum'}">
