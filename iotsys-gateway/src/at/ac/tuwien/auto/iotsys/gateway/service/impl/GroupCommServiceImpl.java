@@ -138,8 +138,14 @@ public class GroupCommServiceImpl implements GroupCommService {
 	}
 
 	@Override
-	public void sendUpdate(Inet6Address group, Object state) {
+	public void sendUpdate(Inet6Address group, Obj state) {
+	
+		
 		log.finest("Sending new state of object " + state + " to group " + group.getHostAddress());
+		
+		
+		// notify internal group objects
+		this.handleRequest(group, state);
 		
 		PUTRequest putRequest = new PUTRequest();
 		putRequest.setType(messageType.NON);
