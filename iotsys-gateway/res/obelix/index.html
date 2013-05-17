@@ -11,11 +11,36 @@
       <div class='navbar-inner'>
         <div class='container'>
           <a class='brand' href='#'>Obelix</a>
+          <ul class='nav'>
+            <li>
+              <a data-toggle='modal' href='#groups'>
+                Groups
+                <span class='badge' ng-bind='groupCount()' ng-show='groupCount() &gt; 0'></span>
+              </a>
+            </li>
+          </ul>
           <button class='btn btn-info' ng-class='{hidden:selectedProperties.length == 0}' ng-click='createGroup()'>New Group</button>
         </div>
       </div>
     </div>
     <div class='container'>
+      <div class='modal hide fade' id='groups' tabindex='-1'>
+        <div class='modal-header'>
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <h3>Groups</h3>
+        </div>
+        <div class='modal-body'>
+          <ul ng-repeat='group in groups'>
+            <li>
+              {{group.ipv6()}}
+              <button class='btn' ng-click='destroyGroup(group.id)'>Destroy</button>
+              <ul ng-repeat='p in group.properties'>
+                <li>{{p.url()}}</li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </div>
       <ul class='thumbnails'>
         <li class='span4' ng-repeat='device in devices'>
           <div class='thumbnail device' ng-class='{fetching:device.fetching}'>
