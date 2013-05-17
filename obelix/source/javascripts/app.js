@@ -82,14 +82,29 @@ app.factory('Device', function($http, $timeout) {
 
   Device.prototype = {
     load: function(response) {
+      var propertiesWithGroupcomm = [];
       this.properties = [];
       angular.forEach(response['childNodes'], function(c) {
-          var p = Property.parse(c, this);
-          if (p) {
-            this.properties.push(p);
+          if (c['tagName'] == 'ref') {
+            var names = c['name'].split(' ');
+            var gcIndex = names.indexOf('groupComm')
+            if (gcIndex != -1) {
+              names.splice(gcIndex,1);
+              propertiesWithGroupcomm.push(names[0]);
+            }
           } else {
-            // console.log("Don't know how to parse",c,"yet");
+              var p = Property.parse(c, this);
+              if (p) {
+                this.properties.push(p);
+              } else {
+                // console.log("Don't know how to parse",c,"yet");
+              }
           }
+      }.bind(this));
+
+      // Mark groupcomm properties
+      angular.forEach(propertiesWithGroupcomm, function(name) {
+        this.property(name).groupcomm = true;
       }.bind(this));
     },
 
@@ -109,6 +124,12 @@ app.factory('Device', function($http, $timeout) {
         console.log(response);
         this.load(response);
       }.bind(this));
+    },
+
+    property: function(name) {
+      for (var i=0;i<this.properties.length;i++) {
+        if(this.properties[i].name == name) return this.properties[i];
+      } 
     }
   };
 
@@ -191,6 +212,7 @@ app.controller('DevicesCtrl', ['$scope','Lobby','Device', function($scope, Lobby
   });
 
   $scope.selectProperty = function(p) {
+    if (!p.groupcomm) return;
     var index = $scope.selectedProperties.indexOf(p);
     if (index != -1) {
       $scope.selectedProperties.splice(index, 1);
