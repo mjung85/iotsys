@@ -75,6 +75,7 @@ public class MultiInterfaceUDPLayer extends Layer {
 	}
 	
 	private boolean PCAP_ENABLED = false;
+	private String PCAP_IF = "eth0";
 	
 	private Pcap pcap;
 	private List<PcapIf> alldevs = new ArrayList<PcapIf>();
@@ -90,6 +91,9 @@ public class MultiInterfaceUDPLayer extends Layer {
 		PCAP_ENABLED = Boolean.parseBoolean(PropertiesLoader.getInstance().getProperties()
 				.getProperty("iotsys.gateway.pcap", "false"));
 		
+		PCAP_IF = PropertiesLoader.getInstance().getProperties()
+				.getProperty("iotsys.gateway.pcap.if", "eth0");
+		
 		// for multicast group communication use
 		// pcap or multicast datagram sockets
 		// NOTE: in linux environments the mulicast mechanism
@@ -104,14 +108,19 @@ public class MultiInterfaceUDPLayer extends Layer {
 			}
 
 			int i = 0;
+			int pick =0;
 
 			for (PcapIf device : alldevs) {
 				String description = (device.getDescription() != null) ? device
 						.getDescription() : "No description available.";
-				log.info("" + i + "#: " + device.getName() + " " + description);
+				log.info("" + (i++) + "#: " + device.getName() + " " + description);
+				if(device.getName().equals(PCAP_IF)){
+					pick = i-1;
+				}
 			}
 
-			PcapIf device = alldevs.get(6);
+			log.info("openening device for pcap: " + alldevs.get(pick).getName());
+			PcapIf device = alldevs.get(pick);
 
 			int snaplen = 64 * 1024;
 			int flags = Pcap.MODE_NON_PROMISCUOUS;

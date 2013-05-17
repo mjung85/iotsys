@@ -1,0 +1,51 @@
+// Variables
+description = 'IoTSyS Control'
+
+eclipse{
+	classpath{
+		file {
+			withXml {
+				def node = it.asNode()				
+				node.appendNode('classpathentry', [kind: 'src', path: '/iotsys-common', exported:'true'])
+				node.appendNode('classpathentry', [kind: 'src', path: '/iotsys-obix', exported:'true'])			
+			}
+		}
+	}
+}
+
+repositories {	
+	
+}
+
+configurations {
+	provided
+}
+
+sourceSets{
+	main { compileClasspath += configurations.provided }
+}
+
+jar {
+	from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+	
+	manifest {
+		attributes("Main-Class": "at.ac.tuwien.auto.iotsys.demoapp.DemoApp",
+				   "Manifest-Version": "1.0",
+				   "Bundle-Name": "IoTSyS-DemoApp", 
+				   "Bundle-SymbolicName": "at.ac.tuwien.auto.iotsys.demoapp",
+				   "Bundle-Description": "OSGI Demo App",
+				   "Bundle-Vendor": "Vienna University of Technology, Automation Systems Group, www.auto.tuwien.ac.at",
+				   "Bundle-Version": "0.1", 
+				   "Bundle-Classpath": ".",
+				   "Import-Package": "obix, obix.asm, obix.contracts, obix.io, obix.net, obix.test, obix.toos, obix.ui, obix.ui.fields, obix.ui.views, obix.xml,"+ 
+					"org.osgi.framework,at.ac.tuwien.auto.iotsys.commons,at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot, at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators,"+
+					"at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl, at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors,"+ 
+					"at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl, at.ac.tuwien.auto.iotsys.gateway.obix.observer",
+				   )
+	}
+}
+
+dependencies {
+	provided project(':iotsys-obix')
+	provided project(':iotsys-common')
+}
