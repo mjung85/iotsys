@@ -24,11 +24,11 @@
               %a.name(href="{{device.url}}" target="_blank")
                 {{device.name}}
             .form-horizontal
-              .control-group.property.bool(ng-repeat="bool in device.properties | filter: {type: 'bool'}" ng-click="selectProperty(bool)" ng-class="{selected:bool.selected}")
+              .control-group.property.bool(ng-repeat="bool in device.properties | filter: {type: 'bool'}" ng-click="selectProperty(bool)" ng-class="{groupcomm: bool.groupcomm, selected:bool.selected}")
                 %label.control-label {{bool.name}}
                 .controls
                   %input(type="checkbox" ng-checked="bool.value" ng-disabled="bool.readonly" ng-model="bool.value" ng-change="device.update(bool)")
-              .control-group.property.numeric(ng-repeat="numeric in device.properties | filter: {numeric: true}")
+              .control-group.property.numeric(ng-repeat="numeric in device.properties | filter: {numeric: true}" ng-click="selectProperty(numeric)" ng-class="{groupcomm: numeric.groupcomm, selected:numeric.selected}")
                 %label.control-label {{numeric.name}}
                 .controls
                   .numeric-value
