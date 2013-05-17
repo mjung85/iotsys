@@ -64,9 +64,9 @@ public class PushButtonImplKnx extends PushButtonImpl {
 					DPTXlatorBoolean x = new DPTXlatorBoolean(DPTXlatorBoolean.DPT_SWITCH);
 					x.setData(apdu);
 					
-					for(int i=0; i< apdu.length; i++) {
-						System.out.print(apdu[i]);
-					}
+//					for(int i=0; i< apdu.length; i++) {
+//						System.out.print(apdu[i]);
+//					}
 					
 //					CsvCreator.instance.writeLine("" + System.currentTimeMillis() + ";" + observation.toString() + ";" + x.getValueBoolean());
 					
