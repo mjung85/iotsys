@@ -11,7 +11,9 @@
     /     .container
     /       %a.brand(href="#") Obelix
     .container
-      %h3 Obelix
+      .row#toolbar
+        %span.title Obelix
+        %button.btn(ng-click="createGroup()") Group
       %ul.thumbnails
         %li.span4(ng-repeat="device in devices")
           .thumbnail.device(ng-class="{fetching:device.fetching}")
@@ -22,16 +24,16 @@
               %a.name(href="{{device.url}}" target="_blank")
                 {{device.name}}
             .form-horizontal
-              .control-group.bool(ng-repeat="bool in device.properties | filter: {type: 'bool'}")
+              .control-group.property.bool(ng-repeat="bool in device.properties | filter: {type: 'bool'}" ng-click="selectProperty(bool)" ng-class="{selected:bool.selected}")
                 %label.control-label {{bool.name}}
                 .controls
                   %input(type="checkbox" ng-checked="bool.value" ng-disabled="bool.readonly" ng-model="bool.value" ng-change="device.update(bool)")
-              .control-group.bool(ng-repeat="numeric in device.properties | filter: {numeric: true}")
+              .control-group.property.numeric(ng-repeat="numeric in device.properties | filter: {numeric: true}")
                 %label.control-label {{numeric.name}}
                 .controls
                   .numeric-value
                     %input.input-mini(ng-model="numeric.value" type="text" ng-model-onblur ng-disabled="numeric.readonly" ng-change="device.update(numeric)")
-              .control-group.bool(ng-repeat="enum in device.properties | filter: {type: 'enum'}")
+              .control-group.property.enum(ng-repeat="enum in device.properties | filter: {type: 'enum'}")
                 %label.control-label {{enum.name}}
                 .controls
-                  %select.select-mini(ng-model="enum.value" ng-options="x for x in enum.validValues()" ng-change="device.update(enum)")
+                  %select.select-mini(ng-model="enum.value" ng-options="x for x in enum.range" ng-change="device.update(enum)")
