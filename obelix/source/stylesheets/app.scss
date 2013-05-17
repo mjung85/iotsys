@@ -49,25 +49,23 @@ body {
   }
 
   .property.groupcomm {
+    border-radius: 5px;
     &:hover {
-      background: #f3f7fb;
+      background: #d5eff7;
     }
     &.selected{
-      background: #A8CAEF;  
+      background: #8dd5ed;
     }
   }
 }
 
-#toolbar {
-  .title {
-    font-size: large;
-    font-weight: bold;
-    line-height: 30px;
-  }
+.navbar {
   .btn {
     float: right;
+    &.hidden {
+      display: none;
+    }
   }
-  margin: 20px 0;
 }
 
 .device.fetching .header .autofetch input + div {

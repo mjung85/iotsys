@@ -7,15 +7,15 @@
     <script src="javascripts/app.js" type="text/javascript"></script>
   </head>
   <body ng-controller='DevicesCtrl'>
-    <!-- .navbar.navbar-fixed-top -->
-    <!-- .navbar-inner -->
-    <!-- .container -->
-    <!-- %a.brand(href="#") Obelix -->
-    <div class='container'>
-      <div class='row' id='toolbar'>
-        <span class='title'>Obelix</span>
-        <button class='btn' ng-click='createGroup()'>Group</button>
+    <div class='navbar navbar-inverse navbar-fixed-top'>
+      <div class='navbar-inner'>
+        <div class='container'>
+          <a class='brand' href='#'>Obelix</a>
+          <button class='btn btn-info' ng-class='{hidden:selectedProperties.length == 0}' ng-click='createGroup()'>New Group</button>
+        </div>
       </div>
+    </div>
+    <div class='container'>
       <ul class='thumbnails'>
         <li class='span4' ng-repeat='device in devices'>
           <div class='thumbnail device' ng-class='{fetching:device.fetching}'>
