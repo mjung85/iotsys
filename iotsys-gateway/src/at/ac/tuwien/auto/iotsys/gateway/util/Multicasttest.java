@@ -9,7 +9,7 @@ public class Multicasttest {
 	public static void main(String[] args) {
 		try {
 			String msg = "Hello";
-			InetAddress group = InetAddress.getByName("FF02:FFFF::1");
+			InetAddress group = InetAddress.getByName("FF02:FFFF::2");
 
 			MulticastSocket s = new MulticastSocket();
 			s.setReuseAddress(true);

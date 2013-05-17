@@ -43,6 +43,7 @@ public class PcapGroupCommHandler<String> extends Layer implements
 
 			if (udp.destination() == this.port && dest.isMulticastAddress()) {
 				{
+					log.info("Received multicast message through PCAP.");
 					RequestReceiver recv = new RequestReceiver(dest, src, udp.source(), udp.getPayload());
 					recv.start();
 				}
