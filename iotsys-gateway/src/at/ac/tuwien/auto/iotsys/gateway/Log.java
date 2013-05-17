@@ -57,7 +57,7 @@ import ch.ethz.inf.vs.californium.util.Properties;
 public class Log {
 	
 	private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-	private static Level logLevel = Level.FINEST;
+	private static Level logLevel = Level.INFO;
 	
 	private static final Formatter printFormatter = new Formatter() {
 		@Override
