@@ -3,7 +3,7 @@
 
 body {
   background: #f2f2f2;
-  padding-top: 40 + 20;
+  padding-top: 40px + 20px;
 }
 
 .device {
@@ -48,25 +48,34 @@ body {
     };
   }
 
-  .property:hover {
-    background: #f3f7fb;
-  }
+  .property .groupcomm {
+    border-radius: 16px;
+    border: 3px solid #8dd5ed;
+    width: 16px;
+    height: 16px;
+    float: right;
+    margin-top: 4px;
+    margin-right: 4px;
+    display: none;
+    &.selected {
+      background: #8dd5ed;
+    }
 
-  .property.selected {
-    background: #A8CAEF;
+    &.hidden {
+      display: none;
+    }
   }
 }
 
-#toolbar {
-  .title {
-    font-size: large;
-    font-weight: bold;
-    line-height: 30px;
-  }
-  .btn {
+.creatingGroup .property .groupcomm {
+  display: block;
+}
+
+.navbar {
+  #groupbar {
     float: right;
   }
-  margin: 20px 0;
+}
 }
 
 .device.fetching .header .autofetch input + div {
@@ -78,6 +87,9 @@ body {
   margin-bottom: 5px;
 }
 
+.input-mini {
+  width: 40px !important;
+}
 .select-mini {
   margin-top: 5px;
   height: 24px;

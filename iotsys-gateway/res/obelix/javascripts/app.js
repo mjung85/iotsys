@@ -24357,263 +24357,483 @@ var styleDirective = valueFn({
 
 })(window, document);
 angular.element(document).find('head').append('<style type="text/css">@charset "UTF-8";[ng\\:cloak],[ng-cloak],[data-ng-cloak],[x-ng-cloak],.ng-cloak,.x-ng-cloak{display:none;}ng\\:form{display:block;}</style>');
-/* ============================================================
- * bootstrapSwitch v1.3 by Larentis Mattia @spiritualGuru
- * http://www.larentis.eu/switch/
- * ============================================================
- * Licensed under the Apache License, Version 2.0
+/* ===================================================
+ * bootstrap-transition.js v2.3.1
+ * http://twitter.github.com/bootstrap/javascript.html#transitions
+ * ===================================================
+ * Copyright 2012 Twitter, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * ============================================================ */
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * ========================================================== */
+
 
 
 !function ($) {
-  "use strict";
 
-  $.fn['bootstrapSwitch'] = function (method) {
-    var methods = {
-      init: function () {
-        return this.each(function () {
-            var $element = $(this)
-              , $div
-              , $switchLeft
-              , $switchRight
-              , $label
-              , myClasses = ""
-              , classes = $element.attr('class')
-              , color
-              , moving
-              , onLabel = "ON"
-              , offLabel = "OFF"
-              , icon = false;
-
-            $.each(['switch-mini', 'switch-small', 'switch-large'], function (i, el) {
-              if (classes.indexOf(el) >= 0)
-                myClasses = el;
-            });
+  "use strict"; // jshint ;_;
 
 
+  /* CSS TRANSITION SUPPORT (http://www.modernizr.com/)
+   * ======================================================= */
 
-            $element.addClass('has-switch');
+  $(function () {
 
-            if ($element.data('on') !== undefined)
-              color = "switch-" + $element.data('on');
+    $.support.transition = (function () {
 
-            if ($element.data('on-label') !== undefined)
-              onLabel = $element.data('on-label');
+      var transitionEnd = (function () {
 
-            if ($element.data('off-label') !== undefined)
-              offLabel = $element.data('off-label');
-
-            if ($element.data('icon') !== undefined)
-              icon = $element.data('icon');
-
-            $switchLeft = $('<span>')
-              .addClass("switch-left")
-              .addClass(myClasses)
-              .addClass(color)
-              .html(onLabel);
-
-            color = '';
-            if ($element.data('off') !== undefined)
-              color = "switch-" + $element.data('off');
-
-            $switchRight = $('<span>')
-              .addClass("switch-right")
-              .addClass(myClasses)
-              .addClass(color)
-              .html(offLabel);
-
-            $label = $('<label>')
-              .html("&nbsp;")
-              .addClass(myClasses)
-              .attr('for', $element.find('input').attr('id'));
-
-            if (icon) {
-              $label.html('<i class="icon icon-' + icon + '"></i>');
+        var el = document.createElement('bootstrap')
+          , transEndEventNames = {
+               'WebkitTransition' : 'webkitTransitionEnd'
+            ,  'MozTransition'    : 'transitionend'
+            ,  'OTransition'      : 'oTransitionEnd otransitionend'
+            ,  'transition'       : 'transitionend'
             }
+          , name
 
-            $div = $element.find(':checkbox').wrap($('<div>')).parent().data('animated', false);
-
-            if ($element.data('animated') !== false)
-              $div.addClass('switch-animate').data('animated', true);
-
-            $div
-              .append($switchLeft)
-              .append($label)
-              .append($switchRight);
-
-            $element.find('>div').addClass(
-              $element.find('input').is(':checked') ? 'switch-on' : 'switch-off'
-            );
-
-            if ($element.find('input').is(':disabled'))
-              $(this).addClass('deactivate');
-
-            var changeStatus = function ($this) {
-              $this.siblings('label').trigger('mousedown').trigger('mouseup').trigger('click');
-            };
-
-            $element.on('keydown', function (e) {
-              if (e.keyCode === 32) {
-                e.stopImmediatePropagation();
-                e.preventDefault();
-                changeStatus($(e.target).find('span:first'));
-              }
-            });
-
-            $switchLeft.on('click', function (e) {
-              changeStatus($(this));
-            });
-
-            $switchRight.on('click', function (e) {
-              changeStatus($(this));
-            });
-
-            $element.find('input').on('change', function (e, skipOnChange) {
-              var $this = $(this)
-                , $element = $this.parent()
-                , thisState = $this.is(':checked')
-                , state = $element.is('.switch-off');
-
-              e.preventDefault();
-
-              $element.css('left', '');
-
-              if (state === thisState) {
-
-                if (thisState)
-                  $element.removeClass('switch-off').addClass('switch-on');
-                else $element.removeClass('switch-on').addClass('switch-off');
-
-                if ($element.data('animated') !== false)
-                  $element.addClass("switch-animate");
-
-                if (typeof skipOnChange === 'boolean' && skipOnChange)
-                  return;
-
-                $element.parent().trigger('switch-change', {'el': $this, 'value': thisState})
-              }
-            });
-
-            $element.find('label').on('mousedown touchstart', function (e) {
-              var $this = $(this);
-              moving = false;
-
-              e.preventDefault();
-              e.stopImmediatePropagation();
-
-              $this.closest('div').removeClass('switch-animate');
-
-              if ($this.closest('.has-switch').is('.deactivate'))
-                $this.unbind('click');
-              else {
-                $this.on('mousemove touchmove', function (e) {
-                  var $element = $(this).closest('.switch')
-                    , relativeX = (e.pageX || e.originalEvent.targetTouches[0].pageX) - $element.offset().left
-                    , percent = (relativeX / $element.width()) * 100
-                    , left = 25
-                    , right = 75;
-
-                  moving = true;
-
-                  if (percent < left)
-                    percent = left;
-                  else if (percent > right)
-                    percent = right;
-
-                  $element.find('>div').css('left', (percent - right) + "%")
-                });
-
-                $this.on('click touchend', function (e) {
-                  var $this = $(this)
-                    , $target = $(e.target)
-                    , $myCheckBox = $target.siblings('input');
-
-                  e.stopImmediatePropagation();
-                  e.preventDefault();
-
-                  $this.unbind('mouseleave');
-
-                  if (moving)
-                    $myCheckBox.prop('checked', !(parseInt($this.parent().css('left')) < -25));
-                  else $myCheckBox.prop("checked", !$myCheckBox.is(":checked"));
-
-                  moving = false;
-                  $myCheckBox.trigger('change');
-                });
-
-                $this.on('mouseleave', function (e) {
-                  var $this = $(this)
-                    , $myCheckBox = $this.siblings('input');
-
-                  e.preventDefault();
-                  e.stopImmediatePropagation();
-
-                  $this.unbind('mouseleave');
-                  $this.trigger('mouseup');
-
-                  $myCheckBox.prop('checked', !(parseInt($this.parent().css('left')) < -25)).trigger('change');
-                });
-
-                $this.on('mouseup', function (e) {
-                  e.stopImmediatePropagation();
-                  e.preventDefault();
-
-                  $(this).unbind('mousemove');
-                });
-              }
-            });
+        for (name in transEndEventNames){
+          if (el.style[name] !== undefined) {
+            return transEndEventNames[name]
           }
-        );
-      },
-      toggleActivation: function () {
-        $(this).toggleClass('deactivate');
-      },
-      isActive: function () {
-        return !$(this).hasClass('deactivate');
-      },
-      setActive: function (active) {
-        if (active)
-          $(this).removeClass('deactivate');
-        else $(this).addClass('deactivate');
-      },
-      toggleState: function (skipOnChange) {
-        var $input = $(this).find('input:checkbox');
-        $input.prop('checked', !$input.is(':checked')).trigger('change', skipOnChange);
-      },
-      setState: function (value, skipOnChange) {
-        $(this).find('input:checkbox').prop('checked', value).trigger('change', skipOnChange);
-      },
-      status: function () {
-        return $(this).find('input:checkbox').is(':checked');
-      },
-      destroy: function () {
-        var $div = $(this).find('div')
-          , $checkbox;
+        }
 
-        $div.find(':not(input:checkbox)').remove();
+      }())
 
-        $checkbox = $div.children();
-        $checkbox.unwrap().unwrap();
-
-        $checkbox.unbind('change');
-
-        return $checkbox;
+      return transitionEnd && {
+        end: transitionEnd
       }
-    };
 
-    if (methods[method])
-      return methods[method].apply(this, Array.prototype.slice.call(arguments, 1));
-    else if (typeof method === 'object' || !method)
-      return methods.init.apply(this, arguments);
-    else
-      $.error('Method ' + method + ' does not exist!');
-  };
-}(jQuery);
+    })()
 
-$(function () {
-  $('.switch')['bootstrapSwitch']();
-});
+  })
+
+}(window.jQuery);
+/* =========================================================
+ * bootstrap-modal.js v2.3.1
+ * http://twitter.github.com/bootstrap/javascript.html#modals
+ * =========================================================
+ * Copyright 2012 Twitter, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * ========================================================= */
+
+
+
+!function ($) {
+
+  "use strict"; // jshint ;_;
+
+
+ /* MODAL CLASS DEFINITION
+  * ====================== */
+
+  var Modal = function (element, options) {
+    this.options = options
+    this.$element = $(element)
+      .delegate('[data-dismiss="modal"]', 'click.dismiss.modal', $.proxy(this.hide, this))
+    this.options.remote && this.$element.find('.modal-body').load(this.options.remote)
+  }
+
+  Modal.prototype = {
+
+      constructor: Modal
+
+    , toggle: function () {
+        return this[!this.isShown ? 'show' : 'hide']()
+      }
+
+    , show: function () {
+        var that = this
+          , e = $.Event('show')
+
+        this.$element.trigger(e)
+
+        if (this.isShown || e.isDefaultPrevented()) return
+
+        this.isShown = true
+
+        this.escape()
+
+        this.backdrop(function () {
+          var transition = $.support.transition && that.$element.hasClass('fade')
+
+          if (!that.$element.parent().length) {
+            that.$element.appendTo(document.body) //don't move modals dom position
+          }
+
+          that.$element.show()
+
+          if (transition) {
+            that.$element[0].offsetWidth // force reflow
+          }
+
+          that.$element
+            .addClass('in')
+            .attr('aria-hidden', false)
+
+          that.enforceFocus()
+
+          transition ?
+            that.$element.one($.support.transition.end, function () { that.$element.focus().trigger('shown') }) :
+            that.$element.focus().trigger('shown')
+
+        })
+      }
+
+    , hide: function (e) {
+        e && e.preventDefault()
+
+        var that = this
+
+        e = $.Event('hide')
+
+        this.$element.trigger(e)
+
+        if (!this.isShown || e.isDefaultPrevented()) return
+
+        this.isShown = false
+
+        this.escape()
+
+        $(document).off('focusin.modal')
+
+        this.$element
+          .removeClass('in')
+          .attr('aria-hidden', true)
+
+        $.support.transition && this.$element.hasClass('fade') ?
+          this.hideWithTransition() :
+          this.hideModal()
+      }
+
+    , enforceFocus: function () {
+        var that = this
+        $(document).on('focusin.modal', function (e) {
+          if (that.$element[0] !== e.target && !that.$element.has(e.target).length) {
+            that.$element.focus()
+          }
+        })
+      }
+
+    , escape: function () {
+        var that = this
+        if (this.isShown && this.options.keyboard) {
+          this.$element.on('keyup.dismiss.modal', function ( e ) {
+            e.which == 27 && that.hide()
+          })
+        } else if (!this.isShown) {
+          this.$element.off('keyup.dismiss.modal')
+        }
+      }
+
+    , hideWithTransition: function () {
+        var that = this
+          , timeout = setTimeout(function () {
+              that.$element.off($.support.transition.end)
+              that.hideModal()
+            }, 500)
+
+        this.$element.one($.support.transition.end, function () {
+          clearTimeout(timeout)
+          that.hideModal()
+        })
+      }
+
+    , hideModal: function () {
+        var that = this
+        this.$element.hide()
+        this.backdrop(function () {
+          that.removeBackdrop()
+          that.$element.trigger('hidden')
+        })
+      }
+
+    , removeBackdrop: function () {
+        this.$backdrop && this.$backdrop.remove()
+        this.$backdrop = null
+      }
+
+    , backdrop: function (callback) {
+        var that = this
+          , animate = this.$element.hasClass('fade') ? 'fade' : ''
+
+        if (this.isShown && this.options.backdrop) {
+          var doAnimate = $.support.transition && animate
+
+          this.$backdrop = $('<div class="modal-backdrop ' + animate + '" />')
+            .appendTo(document.body)
+
+          this.$backdrop.click(
+            this.options.backdrop == 'static' ?
+              $.proxy(this.$element[0].focus, this.$element[0])
+            : $.proxy(this.hide, this)
+          )
+
+          if (doAnimate) this.$backdrop[0].offsetWidth // force reflow
+
+          this.$backdrop.addClass('in')
+
+          if (!callback) return
+
+          doAnimate ?
+            this.$backdrop.one($.support.transition.end, callback) :
+            callback()
+
+        } else if (!this.isShown && this.$backdrop) {
+          this.$backdrop.removeClass('in')
+
+          $.support.transition && this.$element.hasClass('fade')?
+            this.$backdrop.one($.support.transition.end, callback) :
+            callback()
+
+        } else if (callback) {
+          callback()
+        }
+      }
+  }
+
+
+ /* MODAL PLUGIN DEFINITION
+  * ======================= */
+
+  var old = $.fn.modal
+
+  $.fn.modal = function (option) {
+    return this.each(function () {
+      var $this = $(this)
+        , data = $this.data('modal')
+        , options = $.extend({}, $.fn.modal.defaults, $this.data(), typeof option == 'object' && option)
+      if (!data) $this.data('modal', (data = new Modal(this, options)))
+      if (typeof option == 'string') data[option]()
+      else if (options.show) data.show()
+    })
+  }
+
+  $.fn.modal.defaults = {
+      backdrop: true
+    , keyboard: true
+    , show: true
+  }
+
+  $.fn.modal.Constructor = Modal
+
+
+ /* MODAL NO CONFLICT
+  * ================= */
+
+  $.fn.modal.noConflict = function () {
+    $.fn.modal = old
+    return this
+  }
+
+
+ /* MODAL DATA-API
+  * ============== */
+
+  $(document).on('click.modal.data-api', '[data-toggle="modal"]', function (e) {
+    var $this = $(this)
+      , href = $this.attr('href')
+      , $target = $($this.attr('data-target') || (href && href.replace(/.*(?=#[^\s]+$)/, ''))) //strip for ie7
+      , option = $target.data('modal') ? 'toggle' : $.extend({ remote:!/#/.test(href) && href }, $target.data(), $this.data())
+
+    e.preventDefault()
+
+    $target
+      .modal(option)
+      .one('hide', function () {
+        $this.focus()
+      })
+  })
+
+}(window.jQuery);
+/* ============================================================
+ * bootstrap-dropdown.js v2.3.1
+ * http://twitter.github.com/bootstrap/javascript.html#dropdowns
+ * ============================================================
+ * Copyright 2012 Twitter, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * ============================================================ */
+
+
+
+!function ($) {
+
+  "use strict"; // jshint ;_;
+
+
+ /* DROPDOWN CLASS DEFINITION
+  * ========================= */
+
+  var toggle = '[data-toggle=dropdown]'
+    , Dropdown = function (element) {
+        var $el = $(element).on('click.dropdown.data-api', this.toggle)
+        $('html').on('click.dropdown.data-api', function () {
+          $el.parent().removeClass('open')
+        })
+      }
+
+  Dropdown.prototype = {
+
+    constructor: Dropdown
+
+  , toggle: function (e) {
+      var $this = $(this)
+        , $parent
+        , isActive
+
+      if ($this.is('.disabled, :disabled')) return
+
+      $parent = getParent($this)
+
+      isActive = $parent.hasClass('open')
+
+      clearMenus()
+
+      if (!isActive) {
+        $parent.toggleClass('open')
+      }
+
+      $this.focus()
+
+      return false
+    }
+
+  , keydown: function (e) {
+      var $this
+        , $items
+        , $active
+        , $parent
+        , isActive
+        , index
+
+      if (!/(38|40|27)/.test(e.keyCode)) return
+
+      $this = $(this)
+
+      e.preventDefault()
+      e.stopPropagation()
+
+      if ($this.is('.disabled, :disabled')) return
+
+      $parent = getParent($this)
+
+      isActive = $parent.hasClass('open')
+
+      if (!isActive || (isActive && e.keyCode == 27)) {
+        if (e.which == 27) $parent.find(toggle).focus()
+        return $this.click()
+      }
+
+      $items = $('[role=menu] li:not(.divider):visible a', $parent)
+
+      if (!$items.length) return
+
+      index = $items.index($items.filter(':focus'))
+
+      if (e.keyCode == 38 && index > 0) index--                                        // up
+      if (e.keyCode == 40 && index < $items.length - 1) index++                        // down
+      if (!~index) index = 0
+
+      $items
+        .eq(index)
+        .focus()
+    }
+
+  }
+
+  function clearMenus() {
+    $(toggle).each(function () {
+      getParent($(this)).removeClass('open')
+    })
+  }
+
+  function getParent($this) {
+    var selector = $this.attr('data-target')
+      , $parent
+
+    if (!selector) {
+      selector = $this.attr('href')
+      selector = selector && /#/.test(selector) && selector.replace(/.*(?=#[^\s]*$)/, '') //strip for ie7
+    }
+
+    $parent = selector && $(selector)
+
+    if (!$parent || !$parent.length) $parent = $this.parent()
+
+    return $parent
+  }
+
+
+  /* DROPDOWN PLUGIN DEFINITION
+   * ========================== */
+
+  var old = $.fn.dropdown
+
+  $.fn.dropdown = function (option) {
+    return this.each(function () {
+      var $this = $(this)
+        , data = $this.data('dropdown')
+      if (!data) $this.data('dropdown', (data = new Dropdown(this)))
+      if (typeof option == 'string') data[option].call($this)
+    })
+  }
+
+  $.fn.dropdown.Constructor = Dropdown
+
+
+ /* DROPDOWN NO CONFLICT
+  * ==================== */
+
+  $.fn.dropdown.noConflict = function () {
+    $.fn.dropdown = old
+    return this
+  }
+
+
+  /* APPLY TO STANDARD DROPDOWN ELEMENTS
+   * =================================== */
+
+  $(document)
+    .on('click.dropdown.data-api', clearMenus)
+    .on('click.dropdown.data-api', '.dropdown form', function (e) { e.stopPropagation() })
+    .on('click.dropdown-menu', function (e) { e.stopPropagation() })
+    .on('click.dropdown.data-api'  , toggle, Dropdown.prototype.toggle)
+    .on('keydown.dropdown.data-api', toggle + ', [role=menu]' , Dropdown.prototype.keydown)
+
+}(window.jQuery);
+
+
 
 
 
@@ -24678,8 +24898,8 @@ app.factory('Device', function($http, $timeout) {
       var result = {'tagName': this.type, 'href': this.href, 'val': this.value };
       return result;
     },
-    joinGroup: function(group) {
-      var url = [this.device.url,this.href,'groupComm/joinGroup'].join('/');
+    url: function() {
+      return this.device.url + '/' + this.href;
       $http.post(url, '<str val="'+group.ipv6()+'"/>', {headers: {
         'Content-Type': 'application/xml'
       }}).success(function() {
@@ -24698,14 +24918,29 @@ app.factory('Device', function($http, $timeout) {
 
   Device.prototype = {
     load: function(response) {
+      var propertiesWithGroupcomm = [];
       this.properties = [];
       angular.forEach(response['childNodes'], function(c) {
-          var p = Property.parse(c, this);
-          if (p) {
-            this.properties.push(p);
+          if (c['tagName'] == 'ref') {
+            var names = c['name'].split(' ');
+            var gcIndex = names.indexOf('groupComm')
+            if (gcIndex != -1) {
+              names.splice(gcIndex,1);
+              propertiesWithGroupcomm.push(names[0]);
+            }
           } else {
-            // console.log("Don't know how to parse",c,"yet");
+              var p = Property.parse(c, this);
+              if (p) {
+                this.properties.push(p);
+              } else {
+                // console.log("Don't know how to parse",c,"yet");
+              }
           }
+      }.bind(this));
+
+      // Mark groupcomm properties
+      angular.forEach(propertiesWithGroupcomm, function(name) {
+        this.property(name).groupcomm = true;
       }.bind(this));
     },
 
@@ -24720,10 +24955,54 @@ app.factory('Device', function($http, $timeout) {
       }.bind(this));
     },
 
+    toggleAutofetching: function() {
+      this.autofetching = !this.autofetching;
+      if (this.autofetching) this.fetch();
+    },
+
     update: function(property) {
       $http.put(this.url, property.serialize()).success(function(response) {
         console.log(response);
         this.load(response);
+      }.bind(this));
+    },
+
+    property: function(name) {
+      for (var i=0;i<this.properties.length;i++) {
+        if(this.properties[i].name == name) return this.properties[i];
+      } 
+    }
+  };
+
+  Device.Group = function(properties) {
+    this.properties = properties;
+    this.id = Device.Group.counter;
+    Device.Group.counter += 1;
+    return this;
+  };
+
+  Device.Group.counter = 1;
+
+  Device.Group.prototype = {
+    ipv6: function() {
+      return "FF02:FFFF::"+this.id;
+    },
+    create: function() {
+      angular.forEach(this.properties, function(p) {
+        this.action(p, 'joinGroup');
+      }.bind(this));
+    },
+    destroy: function() {
+      angular.forEach(this.properties, function(p) {
+        this.action(p, 'leaveGroup');
+      }.bind(this));
+    },
+    action: function(property, action) {
+      var url = [property.device.url,property.href,'groupComm',action].join('/');
+      $http.post(url, '<str val="'+this.ipv6()+'"/>', {headers: {
+        'Content-Type': 'application/xml'
+      }}).success(function() {
+        console.log(property,action, this.ipv6());
       }.bind(this));
     }
   };
@@ -24800,13 +25079,22 @@ app.directive('ngModelOnblur', function() {
 // });
 
 app.controller('DevicesCtrl', ['$scope','Lobby','Device', function($scope, Lobby, Device) {
+  $scope.creatingGroup = false; // are we in ui mode for creating new group
+
+  $scope.groups = {};
   $scope.selectedProperties = [];
 
   Lobby.getDevices(function(devices) {
     $scope.devices = devices;
   });
 
+  $scope.groupCount = function() {
+    return Object.keys($scope.groups).length;
+  }
+
   $scope.selectProperty = function(p) {
+    console.log("SELECT",p);
+    if (!p.groupcomm) return;
     var index = $scope.selectedProperties.indexOf(p);
     if (index != -1) {
       $scope.selectedProperties.splice(index, 1);
@@ -24817,11 +25105,19 @@ app.controller('DevicesCtrl', ['$scope','Lobby','Device', function($scope, Lobby
   }
 
   $scope.createGroup = function() {
-    var group = Device.Group.next();
+    var g = new Device.Group($scope.selectedProperties);
+    g.create();
+    this.groups[g.id] = g;
     angular.forEach($scope.selectedProperties, function(p) {
-      p.joinGroup(group);
       p.selected = false;
     });
+    $scope.creatingGroup = false;
     $scope.selectedProperties = [];
+  }
+
+  $scope.destroyGroup = function(id) {
+    var g = $scope.groups[id];
+    g.destroy();
+    delete $scope.groups[id];
   }
 }]);

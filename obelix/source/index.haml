@@ -5,15 +5,33 @@
     %title Obelix
     = stylesheet_link_tag "app.css"
     = javascript_include_tag "app.js"
-  %body(ng-controller="DevicesCtrl")
-    / .navbar.navbar-fixed-top
-    /   .navbar-inner
-    /     .container
-    /       %a.brand(href="#") Obelix
+  %body(ng-controller="DevicesCtrl" ng-class="{creatingGroup: creatingGroup}")
+    .navbar.navbar-inverse.navbar-fixed-top
+      .navbar-inner
+        .container
+          %a.brand(href="#") Obelix
+          %ul.nav
+            %li
+              %a(href="#groups" data-toggle="modal") 
+                Groups
+                %span.badge(ng-show="groupCount() > 0" ng-bind="groupCount()")
+          %div#groupbar
+            %button.btn(ng-show="!creatingGroup" ng-click="creatingGroup = true") New Group
+            %div(ng-show="creatingGroup")
+              %button.btn(ng-click="creatingGroup = false") Cancel
+              %button.btn.btn-info(ng-click="createGroup()" ng-classx="{hidden:selectedProperties.length == 0}") Create
     .container
-      .row#toolbar
-        %span.title Obelix
-        %button.btn(ng-click="createGroup()") Group
+      #groups.modal.hide.fade(tabindex="-1")
+        .modal-header
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          %h3 Groups
+        .modal-body
+          %ul(ng-repeat="group in groups")
+            %li 
+              {{group.ipv6()}}
+              %button.btn(ng-click="destroyGroup(group.id)") Destroy
+              %ul(ng-repeat="p in group.properties")
+                %li {{p.url()}}
       %ul.thumbnails
         %li.span4(ng-repeat="device in devices")
           .thumbnail.device(ng-class="{fetching:device.fetching}")
@@ -21,18 +39,30 @@
               %label.autofetch
                 %input(type="checkbox" ng-model="device.autofetching" ng-change="device.fetch()")
                 %div
-              %a.name(href="{{device.url}}" target="_blank")
-                {{device.name}}
+              .dropdown
+                %a.name.dropdown-toggle(data-toggle="dropdown" href="#")
+                  {{device.name}}
+                %ul.dropdown-menu(role="menu")
+                  %li
+                    %a(ng-click="device.fetch()") Refresh
+                  %li
+                    %a(ng-click="device.toggleAutofetching()") 
+                      %span(ng-show="device.autofetching") ✔
+                      Auto-refresh
+                  %li.divider
+                  %li
+                    %a(href="{{device.url}}" target="_blank") oBIX Resource
             .form-horizontal
-              .control-group.property.bool(ng-repeat="bool in device.properties | filter: {type: 'bool'}" ng-click="selectProperty(bool)" ng-class="{selected:bool.selected}")
+              .control-group.property.bool(ng-repeat="bool in device.properties | filter: {type: 'bool'}")
                 %label.control-label {{bool.name}}
                 .controls
                   %input(type="checkbox" ng-checked="bool.value" ng-disabled="bool.readonly" ng-model="bool.value" ng-change="device.update(bool)")
+                  .groupcomm(ng-click="selectProperty(bool)" ng-class="{selected:bool.selected, hidden:!bool.groupcomm}")
               .control-group.property.numeric(ng-repeat="numeric in device.properties | filter: {numeric: true}")
                 %label.control-label {{numeric.name}}
                 .controls
-                  .numeric-value
-                    %input.input-mini(ng-model="numeric.value" type="text" ng-model-onblur ng-disabled="numeric.readonly" ng-change="device.update(numeric)")
+                  %input.input-mini(ng-model="numeric.value" type="text" ng-model-onblur ng-disabled="numeric.readonly" ng-change="device.update(numeric)")
+                  .groupcomm(ng-click="selectProperty(numeric)" ng-class="{selected:numeric.selected, hidden:!numeric.groupcomm}")
               .control-group.property.enum(ng-repeat="enum in device.properties | filter: {type: 'enum'}")
                 %label.control-label {{enum.name}}
                 .controls

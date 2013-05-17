@@ -1,6 +1,8 @@
 //= require 'jquery-1.9.1'
 //= require 'angular'
-//= require 'bootstrapSwitch'
+//= require 'bootstrap-transition'
+//= require 'bootstrap-modal'
+//= require 'bootstrap-dropdown'
 //= require_self
 
 var app = angular.module('Obelix', []);
@@ -62,8 +64,8 @@ app.factory('Device', function($http, $timeout) {
       var result = {'tagName': this.type, 'href': this.href, 'val': this.value };
       return result;
     },
-    joinGroup: function(group) {
-      var url = [this.device.url,this.href,'groupComm/joinGroup'].join('/');
+    url: function() {
+      return this.device.url + '/' + this.href;
       $http.post(url, '<str val="'+group.ipv6()+'"/>', {headers: {
         'Content-Type': 'application/xml'
       }}).success(function() {
@@ -82,14 +84,29 @@ app.factory('Device', function($http, $timeout) {
 
   Device.prototype = {
     load: function(response) {
+      var propertiesWithGroupcomm = [];
       this.properties = [];
       angular.forEach(response['childNodes'], function(c) {
-          var p = Property.parse(c, this);
-          if (p) {
-            this.properties.push(p);
+          if (c['tagName'] == 'ref') {
+            var names = c['name'].split(' ');
+            var gcIndex = names.indexOf('groupComm')
+            if (gcIndex != -1) {
+              names.splice(gcIndex,1);
+              propertiesWithGroupcomm.push(names[0]);
+            }
           } else {
-            // console.log("Don't know how to parse",c,"yet");
+              var p = Property.parse(c, this);
+              if (p) {
+                this.properties.push(p);
+              } else {
+                // console.log("Don't know how to parse",c,"yet");
+              }
           }
+      }.bind(this));
+
+      // Mark groupcomm properties
+      angular.forEach(propertiesWithGroupcomm, function(name) {
+        this.property(name).groupcomm = true;
       }.bind(this));
     },
 
@@ -104,10 +121,54 @@ app.factory('Device', function($http, $timeout) {
       }.bind(this));
     },
 
+    toggleAutofetching: function() {
+      this.autofetching = !this.autofetching;
+      if (this.autofetching) this.fetch();
+    },
+
     update: function(property) {
       $http.put(this.url, property.serialize()).success(function(response) {
         console.log(response);
         this.load(response);
+      }.bind(this));
+    },
+
+    property: function(name) {
+      for (var i=0;i<this.properties.length;i++) {
+        if(this.properties[i].name == name) return this.properties[i];
+      } 
+    }
+  };
+
+  Device.Group = function(properties) {
+    this.properties = properties;
+    this.id = Device.Group.counter;
+    Device.Group.counter += 1;
+    return this;
+  };
+
+  Device.Group.counter = 1;
+
+  Device.Group.prototype = {
+    ipv6: function() {
+      return "FF02:FFFF::"+this.id;
+    },
+    create: function() {
+      angular.forEach(this.properties, function(p) {
+        this.action(p, 'joinGroup');
+      }.bind(this));
+    },
+    destroy: function() {
+      angular.forEach(this.properties, function(p) {
+        this.action(p, 'leaveGroup');
+      }.bind(this));
+    },
+    action: function(property, action) {
+      var url = [property.device.url,property.href,'groupComm',action].join('/');
+      $http.post(url, '<str val="'+this.ipv6()+'"/>', {headers: {
+        'Content-Type': 'application/xml'
+      }}).success(function() {
+        console.log(property,action, this.ipv6());
       }.bind(this));
     }
   };
@@ -184,13 +245,22 @@ app.directive('ngModelOnblur', function() {
 // });
 
 app.controller('DevicesCtrl', ['$scope','Lobby','Device', function($scope, Lobby, Device) {
+  $scope.creatingGroup = false; // are we in ui mode for creating new group
+
+  $scope.groups = {};
   $scope.selectedProperties = [];
 
   Lobby.getDevices(function(devices) {
     $scope.devices = devices;
   });
 
+  $scope.groupCount = function() {
+    return Object.keys($scope.groups).length;
+  }
+
   $scope.selectProperty = function(p) {
+    console.log("SELECT",p);
+    if (!p.groupcomm) return;
     var index = $scope.selectedProperties.indexOf(p);
     if (index != -1) {
       $scope.selectedProperties.splice(index, 1);
@@ -201,11 +271,19 @@ app.controller('DevicesCtrl', ['$scope','Lobby','Device', function($scope, Lobby
   }
 
   $scope.createGroup = function() {
-    var group = Device.Group.next();
+    var g = new Device.Group($scope.selectedProperties);
+    g.create();
+    this.groups[g.id] = g;
     angular.forEach($scope.selectedProperties, function(p) {
-      p.joinGroup(group);
       p.selected = false;
     });
+    $scope.creatingGroup = false;
     $scope.selectedProperties = [];
+  }
+
+  $scope.destroyGroup = function(id) {
+    var g = $scope.groups[id];
+    g.destroy();
+    delete $scope.groups[id];
   }
 }]);
