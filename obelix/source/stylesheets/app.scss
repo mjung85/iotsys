@@ -48,12 +48,13 @@ body {
     };
   }
 
-  .property:hover {
-    background: #f3f7fb;
-  }
-
-  .property.selected {
-    background: #A8CAEF;
+  .property.groupcomm {
+    &:hover {
+      background: #f3f7fb;
+    }
+    &.selected{
+      background: #A8CAEF;  
+    }
   }
 }
 
