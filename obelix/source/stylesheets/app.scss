@@ -48,8 +48,26 @@ body {
     };
   }
 
+  .property:hover {
+    background: #f3f7fb;
+  }
+
+  .property.selected {
+    background: #A8CAEF;
+  }
 }
 
+#toolbar {
+  .title {
+    font-size: large;
+    font-weight: bold;
+    line-height: 30px;
+  }
+  .btn {
+    float: right;
+  }
+  margin: 20px 0;
+}
 
 .device.fetching .header .autofetch input + div {
   background: #52be7f;
