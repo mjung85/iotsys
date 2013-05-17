@@ -36,6 +36,7 @@ import java.net.Inet6Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
@@ -147,6 +148,15 @@ public class MultiInterfaceUDPLayer extends Layer {
 			packetlistener.start();	
 		}
 		else{
+			try {
+				Inet6Address group = (Inet6Address) Inet6Address
+						.getByName("FF02:F::1");
+				openMulticastSocket(group);
+			} catch (UnknownHostException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+						
 	
 			Enumeration<NetworkInterface> networkInterfaces = NetworkInterface
 					.getNetworkInterfaces();	

@@ -30,62 +30,39 @@
  * This file is part of the IoTSyS project.
  ******************************************************************************/
 
-package at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.knx;
+package at.ac.tuwien.auto.iotsys.demoapp;
 
-import java.util.logging.Logger;
+import java.util.ArrayList;
 
-import at.ac.tuwien.auto.calimero.GroupAddress;
-import at.ac.tuwien.auto.calimero.dptxlator.DPTXlatorBoolean;
-import at.ac.tuwien.auto.calimero.exception.KNXException;
-import at.ac.tuwien.auto.iotsys.gateway.connectors.knx.KNXConnector;
-import at.ac.tuwien.auto.iotsys.gateway.connectors.knx.KNXWatchDog;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.PushButtonImpl;
-import at.ac.tuwien.auto.iotsys.gateway.util.CsvCreator;
+import obix.Obj;
+import obix.Uri;
 
-public class PushButtonImplKnx extends PushButtonImpl {
-	private GroupAddress observation;
-	
-	private KNXConnector connector;
-	
-	public static final Logger knxBus = KNXConnector.knxBus;
-	
-	private static final Logger log = Logger.getLogger(PushButtonImplKnx.class.getName());
+import at.ac.tuwien.auto.iotsys.commons.Connector;
+import at.ac.tuwien.auto.iotsys.commons.DeviceLoader;
+import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
 
-	public PushButtonImplKnx(KNXConnector connector , GroupAddress observation) {
-		this.observation = observation;
-		this.connector = connector;	
-	}
 
-	public void createWatchDog() {
-		connector.addWatchDog(observation, new KNXWatchDog() {
-			@Override
-			public void notifyWatchDog(byte[] apdu) {			
-				try {
-					DPTXlatorBoolean x = new DPTXlatorBoolean(DPTXlatorBoolean.DPT_SWITCH);
-					x.setData(apdu);
-					
-					for(int i=0; i< apdu.length; i++) {
-						System.out.print(apdu[i]);
-					}
-					
-//					CsvCreator.instance.writeLine("" + System.currentTimeMillis() + ";" + observation.toString() + ";" + x.getValueBoolean());
-					
-					value.set(x.getValueBoolean());
+public class DemoAppLoaderImpl implements DeviceLoader {
+	private final ArrayList<String> myObjects = new ArrayList<String>();
 
-									
-					// notify observers of this oBIX object
-					PushButtonImplKnx.this.notifyObservers();
-				} 				
-				catch (KNXException e) {			
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-	
 	@Override
-	public void initialize(){
-		super.initialize();
-		createWatchDog();
-	}	
+	public ArrayList<Connector> initDevices(ObjectBroker objectBroker) {
+		Obj application = new HVACControl();
+		application.setHref(new Uri("demoapp1"));
+		synchronized(myObjects){
+			myObjects.addAll(objectBroker.addObj(application));
+		}
+		return null;
+	}
+
+	@Override
+	public void removeDevices(ObjectBroker objectBroker) {
+		synchronized (myObjects) {
+			for (String href : myObjects) {
+				objectBroker.removeObj(href);
+			}
+		}
+		
+	}
+
 }
