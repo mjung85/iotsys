@@ -36,7 +36,7 @@
   <knx>
    <connector>
       <name>IPSO Challenge</name>
-      <enabled>true</enabled>
+      <enabled>false</enabled>
       <router>
         <ip>192.168.1.12</ip>
         <port>3671</port>

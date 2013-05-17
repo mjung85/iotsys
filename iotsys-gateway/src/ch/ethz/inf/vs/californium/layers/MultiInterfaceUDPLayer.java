@@ -86,8 +86,7 @@ public class MultiInterfaceUDPLayer extends Layer {
 			throws SocketException {
 		this.port = port;
 		
-		defaultUDPLayer = new UDPLayer(port, true);
-		defaultUDPLayer.registerReceiver(this);
+		
 		
 		PCAP_ENABLED = Boolean.parseBoolean(PropertiesLoader.getInstance().getProperties()
 				.getProperty("iotsys.gateway.pcap", "false"));
@@ -102,6 +101,8 @@ public class MultiInterfaceUDPLayer extends Layer {
 		// the target mulitcast address could not be 
 		// determined.
 		if(PCAP_ENABLED){
+			defaultUDPLayer = new UDPLayer(port, true);
+			defaultUDPLayer.registerReceiver(this);
 			int r = Pcap.findAllDevs(alldevs, errbuf);
 			if (r == Pcap.NOT_OK || alldevs.isEmpty()) {
 				log.info("No devs found");
@@ -156,7 +157,8 @@ public class MultiInterfaceUDPLayer extends Layer {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
-						
+			defaultUDPLayer = new UDPLayer(port, true);
+			defaultUDPLayer.registerReceiver(this);	
 	
 			Enumeration<NetworkInterface> networkInterfaces = NetworkInterface
 					.getNetworkInterfaces();	
