@@ -38,7 +38,7 @@
       <name>IPSO Challenge</name>
       <enabled>false</enabled>
       <router>
-        <ip>128.130.56.77</ip>
+        <ip>192.168.1.12</ip>
         <port>3671</port>
       </router>
       <localIP>auto</localIP>
@@ -67,9 +67,9 @@
       <device>
         <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.knx.PushButtonImplKnx
         </type>
-        <address>1/0/0</address>
+        <address>2/0/1</address>
         <href>button1</href>
-        <ipv6>aaaa::1:3</ipv6>
+        <ipv6>aaaa::2:1</ipv6>
         <historyEnabled>false</historyEnabled>
         <groupCommEnabled>true</groupCommEnabled>
       </device>
@@ -77,12 +77,33 @@
       <device>
         <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.knx.PushButtonImplKnx
         </type>
-        <address>1/0/0</address>
+        <address>2/0/2</address>
         <href>button2</href>
-        <ipv6>aaaa::1:4</ipv6>
+        <ipv6>aaaa::2:2</ipv6>
         <historyEnabled>false</historyEnabled>
         <groupCommEnabled>true</groupCommEnabled>
       </device>
+      
+      <device>
+        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.knx.PushButtonImplKnx
+        </type>
+        <address>2/0/3</address>
+        <href>button3</href>
+        <ipv6>aaaa::2:3</ipv6>
+        <historyEnabled>false</historyEnabled>
+        <groupCommEnabled>true</groupCommEnabled>
+      </device>
+      
+       <device>
+        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.knx.PushButtonImplKnx
+        </type>
+        <address>2/0/4</address>
+        <href>button4</href>
+        <ipv6>aaaa::2:4</ipv6>
+        <historyEnabled>false</historyEnabled>
+        <groupCommEnabled>true</groupCommEnabled>
+      </device>
+     
       
       <device>
         <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.knx.BrightnessActuatorImplKnx

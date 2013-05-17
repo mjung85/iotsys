@@ -36,6 +36,7 @@ import java.net.Inet6Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
@@ -85,8 +86,7 @@ public class MultiInterfaceUDPLayer extends Layer {
 			throws SocketException {
 		this.port = port;
 		
-		defaultUDPLayer = new UDPLayer(port, true);
-		defaultUDPLayer.registerReceiver(this);
+		
 		
 		PCAP_ENABLED = Boolean.parseBoolean(PropertiesLoader.getInstance().getProperties()
 				.getProperty("iotsys.gateway.pcap", "false"));
@@ -101,6 +101,8 @@ public class MultiInterfaceUDPLayer extends Layer {
 		// the target mulitcast address could not be 
 		// determined.
 		if(PCAP_ENABLED){
+			defaultUDPLayer = new UDPLayer(port, true);
+			defaultUDPLayer.registerReceiver(this);
 			int r = Pcap.findAllDevs(alldevs, errbuf);
 			if (r == Pcap.NOT_OK || alldevs.isEmpty()) {
 				log.info("No devs found");
@@ -147,6 +149,16 @@ public class MultiInterfaceUDPLayer extends Layer {
 			packetlistener.start();	
 		}
 		else{
+			try {
+				Inet6Address group = (Inet6Address) Inet6Address
+						.getByName("FF02:F::1");
+				openMulticastSocket(group);
+			} catch (UnknownHostException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			defaultUDPLayer = new UDPLayer(port, true);
+			defaultUDPLayer.registerReceiver(this);	
 	
 			Enumeration<NetworkInterface> networkInterfaces = NetworkInterface
 					.getNetworkInterfaces();	

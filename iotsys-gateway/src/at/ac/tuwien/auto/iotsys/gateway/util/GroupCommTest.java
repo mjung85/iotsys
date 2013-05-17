@@ -16,14 +16,14 @@ public class GroupCommTest {
 	public static void main(String[] args) {
 		InetAddress group;
 		try {
-			group = Inet6Address.getByName("FF02:FFFF::11");
+			group = Inet6Address.getByName("FF02:FFFF::1");
 			PUTRequest putRequest = new PUTRequest();
 			putRequest.setType(messageType.NON);
 			String uri = "coap://[" + group.getHostAddress() + "]/";
 			System.out.println("URI: " + uri);
 			putRequest.setURI(uri);
 
-			Obj obj = new Real(70);
+			Obj obj = new Real(0);
 
 			String payload = ObixEncoder.toString(obj);
 			putRequest.setPayload(payload);
