@@ -2,6 +2,7 @@
 //= require 'angular'
 //= require 'bootstrap-transition'
 //= require 'bootstrap-modal'
+//= require 'bootstrap-dropdown'
 //= require_self
 
 var app = angular.module('Obelix', []);
@@ -115,6 +116,11 @@ app.factory('Device', function($http, $timeout) {
       }.bind(this));
     },
 
+    toggleAutofetching: function() {
+      this.autofetching = !this.autofetching;
+      if (this.autofetching) this.fetch();
+    },
+
     update: function(property) {
       $http.put(this.url, property.serialize()).success(function(response) {
         console.log(response);
@@ -217,6 +223,8 @@ app.directive('ngModelOnblur', function() {
 // });
 
 app.controller('DevicesCtrl', ['$scope','Lobby','Device', function($scope, Lobby, Device) {
+  $scope.creatingGroup = false; // are we in ui mode for creating new group
+
   $scope.groups = {};
   $scope.selectedProperties = [];
 
@@ -247,6 +255,7 @@ app.controller('DevicesCtrl', ['$scope','Lobby','Device', function($scope, Lobby
     angular.forEach($scope.selectedProperties, function(p) {
       p.selected = false;
     });
+    $scope.creatingGroup = false;
     $scope.selectedProperties = [];
   }
 

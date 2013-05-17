@@ -6,7 +6,7 @@
     <link href="stylesheets/app.css" media="screen" rel="stylesheet" type="text/css" />
     <script src="javascripts/app.js" type="text/javascript"></script>
   </head>
-  <body ng-controller='DevicesCtrl'>
+  <body ng-class='{creatingGroup: creatingGroup}' ng-controller='DevicesCtrl'>
     <div class='navbar navbar-inverse navbar-fixed-top'>
       <div class='navbar-inner'>
         <div class='container'>
@@ -19,7 +19,13 @@
               </a>
             </li>
           </ul>
-          <button class='btn btn-info' ng-class='{hidden:selectedProperties.length == 0}' ng-click='createGroup()'>New Group</button>
+          <div id='groupbar'>
+            <button class='btn' ng-click='creatingGroup = true' ng-show='!creatingGroup'>New Group</button>
+            <div ng-show='creatingGroup'>
+              <button class='btn' ng-click='creatingGroup = false'>Cancel</button>
+              <button class='btn btn-info' ng-classx='{hidden:selectedProperties.length == 0}' ng-click='createGroup()'>Create</button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -49,9 +55,26 @@
                 <input ng-change='device.fetch()' ng-model='device.autofetching' type='checkbox'>
                 <div></div>
               </label>
-              <a class='name' href='{{device.url}}' target='_blank'>
-                {{device.name}}
-              </a>
+              <div class='dropdown'>
+                <a class='name dropdown-toggle' data-toggle='dropdown' href='#'>
+                  {{device.name}}
+                </a>
+                <ul class='dropdown-menu' role='menu'>
+                  <li>
+                    <a ng-click='device.fetch()'>Refresh</a>
+                  </li>
+                  <li>
+                    <a ng-click='device.toggleAutofetching()'>
+                      <span ng-show='device.autofetching'>✔</span>
+                      Auto-refresh
+                    </a>
+                  </li>
+                  <li class='divider'></li>
+                  <li>
+                    <a href='{{device.url}}' target='_blank'>oBIX Resource</a>
+                  </li>
+                </ul>
+              </div>
             </div>
             <div class='form-horizontal'>
               <div class='control-group property bool' ng-repeat="bool in device.properties | filter: {type: 'bool'}">

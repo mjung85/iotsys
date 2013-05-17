@@ -59,25 +59,21 @@ body {
     display: none;
     &.selected {
       background: #8dd5ed;
-      display: block;
     }
 
     &.hidden {
       display: none;
     }
-  }
-
-  &:hover .groupcomm {
-    display: block;
   }
 }
 
+.creatingGroup .property .groupcomm {
+  display: block;
+}
+
 .navbar {
-  .btn {
+  #groupbar {
     float: right;
-    &.hidden {
-      display: none;
-    }
   }
 }
 
