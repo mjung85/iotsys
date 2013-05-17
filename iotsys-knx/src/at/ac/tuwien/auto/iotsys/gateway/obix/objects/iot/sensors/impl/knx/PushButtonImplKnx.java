@@ -68,7 +68,7 @@ public class PushButtonImplKnx extends PushButtonImpl {
 						System.out.print(apdu[i]);
 					}
 					
-					CsvCreator.instance.writeLine("" + System.currentTimeMillis() + ";" + observation.toString() + ";" + x.getValueBoolean());
+//					CsvCreator.instance.writeLine("" + System.currentTimeMillis() + ";" + observation.toString() + ";" + x.getValueBoolean());
 					
 					value.set(x.getValueBoolean());
 
