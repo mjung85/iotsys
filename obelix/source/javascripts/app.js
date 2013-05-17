@@ -46,12 +46,13 @@ app.factory('Device', function($http, $timeout) {
     }
   };
 
-  Property.parse = function(el) {
+  Property.parse = function(el, device) {
     if (el['tagName'] == 'bool' || el['tagName'] == 'int' || el['tagName'] == 'real' || el['tagName'] == 'enum') {
       var p = new Property(el['href'], el['tagName'], el['name'], el['val'], !el['writable']);
       if (p.type == 'enum') {
         p.range = Property.Enum.range(el['range']);
       }
+      p.device = device;
       return p;
     }
   };
@@ -60,6 +61,14 @@ app.factory('Device', function($http, $timeout) {
     serialize: function() {
       var result = {'tagName': this.type, 'href': this.href, 'val': this.value };
       return result;
+    },
+    joinGroup: function(group) {
+      var url = [this.device.url,this.href,'groupComm/joinGroup'].join('/');
+      $http.post(url, '<str val="'+group.ipv6()+'"/>', {headers: {
+        'Content-Type': 'application/xml'
+      }}).success(function() {
+        console.log(this,"joined", group.id);
+      }.bind(this));
     }
   };
 
@@ -73,16 +82,15 @@ app.factory('Device', function($http, $timeout) {
 
   Device.prototype = {
     load: function(response) {
-      var d = this;
       this.properties = [];
       angular.forEach(response['childNodes'], function(c) {
-          var p = Property.parse(c);
+          var p = Property.parse(c, this);
           if (p) {
-            d.properties.push(p);
+            this.properties.push(p);
           } else {
             // console.log("Don't know how to parse",c,"yet");
           }
-      });
+      }.bind(this));
     },
 
     fetch: function() {
@@ -103,6 +111,23 @@ app.factory('Device', function($http, $timeout) {
       }.bind(this));
     }
   };
+
+  Device.Group = function(id) {
+    this.id = id;
+  };
+
+  Device.Group.prototype = {
+    ipv6: function() {
+      return "FF02:FFFF::"+this.id;
+    }
+  }
+
+  Device.Group.counter = 2;
+  Device.Group.next = function() {
+    Device.Group.counter += 1;
+    return new Device.Group(Device.Group.counter);
+  };
+
 
   return Device;
 });
@@ -158,8 +183,29 @@ app.directive('ngModelOnblur', function() {
 //     };
 // });
 
-app.controller('DevicesCtrl', ['$scope','Lobby', function($scope, Lobby) {
+app.controller('DevicesCtrl', ['$scope','Lobby','Device', function($scope, Lobby, Device) {
+  $scope.selectedProperties = [];
+
   Lobby.getDevices(function(devices) {
     $scope.devices = devices;
   });
+
+  $scope.selectProperty = function(p) {
+    var index = $scope.selectedProperties.indexOf(p);
+    if (index != -1) {
+      $scope.selectedProperties.splice(index, 1);
+    } else {
+      $scope.selectedProperties.push(p);
+    }
+    p.selected = !p.selected;
+  }
+
+  $scope.createGroup = function() {
+    var group = Device.Group.next();
+    angular.forEach($scope.selectedProperties, function(p) {
+      p.joinGroup(group);
+      p.selected = false;
+    });
+    $scope.selectedProperties = [];
+  }
 }]);
