@@ -22,15 +22,16 @@
               %a.name(href="{{device.url}}" target="_blank")
                 {{device.name}}
             .form-horizontal
-              .control-group.property.bool(ng-repeat="bool in device.properties | filter: {type: 'bool'}" ng-click="selectProperty(bool)" ng-class="{groupcomm: bool.groupcomm, selected:bool.selected}")
+              .control-group.property.bool(ng-repeat="bool in device.properties | filter: {type: 'bool'}")
                 %label.control-label {{bool.name}}
                 .controls
                   %input(type="checkbox" ng-checked="bool.value" ng-disabled="bool.readonly" ng-model="bool.value" ng-change="device.update(bool)")
-              .control-group.property.numeric(ng-repeat="numeric in device.properties | filter: {numeric: true}" ng-click="selectProperty(numeric)" ng-class="{groupcomm: numeric.groupcomm, selected:numeric.selected}")
+                  .groupcomm(ng-click="selectProperty(bool)" ng-class="{selected:bool.selected, hidden:!bool.groupcomm}")
+              .control-group.property.numeric(ng-repeat="numeric in device.properties | filter: {numeric: true}")
                 %label.control-label {{numeric.name}}
                 .controls
-                  .numeric-value
-                    %input.input-mini(ng-model="numeric.value" type="text" ng-model-onblur ng-disabled="numeric.readonly" ng-change="device.update(numeric)")
+                  %input.input-mini(ng-model="numeric.value" type="text" ng-model-onblur ng-disabled="numeric.readonly" ng-change="device.update(numeric)")
+                  .groupcomm(ng-click="selectProperty(numeric)" ng-class="{selected:numeric.selected, hidden:!numeric.groupcomm}")
               .control-group.property.enum(ng-repeat="enum in device.properties | filter: {type: 'enum'}")
                 %label.control-label {{enum.name}}
                 .controls
