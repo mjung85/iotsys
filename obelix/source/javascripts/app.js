@@ -1,6 +1,7 @@
 //= require 'jquery-1.9.1'
 //= require 'angular'
-//= require 'bootstrapSwitch'
+//= require 'bootstrap-transition'
+//= require 'bootstrap-modal'
 //= require_self
 
 var app = angular.module('Obelix', []);
@@ -62,13 +63,8 @@ app.factory('Device', function($http, $timeout) {
       var result = {'tagName': this.type, 'href': this.href, 'val': this.value };
       return result;
     },
-    joinGroup: function(group) {
-      var url = [this.device.url,this.href,'groupComm/joinGroup'].join('/');
-      $http.post(url, '<str val="'+group.ipv6()+'"/>', {headers: {
-        'Content-Type': 'application/xml'
-      }}).success(function() {
-        console.log(this,"joined", group.id);
-      }.bind(this));
+    url: function() {
+      return this.device.url + '/' + this.href;
     }
   };
 
@@ -133,22 +129,38 @@ app.factory('Device', function($http, $timeout) {
     }
   };
 
-  Device.Group = function(id) {
-    this.id = id;
+  Device.Group = function(properties) {
+    this.properties = properties;
+    this.id = Device.Group.counter;
+    Device.Group.counter += 1;
+    return this;
   };
+
+  Device.Group.counter = 1;
 
   Device.Group.prototype = {
     ipv6: function() {
       return "FF02:FFFF::"+this.id;
+    },
+    create: function() {
+      angular.forEach(this.properties, function(p) {
+        this.action(p, 'joinGroup');
+      }.bind(this));
+    },
+    destroy: function() {
+      angular.forEach(this.properties, function(p) {
+        this.action(p, 'leaveGroup');
+      }.bind(this));
+    },
+    action: function(property, action) {
+      var url = [property.device.url,property.href,'groupComm',action].join('/');
+      $http.post(url, '<str val="'+this.ipv6()+'"/>', {headers: {
+        'Content-Type': 'application/xml'
+      }}).success(function() {
+        console.log(property,action, this.ipv6());
+      }.bind(this));
     }
-  }
-
-  Device.Group.counter = 2;
-  Device.Group.next = function() {
-    Device.Group.counter += 1;
-    return new Device.Group(Device.Group.counter);
   };
-
 
   return Device;
 });
@@ -205,11 +217,16 @@ app.directive('ngModelOnblur', function() {
 // });
 
 app.controller('DevicesCtrl', ['$scope','Lobby','Device', function($scope, Lobby, Device) {
+  $scope.groups = {};
   $scope.selectedProperties = [];
 
   Lobby.getDevices(function(devices) {
     $scope.devices = devices;
   });
+
+  $scope.groupCount = function() {
+    return Object.keys($scope.groups).length;
+  }
 
   $scope.selectProperty = function(p) {
     console.log("SELECT",p);
@@ -224,11 +241,18 @@ app.controller('DevicesCtrl', ['$scope','Lobby','Device', function($scope, Lobby
   }
 
   $scope.createGroup = function() {
-    var group = Device.Group.next();
+    var g = new Device.Group($scope.selectedProperties);
+    g.create();
+    this.groups[g.id] = g;
     angular.forEach($scope.selectedProperties, function(p) {
-      p.joinGroup(group);
       p.selected = false;
     });
     $scope.selectedProperties = [];
+  }
+
+  $scope.destroyGroup = function(id) {
+    var g = $scope.groups[id];
+    g.destroy();
+    delete $scope.groups[id];
   }
 }]);

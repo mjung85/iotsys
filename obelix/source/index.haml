@@ -10,8 +10,24 @@
       .navbar-inner
         .container
           %a.brand(href="#") Obelix
+          %ul.nav
+            %li
+              %a(href="#groups" data-toggle="modal") 
+                Groups
+                %span.badge(ng-show="groupCount() > 0" ng-bind="groupCount()")
           %button.btn.btn-info(ng-click="createGroup()" ng-class="{hidden:selectedProperties.length == 0}") New Group  
     .container
+      #groups.modal.hide.fade(tabindex="-1")
+        .modal-header
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          %h3 Groups
+        .modal-body
+          %ul(ng-repeat="group in groups")
+            %li 
+              {{group.ipv6()}}
+              %button.btn(ng-click="destroyGroup(group.id)") Destroy
+              %ul(ng-repeat="p in group.properties")
+                %li {{p.url()}}
       %ul.thumbnails
         %li.span4(ng-repeat="device in devices")
           .thumbnail.device(ng-class="{fetching:device.fetching}")
