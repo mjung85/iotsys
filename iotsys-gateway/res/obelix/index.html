@@ -12,7 +12,10 @@
     <!-- .container -->
     <!-- %a.brand(href="#") Obelix -->
     <div class='container'>
-      <h3>Obelix</h3>
+      <div class='row' id='toolbar'>
+        <span class='title'>Obelix</span>
+        <button class='btn' ng-click='createGroup()'>Group</button>
+      </div>
       <ul class='thumbnails'>
         <li class='span4' ng-repeat='device in devices'>
           <div class='thumbnail device' ng-class='{fetching:device.fetching}'>
@@ -26,13 +29,13 @@
               </a>
             </div>
             <div class='form-horizontal'>
-              <div class='control-group bool' ng-repeat="bool in device.properties | filter: {type: 'bool'}">
+              <div class='control-group property bool' ng-class='{selected:bool.selected}' ng-click='selectProperty(bool)' ng-repeat="bool in device.properties | filter: {type: 'bool'}">
                 <label class='control-label'>{{bool.name}}</label>
                 <div class='controls'>
                   <input ng-change='device.update(bool)' ng-checked='bool.value' ng-disabled='bool.readonly' ng-model='bool.value' type='checkbox'>
                 </div>
               </div>
-              <div class='control-group bool' ng-repeat='numeric in device.properties | filter: {numeric: true}'>
+              <div class='control-group property numeric' ng-repeat='numeric in device.properties | filter: {numeric: true}'>
                 <label class='control-label'>{{numeric.name}}</label>
                 <div class='controls'>
                   <div class='numeric-value'>
@@ -40,10 +43,10 @@
                   </div>
                 </div>
               </div>
-              <div class='control-group bool' ng-repeat="enum in device.properties | filter: {type: 'enum'}">
+              <div class='control-group property enum' ng-repeat="enum in device.properties | filter: {type: 'enum'}">
                 <label class='control-label'>{{enum.name}}</label>
                 <div class='controls'>
-                  <select class='select-mini' ng-change='device.update(enum)' ng-model='enum.value' ng-options='x for x in enum.validValues()'></select>
+                  <select class='select-mini' ng-change='device.update(enum)' ng-model='enum.value' ng-options='x for x in enum.range'></select>
                 </div>
               </div>
             </div>
