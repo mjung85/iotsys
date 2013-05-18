@@ -57,6 +57,8 @@ public class BrightnessActuatorImpl extends ActuatorImpl implements BrightnessAc
 	
 		value.setHref(valueUri);
 		value.setName("value");
+		this.value.setMin(0);
+		this.value.setMax(100);
 		add(value);
 	}
 	
