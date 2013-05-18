@@ -66,7 +66,7 @@ public class MulticastUDPLayer extends Layer {
 	}
 
 	public enum REQUEST_TYPE {
-		MULTICAST_REQUEST, NORMAL_REQUEST
+		MULTICAST_REQUEST, NORMAL_REQUEST, LOCAL_REQUEST
 	}
 
 	// Inner Classes
