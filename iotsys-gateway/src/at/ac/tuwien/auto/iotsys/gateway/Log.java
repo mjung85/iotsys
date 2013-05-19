@@ -96,10 +96,10 @@ public class Log {
 		ConsoleHandler cHandler = new ConsoleHandler();
 		cHandler.setFormatter(printFormatter);
 		// set logging level
-		cHandler.setLevel(Level.FINEST);
+		cHandler.setLevel(logLevel);
 		// add
 		globalLogger.addHandler(cHandler);
-		globalLogger.setLevel(Level.FINEST);
+		globalLogger.setLevel(logLevel);
 		
 		// create custom file handler
 		FileHandler fHandler;
@@ -117,7 +117,7 @@ public class Log {
 			knxHandler = new FileHandler("KNX.txt",true);
 			knxHandler.setFormatter(csvFormatter);
 			Logger.getLogger("knxbus").addHandler(knxHandler);
-			Logger.getLogger("knxbus").setLevel(Level.FINEST);
+			Logger.getLogger("knxbus").setLevel(logLevel);
 		} catch(Exception e){
 			e.printStackTrace();
 		}
@@ -135,7 +135,7 @@ public class Log {
 								
 		// obix server logger
 		
-		Logger.getLogger(IoTSySGateway.class.getName()).setLevel(Level.FINEST);
+		Logger.getLogger(IoTSySGateway.class.getName()).setLevel(logLevel);
 		
 		
 		// indicate new start-up

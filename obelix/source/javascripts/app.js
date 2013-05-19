@@ -66,6 +66,11 @@ app.factory('Device', function($http, $timeout) {
     },
     url: function() {
       return this.device.url + '/' + this.href;
+      $http.post(url, '<str val="'+group.ipv6()+'"/>', {headers: {
+        'Content-Type': 'application/xml'
+      }}).success(function() {
+        console.log(this,"joined", group.id);
+      }.bind(this));
     }
   };
 
@@ -167,6 +172,23 @@ app.factory('Device', function($http, $timeout) {
       }.bind(this));
     }
   };
+
+  Device.Group = function(id) {
+    this.id = id;
+  };
+
+  Device.Group.prototype = {
+    ipv6: function() {
+      return "FF02:FFFF::"+this.id;
+    }
+  }
+
+  Device.Group.counter = 2;
+  Device.Group.next = function() {
+    Device.Group.counter += 1;
+    return new Device.Group(Device.Group.counter);
+  };
+
 
   return Device;
 });

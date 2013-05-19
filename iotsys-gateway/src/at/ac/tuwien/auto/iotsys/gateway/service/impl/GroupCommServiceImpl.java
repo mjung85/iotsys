@@ -42,12 +42,15 @@ import ch.ethz.inf.vs.californium.coap.Communicator;
 import ch.ethz.inf.vs.californium.coap.MediaTypeRegistry;
 import ch.ethz.inf.vs.californium.coap.Message.messageType;
 import ch.ethz.inf.vs.californium.coap.PUTRequest;
+import ch.ethz.inf.vs.californium.layers.MulticastUDPLayer;
+import ch.ethz.inf.vs.californium.layers.MulticastUDPLayer.REQUEST_TYPE;
 
 import obix.Bool;
 import obix.Int;
 import obix.Obj;
 import obix.Real;
 import obix.io.ObixEncoder;
+import at.ac.tuwien.auto.iotsys.commons.PropertiesLoader;
 import at.ac.tuwien.auto.iotsys.gateway.service.GroupCommService;
 import at.ac.tuwien.auto.iotsys.gateway.util.EXIEncoder;
 
@@ -55,23 +58,29 @@ import at.ac.tuwien.auto.iotsys.gateway.util.EXIEncoder;
  * This class takes care for the group communication.
  */
 public class GroupCommServiceImpl implements GroupCommService {
-	private static final Logger log = Logger.getLogger(GroupCommServiceImpl.class.getName());
+	private static final Logger log = Logger
+			.getLogger(GroupCommServiceImpl.class.getName());
 
 	private final static GroupCommServiceImpl instance = new GroupCommServiceImpl();
 
 	private static final Hashtable<Inet6Address, Hashtable<String, Obj>> groupObjectPerAddress = new Hashtable<Inet6Address, Hashtable<String, Obj>>();
 
+	private boolean MCAST_ENABLED = true; 
+	
 	private GroupCommServiceImpl() {
-
+		MCAST_ENABLED = Boolean.parseBoolean(PropertiesLoader.getInstance()
+				.getProperties().getProperty("iotsys.gateway.mcast", "true"));
 	}
 
 	public static GroupCommService getInstance() {
 		return instance;
 	}
+	
+	
 
 	@Override
 	public void handleRequest(Inet6Address group, Obj payload) {
-	
+
 		log.finest("Handle request for " + group + ", " + payload);
 		synchronized (groupObjectPerAddress) {
 			Hashtable<String, Obj> groupObjects = groupObjectPerAddress
@@ -83,30 +92,29 @@ public class GroupCommServiceImpl implements GroupCommService {
 					log.finest("Writing on " + obj.getHref());
 					obj.writeObject(payload);
 				}
-			} 
-			else{
+			} else {
 				log.info("No group objects found!");
 			}
 		}
 	}
 
 	@Override
-	public void registerObject(Inet6Address group, Obj obj)  {
+	public void registerObject(Inet6Address group, Obj obj) {
 		synchronized (groupObjectPerAddress) {
 			Hashtable<String, Obj> groupObjects = groupObjectPerAddress
 					.get(group);
 
 			if (groupObjects != null) {
 				groupObjects.put(obj.getFullContextPath(), obj);
-			}
-			else{
+			} else {
 				// we need to create a multicast socket for the specified port
 				try {
-					Communicator.getInstance().getUDPLayer().openMulticastSocket(group);
+					Communicator.getInstance().getUDPLayer()
+							.openMulticastSocket(group);
 					Hashtable<String, Obj> newGroupObjects = new Hashtable<String, Obj>();
 					groupObjectPerAddress.put(group, newGroupObjects);
 					newGroupObjects.put(obj.getFullContextPath(), obj);
-				} catch (SocketException e) {			
+				} catch (SocketException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
@@ -119,89 +127,101 @@ public class GroupCommServiceImpl implements GroupCommService {
 		synchronized (groupObjectPerAddress) {
 			Hashtable<String, Obj> groupObjects = groupObjectPerAddress
 					.get(group);
-			
+
 			if (groupObjects != null) {
 				groupObjects.remove(obj.getFullContextPath());
-				
-				if(groupObjects.size() == 0){
+
+				if (groupObjects.size() == 0) {
 					// close group comm socket
 					try {
-						Communicator.getInstance().getUDPLayer().closeMulticastSocket(group);
+						Communicator.getInstance().getUDPLayer()
+								.closeMulticastSocket(group);
 					} catch (SocketException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-					groupObjectPerAddress.remove(group);				
+					groupObjectPerAddress.remove(group);
 				}
 			}
 		}
 	}
 
 	@Override
-	public void sendUpdate(Inet6Address group, Object state) {
-		log.finest("Sending new state of object " + state + " to group " + group.getHostAddress());
+	public void sendUpdate(Inet6Address group, Obj state) {
 		
-		PUTRequest putRequest = new PUTRequest();
-		putRequest.setType(messageType.NON);
-		putRequest
-				.setURI("coap://[" + group.getHostAddress() + "]:5684/");
-		
-		if(state instanceof Bool){
-			Bool bool = (Bool) state;
-			Bool b = new Bool();
-			b.set(bool.get());
-			try {
-				byte[] payload =  EXIEncoder.getInstance().toBytes(b, true);
-				// work around application octet stream
-				putRequest.setContentType(MediaTypeRegistry.APPLICATION_OCTET_STREAM);
-				putRequest.setPayload(payload);
-			} catch (Exception e){
-				// fall back to XML encoding
-				e.printStackTrace();
-				String payload = ObixEncoder.toString(b);
-				putRequest.setPayload(payload);
+
+		log.finest("Sending new state of object " + state + " to group "
+				+ group.getHostAddress());
+
+		// notify internal group objects
+//		if(MulticastUDPLayer.getRequestType() != REQUEST_TYPE.LOCAL_REQUEST){
+//			MulticastUDPLayer.setRequestType(REQUEST_TYPE.LOCAL_REQUEST);
+//			this.handleRequest(group, state);
+//		}
+
+		if (MCAST_ENABLED) {
+			PUTRequest putRequest = new PUTRequest();
+			putRequest.setType(messageType.NON);
+			putRequest.setURI("coap://[" + group.getHostAddress() + "]:5684/");
+
+			if (state instanceof Bool) {
+				Bool bool = (Bool) state;
+				Bool b = new Bool();
+				b.set(bool.get());
+				try {
+					byte[] payload = EXIEncoder.getInstance().toBytes(b, true);
+					// work around application octet stream
+					putRequest
+							.setContentType(MediaTypeRegistry.APPLICATION_OCTET_STREAM);
+					putRequest.setPayload(payload);
+				} catch (Exception e) {
+					// fall back to XML encoding
+					e.printStackTrace();
+					String payload = ObixEncoder.toString(b);
+					putRequest.setPayload(payload);
+				}
+
+			} else if (state instanceof Real) {
+				Real real = (Real) state;
+				Real r = new Real();
+				r.set(real.get());
+				try {
+					byte[] payload = EXIEncoder.getInstance().toBytes(r, true);
+					// work around application octet stream
+					putRequest
+							.setContentType(MediaTypeRegistry.APPLICATION_OCTET_STREAM);
+					putRequest.setPayload(payload);
+				} catch (Exception e) {
+					// fall back to XML encoding
+					e.printStackTrace();
+					String payload = ObixEncoder.toString(r);
+					putRequest.setPayload(payload);
+				}
+			} else if (state instanceof Int) {
+				Int intObj = (Int) state;
+				Int i = new Int();
+				i.set(intObj.get());
+				try {
+					byte[] payload = EXIEncoder.getInstance().toBytes(i, true);
+					// work around application octet stream
+					putRequest
+							.setContentType(MediaTypeRegistry.APPLICATION_OCTET_STREAM);
+					putRequest.setPayload(payload);
+				} catch (Exception e) {
+					// fall back to XML encoding
+					e.printStackTrace();
+					String payload = ObixEncoder.toString(i);
+					putRequest.setPayload(payload);
+				}
 			}
-						
+
+			putRequest.enableResponseQueue(false);
+			try {
+				putRequest.execute();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
-		else if(state instanceof Real){
-			Real real = (Real) state;
-			Real r = new Real();
-			r.set(real.get());
-			try {
-				byte[] payload =  EXIEncoder.getInstance().toBytes(r, true);
-				// work around application octet stream
-				putRequest.setContentType(MediaTypeRegistry.APPLICATION_OCTET_STREAM);
-				putRequest.setPayload(payload);
-			} catch (Exception e){
-				// fall back to XML encoding
-				e.printStackTrace();
-				String payload = ObixEncoder.toString(r);
-				putRequest.setPayload(payload);
-			}
-		} else if(state instanceof Int){
-			Int intObj = (Int) state;
-			Int i = new Int();
-			i.set(intObj.get());
-			try {
-				byte[] payload =  EXIEncoder.getInstance().toBytes(i, true);
-				// work around application octet stream
-				putRequest.setContentType(MediaTypeRegistry.APPLICATION_OCTET_STREAM);
-				putRequest.setPayload(payload);
-			} catch (Exception e){
-				// fall back to XML encoding
-				e.printStackTrace();
-				String payload = ObixEncoder.toString(i);
-				putRequest.setPayload(payload);
-			}
-		} 
-	
-		putRequest.enableResponseQueue(false);
-		try {
-			putRequest.execute();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
+
 	}
 }
-

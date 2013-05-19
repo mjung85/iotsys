@@ -28,7 +28,7 @@ public class XBeeConnector implements Connector{
 	
 	@Override
 	public void connect() throws Exception {
-		System.out.println(port +", "+baudRate);
+		log.info(port +", "+baudRate);
 		xbee = new XBee();
 		xbee.open(port, baudRate);
 		xbee.addPacketListener(new PacketListener(){

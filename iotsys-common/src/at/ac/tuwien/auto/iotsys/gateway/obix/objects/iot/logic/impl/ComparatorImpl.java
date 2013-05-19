@@ -69,6 +69,7 @@ public class ComparatorImpl extends Obj implements Comparator {
 		compareType.setName("compareType");
 		compareType.setRange(new Uri("/enums/compareTypes"));
 		compareType.set("eq");
+		
 		compareType.setHref(new Uri("compareType"));
 
 		this.add(input1);
@@ -115,7 +116,7 @@ public class ComparatorImpl extends Obj implements Comparator {
 			this.compareType.set(in.compareType().get());
 			this.enabled.set(in.enabled().get());
 		} else if (input instanceof Real) {
-			if (input.getHref() == null) {
+			
 				
 				if ("input1".equals(resourceUriPath)) {
 					input1.set(((Real) input).get());
@@ -124,9 +125,9 @@ public class ComparatorImpl extends Obj implements Comparator {
 				} else if("enabled".equals(resourceUriPath)){
 					enabled.set(((Real) input).get());
 				}
-			}
+			
 		} else if (input instanceof Bool) {
-			if (input.getHref() == null) {
+			
 				if ("input1".equals(resourceUriPath)) {
 					input1.set(((Bool) input).get());
 				} else if ("input2".equals(resourceUriPath)) {
@@ -134,10 +135,10 @@ public class ComparatorImpl extends Obj implements Comparator {
 				} else if("enabled".equals(resourceUriPath)){
 					enabled.set(((Bool) input).get());
 				}
-			}
+			
 		}
 		else if (input instanceof Int) {
-			if (input.getHref() == null) {
+			
 				if ("input1".equals(resourceUriPath)) {
 					input1.set(((Int) input).get());
 				} else if ("input2".equals(resourceUriPath)) {
@@ -145,7 +146,7 @@ public class ComparatorImpl extends Obj implements Comparator {
 				} else if("enabled".equals(resourceUriPath)){
 					enabled.set(((Int) input).get());
 				}
-			}
+			
 		}
 		else if (input instanceof obix.Enum){
 			this.compareType.set( ((obix.Enum) input).get() );

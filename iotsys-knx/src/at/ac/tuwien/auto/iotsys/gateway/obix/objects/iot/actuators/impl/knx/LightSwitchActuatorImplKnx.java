@@ -74,7 +74,7 @@ public class LightSwitchActuatorImplKnx extends LightSwitchActuatorImpl  {
 		// A write on this object was received, update the according data point.	
 		super.writeObject(input);
 		knxConnector.write(switching, this.value().get());	
-		CsvCreator.instance.writeLine("" + System.currentTimeMillis() + ";" + switching.toString() + ";" + this.value().get());
+//		CsvCreator.instance.writeLine("" + System.currentTimeMillis() + ";" + switching.toString() + ";" + this.value().get());
 	}
 	
 	public void refreshObject(){

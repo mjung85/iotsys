@@ -36,6 +36,7 @@ import java.net.Inet6Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
@@ -57,26 +58,27 @@ import ch.ethz.inf.vs.californium.coap.Message;
  * 
  */
 public class MultiInterfaceUDPLayer extends Layer {
-	
-	private static final Logger log = Logger.getLogger(MultiInterfaceUDPLayer.class.getName());
+
+	private static final Logger log = Logger
+			.getLogger(MultiInterfaceUDPLayer.class.getName());
 
 	private int port = 0;
 
 	private Hashtable<InetAddress, UDPLayer> udplayers = new Hashtable<InetAddress, UDPLayer>();
 
 	private UDPLayer defaultUDPLayer = null;
-	
+
 	// MulticastUDPLayer per group address
 	private final Hashtable<Inet6Address, MulticastUDPLayer> multicastUDPLayers = new Hashtable<Inet6Address, MulticastUDPLayer>();
-	
 
 	public MultiInterfaceUDPLayer() throws SocketException {
 		this(0, true);
 	}
-	
+
 	private boolean PCAP_ENABLED = false;
+	private boolean MCAST_ENABLED = false;
 	private String PCAP_IF = "eth0";
-	
+
 	private Pcap pcap;
 	private List<PcapIf> alldevs = new ArrayList<PcapIf>();
 	private StringBuilder errbuf = new StringBuilder();
@@ -84,92 +86,108 @@ public class MultiInterfaceUDPLayer extends Layer {
 	public MultiInterfaceUDPLayer(final int port, boolean runAsDaemon)
 			throws SocketException {
 		this.port = port;
-		
-		defaultUDPLayer = new UDPLayer(port, true);
-		defaultUDPLayer.registerReceiver(this);
-		
-		PCAP_ENABLED = Boolean.parseBoolean(PropertiesLoader.getInstance().getProperties()
-				.getProperty("iotsys.gateway.pcap", "false"));
-		
+
+		PCAP_ENABLED = Boolean.parseBoolean(PropertiesLoader.getInstance()
+				.getProperties().getProperty("iotsys.gateway.pcap", "false"));
+
 		PCAP_IF = PropertiesLoader.getInstance().getProperties()
 				.getProperty("iotsys.gateway.pcap.if", "eth0");
-		
+		MCAST_ENABLED = Boolean.parseBoolean(PropertiesLoader.getInstance()
+				.getProperties().getProperty("iotsys.gateway.mcast", "true"));
+
 		// for multicast group communication use
 		// pcap or multicast datagram sockets
 		// NOTE: in linux environments the mulicast mechanism
 		// on data points does not work properly because
-		// the target mulitcast address could not be 
+		// the target mulitcast address could not be
 		// determined.
-		if(PCAP_ENABLED){
-			int r = Pcap.findAllDevs(alldevs, errbuf);
-			if (r == Pcap.NOT_OK || alldevs.isEmpty()) {
-				log.info("No devs found");
-				return;
-			}
-
-			int i = 0;
-			int pick =0;
-
-			for (PcapIf device : alldevs) {
-				String description = (device.getDescription() != null) ? device
-						.getDescription() : "No description available.";
-				log.info("" + (i++) + "#: " + device.getName() + " " + description);
-				if(device.getName().equals(PCAP_IF)){
-					pick = i-1;
+		if (MCAST_ENABLED) {
+			if (PCAP_ENABLED) {
+				defaultUDPLayer = new UDPLayer(port, true);
+				defaultUDPLayer.registerReceiver(this);
+				int r = Pcap.findAllDevs(alldevs, errbuf);
+				if (r == Pcap.NOT_OK || alldevs.isEmpty()) {
+					log.info("No devs found");
+					return;
 				}
-			}
 
-			log.info("openening device for pcap: " + alldevs.get(pick).getName());
-			PcapIf device = alldevs.get(pick);
+				int i = 0;
+				int pick = 0;
 
-			int snaplen = 64 * 1024;
-			int flags = Pcap.MODE_NON_PROMISCUOUS;
-			int timeout = 10 * 1000;
-
-			final Pcap pcap = Pcap.openLive(device.getName(), snaplen, flags, timeout,
-					errbuf);
-
-			if (pcap == null) {
-				log.info("Cannot listen.");
-			}
-			final PcapGroupCommHandler<String> pcapGroupCommHandler = new PcapGroupCommHandler<String>(port);
-			pcapGroupCommHandler.registerReceiver(this);
-			
-			Thread packetlistener = new Thread(){
-				
-				@Override
-				public void run() {
-					pcap.loop(0, pcapGroupCommHandler, "GroupCommListener");
+				for (PcapIf device : alldevs) {
+					String description = (device.getDescription() != null) ? device
+							.getDescription() : "No description available.";
+					log.info("" + (i++) + "#: " + device.getName() + " "
+							+ description);
+					if (device.getName().equals(PCAP_IF)) {
+						pick = i - 1;
+					}
 				}
-				
-			};
-			packetlistener.setDaemon(true);
-			packetlistener.start();	
-		}
-		else{
-	
-			Enumeration<NetworkInterface> networkInterfaces = NetworkInterface
-					.getNetworkInterfaces();	
-		
-	
-			while (networkInterfaces.hasMoreElements()) {
-				NetworkInterface iface = networkInterfaces.nextElement();
-	
-				Enumeration<InetAddress> inetAddresses = iface.getInetAddresses();
-				for (InetAddress inetAddress : Collections.list(inetAddresses)) {
-	
-					try {
-						UDPLayer udpLayer = new UDPLayer(inetAddress, port,
-								runAsDaemon);
-						udpLayer.registerReceiver(this);
-						udplayers.put(inetAddress, udpLayer);
-					} catch (Exception e) {
-						// do nothing. may conflict with default UDP layer
+
+				log.info("openening device for pcap: "
+						+ alldevs.get(pick).getName());
+				PcapIf device = alldevs.get(pick);
+
+				int snaplen = 64 * 1024;
+				int flags = Pcap.MODE_NON_PROMISCUOUS;
+				int timeout = 10 * 1000;
+
+				final Pcap pcap = Pcap.openLive(device.getName(), snaplen,
+						flags, timeout, errbuf);
+
+				if (pcap == null) {
+					log.info("Cannot listen.");
+				}
+				final PcapGroupCommHandler<String> pcapGroupCommHandler = new PcapGroupCommHandler<String>(
+						port);
+				pcapGroupCommHandler.registerReceiver(this);
+
+				Thread packetlistener = new Thread() {
+
+					@Override
+					public void run() {
+						pcap.loop(0, pcapGroupCommHandler, "GroupCommListener");
+					}
+
+				};
+				packetlistener.setDaemon(true);
+				packetlistener.start();
+			} else {
+				try {
+					Inet6Address group = (Inet6Address) Inet6Address
+							.getByName("FF02:F::1");
+					openMulticastSocket(group);
+				} catch (UnknownHostException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				defaultUDPLayer = new UDPLayer(port, true);
+				defaultUDPLayer.registerReceiver(this);
+
+				Enumeration<NetworkInterface> networkInterfaces = NetworkInterface
+						.getNetworkInterfaces();
+
+				while (networkInterfaces.hasMoreElements()) {
+					NetworkInterface iface = networkInterfaces.nextElement();
+
+					Enumeration<InetAddress> inetAddresses = iface
+							.getInetAddresses();
+					for (InetAddress inetAddress : Collections
+							.list(inetAddresses)) {
+
+						try {
+							UDPLayer udpLayer = new UDPLayer(inetAddress, port,
+									runAsDaemon);
+							udpLayer.registerReceiver(this);
+							udplayers.put(inetAddress, udpLayer);
+						} catch (Exception e) {
+							// do nothing. may conflict with default UDP layer
+						}
 					}
 				}
 			}
 		}
-		
+
 	}
 
 	@Override
@@ -185,39 +203,40 @@ public class MultiInterfaceUDPLayer extends Layer {
 	}
 
 	@Override
-	protected void doReceiveMessage(Message msg) {		
+	protected void doReceiveMessage(Message msg) {
 		deliverMessage(msg);
 	}
 
 	public int getPort() {
 		return port;
 	}
-	
-	public void openMulticastSocket(Inet6Address addr) throws SocketException{
-		if(!PCAP_ENABLED){
-			synchronized(multicastUDPLayers){
-				if(!multicastUDPLayers.contains(addr)){
-					MulticastUDPLayer multicastUDPLayer = new MulticastUDPLayer(addr);
+
+	public void openMulticastSocket(Inet6Address addr) throws SocketException {
+		if (!PCAP_ENABLED && MCAST_ENABLED) {
+			synchronized (multicastUDPLayers) {
+				if (!multicastUDPLayers.contains(addr)) {
+					MulticastUDPLayer multicastUDPLayer = new MulticastUDPLayer(
+							addr);
 					multicastUDPLayer.registerReceiver(this);
-					
+
 					multicastUDPLayers.put(addr, multicastUDPLayer);
-			
+
 				}
 			}
 		}
 	}
-	
-	public void closeMulticastSocket(Inet6Address addr) throws SocketException{
-		if(!PCAP_ENABLED){
-			synchronized(multicastUDPLayers){
-				MulticastUDPLayer multicastUDPLayer = multicastUDPLayers.get(addr);
-				if(multicastUDPLayer != null){
+
+	public void closeMulticastSocket(Inet6Address addr) throws SocketException {
+		if (!PCAP_ENABLED && MCAST_ENABLED) {
+			synchronized (multicastUDPLayers) {
+				MulticastUDPLayer multicastUDPLayer = multicastUDPLayers
+						.get(addr);
+				if (multicastUDPLayer != null) {
 					multicastUDPLayer.unregisterReceiver(this);
 					multicastUDPLayer.close();
 				}
 			}
 		}
 	}
-	
-	
+
 }
