@@ -187,7 +187,23 @@ public class TemperatureControllerImpl extends Obj implements
 			}
 
 		}
+		
+		doControl();
 
+	
+	}
+
+	@Override
+	public Real saveEnergyFactor() {
+		return saveEnergyFactor;
+	}
+
+	@Override
+	public Bool saveEnergyEnabled() {
+		return saveEnergyEnabled;
+	}
+	
+	public void doControl(){
 		// perform control logic
 		if (enabled.get()) {
 			if (temperature.get() < setpoint.get() - tolerance.get()
@@ -220,16 +236,6 @@ public class TemperatureControllerImpl extends Obj implements
 		if((controlValue.get() == 100 || controlValue.get() == -100) && saveEnergyEnabled().get()){
 			this.controlValue.set(controlValue.get() / (100 / saveEnergyFactor().get()));
 		}
-	}
-
-	@Override
-	public Real saveEnergyFactor() {
-		return saveEnergyFactor;
-	}
-
-	@Override
-	public Bool saveEnergyEnabled() {
-		return saveEnergyEnabled;
 	}
 }
 
