@@ -1,6 +1,9 @@
 package at.ac.tuwien.auto.iotsys.gateway.connectors.enocean.util;
 
+import java.util.logging.Logger;
+
 public class ESP3Frame {
+	private static final Logger log = Logger.getLogger(ESP3Frame.class.getName());
 	public enum STATES_GET_PACKET {
 		GET_SYNC_STATE(0x01), GET_HEADER_STATE(0x02), CHECK_CRC8H_STATE(0x03), GET_DATA_STATE(
 				0x04), CHECK_CRC8D_STATE(0x05);
@@ -52,7 +55,7 @@ public class ESP3Frame {
 					dataCnt = 0;
 					tempDataBuffer = null;
 				} else {
-					System.out.println("Sync byte not found!");
+					log.finest("Sync byte not found!");
 				}
 				break;
 
@@ -69,7 +72,7 @@ public class ESP3Frame {
 					header = new ESP3PacketHeader(tempHeaderBuffer);
 					state = STATES_GET_PACKET.GET_DATA_STATE;
 				} else {
-					System.out.println("Wrong CRC8H: "
+					log.finest("Wrong CRC8H: "
 							+ Integer.toHexString(tempData & 0xFF));
 					state = STATES_GET_PACKET.GET_SYNC_STATE;
 				}
@@ -92,19 +95,19 @@ public class ESP3Frame {
 
 				if (ESP3PacketHeader.checkCRC8(tempDataBuffer, tempData)) {
 					packet = new ESP3Packet(header, tempDataBuffer);
-					System.out.println(packet.getHeader().toString());
-					System.out.println("telegram rorg: "
+					log.finest(packet.getHeader().toString());
+					log.finest("telegram rorg: "
 							+ packet.telegram.getRORG());
-					System.out.println("telegram senderid: "
+					log.finest("telegram senderid: "
 							+ packet.telegram.getSenderID().toString());
-					System.out.println("telegram status: "
+					log.finest("telegram status: "
 							+ Integer.toHexString((packet.telegram
 									.getStatusByte() & 0xFF)));
-					System.out.println("telegram payload: "
+					log.finest("telegram payload: "
 							+ packet.telegram.getPayloadAsString());
-					System.out.println("");
+					log.finest("");
 				} else {
-					System.out.println("Wrong CRC8D: "
+					log.finest("Wrong CRC8D: "
 							+ Integer.toHexString(tempData & 0xFF));
 				}
 				break;
