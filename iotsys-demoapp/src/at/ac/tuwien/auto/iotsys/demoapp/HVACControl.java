@@ -41,6 +41,8 @@ import javax.xml.parsers.DocumentBuilderFactory;
 
 import obix.Bool;
 import obix.Obj;
+import obix.Real;
+import obix.Str;
 import obix.Uri;
 
 import org.w3c.dom.Document;
@@ -50,6 +52,7 @@ import org.w3c.dom.NodeList;
 
 import at.ac.tuwien.auto.iotsys.commons.PropertiesLoader;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.logic.Application;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.logic.CoapTemperatureController;
 
 import ch.ethz.inf.vs.californium.coap.GETRequest;
 import ch.ethz.inf.vs.californium.coap.MediaTypeRegistry;
@@ -65,6 +68,9 @@ public class HVACControl extends Obj implements Application {
 	private static final Logger log = Logger.getLogger(HVACControl.class.getName());
 	
 	protected Bool enabled = new Bool(false);
+	protected Real setpoint = new Real(0);
+	protected Str tempIPv6 = new Str("aaaa::c30c:0:0:856");
+	protected Real currentTemp = new Real(0);
 	
 	private boolean cooling = false;
 	private boolean heating = false;
@@ -268,4 +274,6 @@ public class HVACControl extends Obj implements Application {
 		}
 		
 	}
+
+
 }

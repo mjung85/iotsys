@@ -113,7 +113,7 @@ public class EnoceanConnector implements Connector, SerialPortEventListener {
 						frame = new ESP3Frame(buffer, numBytes);
 						frame.readPacket();
 						String address = frame.getPacket().telegram.getSenderID().toString();
-						log.info("notify watchdog: " + address);
+						log.finest("notify watchdog: " + address);
 						if (watchDogs.containsKey(address)) {
 							for (EnoceanWatchdog w: watchDogs.get(address)) {
 								w.notifyWatchDog(frame);
