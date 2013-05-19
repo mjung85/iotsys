@@ -97,6 +97,12 @@
                   <select class='select-mini' ng-change='device.update(enum)' ng-model='enum.value' ng-options='x for x in enum.range'></select>
                 </div>
               </div>
+              <div class='control-group property enum' ng-repeat="str in device.properties | filter: {type: 'str'}">
+                <label class='control-label'>{{str.name}}</label>
+                <div class='controls'>
+                  <input class='input-midi' ng-change='device.update(str)' ng-disabled='str.readonly' ng-model-onblur ng-model='str.value' type='text'>
+                </div>
+              </div>
             </div>
           </div>
         </li>

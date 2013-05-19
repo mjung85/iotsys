@@ -24883,7 +24883,7 @@ app.factory('Device', function($http, $timeout) {
   };
 
   Property.parse = function(el, device) {
-    if (el['tagName'] == 'bool' || el['tagName'] == 'int' || el['tagName'] == 'real' || el['tagName'] == 'enum') {
+    if (el['tagName'] == 'bool' || el['tagName'] == 'int' || el['tagName'] == 'real' || el['tagName'] == 'enum' || el['tagName'] == 'str') {
       var p = new Property(el['href'], el['tagName'], el['name'], el['val'], !el['writable']);
       if (p.type == 'enum') {
         p.range = Property.Enum.range(el['range']);

@@ -67,3 +67,7 @@
                 %label.control-label {{enum.name}}
                 .controls
                   %select.select-mini(ng-model="enum.value" ng-options="x for x in enum.range" ng-change="device.update(enum)")
+              .control-group.property.enum(ng-repeat="str in device.properties | filter: {type: 'str'}")
+                %label.control-label {{str.name}}
+                .controls
+                  %input.input-midi(ng-model="str.value" type="text" ng-model-onblur ng-disabled="str.readonly" ng-change="device.update(str)")
