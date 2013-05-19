@@ -36,9 +36,9 @@ public class PDPBundleActivator implements BundleActivator, ServiceListener {
 
 		// initialize interceptor broker
 
-		enableXacml = Boolean.getBoolean(PropertiesLoader.getInstance()
+		enableXacml = Boolean.parseBoolean(PropertiesLoader.getInstance()
 				.getProperties().getProperty("iotsys.gateway.xacml", "false"));
-
+		
 		log.info("XACML module enabled: " + enableXacml);
 
 		if (enableXacml) {

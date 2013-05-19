@@ -103,7 +103,7 @@ public class IoTSySGateway {
 
 		interceptorBroker = InterceptorBrokerImpl.getInstance();
 		// initialize interceptor broker
-		boolean enableXacml = Boolean.getBoolean(PropertiesLoader.getInstance()
+		boolean enableXacml = Boolean.parseBoolean(PropertiesLoader.getInstance()
 				.getProperties().getProperty("iotsys.gateway.xacml", "false"));
 
 		log.info("XACML module enabled: " + enableXacml);

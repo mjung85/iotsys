@@ -75,6 +75,8 @@ public abstract class CommonFunctions {
         
         AttributeValue o1 = (AttributeValue)params[0];
         AttributeValue o2 = (AttributeValue)params[1];
+        // System.out.println( o1.getValue() + " = " + o2.getValue());
+        
         if (o1 != null && o2 != null) {
             if (o1 == o2) {
                 return TRUE;
