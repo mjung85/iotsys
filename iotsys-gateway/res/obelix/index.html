@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang='en' ng-app='Obelix'>
+  <head>
+    <meta charset='utf-8'>
+    <title>Obelix</title>
+    <link href="stylesheets/app.css" media="screen" rel="stylesheet" type="text/css" />
+    <script src="javascripts/app.js" type="text/javascript"></script>
+  </head>
+  <body ng-class='{creatingGroup: creatingGroup}' ng-controller='DevicesCtrl'>
+    <div class='navbar navbar-inverse navbar-fixed-top'>
+      <div class='navbar-inner'>
+        <div class='container'>
+          <a class='brand' href='#'>Obelix</a>
+          <ul class='nav'>
+            <li>
+              <a data-toggle='modal' href='#groups'>
+                Groups
+                <span class='badge' ng-bind='groupCount()' ng-show='groupCount() &gt; 0'></span>
+              </a>
+            </li>
+          </ul>
+          <div id='groupbar'>
+            <button class='btn' ng-click='creatingGroup = true' ng-show='!creatingGroup'>New Group</button>
+            <div ng-show='creatingGroup'>
+              <button class='btn' ng-click='creatingGroup = false'>Cancel</button>
+              <button class='btn btn-info' ng-classx='{hidden:selectedProperties.length == 0}' ng-click='createGroup()'>Create</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class='container'>
+      <div class='modal hide fade' id='groups' tabindex='-1'>
+        <div class='modal-header'>
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <h3>Groups</h3>
+        </div>
+        <div class='modal-body'>
+          <ul ng-repeat='group in groups'>
+            <li>
+              {{group.ipv6()}}
+              <button class='btn' ng-click='destroyGroup(group.id)'>Destroy</button>
+              <ul ng-repeat='p in group.properties'>
+                <li>{{p.url()}}</li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <ul class='thumbnails'>
+        <li class='span4' ng-repeat='device in devices'>
+          <div class='thumbnail device' ng-class='{fetching:device.fetching}'>
+            <div class='header'>
+              <label class='autofetch'>
+                <input ng-change='device.fetch()' ng-model='device.autofetching' type='checkbox'>
+                <div></div>
+              </label>
+              <div class='dropdown'>
+                <a class='name dropdown-toggle' data-toggle='dropdown' href='#'>
+                  {{device.name}}
+                </a>
+                <ul class='dropdown-menu' role='menu'>
+                  <li>
+                    <a ng-click='device.fetch()'>Refresh</a>
+                  </li>
+                  <li>
+                    <a ng-click='device.toggleAutofetching()'>
+                      <span ng-show='device.autofetching'>✔</span>
+                      Auto-refresh
+                    </a>
+                  </li>
+                  <li class='divider'></li>
+                  <li>
+                    <a href='{{device.url}}' target='_blank'>oBIX Resource</a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class='form-horizontal'>
+              <div class='control-group property bool' ng-repeat="bool in device.properties | filter: {type: 'bool'}">
+                <label class='control-label'>{{bool.name}}</label>
+                <div class='controls'>
+                  <input ng-change='device.update(bool)' ng-checked='bool.value' ng-disabled='bool.readonly' ng-model='bool.value' type='checkbox'>
+                  <div class='groupcomm' ng-class='{selected:bool.selected, hidden:!bool.groupcomm}' ng-click='selectProperty(bool)'></div>
+                </div>
+              </div>
+              <div class='control-group property numeric' ng-repeat='numeric in device.properties | filter: {numeric: true}'>
+                <label class='control-label'>{{numeric.name}}</label>
+                <div class='controls'>
+                  <input class='input-mini' ng-change='device.update(numeric)' ng-disabled='numeric.readonly' ng-model-onblur ng-model='numeric.value' type='text'>
+                  <div class='groupcomm' ng-class='{selected:numeric.selected, hidden:!numeric.groupcomm}' ng-click='selectProperty(numeric)'></div>
+                </div>
+              </div>
+              <div class='control-group property enum' ng-repeat="enum in device.properties | filter: {type: 'enum'}">
+                <label class='control-label'>{{enum.name}}</label>
+                <div class='controls'>
+                  <select class='select-mini' ng-change='device.update(enum)' ng-model='enum.value' ng-options='x for x in enum.range'></select>
+                </div>
+              </div>
+              <div class='control-group property enum' ng-repeat="str in device.properties | filter: {type: 'str'}">
+                <label class='control-label'>{{str.name}}</label>
+                <div class='controls'>
+                  <input class='input-midi' ng-change='device.update(str)' ng-disabled='str.readonly' ng-model-onblur ng-model='str.value' type='text'>
+                </div>
+              </div>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </body>
+</html>
