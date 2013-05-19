@@ -47,10 +47,13 @@ public class DemoAppLoaderImpl implements DeviceLoader {
 
 	@Override
 	public ArrayList<Connector> initDevices(ObjectBroker objectBroker) {
-		Obj application = new HVACControl();
-		application.setHref(new Uri("demoapp1"));
+		Obj application = new CoapTemperatureControllerImpl();
+		
+		application.setHref(new Uri("mixedTempControl"));
+		
 		synchronized(myObjects){
 			myObjects.addAll(objectBroker.addObj(application));
+			objectBroker.enableGroupComm(application);
 		}
 		return null;
 	}
