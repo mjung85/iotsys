@@ -46,26 +46,26 @@ public class BrightnessActuatorImplKnx extends BrightnessActuatorImpl{
 		this.status = status;
 		this.brightness = brightness;
 		this.knxConnector = knxConnector;
-		if(status == null){
-			// add watch dog on switching group address
-			knxConnector.addWatchDog(brightness, new KNXWatchDog() {
-				@Override
-				public void notifyWatchDog(byte[] apdu) {			
-					try {						
-						DPTXlator8BitUnsigned x = new DPTXlator8BitUnsigned(DPTXlator8BitUnsigned.DPT_VALUE_1_UCOUNT);
-					
-						x.setData(apdu);
-																				
-						if(x.getValueUnscaled() != (short)BrightnessActuatorImplKnx.this.value.get()){
-							BrightnessActuatorImplKnx.this.value.set(x.getValueUnscaled());
-						}
-						
-					} catch (KNXException e) {
-						e.printStackTrace();
-					}
-				}
-			});
-		}
+//		if(status == null){
+//			// add watch dog on switching group address
+//			knxConnector.addWatchDog(brightness, new KNXWatchDog() {
+//				@Override
+//				public void notifyWatchDog(byte[] apdu) {			
+//					try {						
+//						DPTXlator8BitUnsigned x = new DPTXlator8BitUnsigned(DPTXlator8BitUnsigned.DPT_VALUE_1_UCOUNT);
+//					
+//						x.setData(apdu);
+//																				
+//						if(x.getValueUnscaled() != (short)BrightnessActuatorImplKnx.this.value.get()){
+//							BrightnessActuatorImplKnx.this.value.set(x.getValueUnscaled());
+//						}
+//						
+//					} catch (KNXException e) {
+//						e.printStackTrace();
+//					}
+//				}
+//			});
+//		}
 	}
 	
 	public void writeObject(Obj input){

@@ -135,6 +135,8 @@ public class TemperatureControllerImpl extends Obj implements
 			this.temperature.set(in.temperature().get());
 			this.enabled.set(in.enabled().get());
 			this.tolerance.set(in.tolerance().get());
+			this.saveEnergyEnabled.set(in.saveEnergyEnabled().get());
+			this.saveEnergyFactor.set(in.saveEnergyFactor().get());
 		} else if (input instanceof Real) {
 
 			if ("setpoint".equals(resourceUriPath)) {
@@ -145,6 +147,10 @@ public class TemperatureControllerImpl extends Obj implements
 				enabled.set(((Real) input).get());
 			} else if ("tolerance".equals(resourceUriPath)) {
 				tolerance.set(((Real) input).get());
+			} else if ("saveEnergyEnabled".equals(resourceUriPath)) {
+				saveEnergyEnabled.set(((Real) input).get());
+			} else if ("saveEnergyFactor".equals(resourceUriPath)) {
+				saveEnergyFactor.set(((Real) input).get());
 			}
 
 		} else if (input instanceof Bool) {
@@ -157,6 +163,11 @@ public class TemperatureControllerImpl extends Obj implements
 				enabled.set(((Bool) input).get());
 			} else if ("tolerance".equals(resourceUriPath)) {
 				tolerance.set(((Bool) input).get());
+			}else if ("saveEnergyEnabled".equals(resourceUriPath)) {
+				saveEnergyEnabled.set(((Bool) input).get());
+			}
+			else if ("saveEnergyFactor".equals(resourceUriPath)) {
+				saveEnergyFactor.set(((Bool) input).get());
 			}
 
 		} else if (input instanceof Int) {
@@ -169,6 +180,10 @@ public class TemperatureControllerImpl extends Obj implements
 				enabled.set(((Int) input).get());
 			} else if ("tolerance".equals(resourceUriPath)) {
 				tolerance.set(((Int) input).get());
+			}else if ("saveEnergyEnabled".equals(resourceUriPath)) {
+				saveEnergyEnabled.set(((Int) input).get());
+			}else if ("saveEnergyFactor".equals(resourceUriPath)) {
+				saveEnergyFactor.set(((Int) input).get());
 			}
 
 		}
@@ -178,11 +193,11 @@ public class TemperatureControllerImpl extends Obj implements
 			if (temperature.get() < setpoint.get() - tolerance.get()
 					&& controllerState != ControllerState.HEATING) {
 				// we need to heat!
-				controlValue.set(100 * (saveEnergyEnabled.get()?(saveEnergyFactor().get()):(1)));
+				controlValue.set(100);
 				controllerState = ControllerState.HEATING;
 			} else if (temperature.get() > setpoint.get() + tolerance.get()
 					&& controllerState != ControllerState.COOLING) {
-				controlValue.set(-100 * (saveEnergyEnabled.get()?(saveEnergyFactor().get()):(1)));
+				controlValue.set(-100);
 				controllerState = ControllerState.COOLING;
 			} else if (temperature.get() > setpoint.get()
 					&& controllerState == ControllerState.HEATING) {
@@ -200,6 +215,10 @@ public class TemperatureControllerImpl extends Obj implements
 			// we need to stop the controller
 			controlValue.set(0);
 			controllerState = ControllerState.INACTIVE;
+		}
+		
+		if((controlValue.get() == 100 || controlValue.get() == -100) && saveEnergyEnabled().get()){
+			this.controlValue.set(controlValue.get() / (100 / saveEnergyFactor().get()));
 		}
 	}
 

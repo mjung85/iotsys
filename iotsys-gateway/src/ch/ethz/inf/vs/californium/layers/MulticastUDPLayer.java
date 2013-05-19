@@ -66,7 +66,7 @@ public class MulticastUDPLayer extends Layer {
 	}
 
 	public enum REQUEST_TYPE {
-		MULTICAST_REQUEST, NORMAL_REQUEST
+		MULTICAST_REQUEST, NORMAL_REQUEST, LOCAL_REQUEST
 	}
 
 	// Inner Classes
@@ -143,22 +143,22 @@ public class MulticastUDPLayer extends Layer {
 			
 			this.socket = new MulticastSocket(null);					
 			this.socket.setReuseAddress(true);
-//			this.socket.joinGroup(group);
+			this.socket.joinGroup(group);
 			this.socket.bind(new InetSocketAddress(5684));
 
-			 Enumeration<NetworkInterface> networkInterfaces =
-			 NetworkInterface.getNetworkInterfaces();
-			 while(networkInterfaces.hasMoreElements()){
-			 NetworkInterface nextElement = networkInterfaces.nextElement();
-			 try{
-			 if(nextElement.isLoopback() && nextElement.isUp()) {
-				 LOG.info("Binding to"+nextElement.toString());
-				 this.socket.joinGroup(socketAddress, nextElement);
-			 }}
-			 catch(Exception e){
-			 // fail silently
-			 }
-			 }
+//			 Enumeration<NetworkInterface> networkInterfaces =
+//			 NetworkInterface.getNetworkInterfaces();
+//			 while(networkInterfaces.hasMoreElements()){
+//			 NetworkInterface nextElement = networkInterfaces.nextElement();
+//			 try{
+//			 if(nextElement.isLoopback() && nextElement.isUp()) {
+//				 LOG.info("Binding to"+nextElement.toString());
+//				 this.socket.joinGroup(socketAddress, nextElement);
+//			 }}
+//			 catch(Exception e){
+//			 // fail silently
+//			 }
+//			 }
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
