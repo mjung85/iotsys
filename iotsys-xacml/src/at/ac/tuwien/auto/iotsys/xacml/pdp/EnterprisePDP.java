@@ -36,8 +36,10 @@ public class EnterprisePDP {
 	public EnterprisePDP(String resourcePrefix) {
 		this.resourcePrefix = resourcePrefix;
 		try {
+			String readFile = resourcePrefix + "request/request.xml";
+			log.info("Reading files from " + readFile);
 			requestTemplate = FileHelper
-					.readFile(resourcePrefix + "request/request.xml");
+					.readFile(readFile);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
