@@ -52,7 +52,8 @@ jar {
 									   "org.apache.commons.lang, org.apache.commons.lang.builder, org.apache.commons.lang.enums, org.apache.commons.lang.exception, org.apache.commons.lang.math, org.apache.commons.lang.mutable, org.apache.commons.lang.text, org.apache.commons.lang.time, " +
 									   "org.apache.commons.logging, org.apache.commons.logging.impl, " + 
 									   "com.sun.org.apache.xerces.internal.jaxp.validation, com.sun.org.apache.xerces.internal.jaxp, " +
-									   "javax.naming.ldap, javax.naming"
+									   "javax.naming.ldap, javax.naming",
+					"Export-Package": "at.ac.tuwien.auto.iotsys.xacml.pdp"
 				   )
 	}
 }

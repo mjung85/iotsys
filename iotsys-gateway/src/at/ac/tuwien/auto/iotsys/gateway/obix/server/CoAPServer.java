@@ -117,48 +117,48 @@ public class CoAPServer extends Endpoint {
 		String resourcePath = request.getUriPath();
 
 		/* INTERCEPTORS START */
-		if (interceptorBroker != null && interceptorBroker.hasInterceptors()) {
-			log.fine("Interceptors found ... starting to prepare.");
-
-			InterceptorRequest interceptorRequest = new InterceptorRequestImpl();
-			HashMap<Parameter, String> interceptorParams = new HashMap<Parameter, String>();
-
-			String resource = COAP_URL_PROTOCOL + "://"
-					+ request.getNetworkInterface().getCanonicalHostName()
-					+ ":" + Communicator.getInstance().port() + resourcePath;
-			LOG.info(resource);
-			String action = CodeRegistry.toString(request.getCode());
-
-			interceptorParams.put(Parameter.SUBJECT, request.getPeerAddress()
-					.toString());
-			interceptorParams.put(Parameter.SUBJECT_IP_ADDRESS, request
-					.getPeerAddress().toString());
-			interceptorParams.put(Parameter.RESOURCE, resource);
-			interceptorParams.put(Parameter.RESOURCE_PROTOCOL,
-					COAP_URL_PROTOCOL);
-			interceptorParams.put(Parameter.RESOURCE_IP_ADDRESS, request
-					.getNetworkInterface().getHostAddress());
-			interceptorParams.put(Parameter.RESOURCE_HOSTNAME, request
-					.getNetworkInterface().getHostName());
-			interceptorParams.put(Parameter.RESOURCE_PATH, resourcePath);
-			interceptorParams.put(Parameter.ACTION, action);
-
-			interceptorRequest.setInterceptorParams(interceptorParams);
-
-			log.fine("Calling interceptions ...");
-			InterceptorResponse resp = interceptorBroker
-					.handleRequest(interceptorRequest);
-
-			if (!resp.getStatus().equals(StatusCode.OK)) {
-				if (resp.forward()) {
-					request.respond(CodeRegistry.RESP_FORBIDDEN,
-							resp.getMessage(), MediaTypeRegistry.TEXT_PLAIN);
-					request.sendResponse();
-					return;
-				}
-			}
-		}
-		/* INTERCEPTORS END */
+//		if (interceptorBroker != null && interceptorBroker.hasInterceptors()) {
+//			log.fine("Interceptors found ... starting to prepare.");
+//
+//			InterceptorRequest interceptorRequest = new InterceptorRequestImpl();
+//			HashMap<Parameter, String> interceptorParams = new HashMap<Parameter, String>();
+//
+//			String resource = COAP_URL_PROTOCOL + "://"
+//					+ request.getNetworkInterface().getCanonicalHostName()
+//					+ ":" + Communicator.getInstance().port() + resourcePath;
+//			LOG.info(resource);
+//			String action = CodeRegistry.toString(request.getCode());
+//
+//			interceptorParams.put(Parameter.SUBJECT, request.getPeerAddress()
+//					.toString());
+//			interceptorParams.put(Parameter.SUBJECT_IP_ADDRESS, request
+//					.getPeerAddress().toString());
+//			interceptorParams.put(Parameter.RESOURCE, resource);
+//			interceptorParams.put(Parameter.RESOURCE_PROTOCOL,
+//					COAP_URL_PROTOCOL);
+//			interceptorParams.put(Parameter.RESOURCE_IP_ADDRESS, request
+//					.getNetworkInterface().getHostAddress());
+//			interceptorParams.put(Parameter.RESOURCE_HOSTNAME, request
+//					.getNetworkInterface().getHostName());
+//			interceptorParams.put(Parameter.RESOURCE_PATH, resourcePath);
+//			interceptorParams.put(Parameter.ACTION, action);
+//
+//			interceptorRequest.setInterceptorParams(interceptorParams);
+//
+//			log.fine("Calling interceptions ...");
+//			InterceptorResponse resp = interceptorBroker
+//					.handleRequest(interceptorRequest);
+//
+//			if (!resp.getStatus().equals(StatusCode.OK)) {
+//				if (resp.forward()) {
+//					request.respond(CodeRegistry.RESP_FORBIDDEN,
+//							resp.getMessage(), MediaTypeRegistry.TEXT_PLAIN);
+//					request.sendResponse();
+//					return;
+//				}
+//			}
+//		}
+//		/* INTERCEPTORS END */
 
 		String localSocket = request.getNetworkInterface().getHostAddress()
 				.toString();

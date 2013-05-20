@@ -46,6 +46,7 @@ import at.ac.tuwien.auto.iotsys.commons.interceptor.Parameter;
 import at.ac.tuwien.auto.iotsys.gateway.interceptor.InterceptorBrokerImpl;
 import at.ac.tuwien.auto.iotsys.gateway.util.ExiUtil;
 import at.ac.tuwien.auto.iotsys.gateway.util.JsonUtil;
+import at.ac.tuwien.auto.iotsys.xacml.pdp.PDPInterceptorSettings;
 
 /**
  * A simple, tiny, nicely embeddable HTTP 1.0 (partially 1.1) server in Java
@@ -143,12 +144,14 @@ public class NanoHTTPD {
 	 */
 	public Response serve(String requestUri, String uri, String method,
 			Properties header, Properties parms, Properties files,
-			Socket mySocket) {
-		log.finest("Serve: " + uri);
+			Socket mySocket, String socketHostname, String hostAddress) {
+	
 
 		String host = header.getProperty("host");
 		String resource = "http://" + host + uri;
 		String subject = mySocket.getInetAddress().getHostAddress();
+		
+		log.info("Serving: " + uri + " for " + subject);
 
 		if (uri.endsWith("soap") && parms.containsKey("wsdl")) {
 			// serve wsdl file
@@ -173,8 +176,8 @@ public class NanoHTTPD {
 			return serveFile(uri, header,new File("res/obelix"), false);
 		}
 
-		if (interceptorBroker != null && interceptorBroker.hasInterceptors()) {
-			log.fine("Interceptors found ... starting to prepare.");
+		if (PDPInterceptorSettings.getInstance().active() && interceptorBroker != null && interceptorBroker.hasInterceptors()) {
+			log.info("Interceptors found ... starting to prepare.");
 
 			InterceptorRequest interceptorRequest = new InterceptorRequestImpl();
 			HashMap<Parameter, String> interceptorParams = new HashMap<Parameter, String>();
@@ -184,10 +187,8 @@ public class NanoHTTPD {
 					.getInetAddress().getHostAddress());
 			interceptorParams.put(Parameter.RESOURCE, resource);
 			interceptorParams.put(Parameter.RESOURCE_PROTOCOL, "http");
-			interceptorParams.put(Parameter.RESOURCE_IP_ADDRESS, mySocket
-					.getLocalAddress().getHostAddress());
-			interceptorParams.put(Parameter.RESOURCE_HOSTNAME, mySocket
-					.getLocalAddress().getHostName());
+			interceptorParams.put(Parameter.RESOURCE_IP_ADDRESS, hostAddress);
+			interceptorParams.put(Parameter.RESOURCE_HOSTNAME, socketHostname);
 			interceptorParams.put(Parameter.RESOURCE_PATH, uri);
 			interceptorParams.put(Parameter.ACTION, method);
 
@@ -201,7 +202,7 @@ public class NanoHTTPD {
 				interceptorRequest.setRequestParam((String) k,
 						header.getProperty((String) k));
 			}
-			log.fine("Calling interceptions ...");
+			log.info("Calling interceptions ...");
 			InterceptorResponse resp = interceptorBroker
 					.handleRequest(interceptorRequest);
 
@@ -420,7 +421,7 @@ public class NanoHTTPD {
 			r = new Response(HTTP_BADREQUEST, MIME_PLAINTEXT,
 					"URI Syntax Exception");
 		}
-
+		log.info("Serving: " + uri + " for " + subject + " done.");
 		return r;
 	}
 
@@ -633,6 +634,10 @@ public class NanoHTTPD {
 	private class HTTPSession implements Runnable {
 		public HTTPSession(Socket s) {
 			mySocket = s;
+//			socketHostname = mySocket.getLocalAddress().getHostName();
+//			hostAddress = mySocket.getLocalAddress().getHostAddress();
+			socketHostname = "localhost";
+			hostAddress = "127.0.0.1";
 			Thread t = new Thread(this);
 			t.setDaemon(true);
 			t.start();
@@ -840,7 +845,7 @@ public class NanoHTTPD {
 				}
 
 				Response r = serve(requestUri, uri, method, header, parms,
-						files, mySocket);
+						files, mySocket, socketHostname, hostAddress);
 				if (r == null)
 					sendError(HTTP_INTERNALERROR,
 							"SERVER INTERNAL ERROR: Serve() returned a null response.");
@@ -1203,6 +1208,8 @@ public class NanoHTTPD {
 		}
 
 		private Socket mySocket;
+		private final String socketHostname;
+		private final String hostAddress;
 	}
 
 	/**
