@@ -20,6 +20,10 @@ public class PDPInterceptor implements Interceptor {
 	
 	private String resourcePrefix = "";
 	
+	private final Response OK_RESPONSE = new Response(StatusCode.OK, false);
+	
+	private final EnterprisePDP pdp = new EnterprisePDP(resourcePrefix);
+	
 	public PDPInterceptor() {
 		
 	}
@@ -30,18 +34,25 @@ public class PDPInterceptor implements Interceptor {
 	
 	@Override
 	public synchronized InterceptorResponse handleRequest(InterceptorRequest request) {
-		log.fine("Incoming request to PDPInteceptor");
+		log.info("Incoming request to PDPInteceptor");
 		
-		EnterprisePDP pdp = new EnterprisePDP(resourcePrefix);
+		if(!PDPInterceptorSettings.getInstance().active()){
+			log.info("Returning ok_response");
+			return OK_RESPONSE;
+		}
+		
+		
 		String resource = request.getInterceptorParam(Parameter.RESOURCE);
 		String subject = request.getInterceptorParam(Parameter.SUBJECT);
 		String method = request.getInterceptorParam(Parameter.ACTION);
-
+		log.info("evaluate request");
 		if (!pdp.evaluate(resource, subject, method,
 				request.getInterceptorParams())) {
+			log.info("permission denied");
 			return new Response(StatusCode.PERMISSION_DENIED, true);
 		}
-		return new Response(StatusCode.OK, false);
+		log.info("permission ok");
+		return OK_RESPONSE;
 	}
 
 	@Override

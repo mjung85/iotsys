@@ -48,11 +48,15 @@ public class DemoAppLoaderImpl implements DeviceLoader {
 	@Override
 	public ArrayList<Connector> initDevices(ObjectBroker objectBroker) {
 		Obj application = new CoapTemperatureControllerImpl();
+		Obj xacml = new XacmlApplication();
 		
 		application.setHref(new Uri("mixedTempControl"));
 		
+		xacml.setHref(new Uri("privacyGuard"));
+		
 		synchronized(myObjects){
-			myObjects.addAll(objectBroker.addObj(application));
+//			myObjects.addAll(objectBroker.addObj(application));
+			myObjects.addAll(objectBroker.addObj(xacml));
 			objectBroker.enableGroupComm(application);
 		}
 		return null;

@@ -13,7 +13,7 @@
     </device-loader>
     <device-loader>at.ac.tuwien.auto.iotsys.gateway.connectors.enocean.EnoceanDeviceLoaderImpl
     </device-loader>
-    <device-loader>at.ac.tuwien.auto.iotsys.demoapp.DemoAppLoaderImpl
+	<device-loader>at.ac.tuwien.auto.iotsys.demoapp.DemoAppLoaderImpl
     </device-loader>
   </deviceloaders>
 
@@ -21,7 +21,7 @@
     <connector>
       <name>XBee</name>
       <enabled>true</enabled>
-      <serialPort>COM9</serialPort>
+      <serialPort>/dev/ttyUSB1</serialPort>
       <device>
         <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.xbee.TemperatureSensorImplXBee
         </type>
@@ -38,7 +38,7 @@
     <connector>
       <name>EnOcean</name>
       <enabled>true</enabled>
-      <serialPort>COM13</serialPort>
+      <serialPort>/dev/ttyS80</serialPort>
       <device>
         <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.enocean.PushButtonImplEnocean
         </type>
@@ -55,7 +55,7 @@
       <name>IPSO Challenge</name>
       <enabled>true</enabled>
       <router>
-        <ip>192.168.1.12</ip>
+        <ip>127.0.0.1</ip>
         <port>3671</port>
       </router>
       <localIP>auto</localIP>
@@ -560,7 +560,7 @@
   <wmbus>
     <connector>
       <name>W-MBus Smart Meter Linux</name>
-      <enabled>false</enabled>
+      <enabled>true</enabled>
       <serialPort>/dev/ttyUSB0</serialPort>
       <device>
         <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.wmbus.SmartMeterImplWMBus
@@ -576,7 +576,7 @@
 
     <connector>
       <name>W-MBus Smart Meter Windows</name>
-      <enabled>true</enabled>
+      <enabled>false</enabled>
       <serialPort>COM8</serialPort>
       <device>
         <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.wmbus.SmartMeterImplWMBus
