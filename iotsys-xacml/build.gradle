@@ -72,7 +72,10 @@ ext {
 	
 	String felixDir = "../felix-framework-4.2.1"
 	
+	String deployDir = "../dist"
+	
 	felix = file(felixDir)
+	depl = file(deployDir)
 }
 
 deployOsgi.doLast {
@@ -87,4 +90,20 @@ deployOsgi.doLast {
 		
 		}
 	}
+}
+
+deploy.doLast {
+	
+	File deployResDir = new File(depl.absolutePath + '/res')
+	
+	if(deployResDir.exists()){
+		println "Resource directory already available at " + deployResDir.absolutePath 
+	
+		println "Copying configuration from " + resDir.absolutePath + " to " + deployResDir.absolutePath 
+		ant.copy(todir:deployResDir){
+			fileset(dir:resDir)
+		
+		}
+	}
+	
 }
