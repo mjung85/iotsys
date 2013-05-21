@@ -470,7 +470,7 @@
 
     <connector>
       <name>BACnet A-Lab</name>
-      <enabled>true</enabled>
+      <enabled>false</enabled>
       <discovery-enabled>true</discovery-enabled>
       <localDeviceID>92345</localDeviceID>
       <broadcastAddress>128.130.56.255</broadcastAddress>
@@ -786,7 +786,7 @@
     </connector>
     <connector>
       <name>HVAC Simulation</name>
-      <enabled>false</enabled>
+      <enabled>true</enabled>
 
       <!-- SENSOREN -->
       <device>
