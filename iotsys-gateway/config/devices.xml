@@ -20,7 +20,7 @@
   <xbee>
     <connector>
       <name>XBee</name>
-      <enabled>true</enabled>
+      <enabled>false</enabled>
       <serialPort>COM9</serialPort>
       <device>
         <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.xbee.TemperatureSensorImplXBee
@@ -37,7 +37,7 @@
   <enocean>
     <connector>
       <name>EnOcean</name>
-      <enabled>true</enabled>
+      <enabled>false</enabled>
       <serialPort>COM13</serialPort>
       <device>
         <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.enocean.PushButtonImplEnocean
@@ -53,7 +53,7 @@
   <knx>
     <connector>
       <name>IPSO Challenge</name>
-      <enabled>true</enabled>
+      <enabled>false</enabled>
       <router>
         <ip>192.168.1.12</ip>
         <port>3671</port>
@@ -470,7 +470,7 @@
 
     <connector>
       <name>BACnet A-Lab</name>
-      <enabled>false</enabled>
+      <enabled>true</enabled>
       <discovery-enabled>true</discovery-enabled>
       <localDeviceID>92345</localDeviceID>
       <broadcastAddress>128.130.56.255</broadcastAddress>
@@ -576,7 +576,7 @@
 
     <connector>
       <name>W-MBus Smart Meter Windows</name>
-      <enabled>true</enabled>
+      <enabled>false</enabled>
       <serialPort>COM8</serialPort>
       <device>
         <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.wmbus.SmartMeterImplWMBus
