@@ -470,7 +470,7 @@
 
     <connector>
       <name>BACnet A-Lab</name>
-      <enabled>true</enabled>
+      <enabled>false</enabled>
       <discovery-enabled>true</discovery-enabled>
       <localDeviceID>92345</localDeviceID>
       <broadcastAddress>128.130.56.255</broadcastAddress>
@@ -594,7 +594,7 @@
   <virtual>
     <connector>
       <name>Virtual Devices</name>
-      <enabled>false</enabled>
+      <enabled>true</enabled>
 
       <!-- SENSOREN -->
 
@@ -618,7 +618,7 @@
         <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.PresenceDetectorSensorImpl
         </type>
         <address>5/1/19</address>
-        <href>presenceA</href>
+        <href>virtualPresence</href>
         <ipv6>2001:629:2500:570::10f</ipv6>
         <historyEnabled>false</historyEnabled>
         <historyCount>200</historyCount>
@@ -786,7 +786,7 @@
     </connector>
     <connector>
       <name>HVAC Simulation</name>
-      <enabled>false</enabled>
+      <enabled>true</enabled>
 
       <!-- SENSOREN -->
       <device>
