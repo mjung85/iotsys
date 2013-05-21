@@ -115,6 +115,7 @@ public class CoAPServer extends Endpoint {
 	public void execute(Request request) throws IOException {
 
 		String resourcePath = request.getUriPath();
+		log.info("Coap serving " + resourcePath + " for " + request.getPeerAddress().getAddress());
 
 		/* INTERCEPTORS START */
 //		if (interceptorBroker != null && interceptorBroker.hasInterceptors()) {
@@ -379,6 +380,8 @@ public class CoAPServer extends Endpoint {
 		}
 
 		request.sendResponse();
+		log.info("Coap serving " + resourcePath + " for " + request.getPeerAddress().getAddress() + " done.");
+		
 	}
 
 	private void fixHref(String href, StringBuffer obixResponse) {
