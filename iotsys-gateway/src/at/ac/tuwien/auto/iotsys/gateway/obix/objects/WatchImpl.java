@@ -87,6 +87,10 @@ public class WatchImpl extends Obj implements Watch {
 						Obj o = broker.pullObj(uri);
 						o.attach(observer);
 						ret.values().add(o);
+						// FIXME: duplicate child name exception! obj name cannot be duplicate?
+						// + add() method should use href as key to check duplication rather than name.
+						// + illogical procedure! object o is pulled from objects list
+						// using href as a key but is added to values() using name as a key
 
 					}					
 				}		
@@ -98,9 +102,20 @@ public class WatchImpl extends Obj implements Watch {
 		broker.addOperationHandler(new Uri(this.getNormalizedHref().getPath() + "/remove"), new OperationHandler(){
 			@Override
 			public Obj invoke(Obj in) {
-				// Perform add logic
-				
-				return new WatchOutImpl();
+				// Perform remove logic
+				if(in instanceof WatchIn){
+					WatchIn watchIn = (WatchIn) in;
+	
+					for(Obj u : watchIn.get("hrefs").list()){
+						Uri uri = (Uri) u;
+
+						ObjObserver observer = observers.get(uri.getPath());
+						observers.remove(uri.getPath());
+						Obj o = broker.pullObj(uri);
+						o.detach(observer);
+					}					
+				}		
+				return new NillImpl();
 			}			
 		});
 		
@@ -123,8 +138,49 @@ public class WatchImpl extends Obj implements Watch {
 				return out;
 			}		
 		});
+		broker.addOperationHandler(new Uri(this.getNormalizedHref().getPath() + "/pollRefresh"), new OperationHandler(){
+			@Override
+			public Obj invoke(Obj in) {
+				WatchOutImpl out = new WatchOutImpl();
+				// Perform refresh logic	
+				// Get a list of being-observed URI; get the corresponding object; notify the observer --> performing an update
+				synchronized(observers){
+					for (ObjObserver observer : observers.values()){
+						Obj beingObservedObject = (Obj) observer.getSubject();
+						beingObservedObject.notifyObservers();
+						out.values().add(beingObservedObject);
+						observer.getEvents();
+					}
+				}
+				return out;
+			}		
+		});
+		broker.addOperationHandler(new Uri(this.getNormalizedHref().getPath() + "/delete"), new OperationHandler(){
+			@Override
+			public Obj invoke(Obj in) {
+				// Perform delete logic
+				for (ObjObserver observer : observers.values()){
+					Obj beingObservedObject = (Obj) observer.getSubject();
+					beingObservedObject.detach(observer);
+					observers.remove(observer);
+					observer = null;
+				}
+				numInstance = 0;
+				broker.removeOperationHandler(new Uri(thisWatch().getNormalizedHref().getPath() + "/add"));
+				broker.removeOperationHandler(new Uri(thisWatch().getNormalizedHref().getPath() + "/remove"));
+				broker.removeOperationHandler(new Uri(thisWatch().getNormalizedHref().getPath() + "/pollChanges"));
+				broker.removeOperationHandler(new Uri(thisWatch().getNormalizedHref().getPath() + "/pollRefresh"));
+				broker.removeOperationHandler(new Uri(thisWatch().getNormalizedHref().getPath() + "/delete"));
+				broker.removeObj(thisWatch().getHref().getPath());
+				return new NillImpl();
+			}		
+		});
 	}
 	
+	public Watch thisWatch(){
+		return this;
+	}
+
 	public Reltime lease() {
 		// TODO make lease time writeable
 		return new Reltime("lease", 60 * 1000); // 1 minute by defaults, not writable
@@ -135,7 +191,7 @@ public class WatchImpl extends Obj implements Watch {
 	}
 
 	public Op remove() {
-		return new Op("remove", new Contract(WATCH_IN_CONTRACT), new Contract("obix:Nil"));
+		return new Op("remove", new Contract(WATCH_IN_CONTRACT), new Contract(OBIX_NIL));
 	}
 
 	public Op pollChanges() {
