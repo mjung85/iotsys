@@ -55,7 +55,7 @@
       <name>IPSO Challenge</name>
       <enabled>false</enabled>
       <router>
-        <ip>192.168.1.12</ip>
+        <ip>192.168.1.13</ip>
         <port>3671</port>
       </router>
       <localIP>auto</localIP>
@@ -471,7 +471,7 @@
     <connector>
       <name>BACnet A-Lab</name>
       <enabled>false</enabled>
-      <discovery-enabled>true</discovery-enabled>
+      <discovery-enabled>false</discovery-enabled>
       <localDeviceID>92345</localDeviceID>
       <broadcastAddress>128.130.56.255</broadcastAddress>
       <localPort>47808</localPort>
@@ -745,7 +745,7 @@
     </connector>
     <connector>
       <name>Virtual Devices 2</name>
-      <enabled>false</enabled>
+      <enabled>true</enabled>
 
       <!-- SENSOREN -->
       <device>
