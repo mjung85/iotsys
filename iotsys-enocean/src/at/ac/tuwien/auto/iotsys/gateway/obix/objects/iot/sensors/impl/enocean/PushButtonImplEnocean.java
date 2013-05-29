@@ -15,7 +15,7 @@ public class PushButtonImplEnocean extends PushButtonImpl {
 	private EnoceanConnector connector;
 	private String hexAddress;
 	
-	public PushButtonImplEnocean(EnoceanConnector connector, String hexAddress) {
+	public PushButtonImplEnocean(EnoceanConnector connector, final String hexAddress) {
 		this.connector = connector;
 		this.hexAddress = hexAddress;
 		
@@ -26,11 +26,11 @@ public class PushButtonImplEnocean extends PushButtonImpl {
 			@Override
 			public void notifyWatchDog(ESP3Frame payload) {
 				if (payload.getPacket().telegram.getPayloadAsString().equals("0x50")) {
-					log.info("switch on");
+					log.info(hexAddress + "switch on");
 					value().set(true);
 				}
 				if (payload.getPacket().telegram.getPayloadAsString().equals("0x70")) {
-					log.info("switch off");					
+					log.info(hexAddress + "switch off");					
 					value().set(false);
 				}
 				
