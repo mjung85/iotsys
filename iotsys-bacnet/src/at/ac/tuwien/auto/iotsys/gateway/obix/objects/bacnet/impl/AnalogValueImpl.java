@@ -37,4 +37,11 @@ public class AnalogValueImpl extends AnalogBacnetObj implements AnalogValue {
 		setIs(new Contract(AnalogValue.CONTRACT));
 		value().setWritable(true);
 	}
+	
+	@Override
+	protected void refreshWritable() {
+		// Value Objects are writable if Out_Of_Service is True
+		// or if Present_Value is commandable (PriorityArray and RelinquishDefault exist)
+		value().setWritable(isOutOfService() || isValueCommandable());
+	}
 }

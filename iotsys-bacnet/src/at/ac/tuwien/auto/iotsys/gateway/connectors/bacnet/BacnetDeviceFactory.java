@@ -48,7 +48,7 @@ public class BacnetDeviceFactory {
 	
 	public static Obj createDevice(BACnetConnector bacnetConnector, RemoteDevice device, ObjectIdentifier objIdentifier) {
 		BacnetDataPointInfo bacnetDataPointInfo =
-				new BacnetDataPointInfo(device.getInstanceNumber(), objIdentifier, new PropertyIdentifier(85));
+				new BacnetDataPointInfo(device.getInstanceNumber(), objIdentifier, PropertyIdentifier.presentValue);
 		
 		switch(objIdentifier.getObjectType().intValue()) {
 		case ANALOG_INPUT:

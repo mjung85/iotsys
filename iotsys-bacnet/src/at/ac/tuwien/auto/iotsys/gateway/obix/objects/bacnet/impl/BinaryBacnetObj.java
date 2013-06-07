@@ -43,7 +43,7 @@ public abstract class BinaryBacnetObj extends BacnetObj {
 	public BinaryBacnetObj(BACnetConnector bacnetConnector, BacnetDataPointInfo dataPointInfo) {
 		super(bacnetConnector, dataPointInfo);
 		
-		Uri valueUri = new Uri("/value");
+		Uri valueUri = new Uri("value");
 		
 		value.setHref(valueUri);
 		value.setName("value");
@@ -51,6 +51,7 @@ public abstract class BinaryBacnetObj extends BacnetObj {
 	}
 	
 	public void writeObject(Obj input) {
+		refreshWritable();
 		if (!value.isWritable()) return;
 		
 		Encodable val;
@@ -91,9 +92,7 @@ public abstract class BinaryBacnetObj extends BacnetObj {
 			if(property instanceof BinaryPV) {
 				BinaryPV newValue = ((BinaryPV) property);
 				boolean active = (newValue.intValue() == 1);
-				
-				if(value.get() != active)
-					value.set(active);
+				value.set(active);
 			}
 		
 		} catch (BACnetException e) {
