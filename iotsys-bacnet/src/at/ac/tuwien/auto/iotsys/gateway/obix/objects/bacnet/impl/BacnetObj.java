@@ -32,6 +32,7 @@ import com.serotonin.bacnet4j.exception.BACnetException;
 import com.serotonin.bacnet4j.exception.PropertyValueException;
 import com.serotonin.bacnet4j.type.Encodable;
 import com.serotonin.bacnet4j.type.enumerated.PropertyIdentifier;
+import com.serotonin.bacnet4j.type.primitive.Boolean;
 import com.serotonin.bacnet4j.type.primitive.CharacterString;
 import com.serotonin.bacnet4j.type.primitive.ObjectIdentifier;
 
@@ -51,25 +52,33 @@ public abstract class BacnetObj extends Obj {
 		this.bacnetConnector = bacnetConnector;
 		
 		name = new Str();
-		name.setHref(new Uri("/name"));
+		name.setHref(new Uri("name"));
 		name.setName("name");
 		name.setWritable(false);
 		add(name);
 		
 		description = new Str();
-		description.setHref(new Uri("/description"));
+		description.setHref(new Uri("description"));
 		description.setName("description");
 		description.setWritable(false);
 		add(description);
 	}
 	
+	/**
+	 * Refreshes the value's writable-status
+	 */
+	protected void refreshWritable() {
+		return;
+	}
+	
 	public void refreshObject() {
+		refreshWritable();
 		Encodable property;
-
+		
 		try {
 			// name
 			if (name.getStr().equals("")) {
-				property = bacnetConnector.readProperty(deviceID, objectIdentifier, new PropertyIdentifier(77));
+				property = bacnetConnector.readProperty(deviceID, objectIdentifier, PropertyIdentifier.objectName);
 				if(property instanceof CharacterString){
 					String newName = ((CharacterString) property).getValue();
 					name.set(newName);
@@ -78,7 +87,7 @@ public abstract class BacnetObj extends Obj {
 			
 			// description
 			if (description.getStr().equals("")) {
-				property = bacnetConnector.readProperty(deviceID, objectIdentifier, new PropertyIdentifier(28));
+				property = bacnetConnector.readProperty(deviceID, objectIdentifier, PropertyIdentifier.description);
 				if(property instanceof CharacterString){
 					String newDesc = ((CharacterString) property).getValue();
 					description.set(newDesc);
@@ -89,5 +98,41 @@ public abstract class BacnetObj extends Obj {
 		} catch (PropertyValueException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	
+	public boolean isOutOfService() {
+		try {
+			Encodable outOfService = bacnetConnector.readProperty(
+					deviceID, objectIdentifier, PropertyIdentifier.outOfService);
+			
+			if (outOfService instanceof Boolean) {
+				Boolean oos = (Boolean) outOfService;
+				return oos.booleanValue();
+			}
+			
+		} catch (BACnetException e) {
+			e.printStackTrace();
+		} catch (PropertyValueException e) {
+			e.printStackTrace();
+		}
+		
+		return true;
+	}
+	
+	public boolean isValueCommandable() {
+		try {
+			bacnetConnector.readProperty(
+					deviceID, objectIdentifier, PropertyIdentifier.priorityArray);
+			bacnetConnector.readProperty(
+					deviceID, objectIdentifier, PropertyIdentifier.relinquishDefault);
+		} catch (PropertyValueException e) {
+			return false;
+		} catch (BACnetException e) {
+			e.printStackTrace();
+			return false;
+		}
+		
+		return true;
 	}
 }

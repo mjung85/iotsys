@@ -35,4 +35,10 @@ public class AnalogOutputImpl extends AnalogBacnetObj implements AnalogOutput {
 		value().setWritable(true);
 		setIs(new Contract(AnalogOutput.CONTRACT));
 	}
+	
+	@Override
+	protected void refreshWritable() {
+		// Output objects always writable
+		value().setWritable(true);
+	}
 }
