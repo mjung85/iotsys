@@ -132,6 +132,9 @@ public class WMBusDeviceLoaderImpl implements DeviceLoader {
 
 						Boolean historyEnabled = subConfig.getBoolean("device("
 								+ i + ").historyEnabled", false);
+						
+						Boolean groupCommEnabled = subConfig.getBoolean("device("
+								+ i + ").groupCommEnabled", false);
 
 						Integer historyCount = subConfig.getInt("device(" + i
 								+ ").historyCount", 0);
@@ -203,6 +206,10 @@ public class WMBusDeviceLoaderImpl implements DeviceLoader {
 												objectBroker
 														.addHistoryToDatapoints(smartMeter);
 											}
+										}
+										
+										if(groupCommEnabled != null && groupCommEnabled){
+											objectBroker.enableGroupComm(smartMeter);
 										}
 									}
 								}

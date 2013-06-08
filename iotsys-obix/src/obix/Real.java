@@ -68,8 +68,31 @@ public class Real extends Val {
 	 * Set value.
 	 */
 	public void set(double val) {
-		this.val = val;
-		notifyObservers();
+		double oldVal = this.val;
+		
+		if(val < this.getMin()){
+			this.val = this.getMin();
+		}
+		else if(val > this.getMax()){
+			this.val = this.getMax();
+		}
+		else{
+			this.val = val;
+		}
+		if(this.val != oldVal)
+			notifyObservers();
+	}
+	
+	/**
+	 * Auto cast for double
+	 */
+	public void set(boolean val){
+		if(val){
+			set(100);
+		}
+		else{
+			set(0);
+		}
 	}
 
 	// //////////////////////////////////////////////////////////////
@@ -207,5 +230,18 @@ public class Real extends Val {
 	private double max = MAX_DEFAULT;
 	private Uri unit = null;
 	private int precision = PRECISION_DEFAULT;
+	
+	public void writeObject(Obj input) {
+		if (this.getParent() != null) {
+			this.getParent().writeObject(input);
+		} else {
+			if (input instanceof Real) {
+				Real inputReal = (Real) input;
+				if (this.get() != inputReal.get()) {
+					this.set(inputReal.get());
+				}
+			}
+		}
+	}
 
 }

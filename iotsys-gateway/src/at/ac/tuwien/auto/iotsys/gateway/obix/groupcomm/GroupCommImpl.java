@@ -96,9 +96,13 @@ public class GroupCommImpl extends Obj implements GroupComm, Observer{
 	
 	@Override
 	public void initialize(){
+		
 		this.setHref(new Uri(this.datapoint.getFullContextPath()
 				+ "/groupComm"));
 		ObjectBrokerImpl.getInstance().addObj(this, false);
+		
+		
+//		ObjectBrokerImpl.getInstance().addObj(groups, false);
 		
 		String queryHref = datapoint.getFullContextPath()
 				+ "/groupComm/joinGroup";
@@ -204,7 +208,7 @@ public class GroupCommImpl extends Obj implements GroupComm, Observer{
 					group = (Inet6Address) Inet6Address.getByName(strObj.get());
 					if(!group.equals(MulticastUDPLayer.getMulticastAddress())){
 						log.finest("Sending out update of " + datapoint.getFullContextPath() + " to group " + group);
-						GroupCommServiceImpl.getInstance().sendUpdate(group, state);
+						GroupCommServiceImpl.getInstance().sendUpdate(group, (Obj)state);
 					}
 				} catch (UnknownHostException e) {
 					e.printStackTrace();

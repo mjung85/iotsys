@@ -34,7 +34,9 @@ package at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl;
 
 import obix.Bool;
 import obix.Contract;
+import obix.Int;
 import obix.Obj;
+import obix.Real;
 import obix.Uri;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.HeatPumpActuator;
 
@@ -68,6 +70,7 @@ public class HeatPumpActuatorImpl extends ActuatorImpl implements HeatPumpActuat
 	
 	@Override
 	public void writeObject(Obj input){
+		
 		if(input instanceof HeatPumpActuator){
 			HeatPumpActuator in = (HeatPumpActuator) input;
 			this.targetValueInfluence.set(in.targetValueInfluence().get());
@@ -75,6 +78,30 @@ public class HeatPumpActuatorImpl extends ActuatorImpl implements HeatPumpActuat
 		}
 		else if(input instanceof Bool){
 			Bool in = (Bool) input;
+			String resourceUriPath = input.getInvokedHref().substring(input.getInvokedHref().lastIndexOf('/') + 1);
+			
+			if(HeatPumpActuator.DISABLED_HREF.equals(resourceUriPath)){
+				this.disabled.set(in.get());
+			}
+			
+			if(HeatPumpActuator.TARGET_VALUE_INFLUENCE_HREF.equals(resourceUriPath)){
+				this.targetValueInfluence.set(in.get());
+			}
+		}
+		else if(input instanceof Int){
+			Int in = (Int) input;
+			String resourceUriPath = input.getInvokedHref().substring(input.getInvokedHref().lastIndexOf('/') + 1);
+			
+			if(HeatPumpActuator.DISABLED_HREF.equals(resourceUriPath)){
+				this.disabled.set(in.get());
+			}
+			
+			if(HeatPumpActuator.TARGET_VALUE_INFLUENCE_HREF.equals(resourceUriPath)){
+				this.targetValueInfluence.set(in.get());
+			}
+		}
+		else if(input instanceof Real){
+			Real in = (Real) input;
 			String resourceUriPath = input.getInvokedHref().substring(input.getInvokedHref().lastIndexOf('/') + 1);
 			
 			if(HeatPumpActuator.DISABLED_HREF.equals(resourceUriPath)){

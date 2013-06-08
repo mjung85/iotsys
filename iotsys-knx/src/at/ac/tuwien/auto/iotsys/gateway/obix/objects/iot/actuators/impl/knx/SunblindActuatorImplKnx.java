@@ -85,25 +85,7 @@ public class SunblindActuatorImplKnx extends SunblindActuatorImpl {
 					}
 				}
 			});
-			// knxConnector.addWatchDog(moveUp, new KNXWatchDog() {
-			// @Override
-			// public void notifyWatchDog(byte[] apdu) {
-			// try {
-			// DPTXlatorBoolean x = new
-			// DPTXlatorBoolean(DPTXlatorBoolean.DPT_OCCUPANCY);
-			//
-			// x.setData(apdu);
-			//
-			// if(x.getValueBoolean() !=
-			// SunblindActuatorImplKnx.this.moveUpValue.get()){
-			// SunblindActuatorImplKnx.this.moveUpValue.set(x.getValueBoolean());
-			// }
-			//
-			// } catch (KNXException e) {
-			// e.printStackTrace();
-			// }
-			// }
-			// });
+			
 
 		}
 	}

@@ -36,7 +36,6 @@ import at.ac.tuwien.auto.calimero.CloseEvent;
 import at.ac.tuwien.auto.calimero.GroupAddress;
 import at.ac.tuwien.auto.calimero.cemi.CEMILData;
 import at.ac.tuwien.auto.calimero.datapoint.Datapoint;
-import at.ac.tuwien.auto.calimero.datapoint.StateDP;
 import at.ac.tuwien.auto.calimero.exception.KNXException;
 import at.ac.tuwien.auto.calimero.link.KNXNetworkLinkIP;
 import at.ac.tuwien.auto.calimero.link.event.NetworkLinkListener;
@@ -254,7 +253,7 @@ public class KNXConnector implements Connector {
 			CEMILData data = (CEMILData) e.getFrame();
 
 			GroupAddress target = (GroupAddress) data.getDestination(); // getDestinationAddress();
-			log.finest("Received frame for " + target.getRawAddress());
+			log.fine("Received frame for " + target);
 			synchronized (watchDogs) {
 
 				if (watchDogs.containsKey(target.getRawAddress())) {

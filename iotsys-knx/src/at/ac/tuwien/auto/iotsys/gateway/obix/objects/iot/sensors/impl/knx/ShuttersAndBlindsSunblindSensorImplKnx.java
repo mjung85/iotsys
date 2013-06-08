@@ -62,10 +62,10 @@ public class ShuttersAndBlindsSunblindSensorImplKnx extends ShuttersAndBlindsSun
 				try {
 					DPTXlatorBoolean x = new DPTXlatorBoolean(DPTXlatorBoolean.DPT_UPDOWN);
 					x.setData(apdu);
-					
-					for(int i=0; i< apdu.length; i++) {
-						System.out.print(apdu[i]);
-					}
+//					
+//					for(int i=0; i< apdu.length; i++) {
+//						System.out.print(apdu[i]);
+//					}
 					
 					moveUpDownValue.set(x.getValueBoolean());
 					

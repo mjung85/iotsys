@@ -72,13 +72,15 @@ public class ObixServerImpl implements ObixServer{
 	}
 
 	public Obj writeObj(URI href, String xmlStream) {
+		log.info("Writing on object " + href);
 		log.finer("Writing on object: " + href + " xmlStream: " + xmlStream);
 		Obj input = ObixDecoder.fromString(xmlStream);
 
 		try {
 			objectBroker.pushObj(new Uri(href.toASCIIString()), input, false);
 		} catch (Exception ex) {
-			Err e = new Err("Error writing object to network" + ex.getMessage());
+			ex.printStackTrace();
+			Err e = new Err("Error writing object to network: " + ex.getMessage());
 			return e;
 		}
 

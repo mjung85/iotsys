@@ -68,6 +68,12 @@ public class EXIDecoder {
 
 	private static final EXIDecoder instance = new EXIDecoder();
 	
+	private EXIReader exiReaderSchema;
+	private EXIReader exiReaderDefault;
+	
+	private ObixHandler exiSchemaHandler;
+	private ObixHandler exiDefaultHandler;
+	
 	
 	public static void main(String[] args) {
 		File inputFile = new File("out.exi");
@@ -118,29 +124,47 @@ public class EXIDecoder {
 			// fall back to default grammarCache
 			schemaGrammarCache = defaultGrammarCache;
 		}
+		
+		
+		try {
+			exiReaderSchema = new EXIReader();
+			exiReaderSchema.setEXISchema(schemaGrammarCache);
+			exiReaderDefault = new EXIReader();
+			exiReaderDefault.setEXISchema(defaultGrammarCache);
+			
+			exiSchemaHandler = new ObixHandler();
+			exiDefaultHandler = new ObixHandler();
+			exiReaderDefault.setContentHandler(exiDefaultHandler);
+			exiReaderSchema.setContentHandler(exiSchemaHandler);
+		} catch (EXIOptionsException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
-	public Obj fromBytes(byte[] payload, boolean useEXISchema)
+	public synchronized Obj fromBytes(byte[] payload, boolean useEXISchema)
+			throws IOException, SAXException,
+			TransformerConfigurationException, EXIOptionsException {
+
+		if(useEXISchema){
+			exiReaderSchema.parse(new InputSource(new ByteArrayInputStream(payload)));
+			return exiSchemaHandler.getObj();
+		}
+		else{
+			exiReaderDefault.parse(new InputSource(new ByteArrayInputStream(payload)));
+			return exiDefaultHandler.getObj();
+		}
+
+	}
+	
+	public synchronized Obj fromBytesSchema(byte[] payload)
 			throws IOException, SAXException,
 			TransformerConfigurationException, EXIOptionsException {
 		
-		// EXIReader infers and reconstructs the XML file structure.
-		EXIReader reader = new EXIReader();
-
-		if (useEXISchema) {
-			reader.setEXISchema(schemaGrammarCache);
-		} else {
-			reader.setEXISchema(defaultGrammarCache);
-		}
-
-		// Assign the transformer handler to interpret XML content.
-		ObixHandler obixHandler = new ObixHandler();
-		reader.setContentHandler(obixHandler);
-
 		// Parse the file information.
-		reader.parse(new InputSource(new ByteArrayInputStream(payload)));
-
-		return obixHandler.getObj();
+		exiReaderSchema.parse(new InputSource(new ByteArrayInputStream(payload)));
+	
+		return exiSchemaHandler.getObj();
 	}
 	
 	public static EXIDecoder getInstance(){

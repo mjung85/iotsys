@@ -33,6 +33,7 @@
 package at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl;
 
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.AirDamperActuator;
+import obix.Bool;
 import obix.Contract;
 import obix.Int;
 import obix.Obj;

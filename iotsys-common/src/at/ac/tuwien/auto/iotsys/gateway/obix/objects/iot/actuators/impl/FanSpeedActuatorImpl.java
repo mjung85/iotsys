@@ -43,55 +43,81 @@ import obix.Int;
 import obix.Obj;
 import obix.Uri;
 
-public class FanSpeedActuatorImpl extends ActuatorImpl implements FanSpeedActuator{
+public class FanSpeedActuatorImpl extends ActuatorImpl implements
+		FanSpeedActuator {
 	protected Int fanSpeedSetpointValue = new Int(0);
 	protected Bool enabledValue = new Bool(false);
-	
-	private static final Logger log = Logger.getLogger(FanSpeedActuatorImpl.class.getName());
-	
+
+	private static final Logger log = Logger
+			.getLogger(FanSpeedActuatorImpl.class.getName());
+
 	public FanSpeedActuatorImpl() {
 		setIs(new Contract(FanSpeedActuator.CONTRACT));
 		fanSpeedSetpointValue.setWritable(true);
-		Uri fanSpeedSetpointValueUri = new Uri(FanSpeedActuator.FAN_SPEED_SETPOINT_CONTRACT_HREF);
+		Uri fanSpeedSetpointValueUri = new Uri(
+				FanSpeedActuator.FAN_SPEED_SETPOINT_CONTRACT_HREF);
 		fanSpeedSetpointValue.setHref(fanSpeedSetpointValueUri);
-		fanSpeedSetpointValue.setName(FanSpeedActuator.FAN_SPEED_SETPOINT_CONTRACT_NAME);
-		fanSpeedSetpointValue.setUnit(new Uri(FanSpeedActuator.FAN_SPEED_SETPOINT_CONTRACT_UNIT));
-		
+		fanSpeedSetpointValue
+				.setName(FanSpeedActuator.FAN_SPEED_SETPOINT_CONTRACT_NAME);
+		fanSpeedSetpointValue.setUnit(new Uri(
+				FanSpeedActuator.FAN_SPEED_SETPOINT_CONTRACT_UNIT));
+
 		enabledValue.setHref(new Uri(FanSpeedActuator.ENBALED_CONTRACT_HREF));
 		enabledValue.setName(FanSpeedActuator.ENABLED_CONTRACT_NAME);
+		enabledValue.setWritable(true);
+		
 		add(fanSpeedSetpointValue);
 		add(enabledValue);
 	}
-		
-	public void writeObject(Obj input){
-		// A write on this object was received, update the according data point.		
-		long newFanSpeedSetpointValue = 0;
-		if(input instanceof FanSpeedActuator){
+
+	public void writeObject(Obj input) {
+		String resourceUriPath = "";
+		if (input.getHref() == null) {
+			resourceUriPath = input.getInvokedHref().substring(
+					input.getInvokedHref().lastIndexOf('/') + 1);
+		} else {
+			resourceUriPath = input.getHref().get();
+		}
+		if (input instanceof FanSpeedActuator) {
 			FanSpeedActuator in = (FanSpeedActuator) input;
-			log.finer("Writing on FanSpeedActuator: " + in.fanSpeedSetpointValue().get() + "," + in.enabled().get());
-			
-			newFanSpeedSetpointValue = in.fanSpeedSetpointValue().get();	
-			enabledValue.set(in.enabled().get());
-			
+			log.finer("Writing on FanSpeedActuator: "
+					+ in.fanSpeedSetpointValue().get() + ","
+					+ in.enabled().get());
+
+			this.fanSpeedSetpointValue.set(in.fanSpeedSetpointValue().get());
+			this.enabledValue.set(in.enabled().get());
+
+		} else if (input instanceof Int) {
+
+			if (FanSpeedActuator.FAN_SPEED_SETPOINT_CONTRACT_HREF
+					.equals(resourceUriPath)) {
+				this.fanSpeedSetpointValue.set(((Int) input).get());
+			} else if (FanSpeedActuator.ENBALED_CONTRACT_HREF
+					.equals(resourceUriPath)) {
+				this.enabledValue.set(((Int) input).get());
+			}
+
+		} else if (input instanceof Bool) {
+
+			if (FanSpeedActuator.FAN_SPEED_SETPOINT_CONTRACT_HREF
+					.equals(resourceUriPath)) {
+				this.fanSpeedSetpointValue.set(((Bool) input).get());
+			} else if (FanSpeedActuator.ENBALED_CONTRACT_HREF
+					.equals(resourceUriPath)) {
+				this.enabledValue.set(((Bool) input).get());
+			}
+
 		}
-		else if(input instanceof Int){
-			newFanSpeedSetpointValue = ((Int) input).get();
-		}
-		else if(input instanceof Bool){
-			this.enabledValue.set(((Bool) input).get());
-		}
-		this.fanSpeedSetpointValue.set(newFanSpeedSetpointValue);
 	}
 
-	
 	@Override
 	public Int fanSpeedSetpointValue() {
-		log.finer("Returning this value is now: " + this.fanSpeedSetpointValue.getInt());
+		log.finer("Returning this value is now: "
+				+ this.fanSpeedSetpointValue.getInt());
 		return this.fanSpeedSetpointValue;
 	}
 
-	
 	public Bool enabled() {
 		return enabledValue;
-	}	
+	}
 }

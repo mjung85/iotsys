@@ -35,7 +35,9 @@ package at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.BoilerActuator;
 import obix.Bool;
 import obix.Contract;
+import obix.Int;
 import obix.Obj;
+import obix.Real;
 import obix.Uri;
 
 public class BoilerActuatorImpl extends ActuatorImpl implements BoilerActuator {
@@ -52,15 +54,21 @@ public class BoilerActuatorImpl extends ActuatorImpl implements BoilerActuator {
 	public void writeObject(Obj input){
 		// A write on this object was received, update the according data point.		
 		boolean newVal = false;
+		
 		if(input instanceof BoilerActuator){
 			BoilerActuator in = (BoilerActuator) input;		
-			newVal = in.enabled().get();
+			this.enabled.set(in.enabled().get());
 			
 		}
 		else if(input instanceof Bool){
-			newVal = ((Bool) input).getBool();
+			this.enabled.set(((Bool) input).getBool());
 		}
-		this.enabled.set(newVal);
+		else if(input instanceof Int){
+			this.enabled.set( ((Int) input).get());
+		} else if(input instanceof Real){
+			this.enabled.set(((Real) input).get());
+		}
+		
 	}
 
 	@Override
