@@ -20,6 +20,7 @@ import java.net.URISyntaxException;
 import java.net.URLEncoder;
 import java.util.Date;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Locale;
 import java.util.Properties;
@@ -36,8 +37,16 @@ import obix.io.ObixEncoder;
 
 import org.json.JSONException;
 
+import at.ac.tuwien.auto.iotsys.commons.interceptor.InterceptorBroker;
+import at.ac.tuwien.auto.iotsys.commons.interceptor.InterceptorRequest;
+import at.ac.tuwien.auto.iotsys.commons.interceptor.InterceptorRequestImpl;
+import at.ac.tuwien.auto.iotsys.commons.interceptor.InterceptorResponse;
+import at.ac.tuwien.auto.iotsys.commons.interceptor.InterceptorResponse.StatusCode;
+import at.ac.tuwien.auto.iotsys.commons.interceptor.Parameter;
+import at.ac.tuwien.auto.iotsys.gateway.interceptor.InterceptorBrokerImpl;
 import at.ac.tuwien.auto.iotsys.gateway.util.ExiUtil;
 import at.ac.tuwien.auto.iotsys.gateway.util.JsonUtil;
+import at.ac.tuwien.auto.iotsys.xacml.pdp.PDPInterceptorSettings;
 
 /**
  * A simple, tiny, nicely embeddable HTTP 1.0 (partially 1.1) server in Java
@@ -111,6 +120,9 @@ public class NanoHTTPD {
 
 	private ExiUtil exiUtil = null;
 
+	private InterceptorBroker interceptorBroker = InterceptorBrokerImpl
+			.getInstance();
+
 	/**
 	 * Override this to customize the server.
 	 * <p>
@@ -132,10 +144,14 @@ public class NanoHTTPD {
 	 */
 	public Response serve(String requestUri, String uri, String method,
 			Properties header, Properties parms, Properties files,
-			Socket mySocket) {
-		log.finest("Serve: " + uri);
+			Socket mySocket, String socketHostname, String hostAddress) {
+	
 
 		String host = header.getProperty("host");
+		String resource = "http://" + host + uri;
+		String subject = mySocket.getInetAddress().getHostAddress();
+		
+		log.info("Serving: " + uri + " for " + subject);
 
 		if (uri.endsWith("soap") && parms.containsKey("wsdl")) {
 			// serve wsdl file
@@ -155,7 +171,48 @@ public class NanoHTTPD {
 			Response r = new Response(HTTP_OK, MIME_PLAINTEXT,
 					obixServer.getCoRELinks());
 			return r;
-		}	
+		} else if (uri.equalsIgnoreCase("/") || uri.isEmpty() || uri.endsWith(".js") || uri.endsWith(".css")) {
+			if (uri.isEmpty()) uri = "/index.html"; 
+			return serveFile(uri, header,new File("res/obelix"), false);
+		}
+
+		if (PDPInterceptorSettings.getInstance().active() && interceptorBroker != null && interceptorBroker.hasInterceptors()) {
+			log.info("Interceptors found ... starting to prepare.");
+
+			InterceptorRequest interceptorRequest = new InterceptorRequestImpl();
+			HashMap<Parameter, String> interceptorParams = new HashMap<Parameter, String>();
+
+			interceptorParams.put(Parameter.SUBJECT, subject);
+			interceptorParams.put(Parameter.SUBJECT_IP_ADDRESS, mySocket
+					.getInetAddress().getHostAddress());
+			interceptorParams.put(Parameter.RESOURCE, resource);
+			interceptorParams.put(Parameter.RESOURCE_PROTOCOL, "http");
+			interceptorParams.put(Parameter.RESOURCE_IP_ADDRESS, hostAddress);
+			interceptorParams.put(Parameter.RESOURCE_HOSTNAME, socketHostname);
+			interceptorParams.put(Parameter.RESOURCE_PATH, uri);
+			interceptorParams.put(Parameter.ACTION, method);
+
+			interceptorRequest.setInterceptorParams(interceptorParams);
+
+			for (Object k : header.keySet()) {
+				interceptorRequest.setHeader((String) k,
+						header.getProperty((String) k));
+			}
+			for (Object k : parms.keySet()) {
+				interceptorRequest.setRequestParam((String) k,
+						header.getProperty((String) k));
+			}
+			log.info("Calling interceptions ...");
+			InterceptorResponse resp = interceptorBroker
+					.handleRequest(interceptorRequest);
+
+			if (!resp.getStatus().equals(StatusCode.OK)) {
+				if (resp.forward()) {
+					return new Response(HTTP_FORBIDDEN, MIME_PLAINTEXT,
+							resp.getMessage());
+				}
+			}
+		}
 
 		String data = "";
 
@@ -178,7 +235,8 @@ public class NanoHTTPD {
 				Byte[] payload = (Byte[]) parms.get("payload");
 
 				try {
-					data = ExiUtil.getInstance().decodeEXI(unbox(payload), true);
+					data = ExiUtil.getInstance()
+							.decodeEXI(unbox(payload), true);
 				} catch (Exception e1) {
 					e1.printStackTrace();
 					data = parms.getProperty("data");
@@ -210,7 +268,6 @@ public class NanoHTTPD {
 		} else if (parms.containsKey("data")) {
 			data = parms.getProperty("data");
 		}
-
 
 		log.finest("serve: " + uri + ", method: " + method + ", data.length() "
 				+ data.length());
@@ -254,8 +311,8 @@ public class NanoHTTPD {
 
 		String resourcePath = uri;
 
-		if (lastIndex > 0) {			
-			localSocketSplitted = localSocketSplitted.substring(0, lastIndex);			
+		if (lastIndex > 0) {
+			localSocketSplitted = localSocketSplitted.substring(0, lastIndex);
 		}
 
 		String ipv6Address = localSocketSplitted.substring(1);
@@ -303,21 +360,20 @@ public class NanoHTTPD {
 				}
 
 				if (method.equals("POST")) {
-					Obj obj = obixServer.invokeOp(new URI(resourcePath),
-							data);
+					Obj obj = obixServer.invokeOp(new URI(resourcePath), data);
 					obixResponse = new StringBuffer(ObixEncoder.toString(obj));
 				}
 			}
 
 			// in case of a method call don't fix the HREF
-			if(!method.equals("POST")){
+			if (!method.equals("POST")) {
 				fixHref(requestUri, obixResponse);
 			}
 
 			if (exiRequested || exiSchemaRequested) {
 				try {
-					byte[] exiData = ExiUtil.getInstance().encodeEXI(XML_HEADER
-							+ obixResponse, exiSchemaRequested);
+					byte[] exiData = ExiUtil.getInstance().encodeEXI(
+							XML_HEADER + obixResponse, exiSchemaRequested);
 					// try to decode it immediately
 
 					r = new Response(HTTP_OK, MIME_EXI,
@@ -365,7 +421,7 @@ public class NanoHTTPD {
 			r = new Response(HTTP_BADREQUEST, MIME_PLAINTEXT,
 					"URI Syntax Exception");
 		}
-
+		log.info("Serving: " + uri + " for " + subject + " done.");
 		return r;
 	}
 
@@ -578,6 +634,10 @@ public class NanoHTTPD {
 	private class HTTPSession implements Runnable {
 		public HTTPSession(Socket s) {
 			mySocket = s;
+//			socketHostname = mySocket.getLocalAddress().getHostName();
+//			hostAddress = mySocket.getLocalAddress().getHostAddress();
+			socketHostname = "localhost";
+			hostAddress = "127.0.0.1";
 			Thread t = new Thread(this);
 			t.setDaemon(true);
 			t.start();
@@ -755,7 +815,7 @@ public class NanoHTTPD {
 						parms.put("data", postLine);
 					}
 
-				}				
+				}
 				String localSocket = mySocket.getLocalSocketAddress()
 						.toString();
 				int lastIndex = localSocket.lastIndexOf(":");
@@ -765,7 +825,7 @@ public class NanoHTTPD {
 					localSocketSplitted = localSocket.substring(0, lastIndex);
 				}
 
-				String requestUri = uri;				
+				String requestUri = uri;
 
 				if (mySocket.getInetAddress() instanceof Inet6Address
 						&& uri.equalsIgnoreCase("/")
@@ -779,13 +839,13 @@ public class NanoHTTPD {
 							+ uri)
 							+ uri;
 				}
-				
+
 				if (uri.endsWith("/")) {
 					uri = uri.substring(0, uri.length() - 1);
 				}
 
 				Response r = serve(requestUri, uri, method, header, parms,
-						files, mySocket);
+						files, mySocket, socketHostname, hostAddress);
 				if (r == null)
 					sendError(HTTP_INTERNALERROR,
 							"SERVER INTERNAL ERROR: Serve() returned a null response.");
@@ -1148,6 +1208,8 @@ public class NanoHTTPD {
 		}
 
 		private Socket mySocket;
+		private final String socketHostname;
+		private final String hostAddress;
 	}
 
 	/**

@@ -91,6 +91,8 @@ public class BacnetDeviceLoaderImpl implements DeviceLoader {
 			int localPort = subConfig.getInteger("localPort", 3671);
 			int localDeviceID = subConfig.getInteger("localDeviceID", 12345);
 			Boolean enabled = subConfig.getBoolean("enabled", false);
+			Boolean groupCommEnabled = subConfig.getBoolean("groupCommEnabled", null);
+			Boolean historyEnabled = subConfig.getBoolean("historyEnabled", null);
 
 			if (enabled) {
 				try {
@@ -103,7 +105,7 @@ public class BacnetDeviceLoaderImpl implements DeviceLoader {
 					bacnetConnector.connect();
 					
 					Boolean discoveryEnabled = subConfig.getBoolean("discovery-enabled", false);
-					if (discoveryEnabled) bacnetConnector.discover(new DeviceDiscoveryListener(objectBroker));
+					if (discoveryEnabled) bacnetConnector.discover(new DeviceDiscoveryListener(objectBroker, groupCommEnabled, historyEnabled));
 					
 					connectors.add(bacnetConnector);
 
@@ -124,12 +126,22 @@ public class BacnetDeviceLoaderImpl implements DeviceLoader {
 							String href = subConfig.getString("device(" + i
 									+ ").href");
 
-							Boolean historyEnabled = subConfig.getBoolean(
-									"device(" + i + ").historyEnabled", false);
+							// device specific setting
+							Boolean historyEnabledDevice = subConfig.getBoolean(
+									"device(" + i + ").historyEnabled", null);
 							
-
-							Boolean groupCommEnabled = subConfig.getBoolean(
-									"device(" + i + ").groupCommEnabled", false);
+							if(historyEnabledDevice != null){
+								historyEnabled = historyEnabledDevice;
+							}
+							
+							// device specific setting
+							Boolean groupCommEnabledDevice = subConfig.getBoolean(
+									"device(" + i + ").groupCommEnabled", null);
+							
+							if(groupCommEnabledDevice != null){
+								// overwrite general settings
+								groupCommEnabled = groupCommEnabledDevice;
+							}
 							
 							String name = subConfig.getString("device(" + i
 									+ ").name");
@@ -280,14 +292,31 @@ public class BacnetDeviceLoaderImpl implements DeviceLoader {
 	
 	private class DeviceDiscoveryListener implements BACnetConnector.DeviceDiscoveryListener {
 		private ObjectBroker objectBroker;
+		private Boolean groupCommEnabled; 
+		private Boolean historyEnabled;
 	
 		public DeviceDiscoveryListener(ObjectBroker objectBroker) {
+			this(objectBroker, null, null);
+		}
+		
+		public DeviceDiscoveryListener(ObjectBroker objectBroker, Boolean groupCommEnabled, Boolean historyEnabled) {
 			this.objectBroker = objectBroker;
+			this.groupCommEnabled = groupCommEnabled;
+			this.historyEnabled = historyEnabled;
 		}
 		
 		@Override
 		public void deviceDiscovered(Obj device) {
+			
 			ArrayList<String> assignedHrefs = objectBroker.addObj(device, false);
+			
+			if(groupCommEnabled != null && groupCommEnabled){
+				objectBroker.enableGroupComm(device);
+			}
+			
+			if(historyEnabled != null && historyEnabled){
+				objectBroker.addHistoryToDatapoints(device);
+			}
 			myObjects.addAll(assignedHrefs);
 			
 			device.initialize();

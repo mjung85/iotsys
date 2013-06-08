@@ -1,5 +1,5 @@
 /*******************************************************************************
-# * Copyright (c) 2013
+ * Copyright (c) 2013
  * Institute of Computer Aided Automation, Automation Systems Group, TU Wien.
  * All rights reserved.
  * 
@@ -50,7 +50,13 @@ import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.HVACvalveActu
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.LightSwitchActuator;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.PumpActuator;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.SunblindActuator;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.logic.BinaryOperation;
 //import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.TemperatureControlActuator;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.logic.Comparator;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.logic.LogicBinaryOperation;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.logic.TemperatureController;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.IndoorBrightnessSensor;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.OutsideTemperatureSensor;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.PresenceDetectorSensor;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.PushButton;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.RoomRelativeHumiditySensor;
@@ -58,6 +64,7 @@ import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.ShuttersAndBlin
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.SmartMeter;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.SunIntensitySensor;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.TemperatureSensor;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sim.HVACSimulation;
 import obix.*;
 
 public class ContractInit
@@ -76,6 +83,8 @@ public class ContractInit
 	  ContractRegistry.put(RoomRelativeHumiditySensor.CONTRACT,RoomRelativeHumiditySensor.class.getName());
 	  ContractRegistry.put(SunIntensitySensor.CONTRACT,SunIntensitySensor.class.getName());
 	  ContractRegistry.put(SmartMeter.CONTRACT, SmartMeter.class.getName());
+	  ContractRegistry.put(IndoorBrightnessSensor.CONTRACT, IndoorBrightnessSensor.class.getName());
+	  ContractRegistry.put(OutsideTemperatureSensor.CONTRACT, OutsideTemperatureSensor.class.getName());
 	  
 	  //Actuator
 	  ContractRegistry.put(FanSpeedActuator.CONTRACT,FanSpeedActuator.class.getName());
@@ -91,13 +100,22 @@ public class ContractInit
 //	  ContractRegistry.put(ChillerActuator.CONTRACT, ChillerActuator.class.getName());
 //	  ContractRegistry.put(HeatPumpActuator.CONTRACT, HeatPumpActuator.class.getName());
 	  
-	  //Generic
+	  //Generic Bacnet
 	  ContractRegistry.put(AnalogInput.CONTRACT, AnalogInput.class.getName());
 	  ContractRegistry.put(AnalogOutput.CONTRACT, AnalogOutput.class.getName());
 	  ContractRegistry.put(AnalogValue.CONTRACT, AnalogValue.class.getName());
 	  ContractRegistry.put(BinaryInput.CONTRACT, BinaryInput.class.getName());
 	  ContractRegistry.put(BinaryOutput.CONTRACT, BinaryOutput.class.getName());
 	  ContractRegistry.put(BinaryValue.CONTRACT, BinaryValue.class.getName());
+	  
+	  // Logic components
+	  ContractRegistry.put(Comparator.CONTRACT, Comparator.class.getName());
+	  ContractRegistry.put(TemperatureController.CONTRACT, TemperatureController.class.getName());
+	  ContractRegistry.put(BinaryOperation.CONTRACT, BinaryOperation.class.getName());
+	  ContractRegistry.put(LogicBinaryOperation.CONTRACT, LogicBinaryOperation.class.getName());
+	  
+	  // Simulation
+	  ContractRegistry.put(HVACSimulation.CONTRACT, HVACSimulation.class.getName());
 	  
 	  ContractRegistry.buildReverseMap();
   }

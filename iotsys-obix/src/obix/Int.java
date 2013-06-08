@@ -3,7 +3,6 @@
  */
 package obix;
 
-import at.ac.tuwien.auto.iotsys.gateway.obix.observer.*;
 /**
  * Int models a 64-bit integer number
  * 
@@ -67,8 +66,39 @@ public class Int extends Val {
 	 * Set value.
 	 */
 	public void set(long val) {
-		this.val = val;
-		notifyObservers();
+		long oldVal = this.val;
+		
+		if( val < this.getMin()){
+			this.val = (int) this.getMin();
+		}
+		else if(val > this.getMax()){
+			this.val = (int) this.getMax();
+		}
+		else{
+			this.val = val;
+		}
+		
+		if(oldVal != this.val)
+			notifyObservers();
+	}
+	
+	/**
+	 * Auto cast for double
+	 */
+	public void set(double val){
+		set((long) val);
+	}
+	
+	/**
+	 * Auto cast for double
+	 */
+	public void set(boolean val){
+		if(val){
+			set(100);
+		}
+		else{
+			set(0);
+		}
 	}
 	
 	/**

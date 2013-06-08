@@ -41,6 +41,8 @@ import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 
+import at.ac.tuwien.auto.iotsys.commons.PropertiesLoader;
+
 import ch.ethz.inf.vs.californium.coap.EndpointAddress;
 import ch.ethz.inf.vs.californium.coap.LinkFormat;
 import ch.ethz.inf.vs.californium.coap.Message;
@@ -57,7 +59,7 @@ import ch.ethz.inf.vs.californium.util.Properties;
 public class Log {
 	
 	private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-	private static Level logLevel = Level.FINEST;
+	private static Level logLevel = Level.parse(PropertiesLoader.getInstance().getProperties().getProperty("iotsys.gateway.loglevel", "INFO"));
 	
 	private static final Formatter printFormatter = new Formatter() {
 		@Override
@@ -96,10 +98,10 @@ public class Log {
 		ConsoleHandler cHandler = new ConsoleHandler();
 		cHandler.setFormatter(printFormatter);
 		// set logging level
-		cHandler.setLevel(Level.FINEST);
+		cHandler.setLevel(logLevel);
 		// add
 		globalLogger.addHandler(cHandler);
-		globalLogger.setLevel(Level.FINEST);
+		globalLogger.setLevel(logLevel);
 		
 		// create custom file handler
 		FileHandler fHandler;
@@ -117,7 +119,7 @@ public class Log {
 			knxHandler = new FileHandler("KNX.txt",true);
 			knxHandler.setFormatter(csvFormatter);
 			Logger.getLogger("knxbus").addHandler(knxHandler);
-			Logger.getLogger("knxbus").setLevel(Level.FINEST);
+			Logger.getLogger("knxbus").setLevel(logLevel);
 		} catch(Exception e){
 			e.printStackTrace();
 		}
@@ -135,7 +137,7 @@ public class Log {
 								
 		// obix server logger
 		
-		Logger.getLogger(IoTSySGateway.class.getName()).setLevel(Level.FINEST);
+		Logger.getLogger(IoTSySGateway.class.getName()).setLevel(logLevel);
 		
 		
 		// indicate new start-up

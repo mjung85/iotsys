@@ -38,6 +38,7 @@ import java.util.logging.Logger;
 import obix.Obj;
 
 import at.ac.tuwien.auto.iotsys.gateway.connectors.virtual.VirtualConnector;
+import at.ac.tuwien.auto.iotsys.gateway.connectors.virtual.simulation.HVACSimulationImpl;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.TemperatureSensorImpl;
 
 public class TemperatureSensorImplVirtual extends TemperatureSensorImpl {
@@ -71,13 +72,15 @@ public class TemperatureSensorImplVirtual extends TemperatureSensorImpl {
 	@Override
 	public void refreshObject(){
 		// value is the protected instance variable of the base class (TemperatureSensorImpl)
-		if(value != null){
-			Double value = virtualConnector.readDouble(busAddress);
-			
-			// this calls the implementation of the base class, which triggers als
-			// oBIX services (e.g. watches, history) and CoAP observe!
-			
-			this.value().set(value); 
-		}	
+//		if(value != null){
+//			Double value = virtualConnector.readDouble(busAddress);
+//			
+//			// this calls the implementation of the base class, which triggers also
+//			// oBIX services (e.g. watches, history) and CoAP observe!
+//			
+//			this.value().set(value); 
+//		}	
+		if(HVACSimulationImpl.instance != null)
+			this.value().set(HVACSimulationImpl.instance.getTemp()); 
 	}
 }

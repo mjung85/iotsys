@@ -33,9 +33,11 @@
 package at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl;
 
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.PumpActuator;
+import obix.Bool;
 import obix.Contract;
 import obix.Int;
 import obix.Obj;
+import obix.Real;
 import obix.Uri;
 
 public class PumpActuatorImpl extends ActuatorImpl implements PumpActuator{
@@ -46,20 +48,27 @@ public class PumpActuatorImpl extends ActuatorImpl implements PumpActuator{
 		value.setWritable(true);
 		value.setHref(new Uri("value"));
 		value.setName("value");		
+		value.setMin(0);
+		value.setMax(100);
 		this.add(value);
 	}
 	
 	public void writeObject(Obj input){		
-		long newVal = 0;
+		
 		if(input instanceof PumpActuator){
 			PumpActuator in = (PumpActuator) input;//			
-			newVal = in.value().get();
+			this.value.set(in.value().get());
 			
 		}
 		else if(input instanceof Int){
-			newVal = ((Int) input).get();
+			this.value.set(((Int) input).get());
 		}
-		this.value.set(newVal);
+		else if(input instanceof Bool){
+			this.value.set(((Bool) input).get());
+		}
+		else if(input instanceof Real){
+			this.value.set(((Real) input).get());
+		}	
 	}
 	
 	public Int value() {

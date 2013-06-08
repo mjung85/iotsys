@@ -5,9 +5,12 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.Inet6Address;
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.MulticastSocket;
+import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.Arrays;
+import java.util.Enumeration;
 
 import ch.ethz.inf.vs.californium.coap.EndpointAddress;
 import ch.ethz.inf.vs.californium.coap.Message;
@@ -63,7 +66,7 @@ public class MulticastUDPLayer extends Layer {
 	}
 
 	public enum REQUEST_TYPE {
-		MULTICAST_REQUEST, NORMAL_REQUEST
+		MULTICAST_REQUEST, NORMAL_REQUEST, LOCAL_REQUEST
 	}
 
 	// Inner Classes
@@ -127,36 +130,35 @@ public class MulticastUDPLayer extends Layer {
 		// initialize members
 
 		try {
-			System.out.println("###### New multicast socket! " + port);
 
 			// join IPv6 Multicast on all interfaces
 
 			// List<InetSocketAddress> multicastSockets = new
 			// ArrayList<InetSocketAddress>();
 
-			// InetSocketAddress socketAddress = new InetSocketAddress(group,
-			// 5683);
+			InetSocketAddress socketAddress = new InetSocketAddress(group,
+			 5683);
 			this.group = ipv6MulticastAddress;
 
 			
-			this.socket = new MulticastSocket(5683);
+			this.socket = new MulticastSocket(null);					
 			this.socket.setReuseAddress(true);
 			this.socket.joinGroup(group);
+			this.socket.bind(new InetSocketAddress(5684));
 
-			// Enumeration<NetworkInterface> networkInterfaces =
-			// NetworkInterface.getNetworkInterfaces();
-			// while(networkInterfaces.hasMoreElements()){
-			// NetworkInterface nextElement = networkInterfaces.nextElement();
-			// try{
-			// if(!nextElement.isLoopback() && !nextElement.isPointToPoint() &&
-			// nextElement.isUp() && !nextElement.isVirtual())
-			// this.socket.joinGroup(socketAddress, nextElement);
-			//
-			// }
-			// catch(Exception e){
-			// // fail silently
-			// }
-			// }
+//			 Enumeration<NetworkInterface> networkInterfaces =
+//			 NetworkInterface.getNetworkInterfaces();
+//			 while(networkInterfaces.hasMoreElements()){
+//			 NetworkInterface nextElement = networkInterfaces.nextElement();
+//			 try{
+//			 if(nextElement.isLoopback() && nextElement.isUp()) {
+//				 LOG.info("Binding to"+nextElement.toString());
+//				 this.socket.joinGroup(socketAddress, nextElement);
+//			 }}
+//			 catch(Exception e){
+//			 // fail silently
+//			 }
+//			 }
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -231,8 +233,7 @@ public class MulticastUDPLayer extends Layer {
 	// ////////////////////////////////////////////////////////////////////
 
 	private void datagramReceived(DatagramPacket datagram) {
-		System.out
-				.println("DataGram Received!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+		
 
 		if (datagram.getLength() > 0) {
 

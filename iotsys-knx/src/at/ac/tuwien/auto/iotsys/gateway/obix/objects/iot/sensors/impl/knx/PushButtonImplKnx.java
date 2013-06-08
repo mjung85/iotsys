@@ -40,6 +40,7 @@ import at.ac.tuwien.auto.calimero.exception.KNXException;
 import at.ac.tuwien.auto.iotsys.gateway.connectors.knx.KNXConnector;
 import at.ac.tuwien.auto.iotsys.gateway.connectors.knx.KNXWatchDog;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.PushButtonImpl;
+import at.ac.tuwien.auto.iotsys.gateway.util.CsvCreator;
 
 public class PushButtonImplKnx extends PushButtonImpl {
 	private GroupAddress observation;
@@ -63,9 +64,11 @@ public class PushButtonImplKnx extends PushButtonImpl {
 					DPTXlatorBoolean x = new DPTXlatorBoolean(DPTXlatorBoolean.DPT_SWITCH);
 					x.setData(apdu);
 					
-					for(int i=0; i< apdu.length; i++) {
-						System.out.print(apdu[i]);
-					}
+//					for(int i=0; i< apdu.length; i++) {
+//						System.out.print(apdu[i]);
+//					}
+					
+//					CsvCreator.instance.writeLine("" + System.currentTimeMillis() + ";" + observation.toString() + ";" + x.getValueBoolean());
 					
 					value.set(x.getValueBoolean());
 

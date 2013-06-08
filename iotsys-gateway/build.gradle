@@ -15,14 +15,18 @@ eclipse{
 				node.appendNode('classpathentry', [kind: 'src', path: '/iotsys-bacnet4j', exported:'true'])
 				node.appendNode('classpathentry', [kind: 'src', path: '/iotsys-wmbus', exported:'true'])
 				node.appendNode('classpathentry', [kind: 'src', path: '/iotsys-virtual', exported:'true'])
-				node.appendNode('classpathentry', [kind: 'src', path: '/iotsys-control', exported:'true'])
+				node.appendNode('classpathentry', [kind: 'src', path: '/iotsys-xbee', exported:'true'])
+				node.appendNode('classpathentry', [kind: 'src', path: '/iotsys-enocean', exported:'true'])
+				node.appendNode('classpathentry', [kind: 'src', path: '/iotsys-demoapp', exported:'true'])
+				node.appendNode('classpathentry', [kind: 'src', path: '/iotsys-xacml', exported:'true'])
+				node.appendNode('classpathentry', [kind: 'lib', path: '/iotsys-xacml/res', exported:'true'])
 			}
 		}
 	}
 }
 
 repositories {	
-	flatDir { dirs "lib/exi" }
+	flatDir { dirs "lib/exi", "lib/jnetpcap" }
 }
 
 configurations {
@@ -46,12 +50,12 @@ jar {
 				   "Bundle-Version": "0.1", 
 				   "Bundle-Classpath": ".",
 				   "Bundle-Activator": "at.ac.tuwien.auto.iotsys.gateway.IoTSySGatewayActivator",
-				   "Import-Package": "org.osgi.framework, at.ac.tuwien.auto.iotsys.commons, org.json, obix, obix.asm, obix.contracts, " +
+				   "Import-Package": "org.osgi.framework, at.ac.tuwien.auto.iotsys.commons, at.ac.tuwien.auto.iotsys.commons.interceptor, org.json, obix, obix.asm, obix.contracts, " +
 				   					"obix.io, obix.net, obix.test, obix.toos, obix.ui, obix.ui.fields, obix.ui.views, obix.xml, " +
 									   "at.ac.tuwien.auto.iotsys.gateway.obix.observer, at.ac.tuwien.auto.iotsys.gateway.obix.objects.bacnet, at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot," +
 									   "at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.general.impl,"+
 									   "at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators, at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl, " +
-									   "at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors, at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl, " +
+									   "at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors, at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl, at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.logic, at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.logic.impl,at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sim," +
 									   "org.xml.sax, org.xml.sax.helpers, org.xml.sax.ext,  com.sun.org.apache.xalan.internal, com.sun.org.apache.xalan.internal.res, " +
 									   "org.w3c.dom, org.w3c.dom.traversal, org.w3c.dom.ls, javax.xml.parsers,  javax.xml.xpath, javax.xml.transform.sax, javax.xml.transform.dom, " +
 									   "javax.xml.namespace, javax.xml.transform, javax.xml.transform.stream, javax.xml.validation, javax.xml.datatype, "+
@@ -73,6 +77,8 @@ dependencies {
 	provided project(':iotsys-common')
 	provided project(':iotsys-encoding-json')
 	provided project(':iotsys-control');
+
+	provided project(':iotsys-xacml')
 	
 	//provided group: 'org.apache.felix', name: 'org.apache.felix.framework', version: '4.2.0'
 	provided group: 'org.apache.felix', name: 'org.osgi.core', version: '1.4.0'
@@ -91,5 +97,6 @@ dependencies {
 	
 	compile group: 'net.sourceforge.javacsv', name: 'javacsv', version: '2.0'
 	
-	compile ":nagasena:"	
+	compile ":nagasena:"
+	compile ":jnetpcap:"
 }
