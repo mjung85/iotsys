@@ -241,7 +241,7 @@ public class CoAPServer extends Endpoint {
 		} else if (request.getContentType() == MediaTypeRegistry.APPLICATION_X_OBIX_BINARY) {
 			try {
 				payloadString = ObixEncoder.toString(BinObixDecoder
-						.fromBytes(request.getPayload()));
+						.fromBytes(request.getPayload()), true);
 			} catch (Exception e) {
 				e.printStackTrace();
 				payloadString = request.getPayloadString();
@@ -280,7 +280,7 @@ public class CoAPServer extends Endpoint {
 
 					obixResponse = new StringBuffer(
 							ObixEncoder.toString(obixServer.readObj(new URI(
-									resourcePath), "guest")));
+									resourcePath), "guest"), true));
 
 				}
 
@@ -288,13 +288,13 @@ public class CoAPServer extends Endpoint {
 
 					obixResponse = new StringBuffer(
 							ObixEncoder.toString(obixServer.writeObj(new URI(
-									resourcePath), payloadString)));
+									resourcePath), payloadString), true));
 
 				}
 				if (request instanceof POSTRequest) {
 					obixResponse = new StringBuffer(
 							ObixEncoder.toString(obixServer.invokeOp(new URI(
-									resourcePath), payloadString)));
+									resourcePath), payloadString), true));
 
 				}
 			}
@@ -304,7 +304,7 @@ public class CoAPServer extends Endpoint {
 							COAP_URL_PROTOCOL));
 			obixResponse = new StringBuffer(obixResponse.toString());
 
-			fixHref(request.getUriPath(), obixResponse);
+//			fixHref(request.getUriPath(), obixResponse);
 
 			if (request.getFirstAccept() == MediaTypeRegistry.APPLICATION_EXI) {
 				try {
