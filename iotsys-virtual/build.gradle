@@ -8,6 +8,7 @@ eclipse{
 				def node = it.asNode()
 				node.appendNode('classpathentry', [kind: 'src', path: '/iotsys-common', exported:'true'])
 				node.appendNode('classpathentry', [kind: 'src', path: '/iotsys-obix', exported:'true'])
+				node.appendNode('classpathentry', [kind: 'src', path: '/iotsys-mdnssd', exported:'true'])
 			}
 		}
 	}
