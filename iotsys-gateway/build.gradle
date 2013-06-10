@@ -19,8 +19,8 @@ eclipse{
 				node.appendNode('classpathentry', [kind: 'src', path: '/iotsys-enocean', exported:'true'])
 				node.appendNode('classpathentry', [kind: 'src', path: '/iotsys-demoapp', exported:'true'])
 				node.appendNode('classpathentry', [kind: 'src', path: '/iotsys-xacml', exported:'true'])
+				node.appendNode('classpathentry', [kind: 'src', path: '/iotsys-mdnssd', exported:'true'])
 				node.appendNode('classpathentry', [kind: 'lib', path: '/iotsys-xacml/res', exported:'true'])
-				node.appendNode('classpathentry', [kind: 'lib', path: '/iotsys-mdnssd', exported:'true'])
 			}
 		}
 	}
