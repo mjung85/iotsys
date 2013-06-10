@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<classpath>
-	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER" exported="true"/>
-	<classpathentry kind="output" path="bin"/>
-	<classpathentry sourcepath="C:/Users/Mr.Nam/.gradle/caches/artifacts-23/filestore/log4j/log4j/1.2.17/source/677abe279b68c5e7490d6d50c6951376238d7d3e/log4j-1.2.17-sources.jar" kind="lib" path="C:/Users/Mr.Nam/.gradle/caches/artifacts-23/filestore/log4j/log4j/1.2.17/bundle/5af35056b4d257e4b64b9e8069c0746e8b08629f/log4j-1.2.17.jar" exported="true"/>
-	<classpathentry kind="src" path="/iotsys-common" exported="true"/>
-	<classpathentry kind="src" path="/iotsys-obix" exported="true"/>
-</classpath>
