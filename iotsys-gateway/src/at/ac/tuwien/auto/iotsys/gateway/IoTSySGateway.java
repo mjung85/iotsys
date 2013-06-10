@@ -49,6 +49,7 @@ import at.ac.tuwien.auto.iotsys.gateway.obix.server.NanoHTTPD;
 import at.ac.tuwien.auto.iotsys.gateway.obix.server.ObixObservingManager;
 import at.ac.tuwien.auto.iotsys.gateway.obix.server.ObixServer;
 import at.ac.tuwien.auto.iotsys.gateway.obix.server.ObixServerImpl;
+import at.ac.tuwien.auto.iotsys.xacml.pdp.PDPInterceptorSettings;
 // import at.ac.tuwien.auto.iotsys.xacml.pdp.PDPInterceptor;
 
 import at.ac.tuwien.auto.iotsys.commons.Connector;
@@ -108,6 +109,17 @@ public class IoTSySGateway {
 
 		log.info("XACML module enabled: " + enableXacml);
 		if (enableXacml && !isOsgiEnvironment()) {
+			// load settings for remote pdp
+			boolean remotePdp = Boolean.parseBoolean(PropertiesLoader
+					.getInstance().getProperties()
+					.getProperty("iotsys.gateway.xacml.remotePDP", "false"));
+			PDPInterceptorSettings.getInstance().setRemotePdp(remotePdp);
+
+			String remotePdpWsdl = PropertiesLoader.getInstance()
+					.getProperties()
+					.getProperty("iotsys.gateway.xacml.remotePDPWsdl", "");
+			PDPInterceptorSettings.getInstance().setRemotePdpWsdl(remotePdpWsdl);
+			
 			// temporarly register interceptor
 			try {
 				// load PDP interceptor if available on class path

@@ -19,7 +19,7 @@ import an.xacml.policy.Effect;
 import at.ac.tuwien.auto.iotsys.commons.interceptor.Parameter;
 import at.ac.tuwien.auto.iotsys.util.FileHelper;
 
-public class EnterprisePDP {
+public class EnterprisePDP implements Pdp {
 
 	private Logger log = Logger.getLogger(EnterprisePDP.class.getName());
 
@@ -32,7 +32,7 @@ public class EnterprisePDP {
 	public EnterprisePDP() {
 
 	}
-
+	
 	public EnterprisePDP(String resourcePrefix) {
 		this.resourcePrefix = resourcePrefix;
 		try {
@@ -63,7 +63,7 @@ public class EnterprisePDP {
 	 * 
 	 * @return in case the request is evaluated to Permit true, false otherwise.
 	 */
-	public boolean evaluate(String resource, String subject, String action,
+	public synchronized boolean evaluate(String resource, String subject, String action,
 			Map<Parameter, String> params) {
 		log.fine("Resource: " + resource);
 		log.fine("Subject: " + subject);
