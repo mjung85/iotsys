@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry exported="true" kind="lib" path="C:/Users/Mr.Nam/.gradle/caches/artifacts-23/filestore/net.sourceforge.javacsv/javacsv/2.0/jar/8092b1ba2d4929f2ec27e58cd240502afdd6a9a7/javacsv-2.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="E:/Work/Current/gsoc2013/giangnambkdtvt-gsoc/iotsys-gateway/lib/exi/nagasena.jar"/>
+	<classpathentry exported="true" kind="lib" path="E:/Work/Current/gsoc2013/giangnambkdtvt-gsoc/iotsys-gateway/lib/jnetpcap/jnetpcap.jar"/>
+	<classpathentry exported="true" kind="src" path="/iotsys-calimero"/>
+	<classpathentry exported="true" kind="src" path="/iotsys-knx"/>
+	<classpathentry exported="true" kind="src" path="/iotsys-common"/>
+	<classpathentry exported="true" kind="src" path="/iotsys-obix"/>
+	<classpathentry exported="true" kind="src" path="/iotsys-encoding-json"/>
+	<classpathentry exported="true" kind="src" path="/iotsys-bacnet"/>
+	<classpathentry exported="true" kind="src" path="/iotsys-bacnet4j"/>
+	<classpathentry exported="true" kind="src" path="/iotsys-wmbus"/>
+	<classpathentry exported="true" kind="src" path="/iotsys-virtual"/>
+	<classpathentry exported="true" kind="src" path="/iotsys-xbee"/>
+	<classpathentry exported="true" kind="src" path="/iotsys-enocean"/>
+	<classpathentry exported="true" kind="src" path="/iotsys-demoapp"/>
+	<classpathentry exported="true" kind="src" path="/iotsys-xacml"/>
+	<classpathentry exported="true" kind="lib" path="/iotsys-xacml/res"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/iotsys-mdnssd"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
