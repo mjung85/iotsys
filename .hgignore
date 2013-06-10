@@ -2,7 +2,8 @@ bin
 build
 .settings
 .metadata
-.gradle
+.classpath
+.project
 felix-framework*
 org.apache.felix.main.distribution-4.2.1.zip
 obelix/.sass-cache
