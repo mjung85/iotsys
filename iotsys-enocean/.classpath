@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry exported="true" kind="lib" path="C:/Users/Mr.Nam/.gradle/caches/artifacts-23/filestore/log4j/log4j/1.2.17/bundle/5af35056b4d257e4b64b9e8069c0746e8b08629f/log4j-1.2.17.jar" sourcepath="C:/Users/Mr.Nam/.gradle/caches/artifacts-23/filestore/log4j/log4j/1.2.17/source/677abe279b68c5e7490d6d50c6951376238d7d3e/log4j-1.2.17-sources.jar"/>
-	<classpathentry exported="true" kind="src" path="/iotsys-common"/>
-	<classpathentry exported="true" kind="src" path="/iotsys-obix"/>
-	<classpathentry exported="true" kind="lib" path="C:/Users/Mr.Nam/.gradle/caches/artifacts-23/filestore/org.bidib.jbidib.org.qbang.rxtx/rxtxcomm/2.2/jar/7e0db5d666d8d15db2fd3086509e67b6bf0930f8/rxtxcomm-2.2.jar" sourcepath="C:/Users/Mr.Nam/.gradle/caches/artifacts-23/filestore/org.bidib.jbidib.org.qbang.rxtx/rxtxcomm/2.2/source/c05908fe4d95ef6ed7863ff9a49c80c15641781e/rxtxcomm-2.2-sources.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER" exported="true"/>
 	<classpathentry kind="output" path="bin"/>
+	<classpathentry sourcepath="C:/Users/Mr.Nam/.gradle/caches/artifacts-23/filestore/log4j/log4j/1.2.17/source/677abe279b68c5e7490d6d50c6951376238d7d3e/log4j-1.2.17-sources.jar" kind="lib" path="C:/Users/Mr.Nam/.gradle/caches/artifacts-23/filestore/log4j/log4j/1.2.17/bundle/5af35056b4d257e4b64b9e8069c0746e8b08629f/log4j-1.2.17.jar" exported="true"/>
+	<classpathentry kind="src" path="/iotsys-common" exported="true"/>
+	<classpathentry kind="src" path="/iotsys-obix" exported="true"/>
 </classpath>

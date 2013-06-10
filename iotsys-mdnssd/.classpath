@@ -2,7 +2,9 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/iotsys-common"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="output" path="bin"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER" exported="true"/>
+	<classpathentry sourcepath="C:/Users/Mr.Nam/.gradle/caches/artifacts-23/filestore/junit/junit/4.1/source/a98a2fb2b8b18491e0a74a01cb16896fb43fb80b/junit-4.1-sources.jar" kind="lib" path="C:/Users/Mr.Nam/.gradle/caches/artifacts-23/filestore/junit/junit/4.1/jar/73913068c0fecba0ffa1972728482b3b8df0fe94/junit-4.1.jar" exported="true"/>
+	<classpathentry kind="src" path="/iotsys-common" exported="true"/>
 </classpath>
