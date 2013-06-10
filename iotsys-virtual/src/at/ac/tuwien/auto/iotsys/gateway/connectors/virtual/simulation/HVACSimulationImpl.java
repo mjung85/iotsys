@@ -386,7 +386,6 @@ public class HVACSimulationImpl extends Obj implements HVACSimulation {
 			this.season.set( ((Str) input).get());
 		}
 		
-		
 		if(enabled().get() && !threadStarted){
 			synchronized(this){
 				simThread = new SimThread(this);
@@ -449,8 +448,7 @@ class SimThread extends Thread{
 					log.finest("HVAC simulation temp is now (after cooling): " + hvacSimulation.getTemp());
 					hvacSimulation.increaseTemp(hvacSimulation.getCoolingImpact());
 				}
-			} catch (InterruptedException e) {
-				
+			} catch (InterruptedException e) {			
 				e.printStackTrace();
 			}
 		}

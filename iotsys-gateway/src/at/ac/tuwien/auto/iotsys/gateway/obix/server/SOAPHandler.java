@@ -128,16 +128,16 @@ public class SOAPHandler {
 			// read on object, find href attribute
 
 			StringBuffer obixObj = new StringBuffer(ObixEncoder.toString(obixServer.readObj(hrefURI,
-					"guest")));
+					"guest"), true));
 			return SOAP_RESPONSE_START + obixObj.toString() + SOAP_RESPONSE_END;
 
 		} else if (op == OPERATION.INVOKE) {
 			String obj = extractObject(soapPayload, nameSpacePrefix, false);
-			return SOAP_RESPONSE_START + ObixEncoder.toString(obixServer.invokeOp(hrefURI, obj))
+			return SOAP_RESPONSE_START + ObixEncoder.toString(obixServer.invokeOp(hrefURI, obj), true)
 					+ SOAP_RESPONSE_END;
 		} else if (op == OPERATION.WRITE) {
 			String obj = extractObject(soapPayload, nameSpacePrefix, true);
-			return SOAP_RESPONSE_START + ObixEncoder.toString(obixServer.writeObj(hrefURI, obj))
+			return SOAP_RESPONSE_START + ObixEncoder.toString(obixServer.writeObj(hrefURI, obj), true)
 					+ SOAP_RESPONSE_END;
 		}
 

@@ -249,7 +249,7 @@ public class NanoHTTPD {
 
 				try {
 					Obj obj = BinObixDecoder.fromBytes(unbox(payload));
-					data = ObixEncoder.toString(obj);
+					data = ObixEncoder.toString(obj, true);
 				} catch (Exception e1) {
 					e1.printStackTrace();
 					data = parms.getProperty("data");
@@ -350,24 +350,24 @@ public class NanoHTTPD {
 				if (method.equals("GET")) {
 					obixResponse = new StringBuffer(
 							ObixEncoder.toString(obixServer.readObj(new URI(
-									resourcePath), "guest")));
+									resourcePath), "guest"), true));
 				}
 
 				if (method.equals("PUT")) {
 					obixResponse = new StringBuffer(
 							ObixEncoder.toString(obixServer.writeObj(new URI(
-									resourcePath), data)));
+									resourcePath), data), true));
 				}
 
 				if (method.equals("POST")) {
 					Obj obj = obixServer.invokeOp(new URI(resourcePath), data);
-					obixResponse = new StringBuffer(ObixEncoder.toString(obj));
+					obixResponse = new StringBuffer(ObixEncoder.toString(obj, false));
 				}
 			}
 
 			// in case of a method call don't fix the HREF
 			if (!method.equals("POST")) {
-				fixHref(requestUri, obixResponse);
+//				fixHref(requestUri, obixResponse);
 			}
 
 			if (exiRequested || exiSchemaRequested) {

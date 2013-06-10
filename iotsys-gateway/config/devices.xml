@@ -470,9 +470,9 @@
 
     <connector>
       <name>BACnet A-Lab</name>
-      <enabled>false</enabled>
+      <enabled>true</enabled>
       <discovery-enabled>false</discovery-enabled>
-      <localDeviceID>92345</localDeviceID>
+      <localDeviceID>12346</localDeviceID>
       <broadcastAddress>128.130.56.255</broadcastAddress>
       <localPort>47808</localPort>
 
@@ -546,7 +546,7 @@
     <connector>
       <name>BACnet A-Lab (Auto)</name>
       <enabled>false</enabled>
-      <discovery-enabled>true</discovery-enabled>
+      <discovery-enabled>false</discovery-enabled>
       <localDeviceID>54321</localDeviceID>
       <broadcastAddress>128.130.56.255</broadcastAddress>
       <localPort>47808</localPort>
@@ -752,8 +752,9 @@
         <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.virtual.TemperatureSensorImplVirtual
         </type>
         <href>virtualTemp2</href>
+        <ipv6>aaaa::1</ipv6>
         <historyEnabled>true</historyEnabled>
-        <refreshEnabled>false</refreshEnabled>
+        <refreshEnabled>true</refreshEnabled>
         <groupCommEnabled>true</groupCommEnabled>
       </device>
 
@@ -762,7 +763,7 @@
         </type>
         <href>virtualTemp3</href>
         <historyEnabled>true</historyEnabled>
-        <refreshEnabled>false</refreshEnabled>
+        <refreshEnabled>true</refreshEnabled>
         <groupCommEnabled>true</groupCommEnabled>
       </device>
 
@@ -793,6 +794,15 @@
         <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.virtual.TemperatureSensorImplVirtual
         </type>
         <href>simTemp</href>
+        <historyEnabled>true</historyEnabled>
+        <refreshEnabled>true</refreshEnabled>
+        <groupCommEnabled>true</groupCommEnabled>
+      </device>
+      
+       <device>
+        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.virtual.TemperatureSensorImplVirtual
+        </type>
+        <href>simTemp2</href>
         <historyEnabled>true</historyEnabled>
         <refreshEnabled>true</refreshEnabled>
         <groupCommEnabled>true</groupCommEnabled>
@@ -862,9 +872,9 @@
         <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.virtual.SmartMeterImplVirtual
         </type>
         <href>simMeter</href>
-        <historyEnabled>false</historyEnabled>
+        <historyEnabled>true</historyEnabled>
         <refreshEnabled>true</refreshEnabled>
-        <groupCommEnabled>true</groupCommEnabled>
+        <groupCommEnabled>false</groupCommEnabled>
       </device>
     </connector>
 
