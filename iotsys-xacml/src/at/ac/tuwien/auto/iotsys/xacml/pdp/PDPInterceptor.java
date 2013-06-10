@@ -1,5 +1,7 @@
 package at.ac.tuwien.auto.iotsys.xacml.pdp;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.logging.Logger;
 
 import at.ac.tuwien.auto.iotsys.commons.interceptor.AbstractResponse;
@@ -22,21 +24,42 @@ public class PDPInterceptor implements Interceptor {
 	
 	private final Response OK_RESPONSE = new Response(StatusCode.OK, false);
 	
-	private final EnterprisePDP pdp = new EnterprisePDP(resourcePrefix);
+	private Pdp pdp = null;
+	
+	private PDPInterceptorSettings settings = PDPInterceptorSettings.getInstance();
 	
 	public PDPInterceptor() {
-		
+		init();
 	}
 	
 	public PDPInterceptor(String resourcePrefix) {
 		this.resourcePrefix = resourcePrefix;
+		init();
 	}
+	
+	private void init() {
+		if (settings.isRemotePdp()) {
+			if (settings.getRemotePdpWsdl().isEmpty()) {
+				pdp = new RemotePDP();
+			} else {
+				try {
+					pdp = new RemotePDP(new URL(settings.getRemotePdpWsdl()));
+				} catch (MalformedURLException e) {
+					log.severe("The given URL for the PDP is not valid!");
+					throw new RuntimeException();
+				}
+			}
+		} else {
+			pdp = new EnterprisePDP(resourcePrefix);
+		}
+	}
+	
 	
 	@Override
 	public synchronized InterceptorResponse handleRequest(InterceptorRequest request) {
 		log.info("Incoming request to PDPInteceptor");
 		
-		if(!PDPInterceptorSettings.getInstance().active()){
+		if(!settings.active()){
 			log.info("Returning ok_response");
 			return OK_RESPONSE;
 		}
