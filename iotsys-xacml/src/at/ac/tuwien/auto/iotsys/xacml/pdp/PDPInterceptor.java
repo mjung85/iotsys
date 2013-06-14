@@ -18,7 +18,7 @@ public class PDPInterceptor implements Interceptor {
 
 	private Logger log = Logger.getLogger(PDPInterceptor.class.getName());
 	
-	private String resourcePrefix = "res";
+	private String resourcePrefix = "res/";
 	
 	private final Response OK_RESPONSE = new Response(StatusCode.OK, false);
 	
