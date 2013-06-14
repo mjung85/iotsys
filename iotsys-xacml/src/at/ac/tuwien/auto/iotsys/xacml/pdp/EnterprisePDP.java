@@ -23,7 +23,7 @@ public class EnterprisePDP {
 
 	private Logger log = Logger.getLogger(EnterprisePDP.class.getName());
 
-	private String resourcePrefix = "";
+	private String resourcePrefix = "res";
 	
 	private String requestTemplate = "";
 	
