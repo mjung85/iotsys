@@ -84,6 +84,7 @@ public class WatchImpl extends Obj implements Watch {
 	
 					for(Obj u : watchIn.get("hrefs").list()){
 						Uri uri = (Uri) u;
+
 						
 						if(!observedObjects.contains(uri.get())){
 							observedObjects.put(uri.get(), uri);
@@ -98,6 +99,7 @@ public class WatchImpl extends Obj implements Watch {
 								ret.values().add(temp, false);
 							}
 						}
+
 					}					
 				}						
 				return ret;
@@ -115,12 +117,15 @@ public class WatchImpl extends Obj implements Watch {
 						Uri uri = (Uri) u;
 
 						ObjObserver observer = observers.get(uri.getPath());
+
 						observedObjects.remove(uri.getPath());
+
 						observers.remove(uri.getPath());
 						Obj o = broker.pullObj(uri);
 						o.detach(observer);
 					}					
 				}		
+
 				return new NilImpl();
 			}			
 		});
@@ -154,14 +159,18 @@ public class WatchImpl extends Obj implements Watch {
 					for (ObjObserver observer : observers.values()){
 						Obj beingObservedObject = (Obj) observer.getSubject();
 						beingObservedObject.notifyObservers();
+
 						out.values().add(beingObservedObject, false);
+
 						observer.getEvents();
 					}
 				}
 				return out;
 			}		
 		});
+
 		
+
 		broker.addOperationHandler(new Uri(this.getNormalizedHref().getPath() + "/delete"), new OperationHandler(){
 			@Override
 			public Obj invoke(Obj in) {
@@ -179,7 +188,9 @@ public class WatchImpl extends Obj implements Watch {
 				broker.removeOperationHandler(new Uri(thisWatch().getNormalizedHref().getPath() + "/pollRefresh"));
 				broker.removeOperationHandler(new Uri(thisWatch().getNormalizedHref().getPath() + "/delete"));
 				broker.removeObj(thisWatch().getHref().getPath());
+
 				return new NilImpl();
+
 			}		
 		});
 	}

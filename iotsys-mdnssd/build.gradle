@@ -1,0 +1,48 @@
+// Variables
+description = 'mDNS-SD module for IoTSyS gateway'
+
+eclipse{
+	classpath{
+		file {
+			withXml {
+				def node = it.asNode()				
+				node.appendNode('classpathentry', [kind: 'src', path: '/iotsys-common', exported:'true'])		
+			}
+		}
+	}
+}
+
+repositories {	
+	
+}
+
+configurations {
+	provided
+}
+
+sourceSets{
+	main { compileClasspath += configurations.provided }
+}
+
+jar {
+	manifest {
+		attributes("Manifest-Version": "1.0",
+				   "Bundle-Name": "IoTSyS-mDNS-SD",
+				   "Bundle-SymbolicName": "at.ac.tuwien.auto.iotsys.mdnssd",
+				   "Bundle-Description": "mDNS-SD module for IoTSyS gateway",
+				   "Bundle-Vendor": "Vienna University of Technology, Automation Systems Group, www.auto.tuwien.ac.at",
+				   "Bundle-Version": "0.1",
+				   "Bundle-Classpath": ".",
+				   "Export-Package": "at.ac.tuwien.auto.iotsys.mdnssd",
+				   "Import-Package": "at.ac.tuwien.auto.iotsys.commons"
+				   )
+	}
+}
+
+dependencies {
+	provided project(':iotsys-common')
+	
+	compile 'junit:junit:4.1'
+}
+
+

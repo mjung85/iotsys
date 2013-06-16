@@ -13,15 +13,15 @@
     </device-loader>
     <device-loader>at.ac.tuwien.auto.iotsys.gateway.connectors.enocean.EnoceanDeviceLoaderImpl
     </device-loader>
-    <device-loader>at.ac.tuwien.auto.iotsys.demoapp.DemoAppLoaderImpl
+	<device-loader>at.ac.tuwien.auto.iotsys.demoapp.DemoAppLoaderImpl
     </device-loader>
   </deviceloaders>
 
   <xbee>
     <connector>
       <name>XBee</name>
-      <enabled>false</enabled>
-      <serialPort>COM9</serialPort>
+      <enabled>true</enabled>
+      <serialPort>/dev/ttyUSB1</serialPort>
       <device>
         <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.xbee.TemperatureSensorImplXBee
         </type>
@@ -37,8 +37,8 @@
   <enocean>
     <connector>
       <name>EnOcean</name>
-      <enabled>false</enabled>
-      <serialPort>COM13</serialPort>
+      <enabled>true</enabled>
+      <serialPort>/dev/ttyS80</serialPort>
       <device>
         <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.enocean.PushButtonImplEnocean
         </type>
@@ -53,9 +53,9 @@
   <knx>
     <connector>
       <name>IPSO Challenge</name>
-      <enabled>false</enabled>
+      <enabled>true</enabled>
       <router>
-        <ip>192.168.1.13</ip>
+        <ip>127.0.0.1</ip>
         <port>3671</port>
       </router>
       <localIP>auto</localIP>
@@ -470,9 +470,9 @@
 
     <connector>
       <name>BACnet A-Lab</name>
-      <enabled>true</enabled>
-      <discovery-enabled>false</discovery-enabled>
-      <localDeviceID>12346</localDeviceID>
+      <enabled>false</enabled>
+      <discovery-enabled>true</discovery-enabled>
+      <localDeviceID>92345</localDeviceID>
       <broadcastAddress>128.130.56.255</broadcastAddress>
       <localPort>47808</localPort>
 
@@ -546,7 +546,7 @@
     <connector>
       <name>BACnet A-Lab (Auto)</name>
       <enabled>false</enabled>
-      <discovery-enabled>false</discovery-enabled>
+      <discovery-enabled>true</discovery-enabled>
       <localDeviceID>54321</localDeviceID>
       <broadcastAddress>128.130.56.255</broadcastAddress>
       <localPort>47808</localPort>
@@ -560,7 +560,7 @@
   <wmbus>
     <connector>
       <name>W-MBus Smart Meter Linux</name>
-      <enabled>false</enabled>
+      <enabled>true</enabled>
       <serialPort>/dev/ttyUSB0</serialPort>
       <device>
         <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.wmbus.SmartMeterImplWMBus
@@ -594,7 +594,7 @@
   <virtual>
     <connector>
       <name>Virtual Devices</name>
-      <enabled>true</enabled>
+      <enabled>false</enabled>
 
       <!-- SENSOREN -->
 
@@ -618,7 +618,7 @@
         <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.PresenceDetectorSensorImpl
         </type>
         <address>5/1/19</address>
-        <href>virtualPresence</href>
+        <href>presenceA</href>
         <ipv6>2001:629:2500:570::10f</ipv6>
         <historyEnabled>false</historyEnabled>
         <historyCount>200</historyCount>
@@ -745,16 +745,15 @@
     </connector>
     <connector>
       <name>Virtual Devices 2</name>
-      <enabled>true</enabled>
+      <enabled>false</enabled>
 
       <!-- SENSOREN -->
       <device>
         <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.virtual.TemperatureSensorImplVirtual
         </type>
         <href>virtualTemp2</href>
-        <ipv6>aaaa::1</ipv6>
         <historyEnabled>true</historyEnabled>
-        <refreshEnabled>true</refreshEnabled>
+        <refreshEnabled>false</refreshEnabled>
         <groupCommEnabled>true</groupCommEnabled>
       </device>
 
@@ -763,7 +762,7 @@
         </type>
         <href>virtualTemp3</href>
         <historyEnabled>true</historyEnabled>
-        <refreshEnabled>true</refreshEnabled>
+        <refreshEnabled>false</refreshEnabled>
         <groupCommEnabled>true</groupCommEnabled>
       </device>
 
@@ -787,22 +786,13 @@
     </connector>
     <connector>
       <name>HVAC Simulation</name>
-      <enabled>true</enabled>
+      <enabled>false</enabled>
 
       <!-- SENSOREN -->
       <device>
         <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.virtual.TemperatureSensorImplVirtual
         </type>
         <href>simTemp</href>
-        <historyEnabled>true</historyEnabled>
-        <refreshEnabled>true</refreshEnabled>
-        <groupCommEnabled>true</groupCommEnabled>
-      </device>
-      
-       <device>
-        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.virtual.TemperatureSensorImplVirtual
-        </type>
-        <href>simTemp2</href>
         <historyEnabled>true</historyEnabled>
         <refreshEnabled>true</refreshEnabled>
         <groupCommEnabled>true</groupCommEnabled>
@@ -872,9 +862,9 @@
         <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.virtual.SmartMeterImplVirtual
         </type>
         <href>simMeter</href>
-        <historyEnabled>true</historyEnabled>
+        <historyEnabled>false</historyEnabled>
         <refreshEnabled>true</refreshEnabled>
-        <groupCommEnabled>false</groupCommEnabled>
+        <groupCommEnabled>true</groupCommEnabled>
       </device>
     </connector>
 
