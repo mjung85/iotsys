@@ -32,6 +32,7 @@
 
 package at.ac.tuwien.auto.iotsys.gateway.obix.objects;
 
+import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.LinkedList;
 
@@ -61,6 +62,8 @@ public class WatchImpl extends Obj implements Watch {
 	
 	// holds an observer object for each obix object that is watched using the normalized href path as key.
 	private final Hashtable <String, ObjObserver> observers = new Hashtable<String, ObjObserver>();
+
+	private final Hashtable<String, Uri> observedObjects = new Hashtable<String, Uri>();
 	
 	public WatchImpl(final ObjectBroker broker){
 		setIs(new Contract(WATCH_CONTRACT));
@@ -82,19 +85,23 @@ public class WatchImpl extends Obj implements Watch {
 					for(Obj u : watchIn.get("hrefs").list()){
 						Uri uri = (Uri) u;
 
-						ObjObserver observer = new ObjObserver();
-						observers.put(uri.getPath(), observer);
-						Obj o = broker.pullObj(uri);
-						o.attach(observer);
-						ret.values().add(o);
-						// FIXME: duplicate child name exception! obj name cannot be duplicate?
-						// + add() method should use href as key to check duplication rather than name.
-						// + illogical procedure! object o is pulled from objects list
-						// using href as a key but is added to values() using name as a key
+						
+						if(!observedObjects.contains(uri.get())){
+							observedObjects.put(uri.get(), uri);
+	
+							ObjObserver observer = new ObjObserver();						
+							observers.put(uri.getPath(), observer);
+							Obj o = broker.pullObj(uri);
+							o.attach(observer);
+							o.setHref(uri);
+							
+							for(Uri temp :observedObjects.values()){
+								ret.values().add(temp, false);
+							}
+						}
 
 					}					
-				}		
-				
+				}						
 				return ret;
 			}			
 		});
@@ -110,12 +117,16 @@ public class WatchImpl extends Obj implements Watch {
 						Uri uri = (Uri) u;
 
 						ObjObserver observer = observers.get(uri.getPath());
+
+						observedObjects.remove(uri.getPath());
+
 						observers.remove(uri.getPath());
 						Obj o = broker.pullObj(uri);
 						o.detach(observer);
 					}					
 				}		
-				return new NillImpl();
+
+				return new NilImpl();
 			}			
 		});
 		
@@ -131,7 +142,7 @@ public class WatchImpl extends Obj implements Watch {
 						if(events.size() > 0 ){							
 							// needs to be an obix object
 							Obj obj = (Obj) objObserver.getSubject();
-							out.values().add(obj);
+							out.values().add(obj, false);
 						}
 					}					
 				}				
@@ -148,13 +159,18 @@ public class WatchImpl extends Obj implements Watch {
 					for (ObjObserver observer : observers.values()){
 						Obj beingObservedObject = (Obj) observer.getSubject();
 						beingObservedObject.notifyObservers();
-						out.values().add(beingObservedObject);
+
+						out.values().add(beingObservedObject, false);
+
 						observer.getEvents();
 					}
 				}
 				return out;
 			}		
 		});
+
+		
+
 		broker.addOperationHandler(new Uri(this.getNormalizedHref().getPath() + "/delete"), new OperationHandler(){
 			@Override
 			public Obj invoke(Obj in) {
@@ -172,7 +188,9 @@ public class WatchImpl extends Obj implements Watch {
 				broker.removeOperationHandler(new Uri(thisWatch().getNormalizedHref().getPath() + "/pollRefresh"));
 				broker.removeOperationHandler(new Uri(thisWatch().getNormalizedHref().getPath() + "/delete"));
 				broker.removeObj(thisWatch().getHref().getPath());
-				return new NillImpl();
+
+				return new NilImpl();
+
 			}		
 		});
 	}

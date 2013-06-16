@@ -2,6 +2,7 @@ package at.ac.tuwien.auto.iotsys.xacml.pdp;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.HashMap;
@@ -23,7 +24,7 @@ public class EnterprisePDP {
 
 	private Logger log = Logger.getLogger(EnterprisePDP.class.getName());
 
-	private String resourcePrefix = "";
+	private String resourcePrefix = "res/";
 	
 	private String requestTemplate = "";
 	

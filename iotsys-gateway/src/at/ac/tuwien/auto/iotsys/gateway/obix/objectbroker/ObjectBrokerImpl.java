@@ -91,7 +91,6 @@ public class ObjectBrokerImpl implements ObjectBroker {
 		aboutImpl = new AboutImpl();
 
 		watchServiceImpl = new WatchServiceImpl(this);
-
 	}
 
 	@Override
@@ -199,6 +198,12 @@ public class ObjectBrokerImpl implements ObjectBroker {
 		enums.add(logicOperationTypes);
 
 		addObj(enums, true);
+		
+		// create default watch
+		WatchImpl watchImpl = new WatchImpl(this);	
+		addObj(watchImpl);
+
+		
 
 //		// Static comperators
 //

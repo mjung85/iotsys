@@ -41,7 +41,7 @@ public class SmartMeterImpl extends SensorImpl implements SmartMeter{
 	protected Real energyValue = new Real(0);	
 	
 	public SmartMeterImpl(){
-		setIs(new Contract(new String[]{SmartMeter.CONTRACT, "obix:History"}));
+		setIs(new Contract(new String[]{SmartMeter.CONTRACT}));
 		powerValue.setWritable(false);
 		Uri powerValueUri = new Uri(SmartMeter.POWER_CONTRACT_HREF);
 		powerValue.setHref(powerValueUri);

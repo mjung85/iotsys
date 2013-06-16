@@ -179,6 +179,17 @@ public class Obj implements IObj, Subject {
 			return href;
 		}
 	}
+	
+	public Uri getRelativePath(){
+		if(href != null && href.getPath() != null){
+			int lastIndexOf = href.getPath().lastIndexOf("/");
+			if(lastIndexOf > -1){
+				new Uri(href.getPath().substring(lastIndexOf));
+			}
+		}
+		return href;
+	}
+	
 
 	public String getFullContextPath() {
 		String path = "";
@@ -208,8 +219,8 @@ public class Obj implements IObj, Subject {
 	/**
 	 * Set uri of this object.
 	 */
-	public void setHref(Uri href) {
-		this.href = href;
+	public void setHref(Uri href) {		
+		this.href = href;				
 	}
 
 	/**
@@ -568,21 +579,25 @@ public class Obj implements IObj, Subject {
 	/**
 	 * Add a child Obj. Return this.
 	 */
-	public Obj add(Obj kid) {
+	public Obj add(Obj kid, boolean checkDuplicates) {
 		// sanity check
 		// if (kid.parent != null || kid.prev != null || kid.next != null)
 		// throw new IllegalStateException("Child is already parented");
-		if (kid.name != null && kidsByName != null
-				&& kidsByName.containsKey(kid.name))
-			throw new IllegalStateException("Duplicate child name '" + kid.name
-					+ "'");
+		
+		if(checkDuplicates){
+			if (kid.name != null && kidsByName != null
+					&& kidsByName.containsKey(kid.name))
+				throw new IllegalStateException("Duplicate child name '" + kid.name
+						+ "'");
+		}
 
 		// if named, add to name map
 		if (kid.name != null) {
-			if (kidsByName == null)
-				kidsByName = new HashMap();
+			
 			kidsByName.put(kid.name, kid);
 		}
+		
+		
 
 		// add to ordered linked list
 		if (kidsTail == null) {
@@ -599,6 +614,13 @@ public class Obj implements IObj, Subject {
 		}
 		kidsCount++;
 		return this;
+	}
+	
+	/**
+	 * Add a child Obj. Return this.
+	 */
+	public Obj add(Obj kid) {
+		return add(kid, true);
 	}
 
 	/**
@@ -722,7 +744,9 @@ public class Obj implements IObj, Subject {
 	private Uri href;
 	private Contract is;
 	private Obj parent;
-	private HashMap kidsByName;
+	private HashMap kidsByName = new HashMap();
+	
+
 	private Obj kidsHead, kidsTail;
 	private int kidsCount;
 	private Obj prev, next;

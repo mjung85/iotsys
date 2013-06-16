@@ -40,6 +40,7 @@ import obix.contracts.WatchOut;
 public class WatchOutImpl extends Obj implements WatchOut{
 	
 	private List list  = new List();
+	
 	public WatchOutImpl(){
 		setIs(new Contract(WatchImpl.WATCH_OUT_CONTRACT));
 		add(values());
