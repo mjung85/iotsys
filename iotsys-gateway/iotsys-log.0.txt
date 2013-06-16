@@ -3969,3 +3969,150 @@
 2013-06-11 01:30:58 [at.ac.tuwien.auto.iotsys.gateway.interceptor.InterceptorBrokerImpl] INFO - Register interceptor: PDPInterceptor
 2013-06-11 01:30:58 [at.ac.tuwien.auto.iotsys.gateway.interceptor.InterceptorBrokerImpl] INFO - Return InterceptorBroker instance.
 2013-06-11 01:30:58 [at.ac.tuwien.auto.iotsys.gateway.interceptor.InterceptorBrokerImpl] INFO - Return InterceptorBroker instance.
+2013-06-11 01:37:36 [at.ac.tuwien.auto.iotsys.gateway.Log] INFO - ==[ START-UP ]========================================================
+2013-06-11 01:37:36 [at.ac.tuwien.auto.iotsys.gateway.IoTSySGateway] INFO - Server starting.
+2013-06-11 01:37:37 [at.ac.tuwien.auto.iotsys.gateway.DeviceLoaderImpl] INFO - Found device loader: at.ac.tuwien.auto.iotsys.gateway.connectors.knx.KNXDeviceLoaderImpl
+2013-06-11 01:37:37 [at.ac.tuwien.auto.iotsys.gateway.DeviceLoaderImpl] INFO - Found device loader: at.ac.tuwien.auto.iotsys.gateway.connectors.bacnet.BacnetDeviceLoaderImpl
+2013-06-11 01:37:37 [at.ac.tuwien.auto.iotsys.gateway.DeviceLoaderImpl] INFO - Found device loader: at.ac.tuwien.auto.iotsys.gateway.connector.wmbus.WMBusDeviceLoaderImpl
+2013-06-11 01:37:37 [at.ac.tuwien.auto.iotsys.gateway.DeviceLoaderImpl] INFO - Found device loader: at.ac.tuwien.auto.iotsys.gateway.connectors.xbee.XBeeDeviceLoaderImpl
+2013-06-11 01:37:37 [at.ac.tuwien.auto.iotsys.gateway.connectors.xbee.XBeeDeviceLoaderImpl] INFO - Found 1 XBee connectors.
+2013-06-11 01:37:37 [at.ac.tuwien.auto.iotsys.gateway.DeviceLoaderImpl] INFO - Found device loader: at.ac.tuwien.auto.iotsys.gateway.connectors.virtual.VirtualDeviceLoaderImpl
+2013-06-11 01:37:37 [at.ac.tuwien.auto.iotsys.gateway.connectors.virtual.VirtualConnector] INFO - VirtualConnector connecting.
+2013-06-11 01:37:37 [at.ac.tuwien.auto.iotsys.gateway.connectors.virtual.VirtualDeviceLoaderImpl] INFO - 20 virtual devices found in configuration for connector Virtual Devices
+2013-06-11 01:37:37 [at.ac.tuwien.auto.iotsys.gateway.connectors.virtual.VirtualDeviceLoaderImpl] INFO - 4 virtual devices found in configuration for connector Virtual Devices 2
+2013-06-11 01:37:37 [at.ac.tuwien.auto.iotsys.gateway.connectors.virtual.VirtualDeviceLoaderImpl] INFO - 9 virtual devices found in configuration for connector HVAC Simulation
+2013-06-11 01:37:37 [at.ac.tuwien.auto.iotsys.gateway.connectors.virtual.VirtualDeviceLoaderImpl] INFO - 4 virtual devices found in configuration for connector IoTSyS Logic
+2013-06-11 01:37:37 [at.ac.tuwien.auto.iotsys.gateway.DeviceLoaderImpl] INFO - Found device loader: at.ac.tuwien.auto.iotsys.gateway.connectors.enocean.EnoceanDeviceLoaderImpl
+2013-06-11 01:37:37 [at.ac.tuwien.auto.iotsys.gateway.connectors.enocean.EnoceanDeviceLoaderImpl] INFO - Found 1 EnOcean connectors.
+2013-06-11 01:37:37 [at.ac.tuwien.auto.iotsys.gateway.DeviceLoaderImpl] INFO - Found device loader: at.ac.tuwien.auto.iotsys.demoapp.DemoAppLoaderImpl
+2013-06-11 01:37:37 [at.ac.tuwien.auto.iotsys.gateway.IoTSySGateway] INFO - No of records built: 4
+2013-06-11 01:37:37 [at.ac.tuwien.auto.iotsys.gateway.interceptor.InterceptorBrokerImpl] INFO - Create InterceptorBroker
+2013-06-11 01:37:37 [at.ac.tuwien.auto.iotsys.gateway.interceptor.InterceptorBrokerImpl] INFO - Return InterceptorBroker instance.
+2013-06-11 01:37:37 [at.ac.tuwien.auto.iotsys.gateway.IoTSySGateway] INFO - XACML module enabled: true
+2013-06-11 01:37:37 [at.ac.tuwien.auto.iotsys.xacml.pdp.EnterprisePDP] INFO - Reading files from request/request.xml
+2013-06-11 01:37:37 [at.ac.tuwien.auto.iotsys.gateway.interceptor.InterceptorBrokerImpl] INFO - Register interceptor: PDPInterceptor
+2013-06-11 01:37:37 [at.ac.tuwien.auto.iotsys.gateway.interceptor.InterceptorBrokerImpl] INFO - Return InterceptorBroker instance.
+2013-06-11 01:37:37 [at.ac.tuwien.auto.iotsys.gateway.interceptor.InterceptorBrokerImpl] INFO - Return InterceptorBroker instance.
+2013-06-17 00:41:41 [at.ac.tuwien.auto.iotsys.gateway.Log] INFO - ==[ START-UP ]========================================================
+2013-06-17 00:41:41 [at.ac.tuwien.auto.iotsys.gateway.IoTSySGateway] INFO - Server starting.
+2013-06-17 00:41:43 [at.ac.tuwien.auto.iotsys.gateway.DeviceLoaderImpl] INFO - Found device loader: at.ac.tuwien.auto.iotsys.gateway.connectors.knx.KNXDeviceLoaderImpl
+2013-06-17 00:41:43 [at.ac.tuwien.auto.iotsys.gateway.DeviceLoaderImpl] INFO - Found device loader: at.ac.tuwien.auto.iotsys.gateway.connectors.bacnet.BacnetDeviceLoaderImpl
+2013-06-17 00:41:43 [at.ac.tuwien.auto.iotsys.gateway.DeviceLoaderImpl] INFO - Found device loader: at.ac.tuwien.auto.iotsys.gateway.connector.wmbus.WMBusDeviceLoaderImpl
+2013-06-17 00:41:43 [at.ac.tuwien.auto.iotsys.gateway.DeviceLoaderImpl] INFO - Found device loader: at.ac.tuwien.auto.iotsys.gateway.connectors.xbee.XBeeDeviceLoaderImpl
+2013-06-17 00:41:43 [at.ac.tuwien.auto.iotsys.gateway.connectors.xbee.XBeeDeviceLoaderImpl] INFO - Found 1 XBee connectors.
+2013-06-17 00:41:43 [at.ac.tuwien.auto.iotsys.gateway.DeviceLoaderImpl] INFO - Found device loader: at.ac.tuwien.auto.iotsys.gateway.connectors.virtual.VirtualDeviceLoaderImpl
+2013-06-17 00:41:43 [at.ac.tuwien.auto.iotsys.gateway.connectors.virtual.VirtualConnector] INFO - VirtualConnector connecting.
+2013-06-17 00:41:43 [at.ac.tuwien.auto.iotsys.gateway.connectors.virtual.VirtualDeviceLoaderImpl] INFO - 20 virtual devices found in configuration for connector Virtual Devices
+2013-06-17 00:41:43 [at.ac.tuwien.auto.iotsys.gateway.connectors.virtual.VirtualDeviceLoaderImpl] INFO - 4 virtual devices found in configuration for connector Virtual Devices 2
+2013-06-17 00:41:43 [at.ac.tuwien.auto.iotsys.gateway.connectors.virtual.VirtualDeviceLoaderImpl] INFO - 9 virtual devices found in configuration for connector HVAC Simulation
+2013-06-17 00:41:43 [at.ac.tuwien.auto.iotsys.gateway.connectors.virtual.VirtualDeviceLoaderImpl] INFO - 4 virtual devices found in configuration for connector IoTSyS Logic
+2013-06-17 00:41:43 [at.ac.tuwien.auto.iotsys.gateway.DeviceLoaderImpl] INFO - Found device loader: at.ac.tuwien.auto.iotsys.gateway.connectors.enocean.EnoceanDeviceLoaderImpl
+2013-06-17 00:41:43 [at.ac.tuwien.auto.iotsys.gateway.connectors.enocean.EnoceanDeviceLoaderImpl] INFO - Found 1 EnOcean connectors.
+2013-06-17 00:41:43 [at.ac.tuwien.auto.iotsys.gateway.DeviceLoaderImpl] INFO - Found device loader: at.ac.tuwien.auto.iotsys.demoapp.DemoAppLoaderImpl
+2013-06-17 00:41:43 [at.ac.tuwien.auto.iotsys.gateway.IoTSySGateway] INFO - No of records built: 4
+2013-06-17 00:41:43 [at.ac.tuwien.auto.iotsys.gateway.interceptor.InterceptorBrokerImpl] INFO - Create InterceptorBroker
+2013-06-17 00:41:43 [at.ac.tuwien.auto.iotsys.gateway.interceptor.InterceptorBrokerImpl] INFO - Return InterceptorBroker instance.
+2013-06-17 00:41:43 [at.ac.tuwien.auto.iotsys.gateway.IoTSySGateway] INFO - XACML module enabled: true
+2013-06-17 00:41:43 [at.ac.tuwien.auto.iotsys.xacml.pdp.EnterprisePDP] INFO - Reading files from request/request.xml
+2013-06-17 00:41:43 [at.ac.tuwien.auto.iotsys.gateway.interceptor.InterceptorBrokerImpl] INFO - Register interceptor: PDPInterceptor
+2013-06-17 00:41:43 [at.ac.tuwien.auto.iotsys.gateway.interceptor.InterceptorBrokerImpl] INFO - Return InterceptorBroker instance.
+2013-06-17 00:41:44 [at.ac.tuwien.auto.iotsys.gateway.interceptor.InterceptorBrokerImpl] INFO - Return InterceptorBroker instance.
+2013-06-17 00:41:56 [at.ac.tuwien.auto.iotsys.gateway.obix.server.NanoHTTPD] INFO - Serving:  for 0:0:0:0:0:0:0:1
+2013-06-17 00:41:56 [at.ac.tuwien.auto.iotsys.gateway.obix.server.NanoHTTPD] INFO - Serving: /stylesheets/app.css for 0:0:0:0:0:0:0:1
+2013-06-17 00:41:56 [at.ac.tuwien.auto.iotsys.gateway.obix.server.NanoHTTPD] INFO - Serving: /javascripts/app.js for 0:0:0:0:0:0:0:1
+2013-06-17 00:41:56 [at.ac.tuwien.auto.iotsys.gateway.obix.server.NanoHTTPD] INFO - Serving: /obix for 0:0:0:0:0:0:0:1
+2013-06-17 00:41:56 [at.ac.tuwien.auto.iotsys.gateway.obix.server.NanoHTTPD] INFO - Serving: /favicon.ico for 0:0:0:0:0:0:0:1
+2013-06-17 00:41:56 [at.ac.tuwien.auto.iotsys.gateway.obix.server.NanoHTTPD] INFO - Serving: /favicon.ico for 0:0:0:0:0:0:0:1 done.
+2013-06-17 00:41:56 [at.ac.tuwien.auto.iotsys.gateway.obix.server.NanoHTTPD] INFO - Serving: /obix for 0:0:0:0:0:0:0:1 done.
+2013-06-17 00:41:56 [at.ac.tuwien.auto.iotsys.gateway.obix.server.NanoHTTPD] INFO - Serving: /about for 0:0:0:0:0:0:0:1
+2013-06-17 00:41:56 [at.ac.tuwien.auto.iotsys.gateway.obix.server.NanoHTTPD] INFO - Serving: /about for 0:0:0:0:0:0:0:1 done.
+2013-06-17 00:41:56 [at.ac.tuwien.auto.iotsys.gateway.obix.server.NanoHTTPD] INFO - Serving: /watchService for 0:0:0:0:0:0:0:1
+2013-06-17 00:41:56 [at.ac.tuwien.auto.iotsys.gateway.obix.server.NanoHTTPD] INFO - Serving: /watchService for 0:0:0:0:0:0:0:1 done.
+2013-06-17 00:41:56 [at.ac.tuwien.auto.iotsys.gateway.obix.server.NanoHTTPD] INFO - Serving: /enums for 0:0:0:0:0:0:0:1
+2013-06-17 00:41:56 [at.ac.tuwien.auto.iotsys.gateway.obix.server.NanoHTTPD] INFO - Serving: /virtualIndoorBrightnessSensor for 0:0:0:0:0:0:0:1
+2013-06-17 00:41:56 [at.ac.tuwien.auto.iotsys.gateway.obix.server.NanoHTTPD] INFO - Serving: /virtualIndoorBrightnessSensor for 0:0:0:0:0:0:0:1 done.
+2013-06-17 00:41:56 [at.ac.tuwien.auto.iotsys.gateway.obix.server.NanoHTTPD] INFO - Serving: /enums for 0:0:0:0:0:0:0:1 done.
+2013-06-17 00:41:56 [at.ac.tuwien.auto.iotsys.gateway.obix.server.NanoHTTPD] INFO - Serving: /virtualOutsideTemperatureSensor for 0:0:0:0:0:0:0:1
+2013-06-17 00:41:56 [at.ac.tuwien.auto.iotsys.gateway.obix.server.NanoHTTPD] INFO - Serving: /virtualOutsideTemperatureSensor for 0:0:0:0:0:0:0:1 done.
+2013-06-17 00:41:56 [at.ac.tuwien.auto.iotsys.gateway.obix.server.NanoHTTPD] INFO - Serving: /virtualPresence for 0:0:0:0:0:0:0:1
+2013-06-17 00:41:56 [at.ac.tuwien.auto.iotsys.gateway.obix.server.NanoHTTPD] INFO - Serving: /virtualPresence for 0:0:0:0:0:0:0:1 done.
+2013-06-17 00:41:56 [at.ac.tuwien.auto.iotsys.gateway.obix.server.NanoHTTPD] INFO - Serving: /virtualPushButton for 0:0:0:0:0:0:0:1
+2013-06-17 00:41:56 [at.ac.tuwien.auto.iotsys.gateway.obix.server.NanoHTTPD] INFO - Serving: /virtualPushButton for 0:0:0:0:0:0:0:1 done.
+2013-06-17 00:41:56 [at.ac.tuwien.auto.iotsys.gateway.obix.server.NanoHTTPD] INFO - Serving: /virtualRoomRelativeHumiditySensor for 0:0:0:0:0:0:0:1
+2013-06-17 00:41:56 [at.ac.tuwien.auto.iotsys.gateway.obix.server.NanoHTTPD] INFO - Serving: /virtualRoomRelativeHumiditySensor for 0:0:0:0:0:0:0:1 done.
+2013-06-17 00:41:56 [at.ac.tuwien.auto.iotsys.gateway.obix.server.NanoHTTPD] INFO - Serving: /virtualRoomTemperatureSensor for 0:0:0:0:0:0:0:1
+2013-06-17 00:41:56 [at.ac.tuwien.auto.iotsys.gateway.obix.server.NanoHTTPD] INFO - Serving: /virtualRoomTemperatureSensor for 0:0:0:0:0:0:0:1 done.
+2013-06-17 00:41:56 [at.ac.tuwien.auto.iotsys.gateway.obix.server.NanoHTTPD] INFO - Serving: /virtualTemperatureSensor for 0:0:0:0:0:0:0:1
+2013-06-17 00:41:56 [at.ac.tuwien.auto.iotsys.gateway.obix.server.NanoHTTPD] INFO - Serving: /virtualTemperatureSensor for 0:0:0:0:0:0:0:1 done.
+2013-06-17 00:41:56 [at.ac.tuwien.auto.iotsys.gateway.obix.server.NanoHTTPD] INFO - Serving: /virtualSunIntensitySensor for 0:0:0:0:0:0:0:1
+2013-06-17 00:41:56 [at.ac.tuwien.auto.iotsys.gateway.obix.server.NanoHTTPD] INFO - Serving: /virtualSunIntensitySensor for 0:0:0:0:0:0:0:1 done.
+2013-06-17 00:41:56 [at.ac.tuwien.auto.iotsys.gateway.obix.server.NanoHTTPD] INFO - Serving: /virtualSwitchingSensor for 0:0:0:0:0:0:0:1
+2013-06-17 00:41:56 [at.ac.tuwien.auto.iotsys.gateway.obix.server.NanoHTTPD] INFO - Serving: /virtualSwitchingSensor for 0:0:0:0:0:0:0:1 done.
+2013-06-17 00:41:56 [at.ac.tuwien.auto.iotsys.gateway.obix.server.NanoHTTPD] INFO - Serving: /smartmeter for 0:0:0:0:0:0:0:1
+2013-06-17 00:41:56 [at.ac.tuwien.auto.iotsys.gateway.obix.server.NanoHTTPD] INFO - Serving: /smartmeter for 0:0:0:0:0:0:0:1 done.
+2013-06-17 00:41:56 [at.ac.tuwien.auto.iotsys.gateway.obix.server.NanoHTTPD] INFO - Serving: /sunblindMiddleA for 0:0:0:0:0:0:0:1
+2013-06-17 00:41:56 [at.ac.tuwien.auto.iotsys.gateway.obix.server.NanoHTTPD] INFO - Serving: /sunblindMiddleA for 0:0:0:0:0:0:0:1 done.
+2013-06-17 00:41:56 [at.ac.tuwien.auto.iotsys.gateway.obix.server.NanoHTTPD] INFO - Serving: /virtualFanSpeed for 0:0:0:0:0:0:0:1
+2013-06-17 00:41:56 [at.ac.tuwien.auto.iotsys.gateway.obix.server.NanoHTTPD] INFO - Serving: /virtualFanSpeed for 0:0:0:0:0:0:0:1 done.
+2013-06-17 00:41:56 [at.ac.tuwien.auto.iotsys.gateway.obix.server.NanoHTTPD] INFO - Serving: /virtualBrightnessActuator for 0:0:0:0:0:0:0:1
+2013-06-17 00:41:56 [at.ac.tuwien.auto.iotsys.gateway.obix.server.NanoHTTPD] INFO - Serving: /virtualBrightnessActuator for 0:0:0:0:0:0:0:1 done.
+2013-06-17 00:41:56 [at.ac.tuwien.auto.iotsys.gateway.obix.server.NanoHTTPD] INFO - Serving: /virtualHVACvalveActuatorImpl for 0:0:0:0:0:0:0:1
+2013-06-17 00:41:56 [at.ac.tuwien.auto.iotsys.gateway.obix.server.NanoHTTPD] INFO - Serving: /virtualHVACvalveActuatorImpl for 0:0:0:0:0:0:0:1 done.
+2013-06-17 00:41:56 [at.ac.tuwien.auto.iotsys.gateway.obix.server.NanoHTTPD] INFO - Serving: /virtualAirDamperActuatorImpl for 0:0:0:0:0:0:0:1
+2013-06-17 00:41:56 [at.ac.tuwien.auto.iotsys.gateway.obix.server.NanoHTTPD] INFO - Serving: /virtualAirDamperActuatorImpl for 0:0:0:0:0:0:0:1 done.
+2013-06-17 00:41:56 [at.ac.tuwien.auto.iotsys.gateway.obix.server.NanoHTTPD] INFO - Serving: /virtualLight for 0:0:0:0:0:0:0:1
+2013-06-17 00:41:56 [at.ac.tuwien.auto.iotsys.gateway.obix.server.NanoHTTPD] INFO - Serving: /virtualLight for 0:0:0:0:0:0:0:1 done.
+2013-06-17 00:41:56 [at.ac.tuwien.auto.iotsys.gateway.obix.server.NanoHTTPD] INFO - Serving: /virtualPumpActuatorImpl for 0:0:0:0:0:0:0:1
+2013-06-17 00:41:56 [at.ac.tuwien.auto.iotsys.gateway.obix.server.NanoHTTPD] INFO - Serving: /virtualPumpActuatorImpl for 0:0:0:0:0:0:0:1 done.
+2013-06-17 00:41:56 [at.ac.tuwien.auto.iotsys.gateway.obix.server.NanoHTTPD] INFO - Serving: /virtualDimmingActuatorImpl for 0:0:0:0:0:0:0:1
+2013-06-17 00:41:56 [at.ac.tuwien.auto.iotsys.gateway.obix.server.NanoHTTPD] INFO - Serving: /virtualDimmingActuatorImpl for 0:0:0:0:0:0:0:1 done.
+2013-06-17 00:41:56 [at.ac.tuwien.auto.iotsys.gateway.obix.server.NanoHTTPD] INFO - Serving: /virtualCoolerActuatorImpl for 0:0:0:0:0:0:0:1
+2013-06-17 00:41:56 [at.ac.tuwien.auto.iotsys.gateway.obix.server.NanoHTTPD] INFO - Serving: /virtualCoolerActuatorImpl for 0:0:0:0:0:0:0:1 done.
+2013-06-17 00:41:56 [at.ac.tuwien.auto.iotsys.gateway.obix.server.NanoHTTPD] INFO - Serving: /virtualBoilerActuatorImpl for 0:0:0:0:0:0:0:1
+2013-06-17 00:41:56 [at.ac.tuwien.auto.iotsys.gateway.obix.server.NanoHTTPD] INFO - Serving: /virtualBoilerActuatorImpl for 0:0:0:0:0:0:0:1 done.
+2013-06-17 00:41:56 [at.ac.tuwien.auto.iotsys.gateway.obix.server.NanoHTTPD] INFO - Serving: /virtualTemp2 for 0:0:0:0:0:0:0:1
+2013-06-17 00:41:56 [at.ac.tuwien.auto.iotsys.gateway.obix.server.NanoHTTPD] INFO - Serving: /virtualTemp2 for 0:0:0:0:0:0:0:1 done.
+2013-06-17 00:41:56 [at.ac.tuwien.auto.iotsys.gateway.obix.server.NanoHTTPD] INFO - Serving: /virtualTemp3 for 0:0:0:0:0:0:0:1
+2013-06-17 00:41:56 [at.ac.tuwien.auto.iotsys.gateway.obix.server.NanoHTTPD] INFO - Serving: /virtualTemp3 for 0:0:0:0:0:0:0:1 done.
+2013-06-17 00:41:56 [at.ac.tuwien.auto.iotsys.gateway.obix.server.NanoHTTPD] INFO - Serving: /virtualLight1 for 0:0:0:0:0:0:0:1
+2013-06-17 00:41:56 [at.ac.tuwien.auto.iotsys.gateway.obix.server.NanoHTTPD] INFO - Serving: /virtualLight1 for 0:0:0:0:0:0:0:1 done.
+2013-06-17 00:41:56 [at.ac.tuwien.auto.iotsys.gateway.obix.server.NanoHTTPD] INFO - Serving: /virtualLight2 for 0:0:0:0:0:0:0:1
+2013-06-17 00:41:56 [at.ac.tuwien.auto.iotsys.gateway.obix.server.NanoHTTPD] INFO - Serving: /virtualLight2 for 0:0:0:0:0:0:0:1 done.
+2013-06-17 00:41:56 [at.ac.tuwien.auto.iotsys.gateway.obix.server.NanoHTTPD] INFO - Serving: /simTemp for 0:0:0:0:0:0:0:1
+2013-06-17 00:41:56 [at.ac.tuwien.auto.iotsys.gateway.obix.server.NanoHTTPD] INFO - Serving: /simTemp for 0:0:0:0:0:0:0:1 done.
+2013-06-17 00:41:56 [at.ac.tuwien.auto.iotsys.gateway.obix.server.NanoHTTPD] INFO - Serving: /simBoiler for 0:0:0:0:0:0:0:1
+2013-06-17 00:41:56 [at.ac.tuwien.auto.iotsys.gateway.obix.server.NanoHTTPD] INFO - Serving: /simBoiler for 0:0:0:0:0:0:0:1 done.
+2013-06-17 00:41:56 [at.ac.tuwien.auto.iotsys.gateway.obix.server.NanoHTTPD] INFO - Serving: /simCooler for 0:0:0:0:0:0:0:1
+2013-06-17 00:41:56 [at.ac.tuwien.auto.iotsys.gateway.obix.server.NanoHTTPD] INFO - Serving: /simCooler for 0:0:0:0:0:0:0:1 done.
+2013-06-17 00:41:56 [at.ac.tuwien.auto.iotsys.gateway.obix.server.NanoHTTPD] INFO - Serving: /simFanSpeedIn for 0:0:0:0:0:0:0:1
+2013-06-17 00:41:56 [at.ac.tuwien.auto.iotsys.gateway.obix.server.NanoHTTPD] INFO - Serving: /simFanSpeedIn for 0:0:0:0:0:0:0:1 done.
+2013-06-17 00:41:56 [at.ac.tuwien.auto.iotsys.gateway.obix.server.NanoHTTPD] INFO - Serving: /simFanSpeedOut for 0:0:0:0:0:0:0:1
+2013-06-17 00:41:56 [at.ac.tuwien.auto.iotsys.gateway.obix.server.NanoHTTPD] INFO - Serving: /simFanSpeedOut for 0:0:0:0:0:0:0:1 done.
+2013-06-17 00:41:56 [at.ac.tuwien.auto.iotsys.gateway.obix.server.NanoHTTPD] INFO - Serving: /simHeatPump for 0:0:0:0:0:0:0:1
+2013-06-17 00:41:56 [at.ac.tuwien.auto.iotsys.gateway.obix.server.NanoHTTPD] INFO - Serving: /simHeatPump for 0:0:0:0:0:0:0:1 done.
+2013-06-17 00:41:56 [at.ac.tuwien.auto.iotsys.gateway.obix.server.NanoHTTPD] INFO - Serving: /simCoolPump for 0:0:0:0:0:0:0:1
+2013-06-17 00:41:56 [at.ac.tuwien.auto.iotsys.gateway.obix.server.NanoHTTPD] INFO - Serving: /simCoolPump for 0:0:0:0:0:0:0:1 done.
+2013-06-17 00:41:56 [at.ac.tuwien.auto.iotsys.gateway.obix.server.NanoHTTPD] INFO - Serving: /hvacSim for 0:0:0:0:0:0:0:1
+2013-06-17 00:41:56 [at.ac.tuwien.auto.iotsys.gateway.obix.server.NanoHTTPD] INFO - Serving: /hvacSim for 0:0:0:0:0:0:0:1 done.
+2013-06-17 00:41:56 [at.ac.tuwien.auto.iotsys.gateway.obix.server.NanoHTTPD] INFO - Serving: /simMeter for 0:0:0:0:0:0:0:1
+2013-06-17 00:41:56 [at.ac.tuwien.auto.iotsys.gateway.obix.server.NanoHTTPD] INFO - Serving: /simMeter for 0:0:0:0:0:0:0:1 done.
+2013-06-17 00:41:56 [at.ac.tuwien.auto.iotsys.gateway.obix.server.NanoHTTPD] INFO - Serving: /binOp1 for 0:0:0:0:0:0:0:1
+2013-06-17 00:41:56 [at.ac.tuwien.auto.iotsys.gateway.obix.server.NanoHTTPD] INFO - Serving: /binOp1 for 0:0:0:0:0:0:0:1 done.
+2013-06-17 00:41:56 [at.ac.tuwien.auto.iotsys.gateway.obix.server.NanoHTTPD] INFO - Serving: /comp1 for 0:0:0:0:0:0:0:1
+2013-06-17 00:41:56 [at.ac.tuwien.auto.iotsys.gateway.obix.server.NanoHTTPD] INFO - Serving: /comp1 for 0:0:0:0:0:0:0:1 done.
+2013-06-17 00:41:56 [at.ac.tuwien.auto.iotsys.gateway.obix.server.NanoHTTPD] INFO - Serving: /logicBinOp1 for 0:0:0:0:0:0:0:1
+2013-06-17 00:41:56 [at.ac.tuwien.auto.iotsys.gateway.obix.server.NanoHTTPD] INFO - Serving: /logicBinOp1 for 0:0:0:0:0:0:0:1 done.
+2013-06-17 00:41:56 [at.ac.tuwien.auto.iotsys.gateway.obix.server.NanoHTTPD] INFO - Serving: /tempControl1 for 0:0:0:0:0:0:0:1
+2013-06-17 00:41:56 [at.ac.tuwien.auto.iotsys.gateway.obix.server.NanoHTTPD] INFO - Serving: /tempControl1 for 0:0:0:0:0:0:0:1 done.
+2013-06-17 00:41:56 [at.ac.tuwien.auto.iotsys.gateway.obix.server.NanoHTTPD] INFO - Serving: /privacyGuard for 0:0:0:0:0:0:0:1
+2013-06-17 00:41:56 [at.ac.tuwien.auto.iotsys.gateway.obix.server.NanoHTTPD] INFO - Serving: /privacyGuard for 0:0:0:0:0:0:0:1 done.
+2013-06-17 00:41:57 [at.ac.tuwien.auto.iotsys.gateway.obix.server.NanoHTTPD] INFO - Serving: /enums/operationTypes for 0:0:0:0:0:0:0:1
+2013-06-17 00:41:57 [at.ac.tuwien.auto.iotsys.gateway.obix.server.NanoHTTPD] INFO - Serving: /enums/operationTypes for 0:0:0:0:0:0:0:1 done.
+2013-06-17 00:41:57 [at.ac.tuwien.auto.iotsys.gateway.obix.server.NanoHTTPD] INFO - Serving: /enums/compareTypes for 0:0:0:0:0:0:0:1
+2013-06-17 00:41:57 [at.ac.tuwien.auto.iotsys.gateway.obix.server.NanoHTTPD] INFO - Serving: /enums/compareTypes for 0:0:0:0:0:0:0:1 done.
+2013-06-17 00:41:57 [at.ac.tuwien.auto.iotsys.gateway.obix.server.NanoHTTPD] INFO - Serving: /enums/logicOperationTypes for 0:0:0:0:0:0:0:1
+2013-06-17 00:41:57 [at.ac.tuwien.auto.iotsys.gateway.obix.server.NanoHTTPD] INFO - Serving: /enums/logicOperationTypes for 0:0:0:0:0:0:0:1 done.
+2013-06-17 00:42:00 [at.ac.tuwien.auto.iotsys.gateway.obix.server.NanoHTTPD] INFO - Serving: /obix for 0:0:0:0:0:0:0:1
+2013-06-17 00:42:00 [at.ac.tuwien.auto.iotsys.gateway.obix.server.NanoHTTPD] INFO - Serving: /obix for 0:0:0:0:0:0:0:1 done.
+2013-06-17 00:42:00 [at.ac.tuwien.auto.iotsys.gateway.obix.server.NanoHTTPD] INFO - Serving: /favicon.ico for 0:0:0:0:0:0:0:1
+2013-06-17 00:42:00 [at.ac.tuwien.auto.iotsys.gateway.obix.server.NanoHTTPD] INFO - Serving: /favicon.ico for 0:0:0:0:0:0:0:1 done.
