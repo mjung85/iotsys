@@ -470,7 +470,7 @@
 
     <connector>
       <name>BACnet A-Lab</name>
-      <enabled>true</enabled>
+      <enabled>false</enabled>
       <discovery-enabled>false</discovery-enabled>
       <localDeviceID>12346</localDeviceID>
       <broadcastAddress>128.130.56.255</broadcastAddress>
@@ -545,7 +545,7 @@
 
     <connector>
       <name>BACnet A-Lab (Auto)</name>
-      <enabled>false</enabled>
+      <enabled>true</enabled>
       <discovery-enabled>false</discovery-enabled>
       <localDeviceID>54321</localDeviceID>
       <broadcastAddress>128.130.56.255</broadcastAddress>
