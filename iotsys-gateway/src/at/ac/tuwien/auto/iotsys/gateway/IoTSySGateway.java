@@ -35,6 +35,8 @@ package at.ac.tuwien.auto.iotsys.gateway;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 
 import java.util.logging.Logger;
@@ -94,6 +96,8 @@ public class IoTSySGateway {
 		String httpPort = PropertiesLoader.getInstance().getProperties()
 				.getProperty("iotsys.gateway.http.port", "8080");
 
+		log.info("HTTP-Port: " + httpPort);
+		
 		// initialize object broker
 		objectBroker = ObjectBrokerImpl.getInstance();
 		obixServer = new ObixServerImpl(objectBroker);
@@ -108,21 +112,60 @@ public class IoTSySGateway {
 				.getProperties().getProperty("iotsys.gateway.xacml", "false"));
 
 		log.info("XACML module enabled: " + enableXacml);
-		if (enableXacml && !isOsgiEnvironment()) {
-			// load settings for remote pdp
-			boolean remotePdp = Boolean.parseBoolean(PropertiesLoader
-					.getInstance().getProperties()
-					.getProperty("iotsys.gateway.xacml.remotePDP", "false"));
-			PDPInterceptorSettings.getInstance().setRemotePdp(remotePdp);
-
-			String remotePdpWsdl = PropertiesLoader.getInstance()
-					.getProperties()
-					.getProperty("iotsys.gateway.xacml.remotePDPWsdl", "");
-			PDPInterceptorSettings.getInstance().setRemotePdpWsdl(remotePdpWsdl);
-			
+		if (enableXacml && !isOsgiEnvironment()) {			
 			// temporarly register interceptor
 			try {
 				// load PDP interceptor if available on class path
+				// load settings for remote pdp
+				boolean remotePdp = Boolean.parseBoolean(PropertiesLoader
+						.getInstance().getProperties()
+						.getProperty("iotsys.gateway.xacml.remotePDP", "false"));
+				// PDPInterceptorSettings.getInstance().setRemotePdp(remotePdp);
+
+				String remotePdpWsdl = PropertiesLoader.getInstance()
+						.getProperties()
+						.getProperty("iotsys.gateway.xacml.remotePDPWsdl", "");
+				// PDPInterceptorSettings.getInstance().setRemotePdpWsdl(remotePdpWsdl);
+				Class pdpSettingsClazz = null;
+				
+				try {
+					pdpSettingsClazz = Class.forName("at.ac.tuwien.auto.iotsys.xacml.pdp.PDPInterceptorSettings");
+					log.info("Class found: " + pdpSettingsClazz.getName());
+				} catch (ClassNotFoundException e2) {
+					// TODO Auto-generated catch block
+					e2.printStackTrace();
+				}
+				
+
+				if (pdpSettingsClazz != null) {
+					
+						Method getInstance;
+						try {
+							getInstance = pdpSettingsClazz.getDeclaredMethod("getInstance");
+							PDPInterceptorSettings settings = (PDPInterceptorSettings) getInstance.invoke(null, null);
+							settings.setRemotePdpWsdl(remotePdpWsdl);
+							settings.setRemotePdp(remotePdp);
+						} catch (NoSuchMethodException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						} catch (SecurityException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						} catch (IllegalAccessException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						} catch (IllegalArgumentException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						} catch (InvocationTargetException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+				
+
+				}
+				
+				
 				Class clazz = null;
 				try {
 					clazz = Class.forName("at.ac.tuwien.auto.iotsys.xacml.pdp.PDPInterceptor");

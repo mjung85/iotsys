@@ -39,8 +39,10 @@ public class PDPInterceptor implements Interceptor {
 	
 	private void init() {
 		if (settings.isRemotePdp()) {
+			log.info("Trying to use RemotePDP Interceptor");
 			if (settings.getRemotePdpWsdl().isEmpty()) {
 				pdp = new RemotePDP();
+				log.info("Instantiating RemotePDP");
 			} else {
 				try {
 					pdp = new RemotePDP(new URL(settings.getRemotePdpWsdl()));
@@ -51,6 +53,7 @@ public class PDPInterceptor implements Interceptor {
 			}
 		} else {
 			pdp = new EnterprisePDP(resourcePrefix);
+			log.info("Instantiating EnterprisePDP using local policies.");
 		}
 	}
 	
@@ -59,10 +62,10 @@ public class PDPInterceptor implements Interceptor {
 	public synchronized InterceptorResponse handleRequest(InterceptorRequest request) {
 		log.info("Incoming request to PDPInteceptor");
 		
-		if(!settings.active()){
-			log.info("Returning ok_response");
-			return OK_RESPONSE;
-		}
+//		if(!settings.active()){
+//			log.info("Returning ok_response");
+//			return OK_RESPONSE;
+//		}
 		
 		
 		String resource = request.getInterceptorParam(Parameter.RESOURCE);
