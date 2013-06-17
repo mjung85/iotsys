@@ -68,7 +68,7 @@ dependencies {
 
 ext {
 	//configDir = file('config')
-	resDir = file('res')
+	resDir = file('res/res')
 	
 	String felixDir = "../felix-framework-4.2.1"
 	
