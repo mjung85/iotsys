@@ -37,6 +37,7 @@ import obix.io.ObixEncoder;
 
 import org.json.JSONException;
 
+import at.ac.tuwien.auto.iotsys.commons.PropertiesLoader;
 import at.ac.tuwien.auto.iotsys.commons.interceptor.InterceptorBroker;
 import at.ac.tuwien.auto.iotsys.commons.interceptor.InterceptorRequest;
 import at.ac.tuwien.auto.iotsys.commons.interceptor.InterceptorRequestImpl;
@@ -145,12 +146,11 @@ public class NanoHTTPD {
 	public Response serve(String requestUri, String uri, String method,
 			Properties header, Properties parms, Properties files,
 			Socket mySocket, String socketHostname, String hostAddress) {
-	
 
 		String host = header.getProperty("host");
 		String resource = "http://" + host + uri;
 		String subject = mySocket.getInetAddress().getHostAddress();
-		
+
 		log.info("Serving: " + uri + " for " + subject);
 
 		if (uri.endsWith("soap") && parms.containsKey("wsdl")) {
@@ -171,12 +171,19 @@ public class NanoHTTPD {
 			Response r = new Response(HTTP_OK, MIME_PLAINTEXT,
 					obixServer.getCoRELinks());
 			return r;
-		} else if (uri.equalsIgnoreCase("/") || uri.isEmpty() || uri.endsWith(".js") || uri.endsWith(".css")) {
-			if (uri.isEmpty()) uri = "/index.html"; 
-			return serveFile(uri, header,new File("res/obelix"), false);
+		} else if (uri.equalsIgnoreCase("/") || uri.isEmpty()
+				|| uri.endsWith(".js") || uri.endsWith(".css")) {
+			if (uri.isEmpty())
+				uri = "/index.html";
+			return serveFile(uri, header, new File("res/obelix"), false);
 		}
 
-		if (PDPInterceptorSettings.getInstance().active() && interceptorBroker != null && interceptorBroker.hasInterceptors()) {
+		boolean interceptorsActive = Boolean.parseBoolean(PropertiesLoader.getInstance()
+				.getProperties()
+				.getProperty("iotsys.gateway.interceptors.enable", "true"));
+
+		if (interceptorsActive && interceptorBroker != null
+				&& interceptorBroker.hasInterceptors()) {
 			log.info("Interceptors found ... starting to prepare.");
 
 			InterceptorRequest interceptorRequest = new InterceptorRequestImpl();
@@ -634,8 +641,8 @@ public class NanoHTTPD {
 	private class HTTPSession implements Runnable {
 		public HTTPSession(Socket s) {
 			mySocket = s;
-//			socketHostname = mySocket.getLocalAddress().getHostName();
-//			hostAddress = mySocket.getLocalAddress().getHostAddress();
+			// socketHostname = mySocket.getLocalAddress().getHostName();
+			// hostAddress = mySocket.getLocalAddress().getHostAddress();
 			socketHostname = "localhost";
 			hostAddress = "127.0.0.1";
 			Thread t = new Thread(this);

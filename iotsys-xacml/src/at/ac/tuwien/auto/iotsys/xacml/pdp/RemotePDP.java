@@ -78,7 +78,7 @@ public class RemotePDP implements Pdp {
 		PDP pdp = pdpService.getPDPPort();
 
 		DecisionType dt = pdp.authorize(xRequest.getRequestAbstract());
-		if (dt.equals(DecisionType.PERMIT)) {
+		if (!dt.equals(DecisionType.PERMIT)) {
 			return false;
 		}
 		return true;

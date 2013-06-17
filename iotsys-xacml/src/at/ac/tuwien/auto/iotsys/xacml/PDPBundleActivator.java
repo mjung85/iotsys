@@ -50,11 +50,15 @@ public class PDPBundleActivator implements BundleActivator, ServiceListener {
 					.getProperty("iotsys.gateway.xacml.remotePDP", "false"));
 			PDPInterceptorSettings.getInstance().setRemotePdp(remotePdp);
 
+			log.info("Use remote pdp: " + remotePdp);;
+			
 			String remotePdpWsdl = PropertiesLoader.getInstance()
 					.getProperties()
 					.getProperty("iotsys.gateway.xacml.remotePDPWsdl", "");
 			PDPInterceptorSettings.getInstance().setRemotePdpWsdl(remotePdpWsdl);
 
+			log.info("Remote PDP WSDL: " + remotePdpWsdl);
+			
 			interceptor = new PDPInterceptor("res/");
 
 			
