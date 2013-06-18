@@ -13,6 +13,7 @@ import at.ac.tuwien.auto.iotsys.commons.interceptor.ClassAlreadyRegisteredExcept
 import at.ac.tuwien.auto.iotsys.commons.interceptor.Interceptor;
 import at.ac.tuwien.auto.iotsys.commons.interceptor.InterceptorBroker;
 import at.ac.tuwien.auto.iotsys.xacml.pdp.PDPInterceptor;
+import at.ac.tuwien.auto.iotsys.xacml.pdp.PDPInterceptorSettings;
 
 /**
  * 
@@ -38,14 +39,29 @@ public class PDPBundleActivator implements BundleActivator, ServiceListener {
 
 		enableXacml = Boolean.parseBoolean(PropertiesLoader.getInstance()
 				.getProperties().getProperty("iotsys.gateway.xacml", "false"));
-		
+
 		log.info("XACML module enabled: " + enableXacml);
 
 		if (enableXacml) {
 			this.context = context;
 
+			boolean remotePdp = Boolean.parseBoolean(PropertiesLoader
+					.getInstance().getProperties()
+					.getProperty("iotsys.gateway.xacml.remotePDP", "false"));
+			PDPInterceptorSettings.getInstance().setRemotePdp(remotePdp);
+
+			log.info("Use remote pdp: " + remotePdp);;
+			
+			String remotePdpWsdl = PropertiesLoader.getInstance()
+					.getProperties()
+					.getProperty("iotsys.gateway.xacml.remotePDPWsdl", "");
+			PDPInterceptorSettings.getInstance().setRemotePdpWsdl(remotePdpWsdl);
+
+			log.info("Remote PDP WSDL: " + remotePdpWsdl);
+			
 			interceptor = new PDPInterceptor("res/");
 
+			
 			ServiceReference<InterceptorBroker> interceptorRef = context
 					.getServiceReference(InterceptorBroker.class);
 
