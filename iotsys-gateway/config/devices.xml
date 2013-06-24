@@ -546,7 +546,7 @@
     <connector>
       <name>BACnet A-Lab (Auto)</name>
       <enabled>true</enabled>
-      <discovery-enabled>false</discovery-enabled>
+      <discovery-enabled>true</discovery-enabled>
       <localDeviceID>54321</localDeviceID>
       <broadcastAddress>128.130.56.255</broadcastAddress>
       <localPort>47808</localPort>
@@ -797,6 +797,7 @@
         <historyEnabled>true</historyEnabled>
         <refreshEnabled>true</refreshEnabled>
         <groupCommEnabled>true</groupCommEnabled>
+        <historyCount>200</historyCount>
       </device>
       
        <device>
