@@ -50,8 +50,8 @@ public class BACnetBundleActivator implements BundleActivator, ServiceListener{
 	public void start(BundleContext context) throws Exception {
 		log.info("Starting BACnet connector");
 		this.context = context;
-		ServiceReference<ObjectBroker> serviceReference = context
-				.getServiceReference(ObjectBroker.class);
+		ServiceReference serviceReference = context
+				.getServiceReference(ObjectBroker.class.getName());
 		if (serviceReference == null) {
 			log.severe("Could not find a running object broker to register devices!");
 
@@ -71,8 +71,8 @@ public class BACnetBundleActivator implements BundleActivator, ServiceListener{
 
 	public void stop(BundleContext context) throws Exception {
 		log.info("Stopping BACnet connector");
-		ServiceReference<ObjectBroker> serviceReference = context
-				.getServiceReference(ObjectBroker.class);
+		ServiceReference serviceReference = context
+				.getServiceReference(ObjectBroker.class.getName());
 		if (serviceReference == null) {
 			log.severe("Could not find a running object broker to unregister devices!");
 		} else {
@@ -96,12 +96,28 @@ public class BACnetBundleActivator implements BundleActivator, ServiceListener{
 	public void serviceChanged(ServiceEvent event) {
 		String[] objectClass = (String[]) event.getServiceReference()
 				.getProperty("objectClass");
+		
+		String[] propertyKeys = event.getServiceReference().getPropertyKeys();
+		
+		for(String key: propertyKeys){
+			if( event.getServiceReference().getProperty(key) instanceof String[]){
+//				String[] properties = (String[]) event.getServiceReference().getProperty(key);
+//				for(int i = 0; i< properties.length; i++){
+//					System.out.println(properties[i]);
+//				}
+				System.out.println(key + ": " + ((String[])event.getServiceReference().getProperty(key))[0]);
+			}
+			else{
+				System.out.println(key + ": " + event.getServiceReference().getProperty(key));
+			}
+			
+		}
 
 		if (event.getType() == ServiceEvent.REGISTERED) {
 			if (objectClass[0].equals(ObjectBroker.class.getName())) {
 
 				synchronized (this) {
-					log.info("DeviceLoader detected.");
+					log.info("Object Broker detected.");
 
 					if (!registered) {
 						ObjectBroker objectBroker = (ObjectBroker) context
