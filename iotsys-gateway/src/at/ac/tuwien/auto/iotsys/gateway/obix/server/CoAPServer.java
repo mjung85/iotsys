@@ -42,6 +42,7 @@ import java.util.logging.Logger;
 
 import org.json.JSONException;
 
+import at.ac.tuwien.auto.iotsys.commons.PropertiesLoader;
 import at.ac.tuwien.auto.iotsys.commons.interceptor.InterceptorBroker;
 import at.ac.tuwien.auto.iotsys.commons.interceptor.InterceptorRequest;
 import at.ac.tuwien.auto.iotsys.commons.interceptor.InterceptorRequestImpl;
@@ -98,7 +99,8 @@ public class CoAPServer extends Endpoint {
 	 * Add all initial {@link LocalResource}s here.
 	 */
 	public void InitCoAPServer() throws SocketException {
-		Communicator.setupPort(Properties.std.getInt("DEFAULT_PORT"));
+		Communicator.setupPort(Integer.parseInt(PropertiesLoader.getInstance().getProperties()
+				.getProperty("iotsys.gateway.coap.port", "5685")));
 		Communicator.setupTransfer(0);
 		Communicator.setupDeamon(false);
 		Communicator.getInstance().registerReceiver(this);
