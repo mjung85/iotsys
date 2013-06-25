@@ -96,22 +96,6 @@ public class BACnetBundleActivator implements BundleActivator, ServiceListener{
 	public void serviceChanged(ServiceEvent event) {
 		String[] objectClass = (String[]) event.getServiceReference()
 				.getProperty("objectClass");
-		
-		String[] propertyKeys = event.getServiceReference().getPropertyKeys();
-		
-		for(String key: propertyKeys){
-			if( event.getServiceReference().getProperty(key) instanceof String[]){
-//				String[] properties = (String[]) event.getServiceReference().getProperty(key);
-//				for(int i = 0; i< properties.length; i++){
-//					System.out.println(properties[i]);
-//				}
-				System.out.println(key + ": " + ((String[])event.getServiceReference().getProperty(key))[0]);
-			}
-			else{
-				System.out.println(key + ": " + event.getServiceReference().getProperty(key));
-			}
-			
-		}
 
 		if (event.getType() == ServiceEvent.REGISTERED) {
 			if (objectClass[0].equals(ObjectBroker.class.getName())) {
