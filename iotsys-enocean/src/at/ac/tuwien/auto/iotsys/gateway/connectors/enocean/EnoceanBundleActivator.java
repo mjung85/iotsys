@@ -57,16 +57,16 @@ public class EnoceanBundleActivator implements BundleActivator, ServiceListener 
 	private BundleContext context = null;
 
 	public void start(BundleContext context) throws Exception {
-		log.info("Starting EnOcean connector");
+		log.info("Starting Enocean connector");
 		this.context = context;
-		ServiceReference<ObjectBroker> serviceReference = context
-				.getServiceReference(ObjectBroker.class);
+		ServiceReference serviceReference = context
+				.getServiceReference(ObjectBroker.class.getName());
 		if (serviceReference == null) {
 			log.severe("Could not find a running object broker to register devices!");
 
 		} else {
 			synchronized (this) {
-				log.info("Initiating EnOcean devices.");
+				log.info("Initiating Enocean devices.");
 				ObjectBroker objectBroker = (ObjectBroker) context
 						.getService(serviceReference);
 				connectors = deviceLoader.initDevices(objectBroker);
@@ -79,13 +79,13 @@ public class EnoceanBundleActivator implements BundleActivator, ServiceListener 
 	}
 
 	public void stop(BundleContext context) throws Exception {
-		log.info("Stopping EnOcean connector");
-		ServiceReference<ObjectBroker> serviceReference = context
-				.getServiceReference(ObjectBroker.class);
+		log.info("Stopping Enocean connector");
+		ServiceReference serviceReference = context
+				.getServiceReference(ObjectBroker.class.getName());
 		if (serviceReference == null) {
 			log.severe("Could not find a running object broker to unregister devices!");
 		} else {
-			log.info("Removing EnOcean Devices.");
+			log.info("Removing Enocean Devices.");
 			ObjectBroker objectBroker = (ObjectBroker) context
 					.getService(serviceReference);
 			deviceLoader.removeDevices(objectBroker);
