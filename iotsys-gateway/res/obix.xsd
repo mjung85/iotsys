@@ -143,6 +143,7 @@
 	<xs:complexType name="ref">
 		<xs:attributeGroup ref="objAttr" />
 		<xs:attributeGroup ref="facets" />
+		<xs:attribute name="of" type="xs:string" />
 	</xs:complexType>
 
 	<xs:complexType name="err">
