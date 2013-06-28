@@ -275,8 +275,9 @@ public class NanoHTTPD {
 		} else if (parms.containsKey("data")) {
 			data = parms.getProperty("data");
 		}
-
-		log.finest("serve: " + uri + ", method: " + method + ", data.length() "
+		
+		if (data != null)
+			log.finest("serve: " + uri + ", method: " + method + ", data.length() "
 				+ data.length());
 		log.finest(data);
 		Response r = new Response(HTTP_OK, MIME_XML, "foo");
