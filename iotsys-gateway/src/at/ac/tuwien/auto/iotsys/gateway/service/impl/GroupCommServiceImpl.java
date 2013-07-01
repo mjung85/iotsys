@@ -65,18 +65,20 @@ public class GroupCommServiceImpl implements GroupCommService {
 
 	private static final Hashtable<Inet6Address, Hashtable<String, Obj>> groupObjectPerAddress = new Hashtable<Inet6Address, Hashtable<String, Obj>>();
 
-	private boolean MCAST_ENABLED = true; 
-	
+	private boolean MCAST_ENABLED = true;
+	private boolean INTERNAL_NOTFICATION = true;
+
 	private GroupCommServiceImpl() {
 		MCAST_ENABLED = Boolean.parseBoolean(PropertiesLoader.getInstance()
 				.getProperties().getProperty("iotsys.gateway.mcast", "true"));
+		INTERNAL_NOTFICATION = Boolean.parseBoolean(PropertiesLoader
+				.getInstance().getProperties()
+				.getProperty("iotsys.gateway.internalNotification", "true"));
 	}
 
 	public static GroupCommService getInstance() {
 		return instance;
 	}
-	
-	
 
 	@Override
 	public void handleRequest(Inet6Address group, Obj payload) {
@@ -147,17 +149,23 @@ public class GroupCommServiceImpl implements GroupCommService {
 	}
 
 	@Override
-	public void sendUpdate(Inet6Address group, Obj state) {
-		
+	public void sendUpdate(final Inet6Address group, final Obj state) {
 
 		log.finest("Sending new state of object " + state + " to group "
 				+ group.getHostAddress());
 
 		// notify internal group objects
-//		if(MulticastUDPLayer.getRequestType() != REQUEST_TYPE.LOCAL_REQUEST){
+		if (INTERNAL_NOTFICATION) {
+			// if(MulticastUDPLayer.getRequestType() !=
+			// REQUEST_TYPE.LOCAL_REQUEST){
+			// Thread run = new Thread(){
+			// public void run(){
 //			MulticastUDPLayer.setRequestType(REQUEST_TYPE.LOCAL_REQUEST);
-//			this.handleRequest(group, state);
-//		}
+			GroupCommServiceImpl.this.handleRequest(group, state);
+			// }
+			// };
+			// run.start();
+		}
 
 		if (MCAST_ENABLED) {
 			PUTRequest putRequest = new PUTRequest();
@@ -177,7 +185,7 @@ public class GroupCommServiceImpl implements GroupCommService {
 				} catch (Exception e) {
 					// fall back to XML encoding
 					e.printStackTrace();
-					String payload = ObixEncoder.toString(b);
+					String payload = ObixEncoder.toString(b, true);
 					putRequest.setPayload(payload);
 				}
 
@@ -194,7 +202,7 @@ public class GroupCommServiceImpl implements GroupCommService {
 				} catch (Exception e) {
 					// fall back to XML encoding
 					e.printStackTrace();
-					String payload = ObixEncoder.toString(r);
+					String payload = ObixEncoder.toString(r, true);
 					putRequest.setPayload(payload);
 				}
 			} else if (state instanceof Int) {
@@ -210,7 +218,7 @@ public class GroupCommServiceImpl implements GroupCommService {
 				} catch (Exception e) {
 					// fall back to XML encoding
 					e.printStackTrace();
-					String payload = ObixEncoder.toString(i);
+					String payload = ObixEncoder.toString(i, true);
 					putRequest.setPayload(payload);
 				}
 			}

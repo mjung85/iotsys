@@ -47,7 +47,7 @@ public class InterceptorBrokerImpl implements InterceptorBroker, Interceptor {
 	
 	@Override
 	public InterceptorResponse handleRequest(InterceptorRequest request) {
-		log.info("Handle request!");
+		// log.info("Handle request!");
 		InterceptorResponse resp = null;
 		for (Interceptor i : interceptors.values()) {
 			resp = i.handleRequest(request);

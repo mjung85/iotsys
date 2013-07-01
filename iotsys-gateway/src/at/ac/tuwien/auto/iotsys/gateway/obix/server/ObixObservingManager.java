@@ -152,7 +152,7 @@ public class ObixObservingManager implements ExternalObserver{
 					
 
 					obixResponse = new StringBuffer(ObixEncoder.toString(obixServer.readObj(new URI(
-								resourcePath), "guest")));
+								resourcePath), "guest"), true));
 				
 					obixResponse = new StringBuffer(obixResponse.toString()
 							.replaceFirst(DEFAULT_OBIX_URL_PROTOCOL,

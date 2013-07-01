@@ -35,4 +35,10 @@ public class AnalogInputImpl extends AnalogBacnetObj implements AnalogInput {
 		setIs(new Contract(AnalogInput.CONTRACT));
 		value().setWritable(false);
 	}
+	
+	@Override
+	protected void refreshWritable() {
+		// Input Objects writable if Out_Of_Service == True
+		value().setWritable(isOutOfService());
+	}
 }

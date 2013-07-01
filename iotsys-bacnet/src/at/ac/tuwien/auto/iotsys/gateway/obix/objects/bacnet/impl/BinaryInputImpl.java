@@ -34,4 +34,10 @@ public class BinaryInputImpl extends BinaryBacnetObj implements BinaryInput {
 		setIs(new Contract(BinaryInput.CONTRACT));
 		value().setWritable(false);
 	}
+	
+	@Override
+	protected void refreshWritable() {
+		// Input Objects writable if Out_Of_Service == True
+		value().setWritable(isOutOfService());
+	}
 }

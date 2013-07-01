@@ -118,9 +118,8 @@ public class UDPLayer extends Layer {
 		
 	
 		
-		this.socket = new DatagramSocket(null);
+		this.socket = new DatagramSocket(port);
 		this.socket.setReuseAddress(true);
-		this.socket.bind(new InetSocketAddress(port));
 		
 		this.inetAddress = socket.getLocalAddress();
 		this.receiverThread = new ReceiverThread();
@@ -144,10 +143,10 @@ public class UDPLayer extends Layer {
 		// initialize members	
 		this.inetAddress = inetAddress;
 			
-		this.socket = new DatagramSocket(null);
-		this.socket.setReuseAddress(false);
-		InetSocketAddress sockAddr = new InetSocketAddress(inetAddress, port);
-		this.socket.bind(sockAddr);
+		this.socket = new DatagramSocket( port, inetAddress);
+		this.socket.setReuseAddress(true);
+//		InetSocketAddress sockAddr = new InetSocketAddress(inetAddress, port);
+//		this.socket.bind(sockAddr);
 		this.receiverThread = new ReceiverThread();
 
 		// decide if receiver thread terminates with main thread

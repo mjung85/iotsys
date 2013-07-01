@@ -100,8 +100,7 @@ public class GroupCommImpl extends Obj implements GroupComm, Observer{
 		this.setHref(new Uri(this.datapoint.getFullContextPath()
 				+ "/groupComm"));
 		ObjectBrokerImpl.getInstance().addObj(this, false);
-		
-		
+				
 //		ObjectBrokerImpl.getInstance().addObj(groups, false);
 		
 		String queryHref = datapoint.getFullContextPath()

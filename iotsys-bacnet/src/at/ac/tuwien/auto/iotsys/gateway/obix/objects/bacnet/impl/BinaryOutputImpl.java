@@ -34,4 +34,10 @@ public class BinaryOutputImpl extends BinaryBacnetObj implements BinaryOutput {
 		setIs(new Contract(BinaryOutput.CONTRACT));
 		value().setWritable(true);
 	}
+	
+	@Override
+	protected void refreshWritable() {
+		// Output objects always writable
+		value().setWritable(true);
+	}
 }

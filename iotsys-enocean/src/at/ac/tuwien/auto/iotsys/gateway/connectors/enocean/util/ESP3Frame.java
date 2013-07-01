@@ -1,6 +1,41 @@
+/*******************************************************************************
+ * Copyright (c) 2013
+ * Institute of Computer Aided Automation, Automation Systems Group, TU Wien.
+ * All rights reserved.
+ * 
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the distribution.
+ * 3. Neither the name of the Institute nor the names of its contributors
+ *    may be used to endorse or promote products derived from this software
+ *    without specific prior written permission.
+ * 
+ * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS "AS IS" AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+ * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+ * SUCH DAMAGE.
+ * 
+ * This file is part of the IoTSyS project.
+ ******************************************************************************/
+
 package at.ac.tuwien.auto.iotsys.gateway.connectors.enocean.util;
 
+import java.util.logging.Logger;
+
 public class ESP3Frame {
+	private static final Logger log = Logger.getLogger(ESP3Frame.class.getName());
 	public enum STATES_GET_PACKET {
 		GET_SYNC_STATE(0x01), GET_HEADER_STATE(0x02), CHECK_CRC8H_STATE(0x03), GET_DATA_STATE(
 				0x04), CHECK_CRC8D_STATE(0x05);
@@ -52,7 +87,7 @@ public class ESP3Frame {
 					dataCnt = 0;
 					tempDataBuffer = null;
 				} else {
-					System.out.println("Sync byte not found!");
+					log.finest("Sync byte not found!");
 				}
 				break;
 
@@ -69,7 +104,7 @@ public class ESP3Frame {
 					header = new ESP3PacketHeader(tempHeaderBuffer);
 					state = STATES_GET_PACKET.GET_DATA_STATE;
 				} else {
-					System.out.println("Wrong CRC8H: "
+					log.finest("Wrong CRC8H: "
 							+ Integer.toHexString(tempData & 0xFF));
 					state = STATES_GET_PACKET.GET_SYNC_STATE;
 				}
@@ -92,19 +127,19 @@ public class ESP3Frame {
 
 				if (ESP3PacketHeader.checkCRC8(tempDataBuffer, tempData)) {
 					packet = new ESP3Packet(header, tempDataBuffer);
-					System.out.println(packet.getHeader().toString());
-					System.out.println("telegram rorg: "
+					log.finest(packet.getHeader().toString());
+					log.finest("telegram rorg: "
 							+ packet.telegram.getRORG());
-					System.out.println("telegram senderid: "
+					log.finest("telegram senderid: "
 							+ packet.telegram.getSenderID().toString());
-					System.out.println("telegram status: "
+					log.finest("telegram status: "
 							+ Integer.toHexString((packet.telegram
 									.getStatusByte() & 0xFF)));
-					System.out.println("telegram payload: "
+					log.finest("telegram payload: "
 							+ packet.telegram.getPayloadAsString());
-					System.out.println("");
+					log.finest("");
 				} else {
-					System.out.println("Wrong CRC8D: "
+					log.finest("Wrong CRC8D: "
 							+ Integer.toHexString(tempData & 0xFF));
 				}
 				break;

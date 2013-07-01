@@ -32,7 +32,12 @@
 
 package at.ac.tuwien.auto.iotsys.gateway.obix.objects;
 
+import java.net.InterfaceAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
 import java.net.UnknownHostException;
+import java.util.Enumeration;
+import java.util.List;
 import java.util.TimeZone;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -71,6 +76,21 @@ public class AboutImpl extends Obj implements About {
 		productName.setName("productName");
 		productVersion.setName("productVersion");
 		productURL.setName("productURL");
+		
+		try {
+			StringBuffer addresses = new StringBuffer();
+			Enumeration<NetworkInterface> networkInterfaces = NetworkInterface.getNetworkInterfaces();
+			while(networkInterfaces.hasMoreElements()){
+				List<InterfaceAddress> interfaceAddresses = networkInterfaces.nextElement().getInterfaceAddresses();
+				for(InterfaceAddress iface : interfaceAddresses) {
+					addresses.append(iface.getAddress().getHostAddress()).append(";");
+				}
+			}
+			serverName.set(serverName.get() + " - " + addresses.toString());
+		} catch (SocketException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		this.add(obixVersion);
 		this.add(serverName);
