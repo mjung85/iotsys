@@ -34,4 +34,12 @@ public class BinaryValueImpl extends BinaryBacnetObj implements BinaryValue {
 		setIs(new Contract(BinaryValue.CONTRACT));
 		value().setWritable(true);
 	}
+	
+
+	@Override
+	protected void refreshWritable() {
+		// Value Objects are writable if Out_Of_Service is True
+		// or if Present_Value is commandable (PriorityArray and RelinquishDefault exist)
+		value().setWritable(isOutOfService() || isValueCommandable());
+	}
 }

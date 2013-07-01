@@ -80,8 +80,10 @@ public class DeviceLoaderImpl implements DeviceLoader {
 			log.info("Found device loader: " + deviceLoaderName);
 			
 			try {
-				DeviceLoader devLoader = (DeviceLoader) Class.forName(deviceLoaderName).newInstance();				
-				connectors.addAll(devLoader.initDevices(objectBroker));			
+				DeviceLoader devLoader = (DeviceLoader) Class.forName(deviceLoaderName).newInstance();
+				ArrayList<Connector> connectorsList = devLoader.initDevices(objectBroker);
+				if(connectorsList != null)
+					connectors.addAll(connectorsList);			
 			} catch (InstantiationException e) {
 				e.printStackTrace();
 			} catch (IllegalAccessException e) {

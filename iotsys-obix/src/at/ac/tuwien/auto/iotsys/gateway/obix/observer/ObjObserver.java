@@ -6,7 +6,7 @@ import java.util.Map;
 import obix.Obj;
 
 /**
- * Observers the state changes of an obix object. Holds a history 
+ * Observes the state changes of an obix object. Holds a history 
  * of the changes until the events are polled or the max number of 
  * elements is exceeded.
  * 

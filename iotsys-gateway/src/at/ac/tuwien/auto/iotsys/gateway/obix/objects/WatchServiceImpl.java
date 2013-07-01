@@ -41,6 +41,7 @@ import obix.Uri;
 import obix.contracts.WatchService;
 
 public class WatchServiceImpl extends Obj implements WatchService{
+	
 	private ObjectBroker broker;
 	
 	private static int watchID = 1;

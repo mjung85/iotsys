@@ -72,6 +72,7 @@ public class ObixServerImpl implements ObixServer{
 	}
 
 	public Obj writeObj(URI href, String xmlStream) {
+		log.info("Writing on object " + href);
 		log.finer("Writing on object: " + href + " xmlStream: " + xmlStream);
 		Obj input = ObixDecoder.fromString(xmlStream);
 

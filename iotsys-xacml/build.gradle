@@ -23,6 +23,14 @@ configurations {
 
 sourceSets{
 	main { compileClasspath += configurations.provided }
+	test { 
+		java {
+			srcDir 'test'
+		}
+		resources {
+			srcDir 'res'
+		}
+	}
 }
 
 
@@ -52,7 +60,8 @@ jar {
 									   "org.apache.commons.lang, org.apache.commons.lang.builder, org.apache.commons.lang.enums, org.apache.commons.lang.exception, org.apache.commons.lang.math, org.apache.commons.lang.mutable, org.apache.commons.lang.text, org.apache.commons.lang.time, " +
 									   "org.apache.commons.logging, org.apache.commons.logging.impl, " + 
 									   "com.sun.org.apache.xerces.internal.jaxp.validation, com.sun.org.apache.xerces.internal.jaxp, " +
-									   "javax.naming.ldap, javax.naming"
+									   "javax.naming.ldap, javax.naming, javax.xml.ws, com.sun.xml.internal.ws.api.message",
+					"Export-Package": "at.ac.tuwien.auto.iotsys.xacml.pdp"
 				   )
 	}
 }
@@ -63,15 +72,19 @@ dependencies {
 	// compile 'com.sun.org.apache:jaxp-ri:1.4'
 	provided group: 'org.apache.felix', name: 'org.osgi.core', version: '1.4.0'
 	compile group: 'log4j', name: 'log4j', version: '1.2.17'
+	testCompile group: 'junit', name: 'junit', version: '4.11'
 }
 
 ext {
 	//configDir = file('config')
-	resDir = file('res')
+	resDir = file('res/res')
 	
 	String felixDir = "../felix-framework-4.2.1"
 	
+	String deployDir = "../dist"
+	
 	felix = file(felixDir)
+	depl = file(deployDir)
 }
 
 deployOsgi.doLast {
@@ -86,4 +99,20 @@ deployOsgi.doLast {
 		
 		}
 	}
+}
+
+deploy.doLast {
+	
+	File deployResDir = new File(depl.absolutePath + '/res')
+	
+	if(deployResDir.exists()){
+		println "Resource directory already available at " + deployResDir.absolutePath 
+	
+		println "Copying configuration from " + resDir.absolutePath + " to " + deployResDir.absolutePath 
+		ant.copy(todir:deployResDir){
+			fileset(dir:resDir)
+		
+		}
+	}
+	
 }

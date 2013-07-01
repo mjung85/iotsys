@@ -103,8 +103,8 @@ public class MultiInterfaceUDPLayer extends Layer {
 		// determined.
 		if (MCAST_ENABLED) {
 			if (PCAP_ENABLED) {
-				defaultUDPLayer = new UDPLayer(port, true);
-				defaultUDPLayer.registerReceiver(this);
+//				defaultUDPLayer = new UDPLayer(port, true);
+//				defaultUDPLayer.registerReceiver(this);
 				int r = Pcap.findAllDevs(alldevs, errbuf);
 				if (r == Pcap.NOT_OK || alldevs.isEmpty()) {
 					log.info("No devs found");
@@ -152,6 +152,7 @@ public class MultiInterfaceUDPLayer extends Layer {
 				};
 				packetlistener.setDaemon(true);
 				packetlistener.start();
+
 			} else {
 				try {
 					Inet6Address group = (Inet6Address) Inet6Address
@@ -161,29 +162,29 @@ public class MultiInterfaceUDPLayer extends Layer {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
-				defaultUDPLayer = new UDPLayer(port, true);
-				defaultUDPLayer.registerReceiver(this);
 
-				Enumeration<NetworkInterface> networkInterfaces = NetworkInterface
-						.getNetworkInterfaces();
+			}
+		}
 
-				while (networkInterfaces.hasMoreElements()) {
-					NetworkInterface iface = networkInterfaces.nextElement();
+		defaultUDPLayer = new UDPLayer();
+		defaultUDPLayer.registerReceiver(this);
 
-					Enumeration<InetAddress> inetAddresses = iface
-							.getInetAddresses();
-					for (InetAddress inetAddress : Collections
-							.list(inetAddresses)) {
+		Enumeration<NetworkInterface> networkInterfaces = NetworkInterface
+				.getNetworkInterfaces();
 
-						try {
-							UDPLayer udpLayer = new UDPLayer(inetAddress, port,
-									runAsDaemon);
-							udpLayer.registerReceiver(this);
-							udplayers.put(inetAddress, udpLayer);
-						} catch (Exception e) {
-							// do nothing. may conflict with default UDP layer
-						}
-					}
+		while (networkInterfaces.hasMoreElements()) {
+			NetworkInterface iface = networkInterfaces.nextElement();
+
+			Enumeration<InetAddress> inetAddresses = iface.getInetAddresses();
+			for (InetAddress inetAddress : Collections.list(inetAddresses)) {
+
+				try {
+					UDPLayer udpLayer = new UDPLayer(inetAddress, port,
+							runAsDaemon);
+					udpLayer.registerReceiver(this);
+					udplayers.put(inetAddress, udpLayer);
+				} catch (Exception e) {
+					// do nothing. may conflict with default UDP layer
 				}
 			}
 		}

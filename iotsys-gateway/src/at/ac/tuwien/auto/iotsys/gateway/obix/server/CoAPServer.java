@@ -42,6 +42,7 @@ import java.util.logging.Logger;
 
 import org.json.JSONException;
 
+import at.ac.tuwien.auto.iotsys.commons.PropertiesLoader;
 import at.ac.tuwien.auto.iotsys.commons.interceptor.InterceptorBroker;
 import at.ac.tuwien.auto.iotsys.commons.interceptor.InterceptorRequest;
 import at.ac.tuwien.auto.iotsys.commons.interceptor.InterceptorRequestImpl;
@@ -98,7 +99,8 @@ public class CoAPServer extends Endpoint {
 	 * Add all initial {@link LocalResource}s here.
 	 */
 	public void InitCoAPServer() throws SocketException {
-		Communicator.setupPort(Properties.std.getInt("DEFAULT_PORT"));
+		Communicator.setupPort(Integer.parseInt(PropertiesLoader.getInstance().getProperties()
+				.getProperty("iotsys.gateway.coap.port", "5685")));
 		Communicator.setupTransfer(0);
 		Communicator.setupDeamon(false);
 		Communicator.getInstance().registerReceiver(this);
@@ -115,50 +117,51 @@ public class CoAPServer extends Endpoint {
 	public void execute(Request request) throws IOException {
 
 		String resourcePath = request.getUriPath();
+		log.info("Coap serving " + resourcePath + " for " + request.getPeerAddress().getAddress());
 
 		/* INTERCEPTORS START */
-		if (interceptorBroker != null && interceptorBroker.hasInterceptors()) {
-			log.fine("Interceptors found ... starting to prepare.");
-
-			InterceptorRequest interceptorRequest = new InterceptorRequestImpl();
-			HashMap<Parameter, String> interceptorParams = new HashMap<Parameter, String>();
-
-			String resource = COAP_URL_PROTOCOL + "://"
-					+ request.getNetworkInterface().getCanonicalHostName()
-					+ ":" + Communicator.getInstance().port() + resourcePath;
-			LOG.info(resource);
-			String action = CodeRegistry.toString(request.getCode());
-
-			interceptorParams.put(Parameter.SUBJECT, request.getPeerAddress()
-					.toString());
-			interceptorParams.put(Parameter.SUBJECT_IP_ADDRESS, request
-					.getPeerAddress().toString());
-			interceptorParams.put(Parameter.RESOURCE, resource);
-			interceptorParams.put(Parameter.RESOURCE_PROTOCOL,
-					COAP_URL_PROTOCOL);
-			interceptorParams.put(Parameter.RESOURCE_IP_ADDRESS, request
-					.getNetworkInterface().getHostAddress());
-			interceptorParams.put(Parameter.RESOURCE_HOSTNAME, request
-					.getNetworkInterface().getHostName());
-			interceptorParams.put(Parameter.RESOURCE_PATH, resourcePath);
-			interceptorParams.put(Parameter.ACTION, action);
-
-			interceptorRequest.setInterceptorParams(interceptorParams);
-
-			log.fine("Calling interceptions ...");
-			InterceptorResponse resp = interceptorBroker
-					.handleRequest(interceptorRequest);
-
-			if (!resp.getStatus().equals(StatusCode.OK)) {
-				if (resp.forward()) {
-					request.respond(CodeRegistry.RESP_FORBIDDEN,
-							resp.getMessage(), MediaTypeRegistry.TEXT_PLAIN);
-					request.sendResponse();
-					return;
-				}
-			}
-		}
-		/* INTERCEPTORS END */
+//		if (interceptorBroker != null && interceptorBroker.hasInterceptors()) {
+//			log.fine("Interceptors found ... starting to prepare.");
+//
+//			InterceptorRequest interceptorRequest = new InterceptorRequestImpl();
+//			HashMap<Parameter, String> interceptorParams = new HashMap<Parameter, String>();
+//
+//			String resource = COAP_URL_PROTOCOL + "://"
+//					+ request.getNetworkInterface().getCanonicalHostName()
+//					+ ":" + Communicator.getInstance().port() + resourcePath;
+//			LOG.info(resource);
+//			String action = CodeRegistry.toString(request.getCode());
+//
+//			interceptorParams.put(Parameter.SUBJECT, request.getPeerAddress()
+//					.toString());
+//			interceptorParams.put(Parameter.SUBJECT_IP_ADDRESS, request
+//					.getPeerAddress().toString());
+//			interceptorParams.put(Parameter.RESOURCE, resource);
+//			interceptorParams.put(Parameter.RESOURCE_PROTOCOL,
+//					COAP_URL_PROTOCOL);
+//			interceptorParams.put(Parameter.RESOURCE_IP_ADDRESS, request
+//					.getNetworkInterface().getHostAddress());
+//			interceptorParams.put(Parameter.RESOURCE_HOSTNAME, request
+//					.getNetworkInterface().getHostName());
+//			interceptorParams.put(Parameter.RESOURCE_PATH, resourcePath);
+//			interceptorParams.put(Parameter.ACTION, action);
+//
+//			interceptorRequest.setInterceptorParams(interceptorParams);
+//
+//			log.fine("Calling interceptions ...");
+//			InterceptorResponse resp = interceptorBroker
+//					.handleRequest(interceptorRequest);
+//
+//			if (!resp.getStatus().equals(StatusCode.OK)) {
+//				if (resp.forward()) {
+//					request.respond(CodeRegistry.RESP_FORBIDDEN,
+//							resp.getMessage(), MediaTypeRegistry.TEXT_PLAIN);
+//					request.sendResponse();
+//					return;
+//				}
+//			}
+//		}
+//		/* INTERCEPTORS END */
 
 		String localSocket = request.getNetworkInterface().getHostAddress()
 				.toString();
@@ -240,7 +243,7 @@ public class CoAPServer extends Endpoint {
 		} else if (request.getContentType() == MediaTypeRegistry.APPLICATION_X_OBIX_BINARY) {
 			try {
 				payloadString = ObixEncoder.toString(BinObixDecoder
-						.fromBytes(request.getPayload()));
+						.fromBytes(request.getPayload()), true);
 			} catch (Exception e) {
 				e.printStackTrace();
 				payloadString = request.getPayloadString();
@@ -279,7 +282,7 @@ public class CoAPServer extends Endpoint {
 
 					obixResponse = new StringBuffer(
 							ObixEncoder.toString(obixServer.readObj(new URI(
-									resourcePath), "guest")));
+									resourcePath), "guest"), true));
 
 				}
 
@@ -287,13 +290,13 @@ public class CoAPServer extends Endpoint {
 
 					obixResponse = new StringBuffer(
 							ObixEncoder.toString(obixServer.writeObj(new URI(
-									resourcePath), payloadString)));
+									resourcePath), payloadString), true));
 
 				}
 				if (request instanceof POSTRequest) {
 					obixResponse = new StringBuffer(
 							ObixEncoder.toString(obixServer.invokeOp(new URI(
-									resourcePath), payloadString)));
+									resourcePath), payloadString), true));
 
 				}
 			}
@@ -303,7 +306,7 @@ public class CoAPServer extends Endpoint {
 							COAP_URL_PROTOCOL));
 			obixResponse = new StringBuffer(obixResponse.toString());
 
-			fixHref(request.getUriPath(), obixResponse);
+//			fixHref(request.getUriPath(), obixResponse);
 
 			if (request.getFirstAccept() == MediaTypeRegistry.APPLICATION_EXI) {
 				try {
@@ -379,6 +382,8 @@ public class CoAPServer extends Endpoint {
 		}
 
 		request.sendResponse();
+		log.info("Coap serving " + resourcePath + " for " + request.getPeerAddress().getAddress() + " done.");
+		
 	}
 
 	private void fixHref(String href, StringBuffer obixResponse) {
