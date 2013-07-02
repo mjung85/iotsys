@@ -32,16 +32,24 @@ app.service('Lobby', function($http, Device) {
 });
 
 app.factory('Device', function($http, $timeout) {
-  var Property = function(href, type, name, value, readonly) {
+  var Property = function(href, type, name, value, el) {
     this.href = href;
     this.type = type;
     this.numeric = (this.type == 'int' || this.type == 'real');
     this.name = name;
     this.value = value;
-    this.readonly = readonly;
+    this.readonly = !el['writable'];
 
     if (this.type == 'real') {
       this.value = Math.round(this.value * 100) / 100.0;
+    }
+
+    if (this.numeric && el['max'] && !this.readonly) {
+      // setup range
+      this.range = true;
+      this.rangeMin = el['min'];
+      this.rangeMax = el['max'];
+      this.rangeStep = Math.abs(this.rangeMax - this.rangeMin)/100.0;
     }
   };
 
@@ -61,8 +69,14 @@ app.factory('Device', function($http, $timeout) {
   };
 
   Property.parse = function(el, device) {
-    if (el['tagName'] == 'bool' || el['tagName'] == 'int' || el['tagName'] == 'real' || el['tagName'] == 'enum' || el['tagName'] == 'str') {
-      var p = new Property(el['href'], el['tagName'], el['name'], el['val'], !el['writable']);
+    if (
+      el['tagName'] == 'bool' || 
+      el['tagName'] == 'int' || 
+      el['tagName'] == 'real' || 
+      el['tagName'] == 'enum' || 
+      el['tagName'] == 'str'
+    ) {
+      var p = new Property(el['href'], el['tagName'], el['name'], el['val'], el);
       if (p.type == 'enum') {
         p.range = Property.Enum.range(el['range']);
       }
@@ -135,7 +149,6 @@ app.factory('Device', function($http, $timeout) {
 
     update: function(property) {
       $http.put(this.url, property.serialize()).success(function(response) {
-        console.log(response);
         this.load(response);
       }.bind(this));
     },
@@ -249,7 +262,6 @@ app.controller('DevicesCtrl', ['$scope','Lobby','Device', function($scope, Lobby
   }
 
   $scope.selectProperty = function(p) {
-    console.log("SELECT",p);
     if (!p.groupcomm) return;
     var index = $scope.selectedProperties.indexOf(p);
     if (index != -1) {

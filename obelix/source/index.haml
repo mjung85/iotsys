@@ -63,6 +63,9 @@
                 .controls
                   %input.input-mini(ng-model="numeric.value" type="text" ng-model-onblur ng-disabled="numeric.readonly" ng-change="device.update(numeric)")
                   .groupcomm(ng-click="selectProperty(numeric)" ng-class="{selected:numeric.selected, hidden:!numeric.groupcomm}")
+                .range(ng-switch="numeric.range")
+                  %div(ng-switch-when="true")
+                    %input(type="range" min="{{numeric.rangeMin}}" max="{{numeric.rangeMax}}" step="{{numeric.rangeStep}}" ng-model="numeric.value" ng-mouseup="device.update(numeric)")
               .control-group.property.enum(ng-repeat="enum in device.properties | filter: {type: 'enum'}")
                 %label.control-label {{enum.name}}
                 .controls
