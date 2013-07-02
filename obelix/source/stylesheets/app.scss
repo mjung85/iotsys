@@ -48,6 +48,13 @@ body {
     };
   }
 
+  .range {
+    text-align: right;
+    input {
+      width: 160px;
+    }
+  }
+
   .property .groupcomm {
     border-radius: 16px;
     border: 3px solid #8dd5ed;
