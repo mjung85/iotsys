@@ -21,13 +21,6 @@ public class ObjObserver<ObjType> implements Observer{
 	private static final Object lock = new Object();
 	private LinkedList<ObjType> queue = new LinkedList<ObjType>();
 	
-	/* Only transmit updates in a max interval of 100 ms */ 
-	/* Work around for Copper bug */
-	private long lastEvent = 0;
-	
-	private boolean coapBugWorkaround = true;
-	private int coapObserveInterval = 200;
-	
 	public ObjObserver(){
 
 	}
@@ -36,16 +29,10 @@ public class ObjObserver<ObjType> implements Observer{
 	public void update(Object currentState) {
 
 		synchronized(lock){		
-			if(coapBugWorkaround){
-				if(System.currentTimeMillis() - lastEvent < coapObserveInterval){
-					return; // too short interval between updates, ignore this one.
-				}
-			}
 			queue.add((ObjType) currentState);
 			if(queue.size() > MAX_EVENTS){
 				queue.removeLast();
-			}
-			lastEvent = System.currentTimeMillis();			
+			}			
 		}
 		
 		// notify any CoAP observers
