@@ -3,17 +3,29 @@
 //= require 'bootstrap-transition'
 //= require 'bootstrap-modal'
 //= require 'bootstrap-dropdown'
+//= require 'html5slider'
 //= require_self
 
 var app = angular.module('Obelix', []);
 
 app.service('Lobby', function($http, Device) {
-  IGNORED_DEVICES = ['/about', '/watchService', '/enums']; // TODO
-
   return {
     getDevices: function(cb) {
       $http.get('/obix').success(function(response) {
-        cb($.map(response['childNodes'], function(ref) { return new Device(ref['href']); }));
+        var devices = [];
+        var nodes = response['childNodes'];
+        angular.forEach(nodes, function(node) {
+          // Skip some obix objects:
+          if (
+            node['name'] == 'about' || 
+            node['is'] == 'obix:obj' || 
+            node['is'] == 'obix:WatchService' ||
+            node['is'] == 'obix:Watch' 
+          ) return;
+          // ...add the rest to list of devices
+          devices.push(new Device(node['href']));
+        });
+        cb(devices); //..and pass them to callback
       });
     }
   }
