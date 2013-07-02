@@ -90,6 +90,11 @@
                   <input class='input-mini' ng-change='device.update(numeric)' ng-disabled='numeric.readonly' ng-model-onblur ng-model='numeric.value' type='text'>
                   <div class='groupcomm' ng-class='{selected:numeric.selected, hidden:!numeric.groupcomm}' ng-click='selectProperty(numeric)'></div>
                 </div>
+                <div class='range' ng-switch='numeric.range'>
+                  <div ng-switch-when='true'>
+                    <input max='{{numeric.rangeMax}}' min='{{numeric.rangeMin}}' ng-model='numeric.value' ng-mouseup='device.update(numeric)' step='{{numeric.rangeStep}}' type='range'>
+                  </div>
+                </div>
               </div>
               <div class='control-group property enum' ng-repeat="enum in device.properties | filter: {type: 'enum'}">
                 <label class='control-label'>{{enum.name}}</label>
