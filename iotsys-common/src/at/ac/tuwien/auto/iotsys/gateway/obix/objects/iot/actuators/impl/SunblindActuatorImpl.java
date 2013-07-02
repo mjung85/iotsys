@@ -50,7 +50,6 @@ public class SunblindActuatorImpl extends ActuatorImpl implements SunblindActuat
 	protected Bool stopStepUpDownValue = new Bool(false);
 	protected Bool dedicatedStopValue  = new Bool(false);
 	
-	
 	private static final Logger log = Logger.getLogger(SunblindActuatorImpl.class.getName());
 	
 	
