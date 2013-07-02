@@ -6,3 +6,6 @@ gem 'middleman-minify-html'
 gem 'rack-reverse-proxy'
 gem 'bootstrap-sass', require: false
 gem 'json', '~> 1.7.7'
+
+# See https://github.com/middleman/middleman/issues/276
+gem 'therubyracer', platforms: :ruby 
