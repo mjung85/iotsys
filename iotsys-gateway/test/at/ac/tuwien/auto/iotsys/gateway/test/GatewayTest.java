@@ -53,10 +53,6 @@ public class GatewayTest {
 		given().body("<bool val='true' />").
 		expect().body(Matchers.hasXPath("//bool[@name='value' and @val='true']")).
 		when().put("/virtualLight1/value");
-		
-		given().body("<int val='42' />").
-		expect().body(Matchers.hasXPath("//int[@val='42']")).
-		when().put("/simFanSpeedIn/fanSpeedSetpoint");
 	}
 	
 	@Test
