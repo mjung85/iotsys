@@ -21,7 +21,7 @@ import obix.io.*;
  * @creation 27 Apr 05
  * @version $Revision$ $Date$
  */
-public class Obj implements IObj, Subject {
+public class Obj implements IObj, Subject, Cloneable {
 
 	// //////////////////////////////////////////////////////////////
 	// Factory
@@ -140,6 +140,19 @@ public class Obj implements IObj, Subject {
 			throw new IllegalStateException("obj is already parented");
 		this.name = name;
 	}
+	
+	/**
+	 * Set name of this Obj. The name may only be set if name is currently null
+	 * and this Obj hasn't been added a child to another Obj yet.
+	 * @param name New name for this Obj
+	 * @param force If true, ignore that name or parent may have already been set
+	 */
+	public void setName(String name, boolean force) {
+		if (force)
+			this.name = name;
+		else
+			setName(name);
+	}
 
 	/**
 	 * Return parent object or null if unparented.
@@ -253,7 +266,12 @@ public class Obj implements IObj, Subject {
 	public void setIs(Contract is) {
 		this.is = is;
 	}
-
+	
+	@Override
+	public Object clone() throws CloneNotSupportedException {
+		return super.clone();
+	}
+	
 	// //////////////////////////////////////////////////////////////
 	// Convenience
 	// //////////////////////////////////////////////////////////////
@@ -596,7 +614,6 @@ public class Obj implements IObj, Subject {
 			
 			kidsByName.put(kid.name, kid);
 		}
-		
 		
 
 		// add to ordered linked list

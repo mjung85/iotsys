@@ -84,6 +84,7 @@ public class HistoryImpl extends Obj implements History, Observer {
 
 		this.setName("history");
 		this.setHref(new Uri("history"));
+		this.setIs(new Contract(HISTORY_CONTRACT));
 
 		count.setName("count");
 		count.setHref(new Uri("count"));

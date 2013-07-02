@@ -72,9 +72,6 @@ public class HistoryRollupOutImpl extends Obj implements HistoryRollupOut {
 		count.setSilent(resultList.size());
 		setIs(new Contract(HISTORY_ROLLUPOUT_CONTRACT));
 		
-		resultList = new List();
-		resultList.setOf(new Contract(HistoryRecordImpl.HISTORY_RECORD_CONTRACT));
-		
 		for(HistoryRollupRecordImpl historyRecord : historyRecords) {
 			resultList.add(historyRecord);
 		}
