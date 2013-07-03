@@ -48,21 +48,13 @@ public class BacnetDeviceLoaderImpl implements DeviceLoader {
 	private static Logger log = Logger.getLogger(BacnetDeviceLoaderImpl.class
 			.getName());
 
-	private XMLConfiguration devicesConfig = new XMLConfiguration();
+	private XMLConfiguration devicesConfig;
 	
 	private ArrayList<String> myObjects = new ArrayList<String>();
-	
-	public BacnetDeviceLoaderImpl() {
-		String devicesConfigFile = DEVICE_CONFIGURATION_LOCATION;
-
-		try {
-			devicesConfig = new XMLConfiguration(devicesConfigFile);
-		} catch (Exception e) {
-			log.log(Level.SEVERE, e.getMessage(), e);
-		}
-	}
 
 	public ArrayList<Connector> initDevices(ObjectBroker objectBroker) {
+		setConfiguration(devicesConfig);
+		
 		ArrayList<Connector> connectors = new ArrayList<Connector>();
 
 		int connectorsSize = 0;
@@ -295,10 +287,6 @@ public class BacnetDeviceLoaderImpl implements DeviceLoader {
 		private Boolean groupCommEnabled; 
 		private Boolean historyEnabled;
 	
-		public DeviceDiscoveryListener(ObjectBroker objectBroker) {
-			this(objectBroker, null, null);
-		}
-		
 		public DeviceDiscoveryListener(ObjectBroker objectBroker, Boolean groupCommEnabled, Boolean historyEnabled) {
 			this.objectBroker = objectBroker;
 			this.groupCommEnabled = groupCommEnabled;
@@ -322,5 +310,18 @@ public class BacnetDeviceLoaderImpl implements DeviceLoader {
 			device.initialize();
 		}
 		
+	}
+	
+
+	@Override
+	public void setConfiguration(XMLConfiguration devicesConfiguration) {
+		this.devicesConfig = devicesConfiguration;
+		if (devicesConfiguration == null) {
+			try {
+				devicesConfig = new XMLConfiguration(DEVICE_CONFIGURATION_LOCATION);
+			} catch (Exception e) {
+				log.log(Level.SEVERE, e.getMessage(), e);
+			}
+		}
 	}
 }

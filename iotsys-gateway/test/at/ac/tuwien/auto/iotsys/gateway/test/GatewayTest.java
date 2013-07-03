@@ -18,7 +18,7 @@ public class GatewayTest {
 	@BeforeClass
 	public static void setUp() {
 		gateway = new IoTSySGateway();
-		gateway.startGateway();
+		gateway.startGateway("config/devices.test.xml");
 	}
 	
 	@AfterClass
