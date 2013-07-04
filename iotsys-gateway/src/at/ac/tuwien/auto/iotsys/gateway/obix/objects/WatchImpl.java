@@ -50,8 +50,6 @@ import obix.contracts.WatchIn;
 import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
 import at.ac.tuwien.auto.iotsys.commons.OperationHandler;
 import at.ac.tuwien.auto.iotsys.gateway.obix.observer.ObjObserver;
-import at.ac.tuwien.auto.iotsys.gateway.obix.observer.Observer;
-import at.ac.tuwien.auto.iotsys.gateway.obix.observer.Subject;
 
 /**
  * Implements the watch logic, representing a per-client state object.
@@ -93,7 +91,6 @@ public class WatchImpl extends Obj implements Watch {
 		add(delete());
 		this.setHref(new Uri("http://localhost/watch" + (numInstance++)));
 		
-		lease.attach(new LeaseObserver());
 		resetExpiration();
 		
 		broker.addOperationHandler(new Uri(this.getNormalizedHref().getPath() + "/add"), new OperationHandler() {
@@ -318,25 +315,13 @@ public class WatchImpl extends Obj implements Watch {
 		resetExpiration();
 	}
 	
-	
-	
-	
-	private class LeaseObserver implements Observer {
-		private Subject lease;
+	@Override
+	public void writeObject(Obj input) {
+		super.writeObject(input);
 		
-		@Override
-		public void update(Object state) {
+		if (input instanceof Reltime) {
+			lease.set(((Reltime) input).get());
 			resetExpiration();
-		}
-
-		@Override
-		public void setSubject(Subject object) {
-			lease = object;
-		}
-
-		@Override
-		public Subject getSubject() {
-			return lease;
 		}
 	}
 }
