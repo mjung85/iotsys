@@ -80,7 +80,11 @@ public class Reltime
    */
   public void set(long millis)
   {
+	long oldVal = this.val;
     this.val = millis;
+    
+    if (oldVal != val)
+    	notifyObservers();
   }
 
 ////////////////////////////////////////////////////////////////
@@ -319,6 +323,15 @@ public class Reltime
   {
     return String.valueOf(val) + "L";
   }    
+  
+ @Override
+ public void writeObject(Obj input) {
+    super.writeObject(input);
+    if (!(input instanceof Reltime)) return;
+    
+    Reltime obj = (Reltime) input;
+    set(obj.val);
+ }
 
 ////////////////////////////////////////////////////////////////
 // Facets
