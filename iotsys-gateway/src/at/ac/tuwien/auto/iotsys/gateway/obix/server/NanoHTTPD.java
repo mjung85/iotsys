@@ -747,6 +747,9 @@ public class NanoHTTPD {
 					String contentType = "";
 					String contentTypeHeader = header
 							.getProperty("content-type");
+					if (contentTypeHeader == null)
+						contentTypeHeader = "text/xml";
+					
 					StringTokenizer st = new StringTokenizer(contentTypeHeader,
 							"; ");
 					if (st.hasMoreTokens()) {
