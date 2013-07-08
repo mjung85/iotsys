@@ -34,13 +34,14 @@ package at.ac.tuwien.auto.iotsys.gateway.obix.objects;
 
 import java.util.ArrayList;
 import java.util.Hashtable;
-import java.util.LinkedList;
+import java.util.List;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
 import obix.Contract;
+import obix.Feed;
 import obix.Obj;
 import obix.Op;
 import obix.Reltime;
@@ -49,7 +50,10 @@ import obix.contracts.Watch;
 import obix.contracts.WatchIn;
 import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
 import at.ac.tuwien.auto.iotsys.commons.OperationHandler;
+import at.ac.tuwien.auto.iotsys.gateway.obix.observer.EventObserver;
+import at.ac.tuwien.auto.iotsys.gateway.obix.observer.FeedObserver;
 import at.ac.tuwien.auto.iotsys.gateway.obix.observer.ObjObserver;
+import at.ac.tuwien.auto.iotsys.gateway.obix.observer.Observer;
 
 /**
  * Implements the watch logic, representing a per-client state object.
@@ -72,7 +76,7 @@ public class WatchImpl extends Obj implements Watch {
 	private ObjectBroker broker;
 	
 	// holds an observer object for each obix object that is watched using the normalized href path as key.
-	private final Hashtable <String, ObjObserver> observers = new Hashtable<String, ObjObserver>();
+	private final Hashtable <String, EventObserver<Obj>> observers = new Hashtable<String, EventObserver<Obj>>();
 
 	private final Hashtable<String, Uri> observedObjects = new Hashtable<String, Uri>();
 	
@@ -115,8 +119,15 @@ public class WatchImpl extends Obj implements Watch {
 						Obj o = broker.pullObj(uri);
 						if(!observedObjects.containsKey(uri.get())) {
 							observedObjects.put(uri.get(), uri);
-	
-							ObjObserver observer = new ObjObserver();
+							
+							EventObserver<Obj> observer;
+							if (o.isFeed()) {
+								Obj filter = null;
+								if (uri.size() > 0) filter = uri.list()[0];
+								observer = new FeedObserver(filter);
+							} else {
+								observer = new ObjObserver<Obj>();
+							}
 							observers.put(uri.getPath(), observer);
 							
 							o.attach(observer);
@@ -133,6 +144,15 @@ public class WatchImpl extends Obj implements Watch {
 								obj.setName(null, true);
 							} catch (CloneNotSupportedException e) {
 								log.info("Obj not clonable" + e.getMessage());
+							}
+						}
+						
+						if (o.isFeed()) {
+							Feed feed = (Feed) o;
+							Obj filter = null;
+							if (uri.size() > 0) filter = uri.list()[0];
+							for (Obj event : feed.query(filter)) {
+								obj.add(event);
 							}
 						}
 						
@@ -156,7 +176,7 @@ public class WatchImpl extends Obj implements Watch {
 					for(Obj u : watchIn.get("hrefs").list()){
 						Uri uri = (Uri) u;
 
-						ObjObserver observer = observers.get(uri.getPath());
+						Observer observer = observers.get(uri.getPath());
 						observedObjects.remove(uri.getPath());
 						observers.remove(uri.getPath());
 						Obj o = broker.pullObj(uri);
@@ -178,19 +198,26 @@ public class WatchImpl extends Obj implements Watch {
 					
 					
 					for (String uri : observers.keySet()) {
-						ObjObserver objObserver = observers.get(uri);
-						LinkedList<Obj> events = objObserver.getEvents();
+						EventObserver<Obj> observer = observers.get(uri);
+						List<Obj> events = observer.getEvents();
 						if(events.size() > 0) {
 							// needs to be an obix object
-							Obj obj = (Obj) objObserver.getSubject();
+							Obj obj = (Obj) observer.getSubject();
+							Obj outItem = null;
 							
 							try {
-								Obj outItem = (Obj) obj.clone();
+								outItem = (Obj) obj.clone();
 								outItem.setName(null, true);
 								outItem.setHref(new Uri(uri));
 								out.values().add(outItem, false);
 							} catch (CloneNotSupportedException e) {
 								log.info("Obj not clonable" + e.getMessage());
+							}
+							
+							if (obj.isFeed()) {
+								for (Obj event : events) {
+									outItem.add(event);
+								}
 							}
 						}
 					}
@@ -199,6 +226,7 @@ public class WatchImpl extends Obj implements Watch {
 				return out;
 			}		
 		});
+		
 		broker.addOperationHandler(new Uri(this.getNormalizedHref().getPath() + "/pollRefresh"), new OperationHandler(){
 			@Override
 			public Obj invoke(Obj in) {
@@ -208,11 +236,11 @@ public class WatchImpl extends Obj implements Watch {
 				// Get a list of being-observed URI; get the corresponding object; notify the observer --> performing an update
 				synchronized(observers){
 					for (String uri : observers.keySet()) {
-						ObjObserver observer = observers.get(uri);
+						EventObserver<Obj> observer = observers.get(uri);
 						Obj beingObservedObject = (Obj) observer.getSubject();
 						beingObservedObject.notifyObservers();
 						
-						Obj outItem;
+						Obj outItem = null;
 						try {
 							outItem = (Obj) beingObservedObject.clone();
 							outItem.setName(null, true);
@@ -220,6 +248,14 @@ public class WatchImpl extends Obj implements Watch {
 							out.values().add(outItem, false);
 						} catch (CloneNotSupportedException e) {
 							log.info("Obj not clonable" + e.getMessage());
+						}
+						
+						if (beingObservedObject.isFeed()) {
+							FeedObserver feedObserver = (FeedObserver) observer;
+							Feed feed = (Feed) beingObservedObject;
+							for (Obj event : feed.query(feedObserver.getFilter())) {
+								outItem.add(event);
+							}
 						}
 						
 						observer.getEvents();
@@ -245,9 +281,9 @@ public class WatchImpl extends Obj implements Watch {
 
 	public Reltime lease() {
 		if (lease == null) {
-		 lease = new Reltime("lease", DEFAULT_LEASE);
-		 lease.setHref(new Uri("lease"));
-		 lease.setWritable(true);
+			lease = new Reltime("lease", DEFAULT_LEASE);
+			lease.setHref(new Uri("lease"));
+			lease.setWritable(true);
 		}
 		
 		return lease;
@@ -274,7 +310,7 @@ public class WatchImpl extends Obj implements Watch {
 	}
 	
 	private void deleteWatch() {
-		for (ObjObserver observer : observers.values()){
+		for (Observer observer : observers.values()){
 			Obj beingObservedObject = (Obj) observer.getSubject();
 			beingObservedObject.detach(observer);
 			observers.remove(observer);

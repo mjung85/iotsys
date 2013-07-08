@@ -3,6 +3,9 @@
  */
 package obix;      
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 /**
  * Feed models a event feed topic.
@@ -100,12 +103,33 @@ public class Feed
   {
     return obix.io.BinObix.FEED;
   }
-    
+
+////////////////////////////////////////////////////////////////
+// Events
+////////////////////////////////////////////////////////////////
+  
+  public List<Obj> getEvents()
+  {
+	  return events;
+  }
+  
+  public void addEvent(Obj event)
+  {
+	  events.add(event);
+	  notifyObservers();
+  }
+  
+  public List<Obj> query(Obj in)
+  {
+	  return getEvents();
+  }
+ 
 ////////////////////////////////////////////////////////////////
 // Fields
 ////////////////////////////////////////////////////////////////
 
   private Contract in;
   private Contract of;
+  private ArrayList<Obj> events = new ArrayList<Obj>();
     
 }
