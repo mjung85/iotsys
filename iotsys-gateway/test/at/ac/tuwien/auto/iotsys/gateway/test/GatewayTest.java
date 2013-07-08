@@ -344,7 +344,9 @@ public class GatewayTest {
 		body(hasXPath("/obj/abstime[@name='start']")).
 		body(hasXPath("/obj/abstime[@name='end']")).
 		body(hasXPath("/obj/op[@name='query' and @in='obix:HistoryFilter' and @out='obix:HistoryQueryOut']")).
+		body(hasXPath("/obj/feed[@name='feed' and @in='obix:HistoryFilter' and @of='obix:HistoryRecord']")).
 		body(hasXPath("/obj/op[@name='rollup' and @in='obix:HistoryRollupIn' and @out='obix:HistoryRollupOut']")).
+		body(hasXPath("/obj/op[@name='append' and @in='obix:HistoryAppendIn' and @out='obix:HistoryAppendOut']")).
 		when().get("/switchHistory1/value/history");
 	}
 	

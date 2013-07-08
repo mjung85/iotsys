@@ -34,12 +34,8 @@ package at.ac.tuwien.auto.iotsys.gateway.obix.objects;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.TimeZone;
-
-import at.ac.tuwien.auto.iotsys.commons.OperationHandler;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objectbroker.ObjectBrokerImpl;
-import at.ac.tuwien.auto.iotsys.gateway.obix.observer.Observer;
-import at.ac.tuwien.auto.iotsys.gateway.obix.observer.Subject;
 
 import obix.Abstime;
 import obix.Bool;
@@ -56,6 +52,10 @@ import obix.Uri;
 import obix.contracts.History;
 import obix.contracts.HistoryFilter;
 import obix.contracts.HistoryRollupIn;
+import at.ac.tuwien.auto.iotsys.commons.OperationHandler;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objectbroker.ObjectBrokerImpl;
+import at.ac.tuwien.auto.iotsys.gateway.obix.observer.Observer;
+import at.ac.tuwien.auto.iotsys.gateway.obix.observer.Subject;
 
 /**
  * Generic history implementation. Should only be used for basic value types
@@ -100,6 +100,13 @@ public class HistoryImpl extends Obj implements History, Observer {
 		add(count);
 		add(start);
 		add(end);
+		
+		
+		feed.setIn(new Contract("obix:HistoryFilter"));
+		feed.setOf(new Contract("obix:HistoryRecord"));
+		feed.setHref(new Uri("feed"));
+		feed.setName("feed");
+		add(feed);
 
 		query.setName("query");
 		query.setIn(new Contract(HistoryFilterImpl.HISTORY_FILTER_CONTRACT));
@@ -151,19 +158,27 @@ public class HistoryImpl extends Obj implements History, Observer {
 	}
 
 	private Obj query(Obj in) {
+		HistoryFilter filter = (HistoryFilter) in;
+		
+		ArrayList<HistoryRecordImpl> filteredRecords = filterRecords(history, filter);
+		HistoryQueryOutImpl queryOut = new HistoryQueryOutImpl(filteredRecords);
+		
+		return queryOut;
+	}
 
+	private ArrayList<HistoryRecordImpl> filterRecords(List<HistoryRecordImpl> history, HistoryFilter historyFilter) {
 		long limit = 0;
 		Abstime start = new Abstime();
 		Abstime end = new Abstime();
-		if (in != null && in instanceof HistoryFilter) {
-			HistoryFilter historyFilter = (HistoryFilter) in;
+		
+		if (historyFilter != null) {
 			limit = historyFilter.limit().get();
 			start = historyFilter.start();
 			end = historyFilter.end();
 		}
 
 		ArrayList<HistoryRecordImpl> filteredRecords = new ArrayList<HistoryRecordImpl>();
-
+		
 		for (HistoryRecordImpl record : history) {
 			boolean addRecord = true;
 
@@ -189,9 +204,7 @@ public class HistoryImpl extends Obj implements History, Observer {
 				filteredRecords.add(record);
 			}
 		}
-
-		HistoryQueryOutImpl queryOut = new HistoryQueryOutImpl(filteredRecords);
-		return queryOut;
+		return filteredRecords;
 	}
 
 	private Obj rollup(Obj in) {
@@ -385,6 +398,8 @@ public class HistoryImpl extends Obj implements History, Observer {
 			}
 
 			history.add(historyRecordImpl);
+			feed.addEvent(historyRecordImpl);
+			
 			if (history.size() > historyCountMax) {
 				history.removeFirst();
 			}

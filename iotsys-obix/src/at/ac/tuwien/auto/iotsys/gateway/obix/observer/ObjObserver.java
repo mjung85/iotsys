@@ -1,7 +1,7 @@
 package at.ac.tuwien.auto.iotsys.gateway.obix.observer;
 
 import java.util.LinkedList;
-import java.util.Map;
+import java.util.List;
 
 import obix.Obj;
 
@@ -13,7 +13,7 @@ import obix.Obj;
  * This class also acts as a singleton subject, in order to allow CoAP updates on observed resources.
  *
  */
-public class ObjObserver<ObjType> implements Observer{
+public class ObjObserver<ObjType extends Obj> implements EventObserver<ObjType> {
 	private Subject subject;
 	private static ExternalObserver observer = null;
 	
@@ -21,14 +21,12 @@ public class ObjObserver<ObjType> implements Observer{
 	private static final Object lock = new Object();
 	private LinkedList<ObjType> queue = new LinkedList<ObjType>();
 	
-	public ObjObserver(){
-
+	public ObjObserver() {
 	}
 		
 	@Override
 	public void update(Object currentState) {
-
-		synchronized(lock){		
+		synchronized(lock) {
 			queue.add((ObjType) currentState);
 			if(queue.size() > MAX_EVENTS){
 				queue.removeLast();
@@ -45,7 +43,7 @@ public class ObjObserver<ObjType> implements Observer{
 	 * Provides the latest events.
 	 * @return 
 	 */
-	public LinkedList<ObjType> getEvents(){
+	public List<ObjType> getEvents() {
 		LinkedList<ObjType> ret = null;
 		synchronized(lock){
 			ret = queue;
