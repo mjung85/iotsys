@@ -1,6 +1,5 @@
 package at.ac.tuwien.auto.iotsys.gateway.obix.observer;
 
-import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -20,7 +19,7 @@ public class FeedObserver implements EventObserver<Obj> {
 	
 	public static final int MAX_EVENTS = 50;
 	private static final Object lock = new Object();
-	private LinkedHashSet<Obj> unpolledEvents = new LinkedHashSet<Obj>();
+	private LinkedList<Obj> unpolledEvents = new LinkedList<Obj>();
 	private Obj filter;
 	
 	public FeedObserver(Obj filter) {
@@ -44,10 +43,9 @@ public class FeedObserver implements EventObserver<Obj> {
 	 * @return 
 	 */
 	public List<Obj> getEvents(){
-		LinkedList<Obj> ret = null;
+		List<Obj> ret = null;
 		synchronized(lock) {
-			unpolledEvents.retainAll(subject.query(filter));
-			ret = new LinkedList<Obj>(unpolledEvents);
+			ret = subject.query(unpolledEvents, filter);
 			unpolledEvents.clear();
 		}
 		return ret;

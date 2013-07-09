@@ -196,7 +196,6 @@ public class WatchImpl extends Obj implements Watch {
 					// check for modified objects
 					// NOTE pollChanges does not need to provide the events, only the latest state.
 					
-					
 					for (String uri : observers.keySet()) {
 						EventObserver<Obj> observer = observers.get(uri);
 						List<Obj> events = observer.getEvents();
