@@ -53,7 +53,7 @@ public class HistoryFeed extends Feed {
 	@Override
 	public List<Obj> query(List<Obj> events, Obj filter) {
 		if (!(filter instanceof HistoryFilter))
-			return events;
+			return new ArrayList<Obj>(events);
 		
 		HistoryFilter in = (HistoryFilter) filter;
 		return new ArrayList<Obj>(filterRecords(events, in));

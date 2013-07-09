@@ -83,6 +83,43 @@
         <href>switchWatch2</href>
         <refreshEnabled>false</refreshEnabled>
       </device>
+      
+      <device>
+        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.FanSpeedActuatorImpl
+        </type>
+        <address>null, 1/2/3</address>
+        <href>fanSpeedWatchAdd</href>
+        <historyEnabled>true</historyEnabled>
+        <historyCount>50</historyCount>
+      </device>
+      
+      <device>
+        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.FanSpeedActuatorImpl
+        </type>
+        <address>null, 1/2/3</address>
+        <href>fanSpeedWatchPollRefresh</href>
+        <historyEnabled>true</historyEnabled>
+        <historyCount>50</historyCount>
+      </device>
+      
+      <device>
+        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.FanSpeedActuatorImpl
+        </type>
+        <address>null, 1/2/3</address>
+        <href>fanSpeedWatchPollChanges</href>
+        <historyEnabled>true</historyEnabled>
+        <historyCount>50</historyCount>
+      </device>
+      
+      <device>
+        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.FanSpeedActuatorImpl
+        </type>
+        <address>null, 1/2/3</address>
+        <href>fanSpeedWatchFilter</href>
+        <historyEnabled>true</historyEnabled>
+        <historyCount>50</historyCount>
+      </device>
+      
     </connector>
     <connector>
       <name>Virtual Devices - History</name>

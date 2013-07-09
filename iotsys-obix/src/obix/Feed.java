@@ -3,6 +3,7 @@
  */
 package obix;      
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -147,7 +148,7 @@ public class Feed
    */
   public List<Obj> query(List<Obj> events, Obj filter)
   {
-	  return events;
+	  return new ArrayList<Obj>(events);
   }
   
   /**

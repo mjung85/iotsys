@@ -277,14 +277,14 @@ public class GatewayTest {
 	public void testWatchLeaseExpiration() throws InterruptedException {
 		String watchHref = makeWatch();
 		
-		given().body("<reltime href='lease' val='PT2S' />").
-		expect().body(hasXPath("//reltime[@name='lease' and @val='PT2S']")).
+		given().body("<reltime href='lease' val='PT1S' />").
+		expect().body(hasXPath("//reltime[@name='lease' and @val='PT1S']")).
 		when().put(watchHref);
 		
 		// still accessible
 		expect().body(hasXPath("/obj")).when().get(watchHref);
 		
-		Thread.sleep(2500);
+		Thread.sleep(1200);
 		
 		// watch expired
 		expect().body(hasXPath("/err")).when().get(watchHref);
@@ -329,6 +329,182 @@ public class GatewayTest {
 		post(watchHref + "/delete");
 		
 		expect().body(hasXPath("/err")).when().get(watchHref);
+	}
+
+	////////////////////////////////////////////////////////////////
+	// Watching History Feed
+	////////////////////////////////////////////////////////////////
+
+	
+	@Test
+	public void testWatchAddFeed() {
+		String watchHref = makeWatch();
+		
+		// initial data for feed
+		given().body("<int val='1' />").put("/fanSpeedWatchAdd/fanSpeedSetpoint");
+		given().body("<int val='2' />").put("/fanSpeedWatchAdd/fanSpeedSetpoint");
+		given().body("<int val='3' />").put("/fanSpeedWatchAdd/fanSpeedSetpoint");
+		
+		given().
+		param("data", "<obj is='obix:WatchIn'>"+
+			 "	<list name='hrefs'>" +
+			 "		<uri val='/fanSpeedWatchAdd/fanSpeedSetpoint/history/feed' />" +
+			 "	</list>" +
+			 "</obj>").
+		expect().
+		body(hasXPath("/obj[@is='obix:WatchOut']")).
+		body(hasXPath("/obj/list/feed[@href='/fanSpeedWatchAdd/fanSpeedSetpoint/history/feed' and @of='obix:HistoryRecord']")).
+		body(hasXPath("/obj/list/feed[count(obj) = 3]")).
+		body(hasXPath("/obj/list/feed/obj/int[@val='1']")).
+		body(hasXPath("/obj/list/feed/obj/int[@val='2']")).
+		body(hasXPath("/obj/list/feed/obj/int[@val='3']")).
+		post(watchHref + "/add");
+	}
+	
+	@Test
+	public void testWatchFeedPollRefresh() {
+		String watchHref = makeWatch();
+		String pollUri = watchHref + "/pollRefresh";
+		String pollChangesUri = watchHref + "/pollChanges";
+		
+		// initial data for feed
+		given().body("<int val='1' />").put("/fanSpeedWatchPollRefresh/fanSpeedSetpoint");
+		given().body("<int val='2' />").put("/fanSpeedWatchPollRefresh/fanSpeedSetpoint");
+		given().body("<int val='3' />").put("/fanSpeedWatchPollRefresh/fanSpeedSetpoint");
+		
+		given().
+		param("data", "<obj is='obix:WatchIn'>"+
+			 "	<list name='hrefs'>" +
+			 "		<uri val='/fanSpeedWatchPollRefresh/fanSpeedSetpoint/history/feed' />" +
+			 "	</list>" +
+			 "</obj>").
+		expect().
+		body(hasXPath("/obj[@is='obix:WatchOut']")).
+		body(hasXPath("/obj/list/feed[@href='/fanSpeedWatchPollRefresh/fanSpeedSetpoint/history/feed' and @of='obix:HistoryRecord']")).
+		post(watchHref + "/add");
+		
+		// additional data for feed
+		given().body("<int val='4' />").put("/fanSpeedWatchPollRefresh/fanSpeedSetpoint");
+		given().body("<int val='5' />").put("/fanSpeedWatchPollRefresh/fanSpeedSetpoint");
+		given().body("<int val='6' />").put("/fanSpeedWatchPollRefresh/fanSpeedSetpoint");
+		
+		
+		// pollRefresh returns all events
+		expect().
+		body(hasXPath("/obj/list/feed[count(obj) = 6]")).
+		body(hasXPath("/obj/list/feed/obj/int[@val='1']")).
+		body(hasXPath("/obj/list/feed/obj/int[@val='2']")).
+		body(hasXPath("/obj/list/feed/obj/int[@val='3']")).
+		body(hasXPath("/obj/list/feed/obj/int[@val='4']")).
+		body(hasXPath("/obj/list/feed/obj/int[@val='5']")).
+		body(hasXPath("/obj/list/feed/obj/int[@val='6']")).
+		post(pollUri);
+		
+		// pollChanges has no unpolled events
+		expect().
+		body(not(hasXPath("/obj/list/feed"))).
+		post(pollChangesUri);
+		
+		// pollRefresh returns all events
+		expect().
+		body(hasXPath("/obj/list/feed[count(obj) = 6]")).
+		post(pollUri);
+	}
+	
+	@Test
+	public void testWatchFeedPollChanges() throws InterruptedException {
+		String watchHref = makeWatch();
+		String addUri = watchHref + "/add";
+		String pollChangesUri = watchHref + "/pollChanges";
+		
+		// initial data for feed
+		given().body("<int val='1' />").put("/fanSpeedWatchPollChanges/fanSpeedSetpoint");
+		given().body("<int val='2' />").put("/fanSpeedWatchPollChanges/fanSpeedSetpoint");
+		given().body("<int val='3' />").put("/fanSpeedWatchPollChanges/fanSpeedSetpoint");
+		
+		given().
+		param("data", "<obj is='obix:WatchIn'>"+
+			 "	<list name='hrefs'>" +
+			 "		<uri val='/fanSpeedWatchPollChanges/fanSpeedSetpoint/history/feed' />" +
+			 "	</list>" +
+			 "</obj>").
+		expect().
+		body(hasXPath("/obj[@is='obix:WatchOut']")).
+		body(hasXPath("/obj/list/feed[@href='/fanSpeedWatchPollChanges/fanSpeedSetpoint/history/feed' and @of='obix:HistoryRecord']")).
+		body(hasXPath("/obj/list/feed[count(obj) = 3]")).
+		post(addUri);
+		
+		// pollChanges has no new events
+		expect().
+		body(not(hasXPath("/obj/list/feed"))).
+		post(pollChangesUri);
+		
+		// additional data for feed
+		given().body("<int val='4' />").put("/fanSpeedWatchPollChanges/fanSpeedSetpoint");
+		given().body("<int val='5' />").put("/fanSpeedWatchPollChanges/fanSpeedSetpoint");
+		given().body("<int val='6' />").put("/fanSpeedWatchPollChanges/fanSpeedSetpoint");
+		
+		expect().
+		body(hasXPath("/obj/list/feed[count(obj) = 3]")).
+		body(hasXPath("/obj/list/feed/obj/int[@val='4']")).
+		body(hasXPath("/obj/list/feed/obj/int[@val='5']")).
+		body(hasXPath("/obj/list/feed/obj/int[@val='6']")).
+		post(pollChangesUri);
+		
+		// pollChanges has no new events
+		expect().
+		body(not(hasXPath("/obj/list/feed"))).
+		post(pollChangesUri);
+	}
+	
+	@Test
+	public void testWatchFilteredFeed() throws InterruptedException {
+		String watchHref = makeWatch();
+		String addUri = watchHref + "/add";
+		String pollRefreshUri = watchHref + "/pollRefresh";
+		String pollChangesUri = watchHref + "/pollChanges";
+		
+		// initial data for feed
+		given().body("<int val='1' />").put("/fanSpeedWatchFilter/fanSpeedSetpoint");
+		given().body("<int val='2' />").put("/fanSpeedWatchFilter/fanSpeedSetpoint");
+		given().body("<int val='3' />").put("/fanSpeedWatchFilter/fanSpeedSetpoint");
+		given().body("<int val='4' />").put("/fanSpeedWatchFilter/fanSpeedSetpoint");
+		given().body("<int val='5' />").put("/fanSpeedWatchFilter/fanSpeedSetpoint");
+		
+		given().
+		param("data", "<obj is='obix:WatchIn'>"+
+			 "	<list name='hrefs'>" +
+			 "		<uri val='/fanSpeedWatchFilter/fanSpeedSetpoint/history/feed'>" +
+			 "			<obj is='obix:HistoryFilter'>" +
+			 "				<int name='limit' val='3' />" +
+			 "			</obj>" +
+			 "		</uri>" + 
+			 "	</list>" +
+			 "</obj>").
+		expect().
+		body(hasXPath("/obj[@is='obix:WatchOut']")).
+		body(hasXPath("/obj/list/feed[@href='/fanSpeedWatchFilter/fanSpeedSetpoint/history/feed' and @of='obix:HistoryRecord']")).
+		body(hasXPath("/obj/list/feed[count(obj) = 3]")).
+		post(addUri);
+		
+		// pollChanges has no new events
+		expect().
+		body(not(hasXPath("/obj/list/feed"))).
+		post(pollChangesUri);
+		
+		expect().
+		body(hasXPath("/obj/list/feed[count(obj) = 3]")).
+		post(pollRefreshUri);
+		
+		// additional data for feed
+		given().body("<int val='6' />").put("/fanSpeedWatchFilter/fanSpeedSetpoint");
+		given().body("<int val='7' />").put("/fanSpeedWatchFilter/fanSpeedSetpoint");
+		given().body("<int val='8' />").put("/fanSpeedWatchFilter/fanSpeedSetpoint");
+		given().body("<int val='9' />").put("/fanSpeedWatchFilter/fanSpeedSetpoint");
+		
+		expect().
+		body(hasXPath("/obj/list/feed[count(obj) = 3]")).
+		post(pollChangesUri);
 	}
 	
 	
