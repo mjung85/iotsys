@@ -33,7 +33,7 @@
 package at.ac.tuwien.auto.iotsys.gateway.obix.objects;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
+import java.util.List;
 import java.util.TimeZone;
 
 import obix.Abstime;
@@ -61,9 +61,6 @@ import at.ac.tuwien.auto.iotsys.gateway.obix.observer.Subject;
  * (bool, int, real, str).
  */
 public class HistoryImpl extends Obj implements History, Observer {
-
-	private int historyCountMax = HistoryHelper.HISTORY_COUNT_DEFAULT;
-	private LinkedList<HistoryRecordImpl> history = new LinkedList<HistoryRecordImpl>();
 	
 	public static final String HISTORY_CONTRACT = "obix:History";
 
@@ -78,8 +75,6 @@ public class HistoryImpl extends Obj implements History, Observer {
 
 	public HistoryImpl(Obj observedDatapoint, int historyCountMax) {
 		this.observedDatapoint = observedDatapoint;
-
-		this.historyCountMax = historyCountMax;
 
 		this.setName("history");
 		this.setHref(new Uri("history"));
@@ -183,7 +178,9 @@ public class HistoryImpl extends Obj implements History, Observer {
 
 		ArrayList<HistoryRecordImpl> currentInterval = new ArrayList<HistoryRecordImpl>();
 
-		for (HistoryRecordImpl record : history) {
+		for (Obj event : feed.getEvents()) {
+			HistoryRecordImpl record = (HistoryRecordImpl) event;
+			
 			if (record.timestamp().get() > curInterval + ival) {
 				// increment current interval
 				while (curInterval < record.timestamp().get() - ival) {
@@ -349,17 +346,17 @@ public class HistoryImpl extends Obj implements History, Observer {
 						((Str) state).get()));
 			}
 
-			history.add(historyRecordImpl);
 			feed.addEvent(historyRecordImpl);
 			
-			if (history.size() > historyCountMax) {
-				history.removeFirst();
-			}
-			count.setSilent(history.size());
-			this.start.set(history.getFirst().timestamp().get(), TimeZone
-					.getTimeZone((history.getFirst().timestamp().getTz())));
-			this.end.set(history.getLast().timestamp().get(), TimeZone
-					.getTimeZone((history.getLast().timestamp().getTz())));
+			List<Obj> events = feed.getEvents();
+			HistoryRecordImpl firstRecord = (HistoryRecordImpl) events.get(0);
+			HistoryRecordImpl lastRecord = (HistoryRecordImpl) events.get(events.size()-1);
+			
+			count.setSilent(events.size());
+			this.start.set(firstRecord.timestamp().get(), TimeZone
+					.getTimeZone((firstRecord.timestamp().getTz())));
+			this.end.set(lastRecord.timestamp().get(), TimeZone
+					.getTimeZone((lastRecord.timestamp().getTz())));
 		}
 	}
 
