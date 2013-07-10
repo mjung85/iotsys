@@ -30,5 +30,8 @@ public interface History
 
   public static final String rollupContract = "<op name='rollup' in='obix:HistoryRollupIn' out='obix:HistoryRollupOut'/>";
   public Op rollup();
+  
+  public static final String appendContract = "<op name='append' in='obix:HistoryAppendIn' out='obix:HistoryAppendOut'/>";
+  public Op append();
 
 }

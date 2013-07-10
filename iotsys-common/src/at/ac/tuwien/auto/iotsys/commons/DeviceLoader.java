@@ -34,11 +34,14 @@ package at.ac.tuwien.auto.iotsys.commons;
 
 import java.util.ArrayList;
 
+import org.apache.commons.configuration.XMLConfiguration;
+
 
 public interface DeviceLoader {
-	public ArrayList<Connector> initDevices(ObjectBroker objectBroker);
-	
 	public static final String DEVICE_CONFIGURATION_LOCATION = "config/devices.xml";
-
+	
+	public ArrayList<Connector> initDevices(ObjectBroker objectBroker);
 	public void removeDevices(ObjectBroker objectBroker);
+	
+	public void setConfiguration(XMLConfiguration devicesConfiguration);
 }

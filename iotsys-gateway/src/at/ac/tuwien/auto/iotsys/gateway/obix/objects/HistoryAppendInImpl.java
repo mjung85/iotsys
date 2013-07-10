@@ -32,40 +32,19 @@
 
 package at.ac.tuwien.auto.iotsys.gateway.obix.objects;
 
-import obix.Abstime;
+import obix.List;
 import obix.Obj;
-import obix.contracts.HistoryRecord;
+import obix.contracts.HistoryAppendIn;
 
-public class HistoryRecordImpl extends Obj implements HistoryRecord {
-	protected Obj value = new Obj();
-	protected Abstime abstime = new Abstime();
-	
-	public static final String HISTORY_RECORD_CONTRACT = "obix:HistoryRecord";
-	
-	public HistoryRecordImpl(Obj value) {
-		this.value = value;
-		abstime = new Abstime(System.currentTimeMillis());
+public class HistoryAppendInImpl extends Obj implements HistoryAppendIn{
 
-		add(timestamp());
-		add(value());
-	}
-	
-	public HistoryRecordImpl(HistoryRecord record) {
-		this.value = record.value();
-		this.abstime = record.timestamp();
-		
-		add(timestamp());
-		add(value());
-	}
-	
-	@Override
-	public Abstime timestamp() {
-		return abstime;
-	}
+	public static final String HISTORY_APPENDIN_CONTRACT = "obix:HistoryAppendIn";
 
 	@Override
-	public Obj value() {
-		return value;
+	public List data() {
+		// TODO Auto-generated method stub
+		return null;
 	}
+
 
 }

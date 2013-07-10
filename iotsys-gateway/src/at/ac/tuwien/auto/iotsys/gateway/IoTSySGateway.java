@@ -38,12 +38,15 @@ import java.io.InputStreamReader;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-
 import java.util.logging.Logger;
 
-import at.ac.tuwien.auto.iotsys.gateway.util.CsvCreator;
-import at.ac.tuwien.auto.iotsys.gateway.util.ExiUtil;
-
+import at.ac.tuwien.auto.iotsys.commons.Connector;
+import at.ac.tuwien.auto.iotsys.commons.DeviceLoader;
+import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
+import at.ac.tuwien.auto.iotsys.commons.PropertiesLoader;
+import at.ac.tuwien.auto.iotsys.commons.interceptor.ClassAlreadyRegisteredException;
+import at.ac.tuwien.auto.iotsys.commons.interceptor.Interceptor;
+import at.ac.tuwien.auto.iotsys.commons.interceptor.InterceptorBroker;
 import at.ac.tuwien.auto.iotsys.gateway.interceptor.InterceptorBrokerImpl;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objectbroker.ObjectBrokerImpl;
 import at.ac.tuwien.auto.iotsys.gateway.obix.server.CoAPServer;
@@ -51,15 +54,9 @@ import at.ac.tuwien.auto.iotsys.gateway.obix.server.NanoHTTPD;
 import at.ac.tuwien.auto.iotsys.gateway.obix.server.ObixObservingManager;
 import at.ac.tuwien.auto.iotsys.gateway.obix.server.ObixServer;
 import at.ac.tuwien.auto.iotsys.gateway.obix.server.ObixServerImpl;
+import at.ac.tuwien.auto.iotsys.gateway.util.ExiUtil;
 import at.ac.tuwien.auto.iotsys.xacml.pdp.PDPInterceptorSettings;
 // import at.ac.tuwien.auto.iotsys.xacml.pdp.PDPInterceptor;
-
-import at.ac.tuwien.auto.iotsys.commons.Connector;
-import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
-import at.ac.tuwien.auto.iotsys.commons.PropertiesLoader;
-import at.ac.tuwien.auto.iotsys.commons.interceptor.ClassAlreadyRegisteredException;
-import at.ac.tuwien.auto.iotsys.commons.interceptor.Interceptor;
-import at.ac.tuwien.auto.iotsys.commons.interceptor.InterceptorBroker;
 
 /**
  * Standalone class to launch the gateway.
@@ -82,8 +79,12 @@ public class IoTSySGateway {
 	public IoTSySGateway() {
 
 	}
-
+	
 	public void startGateway() {
+		startGateway(DeviceLoader.DEVICE_CONFIGURATION_LOCATION);
+	}
+	
+	public void startGateway(String devicesConfigFile) {
 
 		Log.init();
 		log.info("Server starting.");
@@ -103,7 +104,11 @@ public class IoTSySGateway {
 		obixServer = new ObixServerImpl(objectBroker);
 
 		// add initial objects to the database
-		deviceLoader = new DeviceLoaderImpl();
+		if (devicesConfigFile == null) {
+			deviceLoader = new DeviceLoaderImpl();
+		} else {
+			deviceLoader = new DeviceLoaderImpl(devicesConfigFile);
+		}
 		connectors = deviceLoader.initDevices(objectBroker);
 
 		interceptorBroker = InterceptorBrokerImpl.getInstance();

@@ -32,40 +32,84 @@
 
 package at.ac.tuwien.auto.iotsys.gateway.obix.objects;
 
+import java.util.ArrayList;
+
 import obix.Abstime;
+import obix.Contract;
+import obix.Int;
 import obix.Obj;
-import obix.contracts.HistoryRecord;
+import obix.Uri;
+import obix.contracts.HistoryAppendOut;
 
-public class HistoryRecordImpl extends Obj implements HistoryRecord {
-	protected Obj value = new Obj();
-	protected Abstime abstime = new Abstime();
+public class HistoryAppendOutImpl extends Obj implements HistoryAppendOut {
 	
-	public static final String HISTORY_RECORD_CONTRACT = "obix:HistoryRecord";
+	public static final String HISTORY_APPENDOUT_CONTRACT = "obix:HistoryAppendOut";
 	
-	public HistoryRecordImpl(Obj value) {
-		this.value = value;
-		abstime = new Abstime(System.currentTimeMillis());
+	private Int numAdded = new Int();
+	private Int newCount = new Int();
+	private Abstime newStart = new Abstime();
+	private Abstime newEnd = new Abstime();
 
-		add(timestamp());
-		add(value());
-	}
+
+	public HistoryAppendOutImpl(ArrayList<HistoryRecordImpl> newRecords, ArrayList<HistoryRecordImpl> historyRecords) {	
 	
-	public HistoryRecordImpl(HistoryRecord record) {
-		this.value = record.value();
-		this.abstime = record.timestamp();
+		setIs(new Contract(HISTORY_APPENDOUT_CONTRACT));
 		
-		add(timestamp());
-		add(value());
-	}
-	
-	@Override
-	public Abstime timestamp() {
-		return abstime;
+		numAdded.setName("numAdded");
+		numAdded.setHref(new Uri("numAdded"));
+		
+		newCount.setName("newCount");
+		newCount.setHref(new Uri("newCount"));
+		
+		newStart.setName("newStart");
+		newStart.setHref(new Uri("newStart"));
+		
+		newEnd.setName("newEnd");
+		newEnd.setHref(new Uri("newEnd"));
+		
+		newCount.setSilent(historyRecords.size());
+		numAdded.setSilent(newRecords.size());
+		
+		if (historyRecords.size() == 0) {
+			newStart.setNull(true);
+			newEnd.setNull(true);
+		} else {
+			Abstime start = historyRecords.get(0).timestamp();
+			newStart.set(start.get(), start.getTimeZone());
+			
+			Abstime end = historyRecords.get(historyRecords.size()-1).timestamp();
+			newEnd.set(end.get(), end.getTimeZone());
+		}
+		
+		add(numAdded);
+		add(newCount);
+		add(newStart);
+		add(newEnd);
 	}
 
+
 	@Override
-	public Obj value() {
-		return value;
+	public Int numAdded() {
+		return numAdded;
 	}
+
+
+	@Override
+	public Int newCount() {
+		return newCount;
+	}
+
+
+	@Override
+	public Abstime newStart() {
+		return newStart;
+	}
+
+
+	@Override
+	public Abstime newEnd() {
+		return newEnd;
+	}
+
 
 }

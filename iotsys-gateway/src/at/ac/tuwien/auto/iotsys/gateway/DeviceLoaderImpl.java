@@ -46,11 +46,13 @@ import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
 public class DeviceLoaderImpl implements DeviceLoader {
 	private static Logger log = Logger.getLogger(DeviceLoaderImpl.class.getName());
 
-	private XMLConfiguration devicesConfig = new XMLConfiguration();
+	private XMLConfiguration devicesConfig;
 
 	public DeviceLoaderImpl() {
-		String devicesConfigFile = DEVICE_CONFIGURATION_LOCATION;
-
+		this(DEVICE_CONFIGURATION_LOCATION);
+	}
+	
+	public DeviceLoaderImpl(String devicesConfigFile) {
 		try {
 			devicesConfig = new XMLConfiguration(devicesConfigFile);
 		} catch (Exception e) {
@@ -81,6 +83,7 @@ public class DeviceLoaderImpl implements DeviceLoader {
 			
 			try {
 				DeviceLoader devLoader = (DeviceLoader) Class.forName(deviceLoaderName).newInstance();
+				devLoader.setConfiguration(devicesConfig);
 				ArrayList<Connector> connectorsList = devLoader.initDevices(objectBroker);
 				if(connectorsList != null)
 					connectors.addAll(connectorsList);			
@@ -99,6 +102,11 @@ public class DeviceLoaderImpl implements DeviceLoader {
 	@Override
 	public void removeDevices(ObjectBroker objectBroker) {
 		// This device loader acts as a parent loader for all technology specific device loaders.
+	}
+
+	@Override
+	public void setConfiguration(XMLConfiguration devicesConfiguration) {
+		this.devicesConfig = devicesConfiguration;
 	}
 
 }
