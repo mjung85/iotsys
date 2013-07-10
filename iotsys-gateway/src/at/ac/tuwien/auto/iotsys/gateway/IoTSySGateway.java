@@ -51,7 +51,12 @@ import at.ac.tuwien.auto.iotsys.gateway.obix.server.NanoHTTPD;
 import at.ac.tuwien.auto.iotsys.gateway.obix.server.ObixObservingManager;
 import at.ac.tuwien.auto.iotsys.gateway.obix.server.ObixServer;
 import at.ac.tuwien.auto.iotsys.gateway.obix.server.ObixServerImpl;
+<<<<<<< local
+import at.ac.tuwien.auto.iotsys.mdnssd.Named;
+import at.ac.tuwien.auto.iotsys.mdnssd.Resolver;
+=======
 import at.ac.tuwien.auto.iotsys.xacml.pdp.PDPInterceptorSettings;
+>>>>>>> other
 // import at.ac.tuwien.auto.iotsys.xacml.pdp.PDPInterceptor;
 
 import at.ac.tuwien.auto.iotsys.commons.Connector;
@@ -69,6 +74,7 @@ public class IoTSySGateway {
 	private ObjectBroker objectBroker;
 	private DeviceLoaderImpl deviceLoader;
 	private InterceptorBroker interceptorBroker;
+	private Named named;
 
 	private boolean osgiEnvironment = false;
 	
@@ -106,6 +112,10 @@ public class IoTSySGateway {
 		deviceLoader = new DeviceLoaderImpl();
 		connectors = deviceLoader.initDevices(objectBroker);
 
+		log.info("No of records built: " + Resolver.getInstance().getNumberOfRecord());
+		named = new Named();
+		named.startNamedService();
+		
 		interceptorBroker = InterceptorBrokerImpl.getInstance();
 		// initialize interceptor broker
 		boolean enableXacml = Boolean.parseBoolean(PropertiesLoader.getInstance()
@@ -206,6 +216,7 @@ public class IoTSySGateway {
 
 	public void stopGateway() {
 		objectBroker.shutdown();
+		named.stopNamedService();
 //		CsvCreator.instance.close();
 		closeConnectors();
 	}
