@@ -84,14 +84,6 @@ public class WatchImpl extends Obj implements Watch {
 				
 				if(in instanceof WatchIn) {
 					WatchIn watchIn = (WatchIn) in;
-<<<<<<< local
-	
-					for(Obj u : watchIn.get("hrefs").list()){
-						Uri uri = (Uri) u;
-
-						
-						if(!observedObjects.contains(uri.get())){
-=======
 					
 					// If an attempt is made to add the same URI multiple times in the same WatchIn request,
 					// then the server SHOULD only return the object once.
@@ -104,7 +96,6 @@ public class WatchImpl extends Obj implements Watch {
 					for(Uri uri : uris) {
 						Obj o = broker.pullObj(uri);
 						if(!observedObjects.containsKey(uri.get())) {
->>>>>>> other
 							observedObjects.put(uri.get(), uri);
 	
 							ObjObserver observer = new ObjObserver();
@@ -126,15 +117,10 @@ public class WatchImpl extends Obj implements Watch {
 								log.info("Obj not clonable" + e.getMessage());
 							}
 						}
-<<<<<<< local
-
-					}					
-=======
 						
 						obj.setHref(uri);
 						ret.values().add(obj, false);
 					}
->>>>>>> other
 				}						
 				return ret;
 			}			
@@ -206,11 +192,6 @@ public class WatchImpl extends Obj implements Watch {
 						ObjObserver observer = observers.get(uri);
 						Obj beingObservedObject = (Obj) observer.getSubject();
 						beingObservedObject.notifyObservers();
-<<<<<<< local
-
-						out.values().add(beingObservedObject, false);
-
-=======
 						
 						Obj outItem;
 						try {
@@ -222,7 +203,6 @@ public class WatchImpl extends Obj implements Watch {
 							log.info("Obj not clonable" + e.getMessage());
 						}
 						
->>>>>>> other
 						observer.getEvents();
 					}
 				}
