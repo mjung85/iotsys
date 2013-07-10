@@ -33,12 +33,15 @@
 package at.ac.tuwien.auto.iotsys.gateway.obix.objects;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.TimeZone;
+import java.util.logging.Logger;
 
 import obix.Abstime;
 import obix.Bool;
 import obix.Contract;
+import obix.Err;
 import obix.Feed;
 import obix.Int;
 import obix.Obj;
@@ -49,7 +52,9 @@ import obix.Reltime;
 import obix.Str;
 import obix.Uri;
 import obix.contracts.History;
+import obix.contracts.HistoryAppendIn;
 import obix.contracts.HistoryFilter;
+import obix.contracts.HistoryRecord;
 import obix.contracts.HistoryRollupIn;
 import at.ac.tuwien.auto.iotsys.commons.OperationHandler;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objectbroker.ObjectBrokerImpl;
@@ -61,6 +66,7 @@ import at.ac.tuwien.auto.iotsys.gateway.obix.observer.Subject;
  * (bool, int, real, str).
  */
 public class HistoryImpl extends Obj implements History, Observer {
+	private static final Logger log = Logger.getLogger(HistoryImpl.class.getName());
 	
 	public static final String HISTORY_CONTRACT = "obix:History";
 
@@ -68,8 +74,9 @@ public class HistoryImpl extends Obj implements History, Observer {
 	private Abstime start = new Abstime(null);
 	private Abstime end = new Abstime(null);
 	private Op query = new Op();
-	private Op rollup = new Op();
 	private HistoryFeed feed;
+	private Op rollup = new Op();
+	private Op append = new Op();
 
 	private Obj observedDatapoint;
 
@@ -113,6 +120,11 @@ public class HistoryImpl extends Obj implements History, Observer {
 		rollup.setOut(new Contract(
 				HistoryRollupOutImpl.HISTORY_ROLLUPOUT_CONTRACT));
 		add(rollup);
+		
+		append.setName("append");
+		append.setIn(new Contract(HistoryAppendInImpl.HISTORY_APPENDIN_CONTRACT));
+		append.setOut(new Contract(HistoryAppendOutImpl.HISTORY_APPENDOUT_CONTRACT));
+		add(append);
 	}
 
 	@Override
@@ -139,6 +151,16 @@ public class HistoryImpl extends Obj implements History, Observer {
 				new OperationHandler() {
 					public Obj invoke(Obj in) {
 						return HistoryImpl.this.rollup(in);
+					}
+				});
+		
+		String appendHref = observedDatapoint.getFullContextPath()
+				+ "/history/append";
+
+		ObjectBrokerImpl.getInstance().addOperationHandler(new Uri(appendHref),
+				new OperationHandler() {
+					public Obj invoke(Obj in) {
+						return HistoryImpl.this.append(in);
 					}
 				});
 
@@ -242,6 +264,51 @@ public class HistoryImpl extends Obj implements History, Observer {
 		return historyRollupOutImpl;
 	}
 	
+	private Obj append(Obj in) {
+		HistoryAppendOutImpl historyAppendOut = null;
+		
+		obix.List records;
+		
+		if (in != null && in instanceof HistoryAppendIn) {
+			HistoryAppendIn appendIn = (HistoryAppendIn) in;
+			records = appendIn.data();
+		} else {
+			records = new obix.List();
+		}
+		
+		Abstime timestamp = end;
+		ArrayList<HistoryRecordImpl> newRecords = new ArrayList<HistoryRecordImpl>();
+		
+		long now = Calendar.getInstance().getTimeInMillis();
+		
+		for (Obj record : records.list()) {
+			HistoryRecord historyRecord = (HistoryRecord) record;
+			newRecords.add(new HistoryRecordImpl(historyRecord));
+			
+			if (historyRecord.timestamp().compareTo(timestamp) != 1) {
+				// records out of order
+				return new Err("Records out of order");
+			}
+			
+			if (historyRecord.timestamp().getMillis() > now) {
+				// history record with future time
+				log.warning("Appending future event!");
+			}
+			
+			timestamp = historyRecord.timestamp();
+		}
+		
+		
+		for (HistoryRecordImpl record : newRecords) {
+			feed.addEvent(record);
+		}
+		
+		updateKids();
+		
+		historyAppendOut = new HistoryAppendOutImpl(newRecords, feed.getRecords());
+		return historyAppendOut;
+	}
+	
 	private HistoryRollupRecordImpl createRecord(ArrayList<HistoryRecordImpl> currentInterval, long start, long stop, TimeZone tz){
 		HistoryRollupRecordImpl rollupRecord = new HistoryRollupRecordImpl();
 		rollupRecord.count().set(currentInterval.size());
@@ -317,6 +384,11 @@ public class HistoryImpl extends Obj implements History, Observer {
 		return rollup;
 	}
 
+	@Override
+	public Op append() {
+		return append;
+	}
+
 	/**
 	 * Observer method, that is called if the parent object changes
 	 */
@@ -347,17 +419,21 @@ public class HistoryImpl extends Obj implements History, Observer {
 			}
 
 			feed.addEvent(historyRecordImpl);
-			
-			List<Obj> events = feed.getEvents();
-			HistoryRecordImpl firstRecord = (HistoryRecordImpl) events.get(0);
-			HistoryRecordImpl lastRecord = (HistoryRecordImpl) events.get(events.size()-1);
-			
-			count.setSilent(events.size());
-			this.start.set(firstRecord.timestamp().get(), TimeZone
-					.getTimeZone((firstRecord.timestamp().getTz())));
-			this.end.set(lastRecord.timestamp().get(), TimeZone
-					.getTimeZone((lastRecord.timestamp().getTz())));
+
+			updateKids();
 		}
+	}
+	
+	private void updateKids() {
+		List<Obj> events = feed.getEvents();
+		HistoryRecordImpl firstRecord = (HistoryRecordImpl) events.get(0);
+		HistoryRecordImpl lastRecord = (HistoryRecordImpl) events.get(events.size()-1);
+		
+		count.setSilent(events.size());
+		this.start.set(firstRecord.timestamp().get(), TimeZone
+				.getTimeZone((firstRecord.timestamp().getTz())));
+		this.end.set(lastRecord.timestamp().get(), TimeZone
+				.getTimeZone((lastRecord.timestamp().getTz())));
 	}
 
 	public void setSubject(Subject object) {

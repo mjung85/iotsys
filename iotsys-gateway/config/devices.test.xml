@@ -139,6 +139,22 @@
         <historyEnabled>true</historyEnabled>
         <historyCount>100</historyCount>
       </device>
+      
+      <device>
+        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.BrightnessActuatorImpl
+        </type>
+        <href>brightnessHistory2</href>
+        <historyEnabled>true</historyEnabled>
+        <historyCount>10</historyCount>
+      </device>
+      
+      <device>
+        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.BrightnessActuatorImpl
+        </type>
+        <href>brightnessHistory3</href>
+        <historyEnabled>true</historyEnabled>
+        <historyCount>10</historyCount>
+      </device>
    </connector>
     
     

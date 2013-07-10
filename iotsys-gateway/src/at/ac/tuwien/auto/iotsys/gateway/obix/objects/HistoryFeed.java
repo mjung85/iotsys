@@ -59,6 +59,16 @@ public class HistoryFeed extends Feed {
 		return new ArrayList<Obj>(filterRecords(events, in));
 	}
 	
+	public ArrayList<HistoryRecordImpl> getRecords() {
+		ArrayList<HistoryRecordImpl> records = new ArrayList<HistoryRecordImpl>();
+		for (Obj event : getEvents()) {
+			if (event instanceof HistoryRecordImpl)
+				records.add((HistoryRecordImpl) event);
+		}
+		
+		return records;
+	}
+	
 	public ArrayList<HistoryRecordImpl> filterRecords(List<Obj> events, HistoryFilter historyFilter) {
 		long limit = 0;
 		Abstime start = new Abstime();

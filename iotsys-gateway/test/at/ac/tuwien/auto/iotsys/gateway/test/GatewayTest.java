@@ -4,6 +4,9 @@ import static com.jayway.restassured.RestAssured.given;
 import static com.jayway.restassured.RestAssured.post;
 import static org.hamcrest.Matchers.hasXPath;
 import static org.hamcrest.Matchers.not;
+import static org.junit.Assert.assertEquals;
+
+import javax.xml.bind.DatatypeConverter;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -590,6 +593,107 @@ public class GatewayTest {
 		body(hasXPath("/obj/list/obj/real[@name='avg' and @val='75.0']")).
 		body(hasXPath("/obj/list/obj/real[@name='sum' and @val='150.0']")).
 		post("/brightnessHistory1/value/history/rollup");
+	}
+	
+	
+	@Test
+	public void testHistoryAppend() {
+		String response;
+		
+		response = 
+			given().param("data", "<obj is='obix:HistoryAppendIn'>" +
+				"	<list name='data' of='obix:HistoryRecord'>" +
+				"		<obj>" +
+				"			<abstime name='timestamp' val='2013-07-10T10:15:00-05:00'/>" +
+				"			<int name='value' val='2'/>" +
+				"		</obj>" +
+				"		<obj>" +
+				"			<abstime name='timestamp' val='2013-07-10T10:30:00-05:00'/>" +
+				"			<int val='3'/>" +
+				"		</obj>" +
+				"	</list>" +
+				"</obj>").
+			expect().
+			body(hasXPath("/obj[@is='obix:HistoryAppendOut']")).
+			body(hasXPath("/obj/int[@name='numAdded' and @val='2']")).
+			body(hasXPath("/obj/int[@name='newCount' and @val='2']")).
+			post("/brightnessHistory2/value/history/append").asString();
+		
+		long start = DatatypeConverter.parseDateTime(XmlPath.from(response).getString("obj.abstime[0].@val")).getTimeInMillis();
+		long   end = DatatypeConverter.parseDateTime(XmlPath.from(response).getString("obj.abstime[1].@val")).getTimeInMillis();
+		
+		assertEquals(start, DatatypeConverter.parseDateTime("2013-07-10T10:15:00-05:00").getTimeInMillis());
+		assertEquals(  end, DatatypeConverter.parseDateTime("2013-07-10T10:30:00-05:00").getTimeInMillis());
+		
+		
+		
+		response = 
+			given().param("data", "<obj is='obix:HistoryAppendIn'>" +
+				"	<list name='data' of='obix:HistoryRecord'>" +
+				"		<obj>" +
+				"			<abstime name='timestamp' val='2013-07-10T10:45:00-05:00'/>" +
+				"			<int name='value' val='4'/>" +
+				"		</obj>" +
+				"	</list>" +
+				"</obj>").
+			expect().
+			body(hasXPath("/obj[@is='obix:HistoryAppendOut']")).
+			body(hasXPath("/obj/int[@name='numAdded' and @val='1']")).
+			body(hasXPath("/obj/int[@name='newCount' and @val='3']")).
+			post("/brightnessHistory2/value/history/append").asString();
+		
+		
+		end = DatatypeConverter.parseDateTime(XmlPath.from(response).getString("obj.abstime[1].@val")).getTimeInMillis();
+		
+		assertEquals(start, DatatypeConverter.parseDateTime("2013-07-10T10:15:00-05:00").getTimeInMillis());
+		assertEquals(  end, DatatypeConverter.parseDateTime("2013-07-10T10:45:00-05:00").getTimeInMillis());
+	}
+	
+	
+	@Test
+	public void testHistoryAppendOutOfOrder() {
+		given().param("data", "<obj is='obix:HistoryAppendIn'>" +
+			"	<list name='data' of='obix:HistoryRecord'>" +
+			"		<obj>" +
+			"			<abstime name='timestamp' val='2013-07-10T10:30:00-05:00'/>" +
+			"			<int val='3'/>" +
+			"		</obj>" +
+			"		<obj>" +
+			"			<abstime name='timestamp' val='2013-07-10T10:15:00-05:00'/>" +
+			"			<int name='value' val='2'/>" +
+			"		</obj>" +
+			"	</list>" +
+			"</obj>").
+		expect().
+		body(hasXPath("/err")).
+		post("/brightnessHistory2/value/history/append").asString();
+	}
+	
+	@Test
+	public void testHistoryAppendBeforeLast() {
+		given().param("data", "<obj is='obix:HistoryAppendIn'>" +
+			"	<list name='data' of='obix:HistoryRecord'>" +
+			"		<obj>" +
+			"			<abstime name='timestamp' val='2013-07-10T10:15:00-05:00'/>" +
+			"			<int name='value' val='2'/>" +
+			"		</obj>" +
+			"	</list>" +
+			"</obj>").
+		expect().
+		body(not(hasXPath("/err"))).
+		post("/brightnessHistory3/value/history/append").asString();
+		
+		given().param("data", "<obj is='obix:HistoryAppendIn'>" +
+			"	<list name='data' of='obix:HistoryRecord'>" +
+			"		<obj>" +
+			"			<abstime name='timestamp' val='2013-07-05T10:00:00-05:00'/>" +
+			"			<int name='value' val='1'/>" +
+			"		</obj>" +
+			"	</list>" +
+			"</obj>").
+		expect().
+		body(hasXPath("/err")).
+		post("/brightnessHistory3/value/history/append").asString();
 	}
 	
 }
