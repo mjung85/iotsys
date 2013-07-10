@@ -4116,3 +4116,84 @@
 2013-06-17 00:42:00 [at.ac.tuwien.auto.iotsys.gateway.obix.server.NanoHTTPD] INFO - Serving: /obix for 0:0:0:0:0:0:0:1 done.
 2013-06-17 00:42:00 [at.ac.tuwien.auto.iotsys.gateway.obix.server.NanoHTTPD] INFO - Serving: /favicon.ico for 0:0:0:0:0:0:0:1
 2013-06-17 00:42:00 [at.ac.tuwien.auto.iotsys.gateway.obix.server.NanoHTTPD] INFO - Serving: /favicon.ico for 0:0:0:0:0:0:0:1 done.
+2013-06-17 01:16:22 [at.ac.tuwien.auto.iotsys.gateway.Log] INFO - ==[ START-UP ]========================================================
+2013-06-17 01:16:22 [at.ac.tuwien.auto.iotsys.gateway.IoTSySGateway] INFO - Server starting.
+2013-06-17 01:16:22 [at.ac.tuwien.auto.iotsys.gateway.DeviceLoaderImpl] INFO - Found device loader: at.ac.tuwien.auto.iotsys.gateway.connectors.knx.KNXDeviceLoaderImpl
+2013-06-17 01:16:22 [at.ac.tuwien.auto.iotsys.gateway.DeviceLoaderImpl] INFO - Found device loader: at.ac.tuwien.auto.iotsys.gateway.connectors.bacnet.BacnetDeviceLoaderImpl
+2013-06-17 01:16:22 [at.ac.tuwien.auto.iotsys.gateway.connectors.bacnet.BACnetConnector] INFO - Creating BACnet connector - localDeviceID: 12346, broadCastIP: 128.130.56.255, localDevicePort: 47808
+2013-06-17 01:16:22 [at.ac.tuwien.auto.iotsys.gateway.connectors.bacnet.BACnetConnector] INFO - Initializing BACnet connector.
+2013-06-17 01:16:23 [at.ac.tuwien.auto.iotsys.gateway.connectors.bacnet.BacnetDeviceLoaderImpl] INFO - 7 BACnet devices found in configuration for connector BACnet A-Lab
+2013-06-17 01:16:23 [at.ac.tuwien.auto.iotsys.gateway.DeviceLoaderImpl] INFO - Found device loader: at.ac.tuwien.auto.iotsys.gateway.connector.wmbus.WMBusDeviceLoaderImpl
+2013-06-17 01:16:23 [at.ac.tuwien.auto.iotsys.gateway.DeviceLoaderImpl] INFO - Found device loader: at.ac.tuwien.auto.iotsys.gateway.connectors.xbee.XBeeDeviceLoaderImpl
+2013-06-17 01:16:23 [at.ac.tuwien.auto.iotsys.gateway.connectors.xbee.XBeeDeviceLoaderImpl] INFO - Found 1 XBee connectors.
+2013-06-17 01:16:23 [at.ac.tuwien.auto.iotsys.gateway.DeviceLoaderImpl] INFO - Found device loader: at.ac.tuwien.auto.iotsys.gateway.connectors.virtual.VirtualDeviceLoaderImpl
+2013-06-17 01:16:23 [at.ac.tuwien.auto.iotsys.gateway.connectors.virtual.VirtualConnector] INFO - VirtualConnector connecting.
+2013-06-17 01:16:23 [at.ac.tuwien.auto.iotsys.gateway.connectors.virtual.VirtualDeviceLoaderImpl] INFO - 20 virtual devices found in configuration for connector Virtual Devices
+2013-06-17 01:16:23 [at.ac.tuwien.auto.iotsys.gateway.connectors.virtual.VirtualDeviceLoaderImpl] INFO - 4 virtual devices found in configuration for connector Virtual Devices 2
+2013-06-17 01:16:23 [at.ac.tuwien.auto.iotsys.gateway.connectors.virtual.VirtualDeviceLoaderImpl] INFO - 10 virtual devices found in configuration for connector HVAC Simulation
+2013-06-17 01:16:23 [at.ac.tuwien.auto.iotsys.gateway.connectors.virtual.VirtualDeviceLoaderImpl] INFO - 4 virtual devices found in configuration for connector IoTSyS Logic
+2013-06-17 01:16:23 [at.ac.tuwien.auto.iotsys.gateway.DeviceLoaderImpl] INFO - Found device loader: at.ac.tuwien.auto.iotsys.gateway.connectors.enocean.EnoceanDeviceLoaderImpl
+2013-06-17 01:16:23 [at.ac.tuwien.auto.iotsys.gateway.connectors.enocean.EnoceanDeviceLoaderImpl] INFO - Found 1 EnOcean connectors.
+2013-06-17 01:16:23 [at.ac.tuwien.auto.iotsys.gateway.DeviceLoaderImpl] INFO - Found device loader: at.ac.tuwien.auto.iotsys.demoapp.DemoAppLoaderImpl
+2013-06-17 01:16:23 [at.ac.tuwien.auto.iotsys.gateway.IoTSySGateway] INFO - No of records built: 5
+2013-06-17 01:16:23 [at.ac.tuwien.auto.iotsys.gateway.interceptor.InterceptorBrokerImpl] INFO - Create InterceptorBroker
+2013-06-17 01:16:23 [at.ac.tuwien.auto.iotsys.gateway.interceptor.InterceptorBrokerImpl] INFO - Return InterceptorBroker instance.
+2013-06-17 01:16:23 [at.ac.tuwien.auto.iotsys.gateway.IoTSySGateway] INFO - XACML module enabled: true
+2013-06-17 01:16:23 [at.ac.tuwien.auto.iotsys.xacml.pdp.EnterprisePDP] INFO - Reading files from res/request/request.xml
+2013-06-17 01:16:23 [at.ac.tuwien.auto.iotsys.gateway.interceptor.InterceptorBrokerImpl] INFO - Register interceptor: PDPInterceptor
+2013-06-17 01:16:23 [at.ac.tuwien.auto.iotsys.gateway.interceptor.InterceptorBrokerImpl] INFO - Return InterceptorBroker instance.
+2013-06-17 01:16:23 [at.ac.tuwien.auto.iotsys.gateway.interceptor.InterceptorBrokerImpl] INFO - Return InterceptorBroker instance.
+2013-06-17 01:19:52 [at.ac.tuwien.auto.iotsys.gateway.Log] INFO - ==[ START-UP ]========================================================
+2013-06-17 01:19:52 [at.ac.tuwien.auto.iotsys.gateway.IoTSySGateway] INFO - Server starting.
+2013-06-17 01:19:53 [at.ac.tuwien.auto.iotsys.gateway.DeviceLoaderImpl] INFO - Found device loader: at.ac.tuwien.auto.iotsys.gateway.connectors.knx.KNXDeviceLoaderImpl
+2013-06-17 01:19:53 [at.ac.tuwien.auto.iotsys.gateway.DeviceLoaderImpl] INFO - Found device loader: at.ac.tuwien.auto.iotsys.gateway.connectors.bacnet.BacnetDeviceLoaderImpl
+2013-06-17 01:19:53 [at.ac.tuwien.auto.iotsys.gateway.connectors.bacnet.BACnetConnector] INFO - Creating BACnet connector - localDeviceID: 12346, broadCastIP: 128.130.56.255, localDevicePort: 47808
+2013-06-17 01:19:53 [at.ac.tuwien.auto.iotsys.gateway.connectors.bacnet.BACnetConnector] INFO - Initializing BACnet connector.
+2013-06-17 01:19:53 [at.ac.tuwien.auto.iotsys.gateway.connectors.bacnet.BacnetDeviceLoaderImpl] INFO - 7 BACnet devices found in configuration for connector BACnet A-Lab
+2013-06-17 01:19:53 [at.ac.tuwien.auto.iotsys.gateway.DeviceLoaderImpl] INFO - Found device loader: at.ac.tuwien.auto.iotsys.gateway.connector.wmbus.WMBusDeviceLoaderImpl
+2013-06-17 01:19:53 [at.ac.tuwien.auto.iotsys.gateway.DeviceLoaderImpl] INFO - Found device loader: at.ac.tuwien.auto.iotsys.gateway.connectors.xbee.XBeeDeviceLoaderImpl
+2013-06-17 01:19:53 [at.ac.tuwien.auto.iotsys.gateway.connectors.xbee.XBeeDeviceLoaderImpl] INFO - Found 1 XBee connectors.
+2013-06-17 01:19:53 [at.ac.tuwien.auto.iotsys.gateway.DeviceLoaderImpl] INFO - Found device loader: at.ac.tuwien.auto.iotsys.gateway.connectors.virtual.VirtualDeviceLoaderImpl
+2013-06-17 01:19:53 [at.ac.tuwien.auto.iotsys.gateway.connectors.virtual.VirtualConnector] INFO - VirtualConnector connecting.
+2013-06-17 01:19:53 [at.ac.tuwien.auto.iotsys.gateway.connectors.virtual.VirtualDeviceLoaderImpl] INFO - 20 virtual devices found in configuration for connector Virtual Devices
+2013-06-17 01:19:53 [at.ac.tuwien.auto.iotsys.gateway.connectors.virtual.VirtualDeviceLoaderImpl] INFO - 4 virtual devices found in configuration for connector Virtual Devices 2
+2013-06-17 01:19:53 [at.ac.tuwien.auto.iotsys.gateway.connectors.virtual.VirtualDeviceLoaderImpl] INFO - 10 virtual devices found in configuration for connector HVAC Simulation
+2013-06-17 01:19:53 [at.ac.tuwien.auto.iotsys.gateway.connectors.virtual.VirtualDeviceLoaderImpl] INFO - 4 virtual devices found in configuration for connector IoTSyS Logic
+2013-06-17 01:19:53 [at.ac.tuwien.auto.iotsys.gateway.DeviceLoaderImpl] INFO - Found device loader: at.ac.tuwien.auto.iotsys.gateway.connectors.enocean.EnoceanDeviceLoaderImpl
+2013-06-17 01:19:53 [at.ac.tuwien.auto.iotsys.gateway.connectors.enocean.EnoceanDeviceLoaderImpl] INFO - Found 1 EnOcean connectors.
+2013-06-17 01:19:53 [at.ac.tuwien.auto.iotsys.gateway.DeviceLoaderImpl] INFO - Found device loader: at.ac.tuwien.auto.iotsys.demoapp.DemoAppLoaderImpl
+2013-06-17 01:19:53 [at.ac.tuwien.auto.iotsys.gateway.IoTSySGateway] INFO - No of records built: 5
+2013-06-17 01:19:53 [at.ac.tuwien.auto.iotsys.gateway.interceptor.InterceptorBrokerImpl] INFO - Create InterceptorBroker
+2013-06-17 01:19:53 [at.ac.tuwien.auto.iotsys.gateway.interceptor.InterceptorBrokerImpl] INFO - Return InterceptorBroker instance.
+2013-06-17 01:19:53 [at.ac.tuwien.auto.iotsys.gateway.IoTSySGateway] INFO - XACML module enabled: true
+2013-06-17 01:19:53 [at.ac.tuwien.auto.iotsys.xacml.pdp.EnterprisePDP] INFO - Reading files from res/request/request.xml
+2013-06-17 01:19:53 [at.ac.tuwien.auto.iotsys.gateway.interceptor.InterceptorBrokerImpl] INFO - Register interceptor: PDPInterceptor
+2013-06-17 01:19:53 [at.ac.tuwien.auto.iotsys.gateway.interceptor.InterceptorBrokerImpl] INFO - Return InterceptorBroker instance.
+2013-06-17 01:19:53 [at.ac.tuwien.auto.iotsys.gateway.interceptor.InterceptorBrokerImpl] INFO - Return InterceptorBroker instance.
+2013-06-18 20:55:05 [at.ac.tuwien.auto.iotsys.gateway.Log] INFO - ==[ START-UP ]========================================================
+2013-06-18 20:55:05 [at.ac.tuwien.auto.iotsys.gateway.IoTSySGateway] INFO - Server starting.
+2013-06-18 20:55:06 [at.ac.tuwien.auto.iotsys.gateway.DeviceLoaderImpl] INFO - Found device loader: at.ac.tuwien.auto.iotsys.gateway.connectors.knx.KNXDeviceLoaderImpl
+2013-06-18 20:55:06 [at.ac.tuwien.auto.iotsys.gateway.DeviceLoaderImpl] INFO - Found device loader: at.ac.tuwien.auto.iotsys.gateway.connectors.bacnet.BacnetDeviceLoaderImpl
+2013-06-18 20:55:06 [at.ac.tuwien.auto.iotsys.gateway.connectors.bacnet.BACnetConnector] INFO - Creating BACnet connector - localDeviceID: 12346, broadCastIP: 128.130.56.255, localDevicePort: 47808
+2013-06-18 20:55:07 [at.ac.tuwien.auto.iotsys.gateway.connectors.bacnet.BACnetConnector] INFO - Initializing BACnet connector.
+2013-06-18 20:55:07 [at.ac.tuwien.auto.iotsys.gateway.connectors.bacnet.BacnetDeviceLoaderImpl] INFO - 7 BACnet devices found in configuration for connector BACnet A-Lab
+2013-06-18 20:55:07 [at.ac.tuwien.auto.iotsys.gateway.DeviceLoaderImpl] INFO - Found device loader: at.ac.tuwien.auto.iotsys.gateway.connector.wmbus.WMBusDeviceLoaderImpl
+2013-06-18 20:55:07 [at.ac.tuwien.auto.iotsys.gateway.DeviceLoaderImpl] INFO - Found device loader: at.ac.tuwien.auto.iotsys.gateway.connectors.xbee.XBeeDeviceLoaderImpl
+2013-06-18 20:55:07 [at.ac.tuwien.auto.iotsys.gateway.connectors.xbee.XBeeDeviceLoaderImpl] INFO - Found 1 XBee connectors.
+2013-06-18 20:55:07 [at.ac.tuwien.auto.iotsys.gateway.DeviceLoaderImpl] INFO - Found device loader: at.ac.tuwien.auto.iotsys.gateway.connectors.virtual.VirtualDeviceLoaderImpl
+2013-06-18 20:55:07 [at.ac.tuwien.auto.iotsys.gateway.connectors.virtual.VirtualConnector] INFO - VirtualConnector connecting.
+2013-06-18 20:55:07 [at.ac.tuwien.auto.iotsys.gateway.connectors.virtual.VirtualDeviceLoaderImpl] INFO - 20 virtual devices found in configuration for connector Virtual Devices
+2013-06-18 20:55:07 [at.ac.tuwien.auto.iotsys.gateway.connectors.virtual.VirtualDeviceLoaderImpl] INFO - 4 virtual devices found in configuration for connector Virtual Devices 2
+2013-06-18 20:55:07 [at.ac.tuwien.auto.iotsys.gateway.connectors.virtual.VirtualDeviceLoaderImpl] INFO - 10 virtual devices found in configuration for connector HVAC Simulation
+2013-06-18 20:55:07 [at.ac.tuwien.auto.iotsys.gateway.connectors.virtual.VirtualDeviceLoaderImpl] INFO - 4 virtual devices found in configuration for connector IoTSyS Logic
+2013-06-18 20:55:07 [at.ac.tuwien.auto.iotsys.gateway.DeviceLoaderImpl] INFO - Found device loader: at.ac.tuwien.auto.iotsys.gateway.connectors.enocean.EnoceanDeviceLoaderImpl
+2013-06-18 20:55:07 [at.ac.tuwien.auto.iotsys.gateway.connectors.enocean.EnoceanDeviceLoaderImpl] INFO - Found 1 EnOcean connectors.
+2013-06-18 20:55:07 [at.ac.tuwien.auto.iotsys.gateway.DeviceLoaderImpl] INFO - Found device loader: at.ac.tuwien.auto.iotsys.demoapp.DemoAppLoaderImpl
+2013-06-18 20:55:07 [at.ac.tuwien.auto.iotsys.gateway.IoTSySGateway] INFO - No of records built: 5
+2013-06-18 20:55:07 [at.ac.tuwien.auto.iotsys.gateway.interceptor.InterceptorBrokerImpl] INFO - Create InterceptorBroker
+2013-06-18 20:55:07 [at.ac.tuwien.auto.iotsys.gateway.interceptor.InterceptorBrokerImpl] INFO - Return InterceptorBroker instance.
+2013-06-18 20:55:07 [at.ac.tuwien.auto.iotsys.gateway.IoTSySGateway] INFO - XACML module enabled: true
+2013-06-18 20:55:07 [at.ac.tuwien.auto.iotsys.xacml.pdp.EnterprisePDP] INFO - Reading files from res/request/request.xml
+2013-06-18 20:55:07 [at.ac.tuwien.auto.iotsys.gateway.interceptor.InterceptorBrokerImpl] INFO - Register interceptor: PDPInterceptor
+2013-06-18 20:55:07 [at.ac.tuwien.auto.iotsys.gateway.interceptor.InterceptorBrokerImpl] INFO - Return InterceptorBroker instance.
+2013-06-18 20:55:07 [at.ac.tuwien.auto.iotsys.gateway.interceptor.InterceptorBrokerImpl] INFO - Return InterceptorBroker instance.
