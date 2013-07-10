@@ -51,12 +51,8 @@ import at.ac.tuwien.auto.iotsys.gateway.obix.server.NanoHTTPD;
 import at.ac.tuwien.auto.iotsys.gateway.obix.server.ObixObservingManager;
 import at.ac.tuwien.auto.iotsys.gateway.obix.server.ObixServer;
 import at.ac.tuwien.auto.iotsys.gateway.obix.server.ObixServerImpl;
-<<<<<<< local
-import at.ac.tuwien.auto.iotsys.mdnssd.Named;
-import at.ac.tuwien.auto.iotsys.mdnssd.Resolver;
-=======
 import at.ac.tuwien.auto.iotsys.xacml.pdp.PDPInterceptorSettings;
->>>>>>> other
+
 // import at.ac.tuwien.auto.iotsys.xacml.pdp.PDPInterceptor;
 
 import at.ac.tuwien.auto.iotsys.commons.Connector;
@@ -66,6 +62,8 @@ import at.ac.tuwien.auto.iotsys.commons.interceptor.ClassAlreadyRegisteredExcept
 import at.ac.tuwien.auto.iotsys.commons.interceptor.Interceptor;
 import at.ac.tuwien.auto.iotsys.commons.interceptor.InterceptorBroker;
 
+import at.ac.tuwien.auto.iotsys.mdnssd.Named;
+import at.ac.tuwien.auto.iotsys.mdnssd.Resolver;
 /**
  * Standalone class to launch the gateway.
  * 
