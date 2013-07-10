@@ -33,6 +33,8 @@ public class FeedObserver implements EventObserver<Obj> {
 		
 		synchronized(lock) {
 			List<Obj> events = feed.getEvents();
+			if (events.size() == 0) return;
+			
 			Obj recentEvent = events.get(events.size() - 1);
 			unpolledEvents.add(recentEvent);
 		}
