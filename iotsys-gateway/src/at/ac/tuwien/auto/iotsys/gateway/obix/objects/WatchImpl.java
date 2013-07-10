@@ -35,10 +35,7 @@ package at.ac.tuwien.auto.iotsys.gateway.obix.objects;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.LinkedList;
-
-import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
-import at.ac.tuwien.auto.iotsys.commons.OperationHandler;
-import at.ac.tuwien.auto.iotsys.gateway.obix.observer.ObjObserver;
+import java.util.logging.Logger;
 
 import obix.Contract;
 import obix.Obj;
@@ -47,6 +44,9 @@ import obix.Reltime;
 import obix.Uri;
 import obix.contracts.Watch;
 import obix.contracts.WatchIn;
+import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
+import at.ac.tuwien.auto.iotsys.commons.OperationHandler;
+import at.ac.tuwien.auto.iotsys.gateway.obix.observer.ObjObserver;
 
 /**
  * Implements the watch logic, representing a per-client state object.
@@ -54,6 +54,8 @@ import obix.contracts.WatchIn;
  * until the client retrieves them.
  */
 public class WatchImpl extends Obj implements Watch {
+	private static final Logger log = Logger.getLogger(WatchImpl.class.getName());
+	
 	private static int numInstance = 0;
 	public static final String WATCH_IN_CONTRACT = "obix:WatchIn";
 	public static final String WATCH_OUT_CONTRACT = "obix:WatchOut";
@@ -74,33 +76,65 @@ public class WatchImpl extends Obj implements Watch {
 		add(pollRefresh());
 		add(delete());
 		this.setHref(new Uri("http://localhost/watch" + (numInstance++)));
-		broker.addOperationHandler(new Uri(this.getNormalizedHref().getPath() + "/add"), new OperationHandler(){
+		broker.addOperationHandler(new Uri(this.getNormalizedHref().getPath() + "/add"), new OperationHandler() {
 			@Override
 			public Obj invoke(Obj in) {
 				// Perform add logic
 				WatchOutImpl ret = new WatchOutImpl();
-				if(in instanceof WatchIn){
+				
+				if(in instanceof WatchIn) {
 					WatchIn watchIn = (WatchIn) in;
+<<<<<<< local
 	
 					for(Obj u : watchIn.get("hrefs").list()){
 						Uri uri = (Uri) u;
 
 						
 						if(!observedObjects.contains(uri.get())){
+=======
+					
+					// If an attempt is made to add the same URI multiple times in the same WatchIn request,
+					// then the server SHOULD only return the object once.
+					// Therefore filter out duplicate URIs
+					ArrayList<Uri> uris = new ArrayList<Uri>();
+					for(Obj u : watchIn.get("hrefs").list()) {
+						if (!uris.contains(u)) uris.add((Uri) u);
+					}
+					
+					for(Uri uri : uris) {
+						Obj o = broker.pullObj(uri);
+						if(!observedObjects.containsKey(uri.get())) {
+>>>>>>> other
 							observedObjects.put(uri.get(), uri);
 	
-							ObjObserver observer = new ObjObserver();						
+							ObjObserver observer = new ObjObserver();
 							observers.put(uri.getPath(), observer);
-							Obj o = broker.pullObj(uri);
-							o.attach(observer);
-							o.setHref(uri);
 							
-							for(Uri temp :observedObjects.values()){
-								ret.values().add(temp, false);
+							o.attach(observer);
+						}
+						
+						Obj obj = null;
+						if (o.isErr()) {
+							obj = o;
+						} else if(o.isOp()) {
+							obj = new obix.Err("Watching operations not supported");
+						} else {
+							try {
+								obj = (Obj) o.clone();
+								obj.setName(null, true);
+							} catch (CloneNotSupportedException e) {
+								log.info("Obj not clonable" + e.getMessage());
 							}
 						}
+<<<<<<< local
 
 					}					
+=======
+						
+						obj.setHref(uri);
+						ret.values().add(obj, false);
+					}
+>>>>>>> other
 				}						
 				return ret;
 			}			
@@ -134,18 +168,30 @@ public class WatchImpl extends Obj implements Watch {
 			@Override
 			public Obj invoke(Obj in) {
 				WatchOutImpl out = new WatchOutImpl();
-				synchronized(observers){
+				synchronized(observers) {
 					// check for modified objects
 					// NOTE pollChanges does not need to provide the events, only the latest state.
-					for(ObjObserver objObserver : observers.values()){
+					
+					
+					for (String uri : observers.keySet()) {
+						ObjObserver objObserver = observers.get(uri);
 						LinkedList<Obj> events = objObserver.getEvents();
-						if(events.size() > 0 ){							
+						if(events.size() > 0) {
 							// needs to be an obix object
 							Obj obj = (Obj) objObserver.getSubject();
-							out.values().add(obj, false);
+							
+							try {
+								Obj outItem = (Obj) obj.clone();
+								outItem.setName(null, true);
+								outItem.setHref(new Uri(uri));
+								out.values().add(outItem, false);
+							} catch (CloneNotSupportedException e) {
+								log.info("Obj not clonable" + e.getMessage());
+							}
 						}
-					}					
-				}				
+					}
+				}
+				
 				return out;
 			}		
 		});
@@ -156,12 +202,27 @@ public class WatchImpl extends Obj implements Watch {
 				// Perform refresh logic	
 				// Get a list of being-observed URI; get the corresponding object; notify the observer --> performing an update
 				synchronized(observers){
-					for (ObjObserver observer : observers.values()){
+					for (String uri : observers.keySet()) {
+						ObjObserver observer = observers.get(uri);
 						Obj beingObservedObject = (Obj) observer.getSubject();
 						beingObservedObject.notifyObservers();
+<<<<<<< local
 
 						out.values().add(beingObservedObject, false);
 
+=======
+						
+						Obj outItem;
+						try {
+							outItem = (Obj) beingObservedObject.clone();
+							outItem.setName(null, true);
+							outItem.setHref(new Uri(uri));
+							out.values().add(outItem, false);
+						} catch (CloneNotSupportedException e) {
+							log.info("Obj not clonable" + e.getMessage());
+						}
+						
+>>>>>>> other
 						observer.getEvents();
 					}
 				}

@@ -96,7 +96,7 @@ public class Communicator extends UpperLayer {
 		matchingLayer = new MatchingLayer();
 		transactionLayer = new TransactionLayer();
 		adverseLayer = new AdverseLayer();
-		udpLayer = new MultiInterfaceUDPLayer(5683, runAsDaemon);
+		udpLayer = new MultiInterfaceUDPLayer(udpPort, runAsDaemon);
 
 		// connect layers
 		buildStack();

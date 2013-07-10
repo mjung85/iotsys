@@ -57,33 +57,35 @@ public class WMBusBundleActivator implements BundleActivator, ServiceListener{
 	private BundleContext context = null;
 	
 	public void start(BundleContext context) throws Exception {
-		log.info("Starting WMBus connector");
+		log.info("Starting WMBUS connector");
 		this.context = context;
-		ServiceReference<ObjectBroker> serviceReference = context
-				.getServiceReference(ObjectBroker.class);
+		ServiceReference serviceReference = context
+				.getServiceReference(ObjectBroker.class.getName());
 		if (serviceReference == null) {
 			log.severe("Could not find a running object broker to register devices!");
 
 		} else {
 			synchronized (this) {
-				log.info("Initiating WMBus devices.");
+				log.info("Initiating WMBUS devices.");
 				ObjectBroker objectBroker = (ObjectBroker) context
 						.getService(serviceReference);
 				connectors = deviceLoader.initDevices(objectBroker);
 				registered = true;
 			}
+
 		}
-		context.addServiceListener(this);	
+
+		context.addServiceListener(this);
 	}
 
 	public void stop(BundleContext context) throws Exception {
-		log.info("Stopping WMBus connector");
-		ServiceReference<ObjectBroker> serviceReference = context
-				.getServiceReference(ObjectBroker.class);
+		log.info("Stopping WMBUS connector");
+		ServiceReference serviceReference = context
+				.getServiceReference(ObjectBroker.class.getName());
 		if (serviceReference == null) {
 			log.severe("Could not find a running object broker to unregister devices!");
 		} else {
-			log.info("Removing WMBus Devices.");
+			log.info("Removing WMBUS Devices.");
 			ObjectBroker objectBroker = (ObjectBroker) context
 					.getService(serviceReference);
 			deviceLoader.removeDevices(objectBroker);
@@ -96,7 +98,7 @@ public class WMBusBundleActivator implements BundleActivator, ServiceListener{
 					}
 				}
 			}
-		}		
+		}
 	}
 
 	@Override

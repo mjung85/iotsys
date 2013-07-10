@@ -1,4 +1,3 @@
-
 allprojects {
 	apply plugin: 'java'
 	apply plugin: 'maven-publish'
@@ -62,9 +61,9 @@ sourceCompatibility = 1.6
 description = 'IoTSyS - Integration middleware for the Internet of Things'
 
 task deploy << {
-	ant.echo(message:'java -cp "iotsys-bacnet-0.1.jar;iotsys-bacnet4j-0.1.jar;iotsys-calimero-0.1.jar;iotsys-common-0.1.jar;iotsys-mdnssd-0.1.jar;iotsys-control-0.1.jar;iotsys-encoding-json-0.1.jar;iotsys-gateway-0.1.jar;iotsys-knx-0.1.jar;iotsys-obix-0.1.jar;iotsys-virtual-0.1.jar;iotsys-wmbus-0.1.jar;iotsys-enocean-0.1.jar;iotsys-xacml-0.1.jar;res;iotsys-demoapp-0.1.jar;iotsys-xbee-0.1.jar" at.ac.tuwien.auto.iotsys.gateway.IoTSySGateway', file:distLibRunFile)	
+	ant.echo(message:'java -cp "iotsys-bacnet-0.1.jar;iotsys-bacnet4j-0.1.jar;iotsys-calimero-0.1.jar;iotsys-common-0.1.jar;iotsys-control-0.1.jar;iotsys-encoding-json-0.1.jar;iotsys-gateway-0.1.jar;iotsys-knx-0.1.jar;iotsys-obix-0.1.jar;iotsys-virtual-0.1.jar;iotsys-wmbus-0.1.jar;iotsys-enocean-0.1.jar;iotsys-xacml-0.1.jar;res;iotsys-demoapp-0.1.jar;iotsys-xbee-0.1.jar;iotsys-mdnssd-0.1.jar" at.ac.tuwien.auto.iotsys.gateway.IoTSySGateway', file:distLibRunFile)	
 
-	ant.echo(message:'java -cp "iotsys-bacnet-0.1.jar:iotsys-bacnet4j-0.1.jar:iotsys-calimero-0.1.jar:iotsys-common-0.1.jar:iotsys-mdnssd-0.1.jar:iotsys-control-0.1.jar:iotsys-encoding-json-0.1.jar:iotsys-gateway-0.1.jar:iotsys-knx-0.1.jar:iotsys-obix-0.1.jar:iotsys-virtual-0.1.jar:iotsys-wmbus-0.1.jar:iotsys-enocean-0.1.jar:iotsys-xacml-0.1.jar:res:iotsys-demoapp-0.1.jar:iotsys-xbee-0.1.jar" at.ac.tuwien.auto.iotsys.gateway.IoTSySGateway', file:distLibRunFileSh)			
+	ant.echo(message:'java -cp "iotsys-bacnet-0.1.jar:iotsys-bacnet4j-0.1.jar:iotsys-calimero-0.1.jar:iotsys-common-0.1.jar:iotsys-control-0.1.jar:iotsys-encoding-json-0.1.jar:iotsys-gateway-0.1.jar:iotsys-knx-0.1.jar:iotsys-obix-0.1.jar:iotsys-virtual-0.1.jar:iotsys-wmbus-0.1.jar:iotsys-enocean-0.1.jar:iotsys-xacml-0.1.jar:res:iotsys-demoapp-0.1.jar:iotsys-xbee-0.1.jar;iotsys-mdnssd-0.1.jar" at.ac.tuwien.auto.iotsys.gateway.IoTSySGateway', file:distLibRunFileSh)			
 		
 	File deployResDir = new File(distLib.absolutePath + '/res')
 	File deployConfDir = new File(distLib.absolutePath + '/config')
@@ -153,7 +152,6 @@ task setupFelix << {
 					"javax.net.ssl, javax.crypto, javax.crypto.interfaces, javax.crypto.spec, javax.security.auth," +
 					"javax.security.auth.spi, javax.security.auth.callback, javax.security.auth.login," +
 					"javax.security.cert, javax.xml.parsers,  javax.xml.xpath, javax.xml.transform.sax," + "javax.xml.transform.dom, javax.xml.namespace, javax.xml.transform, javax.xml.transform.stream," +
-					"javax.xml.validation, javax.xml.datatype, org.xml.sax, org.xml.sax.helpers, org.xml.sax.ext," + "com.sun.org.apache.xalan.internal, com.sun.org.apache.xalan.internal.res," + "com.sun.org.apache.xml.internal.utils, com.sun.org.apache.xpath.internal," + "com.sun.org.apache.xpath.internal.jaxp, com.sun.org.apache.xpath.internal.objects," + "com.sun.org.apache.xml.internal, org.w3c.dom, org.w3c.dom.traversal, org.w3c.dom.ls, javax.sql," + "javax.transaction, sun.misc, com.sun.org.apache.xerces.internal.jaxp.validation, com.sun.org.apache.xerces.internal.jaxp, javax.naming.ldap, javax.naming")}	
+					"javax.xml.validation, javax.xml.datatype, org.xml.sax, org.xml.sax.helpers, org.xml.sax.ext," + "com.sun.org.apache.xalan.internal, com.sun.org.apache.xalan.internal.res," + "com.sun.org.apache.xml.internal.utils, com.sun.org.apache.xpath.internal," + "com.sun.org.apache.xpath.internal.jaxp, com.sun.org.apache.xpath.internal.objects," + "com.sun.org.apache.xml.internal, org.w3c.dom, org.w3c.dom.traversal, org.w3c.dom.ls, javax.sql," + "javax.transaction, sun.misc, com.sun.org.apache.xerces.internal.jaxp.validation, com.sun.org.apache.xerces.internal.jaxp, javax.naming.ldap, javax.naming, javax.xml.ws, com.sun.xml.internal.ws.api.message")}	
 	
 }
-

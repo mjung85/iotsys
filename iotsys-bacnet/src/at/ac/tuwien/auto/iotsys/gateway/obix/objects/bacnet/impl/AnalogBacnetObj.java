@@ -45,7 +45,7 @@ public abstract class AnalogBacnetObj extends BacnetObj {
 	public AnalogBacnetObj(BACnetConnector bacnetConnector, BacnetDataPointInfo dataPointInfo) {
 		super(bacnetConnector, dataPointInfo);
 		
-		Uri valueUri = new Uri("/value");
+		Uri valueUri = new Uri("value");
 		
 		value.setHref(valueUri);
 		value.setName("value");
@@ -53,6 +53,7 @@ public abstract class AnalogBacnetObj extends BacnetObj {
 	}
 	
 	public void writeObject(Obj input) {
+		refreshWritable();
 		if (!value.isWritable()) return;
 		
 		Encodable val;
@@ -97,7 +98,7 @@ public abstract class AnalogBacnetObj extends BacnetObj {
 			
 			// units
 			if (value.getUnit() == null) {
-				property = bacnetConnector.readProperty(deviceID, objectIdentifier, new PropertyIdentifier(117));
+				property = bacnetConnector.readProperty(deviceID, objectIdentifier, PropertyIdentifier.units);
 				if(property instanceof EngineeringUnits) {
 					int unit = ((EngineeringUnits) property).intValue();
 					String bUnit = BacnetUnits.getUnit(unit);

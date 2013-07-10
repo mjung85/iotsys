@@ -52,6 +52,44 @@
 
   <knx>
     <connector>
+      <name>KNX TP1 Suitcase</name>
+      <enabled>false</enabled>
+      <router>
+        <ip>192.168.161.59</ip>
+        <port>3671</port>
+      </router>
+      <localIP>auto</localIP>
+
+      <device>
+        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.knx.TemperatureSensorImplKnx
+        </type>
+        <address>1/1/0</address>
+        <href>temp1</href>
+        <historyEnabled>true</historyEnabled>
+        <historyCount>200</historyCount>
+        <groupCommEnabled>true</groupCommEnabled>
+      </device>
+
+      <device>
+        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.knx.TemperatureSensorImplKnx
+        </type>
+        <address>1/1/1</address>
+        <href>temp2</href>
+        <historyEnabled>true</historyEnabled>
+        <historyCount>200</historyCount>
+        <groupCommEnabled>true</groupCommEnabled>
+      </device>
+
+      <device>
+        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.knx.LightSwitchActuatorImplKnx
+        </type>
+        <address>null, 1/0/0</address>
+        <href>light1</href>
+        <historyEnabled>false</historyEnabled>
+      </device>
+    </connector>
+
+    <connector>
       <name>IPSO Challenge</name>
       <enabled>false</enabled>
       <router>
@@ -391,7 +429,6 @@
         <historyEnabled>true</historyEnabled>
         <historyCount>200</historyCount>
         <groupCommEnabled>true</groupCommEnabled>
-        s
       </device>
 
       <device>
@@ -470,8 +507,8 @@
 
     <connector>
       <name>BACnet A-Lab</name>
-      <enabled>true</enabled>
-      <discovery-enabled>false</discovery-enabled>
+      <enabled>false</enabled>
+      <discovery-enabled>true</discovery-enabled>
       <localDeviceID>12346</localDeviceID>
       <broadcastAddress>128.130.56.255</broadcastAddress>
       <localPort>47808</localPort>
@@ -546,7 +583,7 @@
     <connector>
       <name>BACnet A-Lab (Auto)</name>
       <enabled>false</enabled>
-      <discovery-enabled>false</discovery-enabled>
+      <discovery-enabled>true</discovery-enabled>
       <localDeviceID>54321</localDeviceID>
       <broadcastAddress>128.130.56.255</broadcastAddress>
       <localPort>47808</localPort>
@@ -565,7 +602,8 @@
       <device>
         <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.wmbus.SmartMeterImplWMBus
         </type>
-        <address>15004474, 66 77 66 77 66 77 66 77 66 77 66 77 66 77 66 77</address>
+        <address>15004474, 66 77 66 77 66 77 66 77 66 77 66 77 66 77 66
+          77</address>
         <ipv6>fe80::b170:1416:1194:8db2</ipv6>
         <href>smartmeter</href>
         <historyEnabled>true</historyEnabled>
@@ -581,7 +619,8 @@
       <device>
         <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.wmbus.SmartMeterImplWMBus
         </type>
-        <address>15004474, 66 77 66 77 66 77 66 77 66 77 66 77 66 77 66 77</address>
+        <address>15004474, 66 77 66 77 66 77 66 77 66 77 66 77 66 77 66
+          77</address>
         <href>smartmeter</href>
         <ipv6>fe80::b170:1416:1194:8db2</ipv6>
         <historyEnabled>true</historyEnabled>
@@ -797,9 +836,10 @@
         <historyEnabled>true</historyEnabled>
         <refreshEnabled>true</refreshEnabled>
         <groupCommEnabled>true</groupCommEnabled>
+        <historyCount>200</historyCount>
       </device>
-      
-       <device>
+
+      <device>
         <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.virtual.TemperatureSensorImplVirtual
         </type>
         <href>simTemp2</href>
@@ -892,23 +932,11 @@
         <groupCommEnabled>true</groupCommEnabled>
       </device>
 
-     <!-- <device>
-        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.logic.impl.BinaryOperationImpl
-        </type>
-        <href>binOp2</href>
-        <historyEnabled>false</historyEnabled>
-        <refreshEnabled>false</refreshEnabled>
-        <groupCommEnabled>true</groupCommEnabled>
-      </device>
-
-      <device>
-        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.logic.impl.BinaryOperationImpl
-        </type>
-        <href>binOp3</href>
-        <historyEnabled>false</historyEnabled>
-        <refreshEnabled>false</refreshEnabled>
-        <groupCommEnabled>true</groupCommEnabled>
-      </device>-->
+      <!-- <device> <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.logic.impl.BinaryOperationImpl 
+        </type> <href>binOp2</href> <historyEnabled>false</historyEnabled> <refreshEnabled>false</refreshEnabled> 
+        <groupCommEnabled>true</groupCommEnabled> </device> <device> <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.logic.impl.BinaryOperationImpl 
+        </type> <href>binOp3</href> <historyEnabled>false</historyEnabled> <refreshEnabled>false</refreshEnabled> 
+        <groupCommEnabled>true</groupCommEnabled> </device> -->
 
       <device>
         <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.logic.impl.ComparatorImpl
@@ -919,23 +947,11 @@
         <groupCommEnabled>true</groupCommEnabled>
       </device>
 
-    <!--  <device>
-        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.logic.impl.ComparatorImpl
-        </type>
-        <href>comp2</href>
-        <historyEnabled>false</historyEnabled>
-        <refreshEnabled>false</refreshEnabled>
-        <groupCommEnabled>true</groupCommEnabled>
-      </device>
-
-      <device>
-        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.logic.impl.ComparatorImpl
-        </type>
-        <href>comp3</href>
-        <historyEnabled>false</historyEnabled>
-        <refreshEnabled>false</refreshEnabled>
-        <groupCommEnabled>true</groupCommEnabled>
-      </device> -->
+      <!-- <device> <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.logic.impl.ComparatorImpl 
+        </type> <href>comp2</href> <historyEnabled>false</historyEnabled> <refreshEnabled>false</refreshEnabled> 
+        <groupCommEnabled>true</groupCommEnabled> </device> <device> <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.logic.impl.ComparatorImpl 
+        </type> <href>comp3</href> <historyEnabled>false</historyEnabled> <refreshEnabled>false</refreshEnabled> 
+        <groupCommEnabled>true</groupCommEnabled> </device> -->
 
       <device>
         <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.logic.impl.LogicBinaryOperationImpl
@@ -945,22 +961,11 @@
         <refreshEnabled>false</refreshEnabled>
         <groupCommEnabled>true</groupCommEnabled>
       </device>
-     <!--  <device>
-        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.logic.impl.LogicBinaryOperationImpl
-        </type>
-        <href>logicBinOp2</href>
-        <historyEnabled>false</historyEnabled>
-        <refreshEnabled>false</refreshEnabled>
-        <groupCommEnabled>true</groupCommEnabled>
-      </device>
-      <device>
-        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.logic.impl.LogicBinaryOperationImpl
-        </type>
-        <href>logicBinOp3</href>
-        <historyEnabled>false</historyEnabled>
-        <refreshEnabled>false</refreshEnabled>
-        <groupCommEnabled>true</groupCommEnabled>
-      </device> -->
+      <!-- <device> <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.logic.impl.LogicBinaryOperationImpl 
+        </type> <href>logicBinOp2</href> <historyEnabled>false</historyEnabled> <refreshEnabled>false</refreshEnabled> 
+        <groupCommEnabled>true</groupCommEnabled> </device> <device> <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.logic.impl.LogicBinaryOperationImpl 
+        </type> <href>logicBinOp3</href> <historyEnabled>false</historyEnabled> <refreshEnabled>false</refreshEnabled> 
+        <groupCommEnabled>true</groupCommEnabled> </device> -->
       <device>
         <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.logic.impl.TemperatureControllerImpl
         </type>
@@ -969,22 +974,13 @@
         <refreshEnabled>false</refreshEnabled>
         <groupCommEnabled>true</groupCommEnabled>
       </device>
-  <!--  <device>
-        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.logic.impl.TemperatureControllerImpl
-        </type>
-        <href>tempControl12</href>
-        <historyEnabled>false</historyEnabled>
-        <refreshEnabled>false</refreshEnabled>
-        <groupCommEnabled>true</groupCommEnabled>
-      </device>
-      <device>
-        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.logic.impl.TemperatureControllerImpl
-        </type>
-        <href>tempControl3</href>
-        <historyEnabled>false</historyEnabled>
-        <refreshEnabled>false</refreshEnabled>
-        <groupCommEnabled>true</groupCommEnabled>
-      </device> -->
+      <!-- <device> <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.logic.impl.TemperatureControllerImpl 
+        </type> <href>tempControl12</href> <historyEnabled>false</historyEnabled> 
+        <refreshEnabled>false</refreshEnabled> <groupCommEnabled>true</groupCommEnabled> 
+        </device> <device> <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.logic.impl.TemperatureControllerImpl 
+        </type> <href>tempControl3</href> <historyEnabled>false</historyEnabled> 
+        <refreshEnabled>false</refreshEnabled> <groupCommEnabled>true</groupCommEnabled> 
+        </device> -->
     </connector>
 
   </virtual>

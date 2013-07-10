@@ -1,3 +1,35 @@
+/*******************************************************************************
+ * Copyright (c) 2013
+ * Institute of Computer Aided Automation, Automation Systems Group, TU Wien.
+ * All rights reserved.
+ * 
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the distribution.
+ * 3. Neither the name of the Institute nor the names of its contributors
+ *    may be used to endorse or promote products derived from this software
+ *    without specific prior written permission.
+ * 
+ * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS "AS IS" AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+ * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+ * SUCH DAMAGE.
+ * 
+ * This file is part of the IoTSyS project.
+ ******************************************************************************/
+
 package at.ac.tuwien.auto.iotsys.gateway.connectors.enocean;
 
 import java.util.ArrayList;
@@ -25,16 +57,16 @@ public class EnoceanBundleActivator implements BundleActivator, ServiceListener 
 	private BundleContext context = null;
 
 	public void start(BundleContext context) throws Exception {
-		log.info("Starting EnOcean connector");
+		log.info("Starting Enocean connector");
 		this.context = context;
-		ServiceReference<ObjectBroker> serviceReference = context
-				.getServiceReference(ObjectBroker.class);
+		ServiceReference serviceReference = context
+				.getServiceReference(ObjectBroker.class.getName());
 		if (serviceReference == null) {
 			log.severe("Could not find a running object broker to register devices!");
 
 		} else {
 			synchronized (this) {
-				log.info("Initiating EnOcean devices.");
+				log.info("Initiating Enocean devices.");
 				ObjectBroker objectBroker = (ObjectBroker) context
 						.getService(serviceReference);
 				connectors = deviceLoader.initDevices(objectBroker);
@@ -47,13 +79,13 @@ public class EnoceanBundleActivator implements BundleActivator, ServiceListener 
 	}
 
 	public void stop(BundleContext context) throws Exception {
-		log.info("Stopping EnOcean connector");
-		ServiceReference<ObjectBroker> serviceReference = context
-				.getServiceReference(ObjectBroker.class);
+		log.info("Stopping Enocean connector");
+		ServiceReference serviceReference = context
+				.getServiceReference(ObjectBroker.class.getName());
 		if (serviceReference == null) {
 			log.severe("Could not find a running object broker to unregister devices!");
 		} else {
-			log.info("Removing EnOcean Devices.");
+			log.info("Removing Enocean Devices.");
 			ObjectBroker objectBroker = (ObjectBroker) context
 					.getService(serviceReference);
 			deviceLoader.removeDevices(objectBroker);

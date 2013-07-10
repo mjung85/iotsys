@@ -60,8 +60,8 @@ public class VirtualBundleActivator implements ServiceListener, BundleActivator 
 	public void start(BundleContext context) throws Exception {
 		log.info("Starting Virtual connector");
 		this.context = context;
-		ServiceReference<ObjectBroker> serviceReference = context
-				.getServiceReference(ObjectBroker.class);
+		ServiceReference serviceReference = context
+				.getServiceReference(ObjectBroker.class.getName());
 		if (serviceReference == null) {
 			log.severe("Could not find a running object broker to register devices!");
 
@@ -81,12 +81,12 @@ public class VirtualBundleActivator implements ServiceListener, BundleActivator 
 
 	public void stop(BundleContext context) throws Exception {
 		log.info("Stopping virtual connector");
-		ServiceReference<ObjectBroker> serviceReference = context
-				.getServiceReference(ObjectBroker.class);
+		ServiceReference serviceReference = context
+				.getServiceReference(ObjectBroker.class.getName());
 		if (serviceReference == null) {
 			log.severe("Could not find a running object broker to unregister devices!");
 		} else {
-			log.info("Removing virtual devices.");
+			log.info("Removing Virtual Devices.");
 			ObjectBroker objectBroker = (ObjectBroker) context
 					.getService(serviceReference);
 			deviceLoader.removeDevices(objectBroker);
@@ -111,7 +111,7 @@ public class VirtualBundleActivator implements ServiceListener, BundleActivator 
 			if (objectClass[0].equals(ObjectBroker.class.getName())) {
 
 				synchronized (this) {
-					log.info("ObjectBroker detected.");
+					log.info("Object Broker detected.");
 
 					if (!registered) {
 						ObjectBroker objectBroker = (ObjectBroker) context
@@ -126,6 +126,6 @@ public class VirtualBundleActivator implements ServiceListener, BundleActivator 
 				}
 			}
 
-		} 
+		}
 	}
 }
