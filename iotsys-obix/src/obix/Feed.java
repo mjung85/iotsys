@@ -3,6 +3,10 @@
  */
 package obix;      
 
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+
 
 /**
  * Feed models a event feed topic.
@@ -23,11 +27,11 @@ public class Feed
    * Construct named Feed with in and of contracts.
    */
   public Feed(String name, Contract in, Contract of) 
-  {                
-    super(name);                          
+  {
+    super(name);
     setIn(in);
     setOf(of);
-  }                 
+  }
   
   /**
    * Construct named Feed.
@@ -100,12 +104,69 @@ public class Feed
   {
     return obix.io.BinObix.FEED;
   }
-    
+
+////////////////////////////////////////////////////////////////
+// Events
+////////////////////////////////////////////////////////////////
+  
+  /**
+   * Return all events in the feed
+   */
+  public List<Obj> getEvents()
+  {
+	  return events;
+  }
+  
+  /**
+   * Add an event to the feed
+   * @param event Event to be added
+   */
+  public void addEvent(Obj event)
+  {
+	  events.add(event);
+	  while (maxEvents > 0 && events.size() > maxEvents)
+		  events.removeFirst();
+	  
+	  notifyObservers();
+  }
+  
+  /**
+   * Query the feed
+   * @param filter Filter to apply to the list of events
+   * @return A list of filtered events
+   */
+  public List<Obj> query(Obj filter)
+  {
+	  return query(getEvents(), filter);
+  }
+  
+  /**
+   * Query the feed
+   * @param events A list of events which should be queried
+   * @param filter Filter to apply to the list of events
+   * @return A list of filtered events
+   */
+  public List<Obj> query(List<Obj> events, Obj filter)
+  {
+	  return new ArrayList<Obj>(events);
+  }
+  
+  /**
+   * Set the maximum number of events to store in the feed
+   * @param maxEvents Maximum number of events. If 0, an unlimited number of events are stored.
+   */
+  protected void setMaxEvents(int maxEvents)
+  {
+	  this.maxEvents = maxEvents;
+  }
+ 
 ////////////////////////////////////////////////////////////////
 // Fields
 ////////////////////////////////////////////////////////////////
 
   private Contract in;
   private Contract of;
+  private LinkedList<Obj> events = new LinkedList<Obj>();
+  private int maxEvents = 0;
     
 }
