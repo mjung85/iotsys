@@ -73,6 +73,7 @@ public class HistoryImpl extends Obj implements History, Observer {
 	private Int count = new Int();
 	private Abstime start = new Abstime(null);
 	private Abstime end = new Abstime(null);
+	private Str tz = new Str(TimeZone.getDefault().getID());
 	private Op query = new Op();
 	private HistoryFeed feed;
 	private Op rollup = new Op();
@@ -95,12 +96,16 @@ public class HistoryImpl extends Obj implements History, Observer {
 
 		end.setName("end");
 		end.setHref(new Uri("end"));
+		
+		tz.setName("tz");
+		tz.setHref(new Uri("tz"));
 
 		observedDatapoint.attach(this);
 
 		add(count);
 		add(start);
 		add(end);
+		add(tz);
 		
 		feed = new HistoryFeed(historyCountMax);
 		feed.setIn(new Contract("obix:HistoryFilter"));
@@ -122,7 +127,7 @@ public class HistoryImpl extends Obj implements History, Observer {
 		add(rollup);
 		
 		append.setName("append");
-		append.setIn(new Contract(HistoryAppendInImpl.HISTORY_APPENDIN_CONTRACT));
+		append.setIn(new Contract(HistoryAppendIn.HISTORY_APPENDIN_CONTRACT));
 		append.setOut(new Contract(HistoryAppendOutImpl.HISTORY_APPENDOUT_CONTRACT));
 		add(append);
 	}
@@ -286,13 +291,14 @@ public class HistoryImpl extends Obj implements History, Observer {
 			newRecords.add(new HistoryRecordImpl(historyRecord));
 			
 			if (historyRecord.timestamp().compareTo(timestamp) != 1) {
-				// records out of order
+				// The HistoryRecords in the data list MUST be sorted by timestamp from oldest to newest,
+				// and MUST not include a timestamp equal to or older than History.end
 				return new Err("Records out of order");
 			}
 			
 			if (historyRecord.timestamp().getMillis() > now) {
 				// history record with future time
-				log.warning("Appending future event!");
+				log.info(getFullContextPath() + ": Appending future event!");
 			}
 			
 			timestamp = historyRecord.timestamp();
@@ -372,6 +378,10 @@ public class HistoryImpl extends Obj implements History, Observer {
 		return end;
 	}
 
+	public Str tz() {
+		return tz;
+	}
+
 	public Op query() {
 		return query;
 	}
@@ -424,6 +434,9 @@ public class HistoryImpl extends Obj implements History, Observer {
 		}
 	}
 	
+	/**
+	 * Update start, end and count after insertion of HistoryRecords
+	 */
 	private void updateKids() {
 		List<Obj> events = feed.getEvents();
 		HistoryRecordImpl firstRecord = (HistoryRecordImpl) events.get(0);
