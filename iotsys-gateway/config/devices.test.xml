@@ -155,6 +155,15 @@
         <historyEnabled>true</historyEnabled>
         <historyCount>10</historyCount>
       </device>
+      
+      <device>
+        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.virtual.TemperatureSensorImplVirtual
+        </type>
+        <href>tempHistory</href>
+        <historyEnabled>true</historyEnabled>
+        <groupCommEnabled>true</groupCommEnabled>
+        <historyCount>100</historyCount>
+      </device>
    </connector>
     
     

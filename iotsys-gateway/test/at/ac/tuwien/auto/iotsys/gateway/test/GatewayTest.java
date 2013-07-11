@@ -569,35 +569,6 @@ public class GatewayTest {
 	
 	
 	@Test
-	public void testHistoryRollup() {
-		given().body("<int val='50' />").put("/brightnessHistory1/value");
-		given().body("<int val='100' />").put("/brightnessHistory1/value");
-		
-		given().
-		param("data", "<obj is='obix:HistoryRollupIn'> " +
-				"  <int name='limit' val='2'/>" +
-				"  <abstime name='start' val='2013-03-31T15:30:00+02:00' tz='Europe/Berlin'/>" +
-				"  <abstime name='end' null='true' />" +
-				"  <reltime name='interval' val='PT15M'/>" +
-				"</obj>").
-		expect().
-		body(hasXPath("/obj[@is='obix:HistoryRollupOut']")).
-		body(hasXPath("/obj/int[@name='count']")).
-		body(hasXPath("/obj/abstime[@name='start']")).
-		body(hasXPath("/obj/abstime[@name='end']")).
-		body(hasXPath("/obj/list[@of='obix:HistoryRollupRecord']")).
-		body(hasXPath("/obj/list/obj/int[@name='count' and @val='2']")).
-		body(hasXPath("/obj/list/obj/abstime[@name='start']")).
-		body(hasXPath("/obj/list/obj/abstime[@name='end']")).
-		body(hasXPath("/obj/list/obj/real[@name='min' and @val='50.0']")).
-		body(hasXPath("/obj/list/obj/real[@name='max' and @val='100.0']")).
-		body(hasXPath("/obj/list/obj/real[@name='avg' and @val='75.0']")).
-		body(hasXPath("/obj/list/obj/real[@name='sum' and @val='150.0']")).
-		post("/brightnessHistory1/value/history/rollup");
-	}
-	
-	
-	@Test
 	public void testHistoryAppend() {
 		String response;
 		
@@ -649,8 +620,7 @@ public class GatewayTest {
 		assertEquals(start, DatatypeConverter.parseDateTime("2013-07-10T10:15:00-05:00").getTimeInMillis());
 		assertEquals(  end, DatatypeConverter.parseDateTime("2013-07-10T10:45:00-05:00").getTimeInMillis());
 	}
-	
-	
+
 	@Test
 	public void testHistoryAppendOutOfOrder() {
 		given().param("data", "<obj is='obix:HistoryAppendIn'>" +
@@ -669,7 +639,7 @@ public class GatewayTest {
 		body(hasXPath("/err")).
 		post("/brightnessHistory2/value/history/append").asString();
 	}
-	
+
 	@Test
 	public void testHistoryAppendBeforeLast() {
 		given().param("data", "<obj is='obix:HistoryAppendIn'>" +
@@ -695,6 +665,129 @@ public class GatewayTest {
 		expect().
 		body(hasXPath("/err")).
 		post("/brightnessHistory3/value/history/append").asString();
+	}
+
+	@Test
+	public void testHistoryRollup() {
+		given().body("<int val='50' />").put("/brightnessHistory1/value");
+		given().body("<int val='100' />").put("/brightnessHistory1/value");
+		
+		given().
+		param("data", "<obj is='obix:HistoryRollupIn'> " +
+				"  <int name='limit' val='2'/>" +
+				"  <abstime name='start' val='2013-03-31T15:30:00+02:00' tz='Europe/Berlin'/>" +
+				"  <abstime name='end' null='true' />" +
+				"  <reltime name='interval' val='PT15M'/>" +
+				"</obj>").
+		expect().
+		body(hasXPath("/obj[@is='obix:HistoryRollupOut']")).
+		body(hasXPath("/obj/int[@name='count']")).
+		body(hasXPath("/obj/abstime[@name='start']")).
+		body(hasXPath("/obj/abstime[@name='end']")).
+		body(hasXPath("/obj/list[@of='obix:HistoryRollupRecord']")).
+		body(hasXPath("/obj/list/obj/abstime[@name='start']")).
+		body(hasXPath("/obj/list/obj/abstime[@name='end']")).
+		body(hasXPath("/obj/list/obj/int[@name='count' and @val='2']")).
+		body(hasXPath("/obj/list/obj/real[@name='min' and @val='50.0']")).
+		body(hasXPath("/obj/list/obj/real[@name='max' and @val='100.0']")).
+		body(hasXPath("/obj/list/obj/real[@name='avg' and @val='75.0']")).
+		body(hasXPath("/obj/list/obj/real[@name='sum' and @val='150.0']")).
+		post("/brightnessHistory1/value/history/rollup");
+	}
+	
+	
+	@Test
+	public void testHistoryRollupBool() {
+		given().
+		param("data", "<obj is='obix:HistoryRollupIn'> " +
+				"  <int name='limit' val='2'/>" +
+				"  <abstime name='start' val='2013-03-31T15:30:00+02:00' tz='Europe/Vienna'/>" +
+				"  <reltime name='interval' val='PT15M'/>" +
+				"</obj>").
+		expect().
+		body(hasXPath("/err")).
+		post("/switch1/value/history/rollup");
+	}
+	
+	@Test
+	public void testHistoryRollupMultipleRecords() {
+		given().param("data", "<obj is='obix:HistoryAppendIn'>" +
+				"	<list name='data' of='obix:HistoryRecord'>" +
+				"		<obj> <abstime name='timestamp' val='2005-03-16T12:00:00Z'/>" + 
+				"		<real name='value' val='80'/></obj>" + 
+				"		<obj> <abstime name='timestamp' val='2005-03-16T12:15:00Z'/>" + 
+				"		<real name='value' val='82'/></obj>" + 
+				"		<obj> <abstime name='timestamp' val='2005-03-16T12:30:00Z'/>" + 
+				"		<real name='value' val='90'/> </obj>" + 
+				"		<obj> <abstime name='timestamp' val='2005-03-16T12:45:00Z'/>" + 
+				"		<real name='value' val='85'/> </obj>" + 
+				"		<obj> <abstime name='timestamp' val='2005-03-16T13:00:00Z'/>" + 
+				"		<real name='value' val='81'/> </obj>" + 
+				"		<obj> <abstime name='timestamp' val='2005-03-16T13:15:00Z'/>" + 
+				"		<real name='value' val='84'/> </obj>" + 
+				"		<obj> <abstime name='timestamp' val='2005-03-16T13:30:00Z'/>" + 
+				"		<real name='value' val='91'/> </obj>" + 
+				"		<obj> <abstime name='timestamp' val='2005-03-16T13:45:00Z'/>" + 
+				"		<real name='value' val='83'/> </obj>" + 
+				"		<obj> <abstime name='timestamp' val='2005-03-16T14:00:00Z'/>" + 
+				"		<real name='value' val='78'/> </obj>" +
+				"	</list>" +
+				"</obj>").
+		expect().
+		body(not(hasXPath("/err"))).
+		post("/tempHistory/value/history/append");
+		
+		String response = 
+			given().
+			param("data", "<obj is='obix:HistoryRollupIn'> " +
+					"  <abstime name='start' val='2005-03-16T12:00:00Z'/>" +
+					"  <abstime name='end' val='2005-03-16T14:00:00Z' />" +
+					"  <reltime name='interval' val='PT1H'/>" +
+					"</obj>").
+			expect().
+			body(hasXPath("/obj[@is='obix:HistoryRollupOut']")).
+			body(hasXPath("/obj/int[@name='count' and @val='2']")).
+			body(hasXPath("/obj/abstime[@name='start']")).
+			body(hasXPath("/obj/abstime[@name='end']")).
+			
+			body(hasXPath("/obj/list[@of='obix:HistoryRollupRecord']")).
+			body(hasXPath("/obj/list/obj[1]/abstime[@name='start']")).
+			body(hasXPath("/obj/list/obj[1]/abstime[@name='end']")).
+			body(hasXPath("/obj/list/obj[1]/int[@name='count' and @val=4]")).
+			body(hasXPath("/obj/list/obj[1]/real[@name='min' and @val=81]")).
+			body(hasXPath("/obj/list/obj[1]/real[@name='max' and @val=90]")).
+			body(hasXPath("/obj/list/obj[1]/real[@name='avg' and @val=84.5]")).
+			body(hasXPath("/obj/list/obj[1]/real[@name='sum' and @val=338]")).
+			
+			body(hasXPath("/obj/list/obj[2]/abstime[@name='start']")).
+			body(hasXPath("/obj/list/obj[2]/abstime[@name='end']")).
+			body(hasXPath("/obj/list/obj[2]/int[@name='count' and @val=4]")).
+			body(hasXPath("/obj/list/obj[2]/real[@name='min' and @val=78]")).
+			body(hasXPath("/obj/list/obj[2]/real[@name='max' and @val=91]")).
+			body(hasXPath("/obj/list/obj[2]/real[@name='avg' and @val=84]")).
+			body(hasXPath("/obj/list/obj[2]/real[@name='sum' and @val=336]")).
+			post("/tempHistory/value/history/rollup").asString();
+		
+		// Check timestamps
+		long timestamp;
+		
+		timestamp = DatatypeConverter.parseDateTime(XmlPath.from(response).getString("obj.abstime[0].@val")).getTimeInMillis();
+		assertEquals(timestamp, DatatypeConverter.parseDateTime("2005-03-16T12:00:00Z").getTimeInMillis());
+		
+		timestamp = DatatypeConverter.parseDateTime(XmlPath.from(response).getString("obj.abstime[1].@val")).getTimeInMillis();
+		assertEquals(timestamp, DatatypeConverter.parseDateTime("2005-03-16T14:00:00Z").getTimeInMillis());
+		
+		timestamp = DatatypeConverter.parseDateTime(XmlPath.from(response).getString("obj.list.obj[0].abstime[0].@val")).getTimeInMillis();
+		assertEquals(timestamp, DatatypeConverter.parseDateTime("2005-03-16T12:00:00Z").getTimeInMillis());
+		
+		timestamp = DatatypeConverter.parseDateTime(XmlPath.from(response).getString("obj.list.obj[0].abstime[1].@val")).getTimeInMillis();
+		assertEquals(timestamp, DatatypeConverter.parseDateTime("2005-03-16T13:00:00Z").getTimeInMillis());
+		
+		timestamp = DatatypeConverter.parseDateTime(XmlPath.from(response).getString("obj.list.obj[1].abstime[0].@val")).getTimeInMillis();
+		assertEquals(timestamp, DatatypeConverter.parseDateTime("2005-03-16T13:00:00Z").getTimeInMillis());
+		
+		timestamp = DatatypeConverter.parseDateTime(XmlPath.from(response).getString("obj.list.obj[1].abstime[1].@val")).getTimeInMillis();
+		assertEquals(timestamp, DatatypeConverter.parseDateTime("2005-03-16T14:00:00Z").getTimeInMillis());
 	}
 	
 }
