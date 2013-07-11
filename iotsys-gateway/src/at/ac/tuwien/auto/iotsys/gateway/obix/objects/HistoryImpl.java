@@ -184,11 +184,17 @@ public class HistoryImpl extends Obj implements History, Observer {
 	}
 
 	private Obj rollup(Obj in) {
+		if (!observedDatapoint.isInt() && !observedDatapoint.isReal()) {
+			Err notSupported = new Err("Rollup only supported on numeric values");
+			notSupported.setIs(new Contract("obix:UnsupportedErr"));
+			return notSupported;
+		}
+		
 		long limit = 0;
 
 		Abstime start = new Abstime();
 		Abstime end = new Abstime();
-		Reltime interval = new Reltime();
+		Reltime interval = new Reltime(60);
 		if (in != null && in instanceof HistoryRollupIn) {
 			HistoryRollupIn rollupIn = (HistoryRollupIn) in;
 			limit = rollupIn.limit().get();
@@ -199,69 +205,56 @@ public class HistoryImpl extends Obj implements History, Observer {
 
 		long ival = interval.get();
 		long curInterval = start.get();
-		long lastInterval = start.get();
-
+		
+		if (ival <= 0) {
+			return new Err("Invalid interval");
+		}
+		
 		ArrayList<HistoryRollupRecordImpl> rollups = new ArrayList<HistoryRollupRecordImpl>();
 
 		ArrayList<HistoryRecordImpl> currentInterval = new ArrayList<HistoryRecordImpl>();
-
-		for (Obj event : feed.getEvents()) {
-			HistoryRecordImpl record = (HistoryRecordImpl) event;
+		
+		List<Obj> records = feed.getEvents();
+		int i = 0;
+		
+		while (i < records.size()) {
+			HistoryRecordImpl record = (HistoryRecordImpl) records.get(i);
 			
-			if (record.timestamp().get() > curInterval + ival) {
-				// increment current interval
-				while (curInterval < record.timestamp().get() - ival) {
-					curInterval += ival;
-
-					if (curInterval > lastInterval
-							&& currentInterval.size() > 0) {
-						
-						// close last interval if it has some elements
-						HistoryRollupRecordImpl rollupRecord = createRecord(currentInterval, curInterval - ival, curInterval, start.getTimeZone());
-						rollups.add(rollupRecord);
-						currentInterval = new ArrayList<HistoryRecordImpl>();
-						lastInterval = curInterval;
-					}
-
-				}
+			// record before start time
+			if (record.timestamp().get() <= curInterval) {
+				i++;
+				continue;
 			}
-
-			if (rollups.size() == count().get()) {
-				break; // record limit reached
-			}
-
-			boolean addRecord = true;
-
-			if (start.get() != end.get()) {
-				if (start != null && start.get() != 0
-						&& record.timestamp().get() < start.get()) {
-					addRecord = false;
-				}
-
-				if (end != null && end.get() != 0
-						&& record.timestamp().get() > end.get()) {
-					addRecord = false;
-				}
-			}
-
-			if (curInterval > record.timestamp().get()
-					&& record.timestamp().get() >= curInterval + ival) {
-				addRecord = false;
-			}
-
-			if (addRecord) {
+			
+			if (record.timestamp().get() <= curInterval + ival) {
+				// record inside interval
 				currentInterval.add(record);
+				i++;
+			} else {
+				// record belonging to next interval
+				
+				// close current interval
+				if (!currentInterval.isEmpty()) {
+					HistoryRollupRecordImpl rollupRecord = createRecord(currentInterval, curInterval, curInterval + ival, start.getTimeZone());
+					rollups.add(rollupRecord);
+					currentInterval.clear();
+					
+					// rollup record limit reached
+					if (limit != 0 && rollups.size() >= limit) break;
+				}
+				
+				// advance interval
+				curInterval += ival;
 			}
 		}
 		
-		// last interval
-		if(currentInterval.size() > 0 ){
+		// close last interval
+		if(currentInterval.size() > 0) {
 			HistoryRollupRecordImpl rollupRecord = createRecord(currentInterval, curInterval , curInterval + ival, start.getTimeZone());
 			rollups.add(rollupRecord);
 		}
 		
-		HistoryRollupOutImpl historyRollupOutImpl = new HistoryRollupOutImpl(
-				rollups);
+		HistoryRollupOutImpl historyRollupOutImpl = new HistoryRollupOutImpl(rollups);
 		historyRollupOutImpl.count().set(rollups.size());
 		historyRollupOutImpl.start().set(start.get(), start.getTimeZone());
 		historyRollupOutImpl.end().set(end.get(), end.getTimeZone());
