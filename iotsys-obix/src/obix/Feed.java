@@ -114,7 +114,9 @@ public class Feed
    */
   public List<Obj> getEvents()
   {
-	  return events;
+	synchronized (events) {
+      return new ArrayList<Obj>(events);
+	}
   }
   
   /**
@@ -123,11 +125,13 @@ public class Feed
    */
   public void addEvent(Obj event)
   {
-	  events.add(event);
-	  while (maxEvents > 0 && events.size() > maxEvents)
-		  events.removeFirst();
-	  
-	  notifyObservers();
+	synchronized (events) {
+		events.add(event);
+		while (maxEvents > 0 && events.size() > maxEvents)
+			events.removeFirst();
+		
+		notifyObservers();
+	}
   }
   
   /**
