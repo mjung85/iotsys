@@ -21,6 +21,9 @@ public interface History
 
   public static final String endContract = "<abstime name='end' val='1969-12-31T19:00:00.000-05:00' null='true'/>";
   public Abstime end();
+  
+  public static final String tzContract = "<str name='tz' null='true'/>";
+  public Str tz();
 
   public static final String queryContract = "<op name='query' in='obix:HistoryFilter' out='obix:HistoryQueryOut'/>";
   public Op query();
