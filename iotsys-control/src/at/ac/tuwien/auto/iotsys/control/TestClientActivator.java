@@ -39,12 +39,14 @@ public class TestClientActivator implements BundleActivator, ServiceListener {
 
 		Bundle[] bundles = context.getBundles();
 		for (Bundle bundle : bundles) {
-			if(bundle.getSymbolicName().equals("at.ac.tuwien.auto.iotsys.virtual") && bundle.getState() == Bundle.ACTIVE){
-				virtualActive = true;
-			} else if(bundle.getSymbolicName().equals("at.ac.tuwien.auto.iotsys.knx") && bundle.getState() == Bundle.ACTIVE){
-				knxActive = true;
-			} else if(bundle.getSymbolicName().equals("at.ac.tuwien.auto.iotsys.gateway") && bundle.getState() == Bundle.ACTIVE){
-				gatewayActive = true;
+			if(bundle.getSymbolicName() != null){
+				if(bundle.getSymbolicName().equals("at.ac.tuwien.auto.iotsys.virtual") && bundle.getState() == Bundle.ACTIVE){
+					virtualActive = true;
+				} else if(bundle.getSymbolicName().equals("at.ac.tuwien.auto.iotsys.knx") && bundle.getState() == Bundle.ACTIVE){
+					knxActive = true;
+				} else if(bundle.getSymbolicName().equals("at.ac.tuwien.auto.iotsys.gateway") && bundle.getState() == Bundle.ACTIVE){
+					gatewayActive = true;
+				}
 			}
 		}
 
@@ -85,12 +87,14 @@ public class TestClientActivator implements BundleActivator, ServiceListener {
 
 		Bundle[] bundles = context.getBundles();
 		for (Bundle bundle : bundles) {
-			if(bundle.getSymbolicName().equals("at.ac.tuwien.auto.iotsys.virtual") && bundle.getState() == Bundle.ACTIVE){
-				virtualActive = true;
-			} else if(bundle.getSymbolicName().equals("at.ac.tuwien.auto.iotsys.knx") && bundle.getState() == Bundle.ACTIVE){
-				knxActive = true;
-			} else if(bundle.getSymbolicName().equals("at.ac.tuwien.auto.iotsys.gateway") && bundle.getState() == Bundle.ACTIVE){
-				gatewayActive = true;
+			if(bundle.getSymbolicName() != null){
+				if(bundle.getSymbolicName().equals("at.ac.tuwien.auto.iotsys.virtual") && bundle.getState() == Bundle.ACTIVE){
+					virtualActive = true;
+				} else if(bundle.getSymbolicName().equals("at.ac.tuwien.auto.iotsys.knx") && bundle.getState() == Bundle.ACTIVE){
+					knxActive = true;
+				} else if(bundle.getSymbolicName().equals("at.ac.tuwien.auto.iotsys.gateway") && bundle.getState() == Bundle.ACTIVE){
+					gatewayActive = true;
+				}
 			}
 		}
 
