@@ -39,17 +39,15 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.apache.commons.configuration.HierarchicalConfiguration;
-import org.apache.commons.configuration.XMLConfiguration;
-
 import obix.Obj;
 import obix.Uri;
+
+import org.apache.commons.configuration.HierarchicalConfiguration;
+import org.apache.commons.configuration.XMLConfiguration;
 
 import at.ac.tuwien.auto.iotsys.commons.Connector;
 import at.ac.tuwien.auto.iotsys.commons.DeviceLoader;
 import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
-import at.ac.tuwien.auto.iotsys.gateway.connectors.virtual.simulation.HVACSimulationImpl;
-import at.ac.tuwien.auto.iotsys.mdnssd.Resolver;
 
 public class VirtualDeviceLoaderImpl implements DeviceLoader {
 	private final ArrayList<String> myObjects = new ArrayList<String>();
@@ -175,8 +173,6 @@ public class VirtualDeviceLoaderImpl implements DeviceLoader {
 									+ ").ipv6");
 							String href = subConfig.getString("device(" + i
 									+ ").href");
-
-							Resolver.getInstance().addToRecordDict(href, ipv6);
 							
 							String name = subConfig.getString("device(" + i
 									+ ").name");
