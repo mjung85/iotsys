@@ -8,9 +8,9 @@ import org.osgi.framework.BundleContext;
 import at.ac.tuwien.auto.iotsys.commons.MDnsResolver;
 
 
-public class MdnssdActivator  implements BundleActivator {
+public class MDnssdActivator  implements BundleActivator {
 
-	private static final Logger log = Logger.getLogger(MdnssdActivator.class
+	private static final Logger log = Logger.getLogger(MDnssdActivator.class
 			.getName());
 	
 	private Named named;
@@ -28,6 +28,7 @@ public class MdnssdActivator  implements BundleActivator {
 
 	@Override
 	public void stop(BundleContext arg0) throws Exception {
+		log.info("Stopping Mdnssd module");
 		named.stopNamedService();
 		
 	}

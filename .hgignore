@@ -1,11 +1,13 @@
 syntax: glob
 bin
 build
+META-INF
 .settings
 .metadata
 .classpath
 .project
 felix-framework*
+felix-cache*
 org.apache.felix.main.distribution-4.2.1.zip
 obelix/.sass-cache
 obelix/build
@@ -14,3 +16,4 @@ obelix/build
 *.txt
 *.orig
 *.bin
+**/build.properties
