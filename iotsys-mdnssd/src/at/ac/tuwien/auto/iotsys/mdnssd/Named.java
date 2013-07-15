@@ -51,18 +51,20 @@ import javax.jmdns.impl.constants.DNSConstants;
 import javax.jmdns.impl.constants.DNSRecordClass;
 import javax.jmdns.impl.constants.DNSRecordType;
 
+import at.ac.tuwien.auto.iotsys.commons.PropertiesLoader;
+
 /**
  * @author Nam Giang - zang at kaist dot ac dot kr
  * 
  */
 public class Named {
 
-	public static final String AUTHORITATIVE_DOMAIN = "iotsys.auto.tuwien.ac.at.";
-	public static final String AUTHORITATIVE_NAME_SERVER = "ns.iotsys.auto.tuwien.ac.at.";
-	public static final String AUTHORITATIVE_NAME_SERVER_ADDR = "143.248.56.162";
-	public static final String AUTHORITATIVE_NAME_SERVER_ADDR6 = "2002:8ff8:38a2::8ff8:38a2";
-	public static final String AUTHORITATIVE_NAME_REVERSE = "143.in-addr.arpa.";
-	public static final String AUTHORITATIVE_NAME_ADDR_REVERSE = "162.248.56.143.in-addr.arpa.";
+	public static final String AUTHORITATIVE_DOMAIN = PropertiesLoader.getInstance().getProperties().getProperty("authDomain", "iotsys.auto.tuwien.ac.at.");
+	public static final String AUTHORITATIVE_NAME_SERVER =  PropertiesLoader.getInstance().getProperties().getProperty("authNs", "ns.iotsys.auto.tuwien.ac.at.");
+	public static final String AUTHORITATIVE_NAME_SERVER_ADDR =  PropertiesLoader.getInstance().getProperties().getProperty("authNsAddr", "143.248.56.162");
+	public static final String AUTHORITATIVE_NAME_SERVER_ADDR6 =  PropertiesLoader.getInstance().getProperties().getProperty("authNsAddr6", "2002:8ff8:38a2::8ff8:38a2");
+	public static final String AUTHORITATIVE_NAME_REVERSE =  PropertiesLoader.getInstance().getProperties().getProperty("authNr", "143.in-addr.arpa.");
+	public static final String AUTHORITATIVE_NAME_ADDR_REVERSE =  PropertiesLoader.getInstance().getProperties().getProperty("authNar", "162.248.56.143.in-addr.arpa.");
 	static final int AUTHORITATIVE_STACK = 46;
 
 	UDPListener ul;
@@ -87,7 +89,6 @@ public class Named {
 
 	private class UDPListener extends Thread {
 		
-		Named sn;
 		DatagramSocket sock;// = new DatagramSocket(port, addr);
 		public static final int IPv4 = 1;
 		public static final int IPv6 = 2;
@@ -96,8 +97,7 @@ public class Named {
 
 		public UDPListener(Named sn) {
 			try {
-				this.sn = sn;
-				sock = new DatagramSocket(53, getByAddress("0.0.0.0"));
+				sock = new DatagramSocket(53, getByAddress("0.0.0.0")); //$NON-NLS-1$
 			} catch (SocketException ex) {
 				Logger.getLogger(Named.class.getName()).log(Level.SEVERE, null, ex);
 			}
@@ -149,7 +149,7 @@ public class Named {
 					authRcrdList.add(createAuthRecord(true));
 					break;
 				} else {
-					if (!((requestedName.endsWith("." + AUTHORITATIVE_DOMAIN)) || (requestedName.equals(AUTHORITATIVE_DOMAIN)))) {
+					if (!((requestedName.endsWith("." + AUTHORITATIVE_DOMAIN)) || (requestedName.equals(AUTHORITATIVE_DOMAIN)))) { //$NON-NLS-1$
 						out = new DNSOutgoing(DNSConstants.FLAGS_QR_RESPONSE
 								| DNSConstants.FLAGS_RF, false, msg.getSenderUDPPayload());
 						break;
@@ -253,7 +253,7 @@ public class Named {
 				if (bytes != null) {
 					return InetAddress.getByAddress(addr, bytes);
 				}
-				throw new UnknownHostException("Invalid address: " + addr);
+				throw new UnknownHostException("Invalid address: " + addr); //$NON-NLS-1$
 
 			} catch (UnknownHostException ex) {
 				Logger.getLogger(Named.class.getName()).log(Level.SEVERE, null, ex);
@@ -267,7 +267,7 @@ public class Named {
 			} else if (family == IPv6) {
 				return parseV6(s);
 			} else {
-				throw new IllegalArgumentException("unknown address family");
+				throw new IllegalArgumentException("unknown address family"); //$NON-NLS-1$
 			}
 		}
 
@@ -345,7 +345,7 @@ public class Named {
 			int range = -1;
 			byte[] data = new byte[16];
 
-			String[] tokens = s.split(":", -1);
+			String[] tokens = s.split(":", -1); //$NON-NLS-1$
 
 			int first = 0;
 			int last = tokens.length - 1;
