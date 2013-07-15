@@ -66,19 +66,18 @@ public class Named {
 	static final int AUTHORITATIVE_STACK = 46;
 
 	UDPListener ul;
-	boolean stop = true;
+	
 
 	public Named() {
 		ul = new UDPListener(this);
 	}
 
 	public void startNamedService() {
-		stop = false;
 		ul.start();
 	}
 
 	public void stopNamedService() {
-		stop = true;
+		ul.stopThread();
 		try {
 			ul.join();
 		} catch (InterruptedException ex) {
@@ -87,11 +86,12 @@ public class Named {
 	}
 
 	private class UDPListener extends Thread {
-
+		
 		Named sn;
 		DatagramSocket sock;// = new DatagramSocket(port, addr);
 		public static final int IPv4 = 1;
 		public static final int IPv6 = 2;
+		boolean stop = true;
 		Logger logger = Logger.getLogger(UDPListener.class.getName());
 
 		public UDPListener(Named sn) {
@@ -102,9 +102,16 @@ public class Named {
 				Logger.getLogger(Named.class.getName()).log(Level.SEVERE, null, ex);
 			}
 		}
+		
+		public void stopThread(){
+			stop = true;
+			sock.close();
+			sock = null;
+		}
 
 		@Override
 		public void run() {
+			stop = false;
 			byte buf[] = new byte[DNSConstants.MAX_MSG_ABSOLUTE];
 			DatagramPacket packet = new DatagramPacket(buf, buf.length);
 			while (!stop) {
