@@ -32,13 +32,17 @@
 package at.ac.tuwien.auto.iotsys.mdnssd;
 
 import java.io.IOException;
-import java.net.*;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.SocketException;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.jmdns.impl.DNSIncoming;
 import javax.jmdns.impl.DNSOutgoing;
 import javax.jmdns.impl.DNSQuestion;
@@ -200,7 +204,7 @@ public class Named {
 			DNSRecord result = null;
 
 			// look up
-			String resolved = Resolver.getInstance().resolve(requestedName); // virtualLight.iotsys.auto.tuwien.ac.at.
+			String resolved = MDnsResolverImpl.getInstance().resolve(requestedName); // virtualLight.iotsys.auto.tuwien.ac.at.
 			if (resolved != null){
 				if (!ipv6) {
 					//result = new DNSRecord.IPv4Address(requestedName, DNSRecordClass.CLASS_IN, DNSRecordClass.UNIQUE, DNSConstants.DNS_TTL, getByAddress(resolved));
