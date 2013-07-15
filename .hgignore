@@ -13,3 +13,4 @@ obelix/build
 *.1
 *.txt
 *.orig
+*.bin
