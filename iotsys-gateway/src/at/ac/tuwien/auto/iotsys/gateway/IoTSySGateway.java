@@ -38,12 +38,15 @@ import java.io.InputStreamReader;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-
 import java.util.logging.Logger;
 
-import at.ac.tuwien.auto.iotsys.gateway.util.CsvCreator;
-import at.ac.tuwien.auto.iotsys.gateway.util.ExiUtil;
-
+import at.ac.tuwien.auto.iotsys.commons.Connector;
+import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
+import at.ac.tuwien.auto.iotsys.commons.PropertiesLoader;
+import at.ac.tuwien.auto.iotsys.commons.MDnsResolver;
+import at.ac.tuwien.auto.iotsys.commons.interceptor.ClassAlreadyRegisteredException;
+import at.ac.tuwien.auto.iotsys.commons.interceptor.Interceptor;
+import at.ac.tuwien.auto.iotsys.commons.interceptor.InterceptorBroker;
 import at.ac.tuwien.auto.iotsys.gateway.interceptor.InterceptorBrokerImpl;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objectbroker.ObjectBrokerImpl;
 import at.ac.tuwien.auto.iotsys.gateway.obix.server.CoAPServer;
@@ -51,19 +54,11 @@ import at.ac.tuwien.auto.iotsys.gateway.obix.server.NanoHTTPD;
 import at.ac.tuwien.auto.iotsys.gateway.obix.server.ObixObservingManager;
 import at.ac.tuwien.auto.iotsys.gateway.obix.server.ObixServer;
 import at.ac.tuwien.auto.iotsys.gateway.obix.server.ObixServerImpl;
-import at.ac.tuwien.auto.iotsys.xacml.pdp.PDPInterceptorSettings;
-
-// import at.ac.tuwien.auto.iotsys.xacml.pdp.PDPInterceptor;
-
-import at.ac.tuwien.auto.iotsys.commons.Connector;
-import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
-import at.ac.tuwien.auto.iotsys.commons.PropertiesLoader;
-import at.ac.tuwien.auto.iotsys.commons.interceptor.ClassAlreadyRegisteredException;
-import at.ac.tuwien.auto.iotsys.commons.interceptor.Interceptor;
-import at.ac.tuwien.auto.iotsys.commons.interceptor.InterceptorBroker;
-
+import at.ac.tuwien.auto.iotsys.gateway.util.ExiUtil;
 import at.ac.tuwien.auto.iotsys.mdnssd.Named;
-import at.ac.tuwien.auto.iotsys.mdnssd.Resolver;
+import at.ac.tuwien.auto.iotsys.mdnssd.MDnsResolverImpl;
+import at.ac.tuwien.auto.iotsys.xacml.pdp.PDPInterceptorSettings;
+// import at.ac.tuwien.auto.iotsys.xacml.pdp.PDPInterceptor;
 /**
  * Standalone class to launch the gateway.
  * 
@@ -72,7 +67,6 @@ public class IoTSySGateway {
 	private ObjectBroker objectBroker;
 	private DeviceLoaderImpl deviceLoader;
 	private InterceptorBroker interceptorBroker;
-	private Named named;
 
 	private boolean osgiEnvironment = false;
 	
@@ -82,6 +76,8 @@ public class IoTSySGateway {
 			.getName());
 
 	private ObixServer obixServer = null;
+	
+	private MDnsResolver mdnsResolver;
 
 	public IoTSySGateway() {
 
@@ -105,14 +101,14 @@ public class IoTSySGateway {
 		// initialize object broker
 		objectBroker = ObjectBrokerImpl.getInstance();
 		obixServer = new ObixServerImpl(objectBroker);
+		
+		objectBroker.setMdnsResolver(mdnsResolver);
 
 		// add initial objects to the database
 		deviceLoader = new DeviceLoaderImpl();
 		connectors = deviceLoader.initDevices(objectBroker);
 
-		log.info("No of records built: " + Resolver.getInstance().getNumberOfRecord());
-		named = new Named();
-		named.startNamedService();
+		log.info("No of records built: " + objectBroker.getMDnsResolver().getNumberOfRecord());
 		
 		interceptorBroker = InterceptorBrokerImpl.getInstance();
 		// initialize interceptor broker
@@ -214,14 +210,14 @@ public class IoTSySGateway {
 
 	public void stopGateway() {
 		objectBroker.shutdown();
-		named.stopNamedService();
 //		CsvCreator.instance.close();
 		closeConnectors();
 	}
 
 	public static void main(String[] args) {
 		final IoTSySGateway iotsys = new IoTSySGateway();
-
+		(new Named()).startNamedService();
+		iotsys.setMdnsResolver(MDnsResolverImpl.getInstance());
 		iotsys.startGateway();
 
 		// TestClient testClient = new TestClient(iotsys.objectBroker);
@@ -258,5 +254,17 @@ public class IoTSySGateway {
 
 	public void setOsgiEnvironment(boolean osgiEnvironment) {
 		this.osgiEnvironment = osgiEnvironment;
+	}
+	
+	public ObjectBroker getObjectBroker() {
+		return objectBroker;
+	}	
+
+	public MDnsResolver getMdnsResolver() {
+		return mdnsResolver;
+	}
+
+	public void setMdnsResolver(MDnsResolver mdnsResolver) {
+		this.mdnsResolver = mdnsResolver;
 	}
 }

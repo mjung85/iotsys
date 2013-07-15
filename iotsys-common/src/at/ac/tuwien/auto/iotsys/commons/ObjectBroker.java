@@ -2,6 +2,7 @@ package at.ac.tuwien.auto.iotsys.commons;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+
 import obix.Obj;
 import obix.Uri;
 
@@ -49,4 +50,8 @@ public interface ObjectBroker{
 	public Obj pullObByName(String name);
 
 	public ArrayList<String> getObjNames();
+
+	public MDnsResolver getMDnsResolver();
+
+	public void setMdnsResolver(MDnsResolver resolver);
 }
