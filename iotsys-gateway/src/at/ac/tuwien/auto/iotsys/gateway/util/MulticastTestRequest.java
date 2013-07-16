@@ -8,7 +8,6 @@ import obix.Bool;
 import obix.Int;
 import obix.Real;
 import obix.io.ObixEncoder;
-import ch.ethz.inf.vs.californium.coap.MediaTypeRegistry;
 import ch.ethz.inf.vs.californium.coap.PUTRequest;
 import ch.ethz.inf.vs.californium.coap.Message.messageType;
 
@@ -35,7 +34,7 @@ public class MulticastTestRequest {
 			try {
 				byte[] payload =  EXIEncoder.getInstance().toBytes(b, true);
 				// work around application octet stream
-				putRequest.setContentType(MediaTypeRegistry.APPLICATION_OCTET_STREAM);
+				putRequest.setContentType(ch.ethz.inf.vs.californium.coap.registries.MediaTypeRegistry.APPLICATION_OCTET_STREAM);
 				putRequest.setPayload(payload);
 			} catch (Exception e){
 				// fall back to XML encoding
@@ -52,7 +51,7 @@ public class MulticastTestRequest {
 			try {
 				byte[] payload =  EXIEncoder.getInstance().toBytes(r, true);
 				// work around application octet stream
-				putRequest.setContentType(MediaTypeRegistry.APPLICATION_OCTET_STREAM);
+				putRequest.setContentType(ch.ethz.inf.vs.californium.coap.registries.MediaTypeRegistry.APPLICATION_OCTET_STREAM);
 				putRequest.setPayload(payload);
 			} catch (Exception e){
 				// fall back to XML encoding
@@ -67,7 +66,7 @@ public class MulticastTestRequest {
 			try {
 				byte[] payload =  EXIEncoder.getInstance().toBytes(i, true);
 				// work around application octet stream
-				putRequest.setContentType(MediaTypeRegistry.APPLICATION_OCTET_STREAM);
+				putRequest.setContentType(ch.ethz.inf.vs.californium.coap.registries.MediaTypeRegistry.APPLICATION_OCTET_STREAM);
 				putRequest.setPayload(payload);
 			} catch (Exception e){
 				// fall back to XML encoding
