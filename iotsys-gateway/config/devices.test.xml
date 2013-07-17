@@ -115,6 +115,14 @@
         <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.FanSpeedActuatorImpl
         </type>
         <address>null, 1/2/3</address>
+        <href>fanSpeedWatchExtent</href>
+        <historyEnabled>true</historyEnabled>
+      </device>
+      
+      <device>
+        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.FanSpeedActuatorImpl
+        </type>
+        <address>null, 1/2/3</address>
         <href>fanSpeedWatchFilter</href>
         <historyEnabled>true</historyEnabled>
         <historyCount>50</historyCount>
