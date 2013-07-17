@@ -510,6 +510,31 @@ public class GatewayTest {
 		post(pollChangesUri);
 	}
 	
+	@Test
+	public void testWatchExtent() throws InterruptedException {
+		String watchHref = makeWatch();
+		String addUri = watchHref + "/add";
+		String pollChangesUri = watchHref + "/pollChanges";
+		
+		given().
+		param("data", "<obj is='obix:WatchIn'>"+
+			 "	<list name='hrefs'>" +
+			 "		<uri val='/fanSpeedWatchExtent'/>" + 
+			 "	</list>" +
+			 "</obj>").
+		expect().
+		body(hasXPath("/obj[@is='obix:WatchOut']")).
+		body(hasXPath("/obj/list/obj[@href='/fanSpeedWatchExtent']")).
+		post(addUri);
+		
+		given().body("<int val='42' />").put("/fanSpeedWatchExtent/fanSpeedSetpoint");
+		
+		expect().
+		body(hasXPath("/obj/list/obj[@href='/fanSpeedWatchExtent']")).
+		body(hasXPath("/obj/list/obj/int[@val=42]")).
+		post(pollChangesUri);
+	}
+	
 	
 	////////////////////////////////////////////////////////////////
 	// History
