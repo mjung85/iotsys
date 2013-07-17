@@ -26,7 +26,7 @@ eclipse{
 }
 
 repositories {	
-	flatDir { dirs "lib/exi", "lib/jnetpcap" }
+	flatDir { dirs "lib/exi", "lib/californium" }
 }
 
 configurations {
