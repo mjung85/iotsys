@@ -554,8 +554,7 @@ public class GatewayTest {
 		body(hasXPath("/obj/op[@name='append' and @in='obix:HistoryAppendIn' and @out='obix:HistoryAppendOut']")).
 		when().get("/switchHistory1/value/history");
 	}
-	
-	
+		
 	@Test
 	public void testHistoryQuery() {
 		given().
@@ -662,7 +661,7 @@ public class GatewayTest {
 			"</obj>").
 		expect().
 		body(hasXPath("/err")).
-		post("/brightnessHistory2/value/history/append").asString();
+		post("/brightnessHistoryAppendOutOfOrder/value/history/append");
 	}
 
 	@Test
@@ -677,7 +676,7 @@ public class GatewayTest {
 			"</obj>").
 		expect().
 		body(not(hasXPath("/err"))).
-		post("/brightnessHistory3/value/history/append").asString();
+		post("/brightnessHistory3/value/history/append");
 		
 		given().param("data", "<obj is='obix:HistoryAppendIn'>" +
 			"	<list name='data' of='obix:HistoryRecord'>" +
@@ -689,7 +688,107 @@ public class GatewayTest {
 			"</obj>").
 		expect().
 		body(hasXPath("/err")).
-		post("/brightnessHistory3/value/history/append").asString();
+		post("/brightnessHistory3/value/history/append");
+	}
+	
+	@Test
+	public void testHistoryAppendNothing() {
+		given().param("data", "<obj is='obix:HistoryAppendIn'>" +
+			"	<list name='data' of='obix:HistoryRecord' />" +
+			"</obj>").
+		expect().
+		body(hasXPath("/obj[@is='obix:HistoryAppendOut']")).
+		body(hasXPath("/obj/int[@name='numAdded' and @val='0']")).
+		body(hasXPath("/obj/int[@name='newCount' and @val='0']")).
+		body(hasXPath("/obj/abstime[@name='newStart' and @null='true']")).
+		body(hasXPath("/obj/abstime[@name='newEnd' and @null='true']")).
+		post("/brightnessHistoryAppendNothing/value/history/append");
+		
+		
+		given().param("data", "<obj is='obix:HistoryAppendIn'>" +
+			"	<list name='data' of='obix:HistoryRecord'>" +
+			"		<obj>" +
+			"			<abstime name='timestamp' val='2013-07-05T10:15:00+01:00'/>" +
+			"			<int name='value' val='1'/>" +
+			"		</obj>" +
+			"	</list>" +
+			"</obj>").
+		expect().
+		body(not(hasXPath("/err"))).
+		post("/brightnessHistoryAppendNothing/value/history/append");
+		
+		given().param("data", "<obj is='obix:HistoryAppendIn'>" +
+			"	<list name='data' of='obix:HistoryRecord' />" +
+			"</obj>").
+		expect().
+		body(hasXPath("/obj[@is='obix:HistoryAppendOut']")).
+		body(hasXPath("/obj/int[@name='numAdded' and @val='0']")).
+		body(hasXPath("/obj/int[@name='newCount' and @val='1']")).
+		body(hasXPath("/obj/abstime[@name='newStart' and not(@null)]")).
+		body(hasXPath("/obj/abstime[@name='newEnd' and not(@null)]")).
+		post("/brightnessHistoryAppendNothing/value/history/append");
+	}
+	
+	@Test
+	public void testHistoryStartEnd() {
+		expect().
+		body(hasXPath("/obj[@is='obix:History']")).
+		body(hasXPath("/obj/int[@name='count' and @val=0]")).
+		body(hasXPath("/obj/abstime[@name='start' and @null='true']")).
+		body(hasXPath("/obj/abstime[@name='end' and @null='true']")).
+		when().get("/brightnessHistoryStartEnd/value/history");
+		
+		
+		given().param("data", "<obj is='obix:HistoryAppendIn'>" +
+			"	<list name='data' of='obix:HistoryRecord'>" +
+			"		<obj>" +
+			"			<abstime name='timestamp' val='2013-07-10T10:15:00+01:00'/>" +
+			"			<int name='value' val='2'/>" +
+			"		</obj>" +
+			"	</list>" +
+			"</obj>").
+		expect().
+		body(not(hasXPath("/err"))).
+		post("/brightnessHistoryStartEnd/value/history/append");
+		
+		
+		String response = expect().
+			body(hasXPath("/obj[@is='obix:History']")).
+			body(hasXPath("/obj/int[@name='count' and @val=1]")).
+			body(not(hasXPath("/obj/abstime[@name='start'][@null]"))).
+			body(not(hasXPath("/obj/abstime[@name='end'][@null]"))).
+			when().get("/brightnessHistoryStartEnd/value/history").asString();
+		
+		long start = DatatypeConverter.parseDateTime(XmlPath.from(response).getString("obj.abstime[0].@val")).getTimeInMillis();
+		long end   = DatatypeConverter.parseDateTime(XmlPath.from(response).getString("obj.abstime[1].@val")).getTimeInMillis();
+		
+		assertEquals(start, DatatypeConverter.parseDateTime("2013-07-10T10:15:00+01:00").getTimeInMillis());
+		assertEquals(  end, DatatypeConverter.parseDateTime("2013-07-10T10:15:00+01:00").getTimeInMillis());
+		
+		given().param("data", "<obj is='obix:HistoryAppendIn'>" +
+			"	<list name='data' of='obix:HistoryRecord'>" +
+			"		<obj>" +
+			"			<abstime name='timestamp' val='2013-07-10T10:45:00+01:00'/>" +
+			"			<int name='value' val='5'/>" +
+			"		</obj>" +
+			"	</list>" +
+			"</obj>").
+		expect().
+		body(not(hasXPath("/err"))).
+		post("/brightnessHistoryStartEnd/value/history/append");
+		
+		response = expect().
+			body(hasXPath("/obj[@is='obix:History']")).
+			body(hasXPath("/obj/int[@name='count' and @val=2]")).
+			body(not(hasXPath("/obj/abstime[@name='start' and @null]"))).
+			body(not(hasXPath("/obj/abstime[@name='end' and @null]"))).
+			when().get("/brightnessHistoryStartEnd/value/history").asString();
+		
+		start = DatatypeConverter.parseDateTime(XmlPath.from(response).getString("obj.abstime[0].@val")).getTimeInMillis();
+		end   = DatatypeConverter.parseDateTime(XmlPath.from(response).getString("obj.abstime[1].@val")).getTimeInMillis();
+		
+		assertEquals(start, DatatypeConverter.parseDateTime("2013-07-10T10:15:00+01:00").getTimeInMillis());
+		assertEquals(  end, DatatypeConverter.parseDateTime("2013-07-10T10:45:00+01:00").getTimeInMillis());
 	}
 
 	@Test
@@ -723,6 +822,7 @@ public class GatewayTest {
 	
 	@Test
 	public void testHistoryRollupBool() {
+		// Attempting to query a rollup on a non-numeric history such as a history of BoolPoints SHOULD result in an error.
 		given().
 		param("data", "<obj is='obix:HistoryRollupIn'> " +
 				"  <int name='limit' val='2'/>" +
