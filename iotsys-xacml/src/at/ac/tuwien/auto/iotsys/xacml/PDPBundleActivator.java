@@ -62,8 +62,8 @@ public class PDPBundleActivator implements BundleActivator, ServiceListener {
 			interceptor = new PDPInterceptor("res/");
 
 			
-			ServiceReference<InterceptorBroker> interceptorRef = context
-					.getServiceReference(InterceptorBroker.class);
+			ServiceReference interceptorRef = context
+					.getServiceReference(InterceptorBroker.class.getName());
 
 			if (interceptorRef == null) {
 				log.severe("Could not find InterceptorBroker");
@@ -85,8 +85,8 @@ public class PDPBundleActivator implements BundleActivator, ServiceListener {
 	@Override
 	public void stop(BundleContext context) throws Exception {
 		if (enableXacml) {
-			ServiceReference<InterceptorBroker> interceptorRef = context
-					.getServiceReference(InterceptorBroker.class);
+			ServiceReference interceptorRef = context
+					.getServiceReference(InterceptorBroker.class.getName());
 
 			if (interceptorRef == null) {
 				log.severe("Could not find a running InterceptorBroker to unregister devices!");
