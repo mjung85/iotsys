@@ -926,8 +926,32 @@ public class GatewayTest {
 		
 		String timezone = XmlPath.from(history).getString("obj.str.@val");
 		
-		// query and rollup have to use same timezone
-		given().body("<int val='123' />").put("/HistoryTimezones/value");
+		// append, query and rollup have to use same timezone
+		String response = 
+			given().param("data", "<obj is='obix:HistoryAppendIn'>" +
+				"	<list name='data' of='obix:HistoryRecord'>" +
+				"		<obj>" +
+				"			<abstime name='timestamp' val='2013-07-10T10:15:00-05:00' tz='America/Detroit'/>" +
+				"			<int name='value' val='2'/>" +
+				"		</obj>" +
+				"		<obj>" +
+				"			<abstime name='timestamp' val='2013-07-10T11:30:00-04:00' tz='America/Barbados'/>" +
+				"			<int val='3'/>" +
+				"		</obj>" +
+				"	</list>" +
+				"</obj>").
+			expect().
+			body(hasXPath("/obj[@is='obix:HistoryAppendOut']")).
+			body(hasXPath("/obj/abstime[@name='newStart' and @tz='" + timezone + "']")).
+			body(hasXPath("/obj/abstime[@name='newEnd' and @tz='" + timezone + "']")).
+			post("/HistoryTimezones/value/history/append").asString();
+	
+		long start = DatatypeConverter.parseDateTime(XmlPath.from(response).getString("obj.abstime[0].@val")).getTimeInMillis();
+		long   end = DatatypeConverter.parseDateTime(XmlPath.from(response).getString("obj.abstime[1].@val")).getTimeInMillis();
+		
+		assertEquals(start, DatatypeConverter.parseDateTime("2013-07-10T10:15:00-05:00").getTimeInMillis());
+		assertEquals(  end, DatatypeConverter.parseDateTime("2013-07-10T11:30:00-04:00").getTimeInMillis());
+		
 		
 		given().
 		param("data", "<obj is='obix:HistoryFilter'>" + 
