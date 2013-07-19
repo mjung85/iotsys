@@ -46,21 +46,16 @@ import obix.contracts.HistoryQueryOut;
 public class HistoryQueryOutImpl extends Obj implements HistoryQueryOut {
 
 	private List resultList;
-	private Int count = new Int();
-	private Abstime start = new Abstime();
-	private Abstime end = new Abstime();
+	private Int count = new Int("count");
+	private Abstime start = new Abstime("start");
+	private Abstime end = new Abstime("end");
 	
 	public static final String HISTORY_QUERY_OUT_CONTRACT = "obix:HistoryQueryOut";
 	
 	public HistoryQueryOutImpl(ArrayList<HistoryRecordImpl> historyRecords) {	
 	
-		count.setName("count");
 		count.setHref(new Uri("count"));
-		
-		start.setName("start");
 		start.setHref(new Uri("start"));
-		
-		end.setName("end");
 		end.setHref(new Uri("end"));
 		
 		resultList = new List();
@@ -76,6 +71,9 @@ public class HistoryQueryOutImpl extends Obj implements HistoryQueryOut {
 		if(historyRecords.size() > 0) {
 			end.set(historyRecords.get(historyRecords.size()-1).timestamp().get(), TimeZone.getDefault());
 		}
+		
+		start.setNull(historyRecords.size() == 0);
+		end.setNull(  historyRecords.size() == 0);
 		
 		count.setSilent(resultList.size());
 		setIs(new Contract(HISTORY_QUERY_OUT_CONTRACT));

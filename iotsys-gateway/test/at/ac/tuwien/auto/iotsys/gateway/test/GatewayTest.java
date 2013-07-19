@@ -566,8 +566,8 @@ public class GatewayTest {
 		expect().
 		body(hasXPath("/obj[@is='obix:HistoryQueryOut']")).
 		body(hasXPath("/obj/int[@name='count' and @val='0']")).
-		body(hasXPath("/obj/abstime[@name='start']")).
-		body(hasXPath("/obj/abstime[@name='end']")).
+		body(hasXPath("/obj/abstime[@name='start' and @null='true']")).
+		body(hasXPath("/obj/abstime[@name='end' and @null='true']")).
 		body(hasXPath("/obj/list[@of='obix:HistoryRecord']")).
 		post("/switchHistory1/value/history/query");
 		
@@ -585,6 +585,8 @@ public class GatewayTest {
 				"</obj>").
 		expect().
 		body(hasXPath("/obj/int[@name='count' and @val='2']")).
+		body(hasXPath("/obj/abstime[@name='start' and not(@null)]")).
+		body(hasXPath("/obj/abstime[@name='end' and not(@null)]")).
 		body(hasXPath("/obj/list[@of='obix:HistoryRecord']")).
 		body(hasXPath("/obj/list/obj[1]/bool[@val='true']")).
 		body(hasXPath("/obj/list/obj[2]/bool[@val='false']")).
@@ -646,7 +648,7 @@ public class GatewayTest {
 	}
 
 	@Test
-	public void testHistoryAppendOutOfOrder() {
+	public void testHistoryAppendOutOfOrderShouldFail() {
 		given().param("data", "<obj is='obix:HistoryAppendIn'>" +
 			"	<list name='data' of='obix:HistoryRecord'>" +
 			"		<obj>" +
@@ -665,7 +667,7 @@ public class GatewayTest {
 	}
 
 	@Test
-	public void testHistoryAppendBeforeLast() {
+	public void testHistoryAppendBeforeLastShouldFail() {
 		given().param("data", "<obj is='obix:HistoryAppendIn'>" +
 			"	<list name='data' of='obix:HistoryRecord'>" +
 			"		<obj>" +
@@ -730,7 +732,7 @@ public class GatewayTest {
 	}
 	
 	@Test
-	public void testHistoryStartEnd() {
+	public void testHistoryStartAndEnd() {
 		expect().
 		body(hasXPath("/obj[@is='obix:History']")).
 		body(hasXPath("/obj/int[@name='count' and @val=0]")).
@@ -793,8 +795,8 @@ public class GatewayTest {
 
 	@Test
 	public void testHistoryRollup() {
-		given().body("<int val='50' />").put("/brightnessHistory1/value");
-		given().body("<int val='100' />").put("/brightnessHistory1/value");
+		given().body("<int val='50' />").put("/brightnessHistoryRollup/value");
+		given().body("<int val='100' />").put("/brightnessHistoryRollup/value");
 		
 		given().
 		param("data", "<obj is='obix:HistoryRollupIn'> " +
@@ -806,8 +808,8 @@ public class GatewayTest {
 		expect().
 		body(hasXPath("/obj[@is='obix:HistoryRollupOut']")).
 		body(hasXPath("/obj/int[@name='count']")).
-		body(hasXPath("/obj/abstime[@name='start']")).
-		body(hasXPath("/obj/abstime[@name='end']")).
+		body(hasXPath("/obj/abstime[@name='start' and not(@null)]")).
+		body(hasXPath("/obj/abstime[@name='end' and not(@null)]")).
 		body(hasXPath("/obj/list[@of='obix:HistoryRollupRecord']")).
 		body(hasXPath("/obj/list/obj/abstime[@name='start']")).
 		body(hasXPath("/obj/list/obj/abstime[@name='end']")).
@@ -816,12 +818,12 @@ public class GatewayTest {
 		body(hasXPath("/obj/list/obj/real[@name='max' and @val='100.0']")).
 		body(hasXPath("/obj/list/obj/real[@name='avg' and @val='75.0']")).
 		body(hasXPath("/obj/list/obj/real[@name='sum' and @val='150.0']")).
-		post("/brightnessHistory1/value/history/rollup");
+		post("/brightnessHistoryRollup/value/history/rollup");
 	}
 	
 	
 	@Test
-	public void testHistoryRollupBool() {
+	public void testHistoryRollupBoolShouldFail() {
 		// Attempting to query a rollup on a non-numeric history such as a history of BoolPoints SHOULD result in an error.
 		given().
 		param("data", "<obj is='obix:HistoryRollupIn'> " +
