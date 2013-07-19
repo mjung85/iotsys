@@ -71,8 +71,8 @@ public class HistoryImpl extends Obj implements History, Observer {
 	public static final String HISTORY_CONTRACT = "obix:History";
 
 	private Int count = new Int();
-	private Abstime start = new Abstime(null);
-	private Abstime end = new Abstime(null);
+	private Abstime start = new Abstime("start");
+	private Abstime end = new Abstime("end");
 	private Str tz = new Str(TimeZone.getDefault().getID());
 	private Op query = new Op();
 	private HistoryFeed feed;
@@ -91,10 +91,10 @@ public class HistoryImpl extends Obj implements History, Observer {
 		count.setName("count");
 		count.setHref(new Uri("count"));
 
-		start.setName("start");
+		start.setNull(true);
 		start.setHref(new Uri("start"));
 
-		end.setName("end");
+		end.setNull(true);
 		end.setHref(new Uri("end"));
 		
 		tz.setName("tz");
@@ -432,14 +432,20 @@ public class HistoryImpl extends Obj implements History, Observer {
 	 */
 	private void updateKids() {
 		List<Obj> events = feed.getEvents();
-		HistoryRecordImpl firstRecord = (HistoryRecordImpl) events.get(0);
-		HistoryRecordImpl lastRecord = (HistoryRecordImpl) events.get(events.size()-1);
 		
-		count.setSilent(events.size());
-		this.start.set(firstRecord.timestamp().get(), TimeZone
-				.getTimeZone((firstRecord.timestamp().getTz())));
-		this.end.set(lastRecord.timestamp().get(), TimeZone
-				.getTimeZone((lastRecord.timestamp().getTz())));
+		if (events.size() > 0) {
+			HistoryRecordImpl firstRecord = (HistoryRecordImpl) events.get(0);
+			HistoryRecordImpl lastRecord = (HistoryRecordImpl) events.get(events.size()-1);
+			
+			count.setSilent(events.size());
+			this.start.set(firstRecord.timestamp().get(), TimeZone
+					.getTimeZone((firstRecord.timestamp().getTz())));
+			this.end.set(lastRecord.timestamp().get(), TimeZone
+					.getTimeZone((lastRecord.timestamp().getTz())));
+			
+			this.start.setNull(false);
+			this.end.setNull(false);
+		}
 	}
 
 	public void setSubject(Subject object) {

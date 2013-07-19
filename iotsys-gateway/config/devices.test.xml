@@ -143,6 +143,13 @@
       <device>
         <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.BrightnessActuatorImpl
         </type>
+        <href>brightnessHistoryStartEnd</href>
+        <historyEnabled>true</historyEnabled>
+      </device>
+      
+      <device>
+        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.BrightnessActuatorImpl
+        </type>
         <href>brightnessHistory1</href>
         <historyEnabled>true</historyEnabled>
         <historyCount>100</historyCount>
@@ -171,6 +178,20 @@
         <historyEnabled>true</historyEnabled>
         <groupCommEnabled>true</groupCommEnabled>
         <historyCount>100</historyCount>
+      </device>
+      
+      <device>
+        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.BrightnessActuatorImpl
+        </type>
+        <href>brightnessHistoryAppendOutOfOrder</href>
+        <historyEnabled>true</historyEnabled>
+      </device>
+      
+      <device>
+        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.BrightnessActuatorImpl
+        </type>
+        <href>brightnessHistoryAppendNothing</href>
+        <historyEnabled>true</historyEnabled>
       </device>
    </connector>
     
