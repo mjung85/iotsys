@@ -272,8 +272,11 @@ public class ObjectBrokerImpl implements ObjectBroker {
 		}
 
 		// if the object could not be found, return an error
-		if (o == null)
-			return new Err("Object not found");
+		if (o == null) {
+			Err error = new Err("Object not found");
+			error.setIs(new Contract("obix:BadUriErr"));
+			return error;
+		}
 
 		return o;
 	}

@@ -45,6 +45,8 @@ public class ContractInit
     ContractRegistry.put("obix:HistoryRollupIn", "obix.contracts.HistoryRollupIn");
     ContractRegistry.put("obix:HistoryRollupOut", "obix.contracts.HistoryRollupOut");
     ContractRegistry.put("obix:HistoryRollupRecord", "obix.contracts.HistoryRollupRecord");
+    ContractRegistry.put("obix:HistoryAppendIn", "obix.contracts.HistoryAppendIn");
+    ContractRegistry.put("obix:HistoryAppendOut", "obix.contracts.HistoryAppendOut");
     ContractRegistry.put("obix:Alarm", "obix.contracts.Alarm");
     ContractRegistry.put("obix:StatefulAlarm", "obix.contracts.StatefulAlarm");
     ContractRegistry.put("obix:AckAlarm", "obix.contracts.AckAlarm");
