@@ -198,8 +198,10 @@ public class HistoryImpl extends Obj implements History, Observer {
 		if (in != null && in instanceof HistoryRollupIn) {
 			HistoryRollupIn rollupIn = (HistoryRollupIn) in;
 			limit = rollupIn.limit().get();
-			start = rollupIn.start();
-			end = rollupIn.end();
+			
+			start.set(rollupIn.start().getMillis(), start.getTimeZone());
+			end.set(rollupIn.end().getMillis(), end.getTimeZone());
+			
 			interval = rollupIn.interval();
 		}
 
