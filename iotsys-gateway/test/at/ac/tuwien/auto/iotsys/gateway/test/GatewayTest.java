@@ -917,4 +917,41 @@ public class GatewayTest {
 		assertEquals(timestamp, DatatypeConverter.parseDateTime("2005-03-16T14:00:00Z").getTimeInMillis());
 	}
 	
+	@Test
+	public void testHistoryTimezones() {
+		String history = expect().
+		body(hasXPath("/obj[@is='obix:History']")).
+		body(hasXPath("/obj/str[@name='tz']")).
+		get("/HistoryTimezones/value/history").asString();
+		
+		String timezone = XmlPath.from(history).getString("obj.str.@val");
+		
+		// query and rollup have to use same timezone
+		given().body("<int val='123' />").put("/HistoryTimezones/value");
+		
+		given().
+		param("data", "<obj is='obix:HistoryFilter'>" + 
+				"	<abstime name='start' val='2013-03-31T15:30:00-07:00' tz='America/Phoenix'/>" +
+				"	<abstime name='end' null='true' />" +
+				"</obj>").
+		expect().
+		body(hasXPath("/obj[@is='obix:HistoryQueryOut']")).
+		body(hasXPath("/obj/abstime[@name='start' and @tz='" + timezone + "']")).
+		body(hasXPath("/obj/abstime[@name='end' and @tz='" + timezone + "']")).
+		post("/HistoryTimezones/value/history/query");
+		
+		
+		given().
+		param("data", "<obj is='obix:HistoryRollupIn'> " +
+				"  <int name='limit' val='2'/>" +
+				"  <abstime name='start' val='2013-03-31T12:30:00+09:00' tz='Japan'/>" +
+				"  <abstime name='end' null='true' />" +
+				"  <reltime name='interval' val='PT2H'/>" +
+				"</obj>").
+		expect().
+		body(hasXPath("/obj[@is='obix:HistoryRollupOut']")).
+		body(hasXPath("/obj/abstime[@name='start' and @tz='" + timezone + "']")).
+		body(hasXPath("/obj/abstime[@name='end' and @tz='" + timezone + "']")).
+		post("/HistoryTimezones/value/history/rollup");
+	}
 }
