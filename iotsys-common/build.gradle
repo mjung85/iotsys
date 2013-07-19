@@ -35,8 +35,6 @@ jar {
 dependencies {
 	compile project(':iotsys-obix')
 	
-	compile group: 'org.apache.felix', name: 'org.osgi.core', version: '1.4.0'
-	
 	compile group: 'commons-beanutils', name: 'commons-beanutils', version: '1.8.3'
 	compile group: 'commons-codec', name: 'commons-codec', version: '1.6'
 	compile group: 'commons-collections', name: 'commons-collections', version: '3.2.1'

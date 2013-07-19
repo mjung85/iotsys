@@ -20,6 +20,7 @@ eclipse{
 				node.appendNode('classpathentry', [kind: 'src', path: '/iotsys-demoapp', exported:'true'])
 				node.appendNode('classpathentry', [kind: 'src', path: '/iotsys-xacml', exported:'true'])
 				node.appendNode('classpathentry', [kind: 'lib', path: '/iotsys-xacml/res', exported:'true'])
+				node.appendNode('classpathentry', [kind: 'src', path: '/iotsys-osgi', exported:'true'])
 			}
 		}
 	}
@@ -87,6 +88,7 @@ dependencies {
 	provided project(':iotsys-control');
 
 	provided project(':iotsys-xacml')
+	provided project(':iotsys-osgi')
 	
 	//provided group: 'org.apache.felix', name: 'org.apache.felix.framework', version: '4.2.0'
 	provided group: 'org.apache.felix', name: 'org.osgi.core', version: '1.4.0'
