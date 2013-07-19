@@ -32,40 +32,85 @@
 
 package at.ac.tuwien.auto.iotsys.gateway.obix.objects;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import obix.Abstime;
+import obix.Feed;
 import obix.Obj;
-import obix.contracts.HistoryRecord;
+import obix.contracts.HistoryFilter;
 
-public class HistoryRecordImpl extends Obj implements HistoryRecord {
-	protected Obj value = new Obj();
-	protected Abstime abstime = new Abstime();
+public class HistoryFeed extends Feed {
 	
-	public static final String HISTORY_RECORD_CONTRACT = "obix:HistoryRecord";
-	
-	public HistoryRecordImpl(Obj value) {
-		this.value = value;
-		abstime = new Abstime(System.currentTimeMillis());
-
-		add(timestamp());
-		add(value());
+	public HistoryFeed() {
+		this(HistoryHelper.HISTORY_COUNT_DEFAULT);
 	}
 	
-	public HistoryRecordImpl(HistoryRecord record) {
-		this.value = record.value();
-		this.abstime = record.timestamp();
+	public HistoryFeed(int maxHistoryCount) {
+		setMaxEvents(maxHistoryCount);
+	}
+	
+	@Override
+	public List<Obj> query(List<Obj> events, Obj filter) {
+		if (!(filter instanceof HistoryFilter))
+			return new ArrayList<Obj>(events);
 		
-		add(timestamp());
-		add(value());
+		HistoryFilter in = (HistoryFilter) filter;
+		return new ArrayList<Obj>(filterRecords(events, in));
 	}
 	
-	@Override
-	public Abstime timestamp() {
-		return abstime;
+	public ArrayList<HistoryRecordImpl> getRecords() {
+		ArrayList<HistoryRecordImpl> records = new ArrayList<HistoryRecordImpl>();
+		for (Obj event : getEvents()) {
+			if (event instanceof HistoryRecordImpl)
+				records.add((HistoryRecordImpl) event);
+		}
+		
+		return records;
 	}
+	
+	public ArrayList<HistoryRecordImpl> filterRecords(List<Obj> events, HistoryFilter historyFilter) {
+		long limit = 0;
+		Abstime start = new Abstime();
+		Abstime end = new Abstime();
+		
+		if (historyFilter != null) {
+			limit = historyFilter.limit().get();
+			start = historyFilter.start();
+			end = historyFilter.end();
+		}
 
-	@Override
-	public Obj value() {
-		return value;
+		ArrayList<HistoryRecordImpl> filteredRecords = new ArrayList<HistoryRecordImpl>();
+		
+		for (Obj event : events) {
+			if (!(event instanceof HistoryRecordImpl))
+				continue;
+			
+			HistoryRecordImpl record = (HistoryRecordImpl) event;
+			boolean addRecord = true;
+
+			if (limit != 0) { // unlimited
+				if (filteredRecords.size() + 1 > limit) {
+					break;
+				}
+			}
+
+			if (start.get() != end.get()) {
+				if (start != null && start.get() != 0
+						&& record.timestamp().get() < start.get()) {
+					addRecord = false;
+				}
+
+				if (end != null && end.get() != 0
+						&& record.timestamp().get() > end.get()) {
+					addRecord = false;
+				}
+			}
+
+			if (addRecord) {
+				filteredRecords.add(record);
+			}
+		}
+		return filteredRecords;
 	}
-
 }

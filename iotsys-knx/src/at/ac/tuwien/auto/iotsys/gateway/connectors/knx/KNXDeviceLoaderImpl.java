@@ -44,21 +44,13 @@ public class KNXDeviceLoaderImpl implements DeviceLoader {
 	private static Logger log = Logger.getLogger(KNXDeviceLoaderImpl.class
 			.getName());
 
-	private XMLConfiguration devicesConfig = new XMLConfiguration();
+	private XMLConfiguration devicesConfig;
 	
 	private ArrayList<String> myObjects = new ArrayList<String>();
 
-	public KNXDeviceLoaderImpl() {
-		String devicesConfigFile = DEVICE_CONFIGURATION_LOCATION;
-
-		try {
-			devicesConfig = new XMLConfiguration(devicesConfigFile);
-		} catch (Exception e) {
-			log.log(Level.SEVERE, e.getMessage(), e);
-		}
-	}
-
 	public ArrayList<Connector> initDevices(ObjectBroker objectBroker) {
+		setConfiguration(devicesConfig);
+		
 		ArrayList<Connector> connectors = new ArrayList<Connector>();
 
 		Object knxConnectors = devicesConfig.getProperty("knx.connector.name");
@@ -246,6 +238,19 @@ public class KNXDeviceLoaderImpl implements DeviceLoader {
 		synchronized(myObjects){
 			for(String href : myObjects){
 				objectBroker.removeObj(href);
+			}
+		}
+	}
+	
+
+	@Override
+	public void setConfiguration(XMLConfiguration devicesConfiguration) {
+		this.devicesConfig = devicesConfiguration;
+		if (devicesConfiguration == null) {
+			try {
+				devicesConfig = new XMLConfiguration(DEVICE_CONFIGURATION_LOCATION);
+			} catch (Exception e) {
+				log.log(Level.SEVERE, e.getMessage(), e);
 			}
 		}
 	}
