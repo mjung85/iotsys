@@ -52,7 +52,7 @@ public class HistoryRecordImpl extends Obj implements HistoryRecord {
 	
 	public HistoryRecordImpl(HistoryRecord record) {
 		this.value = record.value();
-		this.abstime = record.timestamp();
+		this.abstime = new Abstime(record.timestamp().getMillis());
 		
 		add(timestamp());
 		add(value());
