@@ -8,9 +8,9 @@ import org.osgi.framework.BundleContext;
 import at.ac.tuwien.auto.iotsys.commons.MDnsResolver;
 
 
-public class MDnssdActivator  implements BundleActivator {
+public class MdnssdActivator  implements BundleActivator {
 
-	private static final Logger log = Logger.getLogger(MDnssdActivator.class
+	private static final Logger log = Logger.getLogger(MdnssdActivator.class
 			.getName());
 	
 	private Named named;

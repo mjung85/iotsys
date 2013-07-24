@@ -6,7 +6,8 @@ eclipse{
 		file {
 			withXml {
 				def node = it.asNode()				
-				node.appendNode('classpathentry', [kind: 'src', path: '/iotsys-common', exported:'true'])		
+				node.appendNode('classpathentry', [kind: 'src', path: '/iotsys-common', exported:'true'])
+				node.appendNode('classpathentry', [kind: 'src', path: '/iotsys-osgi', exported:'true'])				
 			}
 		}
 	}
@@ -42,6 +43,7 @@ jar {
 
 dependencies {
 	provided project(':iotsys-common')
+	provided project(':iotsys-osgi')
 	provided group: 'org.apache.felix', name: 'org.osgi.core', version: '1.4.0'
 }
 
