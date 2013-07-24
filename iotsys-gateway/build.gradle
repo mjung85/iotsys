@@ -20,6 +20,7 @@ eclipse{
 				node.appendNode('classpathentry', [kind: 'src', path: '/iotsys-demoapp', exported:'true'])
 				node.appendNode('classpathentry', [kind: 'src', path: '/iotsys-xacml', exported:'true'])
 				node.appendNode('classpathentry', [kind: 'lib', path: '/iotsys-xacml/res', exported:'true'])
+				node.appendNode('classpathentry', [kind: 'src', path: '/iotsys-osgi', exported:'true'])
 				node.appendNode('classpathentry', [kind: 'src', path: '/iotsys-mdnssd', exported:'true'])
 			}
 		}
@@ -27,7 +28,7 @@ eclipse{
 }
 
 repositories {	
-	flatDir { dirs "lib/exi", "lib/jnetpcap" }
+	flatDir { dirs "lib/exi", "lib/californium" }
 }
 
 configurations {
@@ -108,7 +109,7 @@ dependencies {
 	compile group: 'net.sourceforge.javacsv', name: 'javacsv', version: '2.0'
 	
 	compile ":nagasena:"
-	compile ":jnetpcap:"
+	compile ":californium-0.12.0-mif_mc:"
 
 	testProvided project(':iotsys-virtual')
 	testCompile group: 'junit',name:'junit',version: '4.8+' 

@@ -41,6 +41,11 @@ import java.util.ArrayList;
 import java.util.logging.Logger;
 
 import at.ac.tuwien.auto.iotsys.commons.Connector;
+import at.ac.tuwien.auto.iotsys.gateway.util.ExiUtil;
+
+import at.ac.tuwien.auto.iotsys.commons.DeviceLoader;
+import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
+import at.ac.tuwien.auto.iotsys.commons.PropertiesLoader;
 import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
 import at.ac.tuwien.auto.iotsys.commons.PropertiesLoader;
 import at.ac.tuwien.auto.iotsys.commons.MDnsResolver;
@@ -82,8 +87,12 @@ public class IoTSySGateway {
 	public IoTSySGateway() {
 
 	}
-
+	
 	public void startGateway() {
+		startGateway(DeviceLoader.DEVICE_CONFIGURATION_LOCATION);
+	}
+	
+	public void startGateway(String devicesConfigFile) {
 
 		Log.init();
 		log.info("Server starting.");
@@ -108,7 +117,11 @@ public class IoTSySGateway {
 		objectBroker.setMdnsResolver(mdnsResolver);
 
 		// add initial objects to the database
-		deviceLoader = new DeviceLoaderImpl();
+		if (devicesConfigFile == null) {
+			deviceLoader = new DeviceLoaderImpl();
+		} else {
+			deviceLoader = new DeviceLoaderImpl(devicesConfigFile);
+		}
 		connectors = deviceLoader.initDevices(objectBroker);
 
 		log.info("No of records built: " + objectBroker.getMDnsResolver().getNumberOfRecord());

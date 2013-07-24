@@ -33,74 +33,84 @@
 package at.ac.tuwien.auto.iotsys.gateway.obix.objects;
 
 import java.util.ArrayList;
-import java.util.TimeZone;
+import java.util.List;
 
 import obix.Abstime;
-import obix.Contract;
-import obix.Int;
-import obix.List;
+import obix.Feed;
 import obix.Obj;
-import obix.Uri;
-import obix.contracts.HistoryQueryOut;
+import obix.contracts.HistoryFilter;
 
-public class HistoryQueryOutImpl extends Obj implements HistoryQueryOut {
-
-	private List resultList;
-	private Int count = new Int("count");
-	private Abstime start = new Abstime("start");
-	private Abstime end = new Abstime("end");
+public class HistoryFeed extends Feed {
 	
-	public static final String HISTORY_QUERY_OUT_CONTRACT = "obix:HistoryQueryOut";
+	public HistoryFeed() {
+		this(HistoryHelper.HISTORY_COUNT_DEFAULT);
+	}
 	
-	public HistoryQueryOutImpl(ArrayList<HistoryRecordImpl> historyRecords) {	
+	public HistoryFeed(int maxHistoryCount) {
+		setMaxEvents(maxHistoryCount);
+	}
 	
-		count.setHref(new Uri("count"));
-		start.setHref(new Uri("start"));
-		end.setHref(new Uri("end"));
+	@Override
+	public List<Obj> query(List<Obj> events, Obj filter) {
+		if (!(filter instanceof HistoryFilter))
+			return new ArrayList<Obj>(events);
 		
-		resultList = new List();
-		resultList.setOf(new Contract(HistoryRecordImpl.HISTORY_RECORD_CONTRACT));
-		for(HistoryRecordImpl historyRecord : historyRecords) {
-			resultList.add(historyRecord);
+		HistoryFilter in = (HistoryFilter) filter;
+		return new ArrayList<Obj>(filterRecords(events, in));
+	}
+	
+	public ArrayList<HistoryRecordImpl> getRecords() {
+		ArrayList<HistoryRecordImpl> records = new ArrayList<HistoryRecordImpl>();
+		for (Obj event : getEvents()) {
+			if (event instanceof HistoryRecordImpl)
+				records.add((HistoryRecordImpl) event);
 		}
 		
-		if(historyRecords.size() > 0) {
-			start.set(historyRecords.get(0).timestamp().get(), TimeZone.getDefault());
-		}
-		
-		if(historyRecords.size() > 0) {
-			end.set(historyRecords.get(historyRecords.size()-1).timestamp().get(), TimeZone.getDefault());
-		}
-		
-		start.setNull(historyRecords.size() == 0);
-		end.setNull(  historyRecords.size() == 0);
-		
-		count.setSilent(resultList.size());
-		setIs(new Contract(HISTORY_QUERY_OUT_CONTRACT));
-		
-		add(count);
-		add(start);
-		add(end);
-		add(resultList);
+		return records;
 	}
 	
-	@Override
-	public Int count() {
-		return count;
-	}
+	public ArrayList<HistoryRecordImpl> filterRecords(List<Obj> events, HistoryFilter historyFilter) {
+		long limit = 0;
+		Abstime start = new Abstime();
+		Abstime end = new Abstime();
+		
+		if (historyFilter != null) {
+			limit = historyFilter.limit().get();
+			start = historyFilter.start();
+			end = historyFilter.end();
+		}
 
-	@Override
-	public Abstime start() {
-		return start;
-	}
+		ArrayList<HistoryRecordImpl> filteredRecords = new ArrayList<HistoryRecordImpl>();
+		
+		for (Obj event : events) {
+			if (!(event instanceof HistoryRecordImpl))
+				continue;
+			
+			HistoryRecordImpl record = (HistoryRecordImpl) event;
+			boolean addRecord = true;
 
-	@Override
-	public Abstime end() {
-		return end;
-	}
+			if (limit != 0) { // unlimited
+				if (filteredRecords.size() + 1 > limit) {
+					break;
+				}
+			}
 
-	@Override
-	public List data() {
-		return resultList;
+			if (start.get() != end.get()) {
+				if (start != null && start.get() != 0
+						&& record.timestamp().get() < start.get()) {
+					addRecord = false;
+				}
+
+				if (end != null && end.get() != 0
+						&& record.timestamp().get() > end.get()) {
+					addRecord = false;
+				}
+			}
+
+			if (addRecord) {
+				filteredRecords.add(record);
+			}
+		}
+		return filteredRecords;
 	}
 }

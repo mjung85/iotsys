@@ -80,7 +80,11 @@ public class Reltime
    */
   public void set(long millis)
   {
+	long oldVal = this.val;
     this.val = millis;
+    
+    if (oldVal != val)
+    	notifyObservers();
   }
 
 ////////////////////////////////////////////////////////////////
@@ -365,4 +369,13 @@ public class Reltime
   private Reltime min;
   private Reltime max;
   
+  public void writeObject(Obj input) {
+		if (this.getParent() != null) {
+			this.getParent().writeObject(input);
+		} else {
+			if (input instanceof Reltime) {
+				this.set(((Reltime) input).get());
+			}
+		}
+	}
 }

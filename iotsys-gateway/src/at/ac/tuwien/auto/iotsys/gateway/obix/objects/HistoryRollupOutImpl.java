@@ -33,15 +33,12 @@
 package at.ac.tuwien.auto.iotsys.gateway.obix.objects;
 
 import java.util.ArrayList;
-import java.util.TimeZone;
 
 import obix.Abstime;
 import obix.Contract;
-import obix.Feed;
 import obix.Int;
 import obix.List;
 import obix.Obj;
-import obix.Op;
 import obix.Uri;
 import obix.contracts.HistoryRollupOut;
 

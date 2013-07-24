@@ -3,33 +3,53 @@
 //= require 'bootstrap-transition'
 //= require 'bootstrap-modal'
 //= require 'bootstrap-dropdown'
+//= require 'html5slider'
 //= require_self
 
 var app = angular.module('Obelix', []);
 
 app.service('Lobby', function($http, Device) {
-  IGNORED_DEVICES = ['/about', '/watchService', '/enums']; // TODO
-
   return {
     getDevices: function(cb) {
       $http.get('/obix').success(function(response) {
-        cb($.map(response['childNodes'], function(ref) { return new Device(ref['href']); }));
+        var devices = [];
+        var nodes = response['childNodes'];
+        angular.forEach(nodes, function(node) {
+          // Skip some obix objects:
+          if (
+            node['name'] == 'about' || 
+            node['is'] == 'obix:obj' || 
+            node['is'] == 'obix:WatchService' ||
+            node['is'] == 'obix:Watch' 
+          ) return;
+          // ...add the rest to list of devices
+          devices.push(new Device(node['href']));
+        });
+        cb(devices); //..and pass them to callback
       });
     }
   }
 });
 
 app.factory('Device', function($http, $timeout) {
-  var Property = function(href, type, name, value, readonly) {
+  var Property = function(href, type, name, value, el) {
     this.href = href;
     this.type = type;
     this.numeric = (this.type == 'int' || this.type == 'real');
     this.name = name;
     this.value = value;
-    this.readonly = readonly;
+    this.readonly = !el['writable'];
 
     if (this.type == 'real') {
       this.value = Math.round(this.value * 100) / 100.0;
+    }
+
+    if (this.numeric && el['max'] && !this.readonly) {
+      // setup range
+      this.range = true;
+      this.rangeMin = el['min'];
+      this.rangeMax = el['max'];
+      this.rangeStep = Math.abs(this.rangeMax - this.rangeMin)/100.0;
     }
   };
 
@@ -49,8 +69,14 @@ app.factory('Device', function($http, $timeout) {
   };
 
   Property.parse = function(el, device) {
-    if (el['tagName'] == 'bool' || el['tagName'] == 'int' || el['tagName'] == 'real' || el['tagName'] == 'enum') {
-      var p = new Property(el['href'], el['tagName'], el['name'], el['val'], !el['writable']);
+    if (
+      el['tagName'] == 'bool' || 
+      el['tagName'] == 'int' || 
+      el['tagName'] == 'real' || 
+      el['tagName'] == 'enum' || 
+      el['tagName'] == 'str'
+    ) {
+      var p = new Property(el['href'], el['tagName'], el['name'], el['val'], el);
       if (p.type == 'enum') {
         p.range = Property.Enum.range(el['range']);
       }
@@ -66,11 +92,6 @@ app.factory('Device', function($http, $timeout) {
     },
     url: function() {
       return this.device.url + '/' + this.href;
-      $http.post(url, '<str val="'+group.ipv6()+'"/>', {headers: {
-        'Content-Type': 'application/xml'
-      }}).success(function() {
-        console.log(this,"joined", group.id);
-      }.bind(this));
     }
   };
 
@@ -128,7 +149,6 @@ app.factory('Device', function($http, $timeout) {
 
     update: function(property) {
       $http.put(this.url, property.serialize()).success(function(response) {
-        console.log(response);
         this.load(response);
       }.bind(this));
     },
@@ -172,23 +192,6 @@ app.factory('Device', function($http, $timeout) {
       }.bind(this));
     }
   };
-
-  Device.Group = function(id) {
-    this.id = id;
-  };
-
-  Device.Group.prototype = {
-    ipv6: function() {
-      return "FF02:FFFF::"+this.id;
-    }
-  }
-
-  Device.Group.counter = 2;
-  Device.Group.next = function() {
-    Device.Group.counter += 1;
-    return new Device.Group(Device.Group.counter);
-  };
-
 
   return Device;
 });
@@ -259,7 +262,6 @@ app.controller('DevicesCtrl', ['$scope','Lobby','Device', function($scope, Lobby
   }
 
   $scope.selectProperty = function(p) {
-    console.log("SELECT",p);
     if (!p.groupcomm) return;
     var index = $scope.selectedProperties.indexOf(p);
     if (index != -1) {
