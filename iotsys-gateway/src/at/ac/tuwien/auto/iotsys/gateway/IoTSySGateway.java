@@ -124,7 +124,12 @@ public class IoTSySGateway {
 		}
 		connectors = deviceLoader.initDevices(objectBroker);
 
-		log.info("No of records built: " + objectBroker.getMDnsResolver().getNumberOfRecord());
+		if(objectBroker.getMDnsResolver() != null){
+			log.info("No of records built: " + objectBroker.getMDnsResolver().getNumberOfRecord());
+		}
+		else{
+			log.info("No MDNS resolver service found.");
+		}
 		
 		interceptorBroker = InterceptorBrokerImpl.getInstance();
 		// initialize interceptor broker
