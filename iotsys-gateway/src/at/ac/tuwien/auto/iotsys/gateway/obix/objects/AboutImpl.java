@@ -43,6 +43,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import obix.Abstime;
+import obix.Contract;
 import obix.Obj;
 import obix.Str;
 import obix.Uri;
@@ -62,6 +63,7 @@ public class AboutImpl extends Obj implements About {
 	
 	public AboutImpl(){
 		this.setHref(new Uri("http://localhost/obix/about"));
+		this.setIs(new Contract("obix:About"));
 		try {
 			serverName = new Str(java.net.InetAddress.getLocalHost().getHostName());
 		} catch (UnknownHostException e) {
@@ -72,10 +74,10 @@ public class AboutImpl extends Obj implements About {
 		serverTime.setName("serverTime");
 		serverBootTime.setName("serverBootTime");
 		vendorName.setName("vendorName");
-		vendorURL.setName("vendorURL");
+		vendorURL.setName("vendorUrl");
 		productName.setName("productName");
 		productVersion.setName("productVersion");
-		productURL.setName("productURL");
+		productURL.setName("productUrl");
 		
 		try {
 			StringBuffer addresses = new StringBuffer();

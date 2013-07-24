@@ -38,13 +38,12 @@ import java.net.SocketException;
 import java.util.Hashtable;
 import java.util.logging.Logger;
 
-import ch.ethz.inf.vs.californium.coap.Communicator;
-import ch.ethz.inf.vs.californium.coap.MediaTypeRegistry;
+import ch.ethz.inf.vs.californium.coap.CommunicatorFactory;
 import ch.ethz.inf.vs.californium.coap.Message.messageType;
 import ch.ethz.inf.vs.californium.coap.PUTRequest;
+import ch.ethz.inf.vs.californium.coap.registries.MediaTypeRegistry;
 import ch.ethz.inf.vs.californium.layers.MulticastUDPLayer;
 import ch.ethz.inf.vs.californium.layers.MulticastUDPLayer.REQUEST_TYPE;
-
 import obix.Bool;
 import obix.Int;
 import obix.Obj;
@@ -111,7 +110,7 @@ public class GroupCommServiceImpl implements GroupCommService {
 			} else {
 				// we need to create a multicast socket for the specified port
 				try {
-					Communicator.getInstance().getUDPLayer()
+					CommunicatorFactory.getInstance().getCommunicator().getMultiInterfaceUDPLayer()
 							.openMulticastSocket(group);
 					Hashtable<String, Obj> newGroupObjects = new Hashtable<String, Obj>();
 					groupObjectPerAddress.put(group, newGroupObjects);
@@ -136,7 +135,7 @@ public class GroupCommServiceImpl implements GroupCommService {
 				if (groupObjects.size() == 0) {
 					// close group comm socket
 					try {
-						Communicator.getInstance().getUDPLayer()
+						CommunicatorFactory.getInstance().getCommunicator().getMultiInterfaceUDPLayer()
 								.closeMulticastSocket(group);
 					} catch (SocketException e) {
 						// TODO Auto-generated catch block

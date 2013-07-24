@@ -30,50 +30,86 @@
  * This file is part of the IoTSyS project.
  ******************************************************************************/
 
-package at.ac.tuwien.auto.iotsys.demoapp;
+package at.ac.tuwien.auto.iotsys.gateway.obix.objects;
 
 import java.util.ArrayList;
 
-import org.apache.commons.configuration.XMLConfiguration;
-
+import obix.Abstime;
+import obix.Contract;
+import obix.Int;
 import obix.Obj;
 import obix.Uri;
+import obix.contracts.HistoryAppendOut;
 
-import at.ac.tuwien.auto.iotsys.commons.Connector;
-import at.ac.tuwien.auto.iotsys.commons.DeviceLoader;
-import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
+public class HistoryAppendOutImpl extends Obj implements HistoryAppendOut {
+	
+	public static final String HISTORY_APPENDOUT_CONTRACT = "obix:HistoryAppendOut";
+	
+	private Int numAdded = new Int();
+	private Int newCount = new Int();
+	private Abstime newStart = new Abstime();
+	private Abstime newEnd = new Abstime();
 
 
-public class DemoAppLoaderImpl implements DeviceLoader {
-	private final ArrayList<String> myObjects = new ArrayList<String>();
-
-	@Override
-	public ArrayList<Connector> initDevices(ObjectBroker objectBroker) {
-		Obj application = new CoapTemperatureControllerImpl();
-		Obj xacml = new XacmlApplication();
+	public HistoryAppendOutImpl(ArrayList<HistoryRecordImpl> newRecords, ArrayList<HistoryRecordImpl> historyRecords) {	
+	
+		setIs(new Contract(HISTORY_APPENDOUT_CONTRACT));
 		
-		application.setHref(new Uri("mixedTempControl"));
+		numAdded.setName("numAdded");
+		numAdded.setHref(new Uri("numAdded"));
 		
-		xacml.setHref(new Uri("privacyGuard"));
+		newCount.setName("newCount");
+		newCount.setHref(new Uri("newCount"));
 		
-		synchronized(myObjects){
-//			myObjects.addAll(objectBroker.addObj(application));
-			myObjects.addAll(objectBroker.addObj(xacml));
-			objectBroker.enableGroupComm(application);
+		newStart.setName("newStart");
+		newStart.setHref(new Uri("newStart"));
+		
+		newEnd.setName("newEnd");
+		newEnd.setHref(new Uri("newEnd"));
+		
+		newCount.setSilent(historyRecords.size());
+		numAdded.setSilent(newRecords.size());
+		
+		if (historyRecords.size() == 0) {
+			newStart.setNull(true);
+			newEnd.setNull(true);
+		} else {
+			Abstime start = historyRecords.get(0).timestamp();
+			newStart.set(start.get(), start.getTimeZone());
+			
+			Abstime end = historyRecords.get(historyRecords.size()-1).timestamp();
+			newEnd.set(end.get(), end.getTimeZone());
 		}
-		return null;
+		
+		add(numAdded);
+		add(newCount);
+		add(newStart);
+		add(newEnd);
 	}
 
-	@Override
-	public void removeDevices(ObjectBroker objectBroker) {
-		synchronized (myObjects) {
-			for (String href : myObjects) {
-				objectBroker.removeObj(href);
-			}
-		}
-		
-	}
 
 	@Override
-	public void setConfiguration(XMLConfiguration devicesConfiguration) {}
+	public Int numAdded() {
+		return numAdded;
+	}
+
+
+	@Override
+	public Int newCount() {
+		return newCount;
+	}
+
+
+	@Override
+	public Abstime newStart() {
+		return newStart;
+	}
+
+
+	@Override
+	public Abstime newEnd() {
+		return newEnd;
+	}
+
+
 }

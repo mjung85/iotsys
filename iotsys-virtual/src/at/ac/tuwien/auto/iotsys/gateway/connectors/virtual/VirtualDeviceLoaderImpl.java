@@ -52,23 +52,15 @@ import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
 public class VirtualDeviceLoaderImpl implements DeviceLoader {
 	private final ArrayList<String> myObjects = new ArrayList<String>();
 
-	private XMLConfiguration devicesConfig = new XMLConfiguration();
+	private XMLConfiguration devicesConfig;
 
 	private static final Logger log = Logger
 			.getLogger(VirtualDeviceLoaderImpl.class.getName());
 
-	public VirtualDeviceLoaderImpl() {
-		String devicesConfigFile = DEVICE_CONFIGURATION_LOCATION;
-
-		try {
-			devicesConfig = new XMLConfiguration(devicesConfigFile);
-		} catch (Exception e) {
-			log.log(Level.SEVERE, e.getMessage(), e);
-		}
-	}
-
 	@Override
 	public ArrayList<Connector> initDevices(ObjectBroker objectBroker) {
+		setConfiguration(devicesConfig);
+		
 		// Hard-coded connections and object creation
 
 		// store all created connectors, will be used by the gateway for closing
@@ -277,5 +269,17 @@ public class VirtualDeviceLoaderImpl implements DeviceLoader {
 			}
 		}
 
+	}
+
+	@Override
+	public void setConfiguration(XMLConfiguration devicesConfiguration) {
+		this.devicesConfig = devicesConfiguration;
+		if (devicesConfiguration == null) {
+			try {
+				devicesConfig = new XMLConfiguration(DEVICE_CONFIGURATION_LOCATION);
+			} catch (Exception e) {
+				log.log(Level.SEVERE, e.getMessage(), e);
+			}
+		}
 	}
 }
