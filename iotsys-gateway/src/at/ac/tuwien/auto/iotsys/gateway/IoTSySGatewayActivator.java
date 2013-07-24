@@ -64,7 +64,7 @@ public class IoTSySGatewayActivator implements BundleActivator, ServiceListener{
 	public void start(BundleContext bundleContext) throws Exception {
 		log.info("Starting IoTSySGateway.");
 		
-		ServiceReference<?> serviceReference = bundleContext
+		ServiceReference serviceReference = bundleContext
 				.getServiceReference(MDnsResolver.class.getName());
 		if (serviceReference == null) {
 			log.severe("Could not find mDNS-SD Service!");
