@@ -331,8 +331,9 @@ public class ObjectBrokerImpl implements ObjectBroker {
 			}
 			String href = o.getFullContextPath();
 			ipv6Mapping.put(generateIPv6Address.toString(), href);
-			System.out.println("href: " + href + " ipv6: " + ipv6Address);
-			resolver.addToRecordDict(href, ipv6Address);
+//			System.out.println("href: " + href + " ipv6: " + ipv6Address);
+			if(resolver != null)
+				resolver.addToRecordDict(href, ipv6Address);
 
 			// add kids
 			if (o.size() > 0) {
