@@ -335,7 +335,8 @@ public class ObjectBrokerImpl implements ObjectBroker {
 			if(resolver != null)
 				resolver.addToRecordDict(href, ipv6Address);
 
-			// add kids
+			// add kids 
+			//TODO this should be done recursively, not only for the first level of kids
 			if (o.size() > 0) {
 				Obj[] kids = o.list();
 				for (int i = 0; i < o.size(); i++) {
@@ -407,8 +408,14 @@ public class ObjectBrokerImpl implements ObjectBroker {
 		if (o.size() > 0) {
 			Obj[] kids = o.list();
 			for (int i = 0; i < o.size(); i++)
-				if (kids[i].getHref() != null)
+				if (kids[i].getHref() != null){
+					try {
 					hrefs.addAll(addObj(kids[i]));
+					}
+					catch(Exception e){
+						// TODO issue
+					}
+				}
 			// FIXME: should we store kid's href as absolute rather than relative href?
 		}
 

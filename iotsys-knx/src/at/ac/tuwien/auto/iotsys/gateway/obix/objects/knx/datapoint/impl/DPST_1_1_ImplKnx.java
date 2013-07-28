@@ -9,9 +9,9 @@ import at.ac.tuwien.auto.calimero.exception.KNXException;
 import at.ac.tuwien.auto.iotsys.gateway.connectors.knx.KNXConnector;
 import at.ac.tuwien.auto.iotsys.gateway.connectors.knx.KNXWatchDog;
 
-public class DPST_9_1_ImplKnx extends DPST_9_1_Impl
+public class DPST_1_1_ImplKnx extends DPST_1_1_Impl
 {
-	private static final Logger log = Logger.getLogger(DPST_9_1_ImplKnx.class.getName());
+	private static final Logger log = Logger.getLogger(DPST_1_1_ImplKnx.class.getName());
 
 	private GroupAddress groupAddress;
 
@@ -21,7 +21,7 @@ public class DPST_9_1_ImplKnx extends DPST_9_1_Impl
 										// configuration
 
 	// if more group addresses are needed just add more constructor parameters.
-	public DPST_9_1_ImplKnx(KNXConnector connector, GroupAddress groupAddress)
+	public DPST_1_1_ImplKnx(KNXConnector connector, GroupAddress groupAddress)
 	{
 		this.groupAddress = groupAddress;
 		this.connector = connector;
@@ -47,9 +47,9 @@ public class DPST_9_1_ImplKnx extends DPST_9_1_Impl
 
 					x.setData(apdu, 0);
 
-					// String[] a = x.getAllValues();
+					//String[] a = x.getAllValues();
 
-					log.fine("Temperature for " + DPST_9_1_ImplKnx.this.getHref() + " now " + x.getValueFloat(1));
+					log.fine("Temperature for " + DPST_1_1_ImplKnx.this.getHref() + " now " + x.getValueFloat(1));
 					value.set(x.getValueFloat(1));
 				}
 				catch (KNXException e)
@@ -82,6 +82,6 @@ public class DPST_9_1_ImplKnx extends DPST_9_1_Impl
 		super.writeObject(obj);
 
 		// now write this.value to the KNX bus
-		// connector.write ...
+		connector.write(groupAddress, this.value().get());
 	}
 }
