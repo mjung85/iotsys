@@ -33,30 +33,32 @@
 package at.ac.tuwien.auto.iotsys.gateway.obix.objects.knx.datapoint.impl;
 
 import obix.Contract;
-import obix.Real;
+import obix.Int;
 import obix.Uri;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.knx.datapoint.DPST_9_1;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.knx.datapoint.DPST_1_1;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.knx.datapoint.DPST_3_7;
 
-public class DPST_9_1_Impl extends DataPointImpl implements DPST_9_1
+public class DPST_3_7_Impl extends DataPointImpl implements DPST_3_7
 {
-	protected Real value = new Real();
 
-	public DPST_9_1_Impl()
+	protected Int value = new Int();
+
+	public DPST_3_7_Impl()
 	{
-		value.setName(DPST_9_1.VALUE_NAME);
-		value.setHref(new Uri(DPST_9_1.VALUE_HREF));
-		value.setUnit(new Uri("obix:units/celsius"));
-		// value.setWritable(true);
+		value.setName(DPST_1_1.VALUE_NAME);
+		value.setHref(new Uri(DPST_1_1.VALUE_HREF));
+		value.setUnit(new Uri("obix:units/dimming"));
+		value.setWritable(true);
 
-		this.setIs(new Contract(DPST_9_1.CONTRACT));
+		this.setIs(new Contract(DPST_1_1.CONTRACT));
 		this.add(value);
 
-		this.function.set("°C-value (EIS5)");
-		this.unit.set("temperature (°C)");
+		this.function.set("Brighter / Darker");
+		this.unit.set("dimming control");
 	}
 
 	@Override
-	public Real value()
+	public Int value()
 	{
 		return value;
 	}

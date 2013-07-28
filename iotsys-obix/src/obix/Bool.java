@@ -10,7 +10,8 @@ package obix;
  * @creation 27 Apr 05
  * @version $Revision$ $Date$
  */
-public class Bool extends Val {
+public class Bool extends Val
+{
 
 	// //////////////////////////////////////////////////////////////
 	// Constructor
@@ -19,7 +20,8 @@ public class Bool extends Val {
 	/**
 	 * Construct named Bool with specified value.
 	 */
-	public Bool(String name, boolean val) {
+	public Bool(String name, boolean val)
+	{
 		super(name);
 		this.val = val; // we don't want to notify observers here
 		// set(val);
@@ -28,7 +30,8 @@ public class Bool extends Val {
 	/**
 	 * Construct named Bool with value of false.
 	 */
-	public Bool(String name) {
+	public Bool(String name)
+	{
 		super(name);
 		this.val = false; // we don't want to notify observers here
 		// set(false);
@@ -37,7 +40,8 @@ public class Bool extends Val {
 	/**
 	 * Construct unnamed Bool with specified value.
 	 */
-	public Bool(boolean val) {
+	public Bool(boolean val)
+	{
 		this.val = val; // we don't want to notify observers here
 		// set(val);
 	}
@@ -45,7 +49,8 @@ public class Bool extends Val {
 	/**
 	 * Construct unnamed Bool with value of false.
 	 */
-	public Bool() {
+	public Bool()
+	{
 		this.val = false; // we don't want to notify observers here
 		// set(false);
 	}
@@ -57,68 +62,83 @@ public class Bool extends Val {
 	/**
 	 * Get value as a boolean.
 	 */
-	public boolean get() {
+	public boolean get()
+	{
 		return val;
 	}
 
 	/**
 	 * Set value.
 	 */
-	public void set(boolean val) {
+	public void set(boolean val)
+	{
 		boolean oldVal = this.val;
 		this.val = val;
-		
-		if(oldVal != this.val)
+
+		if (oldVal != this.val)
 			notifyObservers();
 	}
-	
+
 	/**
 	 * Auto cast for int
 	 */
-	public void set(int val){
-		if(val > 0){
+	public void set(int val)
+	{
+		if (val > 0)
+		{
 			set(true);
 		}
-		else{
+		else
+		{
 			set(false);
 		}
 	}
-	
+
 	/**
 	 * Auto cast for long
 	 */
-	public void set(long val){
-		if(val > 0){
+	public void set(long val)
+	{
+		if (val > 0)
+		{
 			set(true);
 		}
-		else{
+		else
+		{
 			set(false);
 		}
 	}
-	
+
 	/**
 	 * Auto cast for int
 	 */
-	public void set(float val){
-		if(val > 0){
+	public void set(float val)
+	{
+		if (val > 0)
+		{
 			set(true);
 		}
-		else{
+		else
+		{
 			set(false);
 		}
 	}
-	
+
 	/**
 	 * Auto cast for double
 	 */
-	public void set(double val){
-		if(val > 0){
+	public void set(double val)
+	{
+		if (val > 0)
+		{
 			set(true);
 		}
-		else{
+		else
+		{
 			set(false);
 		}
 	}
+
 	// //////////////////////////////////////////////////////////////
 	// Val
 	// //////////////////////////////////////////////////////////////
@@ -126,21 +146,24 @@ public class Bool extends Val {
 	/**
 	 * Return "bool".
 	 */
-	public String getElement() {
+	public String getElement()
+	{
 		return "bool";
 	}
 
 	/**
 	 * Return BinObix.BOOL.
 	 */
-	public int getBinCode() {
+	public int getBinCode()
+	{
 		return obix.io.BinObix.BOOL;
 	}
 
 	/**
 	 * Return if specified Val has equivalent boolean value.
 	 */
-	public boolean valEquals(Val that) {
+	public boolean valEquals(Val that)
+	{
 		if (that instanceof Bool)
 			return ((Bool) that).val == val;
 		return false;
@@ -151,7 +174,8 @@ public class Bool extends Val {
 	 * negative integer, zero, or a positive integer as this object is less
 	 * than, equal to, or greater than the specified object.
 	 */
-	public int compareTo(Object that) {
+	public int compareTo(Object that)
+	{
 		boolean a = val;
 		boolean b = ((Bool) that).val;
 		if (a == b)
@@ -162,14 +186,16 @@ public class Bool extends Val {
 	/**
 	 * Encode the value as a string
 	 */
-	public String encodeVal() {
+	public String encodeVal()
+	{
 		return String.valueOf(val);
 	}
 
 	/**
 	 * Decode the value from a string.
 	 */
-	public void decodeVal(String val) throws Exception {
+	public void decodeVal(String val) throws Exception
+	{
 		this.val = val.equals("true");
 	}
 
@@ -180,14 +206,16 @@ public class Bool extends Val {
 	/**
 	 * Get the range facet or null if unspecified.
 	 */
-	public Uri getRange() {
+	public Uri getRange()
+	{
 		return range;
 	}
 
 	/**
 	 * Set the range facet.
 	 */
-	public void setRange(Uri range) {
+	public void setRange(Uri range)
+	{
 		this.range = range;
 	}
 
@@ -198,16 +226,23 @@ public class Bool extends Val {
 	private boolean val;
 	private Uri range;
 
-	public void writeObject(Obj input) {
-		if (this.getParent() != null) {
-			this.getParent().writeObject(input);
-		} else {
-			if (input instanceof Bool) {
+	public void writeObject(Obj input)
+	{
+		// TODO 
+//		if (this.getParent() != null)
+//		{
+//			this.getParent().writeObject(input);
+//		}
+//		else
+//		{
+			if (input instanceof Bool)
+			{
 				Bool inputBool = (Bool) input;
-				if (this.get() != inputBool.get()) {
+				if (this.get() != inputBool.get())
+				{
 					this.set(((Bool) input).get());
 				}
 			}
-		}
+//		}
 	}
 }

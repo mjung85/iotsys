@@ -32,31 +32,30 @@
 
 package at.ac.tuwien.auto.iotsys.gateway.obix.objects.knx.datapoint.impl;
 
+import obix.Bool;
 import obix.Contract;
-import obix.Real;
 import obix.Uri;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.knx.datapoint.DPST_9_1;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.knx.datapoint.DPST_1_1;
 
-public class DPST_9_1_Impl extends DataPointImpl implements DPST_9_1
+public class DPST_1_1_Impl extends DataPointImpl implements DPST_1_1
 {
-	protected Real value = new Real();
+	protected Bool value = new Bool();
 
-	public DPST_9_1_Impl()
+	public DPST_1_1_Impl()
 	{
-		value.setName(DPST_9_1.VALUE_NAME);
-		value.setHref(new Uri(DPST_9_1.VALUE_HREF));
-		value.setUnit(new Uri("obix:units/celsius"));
-		// value.setWritable(true);
+		value.setName(DPST_1_1.VALUE_NAME);
+		value.setHref(new Uri(DPST_1_1.VALUE_HREF));
+		value.setWritable(true);
 
-		this.setIs(new Contract(DPST_9_1.CONTRACT));
+		this.setIs(new Contract(DPST_1_1.CONTRACT));
 		this.add(value);
 
-		this.function.set("°C-value (EIS5)");
-		this.unit.set("temperature (°C)");
+		this.function.set("On / Off");
+		this.unit.set("on/off");
 	}
 
 	@Override
-	public Real value()
+	public Bool value()
 	{
 		return value;
 	}

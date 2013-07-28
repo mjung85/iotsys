@@ -1,6 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013
- * Institute of Computer Aided Automation, Automation Systems Group, TU Wien.
+ * Copyright (c) 2013, Automation Systems Group, TU Wien.
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -30,35 +29,20 @@
  * This file is part of the IoTSyS project.
  ******************************************************************************/
 
-package at.ac.tuwien.auto.iotsys.gateway.obix.objects.knx.datapoint.impl;
+package at.ac.tuwien.auto.iotsys.gateway.obix.objects.knx.datapoint;
 
-import obix.Contract;
-import obix.Real;
-import obix.Uri;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.knx.datapoint.DPST_9_1;
+import obix.Int;
 
-public class DPST_9_1_Impl extends DataPointImpl implements DPST_9_1
-{
-	protected Real value = new Real();
-
-	public DPST_9_1_Impl()
-	{
-		value.setName(DPST_9_1.VALUE_NAME);
-		value.setHref(new Uri(DPST_9_1.VALUE_HREF));
-		value.setUnit(new Uri("obix:units/celsius"));
-		// value.setWritable(true);
-
-		this.setIs(new Contract(DPST_9_1.CONTRACT));
-		this.add(value);
-
-		this.function.set("°C-value (EIS5)");
-		this.unit.set("temperature (°C)");
-	}
-
-	@Override
-	public Real value()
-	{
-		return value;
-	}
+public interface DPST_3_7 extends DataPoint {
+	public static final String VALUE_NAME = "value";
+	public static final String VALUE_HREF = "value";
+	
+	public static final String VALUE_CONTRACT = "<real name='"+ VALUE_NAME +"' href='"+ VALUE_HREF +"' val=''/>";
+	
+	// TODO probably Bool
+	public Int value();
+	
+	public static final String CONTRACT="knx:DPST_3_7 " + DataPoint.CONTRACT;
+	
 
 }
