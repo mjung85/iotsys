@@ -47,7 +47,7 @@ public class DPST_3_7_ImplKnx extends DPST_3_7_Impl
 
 					x.setData(apdu, 0);
 
-					//String[] a = x.getAllValues();
+					// String[] a = x.getAllValues();
 
 					log.fine("Temperature for " + DPST_3_7_ImplKnx.this.getHref() + " now " + x.getValueFloat(1));
 					value.set(x.getValueFloat(1));
@@ -74,14 +74,12 @@ public class DPST_3_7_ImplKnx extends DPST_3_7_Impl
 	@Override
 	public void writeObject(Obj obj)
 	{
-		// there is no write on a temperature value
-
 		// always pass the writeObject call to the super method (triggers oBIX
 		// related internal services like watches, alarms, ...)
 		// also the internal instance variables get updated
 		super.writeObject(obj);
 
 		// now write this.value to the KNX bus
-		// connector.write ...
+		connector.write(groupAddress, this.value().get());
 	}
 }

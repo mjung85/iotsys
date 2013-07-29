@@ -74,13 +74,11 @@ public class DPST_1_1_ImplKnx extends DPST_1_1_Impl
 	@Override
 	public void writeObject(Obj obj)
 	{
-		// there is no write on a temperature value
-
 		// always pass the writeObject call to the super method (triggers oBIX
 		// related internal services like watches, alarms, ...)
 		// also the internal instance variables get updated
 		super.writeObject(obj);
-
+		
 		// now write this.value to the KNX bus
 		connector.write(groupAddress, this.value().get());
 	}

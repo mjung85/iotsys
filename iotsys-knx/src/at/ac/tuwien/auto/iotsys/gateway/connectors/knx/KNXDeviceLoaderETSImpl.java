@@ -155,7 +155,401 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader
 		functional.add(list);
 		objectBroker.addObj(list, false);
 
-		// TODO ...
+		// All component
+		Obj all = new Obj();
+		all.setName("P-0341-0_GR-1");
+		all.setDisplayName("All component");
+		all.setIs(new Contract("knx:group"));
+		all.setHref(new Uri(list.getHref().getPath() + "/" + "all_component"));
+		list.add(all);
+		objectBroker.addObj(all, false);
+
+		Int address = new Int();
+		address.setName("address");
+		address.setHref(new Uri(all.getHref().getPath() + "/" + "address"));
+		address.setMin(0);
+		address.set(2048);
+		all.add(address);
+		objectBroker.addObj(address, false);
+
+		list = new List();
+		list.setName("groups");
+		list.setOf(new Contract("knx:group"));
+		list.setHref(new Uri(all.getHref().getPath() + "/" + "groups"));
+		all.add(list);
+		objectBroker.addObj(list, false);
+
+		// Light
+		Obj middle = new Obj();
+		middle.setName("P-0341-0_GR-2");
+		middle.setDisplayName("Light");
+		middle.setIs(new Contract("knx:group"));
+		middle.setHref(new Uri(list.getHref().getPath() + "/" + "light"));
+		list.add(middle);
+		objectBroker.addObj(middle, false);
+
+		address = new Int();
+		address.setName("address");
+		address.setHref(new Uri(middle.getHref().getPath() + "/" + "address"));
+		address.setMin(0);
+		address.set(2048);
+		middle.add(address);
+		objectBroker.addObj(address, false);
+
+		List middleList = new List();
+		middleList.setName("groups");
+		middleList.setOf(new Contract("knx:group"));
+		middleList.setHref(new Uri(middle.getHref().getPath() + "/" + "groups"));
+		middle.add(middleList);
+		objectBroker.addObj(middleList, false);
+
+		// Light on/off
+		Obj group = new Obj();
+		group.setName("P-0341-0_GA-1");
+		group.setDisplayName("Light on/off");
+		group.setIs(new Contract("knx:group"));
+		group.setHref(new Uri(middleList.getHref().getPath() + "/" + "light_on_off"));
+		middleList.add(group);
+		objectBroker.addObj(group, false);
+
+		address = new Int();
+		address.setName("address");
+		address.setHref(new Uri(group.getHref().getPath() + "/" + "address"));
+		address.setMin(0);
+		address.set(2048);
+		group.add(address);
+		objectBroker.addObj(address, false);
+
+		// List of instances
+		List instances = new List();
+		instances.setName("instances");
+		instances.setOf(new Contract("knx:instanceFunctional"));
+		instances.setHref(new Uri(group.getHref().getPath() + "/" + "instances"));
+		group.add(instances);
+		objectBroker.addObj(instances, false);
+
+		Obj instance = new Obj();
+		instance.setName("M-0001_A-9803-03-3F77_O-3_R-4");
+		instance.setHref(new Uri(instances.getHref().getPath() + "/" + "1"));
+		instance.setIs(new Contract("knx:instanceFunctional"));
+		instances.add(instance);
+		objectBroker.addObj(instance, false);
+
+		obix.Enum connector = new obix.Enum();
+		connector.setName("connector");
+		connector.setHref(new Uri(instance.getHref().getPath() + "/" + "connector"));
+		connector.setRange(new Uri("/enums/enumConnector"));
+		connector.set("send");
+		instance.add(connector);
+		objectBroker.addObj(connector, false);
+
+		Ref reference = new Ref();
+		reference.setName("reference");
+		reference.setHref(new Uri(network.getHref().getPath() + "/entities/" + "switching_actuator_n_567_01_8_amp" + "/1/datapoints/switch_channel_a"));
+		instance.add(reference);
+		objectBroker.addObj(reference, false);
+
+		// Dimmer
+		group = new Obj();
+		group.setName("P-0341-0_GA-2");
+		group.setDisplayName("Dimmer light");
+		group.setIs(new Contract("knx:group"));
+		group.setHref(new Uri(middleList.getHref().getPath() + "/" + "dimmer_light"));
+		middleList.add(group);
+		objectBroker.addObj(group, false);
+
+		address = new Int();
+		address.setName("address");
+		address.setHref(new Uri(group.getHref().getPath() + "/" + "address"));
+		address.setMin(0);
+		address.set(2049);
+		group.add(address);
+		objectBroker.addObj(address, false);
+
+		// List of instances
+		instances = new List();
+		instances.setName("instances");
+		instances.setOf(new Contract("knx:instanceFunctional"));
+		instances.setHref(new Uri(group.getHref().getPath() + "/" + "instances"));
+		group.add(instances);
+		objectBroker.addObj(instances, false);
+
+		instance = new Obj();
+		instance.setName("M-0001_A-6102-01-A218_O-1_R-1");
+		instance.setHref(new Uri(instances.getHref().getPath() + "/" + "1"));
+		instance.setIs(new Contract("knx:instanceFunctional"));
+		instances.add(instance);
+		objectBroker.addObj(instance, false);
+
+		connector = new obix.Enum();
+		connector.setName("connector");
+		connector.setHref(new Uri(instance.getHref().getPath() + "/" + "connector"));
+		connector.setRange(new Uri("/enums/enumConnector"));
+		connector.set("send");
+		instance.add(connector);
+		objectBroker.addObj(connector, false);
+
+		reference = new Ref();
+		reference.setName("reference");
+		reference.setHref(new Uri(network.getHref().getPath() + "/entities/" + "universal_dimmer_n_527" + "/1/datapoints/dimming"));
+		instance.add(reference);
+		objectBroker.addObj(reference, false);
+
+		// Temperature
+		middle = new Obj();
+		middle.setName("P-0341-0_GR-3");
+		middle.setDisplayName("Temperature");
+		middle.setIs(new Contract("knx:group"));
+		middle.setHref(new Uri(list.getHref().getPath() + "/" + "temperature"));
+		list.add(middle);
+		objectBroker.addObj(middle, false);
+
+		address = new Int();
+		address.setName("address");
+		address.setHref(new Uri(middle.getHref().getPath() + "/" + "address"));
+		address.setMin(0);
+		address.set(2304);
+		middle.add(address);
+		objectBroker.addObj(address, false);
+
+		middleList = new List();
+		middleList.setName("groups");
+		middleList.setOf(new Contract("knx:group"));
+		middleList.setHref(new Uri(middle.getHref().getPath() + "/" + "groups"));
+		middle.add(middleList);
+		objectBroker.addObj(middleList, false);
+
+		// Temp 1
+		group = new Obj();
+		group.setName("P-0341-0_GA-3");
+		group.setDisplayName("Temperature1");
+		group.setIs(new Contract("knx:group"));
+		group.setHref(new Uri(middleList.getHref().getPath() + "/" + "temperature1"));
+		middleList.add(group);
+		objectBroker.addObj(group, false);
+
+		address = new Int();
+		address.setName("address");
+		address.setHref(new Uri(group.getHref().getPath() + "/" + "address"));
+		address.setMin(0);
+		address.set(2304);
+		group.add(address);
+		objectBroker.addObj(address, false);
+
+		// List of instances
+		instances = new List();
+		instances.setName("instances");
+		instances.setOf(new Contract("knx:instanceFunctional"));
+		instances.setHref(new Uri(group.getHref().getPath() + "/" + "instances"));
+		group.add(instances);
+		objectBroker.addObj(instances, false);
+
+		instance = new Obj();
+		instance.setName("M-0001_A-9814-01-5F7E_O-0_R-2");
+		instance.setHref(new Uri(instances.getHref().getPath() + "/" + "1"));
+		instance.setIs(new Contract("knx:instanceFunctional"));
+		instances.add(instance);
+		objectBroker.addObj(instance, false);
+
+		connector = new obix.Enum();
+		connector.setName("connector");
+		connector.setHref(new Uri(instance.getHref().getPath() + "/" + "connector"));
+		connector.setRange(new Uri("/enums/enumConnector"));
+		connector.set("send");
+		instance.add(connector);
+		objectBroker.addObj(connector, false);
+
+		reference = new Ref();
+		reference.setName("reference");
+		reference.setHref(new Uri(network.getHref().getPath() + "/entities/" + "temperature_sensor_n_258_02" + "/1/datapoints/temperatur_kanal_a"));
+		instance.add(reference);
+		objectBroker.addObj(reference, false);
+
+		// Temp 2
+		group = new Obj();
+		group.setName("P-0341-0_GA-4");
+		group.setDisplayName("Temperature2");
+		group.setIs(new Contract("knx:group"));
+		group.setHref(new Uri(middleList.getHref().getPath() + "/" + "temperature2"));
+		middleList.add(group);
+		objectBroker.addObj(group, false);
+
+		address = new Int();
+		address.setName("address");
+		address.setHref(new Uri(group.getHref().getPath() + "/" + "address"));
+		address.setMin(0);
+		address.set(2305);
+		group.add(address);
+		objectBroker.addObj(address, false);
+
+		// List of instances
+		instances = new List();
+		instances.setName("instances");
+		instances.setOf(new Contract("knx:instanceFunctional"));
+		instances.setHref(new Uri(group.getHref().getPath() + "/" + "instances"));
+		group.add(instances);
+		objectBroker.addObj(instances, false);
+
+		instance = new Obj();
+		instance.setName("M-0001_A-9814-01-5F7E_O-1_R-3");
+		instance.setHref(new Uri(instances.getHref().getPath() + "/" + "1"));
+		instance.setIs(new Contract("knx:instanceFunctional"));
+		instances.add(instance);
+		objectBroker.addObj(instance, false);
+
+		connector = new obix.Enum();
+		connector.setName("connector");
+		connector.setHref(new Uri(instance.getHref().getPath() + "/" + "connector"));
+		connector.setRange(new Uri("/enums/enumConnector"));
+		connector.set("send");
+		instance.add(connector);
+		objectBroker.addObj(connector, false);
+
+		reference = new Ref();
+		reference.setName("reference");
+		reference.setHref(new Uri(network.getHref().getPath() + "/entities/" + "temperature_sensor_n_258_02" + "/1/datapoints/temperatur_kanal_b"));
+		instance.add(reference);
+		objectBroker.addObj(reference, false);
+
+		// Temp 3
+		group = new Obj();
+		group.setName("P-0341-0_GA-5");
+		group.setDisplayName("Temperature3");
+		group.setIs(new Contract("knx:group"));
+		group.setHref(new Uri(middleList.getHref().getPath() + "/" + "temperature3"));
+		middleList.add(group);
+		objectBroker.addObj(group, false);
+
+		address = new Int();
+		address.setName("address");
+		address.setHref(new Uri(group.getHref().getPath() + "/" + "address"));
+		address.setMin(0);
+		address.set(2306);
+		group.add(address);
+		objectBroker.addObj(address, false);
+
+		// List of instances
+		instances = new List();
+		instances.setName("instances");
+		instances.setOf(new Contract("knx:instanceFunctional"));
+		instances.setHref(new Uri(group.getHref().getPath() + "/" + "instances"));
+		group.add(instances);
+		objectBroker.addObj(instances, false);
+
+		instance = new Obj();
+		instance.setName("M-0001_A-9814-01-5F7E_O-2_R-1");
+		instance.setHref(new Uri(instances.getHref().getPath() + "/" + "1"));
+		instance.setIs(new Contract("knx:instanceFunctional"));
+		instances.add(instance);
+		objectBroker.addObj(instance, false);
+
+		connector = new obix.Enum();
+		connector.setName("connector");
+		connector.setHref(new Uri(instance.getHref().getPath() + "/" + "connector"));
+		connector.setRange(new Uri("/enums/enumConnector"));
+		connector.set("send");
+		instance.add(connector);
+		objectBroker.addObj(connector, false);
+
+		reference = new Ref();
+		reference.setName("reference");
+		reference.setHref(new Uri(network.getHref().getPath() + "/entities/" + "temperature_sensor_n_258_02" + "/1/datapoints/temperatur_kanal_c"));
+		instance.add(reference);
+		objectBroker.addObj(reference, false);
+
+		// Temp 4
+		group = new Obj();
+		group.setName("P-0341-0_GA-6");
+		group.setDisplayName("Temperature4");
+		group.setIs(new Contract("knx:group"));
+		group.setHref(new Uri(middleList.getHref().getPath() + "/" + "temperature4"));
+		middleList.add(group);
+		objectBroker.addObj(group, false);
+
+		address = new Int();
+		address.setName("address");
+		address.setHref(new Uri(group.getHref().getPath() + "/" + "address"));
+		address.setMin(0);
+		address.set(2307);
+		group.add(address);
+		objectBroker.addObj(address, false);
+
+		// List of instances
+		instances = new List();
+		instances.setName("instances");
+		instances.setOf(new Contract("knx:instanceFunctional"));
+		instances.setHref(new Uri(group.getHref().getPath() + "/" + "instances"));
+		group.add(instances);
+		objectBroker.addObj(instances, false);
+
+		instance = new Obj();
+		instance.setName("M-0001_A-9814-01-5F7E_O-3_R-4");
+		instance.setHref(new Uri(instances.getHref().getPath() + "/" + "1"));
+		instance.setIs(new Contract("knx:instanceFunctional"));
+		instances.add(instance);
+		objectBroker.addObj(instance, false);
+
+		connector = new obix.Enum();
+		connector.setName("connector");
+		connector.setHref(new Uri(instance.getHref().getPath() + "/" + "connector"));
+		connector.setRange(new Uri("/enums/enumConnector"));
+		connector.set("send");
+		instance.add(connector);
+		objectBroker.addObj(connector, false);
+
+		reference = new Ref();
+		reference.setName("reference");
+		reference.setHref(new Uri(network.getHref().getPath() + "/entities/" + "temperature_sensor_n_258_02" + "/1/datapoints/temperatur_kanal_d"));
+		instance.add(reference);
+		objectBroker.addObj(reference, false);
+
+		// Sun Blind
+		middle = new Obj();
+		middle.setName("P-0341-0_GR-4");
+		middle.setDisplayName("Sun Blind");
+		middle.setIs(new Contract("knx:group"));
+		middle.setHref(new Uri(list.getHref().getPath() + "/" + "sun_blind"));
+		list.add(middle);
+		objectBroker.addObj(middle, false);
+
+		address = new Int();
+		address.setName("address");
+		address.setHref(new Uri(middle.getHref().getPath() + "/" + "address"));
+		address.setMin(0);
+		address.set(2560);
+		middle.add(address);
+		objectBroker.addObj(address, false);
+
+		middleList = new List();
+		middleList.setName("groups");
+		middleList.setOf(new Contract("knx:group"));
+		middleList.setHref(new Uri(middle.getHref().getPath() + "/" + "groups"));
+		middle.add(middleList);
+		objectBroker.addObj(middleList, false);
+
+		// Diverses
+		middle = new Obj();
+		middle.setName("P-0341-0_GR-5");
+		middle.setDisplayName("Diverses");
+		middle.setIs(new Contract("knx:group"));
+		middle.setHref(new Uri(list.getHref().getPath() + "/" + "diverses"));
+		list.add(middle);
+		objectBroker.addObj(middle, false);
+
+		address = new Int();
+		address.setName("address");
+		address.setHref(new Uri(middle.getHref().getPath() + "/" + "address"));
+		address.setMin(0);
+		address.set(2816);
+		middle.add(address);
+		objectBroker.addObj(address, false);
+
+		middleList = new List();
+		middleList.setName("groups");
+		middleList.setOf(new Contract("knx:group"));
+		middleList.setHref(new Uri(middle.getHref().getPath() + "/" + "groups"));
+		middle.add(middleList);
+		objectBroker.addObj(middleList, false);
 	}
 
 	private void initTopology(KNXConnector knxConnector, ObjectBroker objectBroker, Obj network)
