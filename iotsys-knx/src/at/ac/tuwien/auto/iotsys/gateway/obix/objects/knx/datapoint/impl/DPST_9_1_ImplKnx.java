@@ -79,7 +79,7 @@ public class DPST_9_1_ImplKnx extends DPST_9_1_Impl
 		// always pass the writeObject call to the super method (triggers oBIX
 		// related internal services like watches, alarms, ...)
 		// also the internal instance variables get updated
-		super.writeObject(obj);
+		//super.writeObject(obj);
 
 		// now write this.value to the KNX bus
 		// connector.write ...
