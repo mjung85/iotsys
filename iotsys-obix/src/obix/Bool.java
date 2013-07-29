@@ -227,22 +227,19 @@ public class Bool extends Val
 	private Uri range;
 
 	public void writeObject(Obj input)
-	{
-		// TODO 
-//		if (this.getParent() != null)
-//		{
-//			this.getParent().writeObject(input);
-//		}
-//		else
-//		{
-			if (input instanceof Bool)
+	{ 
+		if (input instanceof Bool)
+		{
+			Bool inputBool = (Bool) input;
+			if (this.get() != inputBool.get())
 			{
-				Bool inputBool = (Bool) input;
-				if (this.get() != inputBool.get())
-				{
-					this.set(((Bool) input).get());
-				}
+				this.set(((Bool) input).get());
 			}
-//		}
+		}
+		
+		if (this.getParent() != null)
+		{
+			this.getParent().writeObject(input);
+		}
 	}
 }

@@ -55,20 +55,20 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader
 
 	private void connect(KNXConnector knxConnector)
 	{
-		// try
-		// {
-		// knxConnector.connect();
-		// }
-		// catch (UnknownHostException e)
-		// {
-		// // TODO Auto-generated catch block
-		// e.printStackTrace();
-		// }
-		// catch (KNXException e)
-		// {
-		// // TODO Auto-generated catch block
-		// e.printStackTrace();
-		// }
+		try
+		{
+			knxConnector.connect();
+		}
+		catch (UnknownHostException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		catch (KNXException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	private void initNetworks(KNXConnector knxConnector, ObjectBroker objectBroker)
@@ -86,10 +86,10 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader
 
 		// Network
 		Obj network = new Obj();
-		network.setName("P-0944");
-		network.setHref(new Uri(networks.getHref().getPath() + "/" + "1"));
-		network.setDisplayName("Uebungswand_pt1000_Dimmer");
-		network.setDisplay("any description");
+		network.setName("P-0341");
+		network.setHref(new Uri(networks.getHref().getPath() + "/" + "suitcase"));
+		network.setDisplayName("Suitcase");
+		network.setDisplay("...");
 		network.setIs(new Contract("knx:network"));
 		objectBroker.addObj(network, false);
 
@@ -105,9 +105,9 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader
 		// Note: build references after building the real objects, so that href
 		// is registered for real object
 		Ref networkRef = new Ref();
-		networkRef.setName("P-0944");
-		networkRef.setHref(new Uri("1"));
-		networkRef.setDisplayName("Uebungswand_pt1000_Dimmer");
+		networkRef.setName("P-0341");
+		networkRef.setHref(new Uri("suitcase"));
+		networkRef.setDisplayName("Suitcase");
 		networkRef.setIs(new Contract("knx:network"));
 		networks.add(networkRef);
 		objectBroker.addObj(networkRef, false);
@@ -580,8 +580,8 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader
 
 		// Domain general
 		Obj general = new Obj();
-		general.setName("general");
-		general.setDisplayName("General domain");
+		general.setName("D-0");
+		general.setDisplayName("General");
 		general.setIs(new Contract("knx:domain"));
 		general.setHref(new Uri(list.getHref().getPath() + "/" + "general"));
 		list.add(general);
