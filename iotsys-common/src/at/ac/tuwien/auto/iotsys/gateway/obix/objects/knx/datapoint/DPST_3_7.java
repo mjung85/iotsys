@@ -42,7 +42,7 @@ public interface DPST_3_7 extends DataPoint {
 	// TODO probably Bool
 	public Int value();
 	
-	public static final String CONTRACT="knx:DPST_3_7 " + DataPoint.CONTRACT;
+	public static final String CONTRACT="knx:DPST_3_7";
 	
 
 }
