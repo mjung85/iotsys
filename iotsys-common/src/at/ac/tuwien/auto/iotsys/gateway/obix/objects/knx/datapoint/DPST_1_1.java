@@ -37,10 +37,10 @@ public interface DPST_1_1 extends DataPoint {
 	public static final String VALUE_NAME = "value";
 	public static final String VALUE_HREF = "value";
 	
-	public static final String VALUE_CONTRACT = "<real name='"+ VALUE_NAME +"' href='"+ VALUE_HREF +"' val=''/>";
+	public static final String VALUE_CONTRACT = "<bool name='"+ VALUE_NAME +"' href='"+ VALUE_HREF +"' val=''/>";
 	public Bool value();
 	
-	public static final String CONTRACT="knx:DPST_1_1 " + DataPoint.CONTRACT;
+	public static final String CONTRACT="knx:DPST_1_1";
 	
 
 }

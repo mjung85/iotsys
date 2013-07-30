@@ -32,6 +32,8 @@
 
 package at.ac.tuwien.auto.iotsys.gateway.obix.objects.knx.datapoint.impl;
 
+import java.util.logging.Logger;
+
 import obix.Bool;
 import obix.Contract;
 import obix.Int;
@@ -43,6 +45,7 @@ import at.ac.tuwien.auto.iotsys.gateway.obix.objects.knx.datapoint.DPST_1_1;
 
 public class DPST_1_1_Impl extends DataPointImpl implements DPST_1_1
 {
+	private static final Logger log = Logger.getLogger(DPST_1_1_Impl.class.getName());
 	protected Bool value = new Bool();
 
 	public DPST_1_1_Impl()
@@ -68,8 +71,8 @@ public class DPST_1_1_Impl extends DataPointImpl implements DPST_1_1
 	public void writeObject(Obj input){
 		if(input instanceof DPST_1_1){
 			DPST_1_1 in = (DPST_1_1) input;
+			log.info("Writing on data point.");
 			this.value.set(in.value().get());
-			
 		}
 		else if(input instanceof Bool){
 			this.value.set(((Bool) input).get());
