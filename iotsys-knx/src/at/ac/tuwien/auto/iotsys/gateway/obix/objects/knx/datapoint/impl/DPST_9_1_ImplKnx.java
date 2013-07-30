@@ -2,7 +2,6 @@ package at.ac.tuwien.auto.iotsys.gateway.obix.objects.knx.datapoint.impl;
 
 import java.util.logging.Logger;
 
-import obix.Obj;
 import at.ac.tuwien.auto.calimero.GroupAddress;
 import at.ac.tuwien.auto.calimero.dptxlator.DPTXlator2ByteFloat;
 import at.ac.tuwien.auto.calimero.exception.KNXException;
@@ -17,12 +16,14 @@ public class DPST_9_1_ImplKnx extends DPST_9_1_Impl
 
 	private KNXConnector connector;
 
-	private boolean readFlag = false; // TODO need to be set based on ETS
+	private boolean readFlag = true; // TODO need to be set based on ETS
 										// configuration
 
 	// if more group addresses are needed just add more constructor parameters.
 	public DPST_9_1_ImplKnx(KNXConnector connector, GroupAddress groupAddress)
 	{
+		super();
+
 		this.groupAddress = groupAddress;
 		this.connector = connector;
 
@@ -69,19 +70,5 @@ public class DPST_9_1_ImplKnx extends DPST_9_1_Impl
 		{
 			// TODO read from KNX bus
 		}
-	}
-
-	@Override
-	public void writeObject(Obj obj)
-	{
-		// there is no write on a temperature value
-
-		// always pass the writeObject call to the super method (triggers oBIX
-		// related internal services like watches, alarms, ...)
-		// also the internal instance variables get updated
-		//super.writeObject(obj);
-
-		// now write this.value to the KNX bus
-		// connector.write ...
 	}
 }

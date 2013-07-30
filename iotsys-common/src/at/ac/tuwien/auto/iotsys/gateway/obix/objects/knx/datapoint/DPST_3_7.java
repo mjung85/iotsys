@@ -37,9 +37,7 @@ public interface DPST_3_7 extends DataPoint {
 	public static final String VALUE_NAME = "value";
 	public static final String VALUE_HREF = "value";
 	
-	public static final String VALUE_CONTRACT = "<real name='"+ VALUE_NAME +"' href='"+ VALUE_HREF +"' val=''/>";
-	
-	// TODO probably Bool
+	public static final String VALUE_CONTRACT = "<int name='"+ VALUE_NAME +"' href='"+ VALUE_HREF +"' val=''/>";	
 	public Int value();
 	
 	public static final String CONTRACT="knx:DPST_3_7";

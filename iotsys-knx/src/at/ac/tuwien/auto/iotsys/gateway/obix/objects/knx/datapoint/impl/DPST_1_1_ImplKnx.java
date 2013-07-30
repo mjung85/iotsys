@@ -4,7 +4,7 @@ import java.util.logging.Logger;
 
 import obix.Obj;
 import at.ac.tuwien.auto.calimero.GroupAddress;
-import at.ac.tuwien.auto.calimero.dptxlator.DPTXlator2ByteFloat;
+import at.ac.tuwien.auto.calimero.dptxlator.DPTXlatorBoolean;
 import at.ac.tuwien.auto.calimero.exception.KNXException;
 import at.ac.tuwien.auto.iotsys.gateway.connectors.knx.KNXConnector;
 import at.ac.tuwien.auto.iotsys.gateway.connectors.knx.KNXWatchDog;
@@ -17,12 +17,13 @@ public class DPST_1_1_ImplKnx extends DPST_1_1_Impl
 
 	private KNXConnector connector;
 
-	private boolean readFlag = false; // TODO need to be set based on ETS
-										// configuration
+	private boolean readFlag = false;
 
 	// if more group addresses are needed just add more constructor parameters.
 	public DPST_1_1_ImplKnx(KNXConnector connector, GroupAddress groupAddress)
 	{
+		super();
+		
 		this.groupAddress = groupAddress;
 		this.connector = connector;
 
@@ -43,14 +44,14 @@ public class DPST_1_1_ImplKnx extends DPST_1_1_Impl
 			{
 				try
 				{
-					DPTXlator2ByteFloat x = new DPTXlator2ByteFloat(DPTXlator2ByteFloat.DPT_TEMPERATURE);
-
+					DPTXlatorBoolean x = new DPTXlatorBoolean(DPTXlatorBoolean.DPT_SWITCH);
+					
 					x.setData(apdu, 0);
 
 					//String[] a = x.getAllValues();
 
-					log.fine("Temperature for " + DPST_1_1_ImplKnx.this.getHref() + " now " + x.getValueFloat(1));
-					value.set(x.getValueFloat(1));
+					log.fine("Switch for " + DPST_1_1_ImplKnx.this.getHref() + " now " + x.getValueBoolean());
+					value.set(x.getValueBoolean());
 				}
 				catch (KNXException e)
 				{
@@ -67,7 +68,8 @@ public class DPST_1_1_ImplKnx extends DPST_1_1_Impl
 		// the data point
 		if (readFlag)
 		{
-			// TODO read from KNX bus
+			boolean value = connector.readBool(groupAddress);		
+			this.value().set(value);
 		}
 	}
 

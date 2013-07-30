@@ -40,12 +40,12 @@ import obix.Int;
 import obix.Obj;
 import obix.Real;
 import obix.Uri;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.LightSwitchActuator;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.knx.datapoint.DPST_1_1;
 
 public class DPST_1_1_Impl extends DataPointImpl implements DPST_1_1
 {
 	private static final Logger log = Logger.getLogger(DPST_1_1_Impl.class.getName());
+
 	protected Bool value = new Bool();
 
 	public DPST_1_1_Impl()
@@ -66,21 +66,26 @@ public class DPST_1_1_Impl extends DataPointImpl implements DPST_1_1
 	{
 		return value;
 	}
-	
+
 	@Override
-	public void writeObject(Obj input){
-		if(input instanceof DPST_1_1){
+	public void writeObject(Obj input)
+	{
+		if (input instanceof DPST_1_1)
+		{
 			DPST_1_1 in = (DPST_1_1) input;
 			log.info("Writing on data point.");
 			this.value.set(in.value().get());
 		}
-		else if(input instanceof Bool){
+		else if (input instanceof Bool)
+		{
 			this.value.set(((Bool) input).get());
 		}
-		else if(input instanceof Real){
+		else if (input instanceof Real)
+		{
 			this.value.set(((Real) input).get());
 		}
-		else if(input instanceof Int){
+		else if (input instanceof Int)
+		{
 			this.value.set(((Int) input).get());
 		}
 	}
