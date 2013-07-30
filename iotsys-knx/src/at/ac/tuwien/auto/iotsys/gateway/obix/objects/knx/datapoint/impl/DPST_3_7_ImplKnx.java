@@ -4,8 +4,9 @@ import java.util.logging.Logger;
 
 import obix.Obj;
 import at.ac.tuwien.auto.calimero.GroupAddress;
-import at.ac.tuwien.auto.calimero.dptxlator.DPTXlator2ByteFloat;
+import at.ac.tuwien.auto.calimero.dptxlator.DPTXlator3BitControlled;
 import at.ac.tuwien.auto.calimero.exception.KNXException;
+import at.ac.tuwien.auto.calimero.process.ProcessCommunicator;
 import at.ac.tuwien.auto.iotsys.gateway.connectors.knx.KNXConnector;
 import at.ac.tuwien.auto.iotsys.gateway.connectors.knx.KNXWatchDog;
 
@@ -17,25 +18,22 @@ public class DPST_3_7_ImplKnx extends DPST_3_7_Impl
 
 	private KNXConnector connector;
 
-	private boolean readFlag = false; // TODO need to be set based on ETS
-										// configuration
+	private boolean readFlag = false;
 
 	// if more group addresses are needed just add more constructor parameters.
 	public DPST_3_7_ImplKnx(KNXConnector connector, GroupAddress groupAddress)
 	{
+		super();
+
 		this.groupAddress = groupAddress;
 		this.connector = connector;
-
-		// if it is not possible to read from the group address --> create a
-		// watchdog that monitors the communicaiton
-
+		
 		if (readFlag)
 			this.createWatchDog();
 	}
 
 	public void createWatchDog()
 	{
-
 		connector.addWatchDog(groupAddress, new KNXWatchDog()
 		{
 			@Override
@@ -43,14 +41,14 @@ public class DPST_3_7_ImplKnx extends DPST_3_7_Impl
 			{
 				try
 				{
-					DPTXlator2ByteFloat x = new DPTXlator2ByteFloat(DPTXlator2ByteFloat.DPT_TEMPERATURE);
+					DPTXlator3BitControlled x = new DPTXlator3BitControlled(DPTXlator3BitControlled.DPT_CONTROL_DIMMING);
 
 					x.setData(apdu, 0);
 
 					// String[] a = x.getAllValues();
 
-					log.fine("Temperature for " + DPST_3_7_ImplKnx.this.getHref() + " now " + x.getValueFloat(1));
-					value.set(x.getValueFloat(1));
+					log.fine("Value for " + DPST_3_7_ImplKnx.this.getHref() + " now " + x.getValueSigned());
+					value.set(x.getValueSigned());
 				}
 				catch (KNXException e)
 				{
@@ -67,7 +65,8 @@ public class DPST_3_7_ImplKnx extends DPST_3_7_Impl
 		// the data point
 		if (readFlag)
 		{
-			// TODO read from KNX bus
+			int value = connector.readInt(groupAddress, ProcessCommunicator.UNSCALED);
+			this.value().set(value);
 		}
 	}
 
@@ -80,6 +79,6 @@ public class DPST_3_7_ImplKnx extends DPST_3_7_Impl
 		super.writeObject(obj);
 
 		// now write this.value to the KNX bus
-		connector.write(groupAddress, this.value().get());
+		connector.write(groupAddress, (int) this.value().get(), ProcessCommunicator.UNSCALED);
 	}
 }

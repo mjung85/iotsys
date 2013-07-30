@@ -32,25 +32,31 @@
 
 package at.ac.tuwien.auto.iotsys.gateway.obix.objects.knx.datapoint.impl;
 
+import java.util.logging.Logger;
+
+import obix.Bool;
 import obix.Contract;
 import obix.Int;
+import obix.Obj;
+import obix.Real;
 import obix.Uri;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.knx.datapoint.DPST_1_1;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.knx.datapoint.DPST_3_7;
 
 public class DPST_3_7_Impl extends DataPointImpl implements DPST_3_7
 {
-
+	private static final Logger log = Logger.getLogger(DPST_3_7_Impl.class.getName());
 	protected Int value = new Int();
 
 	public DPST_3_7_Impl()
 	{
-		value.setName(DPST_1_1.VALUE_NAME);
-		value.setHref(new Uri(DPST_1_1.VALUE_HREF));
+		value.setName(DPST_3_7.VALUE_NAME);
+		value.setHref(new Uri(DPST_3_7.VALUE_HREF));
 		value.setUnit(new Uri("obix:units/dimming"));
 		value.setWritable(true);
+		value.setMin(0);
+		value.setMax(100);
 
-		this.setIs(new Contract(DPST_1_1.CONTRACT));
+		this.setIs(new Contract(DPST_3_7.CONTRACT));
 		this.add(value);
 
 		this.function.set("Brighter / Darker");
@@ -61,6 +67,29 @@ public class DPST_3_7_Impl extends DataPointImpl implements DPST_3_7
 	public Int value()
 	{
 		return value;
+	}
+
+	@Override
+	public void writeObject(Obj input)
+	{
+		if (input instanceof DPST_3_7)
+		{
+			DPST_3_7 in = (DPST_3_7) input;
+			log.info("Writing on data point.");
+			this.value.set(in.value().get());
+		}
+		else if (input instanceof Bool)
+		{
+			this.value.set(((Bool) input).get());
+		}
+		else if (input instanceof Real)
+		{
+			this.value.set(((Real) input).get());
+		}
+		else if (input instanceof Int)
+		{
+			this.value.set(((Int) input).get());
+		}
 	}
 
 }
