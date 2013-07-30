@@ -58,7 +58,7 @@ public class DemoAppLoaderImpl implements DeviceLoader {
 		
 		synchronized(myObjects){
 //			myObjects.addAll(objectBroker.addObj(application));
-			myObjects.addAll(objectBroker.addObj(xacml));
+//			myObjects.addAll(objectBroker.addObj(xacml));
 			objectBroker.enableGroupComm(application);
 		}
 		return null;

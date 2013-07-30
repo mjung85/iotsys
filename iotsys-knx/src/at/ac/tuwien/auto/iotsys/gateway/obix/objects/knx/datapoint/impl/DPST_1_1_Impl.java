@@ -34,7 +34,11 @@ package at.ac.tuwien.auto.iotsys.gateway.obix.objects.knx.datapoint.impl;
 
 import obix.Bool;
 import obix.Contract;
+import obix.Int;
+import obix.Obj;
+import obix.Real;
 import obix.Uri;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.LightSwitchActuator;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.knx.datapoint.DPST_1_1;
 
 public class DPST_1_1_Impl extends DataPointImpl implements DPST_1_1
@@ -58,6 +62,24 @@ public class DPST_1_1_Impl extends DataPointImpl implements DPST_1_1
 	public Bool value()
 	{
 		return value;
+	}
+	
+	@Override
+	public void writeObject(Obj input){
+		if(input instanceof DPST_1_1){
+			DPST_1_1 in = (DPST_1_1) input;
+			this.value.set(in.value().get());
+			
+		}
+		else if(input instanceof Bool){
+			this.value.set(((Bool) input).get());
+		}
+		else if(input instanceof Real){
+			this.value.set(((Real) input).get());
+		}
+		else if(input instanceof Int){
+			this.value.set(((Int) input).get());
+		}
 	}
 
 }
