@@ -577,7 +577,7 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader
 		// Topology View
 		Obj topology = new Obj();
 		topology.setName("topology");
-		topology.setDisplay("...");
+		topology.setDisplay("Topologie des Netzwerks");
 		topology.setHref(new Uri(network.getHref().getPath() + "/" + "views/topology"));
 		topology.setIs(new Contract("knx:viewTopology"));
 
@@ -819,7 +819,7 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader
 		// Building View
 		Obj building = new Obj();
 		building.setName("building");
-		building.setDisplay("...");
+		building.setDisplay("Geb‰ude-Sicht des Netzwerks");
 		building.setHref(new Uri(network.getHref().getPath() + "/" + "views/building"));
 		building.setIs(new Contract("knx:viewBuilding"));
 		objectBroker.addObj(building, false);
@@ -840,29 +840,104 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader
 		building.add(list);
 		objectBroker.addObj(list, false);
 
-		// Part Suitcase
-		Obj suitcase = new Obj();
-		suitcase.setName("suitcase");
-		suitcase.setDisplayName("Suitcase");
-		suitcase.setIs(new Contract("knx:part"));
-		suitcase.setHref(new Uri(list.getHref().getPath() + "/" + "suitcase"));
-		list.add(suitcase);
-		objectBroker.addObj(suitcase, false);
+		// Part
+		Obj part = new Obj();
+		part.setName("P-01EE-0_BP-0");
+		part.setDisplayName("Treitlstraﬂe 1-3");
+		part.setIs(new Contract("knx:part"));
+		part.setHref(new Uri(list.getHref().getPath() + "/" + "treitlstrasse_1-3"));
+		list.add(part);
+		objectBroker.addObj(part, false);
 
 		obix.Enum type = new obix.Enum();
 		type.setName("type");
-		type.setHref(new Uri(suitcase.getHref().getPath() + "/" + "type"));
+		type.setHref(new Uri(part.getHref().getPath() + "/" + "type"));
 		type.setRange(new Uri("/enums/enumPart"));
 		type.set("building");
-		suitcase.add(type);
+		part.add(type);
+		objectBroker.addObj(type, false);
+
+		// List of building parts
+		list = new List();
+		list.setName("parts");
+		list.setOf(new Contract("knx:part"));
+		list.setHref(new Uri(part.getHref().getPath() + "/" + "parts"));
+		part.add(list);
+		objectBroker.addObj(list, false);
+
+		// Part
+		part = new Obj();
+		part.setName("P-01EE-0_BP-1");
+		part.setDisplayName("4. Stock");
+		part.setIs(new Contract("knx:part"));
+		part.setHref(new Uri(list.getHref().getPath() + "/" + "4_stock"));
+		list.add(part);
+		objectBroker.addObj(part, false);
+
+		type = new obix.Enum();
+		type.setName("type");
+		type.setHref(new Uri(part.getHref().getPath() + "/" + "type"));
+		type.setRange(new Uri("/enums/enumPart"));
+		type.set("floor");
+		part.add(type);
+		objectBroker.addObj(type, false);
+
+		// List of building parts
+		list = new List();
+		list.setName("parts");
+		list.setOf(new Contract("knx:part"));
+		list.setHref(new Uri(part.getHref().getPath() + "/" + "parts"));
+		part.add(list);
+		objectBroker.addObj(list, false);
+
+		// Part
+		part = new Obj();
+		part.setName("P-01EE-0_BP-4");
+		part.setDisplayName("A-Lab");
+		part.setIs(new Contract("knx:part"));
+		part.setHref(new Uri(list.getHref().getPath() + "/" + "a-lab"));
+		list.add(part);
+		objectBroker.addObj(part, false);
+
+		type = new obix.Enum();
+		type.setName("type");
+		type.setHref(new Uri(part.getHref().getPath() + "/" + "type"));
+		type.setRange(new Uri("/enums/enumPart"));
+		type.set("room");
+		part.add(type);
+		objectBroker.addObj(type, false);
+
+		// List of building parts
+		list = new List();
+		list.setName("parts");
+		list.setOf(new Contract("knx:part"));
+		list.setHref(new Uri(part.getHref().getPath() + "/" + "parts"));
+		part.add(list);
+		objectBroker.addObj(list, false);
+
+		// Part
+		part = new Obj();
+		part.setName("P-01FF-0_BP-1");
+		part.setDisplayName("Suitcase");
+		part.setIs(new Contract("knx:part"));
+		part.setHref(new Uri(list.getHref().getPath() + "/" + "suitcase"));
+		list.add(part);
+		objectBroker.addObj(part, false);
+
+		type = new obix.Enum();
+		type.setName("type");
+		type.setHref(new Uri(part.getHref().getPath() + "/" + "type"));
+		type.setRange(new Uri("/enums/enumPart"));
+		type.set("distributedBoard");
+		part.add(type);
 		objectBroker.addObj(type, false);
 
 		// List of instances
 		list = new List();
 		list.setName("instances");
 		list.setOf(new Contract("knx:instanceBuilding"));
-		list.setHref(new Uri(suitcase.getHref().getPath() + "/" + "instances"));
-		suitcase.add(list);
+		list.setHref(new Uri(part.getHref().getPath() + "/" + "instances"));
+		part.add(list);
 		objectBroker.addObj(list, false);
 
 		// 1
@@ -969,7 +1044,7 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader
 		// Building View
 		Obj domains = new Obj();
 		domains.setName("domains");
-		domains.setDisplay("...");
+		domains.setDisplay("Dom‰nen des Netzwerks");
 		domains.setHref(new Uri(network.getHref().getPath() + "/" + "views/domains"));
 		domains.setIs(new Contract("knx:viewDomains"));
 
