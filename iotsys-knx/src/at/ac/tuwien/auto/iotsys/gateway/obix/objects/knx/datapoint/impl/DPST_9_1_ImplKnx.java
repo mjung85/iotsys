@@ -3,13 +3,11 @@ package at.ac.tuwien.auto.iotsys.gateway.obix.objects.knx.datapoint.impl;
 import java.util.logging.Logger;
 
 import obix.Obj;
-
 import at.ac.tuwien.auto.calimero.GroupAddress;
 import at.ac.tuwien.auto.calimero.dptxlator.DPTXlator2ByteFloat;
 import at.ac.tuwien.auto.calimero.exception.KNXException;
 import at.ac.tuwien.auto.iotsys.gateway.connectors.knx.KNXConnector;
 import at.ac.tuwien.auto.iotsys.gateway.connectors.knx.KNXWatchDog;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.knx.TemperatureSensorImplKnx;
 
 public class DPST_9_1_ImplKnx extends DPST_9_1_Impl {
 	private static final Logger log = Logger.getLogger(DPST_9_1_ImplKnx.class

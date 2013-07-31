@@ -97,7 +97,7 @@ public class Named {
 
 		public UDPListener(Named sn) {
 			try {
-				sock = new DatagramSocket(53, getByAddress("0.0.0.0")); //$NON-NLS-1$
+				sock = new DatagramSocket(53, getByAddress("0.0.0.0"));
 			} catch (SocketException ex) {
 				Logger.getLogger(Named.class.getName()).log(Level.SEVERE, null, ex);
 			}
@@ -149,7 +149,7 @@ public class Named {
 					authRcrdList.add(createAuthRecord(true));
 					break;
 				} else {
-					if (!((requestedName.endsWith("." + AUTHORITATIVE_DOMAIN)) || (requestedName.equals(AUTHORITATIVE_DOMAIN)))) { //$NON-NLS-1$
+					if (!((requestedName.endsWith("." + AUTHORITATIVE_DOMAIN)) || (requestedName.equals(AUTHORITATIVE_DOMAIN)))) {
 						out = new DNSOutgoing(DNSConstants.FLAGS_QR_RESPONSE
 								| DNSConstants.FLAGS_RF, false, msg.getSenderUDPPayload());
 						break;
@@ -211,7 +211,7 @@ public class Named {
 			DNSRecord result = null;
 
 			// look up
-			String resolved = MDnsResolverImpl.getInstance().resolve(requestedName); // virtualLight.iotsys.auto.tuwien.ac.at.
+			String resolved = MdnsResolverImpl.getInstance().resolve(requestedName); // virtualLight.iotsys.auto.tuwien.ac.at.
 			if (resolved != null){
 				if (!ipv6) {
 					//result = new DNSRecord.IPv4Address(requestedName, DNSRecordClass.CLASS_IN, DNSRecordClass.UNIQUE, DNSConstants.DNS_TTL, getByAddress(resolved));
@@ -253,7 +253,7 @@ public class Named {
 				if (bytes != null) {
 					return InetAddress.getByAddress(addr, bytes);
 				}
-				throw new UnknownHostException("Invalid address: " + addr); //$NON-NLS-1$
+				throw new UnknownHostException("Invalid address: " + addr);
 
 			} catch (UnknownHostException ex) {
 				Logger.getLogger(Named.class.getName()).log(Level.SEVERE, null, ex);
@@ -267,7 +267,7 @@ public class Named {
 			} else if (family == IPv6) {
 				return parseV6(s);
 			} else {
-				throw new IllegalArgumentException("unknown address family"); //$NON-NLS-1$
+				throw new IllegalArgumentException("unknown address family");
 			}
 		}
 
@@ -345,7 +345,7 @@ public class Named {
 			int range = -1;
 			byte[] data = new byte[16];
 
-			String[] tokens = s.split(":", -1); //$NON-NLS-1$
+			String[] tokens = s.split(":", -1);
 
 			int first = 0;
 			int last = tokens.length - 1;

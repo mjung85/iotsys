@@ -48,9 +48,9 @@ import obix.List;
 import obix.Obj;
 import obix.Ref;
 import obix.Uri;
+import at.ac.tuwien.auto.iotsys.commons.MdnsResolver;
 import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
 import at.ac.tuwien.auto.iotsys.commons.OperationHandler;
-import at.ac.tuwien.auto.iotsys.commons.MDnsResolver;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.AboutImpl;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.HistoryHelper;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.WatchImpl;
@@ -90,7 +90,7 @@ public class ObjectBrokerImpl implements ObjectBroker {
 
 	private ObjectRefresher objectRefresher = new ObjectRefresher();
 
-	private MDnsResolver resolver;
+	private MdnsResolver resolver;
 
 	private ObjectBrokerImpl() {
 		objects = new HashMap<String, Obj>();
@@ -331,10 +331,11 @@ public class ObjectBrokerImpl implements ObjectBroker {
 			}
 			String href = o.getFullContextPath();
 			ipv6Mapping.put(generateIPv6Address.toString(), href);
-//			System.out.println("href: " + href + " ipv6: " + ipv6Address);
-			if(resolver != null)
+			if(resolver != null) {
 				resolver.addToRecordDict(href, ipv6Address);
-
+				resolver.registerDevice(href, o.getClass(), ipv6Address);
+			}
+			
 			// add kids 
 			//TODO this should be done recursively, not only for the first level of kids
 			if (o.size() > 0) {
@@ -532,11 +533,11 @@ public class ObjectBrokerImpl implements ObjectBroker {
 	}
 	
 	@Override
-	public MDnsResolver getMDnsResolver() {
+	public MdnsResolver getMdnsResolver() {
 		return resolver;
 	}
 	@Override
-	public void setMdnsResolver(MDnsResolver resolver){
+	public void setMdnsResolver(MdnsResolver resolver){
 		this.resolver = resolver;
 	}
 }

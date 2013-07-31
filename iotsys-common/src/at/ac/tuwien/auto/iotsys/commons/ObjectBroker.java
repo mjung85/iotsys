@@ -51,7 +51,7 @@ public interface ObjectBroker{
 
 	public ArrayList<String> getObjNames();
 
-	public MDnsResolver getMDnsResolver();
+	public MdnsResolver getMdnsResolver();
 
-	public void setMdnsResolver(MDnsResolver resolver);
+	public void setMdnsResolver(MdnsResolver resolver);
 }

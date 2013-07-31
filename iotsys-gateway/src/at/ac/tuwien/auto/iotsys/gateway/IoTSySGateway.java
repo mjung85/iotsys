@@ -48,7 +48,7 @@ import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
 import at.ac.tuwien.auto.iotsys.commons.PropertiesLoader;
 import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
 import at.ac.tuwien.auto.iotsys.commons.PropertiesLoader;
-import at.ac.tuwien.auto.iotsys.commons.MDnsResolver;
+import at.ac.tuwien.auto.iotsys.commons.MdnsResolver;
 import at.ac.tuwien.auto.iotsys.commons.interceptor.ClassAlreadyRegisteredException;
 import at.ac.tuwien.auto.iotsys.commons.interceptor.Interceptor;
 import at.ac.tuwien.auto.iotsys.commons.interceptor.InterceptorBroker;
@@ -61,7 +61,7 @@ import at.ac.tuwien.auto.iotsys.gateway.obix.server.ObixServer;
 import at.ac.tuwien.auto.iotsys.gateway.obix.server.ObixServerImpl;
 import at.ac.tuwien.auto.iotsys.gateway.util.ExiUtil;
 import at.ac.tuwien.auto.iotsys.mdnssd.Named;
-import at.ac.tuwien.auto.iotsys.mdnssd.MDnsResolverImpl;
+import at.ac.tuwien.auto.iotsys.mdnssd.MdnsResolverImpl;
 import at.ac.tuwien.auto.iotsys.xacml.pdp.PDPInterceptorSettings;
 // import at.ac.tuwien.auto.iotsys.xacml.pdp.PDPInterceptor;
 /**
@@ -82,7 +82,10 @@ public class IoTSySGateway {
 
 	private ObixServer obixServer = null;
 	
-	private MDnsResolver mdnsResolver;
+	private CoAPServer coapServer;
+	private NanoHTTPD httpServer;
+	
+	private MdnsResolver mdnsResolver;
 
 	public IoTSySGateway() {
 
@@ -124,8 +127,8 @@ public class IoTSySGateway {
 		}
 		connectors = deviceLoader.initDevices(objectBroker);
 
-		if(objectBroker.getMDnsResolver() != null){
-			log.info("No of records built: " + objectBroker.getMDnsResolver().getNumberOfRecord());
+		if(objectBroker.getMdnsResolver() != null){
+			log.info("No of records built: " + objectBroker.getMdnsResolver().getNumberOfRecord());
 		}
 		else{
 			log.info("No MDNS resolver service found.");
@@ -222,8 +225,8 @@ public class IoTSySGateway {
 		ObixObservingManager.getInstance().setObixServer(obixServer);
 
 		try {
-			new CoAPServer(obixServer);
-			new NanoHTTPD(Integer.parseInt(httpPort), obixServer);
+			coapServer= new CoAPServer(obixServer);
+			httpServer = new NanoHTTPD(Integer.parseInt(httpPort), obixServer);
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
 		}
@@ -231,6 +234,7 @@ public class IoTSySGateway {
 
 	public void stopGateway() {
 		objectBroker.shutdown();
+		httpServer.stop();
 //		CsvCreator.instance.close();
 		closeConnectors();
 	}
@@ -238,7 +242,7 @@ public class IoTSySGateway {
 	public static void main(String[] args) {
 		final IoTSySGateway iotsys = new IoTSySGateway();
 		(new Named()).startNamedService();
-		iotsys.setMdnsResolver(MDnsResolverImpl.getInstance());
+		iotsys.setMdnsResolver(MdnsResolverImpl.getInstance());
 		iotsys.startGateway();
 
 		// TestClient testClient = new TestClient(iotsys.objectBroker);
@@ -281,11 +285,11 @@ public class IoTSySGateway {
 		return objectBroker;
 	}	
 
-	public MDnsResolver getMdnsResolver() {
+	public MdnsResolver getMdnsResolver() {
 		return mdnsResolver;
 	}
 
-	public void setMdnsResolver(MDnsResolver mdnsResolver) {
+	public void setMdnsResolver(MdnsResolver mdnsResolver) {
 		this.mdnsResolver = mdnsResolver;
 	}
 }
