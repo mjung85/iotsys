@@ -79,7 +79,7 @@ public class KNXDeviceLoaderImpl implements DeviceLoader {
 				try {
 					KNXConnector knxConnector = new KNXConnector(routerIP,
 							routerPort, localIP);
-					//knxConnector.connect();
+					knxConnector.connect();
 					connectors.add(knxConnector);
 
 					if (knxConfiguredDevices instanceof Collection<?>) {
