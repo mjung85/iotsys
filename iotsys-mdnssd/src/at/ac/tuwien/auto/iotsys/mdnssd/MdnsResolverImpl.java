@@ -45,6 +45,7 @@ import javax.jmdns.JmDNS;
 import javax.jmdns.ServiceInfo;
 
 import at.ac.tuwien.auto.iotsys.commons.MdnsResolver;
+import at.ac.tuwien.auto.iotsys.commons.PropertiesLoader;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.Actuator;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.Sensor;
 
@@ -62,7 +63,7 @@ public class MdnsResolverImpl implements MdnsResolver {
 	private MdnsResolverImpl() {
 		try {
 			jmdns = JmDNS.create(InetAddress
-					.getByName("fe80::acbc:b659:71db:5cb7%20"));
+					.getByName(PropertiesLoader.getInstance().getProperties().getProperty("authNsAddr6", "fe80::acbc:b659:71db:5cb7%20")));
 			executor = Executors.newFixedThreadPool(10);
 		} catch (UnknownHostException e) {
 			// TODO Auto-generated catch block
