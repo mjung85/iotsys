@@ -55,7 +55,7 @@
 
     <connector>
       <name>KNX TP1 Suitcase</name>
-      <enabled>true</enabled>
+      <enabled>false</enabled>
       <router>
         <ip>192.168.161.59</ip>
         <port>3671</port>
