@@ -103,7 +103,7 @@ public class DPST_3_7_ImplKnx extends DPST_3_7_Impl
 			}
 			
 			// current value is below the lower interval bounds
-			while(this.value().get() < (this.curInterval-1) * intervalSize){
+			while(this.value().get() < (this.curInterval) * intervalSize){
 				// increase the current interval			
 				connector.getProcessCommunicator().write(groupAddress, ProcessCommunicator.BOOL_DECREASE,(byte) STEP_SIZE);
 				this.curInterval -= 1;
