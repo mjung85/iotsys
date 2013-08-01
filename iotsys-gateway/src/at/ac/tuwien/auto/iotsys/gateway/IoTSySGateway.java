@@ -38,12 +38,16 @@ import java.io.InputStreamReader;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-
 import java.util.logging.Logger;
 
-import at.ac.tuwien.auto.iotsys.gateway.util.CsvCreator;
-import at.ac.tuwien.auto.iotsys.gateway.util.ExiUtil;
-
+import at.ac.tuwien.auto.iotsys.commons.Connector;
+import at.ac.tuwien.auto.iotsys.commons.DeviceLoader;
+import at.ac.tuwien.auto.iotsys.commons.MDnsResolver;
+import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
+import at.ac.tuwien.auto.iotsys.commons.PropertiesLoader;
+import at.ac.tuwien.auto.iotsys.commons.interceptor.ClassAlreadyRegisteredException;
+import at.ac.tuwien.auto.iotsys.commons.interceptor.Interceptor;
+import at.ac.tuwien.auto.iotsys.commons.interceptor.InterceptorBroker;
 import at.ac.tuwien.auto.iotsys.gateway.interceptor.InterceptorBrokerImpl;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objectbroker.ObjectBrokerImpl;
 import at.ac.tuwien.auto.iotsys.gateway.obix.server.CoAPServer;
@@ -51,168 +55,208 @@ import at.ac.tuwien.auto.iotsys.gateway.obix.server.NanoHTTPD;
 import at.ac.tuwien.auto.iotsys.gateway.obix.server.ObixObservingManager;
 import at.ac.tuwien.auto.iotsys.gateway.obix.server.ObixServer;
 import at.ac.tuwien.auto.iotsys.gateway.obix.server.ObixServerImpl;
+import at.ac.tuwien.auto.iotsys.gateway.util.ExiUtil;
+import at.ac.tuwien.auto.iotsys.mdnssd.MDnsResolverImpl;
+import at.ac.tuwien.auto.iotsys.mdnssd.Named;
 import at.ac.tuwien.auto.iotsys.xacml.pdp.PDPInterceptorSettings;
+
 // import at.ac.tuwien.auto.iotsys.xacml.pdp.PDPInterceptor;
-
-import at.ac.tuwien.auto.iotsys.commons.Connector;
-import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
-import at.ac.tuwien.auto.iotsys.commons.PropertiesLoader;
-import at.ac.tuwien.auto.iotsys.commons.interceptor.ClassAlreadyRegisteredException;
-import at.ac.tuwien.auto.iotsys.commons.interceptor.Interceptor;
-import at.ac.tuwien.auto.iotsys.commons.interceptor.InterceptorBroker;
-
 /**
  * Standalone class to launch the gateway.
  * 
  */
-public class IoTSySGateway {
+public class IoTSySGateway
+{
 	private ObjectBroker objectBroker;
 	private DeviceLoaderImpl deviceLoader;
 	private InterceptorBroker interceptorBroker;
 
 	private boolean osgiEnvironment = false;
-	
+
 	private ArrayList<Connector> connectors = new ArrayList<Connector>();
 
-	private static final Logger log = Logger.getLogger(IoTSySGateway.class
-			.getName());
+	private static final Logger log = Logger.getLogger(IoTSySGateway.class.getName());
 
 	private ObixServer obixServer = null;
 
-	public IoTSySGateway() {
+	private MDnsResolver mdnsResolver;
+
+	public IoTSySGateway()
+	{
 
 	}
 
-	public void startGateway() {
+	public void startGateway()
+	{
+		startGateway(DeviceLoader.DEVICE_CONFIGURATION_LOCATION);
+	}
+
+	public void startGateway(String devicesConfigFile)
+	{
 
 		Log.init();
 		log.info("Server starting.");
-		
+
 		// init exi util
 		ExiUtil.getInstance();
-		// init contracts
-		at.ac.tuwien.auto.iotsys.gateway.obix.objects.ContractInit.init();
+		// init contracts, this try is to catch re-initiation exception when
+		// restart the bundle
+		try
+		{
+			at.ac.tuwien.auto.iotsys.gateway.obix.objects.ContractInit.init();
+		} catch (IllegalStateException e)
+		{
 
-		String httpPort = PropertiesLoader.getInstance().getProperties()
-				.getProperty("iotsys.gateway.http.port", "8080");
+		}
+		String httpPort = PropertiesLoader.getInstance().getProperties().getProperty("iotsys.gateway.http.port", "8080");
 
 		log.info("HTTP-Port: " + httpPort);
-		
+
 		// initialize object broker
 		objectBroker = ObjectBrokerImpl.getInstance();
 		obixServer = new ObixServerImpl(objectBroker);
 
+		objectBroker.setMdnsResolver(mdnsResolver);
+
 		// add initial objects to the database
-		deviceLoader = new DeviceLoaderImpl();
+		if (devicesConfigFile == null)
+		{
+			deviceLoader = new DeviceLoaderImpl();
+		} else
+		{
+			deviceLoader = new DeviceLoaderImpl(devicesConfigFile);
+		}
 		connectors = deviceLoader.initDevices(objectBroker);
+
+		if (objectBroker.getMDnsResolver() != null)
+		{
+			log.info("No of records built: " + objectBroker.getMDnsResolver().getNumberOfRecord());
+		} else
+		{
+			log.info("No MDNS resolver service found.");
+		}
 
 		interceptorBroker = InterceptorBrokerImpl.getInstance();
 		// initialize interceptor broker
-		boolean enableXacml = Boolean.parseBoolean(PropertiesLoader.getInstance()
-				.getProperties().getProperty("iotsys.gateway.xacml", "false"));
+		boolean enableXacml = Boolean.parseBoolean(PropertiesLoader.getInstance().getProperties().getProperty("iotsys.gateway.xacml", "false"));
 
 		log.info("XACML module enabled: " + enableXacml);
-		if (enableXacml && !isOsgiEnvironment()) {			
+		if (enableXacml && !isOsgiEnvironment())
+		{
 			// temporarly register interceptor
-			try {
+			try
+			{
 				// load PDP interceptor if available on class path
 				// load settings for remote pdp
-				boolean remotePdp = Boolean.parseBoolean(PropertiesLoader
-						.getInstance().getProperties()
-						.getProperty("iotsys.gateway.xacml.remotePDP", "false"));
+				boolean remotePdp = Boolean.parseBoolean(PropertiesLoader.getInstance().getProperties().getProperty("iotsys.gateway.xacml.remotePDP", "false"));
 				// PDPInterceptorSettings.getInstance().setRemotePdp(remotePdp);
 
-				String remotePdpWsdl = PropertiesLoader.getInstance()
-						.getProperties()
-						.getProperty("iotsys.gateway.xacml.remotePDPWsdl", "");
+				String remotePdpWsdl = PropertiesLoader.getInstance().getProperties().getProperty("iotsys.gateway.xacml.remotePDPWsdl", "");
 				// PDPInterceptorSettings.getInstance().setRemotePdpWsdl(remotePdpWsdl);
 				Class pdpSettingsClazz = null;
-				
-				try {
+
+				try
+				{
 					pdpSettingsClazz = Class.forName("at.ac.tuwien.auto.iotsys.xacml.pdp.PDPInterceptorSettings");
 					log.info("Class found: " + pdpSettingsClazz.getName());
-				} catch (ClassNotFoundException e2) {
+				} catch (ClassNotFoundException e2)
+				{
 					// TODO Auto-generated catch block
 					e2.printStackTrace();
 				}
-				
 
-				if (pdpSettingsClazz != null) {
-					
-						Method getInstance;
-						try {
-							getInstance = pdpSettingsClazz.getDeclaredMethod("getInstance");
-							PDPInterceptorSettings settings = (PDPInterceptorSettings) getInstance.invoke(null, null);
-							settings.setRemotePdpWsdl(remotePdpWsdl);
-							settings.setRemotePdp(remotePdp);
-						} catch (NoSuchMethodException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						} catch (SecurityException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						} catch (IllegalAccessException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						} catch (IllegalArgumentException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						} catch (InvocationTargetException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-				
+				if (pdpSettingsClazz != null)
+				{
 
-				}
-				
-				
-				Class clazz = null;
-				try {
-					clazz = Class.forName("at.ac.tuwien.auto.iotsys.xacml.pdp.PDPInterceptor");
-				} catch (ClassNotFoundException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-				
-				
-				if(clazz != null){
-					Interceptor interceptor;
-					try {
-						interceptor = (Interceptor) clazz.newInstance();
-						interceptorBroker.register(interceptor);
-					} catch (InstantiationException e) {
+					Method getInstance;
+					try
+					{
+						getInstance = pdpSettingsClazz.getDeclaredMethod("getInstance");
+						PDPInterceptorSettings settings = (PDPInterceptorSettings) getInstance.invoke(null, null);
+						settings.setRemotePdpWsdl(remotePdpWsdl);
+						settings.setRemotePdp(remotePdp);
+					} catch (NoSuchMethodException e)
+					{
 						// TODO Auto-generated catch block
 						e.printStackTrace();
-					} catch (IllegalAccessException e) {
+					} catch (SecurityException e)
+					{
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (IllegalAccessException e)
+					{
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (IllegalArgumentException e)
+					{
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (InvocationTargetException e)
+					{
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-					
+
 				}
-			} catch (ClassAlreadyRegisteredException e) {
+
+				Class clazz = null;
+				try
+				{
+					clazz = Class.forName("at.ac.tuwien.auto.iotsys.xacml.pdp.PDPInterceptor");
+				} catch (ClassNotFoundException e1)
+				{
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+
+				if (clazz != null)
+				{
+					Interceptor interceptor;
+					try
+					{
+						interceptor = (Interceptor) clazz.newInstance();
+						interceptorBroker.register(interceptor);
+					} catch (InstantiationException e)
+					{
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (IllegalAccessException e)
+					{
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+
+				}
+			} catch (ClassAlreadyRegisteredException e)
+			{
 				// silent exceptionhandling
 			}
 		}
 
 		ObixObservingManager.getInstance().setObixServer(obixServer);
 
-		try {
+		try
+		{
 			new CoAPServer(obixServer);
 			new NanoHTTPD(Integer.parseInt(httpPort), obixServer);
-		} catch (IOException ioe) {
+		} catch (IOException ioe)
+		{
 			ioe.printStackTrace();
 		}
 	}
 
-	public void stopGateway() {
+	public void stopGateway()
+	{
 		objectBroker.shutdown();
-//		CsvCreator.instance.close();
+		// CsvCreator.instance.close();
 		closeConnectors();
 	}
 
-	public static void main(String[] args) {
+	public static void main(String[] args)
+	{
 		final IoTSySGateway iotsys = new IoTSySGateway();
-
+		(new Named()).startNamedService();
+		iotsys.setMdnsResolver(MDnsResolverImpl.getInstance());
 		iotsys.startGateway();
 
 		// TestClient testClient = new TestClient(iotsys.objectBroker);
@@ -222,32 +266,55 @@ public class IoTSySGateway {
 
 		BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
 
-		try {
+		try
+		{
 			in.read();
 			iotsys.stopGateway();
-		} catch (IOException ioex) {
+		} catch (IOException ioex)
+		{
 			ioex.printStackTrace();
 			System.exit(1);
 		}
 		System.exit(0);
 	}
 
-	private void closeConnectors() {
-		for (Connector connector : connectors) {
-			try {
+	private void closeConnectors()
+	{
+		for (Connector connector : connectors)
+		{
+			try
+			{
 				connector.disconnect();
 				log.info("Shutting down connector " + connector.toString());
-			} catch (Exception e) {
+			} catch (Exception e)
+			{
 				e.printStackTrace();
 			}
 		}
 	}
 
-	public boolean isOsgiEnvironment() {
+	public boolean isOsgiEnvironment()
+	{
 		return osgiEnvironment;
 	}
 
-	public void setOsgiEnvironment(boolean osgiEnvironment) {
+	public void setOsgiEnvironment(boolean osgiEnvironment)
+	{
 		this.osgiEnvironment = osgiEnvironment;
+	}
+
+	public ObjectBroker getObjectBroker()
+	{
+		return objectBroker;
+	}
+
+	public MDnsResolver getMdnsResolver()
+	{
+		return mdnsResolver;
+	}
+
+	public void setMdnsResolver(MDnsResolver mdnsResolver)
+	{
+		this.mdnsResolver = mdnsResolver;
 	}
 }

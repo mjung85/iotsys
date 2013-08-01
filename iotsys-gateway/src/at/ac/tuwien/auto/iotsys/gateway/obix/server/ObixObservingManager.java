@@ -9,24 +9,20 @@ import java.util.logging.Logger;
 import at.ac.tuwien.auto.iotsys.gateway.obix.observer.ExternalObserver;
 import at.ac.tuwien.auto.iotsys.gateway.obix.observer.ObjObserver;
 import at.ac.tuwien.auto.iotsys.gateway.util.ExiUtil;
-
 import obix.Obj;
 import obix.io.ObixEncoder;
-
-
-import ch.ethz.inf.vs.californium.coap.CodeRegistry;
 import ch.ethz.inf.vs.californium.coap.GETRequest;
-import ch.ethz.inf.vs.californium.coap.MediaTypeRegistry;
 import ch.ethz.inf.vs.californium.coap.Option;
-import ch.ethz.inf.vs.californium.coap.OptionNumberRegistry;
 import ch.ethz.inf.vs.californium.coap.POSTRequest;
 import ch.ethz.inf.vs.californium.coap.PUTRequest;
 import ch.ethz.inf.vs.californium.coap.Request;
 import ch.ethz.inf.vs.californium.coap.Message.messageType;
-import ch.ethz.inf.vs.californium.endpoint.LocalResource;
+import ch.ethz.inf.vs.californium.coap.registries.CodeRegistry;
+import ch.ethz.inf.vs.californium.coap.registries.MediaTypeRegistry;
+import ch.ethz.inf.vs.californium.coap.registries.OptionNumberRegistry;
+import ch.ethz.inf.vs.californium.endpoint.resources.LocalResource;
 import ch.ethz.inf.vs.californium.layers.TransactionLayer;
 import ch.ethz.inf.vs.californium.util.Properties;
-
 import static at.ac.tuwien.auto.iotsys.gateway.obix.server.ObixServer.DEFAULT_OBIX_URL_PROTOCOL;
 
 /**

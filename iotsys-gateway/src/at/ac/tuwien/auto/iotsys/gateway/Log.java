@@ -49,7 +49,6 @@ import ch.ethz.inf.vs.californium.coap.Message;
 import ch.ethz.inf.vs.californium.coap.ObservingManager;
 import ch.ethz.inf.vs.californium.coap.TokenManager;
 import ch.ethz.inf.vs.californium.endpoint.Endpoint;
-import ch.ethz.inf.vs.californium.endpoint.Resource;
 import ch.ethz.inf.vs.californium.layers.Layer;
 import ch.ethz.inf.vs.californium.util.Properties;
 
@@ -127,7 +126,6 @@ public class Log {
 		// customize levels
 		Logger.getLogger(Endpoint.class.getName()).setLevel(logLevel);
 		Logger.getLogger(EndpointAddress.class.getName()).setLevel(logLevel);
-		Logger.getLogger(Resource.class.getName()).setLevel(logLevel);
 		Logger.getLogger(LinkFormat.class.getName()).setLevel(logLevel);
 		Logger.getLogger(Message.class.getName()).setLevel(logLevel);
 		Logger.getLogger(TokenManager.class.getName()).setLevel(logLevel);

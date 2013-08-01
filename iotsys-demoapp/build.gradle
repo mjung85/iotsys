@@ -54,4 +54,5 @@ dependencies {
 	provided project(':iotsys-obix')
 	provided project(':iotsys-common')
 	provided project(':iotsys-xacml')
+	provided project(':iotsys-osgi')
 }

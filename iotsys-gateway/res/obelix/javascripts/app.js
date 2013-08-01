@@ -25146,7 +25146,7 @@ app.service('Lobby', function($http, Device) {
     getDevices: function(cb) {
       $http.get('/obix').success(function(response) {
         var devices = [];
-        var nodes = response['childNodes'];
+        var nodes = response['nodes'];
         angular.forEach(nodes, function(node) {
           // Skip some obix objects:
           if (
@@ -25194,7 +25194,7 @@ app.factory('Device', function($http, $timeout) {
         result = [];
         this.ranges[href] = result;
         $http.get(href).success(function(response) {
-          angular.forEach(response['childNodes'], function(n) { result.push(n['name']) });
+          angular.forEach(response['nodes'], function(n) { result.push(n['name']) });
         });
       }
       return result;
@@ -25203,13 +25203,13 @@ app.factory('Device', function($http, $timeout) {
 
   Property.parse = function(el, device) {
     if (
-      el['tagName'] == 'bool' || 
-      el['tagName'] == 'int' || 
-      el['tagName'] == 'real' || 
-      el['tagName'] == 'enum' || 
-      el['tagName'] == 'str'
+      el['tag'] == 'bool' || 
+      el['tag'] == 'int' || 
+      el['tag'] == 'real' || 
+      el['tag'] == 'enum' || 
+      el['tag'] == 'str'
     ) {
-      var p = new Property(el['href'], el['tagName'], el['name'], el['val'], el);
+      var p = new Property(el['href'], el['tag'], el['name'], el['val'], el);
       if (p.type == 'enum') {
         p.range = Property.Enum.range(el['range']);
       }
@@ -25220,7 +25220,7 @@ app.factory('Device', function($http, $timeout) {
 
   Property.prototype = {
     serialize: function() {
-      var result = {'tagName': this.type, 'href': this.href, 'val': this.value };
+      var result = {'tag': this.type, 'href': this.href, 'val': this.value };
       return result;
     },
     url: function() {
@@ -25240,8 +25240,8 @@ app.factory('Device', function($http, $timeout) {
     load: function(response) {
       var propertiesWithGroupcomm = [];
       this.properties = [];
-      angular.forEach(response['childNodes'], function(c) {
-          if (c['tagName'] == 'ref') {
+      angular.forEach(response['nodes'], function(c) {
+          if (c['tag'] == 'ref') {
             var names = c['name'].split(' ');
             var gcIndex = names.indexOf('groupComm')
             if (gcIndex != -1) {

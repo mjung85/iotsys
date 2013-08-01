@@ -145,7 +145,7 @@ public class JSONML {
                             ja.put(newja);
                         }
                     } else {
-                        newjo.put("tagName", tagName);
+                        newjo.put("tag", tagName);
                         if (ja != null) {
                             ja.put(newjo);
                         }
@@ -165,7 +165,7 @@ public class JSONML {
 // attribute = value
 
                         attribute = (String)token;
-                        if (!arrayForm && ("tagName".equals(attribute) || "childNode".equals(attribute))) {
+                        if (!arrayForm && ("tag".equals(attribute) || "nodes".equals(attribute))) {
                             throw x.syntaxError("Reserved attribute.");
                         }
                         token = x.nextToken();
@@ -212,7 +212,7 @@ public class JSONML {
                             }
                             tagName = null;
                             if (!arrayForm && newja.length() > 0) {
-                                newjo.put("childNodes", newja);
+                                newjo.put("nodes", newja);
                             }
                             if (ja == null) {
                                 if (arrayForm) {
@@ -272,9 +272,9 @@ public class JSONML {
     /**
      * Convert a well-formed (but not necessarily valid) XML string into a
      * JSONObject using the JsonML transform. Each XML tag is represented as
-     * a JSONObject with a "tagName" property. If the tag has attributes, then
+     * a JSONObject with a "tag" property. If the tag has attributes, then
      * the attributes will be in the JSONObject as properties. If the tag
-     * contains children, the object will have a "childNodes" property which
+     * contains children, the object will have a "nodes" property which
      * will be an array of strings and JsonML JSONObjects.
 
      * Comments, prologs, DTDs, and <code>&lt;[ [ ]]></code> are ignored.
@@ -290,9 +290,9 @@ public class JSONML {
     /**
      * Convert a well-formed (but not necessarily valid) XML string into a
      * JSONObject using the JsonML transform. Each XML tag is represented as
-     * a JSONObject with a "tagName" property. If the tag has attributes, then
+     * a JSONObject with a "tag" property. If the tag has attributes, then
      * the attributes will be in the JSONObject as properties. If the tag
-     * contains children, the object will have a "childNodes" property which
+     * contains children, the object will have a "nodes" property which
      * will be an array of strings and JsonML JSONObjects.
 
      * Comments, prologs, DTDs, and <code>&lt;[ [ ]]></code> are ignored.
@@ -387,7 +387,7 @@ public class JSONML {
     /**
      * Reverse the JSONML transformation, making an XML text from a JSONObject.
      * The JSONObject must contain a "tagName" property. If it has children,
-     * then it must have a "childNodes" property containing an array of objects.
+     * then it must have a "nodes" property containing an array of objects.
      * The other properties are attributes with string values.
      * @param jo A JSONObject.
      * @return An XML string.
@@ -406,7 +406,7 @@ public class JSONML {
 
 //Emit <tagName
 
-        tagName = jo.optString("tagName");
+        tagName = jo.optString("tag");
         if (tagName == null) {
             return XML.escape(jo.toString());
         }
@@ -420,7 +420,7 @@ public class JSONML {
         keys = jo.keys();
         while (keys.hasNext()) {
             key = keys.next().toString();
-            if (!"tagName".equals(key) && !"childNodes".equals(key)) {
+            if (!"tag".equals(key) && !"nodes".equals(key)) {
                 XML.noSpace(key);
                 value = jo.optString(key);
                 if (value != null) {
@@ -436,7 +436,7 @@ public class JSONML {
 
 //Emit content in body
 
-        ja = jo.optJSONArray("childNodes");
+        ja = jo.optJSONArray("nodes");
         if (ja == null) {
             sb.append('/');
             sb.append('>');

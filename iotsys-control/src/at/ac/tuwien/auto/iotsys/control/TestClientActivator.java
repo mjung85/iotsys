@@ -39,17 +39,19 @@ public class TestClientActivator implements BundleActivator, ServiceListener {
 
 		Bundle[] bundles = context.getBundles();
 		for (Bundle bundle : bundles) {
-			if(bundle.getSymbolicName().equals("at.ac.tuwien.auto.iotsys.virtual") && bundle.getState() == Bundle.ACTIVE){
-				virtualActive = true;
-			} else if(bundle.getSymbolicName().equals("at.ac.tuwien.auto.iotsys.knx") && bundle.getState() == Bundle.ACTIVE){
-				knxActive = true;
-			} else if(bundle.getSymbolicName().equals("at.ac.tuwien.auto.iotsys.gateway") && bundle.getState() == Bundle.ACTIVE){
-				gatewayActive = true;
+			if(bundle.getSymbolicName() != null){
+				if(bundle.getSymbolicName().equals("at.ac.tuwien.auto.iotsys.virtual") && bundle.getState() == Bundle.ACTIVE){
+					virtualActive = true;
+				} else if(bundle.getSymbolicName().equals("at.ac.tuwien.auto.iotsys.knx") && bundle.getState() == Bundle.ACTIVE){
+					knxActive = true;
+				} else if(bundle.getSymbolicName().equals("at.ac.tuwien.auto.iotsys.gateway") && bundle.getState() == Bundle.ACTIVE){
+					gatewayActive = true;
+				}
 			}
 		}
 
-		ServiceReference<ObjectBroker> serviceReference = context
-				.getServiceReference(ObjectBroker.class);
+		ServiceReference serviceReference = context
+				.getServiceReference(ObjectBroker.class.getName());
 		if (serviceReference == null) {
 			log.severe("Could not find a running object broker to register devices!");
 
@@ -85,12 +87,14 @@ public class TestClientActivator implements BundleActivator, ServiceListener {
 
 		Bundle[] bundles = context.getBundles();
 		for (Bundle bundle : bundles) {
-			if(bundle.getSymbolicName().equals("at.ac.tuwien.auto.iotsys.virtual") && bundle.getState() == Bundle.ACTIVE){
-				virtualActive = true;
-			} else if(bundle.getSymbolicName().equals("at.ac.tuwien.auto.iotsys.knx") && bundle.getState() == Bundle.ACTIVE){
-				knxActive = true;
-			} else if(bundle.getSymbolicName().equals("at.ac.tuwien.auto.iotsys.gateway") && bundle.getState() == Bundle.ACTIVE){
-				gatewayActive = true;
+			if(bundle.getSymbolicName() != null){
+				if(bundle.getSymbolicName().equals("at.ac.tuwien.auto.iotsys.virtual") && bundle.getState() == Bundle.ACTIVE){
+					virtualActive = true;
+				} else if(bundle.getSymbolicName().equals("at.ac.tuwien.auto.iotsys.knx") && bundle.getState() == Bundle.ACTIVE){
+					knxActive = true;
+				} else if(bundle.getSymbolicName().equals("at.ac.tuwien.auto.iotsys.gateway") && bundle.getState() == Bundle.ACTIVE){
+					gatewayActive = true;
+				}
 			}
 		}
 

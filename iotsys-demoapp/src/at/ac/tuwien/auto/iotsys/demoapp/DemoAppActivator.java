@@ -60,8 +60,8 @@ public class DemoAppActivator implements ServiceListener, BundleActivator {
 	public void start(BundleContext context) throws Exception {
 		log.info("Starting demo app");
 		this.context = context;
-		ServiceReference<ObjectBroker> serviceReference = context
-				.getServiceReference(ObjectBroker.class);
+		ServiceReference serviceReference = context
+				.getServiceReference(ObjectBroker.class.getName());
 		if (serviceReference == null) {
 			log.severe("Could not find a running object broker to register devices!");
 
@@ -81,8 +81,8 @@ public class DemoAppActivator implements ServiceListener, BundleActivator {
 
 	public void stop(BundleContext context) throws Exception {
 		log.info("Stopping virtual connector");
-		ServiceReference<ObjectBroker> serviceReference = context
-				.getServiceReference(ObjectBroker.class);
+		ServiceReference serviceReference = context
+				.getServiceReference(ObjectBroker.class.getName());
 		if (serviceReference == null) {
 			log.severe("Could not find a running object broker to unregister devices!");
 		} else {
