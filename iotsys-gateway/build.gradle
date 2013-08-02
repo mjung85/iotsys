@@ -65,7 +65,7 @@ jar {
 									   "at.ac.tuwien.auto.iotsys.gateway.obix.observer, at.ac.tuwien.auto.iotsys.gateway.obix.objects.bacnet, at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot," +
 									   "at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.general.impl,"+
 									   "at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators, at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl, " +
-									   "at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors, at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl, at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.logic, at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.logic.impl,at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sim," +
+									   "at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors, at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl, at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.logic, at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.logic.impl,at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sim,at.ac.tuwien.auto.iotsys.gateway.obix.objects.knx.datapoint," +
 									   "org.xml.sax, org.xml.sax.helpers, org.xml.sax.ext,  com.sun.org.apache.xalan.internal, com.sun.org.apache.xalan.internal.res, " +
 									   "org.w3c.dom, org.w3c.dom.traversal, org.w3c.dom.ls, javax.xml.parsers,  javax.xml.xpath, javax.xml.transform.sax, javax.xml.transform.dom, " +
 									   "javax.xml.namespace, javax.xml.transform, javax.xml.transform.stream, javax.xml.validation, javax.xml.datatype, "+
