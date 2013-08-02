@@ -24,6 +24,6 @@ Start middleman with:
 
   bundle exec middleman
 
-Middleman will now serve obelix at http://localhost:4567/ and per default proxy all requests for obix resources to http://localhost:8080/. To override the gateway URL, use GATEWAY_HOST/GATEWAY_PORT environment variables, i.e.
+Middleman will now serve obelix at http://localhost:4567/ and per default proxy all requests for obix resources to http://localhost:8080/. To override the gateway URL, use GATEWAY_HOST and GATEWAY_PORT environment variables, i.e.
 
-  GATEWAY_HOST=192.168.0.10 GATEWAY_PORT = 1234 bundle exec middleman
+  GATEWAY_HOST=192.168.0.10 GATEWAY_PORT=1234 bundle exec middleman
