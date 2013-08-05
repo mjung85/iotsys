@@ -20,6 +20,8 @@
 
 package at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.knx;
 
+import java.util.logging.Logger;
+
 import at.ac.tuwien.auto.calimero.GroupAddress;
 import at.ac.tuwien.auto.calimero.dptxlator.DPTXlator8BitUnsigned;
 import at.ac.tuwien.auto.calimero.exception.KNXException;
@@ -34,6 +36,7 @@ import obix.Obj;
  */
 
 public class BrightnessActuatorImplKnx extends BrightnessActuatorImpl{
+	private static final Logger log = Logger.getLogger(BrightnessActuatorImplKnx.class.getName());
 	
 	//CalimeroNG
 	private GroupAddress status;
@@ -71,6 +74,7 @@ public class BrightnessActuatorImplKnx extends BrightnessActuatorImpl{
 	public void writeObject(Obj input){
 		// A write on this object was received, update the according data point.	
 		super.writeObject(input);				
+		log.info("Writing on brightness actuator!");
 		knxConnector.write(brightness, (int)this.value().get(), ProcessCommunicator.UNSCALED);
 	}
 	

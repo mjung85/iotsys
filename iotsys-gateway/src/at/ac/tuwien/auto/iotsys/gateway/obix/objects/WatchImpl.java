@@ -177,12 +177,15 @@ public class WatchImpl extends Obj implements Watch {
 						Uri uri = (Uri) u;
 
 						Observer observer = observers.get(uri.getPath());
+
 						observedObjects.remove(uri.getPath());
+
 						observers.remove(uri.getPath());
 						Obj o = broker.pullObj(uri);
 						o.detach(observer);
 					}					
 				}		
+
 				return new NilImpl();
 			}			
 		});
@@ -263,13 +266,17 @@ public class WatchImpl extends Obj implements Watch {
 				return out;
 			}		
 		});
+
 		
+
 		broker.addOperationHandler(new Uri(this.getNormalizedHref().getPath() + "/delete"), new OperationHandler(){
 			@Override
 			public Obj invoke(Obj in) {
 				// Perform delete logic
 				deleteWatch();
+
 				return new NilImpl();
+
 			}		
 		});
 	}
