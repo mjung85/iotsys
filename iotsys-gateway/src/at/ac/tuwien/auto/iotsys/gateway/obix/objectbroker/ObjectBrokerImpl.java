@@ -34,24 +34,32 @@ package at.ac.tuwien.auto.iotsys.gateway.obix.objectbroker;
 
 import java.net.Inet6Address;
 import java.net.UnknownHostException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import obix.Contract;
+import obix.ContractRegistry;
+import obix.Err;
+import obix.List;
+import obix.Obj;
+import obix.Ref;
+import obix.Uri;
 import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
 import at.ac.tuwien.auto.iotsys.commons.OperationHandler;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.*;
+import at.ac.tuwien.auto.iotsys.commons.MDnsResolver;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.AboutImpl;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.AlarmSubjectImpl;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.HistoryHelper;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.WatchImpl;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.WatchServiceImpl;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.general.impl.LobbyImpl;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.logic.BinaryOperation;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.logic.LogicBinaryOperation;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.logic.impl.BinaryOperationImpl;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.logic.impl.ComparatorImpl;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.logic.impl.LogicBinaryOperationImpl;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.logic.impl.TemperatureControllerImpl;
 import at.ac.tuwien.auto.iotsys.gateway.service.GroupCommHelper;
-
-import obix.*;
-import obix.List;
 
 public class ObjectBrokerImpl implements ObjectBroker {
 
@@ -84,6 +92,8 @@ public class ObjectBrokerImpl implements ObjectBroker {
 	}
 
 	private ObjectRefresher objectRefresher = new ObjectRefresher();
+
+	private MDnsResolver resolver;
 
 	private ObjectBrokerImpl() {
 		objects = new HashMap<String, Obj>();
@@ -328,10 +338,13 @@ public class ObjectBrokerImpl implements ObjectBroker {
 						+ o.getHref().toString()));
 			}
 			String href = o.getFullContextPath();
-
 			ipv6Mapping.put(generateIPv6Address.toString(), href);
+//			System.out.println("href: " + href + " ipv6: " + ipv6Address);
+			if(resolver != null)
+				resolver.addToRecordDict(href, ipv6Address);
 
-			// add kids
+			// add kids 
+			//TODO this should be done recursively, not only for the first level of kids
 			if (o.size() > 0) {
 				Obj[] kids = o.list();
 				for (int i = 0; i < o.size(); i++) {
@@ -403,8 +416,14 @@ public class ObjectBrokerImpl implements ObjectBroker {
 		if (o.size() > 0) {
 			Obj[] kids = o.list();
 			for (int i = 0; i < o.size(); i++)
-				if (kids[i].getHref() != null)
+				if (kids[i].getHref() != null){
+					try {
 					hrefs.addAll(addObj(kids[i]));
+					}
+					catch(Exception e){
+						// TODO issue
+					}
+				}
 			// FIXME: should we store kid's href as absolute rather than relative href?
 		}
 
@@ -519,5 +538,13 @@ public class ObjectBrokerImpl implements ObjectBroker {
 	public void enableGroupComm(Obj obj) {
 		GroupCommHelper.enableGroupCommForObject(obj);
 	}
-
+	
+	@Override
+	public MDnsResolver getMDnsResolver() {
+		return resolver;
+	}
+	@Override
+	public void setMdnsResolver(MDnsResolver resolver){
+		this.resolver = resolver;
+	}
 }
