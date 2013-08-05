@@ -3,15 +3,18 @@
  */
 package obix;
 
+import java.lang.reflect.Array;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.lang.reflect.Array;
+import java.util.LinkedList;
 
+import obix.contracts.Alarm;
+import obix.io.BinObix;
+import obix.io.ObixEncoder;
 import at.ac.tuwien.auto.iotsys.gateway.obix.observer.ExternalObserver;
 import at.ac.tuwien.auto.iotsys.gateway.obix.observer.Observer;
 import at.ac.tuwien.auto.iotsys.gateway.obix.observer.Subject;
-import obix.io.*;
 
 /**
  * Obj is the base class for representing Obix objects and managing their tree
@@ -21,7 +24,7 @@ import obix.io.*;
  * @creation 27 Apr 05
  * @version $Revision$ $Date$
  */
-public class Obj implements IObj, Subject, Cloneable {
+public class Obj implements IObj, Subject, AlarmSource, Cloneable {
 
 	// //////////////////////////////////////////////////////////////
 	// Factory
@@ -185,12 +188,14 @@ public class Obj implements IObj, Subject, Cloneable {
 	public Uri getNormalizedHref() {
 		if (href == null)
 			return null;
-		Obj root = getRoot();
-		if (root != null && root.getHref() != null && root.getHref().isAbsolute()) {
-			return href.normalize(root.getHref());		
-		} else {
-			return href;
+		
+		if (getParent() != null &&
+				getParent().getNormalizedHref() != null &&
+				getParent().getNormalizedHref().isAbsolute()) {
+			return href.normalize(getParent().getNormalizedHref());
 		}
+		
+		return href;
 	}
 	
 	public Uri getRelativePath(){
@@ -384,6 +389,11 @@ public class Obj implements IObj, Subject, Cloneable {
 	/** Convenience for setting the value as if a Str */
 	public void setStr(String val) {
 		((Str) this).set(val);
+	}
+	
+	/** Convenience for setting the value to the value of another Obj */
+	public void set(Obj obj) {
+		return;
 	}
 
 	// //////////////////////////////////////////////////////////////
@@ -879,10 +889,40 @@ public class Obj implements IObj, Subject, Cloneable {
 		Obj.extObserver = extObserver; 	
 	}
 	
+	
+	
+	
+	
+	private LinkedList<Alarm> alarms = new LinkedList<Alarm>();
+	
+	@Override
+	public void setOffNormal(Alarm alarm) {
+		alarms.add(alarm);
+	}
+
+	@Override
+	public void setToNormal(Alarm alarm) {
+		alarms.remove(alarm);
+	}
+	
+	@Override
+	public boolean inAlarmState() {
+		return !(alarms.isEmpty());
+	}
+	
+	@Override
+	public LinkedList<Alarm> getAlarms() {
+		if (alarms == null)
+			alarms = new LinkedList<Alarm>();
+		
+		return alarms;
+	}
+	
 	/**
 	 * Method that can be overridden to contain logic that should be executed if all fields are set.
 	 */
 	public void initialize(){
 		
 	}
+
 }

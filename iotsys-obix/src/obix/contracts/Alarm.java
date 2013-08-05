@@ -12,7 +12,8 @@ import obix.*;
 public interface Alarm
   extends IObj
 {
-
+  public static final String ALARM_CONTRACT = "obix:Alarm";
+  
   public Ref source();
 
   public Abstime timestamp();

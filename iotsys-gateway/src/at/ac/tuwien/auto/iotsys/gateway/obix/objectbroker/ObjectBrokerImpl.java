@@ -66,6 +66,8 @@ public class ObjectBrokerImpl implements ObjectBroker {
 	private LobbyImpl iotLobby = null;
 
 	private WatchServiceImpl watchServiceImpl = null;
+	
+	private AlarmSubjectImpl alarmSubjectImpl = null;
 
 	private AboutImpl aboutImpl = null;
 
@@ -91,6 +93,7 @@ public class ObjectBrokerImpl implements ObjectBroker {
 		aboutImpl = new AboutImpl();
 
 		watchServiceImpl = new WatchServiceImpl(this);
+		alarmSubjectImpl = new AlarmSubjectImpl(this);
 	}
 
 	@Override
@@ -100,7 +103,11 @@ public class ObjectBrokerImpl implements ObjectBroker {
 
 	private void initInternals() {
 		addObj(watchServiceImpl);
+		addObj(alarmSubjectImpl);
 		addObj(aboutImpl, false); // About is added directly in lobby as local
+		
+		alarmSubjectImpl.initialize();
+		removeObj(alarmSubjectImpl.getFullContextPath());
 
 		Obj enums = new Obj();
 		enums.setName("enums");
@@ -373,7 +380,7 @@ public class ObjectBrokerImpl implements ObjectBroker {
 		if (objects.containsKey(href)) {
 			log.log(Level.WARNING, "Object with href: " + href
 					+ " already registered.");
-			return null;
+			return hrefs;
 		}
 		hrefs.add(href);
 		objects.put(href, o);
