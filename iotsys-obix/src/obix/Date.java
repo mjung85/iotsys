@@ -249,6 +249,16 @@ public class Date
   {
     this.tz = tz;
   }
+  
+  /**
+   * Set to value of another Date
+   */
+  public void set(Obj obj)
+  {
+	  if (!(obj instanceof Date)) return;
+	  Date date = (Date) obj;
+	  set(date.year, date.mon, date.day);
+  }
     
 ////////////////////////////////////////////////////////////////
 // Fields

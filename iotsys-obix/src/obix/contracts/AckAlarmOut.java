@@ -12,7 +12,8 @@ import obix.*;
 public interface AckAlarmOut
   extends IObj
 {
-
+  public static final String ALARM_ACKOUT_CONTRACT = "obix:AckAlarmOut";
+  
   public static final String alarmContract = "<obj name='alarm' is='obix:AckAlarm obix:Alarm'/>";
   public AckAlarm alarm();
 

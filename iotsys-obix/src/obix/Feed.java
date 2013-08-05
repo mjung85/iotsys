@@ -126,9 +126,9 @@ public class Feed
   public void addEvent(Obj event)
   {
 	synchronized (events) {
-		events.add(event);
+		events.addFirst(event);
 		while (maxEvents > 0 && events.size() > maxEvents)
-			events.removeFirst();
+			removeEvent(events.getLast());
 		
 		notifyObservers();
 	}
@@ -159,9 +159,18 @@ public class Feed
    * Set the maximum number of events to store in the feed
    * @param maxEvents Maximum number of events. If 0, an unlimited number of events are stored.
    */
-  protected void setMaxEvents(int maxEvents)
+  public void setMaxEvents(int maxEvents)
   {
 	  this.maxEvents = maxEvents;
+  }
+  
+  /**
+   * Remove event from feed
+   * @param event Event to remove from the feed
+   */
+  public void removeEvent(Obj event)
+  {
+	  this.events.remove(event);
   }
  
 ////////////////////////////////////////////////////////////////

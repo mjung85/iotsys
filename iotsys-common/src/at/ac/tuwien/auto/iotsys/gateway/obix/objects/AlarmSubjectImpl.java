@@ -1,0 +1,123 @@
+package at.ac.tuwien.auto.iotsys.gateway.obix.objects;
+
+import java.util.List;
+
+import obix.Contract;
+import obix.Feed;
+import obix.IAlarmSubject;
+import obix.Int;
+import obix.Obj;
+import obix.Op;
+import obix.Uri;
+import obix.contracts.Alarm;
+import obix.contracts.AlarmFilter;
+import obix.contracts.AlarmQueryOut;
+import obix.contracts.AlarmSubject;
+import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
+import at.ac.tuwien.auto.iotsys.commons.OperationHandler;
+
+public class AlarmSubjectImpl extends Obj implements IAlarmSubject {
+	private static IAlarmSubject defaultSubject;
+	private static int alarmID = 0;
+	
+	private ObjectBroker broker;
+	private Int count;
+	private Op query;
+	private AlarmFeed feed;
+	private static obix.List alarmdb;
+	
+	/**
+	 * @return the default instance of an AlarmSubject
+	 */
+	public static IAlarmSubject defaultAlarmSubject() {
+		return defaultSubject;
+	}
+	
+	public static void setDefaultAlarmSubject(IAlarmSubject subject) {
+		defaultSubject = subject;
+	}
+	
+	
+	public AlarmSubjectImpl(final ObjectBroker broker) {
+		this.broker = broker;
+		
+		this.setHref(new Uri("alarms"));
+		this.setIs(new Contract(AlarmSubject.ALARM_SUBJECT_CONTRACT));
+		
+		if (alarmdb == null) {
+			alarmdb = new obix.List("alarmdb", new Contract(Alarm.ALARM_CONTRACT));
+			alarmdb.setHref(new Uri("http://localhost/alarmdb"));
+			// If alarmdb should be accessible directly:
+			// broker.addObj(alarmdb, false);
+		}
+		
+		add(count());
+		add(query());
+		add(feed());
+		
+		if (defaultSubject == null)
+			defaultSubject = this;
+	}
+	
+	public void initialize() {
+		String queryHref = query().getFullContextPath();
+		broker.addOperationHandler(new Uri(queryHref),
+			new OperationHandler() {
+				public Obj invoke(Obj in) {
+					return AlarmSubjectImpl.this.query(in);
+				}
+			});
+	}
+	
+	public Int count() {
+		if (count == null) {
+			count = new Int("count");
+			count.set(0);
+			count.setHref(new Uri("count"));
+		}
+		return count;
+	}
+
+	public Op query() {
+		if (query == null) {
+			query = new Op("query", new Contract(AlarmFilter.ALARM_FILTER_CONTRACT), new Contract(AlarmQueryOut.ALARM_QUERYOUT_CONTRACT));
+			query.setHref(new Uri("query"));
+		}
+		return query;
+	}
+
+	public Feed feed() {
+		if (feed == null) {
+			feed = new AlarmFeed();
+		}
+		return feed;
+	}
+
+	public synchronized void addAlarm(final Alarm alarm) {
+		AlarmImpl alarmObj = (AlarmImpl) alarm;
+		
+		alarmObj.setHref(new Uri(String.valueOf(alarmID++)));
+		alarmdb.add(alarmObj);
+		alarmObj.getNormalizedHref();
+		alarmObj.setHref(new Uri(alarmObj.getFullContextPath()));
+		
+		feed.addEvent((Obj) alarm);
+		count.set(count.get()+1);
+		
+		broker.addObj((Obj)alarm, false);
+		
+		Op ack = ((AlarmImpl)alarm).ack();
+		if (ack == null) return;
+		
+		broker.addOperationHandler(new Uri(ack.getFullContextPath()), new OperationHandler() {
+			public Obj invoke(Obj in) {
+				return ((AlarmImpl)alarm).ack(in);
+			}
+		});
+	}
+	
+	public Obj query(Obj in) {
+		List<AlarmImpl> results = feed.getRecords(in, feed.getEvents());
+		return new AlarmQueryOutImpl(results);
+	}
+}
