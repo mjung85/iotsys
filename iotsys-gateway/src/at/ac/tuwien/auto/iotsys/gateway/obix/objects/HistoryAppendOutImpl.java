@@ -74,10 +74,10 @@ public class HistoryAppendOutImpl extends Obj implements HistoryAppendOut {
 			newStart.setNull(true);
 			newEnd.setNull(true);
 		} else {
-			Abstime start = historyRecords.get(0).timestamp();
+			Abstime start = historyRecords.get(historyRecords.size()-1).timestamp();
 			newStart.set(start.get(), start.getTimeZone());
 			
-			Abstime end = historyRecords.get(historyRecords.size()-1).timestamp();
+			Abstime end = historyRecords.get(0).timestamp();
 			newEnd.set(end.get(), end.getTimeZone());
 		}
 		

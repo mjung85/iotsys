@@ -588,8 +588,8 @@ public class GatewayTest {
 		body(hasXPath("/obj/abstime[@name='start' and not(@null)]")).
 		body(hasXPath("/obj/abstime[@name='end' and not(@null)]")).
 		body(hasXPath("/obj/list[@of='obix:HistoryRecord']")).
-		body(hasXPath("/obj/list/obj[1]/bool[@val='true']")).
-		body(hasXPath("/obj/list/obj[2]/bool[@val='false']")).
+		body(hasXPath("/obj/list/obj[2]/bool[@val='true']")).
+		body(hasXPath("/obj/list/obj[1]/bool[@val='false']")).
 		post("/switchHistory1/value/history/query");
 	}
 	
@@ -641,6 +641,7 @@ public class GatewayTest {
 			post("/brightnessHistory2/value/history/append").asString();
 		
 		
+		end = DatatypeConverter.parseDateTime(XmlPath.from(response).getString("obj.abstime[0].@val")).getTimeInMillis();
 		end = DatatypeConverter.parseDateTime(XmlPath.from(response).getString("obj.abstime[1].@val")).getTimeInMillis();
 		
 		assertEquals(start, DatatypeConverter.parseDateTime("2013-07-10T10:15:00-05:00").getTimeInMillis());
@@ -648,22 +649,31 @@ public class GatewayTest {
 	}
 
 	@Test
-	public void testHistoryAppendOutOfOrderShouldFail() {
+	public void testHistoryAppendRecordsOutOfOrderShouldSort() {
+		String response = 
 		given().param("data", "<obj is='obix:HistoryAppendIn'>" +
 			"	<list name='data' of='obix:HistoryRecord'>" +
 			"		<obj>" +
-			"			<abstime name='timestamp' val='2013-07-10T10:30:00-05:00'/>" +
+			"			<abstime name='timestamp' val='2013-07-10T12:30:00-05:00'/>" +
 			"			<int val='3'/>" +
 			"		</obj>" +
 			"		<obj>" +
-			"			<abstime name='timestamp' val='2013-07-10T10:15:00-05:00'/>" +
+			"			<abstime name='timestamp' val='2013-07-10T12:15:00-05:00'/>" +
 			"			<int name='value' val='2'/>" +
 			"		</obj>" +
 			"	</list>" +
 			"</obj>").
 		expect().
-		body(hasXPath("/err")).
-		post("/brightnessHistoryAppendOutOfOrder/value/history/append");
+		body(hasXPath("/obj[@is='obix:HistoryAppendOut']")).
+		body(hasXPath("/obj/int[@name='numAdded' and @val='2']")).
+		body(hasXPath("/obj/int[@name='newCount' and @val='2']")).
+		post("/brightnessHistoryAppendOutOfOrder/value/history/append").asString();
+		
+		long start = DatatypeConverter.parseDateTime(XmlPath.from(response).getString("obj.abstime[0].@val")).getTimeInMillis();
+		long   end = DatatypeConverter.parseDateTime(XmlPath.from(response).getString("obj.abstime[1].@val")).getTimeInMillis();
+				
+		assertEquals(start, DatatypeConverter.parseDateTime("2013-07-10T12:15:00-05:00").getTimeInMillis());
+		assertEquals(  end, DatatypeConverter.parseDateTime("2013-07-10T12:30:00-05:00").getTimeInMillis());
 	}
 
 	@Test

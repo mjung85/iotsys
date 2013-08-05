@@ -103,7 +103,7 @@ public class ObixServerImpl implements ObixServer{
 
 			return o;
 		} catch (Exception ex) {
-			Err e = new Err("Error invoking operation" + ex.getMessage());
+			Err e = new Err("Error invoking operation: " + ex.getMessage());
 			ex.printStackTrace();
 			return e;
 		}

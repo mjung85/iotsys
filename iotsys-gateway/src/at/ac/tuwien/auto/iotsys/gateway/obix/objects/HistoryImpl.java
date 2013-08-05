@@ -33,10 +33,10 @@
 package at.ac.tuwien.auto.iotsys.gateway.obix.objects;
 
 import java.util.ArrayList;
-import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.TimeZone;
-import java.util.logging.Logger;
 
 import obix.Abstime;
 import obix.Bool;
@@ -66,8 +66,6 @@ import at.ac.tuwien.auto.iotsys.gateway.obix.observer.Subject;
  * (bool, int, real, str).
  */
 public class HistoryImpl extends Obj implements History, Observer {
-	private static final Logger log = Logger.getLogger(HistoryImpl.class.getName());
-	
 	public static final String HISTORY_CONTRACT = "obix:History";
 
 	private Int count = new Int();
@@ -217,21 +215,21 @@ public class HistoryImpl extends Obj implements History, Observer {
 		ArrayList<HistoryRecordImpl> currentInterval = new ArrayList<HistoryRecordImpl>();
 		
 		List<Obj> records = feed.getEvents();
-		int i = 0;
+		int i = records.size()-1;
 		
-		while (i < records.size()) {
+		while (i >= 0) {
 			HistoryRecordImpl record = (HistoryRecordImpl) records.get(i);
 			
 			// record before start time
 			if (record.timestamp().get() <= curInterval) {
-				i++;
+				i--;
 				continue;
 			}
 			
 			if (record.timestamp().get() <= curInterval + ival) {
 				// record inside interval
 				currentInterval.add(record);
-				i++;
+				i--;
 			} else {
 				// record belonging to next interval
 				
@@ -279,8 +277,6 @@ public class HistoryImpl extends Obj implements History, Observer {
 		Abstime timestamp = end;
 		ArrayList<HistoryRecordImpl> newRecords = new ArrayList<HistoryRecordImpl>();
 		
-		long now = Calendar.getInstance().getTimeInMillis();
-		
 		for (Obj record : records.list()) {
 			HistoryRecord historyRecord = (HistoryRecord) record;
 			newRecords.add(new HistoryRecordImpl(historyRecord));
@@ -288,16 +284,16 @@ public class HistoryImpl extends Obj implements History, Observer {
 			if (historyRecord.timestamp().compareTo(timestamp) != 1) {
 				// The HistoryRecords in the data list MUST be sorted by timestamp from oldest to newest,
 				// and MUST not include a timestamp equal to or older than History.end
-				return new Err("Records out of order");
+				return new Err("Cannot append before last event");
 			}
-			
-			if (historyRecord.timestamp().getMillis() > now) {
-				// history record with future time
-				log.info(getFullContextPath() + ": Appending future event!");
-			}
-			
-			timestamp = historyRecord.timestamp();
 		}
+		
+		// sort records
+		Collections.sort(newRecords, new Comparator<HistoryRecordImpl>() {
+			public int compare(HistoryRecordImpl r1, HistoryRecordImpl r2) {
+				return r1.timestamp().compareTo(r2.timestamp());
+			}
+		});
 		
 		
 		for (HistoryRecordImpl record : newRecords) {
@@ -436,8 +432,8 @@ public class HistoryImpl extends Obj implements History, Observer {
 		List<Obj> events = feed.getEvents();
 		
 		if (events.size() > 0) {
-			HistoryRecordImpl firstRecord = (HistoryRecordImpl) events.get(0);
-			HistoryRecordImpl lastRecord = (HistoryRecordImpl) events.get(events.size()-1);
+			HistoryRecordImpl firstRecord = (HistoryRecordImpl) events.get(events.size()-1);
+			HistoryRecordImpl lastRecord = (HistoryRecordImpl) events.get(0);
 			
 			count.setSilent(events.size());
 			this.start.set(firstRecord.timestamp().get(), TimeZone
