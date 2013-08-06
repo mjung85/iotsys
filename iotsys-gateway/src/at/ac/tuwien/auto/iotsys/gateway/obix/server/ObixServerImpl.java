@@ -98,8 +98,7 @@ public class ObixServerImpl implements ObixServer{
 		}
 		try {
 			Obj o = new Obj();
-			o = objectBroker.invokeOp(new Uri(href.toASCIIString()), input,
-					true);
+			o = objectBroker.invokeOp(new Uri(href.toASCIIString()), input);
 
 			return o;
 		} catch (Exception ex) {

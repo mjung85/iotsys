@@ -59,16 +59,6 @@ public class AlarmSubjectImpl extends Obj implements IAlarmSubject {
 			defaultSubject = this;
 	}
 	
-	public void initialize() {
-		String queryHref = query().getFullContextPath();
-		broker.addOperationHandler(new Uri(queryHref),
-			new OperationHandler() {
-				public Obj invoke(Obj in) {
-					return AlarmSubjectImpl.this.query(in);
-				}
-			});
-	}
-	
 	public Int count() {
 		if (count == null) {
 			count = new Int("count");
@@ -82,6 +72,11 @@ public class AlarmSubjectImpl extends Obj implements IAlarmSubject {
 		if (query == null) {
 			query = new Op("query", new Contract(AlarmFilter.ALARM_FILTER_CONTRACT), new Contract(AlarmQueryOut.ALARM_QUERYOUT_CONTRACT));
 			query.setHref(new Uri("query"));
+			query.setOperationHandler(new OperationHandler() {
+				public Obj invoke(Obj in) {
+					return query(in);
+				}
+			});
 		}
 		return query;
 	}
@@ -105,15 +100,6 @@ public class AlarmSubjectImpl extends Obj implements IAlarmSubject {
 		count.set(count.get()+1);
 		
 		broker.addObj((Obj)alarm, false);
-		
-		Op ack = ((AlarmImpl)alarm).ack();
-		if (ack == null) return;
-		
-		broker.addOperationHandler(new Uri(ack.getFullContextPath()), new OperationHandler() {
-			public Obj invoke(Obj in) {
-				return ((AlarmImpl)alarm).ack(in);
-			}
-		});
 	}
 	
 	public Obj query(Obj in) {

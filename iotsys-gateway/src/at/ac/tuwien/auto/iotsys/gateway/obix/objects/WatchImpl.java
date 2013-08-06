@@ -96,8 +96,26 @@ public class WatchImpl extends Obj implements Watch {
 		this.setHref(new Uri("http://localhost/watch" + (numInstance++)));
 		
 		resetExpiration();
+	}
+	
+	public Watch thisWatch(){
+		return this;
+	}
+
+	public Reltime lease() {
+		if (lease == null) {
+			lease = new Reltime("lease", DEFAULT_LEASE);
+			lease.setHref(new Uri("lease"));
+			lease.setWritable(true);
+		}
 		
-		broker.addOperationHandler(new Uri(this.getNormalizedHref().getPath() + "/add"), new OperationHandler() {
+		return lease;
+	}
+
+	public Op add() {
+		Op add = new Op("add", new Contract(WATCH_IN_CONTRACT), new Contract(WATCH_OUT_CONTRACT));
+		add.setHref(new Uri("add"));
+		add.setOperationHandler(new OperationHandler() {
 			@Override
 			public Obj invoke(Obj in) {
 				// Perform add logic
@@ -164,8 +182,13 @@ public class WatchImpl extends Obj implements Watch {
 				return ret;
 			}			
 		});
-		
-		broker.addOperationHandler(new Uri(this.getNormalizedHref().getPath() + "/remove"), new OperationHandler(){
+		return add;
+	}
+
+	public Op remove() {
+		Op remove = new Op("remove", new Contract(WATCH_IN_CONTRACT), new Contract(OBIX_NIL));
+		remove.setHref(new Uri("remove"));
+		remove.setOperationHandler(new OperationHandler(){
 			@Override
 			public Obj invoke(Obj in) {
 				// Perform remove logic
@@ -190,7 +213,13 @@ public class WatchImpl extends Obj implements Watch {
 			}			
 		});
 		
-		broker.addOperationHandler(new Uri(this.getNormalizedHref().getPath() + "/pollChanges"), new OperationHandler(){
+		return remove;
+	}
+
+	public Op pollChanges() {
+		Op pollChanges = new Op("pollChanges", new Contract(WATCH_IN_CONTRACT), new Contract(WATCH_OUT_CONTRACT));
+		pollChanges.setHref(new Uri("pollChanges"));
+		pollChanges.setOperationHandler(new OperationHandler(){
 			@Override
 			public Obj invoke(Obj in) {
 				resetExpiration();
@@ -229,7 +258,13 @@ public class WatchImpl extends Obj implements Watch {
 			}		
 		});
 		
-		broker.addOperationHandler(new Uri(this.getNormalizedHref().getPath() + "/pollRefresh"), new OperationHandler(){
+		return pollChanges;
+	}
+
+	public Op pollRefresh() {	
+		Op pollRefresh = new Op("pollRefresh", new Contract(WATCH_IN_CONTRACT), new Contract(WATCH_OUT_CONTRACT));
+		pollRefresh.setHref(new Uri("pollRefresh"));
+		pollRefresh.setOperationHandler(new OperationHandler(){
 			@Override
 			public Obj invoke(Obj in) {
 				resetExpiration();
@@ -266,53 +301,24 @@ public class WatchImpl extends Obj implements Watch {
 				return out;
 			}		
 		});
-
 		
+		return pollRefresh;
+	}
 
-		broker.addOperationHandler(new Uri(this.getNormalizedHref().getPath() + "/delete"), new OperationHandler(){
+	public Op delete() {
+		Op delete = new Op("delete", new Contract(OBIX_NIL), new Contract(OBIX_NIL));
+		delete.setHref(new Uri("delete"));
+		delete.setOperationHandler(new OperationHandler(){
 			@Override
 			public Obj invoke(Obj in) {
 				// Perform delete logic
 				deleteWatch();
 
 				return new NilImpl();
-
 			}		
 		});
-	}
-	
-	public Watch thisWatch(){
-		return this;
-	}
-
-	public Reltime lease() {
-		if (lease == null) {
-			lease = new Reltime("lease", DEFAULT_LEASE);
-			lease.setHref(new Uri("lease"));
-			lease.setWritable(true);
-		}
 		
-		return lease;
-	}
-
-	public Op add() {
-		return new Op("add", new Contract(WATCH_IN_CONTRACT), new Contract(WATCH_OUT_CONTRACT));
-	}
-
-	public Op remove() {
-		return new Op("remove", new Contract(WATCH_IN_CONTRACT), new Contract(OBIX_NIL));
-	}
-
-	public Op pollChanges() {
-		return new Op("pollChanges", new Contract(WATCH_IN_CONTRACT), new Contract(WATCH_OUT_CONTRACT));
-	}
-
-	public Op pollRefresh() {	
-		return new Op("pollRefresh", new Contract(WATCH_IN_CONTRACT), new Contract(WATCH_OUT_CONTRACT));
-	}
-
-	public Op delete() {
-		return new Op("delete", new Contract(OBIX_NIL), new Contract(OBIX_NIL));
+		return delete;
 	}
 	
 	private void deleteWatch() {
@@ -323,11 +329,7 @@ public class WatchImpl extends Obj implements Watch {
 			observer = null;
 		}
 		
-		broker.removeOperationHandler(new Uri(thisWatch().getNormalizedHref().getPath() + "/add"));
-		broker.removeOperationHandler(new Uri(thisWatch().getNormalizedHref().getPath() + "/remove"));
-		broker.removeOperationHandler(new Uri(thisWatch().getNormalizedHref().getPath() + "/pollChanges"));
-		broker.removeOperationHandler(new Uri(thisWatch().getNormalizedHref().getPath() + "/pollRefresh"));
-		broker.removeOperationHandler(new Uri(thisWatch().getNormalizedHref().getPath() + "/delete"));
+		expirationTimer.cancel(false);
 		broker.removeObj(thisWatch().lease().getNormalizedHref().getPath());
 		broker.removeObj(thisWatch().getHref().getPath());
 	}

@@ -36,7 +36,6 @@ import java.net.Inet6Address;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -46,11 +45,11 @@ import obix.ContractRegistry;
 import obix.Err;
 import obix.List;
 import obix.Obj;
+import obix.Op;
 import obix.Ref;
 import obix.Uri;
-import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
-import at.ac.tuwien.auto.iotsys.commons.OperationHandler;
 import at.ac.tuwien.auto.iotsys.commons.MDnsResolver;
+import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.AboutImpl;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.AlarmSubjectImpl;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.HistoryHelper;
@@ -78,8 +77,6 @@ public class ObjectBrokerImpl implements ObjectBroker {
 	private AlarmSubjectImpl alarmSubjectImpl = null;
 
 	private AboutImpl aboutImpl = null;
-
-	private final Hashtable<String, OperationHandler> operationHandler = new Hashtable<String, OperationHandler>();
 
 	private final HashMap<String, String> ipv6Mapping = new HashMap<String, String>();
 
@@ -448,22 +445,16 @@ public class ObjectBrokerImpl implements ObjectBroker {
 	}
 
 	@Override
-	public synchronized Obj invokeOp(Uri uri, Obj input, boolean b) {
-		if (operationHandler.get(uri.toString()) != null) {
-			return operationHandler.get(uri.toString()).invoke(input);
+	public synchronized Obj invokeOp(Uri uri, Obj input) {
+		Obj obj = pullObj(uri);
+		
+		if (obj instanceof Op) {
+			Op op = (Op) obj;
+			if (op.getOperationHandler() != null)
+				return op.getOperationHandler().invoke(input);
 		}
+		
 		return new Err("No handler for operation defined.");
-	}
-
-	@Override
-	public synchronized void addOperationHandler(Uri uri,
-			OperationHandler handler) {
-		operationHandler.put(uri.toString(), handler);
-	}
-	
-	@Override
-	public void removeOperationHandler(Uri uri){
-		operationHandler.remove(uri.getPath());
 	}
 
 	@Override

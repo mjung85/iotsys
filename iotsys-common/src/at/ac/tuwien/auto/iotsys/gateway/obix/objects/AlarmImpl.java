@@ -2,6 +2,8 @@ package at.ac.tuwien.auto.iotsys.gateway.obix.objects;
 
 import java.util.TimeZone;
 
+import at.ac.tuwien.auto.iotsys.commons.OperationHandler;
+
 import obix.Abstime;
 import obix.AlarmSource;
 import obix.Contract;
@@ -120,6 +122,11 @@ public class AlarmImpl extends Obj implements Alarm, AckAlarm, StatefulAlarm, Po
 		if (ack == null) {
 			ack = new Op("ack", new Contract(AckAlarmIn.ALARM_ACKIN_CONTRACT), new Contract(AckAlarmOut.ALARM_ACKOUT_CONTRACT));
 			ack.setHref(new Uri("ack"));
+			ack.setOperationHandler(new OperationHandler() {
+				public Obj invoke(Obj in) {
+					return ack(in);
+				}
+			});
 		}
 		return ack;
 	}

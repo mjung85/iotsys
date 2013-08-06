@@ -27,11 +27,7 @@ public interface ObjectBroker{
 
 	public abstract void removeObj(String href);
 
-	public abstract Obj invokeOp(Uri uri, Obj input, boolean b);
-
-	public abstract void addOperationHandler(Uri uri, OperationHandler handler);
-	
-	public abstract void removeOperationHandler(Uri uri);
+	public abstract Obj invokeOp(Uri uri, Obj input);
 
 	public abstract String getCoRELinks();
 	
