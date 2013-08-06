@@ -103,26 +103,17 @@ public class GroupCommImpl extends Obj implements GroupComm, Observer{
 				
 //		ObjectBrokerImpl.getInstance().addObj(groups, false);
 		
-		String queryHref = datapoint.getFullContextPath()
-				+ "/groupComm/joinGroup";
-
-		ObjectBrokerImpl.getInstance().addOperationHandler(
-
-		new Uri(queryHref), new OperationHandler() {
+		joinGroup.setOperationHandler(new OperationHandler() {
 			public Obj invoke(Obj in) {
 				return GroupCommImpl.this.joinGroup(in);
 			}
 		});
 
-		String rollupHref = datapoint.getFullContextPath()
-				+ "/groupComm/leaveGroup";
-
-		ObjectBrokerImpl.getInstance().addOperationHandler(new Uri(rollupHref),
-				new OperationHandler() {
-					public Obj invoke(Obj in) {
-						return GroupCommImpl.this.leaveGroup(in);
-					}
-				});
+		leaveGroup.setOperationHandler(new OperationHandler() {
+			public Obj invoke(Obj in) {
+				return GroupCommImpl.this.leaveGroup(in);
+			}
+		});
 
 		// add history reference in the parent element
 		if (datapoint.getParent() != null) {

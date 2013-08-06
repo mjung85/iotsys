@@ -113,18 +113,21 @@ public class HistoryImpl extends Obj implements History, Observer {
 		add(feed);
 
 		query.setName("query");
+		query.setHref(new Uri("query"));
 		query.setIn(new Contract(HistoryFilterImpl.HISTORY_FILTER_CONTRACT));
 		query.setOut(new Contract(
 				HistoryQueryOutImpl.HISTORY_QUERY_OUT_CONTRACT));
 		add(query);
 
 		rollup.setName("rollup");
+		rollup.setHref(new Uri("rollup"));
 		rollup.setIn(new Contract(HistoryRollupInImpl.HISTORY_ROLLUPIN_CONTRACT));
 		rollup.setOut(new Contract(
 				HistoryRollupOutImpl.HISTORY_ROLLUPOUT_CONTRACT));
 		add(rollup);
 		
 		append.setName("append");
+		append.setHref(new Uri("append"));
 		append.setIn(new Contract(HistoryAppendIn.HISTORY_APPENDIN_CONTRACT));
 		append.setOut(new Contract(HistoryAppendOutImpl.HISTORY_APPENDOUT_CONTRACT));
 		add(append);
@@ -132,40 +135,26 @@ public class HistoryImpl extends Obj implements History, Observer {
 
 	@Override
 	public void initialize() {
-		this.setHref(new Uri(observedDatapoint.getFullContextPath()
-				+ "/history"));
+		this.setHref(new Uri(observedDatapoint.getFullContextPath() + "/history"));
 		ObjectBrokerImpl.getInstance().addObj(this, false);
-		
-		String queryHref = observedDatapoint.getFullContextPath()
-				+ "/history/query";
 
-		ObjectBrokerImpl.getInstance().addOperationHandler(
-
-		new Uri(queryHref), new OperationHandler() {
+		query.setOperationHandler(new OperationHandler() {
 			public Obj invoke(Obj in) {
 				return HistoryImpl.this.query(in);
 			}
 		});
 
-		String rollupHref = observedDatapoint.getFullContextPath()
-				+ "/history/rollup";
+		rollup.setOperationHandler(new OperationHandler() {
+			public Obj invoke(Obj in) {
+				return HistoryImpl.this.rollup(in);
+			}
+		});
 
-		ObjectBrokerImpl.getInstance().addOperationHandler(new Uri(rollupHref),
-				new OperationHandler() {
-					public Obj invoke(Obj in) {
-						return HistoryImpl.this.rollup(in);
-					}
-				});
-		
-		String appendHref = observedDatapoint.getFullContextPath()
-				+ "/history/append";
-
-		ObjectBrokerImpl.getInstance().addOperationHandler(new Uri(appendHref),
-				new OperationHandler() {
-					public Obj invoke(Obj in) {
-						return HistoryImpl.this.append(in);
-					}
-				});
+		append.setOperationHandler(new OperationHandler() {
+			public Obj invoke(Obj in) {
+				return HistoryImpl.this.append(in);
+			}
+		});
 
 		// add history reference in the parent element
 		if (observedDatapoint.getParent() != null) {
