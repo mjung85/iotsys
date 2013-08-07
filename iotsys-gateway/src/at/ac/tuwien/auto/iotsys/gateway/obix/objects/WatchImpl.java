@@ -169,8 +169,9 @@ public class WatchImpl extends Obj implements Watch {
 							Feed feed = (Feed) o;
 							Obj filter = null;
 							if (uri.size() > 0) filter = uri.list()[0];
-							for (Obj event : feed.query(filter)) {
-								obj.add(event);
+							List<Obj> events = feed.query(filter);
+							for (int i = events.size() - 1; i >= 0; i--) {
+								obj.add(events.get(i));
 							}
 						}
 						
@@ -290,8 +291,9 @@ public class WatchImpl extends Obj implements Watch {
 						if (beingObservedObject.isFeed()) {
 							FeedObserver feedObserver = (FeedObserver) observer;
 							Feed feed = (Feed) beingObservedObject;
-							for (Obj event : feed.query(feedObserver.getFilter())) {
-								outItem.add(event);
+							List<Obj> events = feed.query(feedObserver.getFilter());
+							for (int i = events.size() - 1; i >= 0; i--) {
+								outItem.add(events.get(i));
 							}
 						}
 						

@@ -197,6 +197,20 @@
       <device>
         <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.BrightnessActuatorImpl
         </type>
+        <href>brightnessHistoryAppendFuture</href>
+        <historyEnabled>true</historyEnabled>
+      </device>
+      
+      <device>
+        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.BrightnessActuatorImpl
+        </type>
+        <href>brightnessHistoryFeedFuture</href>
+        <historyEnabled>true</historyEnabled>
+      </device>
+      
+      <device>
+        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.BrightnessActuatorImpl
+        </type>
         <href>brightnessHistoryRollup</href>
         <historyEnabled>true</historyEnabled>
       </device>

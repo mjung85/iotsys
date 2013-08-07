@@ -270,7 +270,7 @@ public class HistoryImpl extends Obj implements History, Observer {
 			HistoryRecord historyRecord = (HistoryRecord) record;
 			newRecords.add(new HistoryRecordImpl(historyRecord));
 			
-			if (historyRecord.timestamp().compareTo(timestamp) != 1) {
+			if (!timestamp.isNull() && historyRecord.timestamp().compareTo(timestamp) != 1) {
 				// The HistoryRecords in the data list MUST be sorted by timestamp from oldest to newest,
 				// and MUST not include a timestamp equal to or older than History.end
 				return new Err("Cannot append before last event");

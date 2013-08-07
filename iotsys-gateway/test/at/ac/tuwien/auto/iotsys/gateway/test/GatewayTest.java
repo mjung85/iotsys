@@ -6,6 +6,8 @@ import static org.hamcrest.Matchers.hasXPath;
 import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertEquals;
 
+import java.util.Calendar;
+
 import javax.xml.bind.DatatypeConverter;
 
 import org.junit.AfterClass;
@@ -588,8 +590,8 @@ public class GatewayTest {
 		body(hasXPath("/obj/abstime[@name='start' and not(@null)]")).
 		body(hasXPath("/obj/abstime[@name='end' and not(@null)]")).
 		body(hasXPath("/obj/list[@of='obix:HistoryRecord']")).
-		body(hasXPath("/obj/list/obj[2]/bool[@val='true']")).
-		body(hasXPath("/obj/list/obj[1]/bool[@val='false']")).
+		body(hasXPath("/obj/list/obj[1]/bool[@val='true']")).
+		body(hasXPath("/obj/list/obj[2]/bool[@val='false']")).
 		post("/switchHistory1/value/history/query");
 	}
 	
@@ -739,6 +741,110 @@ public class GatewayTest {
 		body(hasXPath("/obj/abstime[@name='newStart' and not(@null)]")).
 		body(hasXPath("/obj/abstime[@name='newEnd' and not(@null)]")).
 		post("/brightnessHistoryAppendNothing/value/history/append");
+	}
+	
+	@Test
+	public void testHistoryAppendFuture() {
+		Calendar calendar = Calendar.getInstance();
+		calendar.add(Calendar.HOUR, 1);
+		String futureDate = DatatypeConverter.printDateTime(calendar);
+		
+		given().param("data", "<obj is='obix:HistoryAppendIn'>" +
+			"	<list name='data' of='obix:HistoryRecord'>" +
+			"		<obj>" +
+			"			<abstime name='timestamp' val='" + futureDate + "'/>" +
+			"			<int name='value' val='3'/>" +
+			"		</obj>" +
+			"	</list>" +
+			"</obj>").
+		expect().
+		body(hasXPath("/obj[@is='obix:HistoryAppendOut']")).
+		body(hasXPath("/obj/int[@name='numAdded' and @val='1']")).
+		body(hasXPath("/obj/int[@name='newCount' and @val='1']")).
+		body(hasXPath("/obj/abstime[@name='newStart' and not(@null)]")).
+		body(hasXPath("/obj/abstime[@name='newEnd' and not(@null)]")).
+		post("/brightnessHistoryAppendFuture/value/history/append");
+		
+		given().body("<int val='1' />").
+		expect().
+		body(not(hasXPath("/err"))).
+		put("/brightnessHistoryAppendFuture/value");
+	}
+	
+	@Test
+	public void testHistoryFeedFuture() {
+		String watchHref = makeWatch();
+		String addUri = watchHref + "/add";
+		String pollChangesUri = watchHref + "/pollChanges";
+		String pollRefreshUri = watchHref + "/pollRefresh";
+		Calendar calendar = Calendar.getInstance();
+		String futureDate;
+		
+		
+		String appendEvent = "<obj is='obix:HistoryAppendIn'>" +
+			"	<list name='data' of='obix:HistoryRecord'>" +
+			"		<obj>" +
+			"			<abstime name='timestamp' val='%s'/>" +
+			"			<int name='value' val='%d'/>" +
+			"		</obj>" +
+			"	</list>" +
+			"</obj>";
+		
+		
+		calendar.add(Calendar.HOUR, 1);
+		futureDate = DatatypeConverter.printDateTime(calendar);
+		
+		given().
+		param("data", "<obj is='obix:WatchIn'>"+
+			 "	<list name='hrefs'>" +
+			 "		<uri val='/brightnessHistoryFeedFuture/value/history/feed' />" +
+			 "	</list>" +
+			 "</obj>").
+		expect().
+		body(hasXPath("/obj[@is='obix:WatchOut']")).
+		post(addUri);
+		
+		
+		given().param("data", String.format(appendEvent, futureDate, 5)).
+		post("/brightnessHistoryFeedFuture/value/history/append");
+		
+		given().body("<int val='1' />").put("/brightnessHistoryFeedFuture/value");
+		
+		expect().
+		body(hasXPath("/obj/list/feed")).
+		body(hasXPath("/obj/list/feed/obj[1]/int[@val=5]")).
+		body(hasXPath("/obj/list/feed/obj[2]/int[@val=1]")).
+		post(pollChangesUri);
+		
+		given().body("<int val='2' />").put("/brightnessHistoryFeedFuture/value");
+		
+		expect().
+		body(hasXPath("/obj/list/feed")).
+		body(hasXPath("/obj/list/feed/obj[1]/int[@val=2]")).
+		post(pollChangesUri);
+		
+		
+		calendar.add(Calendar.MINUTE, -20);
+		futureDate = DatatypeConverter.printDateTime(calendar);
+		
+		given().body("<int val='3' />").put("/brightnessHistoryFeedFuture/value");
+		given().param("data", String.format(appendEvent, futureDate, 4)).
+			post("/brightnessHistoryFeedFuture/value/history/append");
+		
+		expect().
+		body(hasXPath("/obj/list/feed")).
+		body(hasXPath("/obj/list/feed/obj[1]/int[@val=4]")).
+		body(hasXPath("/obj/list/feed/obj[2]/int[@val=3]")).
+		post(pollChangesUri);
+		
+		expect().
+		body(hasXPath("/obj/list/feed")).
+		body(hasXPath("/obj/list/feed/obj[1]/int[@val=5]")).
+		body(hasXPath("/obj/list/feed/obj[2]/int[@val=4]")).
+		body(hasXPath("/obj/list/feed/obj[3]/int[@val=3]")).
+		body(hasXPath("/obj/list/feed/obj[4]/int[@val=2]")).
+		body(hasXPath("/obj/list/feed/obj[5]/int[@val=1]")).
+		post(pollRefreshUri);
 	}
 	
 	@Test

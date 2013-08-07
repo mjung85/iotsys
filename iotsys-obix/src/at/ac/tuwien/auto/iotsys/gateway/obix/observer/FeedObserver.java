@@ -28,15 +28,8 @@ public class FeedObserver implements EventObserver<Obj> {
 		
 	@Override
 	public void update(Object currentState) {
-		if (!(currentState instanceof Feed)) return;
-		Feed feed = (Feed) currentState;
-		
 		synchronized(lock) {
-			List<Obj> events = feed.getEvents();
-			if (events.size() == 0) return;
-			
-			Obj recentEvent = events.get(0);
-			unpolledEvents.add(recentEvent);
+			unpolledEvents.add((Obj)currentState);
 		}
 	}
 	

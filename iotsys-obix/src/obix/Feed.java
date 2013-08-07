@@ -130,6 +130,7 @@ public class Feed
 		while (maxEvents > 0 && events.size() > maxEvents)
 			removeEvent(events.getLast());
 		
+		latestEvent = event;
 		notifyObservers();
 	}
   }
@@ -172,6 +173,11 @@ public class Feed
   {
 	  this.events.remove(event);
   }
+  
+  @Override
+  public Object getCurrentState() {
+    return latestEvent;
+  }
  
 ////////////////////////////////////////////////////////////////
 // Fields
@@ -181,5 +187,6 @@ public class Feed
   private Contract of;
   private LinkedList<Obj> events = new LinkedList<Obj>();
   private int maxEvents = 0;
+  private Obj latestEvent;
     
 }
