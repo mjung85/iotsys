@@ -53,7 +53,7 @@ public class IndoorBrightnessSensorImpl  extends SensorImpl implements IndoorBri
 	
 	
 	public void writeObject(Obj input) {
-
+		// not writable
 	}
 	
 	@Override

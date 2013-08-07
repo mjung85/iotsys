@@ -23,7 +23,7 @@ public class TestResponse {
 	
 	public TestResponse() throws XBeeException, IOException{
 		
-		xbee.open("COM9", 9600);
+		xbee.open("COM3", 9600);
 		
 		// get the Node discovery timeout
 		xbee.sendAsynchronous(new AtCommand("NT"));
@@ -73,7 +73,7 @@ public class TestResponse {
 		//xbee.sendAsynchronous(new ZNetTxRequest(address64, payload));
 		//xbee.sendAsynchronous(new ZNetTxRequest(address64, payload));		
 //		int[] address = {0x00,0x13,0xa2,0x00,0x40,0x7c,0x17,0x15};
-		int[] address = {0x7e,0x00,0x04,0x08,0x01,0x4e,0x54,0x54};
+		int[] address = {0x00,0x13,0xa2,0x00,0x40,0x7c,0x17,0x17};
 		
 		XBeeAddress64 address64 = new XBeeAddress64(address);
 		int[] payload = new int[8];
@@ -127,7 +127,7 @@ public class TestResponse {
 	 */
 	public static void main(String[] args) throws XBeeException, IOException {
 		// TODO Auto-generated method stub
-		PropertyConfigurator.configure("log4j.properties");
+		PropertyConfigurator.configure("res/log4j.properties");
 		new TestResponse();
 
 	}
