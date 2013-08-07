@@ -358,9 +358,9 @@ public class GatewayTest {
 		body(hasXPath("/obj[@is='obix:WatchOut']")).
 		body(hasXPath("/obj/list/feed[@href='/fanSpeedWatchAdd/fanSpeedSetpoint/history/feed' and @of='obix:HistoryRecord']")).
 		body(hasXPath("/obj/list/feed[count(obj) = 3]")).
-		body(hasXPath("/obj/list/feed/obj/int[@val='1']")).
-		body(hasXPath("/obj/list/feed/obj/int[@val='2']")).
-		body(hasXPath("/obj/list/feed/obj/int[@val='3']")).
+		body(hasXPath("/obj/list/feed/obj[1]/int[@val='3']")).
+		body(hasXPath("/obj/list/feed/obj[2]/int[@val='2']")).
+		body(hasXPath("/obj/list/feed/obj[3]/int[@val='1']")).
 		post(watchHref + "/add");
 	}
 	
@@ -395,12 +395,12 @@ public class GatewayTest {
 		// pollRefresh returns all events
 		expect().
 		body(hasXPath("/obj/list/feed[count(obj) = 6]")).
-		body(hasXPath("/obj/list/feed/obj/int[@val='1']")).
-		body(hasXPath("/obj/list/feed/obj/int[@val='2']")).
-		body(hasXPath("/obj/list/feed/obj/int[@val='3']")).
-		body(hasXPath("/obj/list/feed/obj/int[@val='4']")).
-		body(hasXPath("/obj/list/feed/obj/int[@val='5']")).
-		body(hasXPath("/obj/list/feed/obj/int[@val='6']")).
+		body(hasXPath("/obj/list/feed/obj[1]/int[@val='6']")).
+		body(hasXPath("/obj/list/feed/obj[2]/int[@val='5']")).
+		body(hasXPath("/obj/list/feed/obj[3]/int[@val='4']")).
+		body(hasXPath("/obj/list/feed/obj[4]/int[@val='3']")).
+		body(hasXPath("/obj/list/feed/obj[5]/int[@val='2']")).
+		body(hasXPath("/obj/list/feed/obj[6]/int[@val='1']")).
 		post(pollUri);
 		
 		// pollChanges has no unpolled events
@@ -449,9 +449,9 @@ public class GatewayTest {
 		
 		expect().
 		body(hasXPath("/obj/list/feed[count(obj) = 3]")).
-		body(hasXPath("/obj/list/feed/obj/int[@val='4']")).
-		body(hasXPath("/obj/list/feed/obj/int[@val='5']")).
-		body(hasXPath("/obj/list/feed/obj/int[@val='6']")).
+		body(hasXPath("/obj/list/feed/obj[1]/int[@val='6']")).
+		body(hasXPath("/obj/list/feed/obj[2]/int[@val='5']")).
+		body(hasXPath("/obj/list/feed/obj[3]/int[@val='4']")).
 		post(pollChangesUri);
 		
 		// pollChanges has no new events

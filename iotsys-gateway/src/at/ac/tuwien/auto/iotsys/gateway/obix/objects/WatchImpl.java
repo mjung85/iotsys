@@ -246,8 +246,8 @@ public class WatchImpl extends Obj implements Watch {
 							}
 							
 							if (obj.isFeed()) {
-								for (Obj event : events) {
-									outItem.add(event);
+								for (int i = events.size() - 1; i >= 0; i--) {
+									outItem.add(events.get(i));
 								}
 							}
 						}
