@@ -333,6 +333,7 @@ public class ObjectBrokerImpl implements ObjectBroker {
 				}
 			}
 
+			log.info(o.getName());
 			return addObj(o);
 
 		} catch (UnknownHostException e2) {
@@ -366,6 +367,8 @@ public class ObjectBrokerImpl implements ObjectBroker {
 		}
 
 		String href = o.getFullContextPath();
+		log.finest("======add object: " + href);
+		
 		// don't add object if href is already assigned
 		if (objects.containsKey(href)) {
 			log.log(Level.WARNING, "Object with href: " + href

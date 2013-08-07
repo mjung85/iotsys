@@ -51,6 +51,7 @@ public class TemperatureSensorImplXBee extends TemperatureSensorImpl {
 		});
 	}
 	
+	
 	public void refreshObject(){
 		
 	}

@@ -39,7 +39,7 @@ public class IndoorBrightnessSensorImplXBee extends IndoorBrightnessSensorImpl {
 				
 					Integer brightnessMax = 1023;
 					double brightnessValue = 0;
-					brightnessValue = ioSample.getAnalog2();
+					brightnessValue = ioSample.getAnalog1();
 					
 					
 					double brightnessPercentalValue = (brightnessMax - (brightnessMax-brightnessValue))*100/1023;

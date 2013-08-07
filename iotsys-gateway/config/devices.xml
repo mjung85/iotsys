@@ -32,6 +32,30 @@
         <groupCommEnabled>true</groupCommEnabled>
       </device>
     </connector>
+		
+		<connector>
+      <name>XBee</name>
+      <enabled>true</enabled>
+      <serialPort>COM3</serialPort>
+      <device>
+        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.xbee.TemperatureSensorImplXBee
+        </type>
+        <address>0013a200407c1717</address>
+        <href>temperatureXBee</href>
+        <historyEnabled>false</historyEnabled>
+        <ipv6>aaab::2:1</ipv6>
+        <groupCommEnabled>true</groupCommEnabled>
+      </device>
+			<device>
+        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.xbee.IndoorBrightnessSensorImplXBee
+        </type>
+        <address>0013a200407c1717</address>
+        <href>brightnessXBee</href>
+        <historyEnabled>false</historyEnabled>
+        <ipv6>aaab::2:2</ipv6>
+        <groupCommEnabled>true</groupCommEnabled>
+      </device>
+    </connector>
   </xbee>
 
   <enocean>
@@ -633,7 +657,7 @@
   <virtual>
     <connector>
       <name>Virtual Devices</name>
-      <enabled>true</enabled>
+      <enabled>false</enabled>
 
       <!-- SENSOREN -->
 
@@ -784,7 +808,7 @@
     </connector>
     <connector>
       <name>Virtual Devices 2</name>
-      <enabled>true</enabled>
+      <enabled>false</enabled>
 
       <!-- SENSOREN -->
       <device>
@@ -826,7 +850,7 @@
     </connector>
     <connector>
       <name>HVAC Simulation</name>
-      <enabled>true</enabled>
+      <enabled>false</enabled>
 
       <!-- SENSOREN -->
       <device>
@@ -920,7 +944,7 @@
 
     <connector>
       <name>IoTSyS Logic</name>
-      <enabled>true</enabled>
+      <enabled>false</enabled>
 
       <!-- Logic components -->
       <device>
