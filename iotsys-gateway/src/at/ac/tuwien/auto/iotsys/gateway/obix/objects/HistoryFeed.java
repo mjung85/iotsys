@@ -33,6 +33,8 @@
 package at.ac.tuwien.auto.iotsys.gateway.obix.objects;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import obix.Abstime;
@@ -53,7 +55,7 @@ public class HistoryFeed extends Feed {
 	@Override
 	public List<Obj> query(List<Obj> events, Obj filter) {
 		if (!(filter instanceof HistoryFilter))
-			return new ArrayList<Obj>(events);
+			filter = null;
 		
 		HistoryFilter in = (HistoryFilter) filter;
 		return new ArrayList<Obj>(filterRecords(events, in));
@@ -81,6 +83,15 @@ public class HistoryFeed extends Feed {
 		}
 
 		ArrayList<HistoryRecordImpl> filteredRecords = new ArrayList<HistoryRecordImpl>();
+
+		// sort records
+		Collections.sort(events, new Comparator<Obj>() {
+			public int compare(Obj obj1, Obj obj2) {
+				HistoryRecordImpl r1 = (HistoryRecordImpl) obj1;
+				HistoryRecordImpl r2 = (HistoryRecordImpl) obj2;
+				return r1.timestamp().compareTo(r2.timestamp());
+			}
+		});
 		
 		for (Obj event : events) {
 			if (!(event instanceof HistoryRecordImpl))
@@ -94,15 +105,14 @@ public class HistoryFeed extends Feed {
 					break;
 				}
 			}
-
+			
+			
 			if (start.get() != end.get()) {
-				if (start != null && start.get() != 0
-						&& record.timestamp().get() < start.get()) {
+				if (start.get() != 0 && record.timestamp().get() < start.get()) {
 					addRecord = false;
 				}
 
-				if (end != null && end.get() != 0
-						&& record.timestamp().get() > end.get()) {
+				if (end.get() != 0 && record.timestamp().get() > end.get()) {
 					addRecord = false;
 				}
 			}
