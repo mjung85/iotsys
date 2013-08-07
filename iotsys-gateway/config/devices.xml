@@ -657,7 +657,7 @@
   <virtual>
     <connector>
       <name>Virtual Devices</name>
-      <enabled>false</enabled>
+      <enabled>true</enabled>
 
       <!-- SENSOREN -->
 
@@ -732,7 +732,16 @@
 
 
       <!-- ACTUATORS -->
-
+			<device>
+        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.SimpleHVACvalveActuatorImpl
+        </type>
+        <href>virtualSimpleHVACvalveActuator</href>
+        <historyEnabled>false</historyEnabled>
+        <historyCount>200</historyCount>
+        <groupCommEnabled>true</groupCommEnabled>
+      </device>
+			
+			
       <device>
         <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.SunblindActuatorImpl
         </type>
@@ -944,7 +953,7 @@
 
     <connector>
       <name>IoTSyS Logic</name>
-      <enabled>false</enabled>
+      <enabled>true</enabled>
 
       <!-- Logic components -->
       <device>
