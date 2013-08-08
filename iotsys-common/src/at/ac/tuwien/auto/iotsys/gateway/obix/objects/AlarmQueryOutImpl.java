@@ -14,11 +14,13 @@ public class AlarmQueryOutImpl extends Obj implements AlarmQueryOut {
 	private Abstime end = new Abstime("end");
 	private List data = new List("data", new Contract(Alarm.ALARM_CONTRACT));
 	
-	public AlarmQueryOutImpl(java.util.List<AlarmImpl> alarms) {
+	public AlarmQueryOutImpl(java.util.List<Obj> alarms) {
 		setIs(new Contract(AlarmQueryOut.ALARM_QUERYOUT_CONTRACT));
 		
 		if (alarms != null) {
-			for(AlarmImpl alarm : alarms) {
+			for(Obj obj : alarms) {
+				AlarmImpl alarm = (AlarmImpl) obj;
+				
 				data.add(alarm);
 				if (data.size() == 1 || start.get() > alarm.timestamp().get())
 					start.set(alarm.timestamp().get(), start.getTimeZone());

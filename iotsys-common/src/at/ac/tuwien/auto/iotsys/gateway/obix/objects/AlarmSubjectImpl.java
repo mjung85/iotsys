@@ -23,7 +23,7 @@ public class AlarmSubjectImpl extends Obj implements IAlarmSubject {
 	private ObjectBroker broker;
 	private Int count;
 	private Op query;
-	private AlarmFeed feed;
+	private Feed feed;
 	private static obix.List alarmdb;
 	
 	/**
@@ -83,7 +83,8 @@ public class AlarmSubjectImpl extends Obj implements IAlarmSubject {
 
 	public Feed feed() {
 		if (feed == null) {
-			feed = new AlarmFeed();
+			feed = new Feed("feed", new Contract(AlarmFilter.ALARM_FILTER_CONTRACT), new Contract(Alarm.ALARM_CONTRACT));
+			feed.setHref(new Uri("feed"));
 		}
 		return feed;
 	}
@@ -103,7 +104,8 @@ public class AlarmSubjectImpl extends Obj implements IAlarmSubject {
 	}
 	
 	public Obj query(Obj in) {
-		List<AlarmImpl> results = feed.getRecords(in, feed.getEvents());
+		AlarmFilterImpl filter = new AlarmFilterImpl(in);
+		List<Obj> results = filter.query(feed);
 		return new AlarmQueryOutImpl(results);
 	}
 }
