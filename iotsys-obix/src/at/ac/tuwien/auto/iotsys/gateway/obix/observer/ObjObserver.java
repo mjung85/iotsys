@@ -43,7 +43,7 @@ public class ObjObserver<ObjType extends Obj> implements EventObserver<ObjType> 
 	 * Provides the latest events.
 	 * @return 
 	 */
-	public List<ObjType> getEvents() {
+	public List<ObjType> pollChanges() {
 		LinkedList<ObjType> ret = null;
 		synchronized(lock){
 			ret = queue;

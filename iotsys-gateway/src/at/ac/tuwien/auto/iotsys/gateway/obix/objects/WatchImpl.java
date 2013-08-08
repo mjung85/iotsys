@@ -48,6 +48,7 @@ import obix.Reltime;
 import obix.Uri;
 import obix.contracts.Watch;
 import obix.contracts.WatchIn;
+import at.ac.tuwien.auto.iotsys.commons.FeedFilter;
 import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
 import at.ac.tuwien.auto.iotsys.commons.OperationHandler;
 import at.ac.tuwien.auto.iotsys.gateway.obix.observer.EventObserver;
@@ -135,13 +136,14 @@ public class WatchImpl extends Obj implements Watch {
 					
 					for(Uri uri : uris) {
 						Obj o = broker.pullObj(uri);
+						EventObserver<Obj> observer = null;
+						
 						if(!observedObjects.containsKey(uri.get())) {
 							observedObjects.put(uri.get(), uri);
 							
-							EventObserver<Obj> observer;
 							if (o.isFeed()) {
-								Obj filter = null;
-								if (uri.size() > 0) filter = uri.list()[0];
+								FeedFilter filter = ((Feed)o).getDefaultFilter();
+								if (uri.size() > 0) filter = filter.getFilter(uri.list()[0]);
 								observer = new FeedObserver(filter);
 							} else {
 								observer = new ObjObserver<Obj>();
@@ -166,12 +168,9 @@ public class WatchImpl extends Obj implements Watch {
 						}
 						
 						if (o.isFeed()) {
-							Feed feed = (Feed) o;
-							Obj filter = null;
-							if (uri.size() > 0) filter = uri.list()[0];
-							List<Obj> events = feed.query(filter);
-							for (int i = events.size() - 1; i >= 0; i--) {
-								obj.add(events.get(i));
+							List<Obj> events = ((FeedObserver) observer).pollRefresh();
+							for (Obj event : events) {
+								obj.add(event);
 							}
 						}
 						
@@ -231,7 +230,7 @@ public class WatchImpl extends Obj implements Watch {
 					
 					for (String uri : observers.keySet()) {
 						EventObserver<Obj> observer = observers.get(uri);
-						List<Obj> events = observer.getEvents();
+						List<Obj> events = observer.pollChanges();
 						if(events.size() > 0) {
 							// needs to be an obix object
 							Obj obj = (Obj) observer.getSubject();
@@ -247,8 +246,8 @@ public class WatchImpl extends Obj implements Watch {
 							}
 							
 							if (obj.isFeed()) {
-								for (int i = events.size() - 1; i >= 0; i--) {
-									outItem.add(events.get(i));
+								for (Obj event : events) {
+									outItem.add(event);
 								}
 							}
 						}
@@ -290,14 +289,13 @@ public class WatchImpl extends Obj implements Watch {
 						
 						if (beingObservedObject.isFeed()) {
 							FeedObserver feedObserver = (FeedObserver) observer;
-							Feed feed = (Feed) beingObservedObject;
-							List<Obj> events = feed.query(feedObserver.getFilter());
-							for (int i = events.size() - 1; i >= 0; i--) {
-								outItem.add(events.get(i));
+							List<Obj> events = feedObserver.pollRefresh();
+							for (Obj event : events) {
+								outItem.add(event);
 							}
 						}
 						
-						observer.getEvents();
+						observer.pollChanges();
 					}
 				}
 				return out;

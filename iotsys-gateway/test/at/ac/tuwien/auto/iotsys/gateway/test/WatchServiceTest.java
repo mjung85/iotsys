@@ -336,6 +336,9 @@ public class WatchServiceTest extends AbstractGatewayTest {
 		body(hasXPath("/obj[@is='obix:WatchOut']")).
 		body(hasXPath("/obj/list/feed[@href='/fanSpeedWatchPollChanges/fanSpeedSetpoint/history/feed' and @of='obix:HistoryRecord']")).
 		body(hasXPath("/obj/list/feed[count(obj) = 3]")).
+		body(hasXPath("/obj/list/feed/obj[1]/int[@val='3']")).
+		body(hasXPath("/obj/list/feed/obj[2]/int[@val='2']")).
+		body(hasXPath("/obj/list/feed/obj[3]/int[@val='1']")).
 		post(addUri);
 		
 		// pollChanges has no new events
