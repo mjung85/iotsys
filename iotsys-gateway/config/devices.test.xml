@@ -134,9 +134,9 @@
       <enabled>true</enabled>
 	  
 	  <device>
-        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.LightSwitchActuatorImpl
+        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.BrightnessActuatorImpl
         </type>
-        <href>switchHistory1</href>
+        <href>brightnessHistoryQuery</href>
         <historyEnabled>true</historyEnabled>
       </device>
       
