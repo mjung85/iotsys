@@ -48,6 +48,8 @@ public interface SunblindActuator extends Actuator {
 	public static final String MOVE_UP_CONTRACT = "<bool name='"+MOVE_UP_CONTRACT_NAME+"' href='"+MOVE_UP_CONTRACT_HREF+"' val='false'/>";
 	public Bool moveUpValue();
 	
+	
+	
 //	public static final String DEDICATED_STOP_CONTRACT_NAME="dedicatedStopValue";
 //	public static final String DEDICATED_STOP_CONTRACT_HREF="dedicatedStopValue";	
 //	public static final String DEDICATED_STOP_CONTRACT = "<bool name='"+DEDICATED_STOP_CONTRACT_NAME+"' href='"+DEDICATED_STOP_CONTRACT_HREF+"' val='false'/>";
