@@ -2,8 +2,11 @@ package at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.knx;
 
 import obix.Obj;
 import at.ac.tuwien.auto.calimero.GroupAddress;
+import at.ac.tuwien.auto.calimero.dptxlator.DPTXlator8BitUnsigned;
+import at.ac.tuwien.auto.calimero.exception.KNXException;
 import at.ac.tuwien.auto.calimero.process.ProcessCommunicator;
 import at.ac.tuwien.auto.iotsys.gateway.connectors.knx.KNXConnector;
+import at.ac.tuwien.auto.iotsys.gateway.connectors.knx.KNXWatchDog;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.SimpleHVACvalveActuatorImpl;
 
 public class SimpleHVACvalveActuatorImplKnx extends SimpleHVACvalveActuatorImpl{
@@ -39,6 +42,27 @@ public class SimpleHVACvalveActuatorImplKnx extends SimpleHVACvalveActuatorImpl{
 //			}
 //		});
 //	}
+	if(status == null){
+		// add watch dog on switching group address
+		knxConnector.addWatchDog(valuePosition, new KNXWatchDog() {
+			@Override
+			public void notifyWatchDog(byte[] apdu) {			
+				try {						
+					
+					DPTXlator8BitUnsigned x = new DPTXlator8BitUnsigned(DPTXlator8BitUnsigned.DPT_SCALING);
+					
+					x.setData(apdu);
+																			
+					if(x.getValueUnscaled() != (short)SimpleHVACvalveActuatorImplKnx.this.value.get()){
+						SimpleHVACvalveActuatorImplKnx.this.value.set(x.getValueUnscaled());
+					}
+					
+				} catch (KNXException e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
 }
 
 public void writeObject(Obj input){
