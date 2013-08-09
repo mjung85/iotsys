@@ -47,7 +47,6 @@ import at.ac.tuwien.auto.iotsys.commons.interceptor.Parameter;
 import at.ac.tuwien.auto.iotsys.gateway.interceptor.InterceptorBrokerImpl;
 import at.ac.tuwien.auto.iotsys.gateway.util.ExiUtil;
 import at.ac.tuwien.auto.iotsys.gateway.util.JsonUtil;
-import at.ac.tuwien.auto.iotsys.xacml.pdp.PDPInterceptorSettings;
 
 /**
  * A simple, tiny, nicely embeddable HTTP 1.0 (partially 1.1) server in Java
@@ -147,12 +146,50 @@ public class NanoHTTPD {
 			Properties header, Properties parms, Properties files,
 			Socket mySocket, String socketHostname, String hostAddress) {
 
-		String host = header.getProperty("host");
-		String resource = "http://" + host + uri;
 		String subject = mySocket.getInetAddress().getHostAddress();
+		String ipv6Address = "/" + getIPv6Address(mySocket);
 
 		log.info("Serving: " + uri + " for " + subject);
+		
+		// serve static files
+		Response response = serveStatic(uri, header, parms, ipv6Address);
+		if (response != null) return response;
+		
+		// call interceptors
+		response = intercept(uri, method, header, parms, mySocket, socketHostname, hostAddress);
+		if (response != null) return response;
 
+		
+		String data = getData(header, parms);
+		
+		if (data != null)
+			log.finest("serve: " + uri + ", method: " + method + ", data.length(): " + data.length());
+		log.finest("Data: " + data);
+		
+		
+		
+		String resourcePath = uri;
+		if (obixServer.containsIPv6(ipv6Address)) {
+			log.finest("IPv6 Adresse -> IoT6 Object");
+			resourcePath = obixServer.getIPv6LinkedHref(ipv6Address);
+			resourcePath += uri;
+		}
+		
+
+		try {
+			StringBuffer obixResponse = getObixResponse(resourcePath, data, method, header);
+			response = encodeResponse(uri, header, obixResponse);
+		} catch (URISyntaxException usex) {
+			response = new Response(HTTP_BADREQUEST, MIME_PLAINTEXT, "URI Syntax Exception");
+		}
+		
+		log.info("Serving: " + uri + " for " + subject + " done.");
+		return response;
+	}
+
+	private Response serveStatic(String uri, Properties header, Properties parms, String ipv6Address) {
+		String host = header.getProperty("host");
+		
 		if (uri.endsWith("soap") && parms.containsKey("wsdl")) {
 			// serve wsdl file
 			Response r = new Response(HTTP_OK, MIME_XML,
@@ -162,74 +199,99 @@ public class NanoHTTPD {
 							.replaceAll("./obix.xsd",
 									"http://" + host + uri + "?xsd=1"));
 			return r;
+			
 		} else if (uri.endsWith("soap") && parms.containsKey("xsd")) {
 			// serve schema file
 			Response r = new Response(HTTP_OK, MIME_XML,
 					soapHandler.getSchemaFileContent());
 			return r;
+			
 		} else if (uri.endsWith(".well-known/core")) {
 			Response r = new Response(HTTP_OK, MIME_PLAINTEXT,
 					obixServer.getCoRELinks());
 			return r;
+			
 		} else if (uri.equalsIgnoreCase("/") || uri.isEmpty()
 				|| uri.endsWith(".js") || uri.endsWith(".css")) {
+			
+			if (obixServer.containsIPv6(ipv6Address)) return null;
+			
 			if (uri.isEmpty())
 				uri = "/index.html";
 			return serveFile(uri, header, new File("res/obelix"), false);
 		}
+		
+		return null;
+	}
 
-		boolean interceptorsActive = Boolean.parseBoolean(PropertiesLoader.getInstance()
+	private Response intercept(String uri, String method, Properties header,
+			Properties parms, Socket mySocket, String socketHostname,
+			String hostAddress) {
+		
+		
+		boolean interceptorsActive = Boolean.parseBoolean(
+				PropertiesLoader.getInstance()
 				.getProperties()
 				.getProperty("iotsys.gateway.interceptors.enable", "true"));
+		
+		if (!interceptorsActive || interceptorBroker == null || !interceptorBroker.hasInterceptors())
+			return null;
+		
+	
+		log.info("Interceptors found ... starting to prepare.");
 
-		if (interceptorsActive && interceptorBroker != null
-				&& interceptorBroker.hasInterceptors()) {
-			log.info("Interceptors found ... starting to prepare.");
+		InterceptorRequest interceptorRequest = new InterceptorRequestImpl();
+		HashMap<Parameter, String> interceptorParams = new HashMap<Parameter, String>();
+		
+		String subject = mySocket.getInetAddress().getHostAddress();
+		String host = header.getProperty("host");
+		String resource = "http://" + host + uri;
+		
+		interceptorParams.put(Parameter.SUBJECT, subject);
+		interceptorParams.put(Parameter.SUBJECT_IP_ADDRESS, mySocket
+				.getInetAddress().getHostAddress());
+		interceptorParams.put(Parameter.RESOURCE, resource);
+		interceptorParams.put(Parameter.RESOURCE_PROTOCOL, "http");
+		interceptorParams.put(Parameter.RESOURCE_IP_ADDRESS, hostAddress);
+		interceptorParams.put(Parameter.RESOURCE_HOSTNAME, socketHostname);
+		interceptorParams.put(Parameter.RESOURCE_PATH, uri);
+		interceptorParams.put(Parameter.ACTION, method);
 
-			InterceptorRequest interceptorRequest = new InterceptorRequestImpl();
-			HashMap<Parameter, String> interceptorParams = new HashMap<Parameter, String>();
+		interceptorRequest.setInterceptorParams(interceptorParams);
 
-			interceptorParams.put(Parameter.SUBJECT, subject);
-			interceptorParams.put(Parameter.SUBJECT_IP_ADDRESS, mySocket
-					.getInetAddress().getHostAddress());
-			interceptorParams.put(Parameter.RESOURCE, resource);
-			interceptorParams.put(Parameter.RESOURCE_PROTOCOL, "http");
-			interceptorParams.put(Parameter.RESOURCE_IP_ADDRESS, hostAddress);
-			interceptorParams.put(Parameter.RESOURCE_HOSTNAME, socketHostname);
-			interceptorParams.put(Parameter.RESOURCE_PATH, uri);
-			interceptorParams.put(Parameter.ACTION, method);
+		for (Object k : header.keySet()) {
+			interceptorRequest.setHeader((String) k,
+					header.getProperty((String) k));
+		}
+		for (Object k : parms.keySet()) {
+			interceptorRequest.setRequestParam((String) k,
+					header.getProperty((String) k));
+		}
+		
+		log.info("Calling interceptions ...");
+		
+		InterceptorResponse resp = interceptorBroker
+				.handleRequest(interceptorRequest);
 
-			interceptorRequest.setInterceptorParams(interceptorParams);
-
-			for (Object k : header.keySet()) {
-				interceptorRequest.setHeader((String) k,
-						header.getProperty((String) k));
-			}
-			for (Object k : parms.keySet()) {
-				interceptorRequest.setRequestParam((String) k,
-						header.getProperty((String) k));
-			}
-			log.info("Calling interceptions ...");
-			InterceptorResponse resp = interceptorBroker
-					.handleRequest(interceptorRequest);
-
-			if (!resp.getStatus().equals(StatusCode.OK)) {
-				if (resp.forward()) {
-					return new Response(HTTP_FORBIDDEN, MIME_PLAINTEXT,
-							resp.getMessage());
-				}
+		if (!resp.getStatus().equals(StatusCode.OK)) {
+			if (resp.forward()) {
+				return new Response(HTTP_FORBIDDEN, MIME_PLAINTEXT,
+						resp.getMessage());
 			}
 		}
-
+		
+		return null;
+	}
+	
+	private String getData(Properties header, Properties parms) {
 		String data = "";
-
+		
 		// check for EXI content
-
 		if (header.containsKey("content-type")) {
 			if (header.getProperty("content-type").contains(MIME_EXI)) {
-
+	
 				Byte[] payload = (Byte[]) parms.get("payload");
-
+	
 				try {
 					data = ExiUtil.getInstance().decodeEXI(unbox(payload));
 				} catch (Exception e1) {
@@ -240,7 +302,7 @@ public class NanoHTTPD {
 			} else if (header.getProperty("content-type").contains(
 					MIME_DEFAULT_BINARY)) {
 				Byte[] payload = (Byte[]) parms.get("payload");
-
+	
 				try {
 					data = ExiUtil.getInstance()
 							.decodeEXI(unbox(payload), true);
@@ -249,11 +311,11 @@ public class NanoHTTPD {
 					data = parms.getProperty("data");
 				}
 			}
-
+	
 			else if (header.getProperty("content-type").contains(
 					MIME_X_OBIX_BINARY)) {
 				Byte[] payload = (Byte[]) parms.get("payload");
-
+	
 				try {
 					Obj obj = BinObixDecoder.fromBytes(unbox(payload));
 					data = ObixEncoder.toString(obj, true);
@@ -276,37 +338,10 @@ public class NanoHTTPD {
 			data = parms.getProperty("data");
 		}
 		
-		if (data != null)
-			log.finest("serve: " + uri + ", method: " + method + ", data.length() "
-				+ data.length());
-		log.finest(data);
-		Response r = new Response(HTTP_OK, MIME_XML, "foo");
+		return data;
+	}
 
-		boolean exiRequested = false;
-		boolean exiSchemaRequested = false;
-		boolean obixBinaryRequested = false;
-		boolean jsonRequested = false;
-
-		if (header.containsKey("accept")) {
-			if (header.getProperty("accept").contains(MIME_EXI)) {
-
-				exiRequested = true;
-			} else if (header.getProperty("accept").contains(
-					MIME_DEFAULT_BINARY)) {
-				exiSchemaRequested = true;
-			} else if (header.getProperty("accept")
-					.contains(MIME_X_OBIX_BINARY)) {
-				obixBinaryRequested = true;
-			} else if (header.getProperty("accept").contains(MIME_JSON)) {
-				jsonRequested = true;
-			}
-		}
-
-		if (exiUtil == null) {
-			// there is some problem, we cannot provide EXI encoding
-			exiRequested = false;
-		}
-
+	private String getIPv6Address(Socket mySocket) {
 		String localSocket = mySocket.getLocalSocketAddress().toString();
 		int lastIndex = localSocket.lastIndexOf(":");
 		String localSocketSplitted = "";
@@ -317,120 +352,109 @@ public class NanoHTTPD {
 
 		lastIndex = localSocketSplitted.lastIndexOf("%");
 
-		String resourcePath = uri;
 
 		if (lastIndex > 0) {
 			localSocketSplitted = localSocketSplitted.substring(0, lastIndex);
 		}
 
 		String ipv6Address = localSocketSplitted.substring(1);
+		return ipv6Address;
+	}
+	
+	private boolean accepts(Properties header, String mimeType) {
+		return header.containsKey("accept") && header.getProperty("accept").contains(mimeType);
+	}
 
-		if (mySocket.getLocalAddress() instanceof Inet6Address
-				&& (resourcePath.equalsIgnoreCase("/") || resourcePath.length() == 0)
-				&& obixServer.containsIPv6(localSocketSplitted)) {
-			log.finest("IPv6 Adresse und in der HashMap und Path ist leer enthalten -> IoT6 Object");
-			resourcePath = obixServer.getIPv6LinkedHref(localSocketSplitted);
-		} else if (mySocket.getLocalAddress() instanceof Inet6Address
-				&& obixServer.containsIPv6(localSocketSplitted + resourcePath)) {
+	private StringBuffer getObixResponse(String resourcePath, String data, String method, Properties header)
+				throws URISyntaxException {
+		
+		StringBuffer obixResponse = null;
+	
+		if (resourcePath.endsWith("soap")) {
+			log.finest("Forward to SOAP handler!");
 
-			resourcePath = obixServer.getIPv6LinkedHref(localSocketSplitted
-					+ resourcePath)
-					+ resourcePath;
-		}
+			obixResponse = new StringBuffer(soapHandler.process(data,
+					header.getProperty("soapAction")));
+			log.finest("oBIX Response: " + obixResponse);
 
-		// delete "/" from the href
-		if (resourcePath.endsWith("/")) {
-			resourcePath = resourcePath.substring(0, resourcePath.length() - 1);
-		}
-
-		try {
-
-			StringBuffer obixResponse = new StringBuffer("");
-
-			if (uri.endsWith("soap")) {
-				log.finest("Forward to SOAP handler!");
-
-				obixResponse = new StringBuffer(soapHandler.process(data,
-						header.getProperty("soapAction")));
-				log.finest("oBIX Response: " + obixResponse);
-
-			} else {
-				if (method.equals("GET")) {
-					obixResponse = new StringBuffer(
-							ObixEncoder.toString(obixServer.readObj(new URI(
-									resourcePath), "guest"), true));
-				}
-
-				if (method.equals("PUT")) {
-					obixResponse = new StringBuffer(
-							ObixEncoder.toString(obixServer.writeObj(new URI(
-									resourcePath), data), true));
-				}
-
-				if (method.equals("POST")) {
-					Obj obj = obixServer.invokeOp(new URI(resourcePath), data);
-					obixResponse = new StringBuffer(ObixEncoder.toString(obj, false));
-				}
+		} else {
+			if (method.equals("GET")) {
+				obixResponse = new StringBuffer(
+						ObixEncoder.toString(obixServer.readObj(new URI(
+								resourcePath), "guest"), true));
 			}
 
-			// in case of a method call don't fix the HREF
-			if (!method.equals("POST")) {
+			if (method.equals("PUT")) {
+				obixResponse = new StringBuffer(
+						ObixEncoder.toString(obixServer.writeObj(new URI(
+								resourcePath), data), true));
+			}
+
+			if (method.equals("POST")) {
+				Obj obj = obixServer.invokeOp(new URI(resourcePath), data);
+				obixResponse = new StringBuffer(ObixEncoder.toString(obj, false));
+			}
+		}
+
+		// in case of a method call don't fix the HREF
+		if (!method.equals("POST")) {
 //				fixHref(requestUri, obixResponse);
-			}
-
-			if (exiRequested || exiSchemaRequested) {
-				try {
-					byte[] exiData = ExiUtil.getInstance().encodeEXI(
-							XML_HEADER + obixResponse, exiSchemaRequested);
-					// try to decode it immediately
-
-					r = new Response(HTTP_OK, MIME_EXI,
-							new ByteArrayInputStream(exiData), exiData.length);
-				} catch (Exception e1) {
-					e1.printStackTrace();
-					// fall back
-					r = new Response(HTTP_OK, MIME_XML, XML_HEADER
-							+ obixResponse);
-				}
-			} else if (obixBinaryRequested) {
-				byte[] obixBinaryData = BinObixEncoder.toBytes(ObixDecoder
-						.fromString(obixResponse.toString()));
-				r = new Response(HTTP_OK, MIME_X_OBIX_BINARY,
-						new ByteArrayInputStream(obixBinaryData),
-						obixBinaryData.length);
-			} else if (jsonRequested) {
-				try {
-					String jsonData = JsonUtil.fromXMLtoJSON(obixResponse
-							.toString());
-
-					r = new Response(HTTP_OK, MIME_JSON, XML_HEADER + jsonData,
-							String.valueOf(jsonData).length());
-				} catch (JSONException e1) {
-					e1.printStackTrace();
-				}
-			} else {
-				// TODO properly decide media type
-				if (uri.endsWith(".well-known/core")) {
-					r = new Response(HTTP_OK, MIME_PLAINTEXT, XML_HEADER
-							+ obixResponse);
-				} else {
-					// r = new Response(HTTP_OK, MIME_XML, XML_HEADER +
-					// obixResponse);
-
-					// response with content-length
-					r = new Response(HTTP_OK, MIME_XML, XML_HEADER
-							+ obixResponse, String.valueOf(obixResponse)
-							.length());
-
-				}
-			}
-
-		} catch (URISyntaxException usex) {
-			r = new Response(HTTP_BADREQUEST, MIME_PLAINTEXT,
-					"URI Syntax Exception");
 		}
-		log.info("Serving: " + uri + " for " + subject + " done.");
-		return r;
+		
+		return obixResponse;
+	}
+
+	private Response encodeResponse(String uri, Properties header, StringBuffer obixResponse) {
+		Response response = null;
+		
+		boolean exiRequested = exiUtil != null && accepts(header, MIME_EXI);
+		boolean exiSchemaRequested = accepts(header, MIME_DEFAULT_BINARY);
+		boolean obixBinaryRequested = accepts(header, MIME_X_OBIX_BINARY);
+		boolean jsonRequested = accepts(header, MIME_JSON);
+		
+		if (exiRequested || exiSchemaRequested) {
+			try {
+				byte[] exiData = ExiUtil.getInstance().encodeEXI(
+						XML_HEADER + obixResponse, exiSchemaRequested);
+				// try to decode it immediately
+	
+				response = new Response(HTTP_OK, MIME_EXI,
+						new ByteArrayInputStream(exiData), exiData.length);
+			} catch (Exception e1) {
+				e1.printStackTrace();
+				// fall back
+				response = new Response(HTTP_OK, MIME_XML, XML_HEADER
+						+ obixResponse);
+			}
+		} else if (obixBinaryRequested) {
+			byte[] obixBinaryData = BinObixEncoder.toBytes(ObixDecoder
+					.fromString(obixResponse.toString()));
+			response = new Response(HTTP_OK, MIME_X_OBIX_BINARY,
+					new ByteArrayInputStream(obixBinaryData),
+					obixBinaryData.length);
+		} else if (jsonRequested) {
+			try {
+				String jsonData = JsonUtil.fromXMLtoJSON(obixResponse
+						.toString());
+	
+				response = new Response(HTTP_OK, MIME_JSON, XML_HEADER + jsonData,
+						String.valueOf(jsonData).length());
+			} catch (JSONException e1) {
+				e1.printStackTrace();
+			}
+		} else {
+			// TODO properly decide media type
+			if (uri.endsWith(".well-known/core")) {
+				response = new Response(HTTP_OK, MIME_PLAINTEXT, XML_HEADER
+						+ obixResponse);
+			} else {
+				// response with content-length
+				response = new Response(HTTP_OK, MIME_XML, XML_HEADER
+						+ obixResponse, String.valueOf(obixResponse)
+						.length());
+			}
+		}
+		return response;
 	}
 
 	private void fixHref(String href, StringBuffer obixResponse) {
@@ -455,7 +479,6 @@ public class NanoHTTPD {
 
 			obixResponse.insert(firstQuota + 1, href);
 		}
-
 	}
 
 	public static Byte[] box(byte[] byteArray) {
