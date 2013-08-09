@@ -559,6 +559,46 @@ public class Obj implements IObj, Subject, AlarmSource, Cloneable {
 			throw new IllegalStateException("Child missing href : " + name);
 		return kid.getNormalizedHref();
 	}
+	
+	/**
+	 * Get a child object with the specified href
+	 */
+	public Obj getChildByHref(Uri href) {
+		if (href == null) return null;
+		
+		String childHref = href.get();
+		while (childHref.endsWith("/"))
+			childHref = childHref.substring(0, childHref.length()-1);
+		
+		for (Obj p = kidsHead; p != null; p = p.next) {
+			if (p.getHref() != null && p.getHref().get().equals(childHref) && !p.isRef())
+				return p;
+		}
+		
+		return null;
+	}
+	
+	/**
+	 * Get a sub object with the specified href
+	 */
+	public Obj getByHref(Uri href) {
+		if (href == null) return null;
+		
+		if (href.get().startsWith("/"))
+			return getRoot().getByHref(new Uri(href.get().substring(1)));
+		
+		String[] pathComponents = href.get().split("/");
+		Uri childUri = new Uri(pathComponents[0]);
+		
+		Obj child = getChildByHref(childUri);
+		if (child == null) return null;
+		
+		if (pathComponents.length == 1) return child;
+		
+		
+		String subUri = href.get().substring(href.get().indexOf('/')+1);
+		return child.getByHref(new Uri(subUri));
+	}
 
 	/**
 	 * Return number of child objects.
