@@ -3,17 +3,19 @@ package at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.knx;
 import java.util.logging.Logger;
 import java.util.Timer;
 import java.util.TimerTask;
+
 import at.ac.tuwien.auto.calimero.GroupAddress;
 import at.ac.tuwien.auto.calimero.dptxlator.DPTXlatorBoolean;
 import at.ac.tuwien.auto.calimero.exception.KNXException;
 import at.ac.tuwien.auto.iotsys.gateway.connectors.knx.KNXConnector;
 import at.ac.tuwien.auto.iotsys.gateway.connectors.knx.KNXWatchDog;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.SunblindActuator;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.ComplexSunblindActuatorIml;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.SunblindActuatorImpl;
 import obix.Obj;
 
 
-public class ComplexSunblindActuatorImplKnx extends SunblindActuatorImpl {
+public class ComplexSunblindActuatorImplKnx extends ComplexSunblindActuatorIml {
 
 	private enum STATE_TYPE {
 		STATE_STOP, STATE_MOVE_DOWN, STATE_MOVE_UP
