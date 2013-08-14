@@ -50,7 +50,7 @@ import at.ac.tuwien.auto.iotsys.commons.DeviceLoader;
 import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
 
 public class VirtualDeviceLoaderImpl implements DeviceLoader {
-	private final ArrayList<String> myObjects = new ArrayList<String>();
+	private final ArrayList<Obj> myObjects = new ArrayList<Obj>();
 
 	private XMLConfiguration devicesConfig;
 
@@ -206,14 +206,14 @@ public class VirtualDeviceLoaderImpl implements DeviceLoader {
 									if(name != null && name.length() > 0){
 										virtualObj.setName(name);
 									}
-
+									
 									if (ipv6 != null) {
-										myObjects.addAll(objectBroker.addObj(
-												virtualObj, ipv6));
+										objectBroker.addObj(virtualObj, ipv6);
 									} else {
-										myObjects.addAll(objectBroker
-												.addObj(virtualObj));
+										objectBroker.addObj(virtualObj);
 									}
+									
+									myObjects.add(virtualObj);
 									
 								
 
@@ -264,8 +264,8 @@ public class VirtualDeviceLoaderImpl implements DeviceLoader {
 	@Override
 	public void removeDevices(ObjectBroker objectBroker) {
 		synchronized (myObjects) {
-			for (String href : myObjects) {
-				objectBroker.removeObj(href);
+			for (Obj obj : myObjects) {
+				objectBroker.removeObj(obj.getFullContextPath());
 			}
 		}
 

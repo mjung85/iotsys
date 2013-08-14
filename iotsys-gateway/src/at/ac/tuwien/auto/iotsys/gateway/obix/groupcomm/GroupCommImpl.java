@@ -36,14 +36,6 @@ import java.net.Inet6Address;
 import java.net.UnknownHostException;
 import java.util.logging.Logger;
 
-import ch.ethz.inf.vs.californium.layers.MulticastUDPLayer;
-
-import at.ac.tuwien.auto.iotsys.commons.OperationHandler;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objectbroker.ObjectBrokerImpl;
-import at.ac.tuwien.auto.iotsys.gateway.obix.observer.Observer;
-import at.ac.tuwien.auto.iotsys.gateway.obix.observer.Subject;
-import at.ac.tuwien.auto.iotsys.gateway.service.GroupCommService;
-import at.ac.tuwien.auto.iotsys.gateway.service.impl.GroupCommServiceImpl;
 import obix.Contract;
 import obix.List;
 import obix.Obj;
@@ -51,6 +43,12 @@ import obix.Op;
 import obix.Ref;
 import obix.Str;
 import obix.Uri;
+import at.ac.tuwien.auto.iotsys.commons.OperationHandler;
+import at.ac.tuwien.auto.iotsys.gateway.obix.observer.Observer;
+import at.ac.tuwien.auto.iotsys.gateway.obix.observer.Subject;
+import at.ac.tuwien.auto.iotsys.gateway.service.GroupCommService;
+import at.ac.tuwien.auto.iotsys.gateway.service.impl.GroupCommServiceImpl;
+import ch.ethz.inf.vs.californium.layers.MulticastUDPLayer;
 
 public class GroupCommImpl extends Obj implements GroupComm, Observer{
 	
@@ -96,12 +94,8 @@ public class GroupCommImpl extends Obj implements GroupComm, Observer{
 	
 	@Override
 	public void initialize(){
-		
-		this.setHref(new Uri(this.datapoint.getFullContextPath()
-				+ "/groupComm"));
-		ObjectBrokerImpl.getInstance().addObj(this, false);
-				
-//		ObjectBrokerImpl.getInstance().addObj(groups, false);
+		this.setHref(new Uri("groupComm"));
+		datapoint.add(this);
 		
 		joinGroup.setOperationHandler(new OperationHandler() {
 			public Obj invoke(Obj in) {
@@ -115,7 +109,8 @@ public class GroupCommImpl extends Obj implements GroupComm, Observer{
 			}
 		});
 
-		// add history reference in the parent element
+		// add groupComm reference in the parent element
+		this.setHidden(true);
 		if (datapoint.getParent() != null) {
 			Ref ref = new Ref(datapoint.getName() + " groupComm", new Uri(
 					datapoint.getHref() + "/groupComm"));

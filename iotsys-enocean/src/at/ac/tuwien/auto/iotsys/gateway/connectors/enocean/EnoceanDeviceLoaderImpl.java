@@ -52,7 +52,7 @@ import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
 
 public class EnoceanDeviceLoaderImpl implements DeviceLoader {
 
-	private final ArrayList<String> myObjects = new ArrayList<String>();
+	private final ArrayList<Obj> myObjects = new ArrayList<Obj>();
 
 	private XMLConfiguration devicesConfig;
 
@@ -187,17 +187,13 @@ public class EnoceanDeviceLoaderImpl implements DeviceLoader {
 												enoceanDevice.setName(name);
 											}
 
-											ArrayList<String> assignedHrefs = null;
-
 											if (ipv6 != null) {
-												assignedHrefs = objectBroker
-														.addObj(enoceanDevice, ipv6);
+												objectBroker.addObj(enoceanDevice, ipv6);
 											} else {
-												assignedHrefs = objectBroker
-														.addObj(enoceanDevice);
+												objectBroker.addObj(enoceanDevice);
 											}
 
-											myObjects.addAll(assignedHrefs);
+											myObjects.add(enoceanDevice);
 
 											enoceanDevice.initialize();
 
@@ -281,8 +277,8 @@ public class EnoceanDeviceLoaderImpl implements DeviceLoader {
 	@Override
 	public void removeDevices(ObjectBroker objectBroker) {
 		synchronized (myObjects) {
-			for (String href : myObjects) {
-				objectBroker.removeObj(href);
+			for (Obj obj : myObjects) {
+				objectBroker.removeObj(obj.getFullContextPath());
 			}
 		}
 

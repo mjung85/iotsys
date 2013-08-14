@@ -56,7 +56,6 @@ import obix.contracts.HistoryAppendIn;
 import obix.contracts.HistoryRecord;
 import obix.contracts.HistoryRollupIn;
 import at.ac.tuwien.auto.iotsys.commons.OperationHandler;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objectbroker.ObjectBrokerImpl;
 import at.ac.tuwien.auto.iotsys.gateway.obix.observer.Observer;
 import at.ac.tuwien.auto.iotsys.gateway.obix.observer.Subject;
 
@@ -136,8 +135,8 @@ public class HistoryImpl extends Obj implements History, Observer {
 
 	@Override
 	public void initialize() {
-		this.setHref(new Uri(observedDatapoint.getFullContextPath() + "/history"));
-		ObjectBrokerImpl.getInstance().addObj(this, false);
+		this.setHref(new Uri("history"));
+		observedDatapoint.add(this, false);
 
 		query.setOperationHandler(new OperationHandler() {
 			public Obj invoke(Obj in) {
@@ -158,6 +157,7 @@ public class HistoryImpl extends Obj implements History, Observer {
 		});
 
 		// add history reference in the parent element
+		this.setHidden(true);
 		if (observedDatapoint.getParent() != null) {
 			Ref ref = new Ref(observedDatapoint.getName() + " history", new Uri(
 					observedDatapoint.getHref() + "/history"));
@@ -413,6 +413,12 @@ public class HistoryImpl extends Obj implements History, Observer {
 
 			updateKids();
 		}
+	}
+	
+	@Override
+	public void notifyObservers() {
+		// don't notify observers of parents
+		// to changes of history
 	}
 	
 	/**

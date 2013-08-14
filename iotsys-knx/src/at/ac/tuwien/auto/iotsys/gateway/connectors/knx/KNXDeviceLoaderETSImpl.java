@@ -111,7 +111,6 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader
 		network.setDisplayName("Suitcase");
 		network.setDisplay("...");
 		network.setIs(new Contract("knx:network"));
-		objectBroker.addObj(network, false);
 
 		obix.Enum standard = new obix.Enum();
 		standard.setName("standard");
@@ -819,7 +818,7 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader
 		// Building View
 		Obj building = new Obj();
 		building.setName("building");
-		building.setDisplay("Gebäude-Sicht des Netzwerks");
+		building.setDisplay("Gebï¿½ude-Sicht des Netzwerks");
 		building.setHref(new Uri(network.getHref().getPath() + "/" + "views/building"));
 		building.setIs(new Contract("knx:viewBuilding"));
 		objectBroker.addObj(building, false);
@@ -843,7 +842,7 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader
 		// Part
 		Obj part = new Obj();
 		part.setName("P-01EE-0_BP-0");
-		part.setDisplayName("Treitlstraße 1-3");
+		part.setDisplayName("Treitlstraï¿½e 1-3");
 		part.setIs(new Contract("knx:part"));
 		part.setHref(new Uri(list.getHref().getPath() + "/" + "treitlstrasse_1-3"));
 		list.add(part);
@@ -1044,7 +1043,7 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader
 		// Building View
 		Obj domains = new Obj();
 		domains.setName("domains");
-		domains.setDisplay("Domänen des Netzwerks");
+		domains.setDisplay("Domï¿½nen des Netzwerks");
 		domains.setHref(new Uri(network.getHref().getPath() + "/" + "views/domains"));
 		domains.setIs(new Contract("knx:viewDomains"));
 
@@ -1333,7 +1332,7 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader
 		// no datapoints
 
 		// 6.
-		datapoints = this.initEntity(knxConnector, objectBroker, entities, list, "P-0341-0_DI-7", "KNX CO², Humidity and Temperature Sensor", "knx_co2_humidity_and_temperature_sensor" + "/" + "1", "Schneider Electric Industries SAS", "MTN6005-0001");
+		datapoints = this.initEntity(knxConnector, objectBroker, entities, list, "P-0341-0_DI-7", "KNX COï¿½, Humidity and Temperature Sensor", "knx_co2_humidity_and_temperature_sensor" + "/" + "1", "Schneider Electric Industries SAS", "MTN6005-0001");
 
 		// datapoints omitted
 

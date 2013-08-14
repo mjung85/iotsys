@@ -37,32 +37,26 @@ import java.net.Inet6Address;
 import java.net.SocketException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.HashMap;
 import java.util.logging.Logger;
 
-import org.json.JSONException;
-
-import at.ac.tuwien.auto.iotsys.commons.PropertiesLoader;
-import at.ac.tuwien.auto.iotsys.commons.interceptor.InterceptorBroker;
-import at.ac.tuwien.auto.iotsys.commons.interceptor.InterceptorRequest;
-import at.ac.tuwien.auto.iotsys.commons.interceptor.InterceptorRequestImpl;
-import at.ac.tuwien.auto.iotsys.commons.interceptor.InterceptorResponse;
-import at.ac.tuwien.auto.iotsys.commons.interceptor.Parameter;
-import at.ac.tuwien.auto.iotsys.commons.interceptor.InterceptorResponse.StatusCode;
-import at.ac.tuwien.auto.iotsys.gateway.interceptor.InterceptorBrokerImpl;
-import at.ac.tuwien.auto.iotsys.gateway.service.impl.GroupCommServiceImpl;
-import at.ac.tuwien.auto.iotsys.gateway.util.EXIDecoder;
-import at.ac.tuwien.auto.iotsys.gateway.util.ExiUtil;
-import at.ac.tuwien.auto.iotsys.gateway.util.JsonUtil;
 import obix.Obj;
 import obix.io.BinObixDecoder;
 import obix.io.BinObixEncoder;
 import obix.io.ObixDecoder;
 import obix.io.ObixEncoder;
+
+import org.json.JSONException;
+
+import at.ac.tuwien.auto.iotsys.commons.PropertiesLoader;
+import at.ac.tuwien.auto.iotsys.commons.interceptor.InterceptorBroker;
+import at.ac.tuwien.auto.iotsys.gateway.interceptor.InterceptorBrokerImpl;
+import at.ac.tuwien.auto.iotsys.gateway.service.impl.GroupCommServiceImpl;
+import at.ac.tuwien.auto.iotsys.gateway.util.EXIDecoder;
+import at.ac.tuwien.auto.iotsys.gateway.util.ExiUtil;
+import at.ac.tuwien.auto.iotsys.gateway.util.JsonUtil;
 import ch.ethz.inf.vs.californium.coap.CommunicatorFactory;
 import ch.ethz.inf.vs.californium.coap.CommunicatorFactory.Communicator;
 import ch.ethz.inf.vs.californium.coap.GETRequest;
-import ch.ethz.inf.vs.californium.coap.Option;
 import ch.ethz.inf.vs.californium.coap.POSTRequest;
 import ch.ethz.inf.vs.californium.coap.PUTRequest;
 import ch.ethz.inf.vs.californium.coap.Request;
@@ -71,9 +65,10 @@ import ch.ethz.inf.vs.californium.coap.registries.CodeRegistry;
 import ch.ethz.inf.vs.californium.coap.registries.MediaTypeRegistry;
 import ch.ethz.inf.vs.californium.coap.registries.OptionNumberRegistry;
 import ch.ethz.inf.vs.californium.endpoint.Endpoint;
+import ch.ethz.inf.vs.californium.endpoint.LocalEndpoint;
+import ch.ethz.inf.vs.californium.endpoint.resources.LocalResource;
 import ch.ethz.inf.vs.californium.layers.MulticastUDPLayer;
 import ch.ethz.inf.vs.californium.layers.MulticastUDPLayer.REQUEST_TYPE;
-import ch.ethz.inf.vs.californium.util.Properties;
 
 public class CoAPServer extends Endpoint {
 	private static final Logger log = Logger.getLogger(CoAPServer.class
@@ -123,7 +118,7 @@ public class CoAPServer extends Endpoint {
 
 	@Override
 	public void execute(Request request) throws IOException {
-
+		
 		String resourcePath = request.getUriPath();
 		log.info("Coap serving " + resourcePath + " for "
 				+ request.getPeerAddress().getAddress());
@@ -212,20 +207,9 @@ public class CoAPServer extends Endpoint {
 		}
 
 		if (request.getPeerAddress().getAddress() instanceof Inet6Address
-				&& resourcePath.equalsIgnoreCase("/")
 				&& obixServer.containsIPv6(localSocketSplitted)) {
-			resourcePath = obixServer.getIPv6LinkedHref(localSocketSplitted);
-
-		} else if (request.getPeerAddress().getAddress() instanceof Inet6Address
-				&& obixServer.containsIPv6(localSocketSplitted + resourcePath)) {
-
-			resourcePath = obixServer.getIPv6LinkedHref(localSocketSplitted
-					+ resourcePath)
+			resourcePath = obixServer.getIPv6LinkedHref(localSocketSplitted)
 					+ resourcePath;
-		}
-
-		if (resourcePath.endsWith("/")) {
-			resourcePath = resourcePath.substring(0, resourcePath.length() - 1);
 		}
 
 		LOG.info(String.format("Execution: %s", resourcePath));

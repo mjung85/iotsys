@@ -167,14 +167,7 @@ public class NanoHTTPD {
 		log.finest("Data: " + data);
 		
 		
-		
-		String resourcePath = uri;
-		if (obixServer.containsIPv6(ipv6Address)) {
-			log.finest("IPv6 Adresse -> IoT6 Object");
-			resourcePath = obixServer.getIPv6LinkedHref(ipv6Address);
-			resourcePath += uri;
-		}
-		
+		String resourcePath = getResourcePath(uri, ipv6Address);
 
 		try {
 			StringBuffer obixResponse = getObixResponse(resourcePath, data, method, header);
@@ -189,36 +182,37 @@ public class NanoHTTPD {
 
 	private Response serveStatic(String uri, Properties header, Properties parms, String ipv6Address) {
 		String host = header.getProperty("host");
+		String path = getResourcePath(uri, ipv6Address);
 		
-		if (uri.endsWith("soap") && parms.containsKey("wsdl")) {
+		if (path.endsWith("soap") && parms.containsKey("wsdl")) {
 			// serve wsdl file
 			Response r = new Response(HTTP_OK, MIME_XML,
 					soapHandler
 							.getWSDLFileContent()
 							.replaceAll("localhost", host)
 							.replaceAll("./obix.xsd",
-									"http://" + host + uri + "?xsd=1"));
+									"http://" + host + path + "?xsd=1"));
 			return r;
 			
-		} else if (uri.endsWith("soap") && parms.containsKey("xsd")) {
+		} else if (path.endsWith("soap") && parms.containsKey("xsd")) {
 			// serve schema file
 			Response r = new Response(HTTP_OK, MIME_XML,
 					soapHandler.getSchemaFileContent());
 			return r;
 			
-		} else if (uri.endsWith(".well-known/core")) {
+		} else if (path.endsWith(".well-known/core")) {
 			Response r = new Response(HTTP_OK, MIME_PLAINTEXT,
 					obixServer.getCoRELinks());
 			return r;
 			
-		} else if (uri.equalsIgnoreCase("/") || uri.isEmpty()
-				|| uri.endsWith(".js") || uri.endsWith(".css")) {
+		} else if (path.equalsIgnoreCase("/") || path.isEmpty()
+				|| path.endsWith(".js") || path.endsWith(".css")) {
 			
 			if (obixServer.containsIPv6(ipv6Address)) return null;
 			
-			if (uri.isEmpty())
-				uri = "/index.html";
-			return serveFile(uri, header, new File("res/obelix"), false);
+			if (path.isEmpty())
+				path = "/index.html";
+			return serveFile(path, header, new File("res/obelix"), false);
 		}
 		
 		return null;
@@ -284,61 +278,51 @@ public class NanoHTTPD {
 	}
 	
 	private String getData(Properties header, Properties parms) {
-		String data = "";
-		
-		// check for EXI content
 		if (header.containsKey("content-type")) {
+			// check for EXI content
 			if (header.getProperty("content-type").contains(MIME_EXI)) {
-	
 				Byte[] payload = (Byte[]) parms.get("payload");
 	
 				try {
-					data = ExiUtil.getInstance().decodeEXI(unbox(payload));
+					return ExiUtil.getInstance().decodeEXI(unbox(payload));
 				} catch (Exception e1) {
 					e1.printStackTrace();
-					data = parms.getProperty("data");
 				}
-				// request.
-			} else if (header.getProperty("content-type").contains(
-					MIME_DEFAULT_BINARY)) {
+			
+			} else if (header.getProperty("content-type").contains(MIME_DEFAULT_BINARY)) {
 				Byte[] payload = (Byte[]) parms.get("payload");
 	
 				try {
-					data = ExiUtil.getInstance()
-							.decodeEXI(unbox(payload), true);
+					return ExiUtil.getInstance().decodeEXI(unbox(payload), true);
 				} catch (Exception e1) {
 					e1.printStackTrace();
-					data = parms.getProperty("data");
 				}
-			}
-	
-			else if (header.getProperty("content-type").contains(
-					MIME_X_OBIX_BINARY)) {
+			
+			} else if (header.getProperty("content-type").contains(MIME_X_OBIX_BINARY)) {
 				Byte[] payload = (Byte[]) parms.get("payload");
 	
 				try {
 					Obj obj = BinObixDecoder.fromBytes(unbox(payload));
-					data = ObixEncoder.toString(obj, true);
+					return ObixEncoder.toString(obj, true);
 				} catch (Exception e1) {
 					e1.printStackTrace();
-					data = parms.getProperty("data");
 				}
+				
 			} else if (header.getProperty("content-type").contains(MIME_JSON)) {
 				String jsonData = parms.getProperty("data");
 				try {
-					data = JsonUtil.fromJSONtoXML(jsonData);
+					return JsonUtil.fromJSONtoXML(jsonData);
 				} catch (JSONException e1) {
 					e1.printStackTrace();
-					data = "";
 				}
-			} else {
-				data = parms.getProperty("data");
 			}
-		} else if (parms.containsKey("data")) {
-			data = parms.getProperty("data");
 		}
 		
-		return data;
+		
+		if (parms.containsKey("data"))
+			return parms.getProperty("data");
+		
+		return "";
 	}
 
 	private String getIPv6Address(Socket mySocket) {
@@ -361,6 +345,20 @@ public class NanoHTTPD {
 		return ipv6Address;
 	}
 	
+	private String getResourcePath(String uri, String ipv6Address) {
+		String resourcePath = uri;
+		
+		if (obixServer.containsIPv6(ipv6Address)) {
+			log.finest("IPv6 Adresse -> IoT6 Object");
+			resourcePath = obixServer.getIPv6LinkedHref(ipv6Address);
+			resourcePath += uri;
+		}
+		
+		// normalize resource path
+		resourcePath = URI.create("//localhost/" + resourcePath).normalize().getPath();
+		return resourcePath;
+	}
+
 	private boolean accepts(Properties header, String mimeType) {
 		return header.containsKey("accept") && header.getProperty("accept").contains(mimeType);
 	}
@@ -369,7 +367,7 @@ public class NanoHTTPD {
 				throws URISyntaxException {
 		
 		StringBuffer obixResponse = null;
-	
+		
 		if (resourcePath.endsWith("soap")) {
 			log.finest("Forward to SOAP handler!");
 

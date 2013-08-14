@@ -88,13 +88,14 @@ public class WatchImpl extends Obj implements Watch {
 		this.broker = broker;
 		
 		setIs(new Contract(WATCH_CONTRACT));
+		setHref(new Uri("watch" + (numInstance++)));
+		
 		add(add());
 		add(remove());
 		add(lease());
 		add(pollChanges());
 		add(pollRefresh());
 		add(delete());
-		this.setHref(new Uri("http://localhost/watch" + (numInstance++)));
 		
 		resetExpiration();
 	}
@@ -196,7 +197,7 @@ public class WatchImpl extends Obj implements Watch {
 				if(in instanceof WatchIn){
 					WatchIn watchIn = (WatchIn) in;
 	
-					for(Obj u : watchIn.get("hrefs").list()){
+					for(Obj u : watchIn.get("hrefs").list()) {
 						Uri uri = (Uri) u;
 
 						Observer observer = observers.get(uri.getPath());
@@ -207,7 +208,7 @@ public class WatchImpl extends Obj implements Watch {
 						Obj o = broker.pullObj(uri);
 						o.detach(observer);
 					}					
-				}		
+				}
 
 				return new NilImpl();
 			}			
@@ -269,7 +270,7 @@ public class WatchImpl extends Obj implements Watch {
 			public Obj invoke(Obj in) {
 				resetExpiration();
 				WatchOutImpl out = new WatchOutImpl();
-				// Perform refresh logic	
+				// Perform refresh logic
 				// Get a list of being-observed URI; get the corresponding object; notify the observer --> performing an update
 				synchronized(observers){
 					for (String uri : observers.keySet()) {
@@ -322,7 +323,7 @@ public class WatchImpl extends Obj implements Watch {
 	}
 	
 	private void deleteWatch() {
-		for (Observer observer : observers.values()){
+		for (Observer observer : observers.values()) {
 			Obj beingObservedObject = (Obj) observer.getSubject();
 			beingObservedObject.detach(observer);
 			observers.remove(observer);
@@ -330,8 +331,7 @@ public class WatchImpl extends Obj implements Watch {
 		}
 		
 		expirationTimer.cancel(false);
-		broker.removeObj(thisWatch().lease().getNormalizedHref().getPath());
-		broker.removeObj(thisWatch().getHref().getPath());
+		broker.removeObj(getFullContextPath());
 	}
 	
 	/**
@@ -356,7 +356,8 @@ public class WatchImpl extends Obj implements Watch {
 	@Override
 	public void refreshObject() {
 		super.refreshObject();
-		resetExpiration();
+		if (!expirationTimer.isCancelled())
+			resetExpiration();
 	}
 	
 	@Override

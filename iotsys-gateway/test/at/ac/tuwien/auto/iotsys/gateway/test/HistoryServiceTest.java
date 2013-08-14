@@ -5,6 +5,7 @@ import static com.jayway.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.hasXPath;
 import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertEquals;
+import groovyx.net.http.ContentType;
 
 import java.util.Calendar;
 
@@ -32,12 +33,12 @@ public class HistoryServiceTest extends AbstractGatewayTest {
 		
 	@Test
 	public void testHistoryQuery() {
-		given().
-		param("data", "<obj is='obix:HistoryFilter'>" + 
-				"	<int name='limit' val='2'/>" +
-				"	<abstime name='start' val='2013-03-31T15:30:00+02:00' tz='Europe/Berlin'/>" +
-				"	<abstime name='end' null='true' tz='Europe/Berlin'/>" +
-				"</obj>").
+		given().contentType(ContentType.XML).
+		body("<obj is='obix:HistoryFilter'>" + 
+			"	<int name='limit' val='2'/>" +
+			"	<abstime name='start' val='2013-03-31T15:30:00+02:00' tz='Europe/Berlin'/>" +
+			"	<abstime name='end' null='true' tz='Europe/Berlin'/>" +
+			"</obj>").
 		expect().
 		body(hasXPath("/obj[@is='obix:HistoryQueryOut']")).
 		body(hasXPath("/obj/int[@name='count' and @val='0']")).
@@ -52,12 +53,12 @@ public class HistoryServiceTest extends AbstractGatewayTest {
 		given().body("<int val='3' />").put("/brightnessHistoryQuery/value");
 		
 		// check history
-		given().
-		param("data", "<obj is='obix:HistoryFilter'>" + 
-				"	<int name='limit' val='2'/>" +
-				"	<abstime name='start' val='2013-03-31T15:30:00+02:00' tz='Europe/Berlin'/>" +
-				"	<abstime name='end' null='true'/>" +
-				"</obj>").
+		given().contentType(ContentType.XML).
+		body("<obj is='obix:HistoryFilter'>" + 
+			 "	<int name='limit' val='2'/>" +
+			 "	<abstime name='start' val='2013-03-31T15:30:00+02:00' tz='Europe/Berlin'/>" +
+			 "	<abstime name='end' null='true'/>" +
+			 "</obj>").
 		expect().
 		body(hasXPath("/obj/int[@name='count' and @val='2']")).
 		body(hasXPath("/obj/abstime[@name='start' and not(@null)]")).
