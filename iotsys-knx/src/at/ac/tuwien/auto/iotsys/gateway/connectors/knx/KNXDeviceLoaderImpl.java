@@ -46,7 +46,7 @@ public class KNXDeviceLoaderImpl implements DeviceLoader {
 
 	private XMLConfiguration devicesConfig;
 	
-	private ArrayList<String> myObjects = new ArrayList<String>();
+	private ArrayList<Obj> myObjects = new ArrayList<Obj>();
 
 	public ArrayList<Connector> initDevices(ObjectBroker objectBroker) {
 		setConfiguration(devicesConfig);
@@ -165,17 +165,13 @@ public class KNXDeviceLoaderImpl implements DeviceLoader {
 													knxDevice.setName(name);
 												}
 
-												ArrayList<String> assignedHrefs = null;
-												
 												if (ipv6 != null) {
-													assignedHrefs = objectBroker.addObj(
-															knxDevice, ipv6);
+													objectBroker.addObj(knxDevice, ipv6);
 												} else {
-													assignedHrefs = objectBroker
-															.addObj(knxDevice);
+													objectBroker.addObj(knxDevice);
 												}
 												
-												myObjects.addAll(assignedHrefs);
+												myObjects.add(knxDevice);
 
 												knxDevice.initialize();
 
@@ -236,8 +232,8 @@ public class KNXDeviceLoaderImpl implements DeviceLoader {
 	@Override
 	public void removeDevices(ObjectBroker objectBroker) {
 		synchronized(myObjects){
-			for(String href : myObjects){
-				objectBroker.removeObj(href);
+			for(Obj obj : myObjects) {
+				objectBroker.removeObj(obj.getFullContextPath());
 			}
 		}
 	}

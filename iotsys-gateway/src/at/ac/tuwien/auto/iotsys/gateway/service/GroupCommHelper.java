@@ -1,8 +1,10 @@
 package at.ac.tuwien.auto.iotsys.gateway.service;
 
+import at.ac.tuwien.auto.iotsys.gateway.obix.groupcomm.GroupComm;
 import at.ac.tuwien.auto.iotsys.gateway.obix.groupcomm.GroupCommImpl;
 import at.ac.tuwien.auto.iotsys.gateway.service.impl.GroupCommServiceImpl;
 import obix.Obj;
+import obix.contracts.History;
 
 public class GroupCommHelper {
 	public static void enableGroupCommForObject(Obj obj){
@@ -12,7 +14,10 @@ public class GroupCommHelper {
 		}
 		
 		for(Obj child : obj.list()){
-			enableGroupCommForObject(child);
+			if (child.isHidden()) continue;
+			
+			if (!(child instanceof History || child instanceof GroupComm))
+				enableGroupCommForObject(child);
 		}
 	}
 }

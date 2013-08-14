@@ -40,13 +40,14 @@ import obix.Op;
 import obix.Uri;
 import obix.contracts.WatchService;
 
-public class WatchServiceImpl extends Obj implements WatchService{
+public class WatchServiceImpl extends Obj implements WatchService {
 	
 	private ObjectBroker broker;
 	
 	public WatchServiceImpl(final ObjectBroker broker){
 		this.broker = broker;
-		setHref(new Uri("http://localhost/watchService"));
+		setHref(new Uri("watchService"));
+		setIs(new Contract(WatchService.watchServiceContract));
 		add(make()); 
 	}
 	
@@ -63,8 +64,7 @@ public class WatchServiceImpl extends Obj implements WatchService{
 	
 	public Obj doMake(){
 		WatchImpl watchImpl = new WatchImpl(broker);	
-		broker.addObj(watchImpl);
-		// Create Watch Object
+		broker.addObj(watchImpl, true);
 		return watchImpl;
 	}
 }

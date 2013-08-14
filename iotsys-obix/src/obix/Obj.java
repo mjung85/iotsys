@@ -4,6 +4,7 @@
 package obix;
 
 import java.lang.reflect.Array;
+import java.net.URI;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -187,15 +188,15 @@ public class Obj implements IObj, Subject, AlarmSource, Cloneable {
 	 */
 	public Uri getNormalizedHref() {
 		if (href == null)
-			return null;
-		
-		if (getParent() != null &&
-				getParent().getNormalizedHref() != null &&
-				getParent().getNormalizedHref().isAbsolute()) {
-			return href.normalize(getParent().getNormalizedHref());
-		}
-		
-		return href;
+            return null;
+	    
+	    if (getParent() != null &&
+	            getParent().getNormalizedHref() != null &&
+	            getParent().getNormalizedHref().isAbsolute()) {
+	        return href.normalize(getParent().getNormalizedHref());
+	    }
+	    
+	    return href;
 	}
 	
 	public Uri getRelativePath(){
@@ -213,25 +214,26 @@ public class Obj implements IObj, Subject, AlarmSource, Cloneable {
 		String path = "";
 
 		Obj current = this;
-		while (current != null) {			
+		while (current != null) {
 			Uri normalizedHref = current.getNormalizedHref();
 			if (normalizedHref != null) {
-				if(normalizedHref.isAbsolute()){
+				if(normalizedHref.isAbsolute()) {
 					String fullContextPath = current.getNormalizedHref().getPath().toString() + path;
 					return fullContextPath;
-				}else{
+				} else {
+					if (!path.isEmpty() && !path.startsWith("/"))  path = "/" + path;
 					path = current.getNormalizedHref().getPath().toString() + path;
 				}
 			} else if (current.getHref() != null) {
 				path = current.getHref().toString() + path;
 			} else {
-				path = "" + path;
+				path = path + "/";
 			}
 
 			current = current.getParent();
 		}
+		
 		return path;
-
 	}
 
 	/**
@@ -497,6 +499,22 @@ public class Obj implements IObj, Subject, AlarmSource, Cloneable {
 	public void setNull(boolean isNull) {
 		this.isNull = isNull;
 	}
+	
+	/**
+	 * Get hidden flag or default to false.
+	 * Hidden objects are not printed when printing an ancestor
+	 */
+	public boolean isHidden() {
+		return isHidden;
+	}
+	
+	/**
+	 * Set hidden flag.
+	 * Hidden objects are not printed when printing an ancestor
+	 */ 
+	public void setHidden(boolean isHidden) {
+		this.isHidden = isHidden;
+	}
 
 	/**
 	 * Get writable flag or default to false.
@@ -567,12 +585,25 @@ public class Obj implements IObj, Subject, AlarmSource, Cloneable {
 		if (href == null) return null;
 		
 		String childHref = href.get();
+		
 		while (childHref.endsWith("/"))
 			childHref = childHref.substring(0, childHref.length()-1);
+		while (childHref.contains("//"))
+			childHref = childHref.replaceAll("//", "/");
+		
+		
 		
 		for (Obj p = kidsHead; p != null; p = p.next) {
-			if (p.getHref() != null && p.getHref().get().equals(childHref) && !p.isRef())
-				return p;
+			if (p.getHref() != null && !p.isRef()) {
+				String pHref = p.getHref().get();
+				while (pHref.endsWith("/"))
+					pHref = pHref.substring(0, pHref.length()-1);
+				while (pHref.contains("//"))
+					pHref = pHref.replaceAll("//", "/");
+				
+				if (pHref.equals(childHref))
+					return p;
+			}
 		}
 		
 		return null;
@@ -583,21 +614,42 @@ public class Obj implements IObj, Subject, AlarmSource, Cloneable {
 	 */
 	public Obj getByHref(Uri href) {
 		if (href == null) return null;
+		if (getRoot() != this) {
+			if (href.get().startsWith("/") || href.isAbsolute())
+				return getRoot().getByHref(href);
+			
+			return getRoot().getByHref(new Uri(this.getFullContextPath() + "/" + href.get()));
+		}
 		
-		if (href.get().startsWith("/"))
-			return getRoot().getByHref(new Uri(href.get().substring(1)));
+		String uri = href.get();
+		while (uri.startsWith("/"))
+			uri = uri.substring(1);
 		
-		String[] pathComponents = href.get().split("/");
-		Uri childUri = new Uri(pathComponents[0]);
+		uri = URI.create(uri).normalize().getPath();
 		
-		Obj child = getChildByHref(childUri);
-		if (child == null) return null;
+		String unresolvedUri = uri;
+		Obj current = this;
 		
-		if (pathComponents.length == 1) return child;
+		while (!unresolvedUri.isEmpty()) {
+			Obj child = current.getChildByHref(new Uri(uri));
+			if (child == null)
+				child = current.getChildByHref(new Uri(current.getFullContextPath() + "/" + uri));
+			
+			if (child == null) {
+				int slash = uri.lastIndexOf('/');
+				if (slash == -1) return null;
+				uri = uri.substring(0, slash);
+			} else {
+				current = child;
+				unresolvedUri = unresolvedUri.substring(uri.length());
+				while (unresolvedUri.startsWith("/"))
+					unresolvedUri = unresolvedUri.substring(1);
+				uri = unresolvedUri;
+			}
+		}
 		
 		
-		String subUri = href.get().substring(href.get().indexOf('/')+1);
-		return child.getByHref(new Uri(subUri));
+		return current;
 	}
 
 	/**
@@ -822,7 +874,8 @@ public class Obj implements IObj, Subject, AlarmSource, Cloneable {
 	private String displayName;
 	private Uri icon;
 	private boolean writable;
-	private boolean isNull;	
+	private boolean isNull;
+	private boolean isHidden;
 	
 	private String invokedHref= new String(); 
 	
@@ -900,15 +953,8 @@ public class Obj implements IObj, Subject, AlarmSource, Cloneable {
 		// objects (bool, int,...) it
 		// is quite common that these objects are part of the extent of other
 		// objects
-		Obj current = null;
-
 		if (this.getParent() != null) {
-			current = this.getParent();
-		}
-
-		while (current != null) {
-			current.notifyObservers();
-			current = current.getParent();
+			getParent().notifyObservers();
 		}
 
 		// notify CoAP observers, managed in ObixObservingManager

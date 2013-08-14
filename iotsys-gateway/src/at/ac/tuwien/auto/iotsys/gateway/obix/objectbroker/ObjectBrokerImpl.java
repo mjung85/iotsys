@@ -36,8 +36,6 @@ import java.net.Inet6Address;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import obix.Contract;
@@ -65,8 +63,7 @@ public class ObjectBrokerImpl implements ObjectBroker {
 	private static final Logger log = Logger.getLogger(ObjectBrokerImpl.class
 			.getName());
 
-	// href, obj
-	private final HashMap<String, Obj> objects;
+	private final Obj rootObject;
 
 	private final HashMap<String, String> nameToHref;
 
@@ -80,8 +77,6 @@ public class ObjectBrokerImpl implements ObjectBroker {
 
 	private final HashMap<String, String> ipv6Mapping = new HashMap<String, String>();
 
-	private final ArrayList<Obj> orderedObjects = new ArrayList<Obj>();
-
 	private static final ObjectBroker instance = new ObjectBrokerImpl();
 
 	static {
@@ -93,12 +88,14 @@ public class ObjectBrokerImpl implements ObjectBroker {
 	private MDnsResolver resolver;
 
 	private ObjectBrokerImpl() {
-		objects = new HashMap<String, Obj>();
+		rootObject = new Obj();
+		rootObject.setHref(new Uri("http://localhost/"));
+		
 		nameToHref = new HashMap<String, String>();
 		iotLobby = new LobbyImpl();
 
 		aboutImpl = new AboutImpl();
-
+		
 		watchServiceImpl = new WatchServiceImpl(this);
 		alarmSubjectImpl = new AlarmSubjectImpl(this);
 	}
@@ -109,12 +106,12 @@ public class ObjectBrokerImpl implements ObjectBroker {
 	}
 
 	private void initInternals() {
+		addObj(iotLobby, false);
 		addObj(watchServiceImpl);
 		addObj(alarmSubjectImpl);
 		addObj(aboutImpl, false); // About is added directly in lobby as local
 		
 		alarmSubjectImpl.initialize();
-		removeObj(alarmSubjectImpl.getFullContextPath());
 
 		Obj enums = new Obj();
 		enums.setName("enums");
@@ -268,30 +265,16 @@ public class ObjectBrokerImpl implements ObjectBroker {
 
 	@Override
 	public synchronized Obj pullObj(Uri href) {
-
-		// if the path pointing to the lobby has been entered, the lobby is
-		// returned
-		String path = href.getPath();
-
-		// oBIX lobby
-		if (path.equals("/obix") || path.equals("/obix/"))
-			return iotLobby;
-
-		// else, the href references an internal object -> look it up in the
-		// object database
-
-		Obj o = objects.get(href.getPath());
-		if (o != null) {
-			o.refreshObject();
-		}
-
+		Obj o = rootObject.getByHref(href);
+		
 		// if the object could not be found, return an error
-		if (o == null) {
+		if (o == null || o == rootObject) {
 			Err error = new Err("Object not found");
 			error.setIs(new Contract("obix:BadUriErr"));
 			return error;
 		}
-
+		
+		o.refreshObject();
 		return o;
 	}
 
@@ -299,7 +282,7 @@ public class ObjectBrokerImpl implements ObjectBroker {
 	public synchronized Obj pushObj(Uri href, Obj input, boolean isOp)
 			throws Exception {
 
-		Obj o = objects.get(href.getPath());
+		Obj o = pullObj(href);
 
 		if (o == null)
 			throw new Exception("Object with URI " + href.get() + " not found");
@@ -315,50 +298,18 @@ public class ObjectBrokerImpl implements ObjectBroker {
 	}
 
 	@Override
-	public synchronized ArrayList<String> addObj(Obj o, String ipv6Address) {
-
+	public synchronized void addObj(Obj o, String ipv6Address) {
+		addObj(o);
+		
 		try {
 			// generate Inet6Address in format "/:::::::"
-			Inet6Address generateIPv6Address = (Inet6Address) Inet6Address
-					.getByName(ipv6Address);
-
-			if (o.getParent() == null && !o.getHref().isAbsolute()) { // root
-																		// obj
-																		// need
-																		// to
-																		// have
-																		// an
-																		// absolute
-																		// URL
-				o.setHref(new Uri("http://localhost"
-						+ (o.getHref().toString().startsWith("/") ? "" : "/")
-						+ o.getHref().toString()));
-			}
+			Inet6Address generateIPv6Address = (Inet6Address) Inet6Address.getByName(ipv6Address);
+			
 			String href = o.getFullContextPath();
 			ipv6Mapping.put(generateIPv6Address.toString(), href);
-//			System.out.println("href: " + href + " ipv6: " + ipv6Address);
-			if(resolver != null)
-				resolver.addToRecordDict(href, ipv6Address);
-
-			// add kids 
-			//TODO this should be done recursively, not only for the first level of kids
-			if (o.size() > 0) {
-				Obj[] kids = o.list();
-				for (int i = 0; i < o.size(); i++) {
-					if (kids[i].getHref() != null) {
-						ipv6Mapping.put(generateIPv6Address.toString() + "/"
-								+ kids[i].getHref(), href);
-
-					}
-				}
-			}
-
-			return addObj(o);
-
-		} catch (UnknownHostException e2) {
-			e2.printStackTrace();
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
 		}
-		return null;
 	}
 
 	@Override
@@ -372,75 +323,41 @@ public class ObjectBrokerImpl implements ObjectBroker {
 	}
 
 	@Override
-	public synchronized ArrayList<String> addObj(Obj o) {
-		return addObj(o, true);
+	public synchronized void addObj(Obj o) {
+		addObj(o, true);
 	}
 
 	@Override
-	public synchronized ArrayList<String> addObj(Obj o, boolean listInLobby) {
-		ArrayList<String> hrefs = new ArrayList<String>();
-		if (o.getParent() == null && !o.getHref().isAbsolute()) {
-			o.setHref(new Uri("http://localhost"
-					+ (o.getHref().toString().startsWith("/") ? "" : "/")
-					+ o.getHref().toString()));
+	public synchronized void addObj(Obj o, boolean listInLobby) {
+		Obj root = o.getRoot();
+		if (root != rootObject) {
+			rootObject.add(root, false);
 		}
-
-		String href = o.getFullContextPath();
-		// don't add object if href is already assigned
-		if (objects.containsKey(href)) {
-			log.log(Level.WARNING, "Object with href: " + href
-					+ " already registered.");
-			return hrefs;
+		
+		if (listInLobby) {
+			Ref ref = new Ref(null, new Uri(o.getFullContextPath()));
+			ref.setIs(o.getIs());
+			ref.setName(o.getName());
+			iotLobby.addReference(o.getFullContextPath(), ref);
 		}
-		hrefs.add(href);
-		objects.put(href, o);
-
-		orderedObjects.add(o);
-
-		// add root objects (objects without parent to the KNX lobby)
-		if (listInLobby && !(o instanceof LobbyImpl) && o.getParent() == null) {
-			Ref r = new Ref();
-			r.setName(o.getName());
-			r.setIs(ContractRegistry.lookupContract(o.getClass()));
-			r.setHref(new Uri(o.getFullContextPath()));
-			iotLobby.addReference(href, r);
-
-			// also allow to query them by name
-			nameToHref.put(o.getName(), href);
+		
+		if (o.getName() != null) {
+			nameToHref.put(o.getName(), o.getFullContextPath());
 		}
-
-		// add kids
-		if (o.size() > 0) {
-			Obj[] kids = o.list();
-			for (int i = 0; i < o.size(); i++)
-				if (kids[i].getHref() != null){
-					try {
-					hrefs.addAll(addObj(kids[i]));
-					}
-					catch(Exception e){
-						// TODO issue
-					}
-				}
-			// FIXME: should we store kid's href as absolute rather than relative href?
-		}
-
-		return hrefs;
 	}
 
 	@Override
 	public synchronized void removeObj(String href) {
-		Obj toRemove = objects.get(href);
-		objects.remove(href);
-
-		orderedObjects.remove(toRemove);
-		objectRefresher.removeObject(toRemove);
-
+		Obj toRemove = pullObj(new Uri(href));
+		toRemove.removeThis();
+		
 		if (toRemove.getName() != null) {
 			nameToHref.remove(toRemove.getName());
 		}
 
 		iotLobby.removeReference(href);
-
+		// TODO remove references to descendants of referenced object?
+		
 		// TODO deal with group comm objects.
 	}
 
@@ -459,20 +376,24 @@ public class ObjectBrokerImpl implements ObjectBroker {
 
 	@Override
 	public synchronized String getCoRELinks() {
-
+		return getCoRELinks(rootObject).toString();
+	}
+	
+	private StringBuffer getCoRELinks(Obj obj) {
 		StringBuffer coreLinks = new StringBuffer("");
-
-		Iterator<Obj> objs = orderedObjects.iterator();
-		while (objs.hasNext()) {
-			Obj obj = objs.next();
-			if (obj.getFullContextPath().startsWith("/")) {
-				coreLinks.append("<" + obj.getFullContextPath() + ">;rt=\""
-						+ ContractRegistry.lookupContract(obj.getClass())
-						+ "\";if=\"obix\"");
-			}
+		if (obj.getHref() == null) return coreLinks;
+		
+		if (obj != rootObject && obj != iotLobby)
+			coreLinks.append(String.format("<%s>;rt=\"%s\";if=\"obix\"",
+					obj.getFullContextPath(),
+					ContractRegistry.lookupContract(obj.getClass())));
+		
+		for (Obj child : obj.list()) {
+			if (child.isRef()) continue;
+			coreLinks.append(getCoRELinks(child));
 		}
-
-		return coreLinks.toString();
+		
+		return coreLinks;
 	}
 
 	public static ObjectBroker getInstance() {
@@ -508,7 +429,7 @@ public class ObjectBrokerImpl implements ObjectBroker {
 	public synchronized Obj pullObByName(String name) {
 		String href = nameToHref.get(name);
 		if (href != null) {
-			return objects.get(href);
+			return pullObj(new Uri(href));
 		}
 		return null;
 	}

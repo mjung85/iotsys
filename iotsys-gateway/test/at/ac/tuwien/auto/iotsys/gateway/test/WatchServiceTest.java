@@ -25,7 +25,7 @@ public class WatchServiceTest extends AbstractGatewayTest {
 	private String makeWatch() {
 		String watch = post("/watchService/make").asString();
 		Node watchNode = XmlPath.from(watch).get("/obj");
-		return watchNode.getAttribute("href");
+		return "/" + watchNode.getAttribute("href");
 	}
 	
 	@Test
