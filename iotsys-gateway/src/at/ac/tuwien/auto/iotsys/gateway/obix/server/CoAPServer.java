@@ -200,7 +200,7 @@ public class CoAPServer extends Endpoint {
 				request.respond(CodeRegistry.RESP_CONTENT,
 						obixResponse.toString(), MediaTypeRegistry.TEXT_XML);
 			}
-		} else if (request.getUriPath().endsWith(".well-known/core")) {
+		} else if (request.getUriPath().endsWith(".well-known/core")  && !obixServer.containsIPv6(getIPv6Address(request))) {
 			obixResponse = new StringBuffer(obixServer.getCoRELinks());
 			request.respond(CodeRegistry.RESP_CONTENT,
 					obixResponse.toString(),
@@ -221,7 +221,7 @@ public class CoAPServer extends Endpoint {
 		if (resourcePath.endsWith("/soap")) {
 			obixResponse = new StringBuffer(soapHandler.process(
 					payloadString, null));
-		} else if (resourcePath.endsWith(".well-known/core")) {
+		} else if (resourcePath.endsWith(".well-known/core") && !obixServer.containsIPv6(getIPv6Address(request))) {
 			obixResponse = new StringBuffer(obixServer.getCoRELinks());
 			request.respond(CodeRegistry.RESP_CONTENT,
 					obixResponse.toString(),
