@@ -65,8 +65,6 @@ public class ObjectBrokerImpl implements ObjectBroker {
 
 	private final Obj rootObject;
 
-	private final HashMap<String, String> nameToHref;
-
 	private LobbyImpl iotLobby = null;
 
 	private WatchServiceImpl watchServiceImpl = null;
@@ -91,7 +89,6 @@ public class ObjectBrokerImpl implements ObjectBroker {
 		rootObject = new Obj();
 		rootObject.setHref(new Uri("http://localhost/"));
 		
-		nameToHref = new HashMap<String, String>();
 		iotLobby = new LobbyImpl();
 
 		aboutImpl = new AboutImpl();
@@ -268,7 +265,7 @@ public class ObjectBrokerImpl implements ObjectBroker {
 		Obj o = rootObject.getByHref(href);
 		
 		// if the object could not be found, return an error
-		if (o == null || o == rootObject) {
+		if (o == null) {
 			Err error = new Err("Object not found");
 			error.setIs(new Contract("obix:BadUriErr"));
 			return error;
@@ -340,20 +337,12 @@ public class ObjectBrokerImpl implements ObjectBroker {
 			ref.setName(o.getName());
 			iotLobby.addReference(o.getFullContextPath(), ref);
 		}
-		
-		if (o.getName() != null) {
-			nameToHref.put(o.getName(), o.getFullContextPath());
-		}
 	}
 
 	@Override
 	public synchronized void removeObj(String href) {
 		Obj toRemove = pullObj(new Uri(href));
 		toRemove.removeThis();
-		
-		if (toRemove.getName() != null) {
-			nameToHref.remove(toRemove.getName());
-		}
 
 		iotLobby.removeReference(href);
 		// TODO remove references to descendants of referenced object?
@@ -423,27 +412,6 @@ public class ObjectBrokerImpl implements ObjectBroker {
 	@Override
 	public synchronized void shutdown() {
 		objectRefresher.stop();
-	}
-
-	@Override
-	public synchronized Obj pullObByName(String name) {
-		String href = nameToHref.get(name);
-		if (href != null) {
-			return pullObj(new Uri(href));
-		}
-		return null;
-	}
-
-	@Override
-	public synchronized ArrayList<String> getObjNames() {
-
-		ArrayList<String> ret = new ArrayList<String>();
-		for (String name : nameToHref.keySet()) {
-			if (name != null && name.length() > 0) {
-				ret.add(name);
-			}
-		}
-		return ret;
 	}
 
 	@Override
