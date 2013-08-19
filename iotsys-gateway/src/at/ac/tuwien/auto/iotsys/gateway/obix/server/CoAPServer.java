@@ -119,101 +119,147 @@ public class CoAPServer extends Endpoint {
 	@Override
 	public void execute(Request request) throws IOException {
 		
-		String resourcePath = request.getUriPath();
+		String resourcePath = getResourcePath(request);
 		log.info("Coap serving " + resourcePath + " for "
 				+ request.getPeerAddress().getAddress());
-
-		/* INTERCEPTORS START */
-		// if (interceptorBroker != null && interceptorBroker.hasInterceptors())
-		// {
-		// log.fine("Interceptors found ... starting to prepare.");
-		//
-		// InterceptorRequest interceptorRequest = new InterceptorRequestImpl();
-		// HashMap<Parameter, String> interceptorParams = new HashMap<Parameter,
-		// String>();
-		//
-		// String resource = COAP_URL_PROTOCOL + "://"
-		// + request.getNetworkInterface().getCanonicalHostName()
-		// + ":" + Communicator.getInstance().port() + resourcePath;
-		// LOG.info(resource);
-		// String action = CodeRegistry.toString(request.getCode());
-		//
-		// interceptorParams.put(Parameter.SUBJECT, request.getPeerAddress()
-		// .toString());
-		// interceptorParams.put(Parameter.SUBJECT_IP_ADDRESS, request
-		// .getPeerAddress().toString());
-		// interceptorParams.put(Parameter.RESOURCE, resource);
-		// interceptorParams.put(Parameter.RESOURCE_PROTOCOL,
-		// COAP_URL_PROTOCOL);
-		// interceptorParams.put(Parameter.RESOURCE_IP_ADDRESS, request
-		// .getNetworkInterface().getHostAddress());
-		// interceptorParams.put(Parameter.RESOURCE_HOSTNAME, request
-		// .getNetworkInterface().getHostName());
-		// interceptorParams.put(Parameter.RESOURCE_PATH, resourcePath);
-		// interceptorParams.put(Parameter.ACTION, action);
-		//
-		// interceptorRequest.setInterceptorParams(interceptorParams);
-		//
-		// log.fine("Calling interceptions ...");
-		// InterceptorResponse resp = interceptorBroker
-		// .handleRequest(interceptorRequest);
-		//
-		// if (!resp.getStatus().equals(StatusCode.OK)) {
-		// if (resp.forward()) {
-		// request.respond(CodeRegistry.RESP_FORBIDDEN,
-		// resp.getMessage(), MediaTypeRegistry.TEXT_PLAIN);
-		// request.sendResponse();
-		// return;
-		// }
-		// }
-		// }
-		// /* INTERCEPTORS END */
-
-		String localSocket = request.getNetworkInterface().getHostAddress()
-				.toString();
-
+		
+		
+		if (intercept(request)) return;
+		
 		// handle multicast requests first
-		log.finest("Request type: " + MulticastUDPLayer.getRequestType());
-		if (MulticastUDPLayer.getRequestType() == REQUEST_TYPE.MULTICAST_REQUEST) {
-			log.finest("Handle multicast request!");
-			Obj obj = null;
-			if (request.getContentType() == MediaTypeRegistry.APPLICATION_OCTET_STREAM) {
-				try {
-					log.finest("Received EXI encoded multicast.");
-					obj = EXIDecoder.getInstance().fromBytesSchema(
-							request.getPayload());
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			} else {
-				// try to decode from string
-				obj = ObixDecoder.fromString(request.getPayloadString());
-			}
-			GroupCommServiceImpl.getInstance().handleRequest(
-					MulticastUDPLayer.getMulticastAddress(), obj);
-			return;
-		}
-
-		int lastIndex = localSocket.lastIndexOf("%");
-		String localSocketSplitted = request.getNetworkInterface()
-				.getHostAddress().toString();
-
-		if (lastIndex > 0) {
-			localSocketSplitted = localSocket.substring(0, lastIndex);
-		}
-
-		if (!localSocketSplitted.startsWith("/")) {
-			localSocketSplitted = "/" + localSocketSplitted;
-		}
-
-		if (request.getPeerAddress().getAddress() instanceof Inet6Address
-				&& obixServer.containsIPv6(localSocketSplitted)) {
-			resourcePath = obixServer.getIPv6LinkedHref(localSocketSplitted)
-					+ resourcePath;
-		}
-
+		if (handleMulticastRequest(request)) return;
+		
 		LOG.info(String.format("Execution: %s", resourcePath));
+		
+		try {
+			setCoAPResponse(request);
+		} catch (URISyntaxException e) {
+			e.printStackTrace();
+		}
 
+		if (request instanceof GETRequest) {
+			if (request.hasOption(OptionNumberRegistry.OBSERVE)) {
+				ObixObservingManager.getInstance().addObserver(
+						(GETRequest) request, resourcePath);
+			}
+		}
+
+		request.sendResponse();
+		log.info("Coap serving " + resourcePath + " for "
+				+ request.getPeerAddress().getAddress() + " done.");
+	}
+
+	private void setCoAPResponse(Request request) throws URISyntaxException {
+		StringBuffer obixResponse = getObixResponse(request);
+		
+		if (request.getFirstAccept() == MediaTypeRegistry.APPLICATION_EXI) {
+			try {
+				byte[] exiData = ExiUtil.getInstance().encodeEXI(
+						obixResponse.toString());
+				request.respond(CodeRegistry.RESP_CONTENT, exiData,
+						MediaTypeRegistry.APPLICATION_EXI);
+
+			} catch (Exception e) {
+				e.printStackTrace();
+				request.respond(CodeRegistry.RESP_CONTENT,
+						obixResponse.toString(), MediaTypeRegistry.TEXT_XML);
+			}
+		} else if (request.getFirstAccept() == MediaTypeRegistry.APPLICATION_OCTET_STREAM) {
+			try {
+				byte[] exiData = ExiUtil.getInstance().encodeEXI(
+						obixResponse.toString(), true);
+				request.respond(CodeRegistry.RESP_CONTENT, exiData,
+						MediaTypeRegistry.APPLICATION_EXI);
+
+			} catch (Exception e) {
+				e.printStackTrace();
+				request.respond(CodeRegistry.RESP_CONTENT,
+						obixResponse.toString(), MediaTypeRegistry.TEXT_XML);
+			}
+		} else if (request.getFirstAccept() == MediaTypeRegistry.APPLICATION_X_OBIX_BINARY) {
+			try {
+				byte[] exiData = BinObixEncoder.toBytes(ObixDecoder
+						.fromString(obixResponse.toString()));
+				request.respond(CodeRegistry.RESP_CONTENT, exiData,
+						MediaTypeRegistry.APPLICATION_X_OBIX_BINARY);
+
+			} catch (Exception e) {
+				e.printStackTrace();
+				request.respond(CodeRegistry.RESP_CONTENT,
+						obixResponse.toString(), MediaTypeRegistry.TEXT_XML);
+			}
+		}
+
+		else if (request.getFirstAccept() == MediaTypeRegistry.APPLICATION_JSON) {
+			try {
+				request.respond(CodeRegistry.RESP_CONTENT,
+						JsonUtil.fromXMLtoJSON(obixResponse.toString()),
+						MediaTypeRegistry.APPLICATION_JSON);
+			} catch (JSONException e) {
+				e.printStackTrace();
+				request.respond(CodeRegistry.RESP_CONTENT,
+						obixResponse.toString(), MediaTypeRegistry.TEXT_XML);
+			}
+		} else if (request.getUriPath().endsWith(".well-known/core")) {
+			obixResponse = new StringBuffer(obixServer.getCoRELinks());
+			request.respond(CodeRegistry.RESP_CONTENT,
+					obixResponse.toString(),
+					MediaTypeRegistry.APPLICATION_LINK_FORMAT);
+
+		} else {
+			request.respond(CodeRegistry.RESP_CONTENT,
+					obixResponse.toString(), MediaTypeRegistry.TEXT_XML);
+		}
+	}
+
+	private StringBuffer getObixResponse(Request request) throws URISyntaxException {
+		
+		String resourcePath = getResourcePath(request);
+		String payloadString = getPayload(request);
+		
+		StringBuffer obixResponse = new StringBuffer("");
+		if (resourcePath.endsWith("/soap")) {
+			obixResponse = new StringBuffer(soapHandler.process(
+					payloadString, null));
+		} else if (resourcePath.endsWith(".well-known/core")) {
+			obixResponse = new StringBuffer(obixServer.getCoRELinks());
+			request.respond(CodeRegistry.RESP_CONTENT,
+					obixResponse.toString(),
+					MediaTypeRegistry.APPLICATION_LINK_FORMAT);
+		} else {
+
+			if (request instanceof GETRequest) {
+
+				obixResponse = new StringBuffer(ObixEncoder.toString(
+						obixServer.readObj(new URI(resourcePath), "guest"),
+						true));
+
+			}
+
+			if (request instanceof PUTRequest) {
+
+				obixResponse = new StringBuffer(ObixEncoder.toString(
+						obixServer.writeObj(new URI(resourcePath),
+								payloadString), true));
+
+			}
+			if (request instanceof POSTRequest) {
+				obixResponse = new StringBuffer(ObixEncoder.toString(
+						obixServer.invokeOp(new URI(resourcePath),
+								payloadString), true));
+			}
+		}
+
+		obixResponse = new StringBuffer(obixResponse.toString()
+				.replaceFirst(ObixServer.DEFAULT_OBIX_URL_PROTOCOL,
+						COAP_URL_PROTOCOL));
+		obixResponse = new StringBuffer(obixResponse.toString());
+		
+		// fixHref(request.getUriPath(), obixResponse);
+		return obixResponse;
+	}
+
+	private String getPayload(Request request) {
 		String payloadString = "";
 
 		// check for application/exi content
@@ -255,129 +301,105 @@ public class CoAPServer extends Endpoint {
 		}
 
 		payloadString = payloadString.replaceFirst(COAP_URL_PROTOCOL,
-				obixServer.DEFAULT_OBIX_URL_PROTOCOL);
+				ObixServer.DEFAULT_OBIX_URL_PROTOCOL);
+		
+		return payloadString;
+	}
 
-		String obixMessage = "";
-
-		try {
-			StringBuffer obixResponse = new StringBuffer("");
-			if (resourcePath.endsWith("/soap")) {
-				obixResponse = new StringBuffer(soapHandler.process(
-						payloadString, null));
-			} else if (resourcePath.endsWith(".well-known/core")) {
-				obixResponse = new StringBuffer(obixServer.getCoRELinks());
-				request.respond(CodeRegistry.RESP_CONTENT,
-						obixResponse.toString(),
-						MediaTypeRegistry.APPLICATION_LINK_FORMAT);
-			} else {
-
-				if (request instanceof GETRequest) {
-
-					obixResponse = new StringBuffer(ObixEncoder.toString(
-							obixServer.readObj(new URI(resourcePath), "guest"),
-							true));
-
-				}
-
-				if (request instanceof PUTRequest) {
-
-					obixResponse = new StringBuffer(ObixEncoder.toString(
-							obixServer.writeObj(new URI(resourcePath),
-									payloadString), true));
-
-				}
-				if (request instanceof POSTRequest) {
-					obixResponse = new StringBuffer(ObixEncoder.toString(
-							obixServer.invokeOp(new URI(resourcePath),
-									payloadString), true));
-
-				}
-			}
-
-			obixResponse = new StringBuffer(obixResponse.toString()
-					.replaceFirst(obixServer.DEFAULT_OBIX_URL_PROTOCOL,
-							COAP_URL_PROTOCOL));
-			obixResponse = new StringBuffer(obixResponse.toString());
-
-			// fixHref(request.getUriPath(), obixResponse);
-
-			if (request.getFirstAccept() == MediaTypeRegistry.APPLICATION_EXI) {
+	private boolean handleMulticastRequest(Request request) {
+		if (MulticastUDPLayer.getRequestType() == REQUEST_TYPE.MULTICAST_REQUEST) {
+			log.finest("Handle multicast request!");
+			Obj obj = null;
+			if (request.getContentType() == MediaTypeRegistry.APPLICATION_OCTET_STREAM) {
 				try {
-					byte[] exiData = ExiUtil.getInstance().encodeEXI(
-							obixResponse.toString());
-					request.respond(CodeRegistry.RESP_CONTENT, exiData,
-							MediaTypeRegistry.APPLICATION_EXI);
-
+					log.finest("Received EXI encoded multicast.");
+					obj = EXIDecoder.getInstance().fromBytesSchema(
+							request.getPayload());
 				} catch (Exception e) {
 					e.printStackTrace();
-					request.respond(CodeRegistry.RESP_CONTENT,
-							obixResponse.toString(), MediaTypeRegistry.TEXT_XML);
-				}
-			} else if (request.getFirstAccept() == MediaTypeRegistry.APPLICATION_OCTET_STREAM) {
-				try {
-					byte[] exiData = ExiUtil.getInstance().encodeEXI(
-							obixResponse.toString(), true);
-					request.respond(CodeRegistry.RESP_CONTENT, exiData,
-							MediaTypeRegistry.APPLICATION_EXI);
-
-				} catch (Exception e) {
-					e.printStackTrace();
-					request.respond(CodeRegistry.RESP_CONTENT,
-							obixResponse.toString(), MediaTypeRegistry.TEXT_XML);
-				}
-			} else if (request.getFirstAccept() == MediaTypeRegistry.APPLICATION_X_OBIX_BINARY) {
-				try {
-					byte[] exiData = BinObixEncoder.toBytes(ObixDecoder
-							.fromString(obixResponse.toString()));
-					request.respond(CodeRegistry.RESP_CONTENT, exiData,
-							MediaTypeRegistry.APPLICATION_X_OBIX_BINARY);
-
-				} catch (Exception e) {
-					e.printStackTrace();
-					request.respond(CodeRegistry.RESP_CONTENT,
-							obixResponse.toString(), MediaTypeRegistry.TEXT_XML);
-				}
-			}
-
-			else if (request.getFirstAccept() == MediaTypeRegistry.APPLICATION_JSON) {
-				try {
-					request.respond(CodeRegistry.RESP_CONTENT,
-							JsonUtil.fromXMLtoJSON(obixResponse.toString()),
-							MediaTypeRegistry.APPLICATION_JSON);
-				} catch (JSONException e) {
-					e.printStackTrace();
-					request.respond(CodeRegistry.RESP_CONTENT,
-							obixResponse.toString(), MediaTypeRegistry.TEXT_XML);
 				}
 			} else {
-				if (request.getUriPath().endsWith(".well-known/core")) {
-					obixResponse = new StringBuffer(obixServer.getCoRELinks());
-					request.respond(CodeRegistry.RESP_CONTENT,
-							obixResponse.toString(),
-							MediaTypeRegistry.APPLICATION_LINK_FORMAT);
+				// try to decode from string
+				obj = ObixDecoder.fromString(request.getPayloadString());
+			}
+			GroupCommServiceImpl.getInstance().handleRequest(
+					MulticastUDPLayer.getMulticastAddress(), obj);
+			return true;
+		}
+		
+		return false;
+	}
 
-				} else {
-					request.respond(CodeRegistry.RESP_CONTENT,
-							obixResponse.toString(), MediaTypeRegistry.TEXT_XML);
+	private String getIPv6Address(Request request) {
+		String localSocket = request.getNetworkInterface().getHostAddress()
+				.toString();
+
+		int lastIndex = localSocket.lastIndexOf("%");
+		String localSocketSplitted = request.getNetworkInterface()
+				.getHostAddress().toString();
+
+		if (lastIndex > 0) {
+			localSocketSplitted = localSocket.substring(0, lastIndex);
+		}
+
+		if (!localSocketSplitted.startsWith("/")) {
+			localSocketSplitted = "/" + localSocketSplitted;
+		}
+		
+		return localSocketSplitted;
+	}
+	
+	private boolean intercept(Request request) {
+		/* INTERCEPTORS START */
+		/*
+		if (interceptorBroker != null && interceptorBroker.hasInterceptors())
+		{
+			log.fine("Interceptors found ... starting to prepare.");
+			String resourcePath = getResourcePath(request);
+			
+			InterceptorRequest interceptorRequest = new InterceptorRequestImpl();
+			HashMap<Parameter, String> interceptorParams = new HashMap<Parameter,
+					String>();
+
+			String resource = COAP_URL_PROTOCOL + "://"
+					+ request.getNetworkInterface().getCanonicalHostName()
+					+ ":" + Communicator.getInstance().port() + resourcePath;
+			LOG.info(resource);
+			String action = CodeRegistry.toString(request.getCode());
+
+			interceptorParams.put(Parameter.SUBJECT, request.getPeerAddress()
+					.toString());
+			interceptorParams.put(Parameter.SUBJECT_IP_ADDRESS, request
+					.getPeerAddress().toString());
+			interceptorParams.put(Parameter.RESOURCE, resource);
+			interceptorParams.put(Parameter.RESOURCE_PROTOCOL,
+					COAP_URL_PROTOCOL);
+			interceptorParams.put(Parameter.RESOURCE_IP_ADDRESS, request
+					.getNetworkInterface().getHostAddress());
+			interceptorParams.put(Parameter.RESOURCE_HOSTNAME, request
+					.getNetworkInterface().getHostName());
+			interceptorParams.put(Parameter.RESOURCE_PATH, resourcePath);
+			interceptorParams.put(Parameter.ACTION, action);
+
+			interceptorRequest.setInterceptorParams(interceptorParams);
+
+			log.fine("Calling interceptions ...");
+			InterceptorResponse resp = interceptorBroker
+					.handleRequest(interceptorRequest);
+
+			if (!resp.getStatus().equals(StatusCode.OK)) {
+				if (resp.forward()) {
+					request.respond(CodeRegistry.RESP_FORBIDDEN,
+							resp.getMessage(), MediaTypeRegistry.TEXT_PLAIN);
+					request.sendResponse();
+					return true;
 				}
-
-			}
-
-		} catch (URISyntaxException e) {
-			e.printStackTrace();
-		}
-
-		if (request instanceof GETRequest) {
-			if (request.hasOption(OptionNumberRegistry.OBSERVE)) {
-				ObixObservingManager.getInstance().addObserver(
-						(GETRequest) request, resourcePath);
 			}
 		}
-
-		request.sendResponse();
-		log.info("Coap serving " + resourcePath + " for "
-				+ request.getPeerAddress().getAddress() + " done.");
-
+		*/
+		/* INTERCEPTORS END */
+		
+		return false;
 	}
 
 	private void fixHref(String href, StringBuffer obixResponse) {
@@ -396,6 +418,17 @@ public class CoAPServer extends Endpoint {
 			// put the IPv6 address there instead
 			obixResponse.insert(firstQuota + 1, href);
 		}
+	}
+	
+	private String getResourcePath(Request request) {
+		String resourcePath = request.getUriPath();
+		String ipv6Address = getIPv6Address(request);
+		
+		if (request.getPeerAddress().getAddress() instanceof Inet6Address
+				&& obixServer.containsIPv6(ipv6Address)) {
+			resourcePath = obixServer.getIPv6LinkedHref(ipv6Address) + resourcePath;
+		}
+		return resourcePath;
 	}
 
 	@Override
