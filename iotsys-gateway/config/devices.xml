@@ -35,7 +35,7 @@
 		
 		<connector>
       <name>XBee</name>
-      <enabled>true</enabled>
+      <enabled>false</enabled>
       <serialPort>COM3</serialPort>
       <device>
         <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.xbee.TemperatureSensorImplXBee
@@ -404,10 +404,10 @@
     </connector>
 
     <connector>
-      <name>KNX A-Lab</name>
+      <name>KNX HESSO</name>
       <enabled>false</enabled>
       <router>
-        <ip>128.130.56.140</ip>
+        <ip>153.109.130.116</ip>
         <port>3671</port>
       </router>
       <localIP>auto</localIP>
@@ -423,18 +423,38 @@
         <groupCommEnabled>true</groupCommEnabled>
       </device>
 
+			<device>
+        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.knx.TemperatureSensorImplKnx
+        </type>
+        <address>0/0/4</address>
+        <href>tempKNX</href>
+        <ipv6>aaab::1:1</ipv6>
+        <historyEnabled>true</historyEnabled>
+        <historyCount>200</historyCount>
+        <groupCommEnabled>true</groupCommEnabled>
+      </device>
+			
+			<device>
+        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.knx.SimpleHVACvalveActuatorImplKnx
+        </type>
+        <address>null, 0/0/1</address>
+        <href>valvePositionKNX</href>
+        <ipv6>aaaa::1:7c</ipv6>
+        <groupCommEnabled>true</groupCommEnabled>
+      </device>
+			
       <device>
         <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.knx.IndoorBrightnessSensorImplKnx
         </type>
-        <address>5/2/0</address>
-        <href>luxA</href>
+        <address>0/0/2</address>
+        <href>luxKNX</href>
         <ipv6>2001:629:2500:570::10d</ipv6>
         <historyEnabled>true</historyEnabled>
         <historyCount>200</historyCount>
         <groupCommEnabled>true</groupCommEnabled>
       </device>
 
-      <device>
+      <!--device>
         <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.knx.LightSwitchActuatorImplKnx
         </type>
         <address>null, 5/3/2</address>
@@ -497,8 +517,8 @@
         <historyEnabled>true</historyEnabled>
         <historyCount>200</historyCount>
         <groupCommEnabled>true</groupCommEnabled>
-      </device>
-    </connector>
+      </device-->
+    </connector>	
   </knx>
 
   <bacnet>
@@ -741,6 +761,14 @@
         <groupCommEnabled>true</groupCommEnabled>
       </device>
 			
+			<device>
+        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.ComplexSunblindActuatorImpl
+        </type>
+        <href>vComplexSunBlind</href>
+        <historyEnabled>false</historyEnabled>
+        <historyCount>200</historyCount>
+        <groupCommEnabled>true</groupCommEnabled>
+      </device>
 			
       <device>
         <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.SunblindActuatorImpl
