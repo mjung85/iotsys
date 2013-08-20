@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PolicySet xmlns="urn:oasis:names:tc:xacml:2.0:policy:schema:os"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="urn:oasis:names:tc:xacml:2.0:policy:schema:os http://docs.oasis-open.org/xacml/access_control-xacml-2.0-policy-schema-os.xsd"
+	PolicySetId="urn:auto:tuwien:ac:at:pdp:45a8f48f70-9d9b-d233-6776-06333cd3c5:EnergiedatenService"
+	PolicyCombiningAlgId="urn:oasis:names:tc:xacml:1.0:policy-combining-algorithm:permit-overrides">
+	
+	<Target />
+
+	<PolicySet xmlns="urn:oasis:names:tc:xacml:2.0:policy:schema:os"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="urn:oasis:names:tc:xacml:2.0:policy:schema:os http://docs.oasis-open.org/xacml/access_control-xacml-2.0-policy-schema-os.xsd"
+		PolicySetId="urn:auto:tuwien:ac:at:overall"
+		PolicyCombiningAlgId="urn:oasis:names:tc:xacml:1.0:policy-combining-algorithm:permit-overrides">
+
+		<Target>
+			<Resources>
+				<Resource>
+					<ResourceMatch MatchId="urn:oasis:names:tc:xacml:1.0:function:string-regexp-match">
+						<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">(http|coap)://([a-zA-Z0-9\/\:\_\-\[\]]+)(:[0-9]{2,5})?/obix</AttributeValue>
+						<ResourceAttributeDesignator
+							AttributeId="urn:oasis:names:tc:xacml:1.0:resource:resource-id"
+							DataType="http://www.w3.org/2001/XMLSchema#string" />
+					</ResourceMatch>
+				</Resource>
+			</Resources>
+		</Target>
+		<Policy
+			PolicyId="urn:tuwien:auto:smartwebgrid:id:45a8f48f70-9d9b-d233-6776-06333cd3c5"
+			RuleCombiningAlgId="urn:oasis:names:tc:xacml:1.0:rule-combining-algorithm:deny-overrides">
+			<Description></Description>
+			<Target>
+			</Target>
+			<Rule RuleId="urn:tuwien:auto:smartwebgrid:rule:action:deny"
+				Effect="Deny">
+				<Condition>
+					<Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:not">
+						<Apply
+							FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-at-least-one-member-of">
+							<ActionAttributeDesignator
+								AttributeId="urn:oasis:names:tc:xacml:1.0:action:action-id"
+								DataType="http://www.w3.org/2001/XMLSchema#string" />
+							<Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-bag">
+								<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">POST</AttributeValue>
+								<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">GET</AttributeValue>
+							</Apply>
+						</Apply>
+					</Apply>
+				</Condition>
+			</Rule>
+			<Rule Effect="Permit"
+				RuleId="urn:tuwien:auto:smartwebgrid:rule:permitIfNoDenyHappened">
+			</Rule>
+		</Policy>
+	</PolicySet>
+
+	<PolicySet xmlns="urn:oasis:names:tc:xacml:2.0:policy:schema:os"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="urn:oasis:names:tc:xacml:2.0:policy:schema:os http://docs.oasis-open.org/xacml/access_control-xacml-2.0-policy-schema-os.xsd"
+		PolicySetId="urn:auto:tuwien:ac:at:overall"
+		PolicyCombiningAlgId="urn:oasis:names:tc:xacml:1.0:policy-combining-algorithm:permit-overrides">
+
+		<Target>
+			<Resources>
+				<Resource>
+					<ResourceMatch MatchId="urn:oasis:names:tc:xacml:1.0:function:string-regexp-match">
+						<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">(http|coap)://([a-zA-Z0-9\/\:\_\-\[\]]+)(:[0-9]{2,5})?/obix</AttributeValue>
+						<ResourceAttributeDesignator
+							AttributeId="urn:oasis:names:tc:xacml:1.0:resource:resource-id"
+							DataType="http://www.w3.org/2001/XMLSchema#string" />
+					</ResourceMatch>
+				</Resource>
+			</Resources>
+		</Target>
+		<Policy
+			PolicyId="urn:tuwien:auto:smartwebgrid:id:45a8f48f70-9d9b-d233-6776-06333cd3c5"
+			RuleCombiningAlgId="urn:oasis:names:tc:xacml:1.0:rule-combining-algorithm:deny-overrides">
+			<Description></Description>
+			<Target>
+			</Target>
+			<Rule RuleId="urn:tuwien:auto:smartwebgrid:rule:action:deny"
+				Effect="Deny">
+				<Condition>
+					<Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:not">
+						<Apply
+							FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-at-least-one-member-of">
+							<ActionAttributeDesignator
+								AttributeId="urn:oasis:names:tc:xacml:1.0:action:action-id"
+								DataType="http://www.w3.org/2001/XMLSchema#string" />
+							<Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-bag">
+								<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">POST</AttributeValue>
+								<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">GET</AttributeValue>
+							</Apply>
+						</Apply>
+					</Apply>
+				</Condition>
+			</Rule>
+			<Rule Effect="Permit"
+				RuleId="urn:tuwien:auto:smartwebgrid:rule:permitIfNoDenyHappened">
+			</Rule>
+		</Policy>
+	</PolicySet>
+
+
+	<Policy PolicyId="urn:tuwien:auto:smartwebgrid:catch-all"
+		RuleCombiningAlgId="urn:oasis:names:tc:xacml:1.0:rule-combining-algorithm:permit-overrides">
+		<Description>If no policy above is applicable, the policy set should evaluate 
+		to Deny</Description>
+		<Target />
+		<Rule RuleId="d72b8f02-c07e-4853-a414-5654fa30888f:EnergiedatenService"
+			Effect="Deny"></Rule>
+	</Policy>
+</PolicySet>
