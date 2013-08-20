@@ -43,10 +43,6 @@ public interface ObjectBroker{
 
 	public void shutdown();
 	
-	public Obj pullObByName(String name);
-
-	public ArrayList<String> getObjNames();
-
 	public MDnsResolver getMDnsResolver();
 
 	public void setMdnsResolver(MDnsResolver resolver);
