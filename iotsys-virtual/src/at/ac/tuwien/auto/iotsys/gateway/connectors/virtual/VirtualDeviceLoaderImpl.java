@@ -42,7 +42,10 @@ import java.util.logging.Logger;
 
 import javax.print.DocFlavor.URL;
 
+import obix.Bool;
+import obix.Int;
 import obix.Obj;
+import obix.Real;
 import obix.Uri;
 
 import org.apache.commons.configuration.HierarchicalConfiguration;
@@ -74,6 +77,33 @@ public class VirtualDeviceLoaderImpl implements DeviceLoader {
 			virtualConnector.connect();
 
 			connectors.add(virtualConnector);
+			
+			Obj complexObj= new Obj();
+			complexObj.setHref(new Uri("examples/complexObj"));
+			Bool b1 = new Bool();
+			
+			b1.setHref(new Uri("b1"));
+			
+			Int i1 = new Int();
+			i1.setHref(new Uri("i1"));
+			
+			Int i2 = new Int();
+			i2.setHref(new Uri("i2"));
+			
+			Obj childObj = new Obj();
+			childObj.setHref(new Uri("childObj"));
+			
+			Real r1 = new Real();
+			r1.setHref(new Uri("r"));
+			
+			childObj.add(r1);
+			
+			complexObj.add(b1);
+			complexObj.add(i1);
+			complexObj.add(i2);
+			complexObj.add(childObj);
+					 					
+			objectBroker.addObj(complexObj);
 
 			// add virtual devices
 
@@ -259,7 +289,8 @@ public class VirtualDeviceLoaderImpl implements DeviceLoader {
 				}
 			}
 		}
-
+		
+	
 		return connectors;
 	}
 
