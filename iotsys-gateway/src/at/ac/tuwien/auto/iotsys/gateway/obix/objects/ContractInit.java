@@ -42,6 +42,7 @@ import at.ac.tuwien.auto.iotsys.gateway.obix.objects.bacnet.BinaryValue;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.AirDamperActuator;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.BoilerActuator;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.BrightnessActuator;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.ComplexSunblindActuator;
 //import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.ChillerActuator;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.CoolerActuator;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.FanSpeedActuator;
@@ -88,6 +89,7 @@ public class ContractInit
 	  ContractRegistry.put(OutsideTemperatureSensor.CONTRACT, OutsideTemperatureSensor.class.getName());
 	  
 	  //Actuator
+	  ContractRegistry.put(ComplexSunblindActuator.CONTRACT, ComplexSunblindActuator.class.getName());
 	  ContractRegistry.put(FanSpeedActuator.CONTRACT,FanSpeedActuator.class.getName());
 	  ContractRegistry.put(HVACvalveActuator.CONTRACT,HVACvalveActuator.class.getName());
 	  ContractRegistry.put(AirDamperActuator.CONTRACT,AirDamperActuator.class.getName());
