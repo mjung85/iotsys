@@ -18,5 +18,10 @@ public class AbstractGatewayTest {
 	public static void tearDown() {
 		gateway.stopGateway();
 	}
+	
+	public static void main(String[] args){
+		gateway = new IoTSySGateway();
+		gateway.startGateway("config/devices.test.xml");
+	}
 
 }

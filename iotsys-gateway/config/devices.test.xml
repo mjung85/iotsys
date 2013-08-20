@@ -7,7 +7,7 @@
 
   <virtual>
     <connector>
-      <name>Virtual Devices</name>
+      <name>testDevices</name>
       <enabled>true</enabled>
       
       
@@ -67,7 +67,7 @@
       </device>
     </connector>
     <connector>
-      <name>Virtual Devices - Watch</name>
+      <name>testDevicesWatch</name>
       <enabled>true</enabled>
 	  
 	  <device>
@@ -130,7 +130,7 @@
       
     </connector>
     <connector>
-      <name>Virtual Devices - History</name>
+      <name>testDevicesHistory</name>
       <enabled>true</enabled>
 	  
 	  <device>

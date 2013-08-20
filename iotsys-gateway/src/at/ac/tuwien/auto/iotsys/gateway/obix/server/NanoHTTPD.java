@@ -12,6 +12,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.net.Inet6Address;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -355,7 +356,12 @@ public class NanoHTTPD {
 		}
 		
 		// normalize resource path
-		resourcePath = URI.create("//localhost/" + resourcePath).normalize().getPath();
+		try {
+			resourcePath = URI.create("//localhost/" + URLEncoder.encode(resourcePath, "UTF-8")).normalize().getPath();
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return resourcePath;
 	}
 

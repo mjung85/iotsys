@@ -33,11 +33,14 @@
 package at.ac.tuwien.auto.iotsys.gateway.connectors.virtual;
 
 import java.lang.reflect.Constructor;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import javax.print.DocFlavor.URL;
 
 import obix.Obj;
 import obix.Uri;
@@ -108,6 +111,9 @@ public class VirtualDeviceLoaderImpl implements DeviceLoader {
 
 			// enable history yes/no?
 //			objectBroker.addHistoryToDatapoints(virtualLight1, 100);
+			
+			Obj obj = new Obj();
+			
 
 		} catch (Exception e) {
 
@@ -145,8 +151,6 @@ public class VirtualDeviceLoaderImpl implements DeviceLoader {
 			String connectorName = subConfig.getString("name");
 			Boolean enabled = subConfig.getBoolean("enabled", false);
 			
-			
-
 			if (enabled) {
 				try {
 					VirtualConnector vConn = new VirtualConnector();
@@ -201,7 +205,7 @@ public class VirtualDeviceLoaderImpl implements DeviceLoader {
 										}
 									}
 									
-									virtualObj.setHref(new Uri(href));
+									virtualObj.setHref(new Uri(URLEncoder.encode(connectorName, "UTF-8") + "/" + href));
 									
 									if(name != null && name.length() > 0){
 										virtualObj.setName(name);
@@ -215,8 +219,6 @@ public class VirtualDeviceLoaderImpl implements DeviceLoader {
 									
 									myObjects.add(virtualObj);
 									
-								
-
 									virtualObj.initialize();
 
 									if (historyEnabled != null

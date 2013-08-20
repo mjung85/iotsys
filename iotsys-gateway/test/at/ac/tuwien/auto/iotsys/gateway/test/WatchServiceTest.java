@@ -48,12 +48,12 @@ public class WatchServiceTest extends AbstractGatewayTest {
 		given().
 		param("data", "<obj is='obix:WatchIn'>"+
 			 "	<list name='hrefs'>" +
-			 "		<uri val='/switchWatch1/value' />" +
+			 "		<uri val='/testDevicesWatch/switchWatch1/value' />" +
 			 "	</list>" +
 			 "</obj>").
 		expect().
 		body(hasXPath("/obj[@is='obix:WatchOut']")).
-		body(hasXPath("/obj/list/bool[@val and @href='/switchWatch1/value']")).
+		body(hasXPath("/obj/list/bool[@val and @href='/testDevicesWatch/switchWatch1/value']")).
 		post(watchHref + "/add");
 	}
 	
@@ -64,16 +64,16 @@ public class WatchServiceTest extends AbstractGatewayTest {
 		given().
 		param("data", "<obj is='obix:WatchIn'>"+
 			 "	<list name='hrefs'>" +
-			 "		<uri val='/switchWatch1/value' />" +
-			 "		<uri val='/nonExistingObject/value' />" +
-			 "		<uri val='/switchWatch2/value' />" +
+			 "		<uri val='/testDevicesWatch/switchWatch1/value' />" +
+			 "		<uri val='/testDevicesWatch/nonExistingObject/value' />" +
+			 "		<uri val='/testDevicesWatch/switchWatch2/value' />" +
 			 "	</list>" +
 			 "</obj>").
 		expect().
 		body(hasXPath("/obj[@is='obix:WatchOut']")).
-		body(hasXPath("/obj/list/bool[@href='/switchWatch1/value']")).
-		body(hasXPath("/obj/list/bool[@href='/switchWatch2/value']")).
-		body(hasXPath("/obj/list/err[@href='/nonExistingObject/value']")).
+		body(hasXPath("/obj/list/bool[@href='/testDevicesWatch/switchWatch1/value']")).
+		body(hasXPath("/obj/list/bool[@href='/testDevicesWatch/switchWatch2/value']")).
+		body(hasXPath("/obj/list/err[@href='/testDevicesWatch/nonExistingObject/value']")).
 		post(watchHref + "/add");
 	}
 	
@@ -86,8 +86,8 @@ public class WatchServiceTest extends AbstractGatewayTest {
 		
 		given().param("data", "<obj is='obix:WatchIn'>"+
 				 "	<list name='hrefs'>" +
-				 "		<uri val='/switchWatch1/value' />" +
-				 "		<uri val='/switchWatch2/value' />" +
+				 "		<uri val='/testDevicesWatch/switchWatch1/value' />" +
+				 "		<uri val='/testDevicesWatch/switchWatch2/value' />" +
 				 "	</list>" +
 				 "</obj>").post(addUri);
 		
@@ -99,29 +99,29 @@ public class WatchServiceTest extends AbstractGatewayTest {
 		
 		
 		// Reset objects
-		given().body("<bool val='false' />").put("/switchWatch1/value");
-		given().body("<bool val='false' />").put("/switchWatch2/value");
+		given().body("<bool val='false' />").put("/testDevicesWatch/switchWatch1/value");
+		given().body("<bool val='false' />").put("/testDevicesWatch/switchWatch2/value");
 		given().param("Content-Type", "text/plain").post(pollUri);
 		
 		
 		// Make single change
-		given().body("<bool val='true' />").put("/switchWatch1/value");
+		given().body("<bool val='true' />").put("/testDevicesWatch/switchWatch1/value");
 		given().param("Content-Type", "text/plain").
 		expect().
 		body(hasXPath("/obj[@is='obix:WatchOut']")).
-		body(hasXPath("/obj/list/bool[@val='true' and @href='/switchWatch1/value']")).
+		body(hasXPath("/obj/list/bool[@val='true' and @href='/testDevicesWatch/switchWatch1/value']")).
 		when().post(pollUri);
 		
 		
 		// Make multiple changes
-		given().body("<bool val='false' />").put("/switchWatch1/value");
-		given().body("<bool val='true' />").put("/switchWatch2/value");
+		given().body("<bool val='false' />").put("/testDevicesWatch/switchWatch1/value");
+		given().body("<bool val='true' />").put("/testDevicesWatch/switchWatch2/value");
 		 
 		given().param("Content-Type", "text/plain").
 		expect().
 		body(hasXPath("/obj[@is='obix:WatchOut']")).
-		body(hasXPath("/obj/list/bool[@val='false' and @href='/switchWatch1/value']")).
-		body(hasXPath("/obj/list/bool[@val='true' and @href='/switchWatch2/value']")).
+		body(hasXPath("/obj/list/bool[@val='false' and @href='/testDevicesWatch/switchWatch1/value']")).
+		body(hasXPath("/obj/list/bool[@val='true' and @href='/testDevicesWatch/switchWatch2/value']")).
 		when().post(pollUri);
 	}
 	
@@ -135,31 +135,31 @@ public class WatchServiceTest extends AbstractGatewayTest {
 		
 		given().param("data", "<obj is='obix:WatchIn'>"+
 				 "	<list name='hrefs'>" +
-				 "		<uri val='/switchWatch1/value' />" +
-				 "		<uri val='/switchWatch2/value' />" +
+				 "		<uri val='/testDevicesWatch/switchWatch1/value' />" +
+				 "		<uri val='/testDevicesWatch/switchWatch2/value' />" +
 				 "	</list>" +
 				 "</obj>").post(addUri);
 		
 		// Reset objects
-		given().body("<bool val='false' />").put("/switchWatch1/value");
-		given().body("<bool val='false' />").put("/switchWatch2/value");
+		given().body("<bool val='false' />").put("/testDevicesWatch/switchWatch1/value");
+		given().body("<bool val='false' />").put("/testDevicesWatch/switchWatch2/value");
 		given().param("Content-Type", "text/plain").post(pollUri);
 		
 		// Report all 
 		expect().
 		body(hasXPath("/obj[@is='obix:WatchOut']")).
-		body(hasXPath("/obj/list/bool[@href='/switchWatch1/value']")).
-		body(hasXPath("/obj/list/bool[@href='/switchWatch2/value']")).
+		body(hasXPath("/obj/list/bool[@href='/testDevicesWatch/switchWatch1/value']")).
+		body(hasXPath("/obj/list/bool[@href='/testDevicesWatch/switchWatch2/value']")).
 		when().post(pollUri);
 		
 		// Make single change
-		given().body("<bool val='true' />").put("/switchWatch1/value");
+		given().body("<bool val='true' />").put("/testDevicesWatch/switchWatch1/value");
 		
 		// Report all 
 		expect().
 		body(hasXPath("/obj[@is='obix:WatchOut']")).
-		body(hasXPath("/obj/list/bool[@href='/switchWatch1/value']")).
-		body(hasXPath("/obj/list/bool[@href='/switchWatch2/value']")).
+		body(hasXPath("/obj/list/bool[@href='/testDevicesWatch/switchWatch1/value']")).
+		body(hasXPath("/obj/list/bool[@href='/testDevicesWatch/switchWatch2/value']")).
 		when().post(pollUri);
 		
 		expect().
@@ -201,9 +201,9 @@ public class WatchServiceTest extends AbstractGatewayTest {
 		given().
 		param("data", "<obj is='obix:WatchIn'>"+
 			 "	<list name='hrefs'>" +
-			 "		<uri val='/switchWatch1/value' />" +
-			 "		<uri val='/brightnessSensor1' />" +
-			 "		<uri val='/switchWatch2/value' />" +
+			 "		<uri val='/testDevicesWatch/switchWatch1/value' />" +
+			 "		<uri val='/testDevices/brightnessSensor1' />" +
+			 "		<uri val='/testDevicesWatch/switchWatch2/value' />" +
 			 "	</list>" +
 			 "</obj>").
 		post(watchHref + "/add");
@@ -211,7 +211,7 @@ public class WatchServiceTest extends AbstractGatewayTest {
 		given().
 		param("data", "<obj is='obix:WatchIn'>"+
 			 "	<list name='hrefs'>" +
-			 "		<uri val='/switchWatch1/value' />" +
+			 "		<uri val='/testDevicesWatch/switchWatch1/value' />" +
 			 "	</list>" +
 			 "</obj>").
 		expect().
@@ -219,9 +219,9 @@ public class WatchServiceTest extends AbstractGatewayTest {
 		post(watchHref + "/remove");
 		
 		expect().
-		body(not(hasXPath("//bool[@href='/switchWatch1/value']"))).
-		body(hasXPath("//bool[@href='/switchWatch2/value']")).
-		body(hasXPath("//obj[@href='/brightnessSensor1']")).
+		body(not(hasXPath("//bool[@href='/testDevicesWatch/switchWatch1/value']"))).
+		body(hasXPath("//bool[@href='/testDevicesWatch/switchWatch2/value']")).
+		body(hasXPath("//obj[@href='/testDevices/brightnessSensor1']")).
 		post(watchHref + "/pollRefresh");
 	}
 	
@@ -245,19 +245,19 @@ public class WatchServiceTest extends AbstractGatewayTest {
 		String watchHref = makeWatch();
 		
 		// initial data for feed
-		given().body("<int val='1' />").put("/fanSpeedWatchAdd/fanSpeedSetpoint");
-		given().body("<int val='2' />").put("/fanSpeedWatchAdd/fanSpeedSetpoint");
-		given().body("<int val='3' />").put("/fanSpeedWatchAdd/fanSpeedSetpoint");
+		given().body("<int val='1' />").put("/testDevicesWatch/fanSpeedWatchAdd/fanSpeedSetpoint");
+		given().body("<int val='2' />").put("/testDevicesWatch/fanSpeedWatchAdd/fanSpeedSetpoint");
+		given().body("<int val='3' />").put("/testDevicesWatch/fanSpeedWatchAdd/fanSpeedSetpoint");
 		
 		given().
 		param("data", "<obj is='obix:WatchIn'>"+
 			 "	<list name='hrefs'>" +
-			 "		<uri val='/fanSpeedWatchAdd/fanSpeedSetpoint/history/feed' />" +
+			 "		<uri val='/testDevicesWatch/fanSpeedWatchAdd/fanSpeedSetpoint/history/feed' />" +
 			 "	</list>" +
 			 "</obj>").
 		expect().
 		body(hasXPath("/obj[@is='obix:WatchOut']")).
-		body(hasXPath("/obj/list/feed[@href='/fanSpeedWatchAdd/fanSpeedSetpoint/history/feed' and @of='obix:HistoryRecord']")).
+		body(hasXPath("/obj/list/feed[@href='/testDevicesWatch/fanSpeedWatchAdd/fanSpeedSetpoint/history/feed' and @of='obix:HistoryRecord']")).
 		body(hasXPath("/obj/list/feed[count(obj) = 3]")).
 		body(hasXPath("/obj/list/feed/obj[1]/int[@val='3']")).
 		body(hasXPath("/obj/list/feed/obj[2]/int[@val='2']")).
@@ -272,25 +272,25 @@ public class WatchServiceTest extends AbstractGatewayTest {
 		String pollChangesUri = watchHref + "/pollChanges";
 		
 		// initial data for feed
-		given().body("<int val='1' />").put("/fanSpeedWatchPollRefresh/fanSpeedSetpoint");
-		given().body("<int val='2' />").put("/fanSpeedWatchPollRefresh/fanSpeedSetpoint");
-		given().body("<int val='3' />").put("/fanSpeedWatchPollRefresh/fanSpeedSetpoint");
+		given().body("<int val='1' />").put("/testDevicesWatch/fanSpeedWatchPollRefresh/fanSpeedSetpoint");
+		given().body("<int val='2' />").put("/testDevicesWatch/fanSpeedWatchPollRefresh/fanSpeedSetpoint");
+		given().body("<int val='3' />").put("/testDevicesWatch/fanSpeedWatchPollRefresh/fanSpeedSetpoint");
 		
 		given().
 		param("data", "<obj is='obix:WatchIn'>"+
 			 "	<list name='hrefs'>" +
-			 "		<uri val='/fanSpeedWatchPollRefresh/fanSpeedSetpoint/history/feed' />" +
+			 "		<uri val='/testDevicesWatch/fanSpeedWatchPollRefresh/fanSpeedSetpoint/history/feed' />" +
 			 "	</list>" +
 			 "</obj>").
 		expect().
 		body(hasXPath("/obj[@is='obix:WatchOut']")).
-		body(hasXPath("/obj/list/feed[@href='/fanSpeedWatchPollRefresh/fanSpeedSetpoint/history/feed' and @of='obix:HistoryRecord']")).
+		body(hasXPath("/obj/list/feed[@href='/testDevicesWatch/fanSpeedWatchPollRefresh/fanSpeedSetpoint/history/feed' and @of='obix:HistoryRecord']")).
 		post(watchHref + "/add");
 		
 		// additional data for feed
-		given().body("<int val='4' />").put("/fanSpeedWatchPollRefresh/fanSpeedSetpoint");
-		given().body("<int val='5' />").put("/fanSpeedWatchPollRefresh/fanSpeedSetpoint");
-		given().body("<int val='6' />").put("/fanSpeedWatchPollRefresh/fanSpeedSetpoint");
+		given().body("<int val='4' />").put("/testDevicesWatch/fanSpeedWatchPollRefresh/fanSpeedSetpoint");
+		given().body("<int val='5' />").put("/testDevicesWatch/fanSpeedWatchPollRefresh/fanSpeedSetpoint");
+		given().body("<int val='6' />").put("/testDevicesWatch/fanSpeedWatchPollRefresh/fanSpeedSetpoint");
 		
 		
 		// pollRefresh returns all events
@@ -322,19 +322,19 @@ public class WatchServiceTest extends AbstractGatewayTest {
 		String pollChangesUri = watchHref + "/pollChanges";
 		
 		// initial data for feed
-		given().body("<int val='1' />").put("/fanSpeedWatchPollChanges/fanSpeedSetpoint");
-		given().body("<int val='2' />").put("/fanSpeedWatchPollChanges/fanSpeedSetpoint");
-		given().body("<int val='3' />").put("/fanSpeedWatchPollChanges/fanSpeedSetpoint");
+		given().body("<int val='1' />").put("/testDevicesWatch/fanSpeedWatchPollChanges/fanSpeedSetpoint");
+		given().body("<int val='2' />").put("/testDevicesWatch/fanSpeedWatchPollChanges/fanSpeedSetpoint");
+		given().body("<int val='3' />").put("/testDevicesWatch/fanSpeedWatchPollChanges/fanSpeedSetpoint");
 		
 		given().
 		param("data", "<obj is='obix:WatchIn'>"+
 			 "	<list name='hrefs'>" +
-			 "		<uri val='/fanSpeedWatchPollChanges/fanSpeedSetpoint/history/feed' />" +
+			 "		<uri val='/testDevicesWatch/fanSpeedWatchPollChanges/fanSpeedSetpoint/history/feed' />" +
 			 "	</list>" +
 			 "</obj>").
 		expect().
 		body(hasXPath("/obj[@is='obix:WatchOut']")).
-		body(hasXPath("/obj/list/feed[@href='/fanSpeedWatchPollChanges/fanSpeedSetpoint/history/feed' and @of='obix:HistoryRecord']")).
+		body(hasXPath("/obj/list/feed[@href='/testDevicesWatch/fanSpeedWatchPollChanges/fanSpeedSetpoint/history/feed' and @of='obix:HistoryRecord']")).
 		body(hasXPath("/obj/list/feed[count(obj) = 3]")).
 		body(hasXPath("/obj/list/feed/obj[1]/int[@val='3']")).
 		body(hasXPath("/obj/list/feed/obj[2]/int[@val='2']")).
@@ -347,9 +347,9 @@ public class WatchServiceTest extends AbstractGatewayTest {
 		post(pollChangesUri);
 		
 		// additional data for feed
-		given().body("<int val='4' />").put("/fanSpeedWatchPollChanges/fanSpeedSetpoint");
-		given().body("<int val='5' />").put("/fanSpeedWatchPollChanges/fanSpeedSetpoint");
-		given().body("<int val='6' />").put("/fanSpeedWatchPollChanges/fanSpeedSetpoint");
+		given().body("<int val='4' />").put("/testDevicesWatch/fanSpeedWatchPollChanges/fanSpeedSetpoint");
+		given().body("<int val='5' />").put("/testDevicesWatch/fanSpeedWatchPollChanges/fanSpeedSetpoint");
+		given().body("<int val='6' />").put("/testDevicesWatch/fanSpeedWatchPollChanges/fanSpeedSetpoint");
 		
 		expect().
 		body(hasXPath("/obj/list/feed[count(obj) = 3]")).
@@ -373,18 +373,18 @@ public class WatchServiceTest extends AbstractGatewayTest {
 		given().
 		param("data", "<obj is='obix:WatchIn'>"+
 			 "	<list name='hrefs'>" +
-			 "		<uri val='/fanSpeedWatchExtent'/>" + 
+			 "		<uri val='/testDevicesWatch/fanSpeedWatchExtent'/>" + 
 			 "	</list>" +
 			 "</obj>").
 		expect().
 		body(hasXPath("/obj[@is='obix:WatchOut']")).
-		body(hasXPath("/obj/list/obj[@href='/fanSpeedWatchExtent']")).
+		body(hasXPath("/obj/list/obj[@href='/testDevicesWatch/fanSpeedWatchExtent']")).
 		post(addUri);
 		
-		given().body("<int val='42' />").put("/fanSpeedWatchExtent/fanSpeedSetpoint");
+		given().body("<int val='42' />").put("/testDevicesWatch/fanSpeedWatchExtent/fanSpeedSetpoint");
 		
 		expect().
-		body(hasXPath("/obj/list/obj[@href='/fanSpeedWatchExtent']")).
+		body(hasXPath("/obj/list/obj[@href='/testDevicesWatch/fanSpeedWatchExtent']")).
 		body(hasXPath("/obj/list/obj/int[@val=42]")).
 		post(pollChangesUri);
 	}
@@ -399,16 +399,16 @@ public class WatchServiceTest extends AbstractGatewayTest {
 		String pollChangesUri = watchHref + "/pollChanges";
 		
 		// initial data for feed
-		given().body("<int val='1' />").put("/fanSpeedWatchFilter/fanSpeedSetpoint");
-		given().body("<int val='2' />").put("/fanSpeedWatchFilter/fanSpeedSetpoint");
-		given().body("<int val='3' />").put("/fanSpeedWatchFilter/fanSpeedSetpoint");
-		given().body("<int val='4' />").put("/fanSpeedWatchFilter/fanSpeedSetpoint");
-		given().body("<int val='5' />").put("/fanSpeedWatchFilter/fanSpeedSetpoint");
+		given().body("<int val='1' />").put("/testDevicesWatch/fanSpeedWatchFilter/fanSpeedSetpoint");
+		given().body("<int val='2' />").put("/testDevicesWatch/fanSpeedWatchFilter/fanSpeedSetpoint");
+		given().body("<int val='3' />").put("/testDevicesWatch/fanSpeedWatchFilter/fanSpeedSetpoint");
+		given().body("<int val='4' />").put("/testDevicesWatch/fanSpeedWatchFilter/fanSpeedSetpoint");
+		given().body("<int val='5' />").put("/testDevicesWatch/fanSpeedWatchFilter/fanSpeedSetpoint");
 		
 		given().
 		param("data", "<obj is='obix:WatchIn'>"+
 			 "	<list name='hrefs'>" +
-			 "		<uri val='/fanSpeedWatchFilter/fanSpeedSetpoint/history/feed'>" +
+			 "		<uri val='/testDevicesWatch/fanSpeedWatchFilter/fanSpeedSetpoint/history/feed'>" +
 			 "			<obj is='obix:HistoryFilter'>" +
 			 "				<int name='limit' val='3' />" +
 			 "			</obj>" +
@@ -417,7 +417,7 @@ public class WatchServiceTest extends AbstractGatewayTest {
 			 "</obj>").
 		expect().
 		body(hasXPath("/obj[@is='obix:WatchOut']")).
-		body(hasXPath("/obj/list/feed[@href='/fanSpeedWatchFilter/fanSpeedSetpoint/history/feed' and @of='obix:HistoryRecord']")).
+		body(hasXPath("/obj/list/feed[@href='/testDevicesWatch/fanSpeedWatchFilter/fanSpeedSetpoint/history/feed' and @of='obix:HistoryRecord']")).
 		body(hasXPath("/obj/list/feed[count(obj) = 3]")).
 		body(hasXPath("/obj/list/feed/obj[1]/int[@val=5]")).
 		body(hasXPath("/obj/list/feed/obj[2]/int[@val=4]")).
@@ -437,10 +437,10 @@ public class WatchServiceTest extends AbstractGatewayTest {
 		post(pollRefreshUri);
 		
 		// additional data for feed
-		given().body("<int val='6' />").put("/fanSpeedWatchFilter/fanSpeedSetpoint");
-		given().body("<int val='7' />").put("/fanSpeedWatchFilter/fanSpeedSetpoint");
-		given().body("<int val='8' />").put("/fanSpeedWatchFilter/fanSpeedSetpoint");
-		given().body("<int val='9' />").put("/fanSpeedWatchFilter/fanSpeedSetpoint");
+		given().body("<int val='6' />").put("/testDevicesWatch/fanSpeedWatchFilter/fanSpeedSetpoint");
+		given().body("<int val='7' />").put("/testDevicesWatch/fanSpeedWatchFilter/fanSpeedSetpoint");
+		given().body("<int val='8' />").put("/testDevicesWatch/fanSpeedWatchFilter/fanSpeedSetpoint");
+		given().body("<int val='9' />").put("/testDevicesWatch/fanSpeedWatchFilter/fanSpeedSetpoint");
 		
 		expect().
 		body(hasXPath("/obj/list/feed[count(obj) = 3]")).
@@ -476,7 +476,7 @@ public class WatchServiceTest extends AbstractGatewayTest {
 		given().
 		param("data", "<obj is='obix:WatchIn'>"+
 			 "	<list name='hrefs'>" +
-			 "		<uri val='/brightnessHistoryFeedFuture/value/history/feed' />" +
+			 "		<uri val='/testDevicesHistory/brightnessHistoryFeedFuture/value/history/feed' />" +
 			 "	</list>" +
 			 "</obj>").
 		expect().
@@ -485,9 +485,9 @@ public class WatchServiceTest extends AbstractGatewayTest {
 		
 		
 		given().param("data", String.format(appendEvent, futureDate, 5)).
-		post("/brightnessHistoryFeedFuture/value/history/append");
+		post("/testDevicesHistory/brightnessHistoryFeedFuture/value/history/append");
 		
-		given().body("<int val='1' />").put("/brightnessHistoryFeedFuture/value");
+		given().body("<int val='1' />").put("/testDevicesHistory/brightnessHistoryFeedFuture/value");
 		
 		expect().
 		body(hasXPath("/obj/list/feed")).
@@ -495,20 +495,19 @@ public class WatchServiceTest extends AbstractGatewayTest {
 		body(hasXPath("/obj/list/feed/obj[2]/int[@val=1]")).
 		post(pollChangesUri);
 		
-		given().body("<int val='2' />").put("/brightnessHistoryFeedFuture/value");
+		given().body("<int val='2' />").put("/testDevicesHistory/brightnessHistoryFeedFuture/value");
 		
 		expect().
 		body(hasXPath("/obj/list/feed")).
 		body(hasXPath("/obj/list/feed/obj[1]/int[@val=2]")).
 		post(pollChangesUri);
 		
-		
 		calendar.add(Calendar.MINUTE, -20);
 		futureDate = DatatypeConverter.printDateTime(calendar);
 		
-		given().body("<int val='3' />").put("/brightnessHistoryFeedFuture/value");
+		given().body("<int val='3' />").put("/testDevicesHistory/brightnessHistoryFeedFuture/value");
 		given().param("data", String.format(appendEvent, futureDate, 4)).
-			post("/brightnessHistoryFeedFuture/value/history/append");
+			post("/testDevicesHistory/brightnessHistoryFeedFuture/value/history/append");
 		
 		expect().
 		body(hasXPath("/obj/list/feed")).

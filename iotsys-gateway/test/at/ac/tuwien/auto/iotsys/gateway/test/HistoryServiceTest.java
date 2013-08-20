@@ -28,7 +28,7 @@ public class HistoryServiceTest extends AbstractGatewayTest {
 		body(hasXPath("/obj/feed[@name='feed' and @in='obix:HistoryFilter' and @of='obix:HistoryRecord']")).
 		body(hasXPath("/obj/op[@name='rollup' and @in='obix:HistoryRollupIn' and @out='obix:HistoryRollupOut']")).
 		body(hasXPath("/obj/op[@name='append' and @in='obix:HistoryAppendIn' and @out='obix:HistoryAppendOut']")).
-		when().get("/brightnessHistoryQuery/value/history");
+		when().get("/testDevicesHistory/brightnessHistoryQuery/value/history");
 	}
 		
 	@Test
@@ -45,12 +45,12 @@ public class HistoryServiceTest extends AbstractGatewayTest {
 		body(hasXPath("/obj/abstime[@name='start' and @null='true']")).
 		body(hasXPath("/obj/abstime[@name='end' and @null='true']")).
 		body(hasXPath("/obj/list[@of='obix:HistoryRecord']")).
-		post("/brightnessHistoryQuery/value/history/query");
+		post("/testDevicesHistory/brightnessHistoryQuery/value/history/query");
 		
 		// some changes
-		given().body("<int val='1' />").put("/brightnessHistoryQuery/value");
-		given().body("<int val='2' />").put("/brightnessHistoryQuery/value");
-		given().body("<int val='3' />").put("/brightnessHistoryQuery/value");
+		given().body("<int val='1' />").put("/testDevicesHistory/brightnessHistoryQuery/value");
+		given().body("<int val='2' />").put("/testDevicesHistory/brightnessHistoryQuery/value");
+		given().body("<int val='3' />").put("/testDevicesHistory/brightnessHistoryQuery/value");
 		
 		// check history
 		given().contentType(ContentType.XML).
@@ -67,7 +67,7 @@ public class HistoryServiceTest extends AbstractGatewayTest {
 		body(hasXPath("/obj/list[count(obj) = 2]")).
 		body(hasXPath("/obj/list/obj[1]/int[@val=1]")).
 		body(hasXPath("/obj/list/obj[2]/int[@val=2]")).
-		post("/brightnessHistoryQuery/value/history/query");
+		post("/testDevicesHistory/brightnessHistoryQuery/value/history/query");
 	}
 	
 	
@@ -91,8 +91,8 @@ public class HistoryServiceTest extends AbstractGatewayTest {
 			expect().
 			body(hasXPath("/obj[@is='obix:HistoryAppendOut']")).
 			body(hasXPath("/obj/int[@name='numAdded' and @val='2']")).
-			body(hasXPath("/obj/int[@name='newCount' and @val='2']")).
-			post("/brightnessHistory2/value/history/append").asString();
+			body(hasXPath("/obj/int[@name='newCount' and @val='2']")).	
+			post("/testDevicesHistory/brightnessHistory2/value/history/append").asString();
 		
 		long start = DatatypeConverter.parseDateTime(XmlPath.from(response).getString("obj.abstime[0].@val")).getTimeInMillis();
 		long   end = DatatypeConverter.parseDateTime(XmlPath.from(response).getString("obj.abstime[1].@val")).getTimeInMillis();
@@ -115,7 +115,7 @@ public class HistoryServiceTest extends AbstractGatewayTest {
 			body(hasXPath("/obj[@is='obix:HistoryAppendOut']")).
 			body(hasXPath("/obj/int[@name='numAdded' and @val='1']")).
 			body(hasXPath("/obj/int[@name='newCount' and @val='3']")).
-			post("/brightnessHistory2/value/history/append").asString();
+			post("/testDevicesHistory/brightnessHistory2/value/history/append").asString();
 		
 		
 		end = DatatypeConverter.parseDateTime(XmlPath.from(response).getString("obj.abstime[0].@val")).getTimeInMillis();
@@ -144,7 +144,7 @@ public class HistoryServiceTest extends AbstractGatewayTest {
 		body(hasXPath("/obj[@is='obix:HistoryAppendOut']")).
 		body(hasXPath("/obj/int[@name='numAdded' and @val='2']")).
 		body(hasXPath("/obj/int[@name='newCount' and @val='2']")).
-		post("/brightnessHistoryAppendOutOfOrder/value/history/append").asString();
+		post("/testDevicesHistory/brightnessHistoryAppendOutOfOrder/value/history/append").asString();
 		
 		long start = DatatypeConverter.parseDateTime(XmlPath.from(response).getString("obj.abstime[0].@val")).getTimeInMillis();
 		long   end = DatatypeConverter.parseDateTime(XmlPath.from(response).getString("obj.abstime[1].@val")).getTimeInMillis();
@@ -165,7 +165,7 @@ public class HistoryServiceTest extends AbstractGatewayTest {
 			"</obj>").
 		expect().
 		body(not(hasXPath("/err"))).
-		post("/brightnessHistory3/value/history/append");
+		post("/testDevicesHistory/brightnessHistory3/value/history/append");
 		
 		given().param("data", "<obj is='obix:HistoryAppendIn'>" +
 			"	<list name='data' of='obix:HistoryRecord'>" +
@@ -177,7 +177,7 @@ public class HistoryServiceTest extends AbstractGatewayTest {
 			"</obj>").
 		expect().
 		body(hasXPath("/err")).
-		post("/brightnessHistory3/value/history/append");
+		post("/testDevicesHistory/brightnessHistory3/value/history/append");
 	}
 	
 	@Test
@@ -191,7 +191,7 @@ public class HistoryServiceTest extends AbstractGatewayTest {
 		body(hasXPath("/obj/int[@name='newCount' and @val='0']")).
 		body(hasXPath("/obj/abstime[@name='newStart' and @null='true']")).
 		body(hasXPath("/obj/abstime[@name='newEnd' and @null='true']")).
-		post("/brightnessHistoryAppendNothing/value/history/append");
+		post("/testDevicesHistory/brightnessHistoryAppendNothing/value/history/append");
 		
 		
 		given().param("data", "<obj is='obix:HistoryAppendIn'>" +
@@ -204,7 +204,7 @@ public class HistoryServiceTest extends AbstractGatewayTest {
 			"</obj>").
 		expect().
 		body(not(hasXPath("/err"))).
-		post("/brightnessHistoryAppendNothing/value/history/append");
+		post("/testDevicesHistory/brightnessHistoryAppendNothing/value/history/append");
 		
 		given().param("data", "<obj is='obix:HistoryAppendIn'>" +
 			"	<list name='data' of='obix:HistoryRecord' />" +
@@ -215,7 +215,7 @@ public class HistoryServiceTest extends AbstractGatewayTest {
 		body(hasXPath("/obj/int[@name='newCount' and @val='1']")).
 		body(hasXPath("/obj/abstime[@name='newStart' and not(@null)]")).
 		body(hasXPath("/obj/abstime[@name='newEnd' and not(@null)]")).
-		post("/brightnessHistoryAppendNothing/value/history/append");
+		post("/testDevicesHistory/brightnessHistoryAppendNothing/value/history/append");
 	}
 	
 	@Test
@@ -238,12 +238,12 @@ public class HistoryServiceTest extends AbstractGatewayTest {
 		body(hasXPath("/obj/int[@name='newCount' and @val='1']")).
 		body(hasXPath("/obj/abstime[@name='newStart' and not(@null)]")).
 		body(hasXPath("/obj/abstime[@name='newEnd' and not(@null)]")).
-		post("/brightnessHistoryAppendFuture/value/history/append");
+		post("/testDevicesHistory/brightnessHistoryAppendFuture/value/history/append");
 		
 		given().body("<int val='1' />").
 		expect().
 		body(not(hasXPath("/err"))).
-		put("/brightnessHistoryAppendFuture/value");
+		put("/testDevicesHistory/brightnessHistoryAppendFuture/value");
 	}
 	
 	
@@ -254,7 +254,7 @@ public class HistoryServiceTest extends AbstractGatewayTest {
 		body(hasXPath("/obj/int[@name='count' and @val=0]")).
 		body(hasXPath("/obj/abstime[@name='start' and @null='true']")).
 		body(hasXPath("/obj/abstime[@name='end' and @null='true']")).
-		when().get("/brightnessHistoryStartEnd/value/history");
+		when().get("/testDevicesHistory/brightnessHistoryStartEnd/value/history");
 		
 		
 		given().param("data", "<obj is='obix:HistoryAppendIn'>" +
@@ -267,7 +267,7 @@ public class HistoryServiceTest extends AbstractGatewayTest {
 			"</obj>").
 		expect().
 		body(not(hasXPath("/err"))).
-		post("/brightnessHistoryStartEnd/value/history/append");
+		post("/testDevicesHistory/brightnessHistoryStartEnd/value/history/append");
 		
 		
 		String response = expect().
@@ -275,7 +275,7 @@ public class HistoryServiceTest extends AbstractGatewayTest {
 			body(hasXPath("/obj/int[@name='count' and @val=1]")).
 			body(not(hasXPath("/obj/abstime[@name='start'][@null]"))).
 			body(not(hasXPath("/obj/abstime[@name='end'][@null]"))).
-			when().get("/brightnessHistoryStartEnd/value/history").asString();
+			when().get("/testDevicesHistory/brightnessHistoryStartEnd/value/history").asString();
 		
 		long start = DatatypeConverter.parseDateTime(XmlPath.from(response).getString("obj.abstime[0].@val")).getTimeInMillis();
 		long end   = DatatypeConverter.parseDateTime(XmlPath.from(response).getString("obj.abstime[1].@val")).getTimeInMillis();
@@ -293,14 +293,14 @@ public class HistoryServiceTest extends AbstractGatewayTest {
 			"</obj>").
 		expect().
 		body(not(hasXPath("/err"))).
-		post("/brightnessHistoryStartEnd/value/history/append");
+		post("/testDevicesHistory/brightnessHistoryStartEnd/value/history/append");
 		
 		response = expect().
 			body(hasXPath("/obj[@is='obix:History']")).
 			body(hasXPath("/obj/int[@name='count' and @val=2]")).
 			body(not(hasXPath("/obj/abstime[@name='start' and @null]"))).
 			body(not(hasXPath("/obj/abstime[@name='end' and @null]"))).
-			when().get("/brightnessHistoryStartEnd/value/history").asString();
+			when().get("/testDevicesHistory/brightnessHistoryStartEnd/value/history").asString();
 		
 		start = DatatypeConverter.parseDateTime(XmlPath.from(response).getString("obj.abstime[0].@val")).getTimeInMillis();
 		end   = DatatypeConverter.parseDateTime(XmlPath.from(response).getString("obj.abstime[1].@val")).getTimeInMillis();
@@ -311,8 +311,8 @@ public class HistoryServiceTest extends AbstractGatewayTest {
 
 	@Test
 	public void testHistoryRollup() {
-		given().body("<int val='50' />").put("/brightnessHistoryRollup/value");
-		given().body("<int val='100' />").put("/brightnessHistoryRollup/value");
+		given().body("<int val='50' />").put("/testDevicesHistory/brightnessHistoryRollup/value");
+		given().body("<int val='100' />").put("/testDevicesHistory/brightnessHistoryRollup/value");
 		
 		given().
 		param("data", "<obj is='obix:HistoryRollupIn'> " +
@@ -334,7 +334,7 @@ public class HistoryServiceTest extends AbstractGatewayTest {
 		body(hasXPath("/obj/list/obj/real[@name='max' and @val='100.0']")).
 		body(hasXPath("/obj/list/obj/real[@name='avg' and @val='75.0']")).
 		body(hasXPath("/obj/list/obj/real[@name='sum' and @val='150.0']")).
-		post("/brightnessHistoryRollup/value/history/rollup");
+		post("/testDevicesHistory/brightnessHistoryRollup/value/history/rollup");
 	}
 	
 	
@@ -349,7 +349,7 @@ public class HistoryServiceTest extends AbstractGatewayTest {
 				"</obj>").
 		expect().
 		body(hasXPath("/err")).
-		post("/switch1/value/history/rollup");
+		post("/testDevicesHistory/switch1/value/history/rollup");
 	}
 	
 	@Test
@@ -378,7 +378,7 @@ public class HistoryServiceTest extends AbstractGatewayTest {
 				"</obj>").
 		expect().
 		body(not(hasXPath("/err"))).
-		post("/tempHistory/value/history/append");
+		post("/testDevicesHistory/tempHistory/value/history/append");
 		
 		String response = 
 			given().
@@ -409,7 +409,7 @@ public class HistoryServiceTest extends AbstractGatewayTest {
 			body(hasXPath("/obj/list/obj[2]/real[@name='max' and @val=91]")).
 			body(hasXPath("/obj/list/obj[2]/real[@name='avg' and @val=84]")).
 			body(hasXPath("/obj/list/obj[2]/real[@name='sum' and @val=336]")).
-			post("/tempHistory/value/history/rollup").asString();
+			post("/testDevicesHistory/tempHistory/value/history/rollup").asString();
 		
 		// Check timestamps
 		long timestamp;
@@ -438,7 +438,7 @@ public class HistoryServiceTest extends AbstractGatewayTest {
 		String history = expect().
 		body(hasXPath("/obj[@is='obix:History']")).
 		body(hasXPath("/obj/str[@name='tz']")).
-		get("/HistoryTimezones/value/history").asString();
+		get("/testDevicesHistory/HistoryTimezones/value/history").asString();
 		
 		String timezone = XmlPath.from(history).getString("obj.str.@val");
 		
@@ -460,7 +460,7 @@ public class HistoryServiceTest extends AbstractGatewayTest {
 			body(hasXPath("/obj[@is='obix:HistoryAppendOut']")).
 			body(hasXPath("/obj/abstime[@name='newStart' and @tz='" + timezone + "']")).
 			body(hasXPath("/obj/abstime[@name='newEnd' and @tz='" + timezone + "']")).
-			post("/HistoryTimezones/value/history/append").asString();
+			post("/testDevicesHistory/HistoryTimezones/value/history/append").asString();
 	
 		long start = DatatypeConverter.parseDateTime(XmlPath.from(response).getString("obj.abstime[0].@val")).getTimeInMillis();
 		long   end = DatatypeConverter.parseDateTime(XmlPath.from(response).getString("obj.abstime[1].@val")).getTimeInMillis();
@@ -478,7 +478,7 @@ public class HistoryServiceTest extends AbstractGatewayTest {
 		body(hasXPath("/obj[@is='obix:HistoryQueryOut']")).
 		body(hasXPath("/obj/abstime[@name='start' and @tz='" + timezone + "']")).
 		body(hasXPath("/obj/abstime[@name='end' and @tz='" + timezone + "']")).
-		post("/HistoryTimezones/value/history/query");
+		post("/testDevicesHistory/HistoryTimezones/value/history/query");
 		
 		
 		given().
@@ -492,7 +492,7 @@ public class HistoryServiceTest extends AbstractGatewayTest {
 		body(hasXPath("/obj[@is='obix:HistoryRollupOut']")).
 		body(hasXPath("/obj/abstime[@name='start' and @tz='" + timezone + "']")).
 		body(hasXPath("/obj/abstime[@name='end' and @tz='" + timezone + "']")).
-		post("/HistoryTimezones/value/history/rollup");
+		post("/testDevicesHistory/HistoryTimezones/value/history/rollup");
 	}
 	
 	

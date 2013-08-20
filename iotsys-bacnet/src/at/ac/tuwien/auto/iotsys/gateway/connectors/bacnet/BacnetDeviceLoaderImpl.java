@@ -23,6 +23,7 @@
 package at.ac.tuwien.auto.iotsys.gateway.connectors.bacnet;
 
 import java.lang.reflect.Constructor;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -210,7 +211,7 @@ public class BacnetDeviceLoaderImpl implements DeviceLoader {
 																		// specified
 																		// KNX
 																		// device
-											bacnetDevice.setHref(new Uri(href));
+											bacnetDevice.setHref(new Uri(URLEncoder.encode(connectorName, "UTF-8") + "/" + href));
 											if(name != null && name.length() > 0){
 												bacnetDevice.setName(name);
 											}

@@ -41,7 +41,7 @@ public class GatewayTest extends AbstractGatewayTest {
 	public void testQuerySensor() {
 		expect().body(hasXPath("//real[@name='roomIllumination']")).
 		expect().body(hasXPath("//real[@href='roomIllumination']")).
-		when().get("/brightnessSensor1");
+		when().get("/testDevices/brightnessSensor1");
 	}
 	
 	@Test
@@ -50,18 +50,18 @@ public class GatewayTest extends AbstractGatewayTest {
 		expect().body(hasXPath("//real[@name='roomIllumination']")).
 		expect().body(hasXPath("//real[@href='roomIllumination']")).
 		expect().body(hasXPath("//real[@val!='42.0']")).
-		when().put("/brightnessSensor1");
+		when().put("/testDevices/brightnessSensor1");
 	}
 	
 	@Test
 	public void testModifyValue() {
 		given().body("<bool val='false' />").
 		expect().body(hasXPath("/bool[@name='value' and @val='false']")).
-		when().put("/switch1/value");
+		when().put("/testDevices/switch1/value");
 		
 		given().body("<bool val='true' />").
 		expect().body(hasXPath("/bool[@name='value' and @val='true']")).
-		when().put("/switch1/value");
+		when().put("/testDevices/switch1/value");
 	}
 	
 	@Test
@@ -69,17 +69,17 @@ public class GatewayTest extends AbstractGatewayTest {
 		given().body(  "<obj href='/virtualLight1' is='iot:LightSwitchActuator'>"
 					 + "	<bool name='value' href='value' val='true'/>"
 					 + "</obj>").
-		expect().body(hasXPath("/obj[@href='switch2']")).
+		expect().body(hasXPath("/obj[@href='testDevices/switch2']")).
 		expect().body(hasXPath("/obj/bool[@name='value' and @val='true']")).
-		when().put("/switch2");
+		when().put("/testDevices/switch2");
 		
 		
 		given().body(  "<obj href='/virtualLight1' is='iot:LightSwitchActuator'>"
 				 + "	<bool name='value' href='value' val='false'/>"
 				 + "</obj>").
-		expect().body(hasXPath("/obj[@href='switch2']")).
+		expect().body(hasXPath("/obj[@href='testDevices/switch2']")).
 		expect().body(hasXPath("/obj/bool[@name='value' and @val='false']")).
-		when().put("/switch2");
+		when().put("/testDevices/switch2");
 	}
 	
 	
@@ -89,23 +89,23 @@ public class GatewayTest extends AbstractGatewayTest {
 		expect().
 		body("tag", equalTo("obj")).
 		body("is", equalTo("iot:LightSwitchActuator")).
-		body("href", equalTo("switch1")).
+		body("href", equalTo("testDevices/switch1")).
 		body("nodes[0].tag", equalTo("bool")).
 		body("nodes[0].name", equalTo("value")).
 		body("nodes[0].href", equalTo("value")).
 		body("nodes[1].tag", equalTo("ref")).
-		get("/switch1");
+		get("/testDevices/switch1");
 	}
 	
 	@Test
 	public void testAcceptEXI() throws Exception {
 		byte[] response = given().header("Accept", "application/exi").
-		get("/switch1").asByteArray();
+		get("/testDevices/switch1").asByteArray();
 		
 		ExiUtil exiUtil = ExiUtil.getInstance();
 		String xml = exiUtil.decodeEXI(response);
 		
-		assertEquals("switch1", from(xml).get("obj.@href"));
+		assertEquals("testDevices/switch1", from(xml).get("obj.@href"));
 		assertEquals("iot:LightSwitchActuator", from(xml).get("obj.@is"));
 		assertEquals("value", from(xml).get("obj.bool.@name"));
 		assertEquals("value", from(xml).get("obj.bool.@href"));

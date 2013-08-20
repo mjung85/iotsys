@@ -22,6 +22,7 @@ package at.ac.tuwien.auto.iotsys.gateway.connectors.knx;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -159,7 +160,7 @@ public class KNXDeviceLoaderImpl implements DeviceLoader {
 														.newInstance(args);
 											
 												knxDevice
-														.setHref(new Uri(href));
+														.setHref(new Uri(URLEncoder.encode(connectorName, "UTF-8") + "/" + href));
 												
 												if(name != null && name.length() > 0){
 													knxDevice.setName(name);
