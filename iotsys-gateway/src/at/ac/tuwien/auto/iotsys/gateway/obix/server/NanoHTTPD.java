@@ -200,19 +200,21 @@ public class NanoHTTPD {
 			Response r = new Response(HTTP_OK, MIME_XML,
 					soapHandler.getSchemaFileContent());
 			return r;
-			
-		} else if (path.endsWith(".well-known/core")) {
+		}
+		
+		if (obixServer.containsIPv6(ipv6Address))
+			return null;
+		
+		if (path.endsWith(".well-known/core")) {
 			Response r = new Response(HTTP_OK, MIME_PLAINTEXT,
 					obixServer.getCoRELinks());
-			return r;
 			
+			return r;
 		} else if (path.equalsIgnoreCase("/") || path.isEmpty()
 				|| path.endsWith(".js") || path.endsWith(".css")) {
-			
-			if (obixServer.containsIPv6(ipv6Address)) return null;
-			
 			if (path.isEmpty())
 				path = "/index.html";
+			
 			return serveFile(path, header, new File("res/obelix"), false);
 		}
 		
