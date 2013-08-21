@@ -405,14 +405,14 @@
 
     <connector>
       <name>KNX HESSO</name>
-      <enabled>false</enabled>
+      <enabled>true</enabled>
       <router>
         <ip>153.109.130.116</ip>
         <port>3671</port>
       </router>
       <localIP>auto</localIP>
 
-      <device>
+      <!--device>
         <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.knx.TemperatureSensorImplKnx
         </type>
         <address>5/1/0</address>
@@ -421,7 +421,7 @@
         <historyEnabled>true</historyEnabled>
         <historyCount>200</historyCount>
         <groupCommEnabled>true</groupCommEnabled>
-      </device>
+      </device-->
 
 			<device>
         <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.knx.TemperatureSensorImplKnx
