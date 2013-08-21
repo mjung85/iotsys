@@ -6,6 +6,7 @@ allprojects {
 
 	group = 'at.ac.tuwien.auto.iotsys'
 	version = '0.1'
+	sourceCompatibility = 1.6
 	
 	repositories(){
 		mavenCentral()
@@ -58,7 +59,6 @@ subprojects{
 	}
 }
 			
-sourceCompatibility = 1.7
 description = 'IoTSyS - Integration middleware for the Internet of Things'
 
 task deploy << {
