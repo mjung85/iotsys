@@ -2,8 +2,6 @@ package at.ac.tuwien.auto.iotsys.gateway.obix.objects;
 
 import java.util.TimeZone;
 
-import at.ac.tuwien.auto.iotsys.commons.OperationHandler;
-
 import obix.Abstime;
 import obix.AlarmSource;
 import obix.Contract;
@@ -21,6 +19,7 @@ import obix.contracts.Point;
 import obix.contracts.PointAlarm;
 import obix.contracts.StatefulAlarm;
 import obix.contracts.WritablePoint;
+import at.ac.tuwien.auto.iotsys.commons.OperationHandler;
 
 public class AlarmImpl extends Obj implements Alarm, AckAlarm, StatefulAlarm, PointAlarm {
 	private AlarmSource source;
@@ -69,11 +68,20 @@ public class AlarmImpl extends Obj implements Alarm, AckAlarm, StatefulAlarm, Po
 			contract += " " + AckAlarm.ACK_ALARM_CONTRACT;
 		}
 		
-		Contract sourceContract = ((Obj)source).getIs();
-		if (source instanceof Point
-				|| sourceContract.contains(new Uri(Point.POINT_CONTRACT))
-				|| sourceContract.contains(new Uri(WritablePoint.WRITABLE_POINT_CONTRACT))) {
+		
+		this.pointAlarm = false;
+		if (source instanceof Point) {
 			pointAlarm = true;
+		}
+		
+		Contract sourceContract = ((Obj)source).getIs();
+		if (sourceContract != null) {
+			pointAlarm = 
+					   sourceContract.contains(new Uri(Point.POINT_CONTRACT))
+					|| sourceContract.contains(new Uri(WritablePoint.WRITABLE_POINT_CONTRACT));
+		}
+		
+		if (pointAlarm) {
 			add(alarmValue());
 			contract += " " + PointAlarm.POINT_ALARM_CONTRACT;
 		}
@@ -110,7 +118,8 @@ public class AlarmImpl extends Obj implements Alarm, AckAlarm, StatefulAlarm, Po
 		if (!isAcked()) return null;
 		
 		if (ackUser == null) {
-			ackUser = new Str("ackUser");
+			ackUser = new Str();
+			ackUser.setName("ackUser");
 			ackUser.setNull(true);
 		}
 		return ackUser;
