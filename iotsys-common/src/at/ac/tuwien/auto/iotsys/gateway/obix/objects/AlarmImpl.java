@@ -150,6 +150,8 @@ public class AlarmImpl extends Obj implements Alarm, AckAlarm, StatefulAlarm, Po
 		ackTimestamp().set(System.currentTimeMillis(), TimeZone.getDefault());
 		ackTimestamp().setNull(false);
 		
+		source.alarmAcknowledged(this);
+		
 		return new AckAlarmOutImpl(this);
 	}
 

@@ -5,11 +5,13 @@ package obix;
 
 import java.lang.reflect.Array;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 
+import obix.contracts.AckAlarm;
 import obix.contracts.Alarm;
 import obix.io.BinObix;
 import obix.io.ObixEncoder;
@@ -240,7 +242,7 @@ public class Obj implements IObj, Subject, AlarmSource, Cloneable {
 	 * Set uri of this object.
 	 */
 	public void setHref(Uri href) {		
-		this.href = href;				
+		this.href = href;
 	}
 
 	/**
@@ -274,7 +276,6 @@ public class Obj implements IObj, Subject, AlarmSource, Cloneable {
 		this.is = is;
 	}
 	
-	@Override
 	public Object clone() throws CloneNotSupportedException {
 		return super.clone();
 	}
@@ -473,7 +474,32 @@ public class Obj implements IObj, Subject, AlarmSource, Cloneable {
 	 * Get status for this object.
 	 */
 	public Status getStatus() {
-		return status;
+		if (isDisabled())
+			return Status.disabled;
+		
+		if (isFaulty())
+			return Status.fault;
+		
+		if (isDown())
+			return Status.down;
+		
+		if (inAlarmState()) {
+			ArrayList<Alarm> unackedActiveAlarms = new ArrayList<Alarm>(alarms);
+			unackedActiveAlarms.retainAll(unackedAlarms);
+			
+			if (!unackedActiveAlarms.isEmpty())
+				return Status.unackedAlarm;
+			else
+				return Status.alarm;
+		}
+		
+		if (!unackedAlarms.isEmpty())
+			return Status.unacked;
+		
+		if (isOverridden())
+			return Status.overridden;
+		
+		return Status.ok;
 	}
 
 	/**
@@ -483,7 +509,43 @@ public class Obj implements IObj, Subject, AlarmSource, Cloneable {
 	public void setStatus(Status status) {
 		if (status == null)
 			status = Status.ok;
-		this.status = status;
+		
+		setDisabled(status == Status.disabled);
+		setFaulty(status == Status.fault);
+		setDown(status == Status.down);
+		setOverridden(status == Status.overridden);
+	}
+
+	public boolean isDisabled() {
+		return isDisabled;
+	}
+
+	public void setDisabled(boolean isDisabled) {
+		this.isDisabled = isDisabled;
+	}
+
+	public boolean isFaulty() {
+		return isFaulty;
+	}
+
+	public void setFaulty(boolean isFaulty) {
+		this.isFaulty = isFaulty;
+	}
+
+	public boolean isDown() {
+		return isDown;
+	}
+
+	public void setDown(boolean isDown) {
+		this.isDown = isDown;
+	}
+
+	public boolean isOverridden() {
+		return isOverridden;
+	}
+
+	public void setOverridden(boolean isOverridden) {
+		this.isOverridden = isOverridden;
 	}
 
 	/**
@@ -869,13 +931,17 @@ public class Obj implements IObj, Subject, AlarmSource, Cloneable {
 	private Obj kidsHead, kidsTail;
 	private int kidsCount;
 	private Obj prev, next;
-	private Status status = Status.ok;
 	private String display;
 	private String displayName;
 	private Uri icon;
 	private boolean writable;
 	private boolean isNull;
 	private boolean isHidden;
+	
+	private boolean isDisabled   = false;
+	private boolean isFaulty     = false;
+	private boolean isDown       = false;
+	private boolean isOverridden = false;
 	
 	private String invokedHref= new String(); 
 	
@@ -980,23 +1046,30 @@ public class Obj implements IObj, Subject, AlarmSource, Cloneable {
 	
 	
 	private LinkedList<Alarm> alarms = new LinkedList<Alarm>();
+	private LinkedList<Alarm> unackedAlarms = new LinkedList<Alarm>();
 	
-	@Override
 	public void setOffNormal(Alarm alarm) {
 		alarms.add(alarm);
+		
+		if (alarm instanceof AckAlarm) {
+			Abstime ackTimestamp = ((AckAlarm)alarm).ackTimestamp();
+			if (ackTimestamp != null && ackTimestamp.isNull())
+				unackedAlarms.add(alarm);
+		}
 	}
 
-	@Override
 	public void setToNormal(Alarm alarm) {
 		alarms.remove(alarm);
 	}
 	
-	@Override
+	public void alarmAcknowledged(Alarm alarm) {
+		unackedAlarms.remove(alarm);
+	}
+	
 	public boolean inAlarmState() {
 		return !(alarms.isEmpty());
 	}
 	
-	@Override
 	public LinkedList<Alarm> getAlarms() {
 		if (alarms == null)
 			alarms = new LinkedList<Alarm>();
