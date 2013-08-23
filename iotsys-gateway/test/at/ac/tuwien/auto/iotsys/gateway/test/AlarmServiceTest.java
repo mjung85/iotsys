@@ -7,8 +7,12 @@ import static com.jayway.restassured.RestAssured.post;
 import static org.hamcrest.Matchers.hasXPath;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import javax.xml.bind.DatatypeConverter;
+
+import obix.Int;
+import obix.Status;
 
 import org.junit.Test;
 
@@ -192,5 +196,107 @@ public class AlarmServiceTest extends AbstractGatewayTest {
 		
 		// new alarm has been generated
 		assertFalse(alarmHref.equals(getLatestAlarm().get("@href")));
+	}
+	
+	
+	@Test
+	public void testAlarmSourceStatus() {
+		
+		BrightnessActuatorImpl source = new BrightnessActuatorImpl();
+		Int val = source.value();
+		
+		val.attach(new IntAlarmObserver(10l, 20l).setTarget(source).setAcked(false).setStateful(true).setFlipped(true));
+		val.attach(new IntAlarmObserver(21l, 30l).setTarget(source).setAcked(true).setStateful(false).setFlipped(true));
+		
+		long statefulAlarmValue = 15;
+		long ackedAlarmValue = 25;
+		long noAlarmValue = 0;
+		
+		assertEquals(Status.ok, source.getStatus());
+
+		source.setOverridden(true);
+		assertEquals(Status.overridden, source.getStatus());
+		
+		source.setDown(true);
+		assertEquals(Status.down, source.getStatus());
+		
+		source.setFaulty(true);
+		assertEquals(Status.fault, source.getStatus());
+		
+		source.setDisabled(true);
+		assertEquals(Status.disabled, source.getStatus());
+		
+		source.setFaulty(false);
+		assertEquals(Status.disabled, source.getStatus());
+		
+		source.setDisabled(false);
+		assertEquals(Status.down, source.getStatus());
+		
+		source.setStatus(Status.ok);
+		assertEquals(Status.ok, source.getStatus());
+		
+		
+		// generate alarm
+		val.set(statefulAlarmValue);
+		assertTrue(source.inAlarmState());
+		assertEquals(Status.alarm, source.getStatus());
+		
+		source.setFaulty(true);
+		assertEquals(Status.fault, source.getStatus());
+		
+		source.setFaulty(false);
+		assertEquals(Status.alarm, source.getStatus());
+		
+		source.setDisabled(true);
+		assertEquals(Status.disabled, source.getStatus());
+		source.setDown(true);
+		assertEquals(Status.disabled, source.getStatus());
+		source.setDisabled(false);
+		assertEquals(Status.down, source.getStatus());
+		source.setDown(false);
+		assertEquals(Status.alarm, source.getStatus());
+		
+		// unset alarm
+		val.set(noAlarmValue);
+		assertEquals(Status.ok, source.getStatus());
+		
+		// generate AckAlarm
+		val.set(ackedAlarmValue);
+		assertEquals(Status.unackedAlarm, source.getStatus());
+		
+		// ack the alarm
+		String alarmHref;
+		
+		alarmHref = getLatestAlarm().get("@href");
+		given().param("data", "<obj is='obix:AckAlarmIn'>"
+				+ " <str name='ackUser' source='someUser'/>"
+				+ "</obj>").
+		post(alarmHref + "/ack");
+		
+		assertEquals(Status.alarm, source.getStatus());
+		// unset alarm 
+		val.set(noAlarmValue);
+		assertEquals(Status.ok, source.getStatus());
+		
+		// generate AckAlarm
+		val.set(ackedAlarmValue);
+		assertEquals(Status.unackedAlarm, source.getStatus());
+		alarmHref = getLatestAlarm().get("@href");
+		
+		val.set(noAlarmValue);
+		assertEquals(Status.unacked, source.getStatus());
+		
+		val.set(statefulAlarmValue);
+		assertEquals(Status.alarm, source.getStatus());
+		
+		val.set(noAlarmValue);
+		assertEquals(Status.unacked, source.getStatus());
+		
+		given().param("data", "<obj is='obix:AckAlarmIn'>"
+				+ " <str name='ackUser' source='someUser'/>"
+				+ "</obj>").
+		post(alarmHref + "/ack");
+		
+		assertEquals(Status.ok, source.getStatus());
 	}
 }
