@@ -3,6 +3,7 @@ package at.ac.tuwien.auto.iotsys.gateway.obix.observer;
 import java.util.TimeZone;
 
 import obix.Abstime;
+import obix.AlarmCondition;
 import obix.AlarmSource;
 import obix.IAlarmSubject;
 import obix.contracts.Alarm;
@@ -18,9 +19,11 @@ public abstract class AlarmObserver implements Observer {
 	private Alarm currentAlarm;
 	private boolean stateful, acked;
 	private boolean flipped;
+	private AlarmCondition alarmCondition;
 	
-	public AlarmObserver(IAlarmSubject alarmSubject, boolean stateful, boolean acked) {
+	public AlarmObserver(IAlarmSubject alarmSubject, AlarmCondition alarmCondition, boolean stateful, boolean acked) {
 		this.alarmSubject = alarmSubject;
+		this.alarmCondition = alarmCondition;
 		this.stateful = stateful;
 		this.acked = acked;
 		this.flipped = false;
@@ -30,7 +33,15 @@ public abstract class AlarmObserver implements Observer {
 	 * @param source the alarm source to be checked for an alarm condition
 	 * @return <code>true</code> if <code>source</code> is currently in an alarm condition, <code>false</code> otherwise
 	 */
-	public abstract boolean inAlarmCondition(AlarmSource source);
+	private boolean inAlarmCondition() {
+		if (alarmCondition == null) return false;
+		return alarmCondition.inAlarmCondition(source);
+	}
+	
+	/**
+	 * Generates a new alarm
+	 * @return the generated alarm
+	 */
 	public abstract Alarm generateAlarm();
 	
 	private void notifyAlarmSubject(Alarm alarm) {
@@ -40,7 +51,7 @@ public abstract class AlarmObserver implements Observer {
 	
 	@Override
 	public synchronized void update(Object state) {
-		if (flipped ^ inAlarmCondition(source)) {
+		if (flipped ^ inAlarmCondition()) {
 			this.setOffNormal();
 		} else if(currentAlarm != null) {
 			this.setNormal();
@@ -89,6 +100,12 @@ public abstract class AlarmObserver implements Observer {
 		return target;
 	}
 	
+	/**
+	 * Sets the target.
+	 * Generated Alarms should have their source set to this target.
+	 * @param target an AlarmSource, that functions as source for generated alarms 
+	 * @return
+	 */
 	public AlarmObserver setTarget(AlarmSource target) {
 		this.target = target;
 		return this;

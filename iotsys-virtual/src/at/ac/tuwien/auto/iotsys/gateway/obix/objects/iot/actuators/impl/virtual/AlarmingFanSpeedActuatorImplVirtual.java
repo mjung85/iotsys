@@ -32,6 +32,7 @@
 
 package at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.virtual;
 
+import obix.AlarmCondition;
 import obix.AlarmSource;
 import at.ac.tuwien.auto.iotsys.gateway.connectors.virtual.VirtualConnector;
 import at.ac.tuwien.auto.iotsys.gateway.obix.observer.DefaultAlarmObserver;
@@ -40,12 +41,12 @@ public class AlarmingFanSpeedActuatorImplVirtual extends FanSpeedActuatorImplVir
 	public AlarmingFanSpeedActuatorImplVirtual(VirtualConnector virtualConnector) {
 		super(virtualConnector);
 		
-		this.attach(new DefaultAlarmObserver() {
-			public boolean inAlarmCondition(AlarmSource source) {
+		this.attach(new DefaultAlarmObserver(new AlarmCondition() {
+			protected boolean checkAlarmCondition(AlarmSource source) {
 				// in alarm if fan is spinning too slowly
 				// but only when enabled
 				return enabled().get() && fanSpeedSetpointValue().get() < 2000;
 			}
-		});
+		}));
 	}
 }

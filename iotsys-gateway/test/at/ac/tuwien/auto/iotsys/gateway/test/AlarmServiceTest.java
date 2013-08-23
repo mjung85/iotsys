@@ -16,8 +16,9 @@ import obix.Status;
 
 import org.junit.Test;
 
+import at.ac.tuwien.auto.iotsys.commons.alarms.IntRangeAlarmCondition;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.BrightnessActuatorImpl;
-import at.ac.tuwien.auto.iotsys.gateway.obix.observer.IntAlarmObserver;
+import at.ac.tuwien.auto.iotsys.gateway.obix.observer.DefaultAlarmObserver;
 
 import com.jayway.restassured.path.xml.XmlPath;
 
@@ -120,7 +121,8 @@ public class AlarmServiceTest extends AbstractGatewayTest {
 	@Test
 	public void testAckAlarm() {
 		BrightnessActuatorImpl source = new BrightnessActuatorImpl();
-		source.value().attach(new IntAlarmObserver(10l, 20l).setAcked(true).setStateful(false));
+		source.value().attach(new DefaultAlarmObserver(new IntRangeAlarmCondition(10l, 20l))
+										.setAcked(true).setStateful(false));
 		
 		// generate alarm
 		source.value().set(15l);
@@ -158,7 +160,8 @@ public class AlarmServiceTest extends AbstractGatewayTest {
 	@Test
 	public void testStatefulAlarmObj() {
 		BrightnessActuatorImpl source = new BrightnessActuatorImpl();
-		source.value().attach(new IntAlarmObserver(10l, 20l).setAcked(false).setStateful(true));
+		source.value().attach(new DefaultAlarmObserver(new IntRangeAlarmCondition(10l, 20l))
+										.setAcked(false).setStateful(true));
 		int alarms = getAlarmCount();
 		
 		// generate alarm
@@ -205,8 +208,10 @@ public class AlarmServiceTest extends AbstractGatewayTest {
 		BrightnessActuatorImpl source = new BrightnessActuatorImpl();
 		Int val = source.value();
 		
-		val.attach(new IntAlarmObserver(10l, 20l).setTarget(source).setAcked(false).setStateful(true).setFlipped(true));
-		val.attach(new IntAlarmObserver(21l, 30l).setTarget(source).setAcked(true).setStateful(false).setFlipped(true));
+		val.attach(new DefaultAlarmObserver(new IntRangeAlarmCondition(10l, 20l), true, false)
+										.setFlipped(true).setTarget(source));
+		val.attach(new DefaultAlarmObserver(new IntRangeAlarmCondition(21l, 30l), false, true)
+										.setFlipped(true).setTarget(source));
 		
 		long statefulAlarmValue = 15;
 		long ackedAlarmValue = 25;
