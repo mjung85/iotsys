@@ -17,7 +17,8 @@ public abstract class AlarmCondition {
 	 */
 	protected abstract boolean checkAlarmCondition(AlarmSource source);
 	
-	public void setFlipped(boolean flipped) {
+	public AlarmCondition setFlipped(boolean flipped) {
 		this.isFlipped = flipped;
+		return this;
 	}
 }
