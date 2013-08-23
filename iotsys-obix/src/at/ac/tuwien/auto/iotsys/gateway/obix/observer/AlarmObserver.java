@@ -18,7 +18,6 @@ public abstract class AlarmObserver implements Observer {
 	private IAlarmSubject alarmSubject;
 	private Alarm currentAlarm;
 	private boolean stateful, acked;
-	private boolean flipped;
 	private AlarmCondition alarmCondition;
 	
 	public AlarmObserver(IAlarmSubject alarmSubject, AlarmCondition alarmCondition, boolean stateful, boolean acked) {
@@ -26,7 +25,6 @@ public abstract class AlarmObserver implements Observer {
 		this.alarmCondition = alarmCondition;
 		this.stateful = stateful;
 		this.acked = acked;
-		this.flipped = false;
 	}
 	
 	/**
@@ -51,7 +49,7 @@ public abstract class AlarmObserver implements Observer {
 	
 	@Override
 	public synchronized void update(Object state) {
-		if (flipped ^ inAlarmCondition()) {
+		if (inAlarmCondition()) {
 			this.setOffNormal();
 		} else if(currentAlarm != null) {
 			this.setNormal();
@@ -149,10 +147,4 @@ public abstract class AlarmObserver implements Observer {
 		this.acked = acked;
 		return this;
 	}
-	
-	public AlarmObserver setFlipped(boolean flipped) {
-		this.flipped = flipped;
-		return this;
-	}
-
 }

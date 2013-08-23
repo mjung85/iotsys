@@ -208,10 +208,10 @@ public class AlarmServiceTest extends AbstractGatewayTest {
 		BrightnessActuatorImpl source = new BrightnessActuatorImpl();
 		Int val = source.value();
 		
-		val.attach(new DefaultAlarmObserver(new IntRangeAlarmCondition(10l, 20l), true, false)
-										.setFlipped(true).setTarget(source));
-		val.attach(new DefaultAlarmObserver(new IntRangeAlarmCondition(21l, 30l), false, true)
-										.setFlipped(true).setTarget(source));
+		val.attach(new DefaultAlarmObserver(new IntRangeAlarmCondition(10l, 20l).setFlipped(true), true, false)
+							.setTarget(source));
+		val.attach(new DefaultAlarmObserver(new IntRangeAlarmCondition(21l, 30l).setFlipped(true), false, true)
+							.setTarget(source));
 		
 		long statefulAlarmValue = 15;
 		long ackedAlarmValue = 25;
