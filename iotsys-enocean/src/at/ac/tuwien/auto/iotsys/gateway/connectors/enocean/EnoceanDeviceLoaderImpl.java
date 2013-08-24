@@ -34,6 +34,7 @@ package at.ac.tuwien.auto.iotsys.gateway.connectors.enocean;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -52,7 +53,7 @@ import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
 
 public class EnoceanDeviceLoaderImpl implements DeviceLoader {
 
-	private final ArrayList<String> myObjects = new ArrayList<String>();
+	private final ArrayList<Obj> myObjects = new ArrayList<Obj>();
 
 	private XMLConfiguration devicesConfig;
 
@@ -180,24 +181,20 @@ public class EnoceanDeviceLoaderImpl implements DeviceLoader {
 											Obj enoceanDevice = (Obj) declaredConstructors[k]
 													.newInstance(args);
 
-											enoceanDevice.setHref(new Uri(href));
+											enoceanDevice.setHref(new Uri(URLEncoder.encode(connectorName, "UTF-8") + "/" + href));
 
 											if (name != null
 													&& name.length() > 0) {
 												enoceanDevice.setName(name);
 											}
 
-											ArrayList<String> assignedHrefs = null;
-
 											if (ipv6 != null) {
-												assignedHrefs = objectBroker
-														.addObj(enoceanDevice, ipv6);
+												objectBroker.addObj(enoceanDevice, ipv6);
 											} else {
-												assignedHrefs = objectBroker
-														.addObj(enoceanDevice);
+												objectBroker.addObj(enoceanDevice);
 											}
 
-											myObjects.addAll(assignedHrefs);
+											myObjects.add(enoceanDevice);
 
 											enoceanDevice.initialize();
 
@@ -281,8 +278,8 @@ public class EnoceanDeviceLoaderImpl implements DeviceLoader {
 	@Override
 	public void removeDevices(ObjectBroker objectBroker) {
 		synchronized (myObjects) {
-			for (String href : myObjects) {
-				objectBroker.removeObj(href);
+			for (Obj obj : myObjects) {
+				objectBroker.removeObj(obj.getFullContextPath());
 			}
 		}
 

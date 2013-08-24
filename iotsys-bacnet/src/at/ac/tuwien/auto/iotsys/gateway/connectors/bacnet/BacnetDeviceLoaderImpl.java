@@ -23,6 +23,7 @@
 package at.ac.tuwien.auto.iotsys.gateway.connectors.bacnet;
 
 import java.lang.reflect.Constructor;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -50,7 +51,7 @@ public class BacnetDeviceLoaderImpl implements DeviceLoader {
 
 	private XMLConfiguration devicesConfig;
 	
-	private ArrayList<String> myObjects = new ArrayList<String>();
+	private ArrayList<Obj> myObjects = new ArrayList<Obj>();
 
 	public ArrayList<Connector> initDevices(ObjectBroker objectBroker) {
 		setConfiguration(devicesConfig);
@@ -93,7 +94,7 @@ public class BacnetDeviceLoaderImpl implements DeviceLoader {
 					Obj bacRoot = bacnetConnector.getRootObj();
 					bacRoot.setName(connectorName);
 					bacRoot.setHref(new Uri(connectorName.replaceAll("[^a-zA-Z0-9-~\\(\\)]", "")));
-					objectBroker.addObj(bacRoot);
+					objectBroker.addObj(bacRoot, true);
 					bacnetConnector.connect();
 					
 					Boolean discoveryEnabled = subConfig.getBoolean("discovery-enabled", false);
@@ -210,22 +211,19 @@ public class BacnetDeviceLoaderImpl implements DeviceLoader {
 																		// specified
 																		// KNX
 																		// device
-											bacnetDevice.setHref(new Uri(href));
+											bacnetDevice.setHref(new Uri(URLEncoder.encode(connectorName, "UTF-8") + "/" + href));
 											if(name != null && name.length() > 0){
 												bacnetDevice.setName(name);
 											}
 											
-											ArrayList<String> assignedHrefs = null;
 
 											if (ipv6 != null) {
-												assignedHrefs = objectBroker.addObj(
-														bacnetDevice, ipv6);
+												objectBroker.addObj(bacnetDevice, ipv6);
 											} else {
-												assignedHrefs = objectBroker
-														.addObj(bacnetDevice);
+												objectBroker.addObj(bacnetDevice);
 											}
 											
-											myObjects.addAll(assignedHrefs);
+											myObjects.add(bacnetDevice);
 											
 											bacnetDevice.initialize();
 
@@ -275,9 +273,9 @@ public class BacnetDeviceLoaderImpl implements DeviceLoader {
 	
 	@Override
 	public void removeDevices(ObjectBroker objectBroker) {
-		synchronized(myObjects){
-			for(String href : myObjects){
-				objectBroker.removeObj(href);
+		synchronized(myObjects) {
+			for(Obj obj : myObjects) {
+				objectBroker.removeObj(obj.getFullContextPath());
 			}
 		}
 	}
@@ -296,7 +294,7 @@ public class BacnetDeviceLoaderImpl implements DeviceLoader {
 		@Override
 		public void deviceDiscovered(Obj device) {
 			
-			ArrayList<String> assignedHrefs = objectBroker.addObj(device, false);
+			objectBroker.addObj(device, false);
 			
 			if(groupCommEnabled != null && groupCommEnabled){
 				objectBroker.enableGroupComm(device);
@@ -305,7 +303,8 @@ public class BacnetDeviceLoaderImpl implements DeviceLoader {
 			if(historyEnabled != null && historyEnabled){
 				objectBroker.addHistoryToDatapoints(device);
 			}
-			myObjects.addAll(assignedHrefs);
+			
+			myObjects.add(device);
 			
 			device.initialize();
 		}

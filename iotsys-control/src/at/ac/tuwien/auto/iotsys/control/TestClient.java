@@ -1,10 +1,9 @@
 package at.ac.tuwien.auto.iotsys.control;
 
-import java.util.ArrayList;
 import java.util.logging.Logger;
 
 import obix.Obj;
-
+import obix.Uri;
 import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.BoilerActuator;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.HeatPumpActuator;
@@ -21,30 +20,31 @@ public class TestClient implements Observer {
 	private ObjectBroker objectBroker;
 	
 	private static final Logger log = Logger.getLogger(TestClient.class.getName());
-
+	
 	public TestClient(ObjectBroker objectBroker) {
 		this.objectBroker = objectBroker;
 	}
 
 	public void runTests() {
-		ArrayList<String> objNames = objectBroker.getObjNames();
 		System.out.println("\n\nAvailable named objects: ");
-		for (String name : objNames) {
-			System.out.println("  " + name);
+		for (Obj o : objectBroker.pullObj(new Uri("/")).list()) {
+			if (o.getName() != null && !o.getName().isEmpty())
+				System.out.println("  " + o.getName());
 		}
 
 		System.out.println("\nObserving all objects.");
-		for (String name : objNames) {
-			objectBroker.pullObByName(name).attach(this);
+		for (Obj o : objectBroker.pullObj(new Uri("/")).list()) {
+			if (o.getName() != null && !o.getName().isEmpty())
+				o.attach(this);
 		}
 
 		System.out.println("\nReading kuelhaus_hesselbachweg_5.");
 
-		Obj obj = objectBroker.pullObByName("kuehlhaus_hesselbachweg_5");
+		Obj obj = objectBroker.pullObj(new Uri("/kuehlhaus_hesselbachweg_5"));
 
 		if (obj instanceof TemperatureControlActuator) {
 			TemperatureControlActuator kuehlhaus = (TemperatureControlActuator) obj;
-			System.out.println("\nKühlhaus Hesselbachweg 5.");
+			System.out.println("\nKï¿½hlhaus Hesselbachweg 5.");
 
 			System.out.println("  Vorgabe Raumtemperatur-Sollwert: "
 					+ kuehlhaus.targetValue());
@@ -52,7 +52,7 @@ public class TestClient implements Observer {
 					+ kuehlhaus.actualValue());
 			System.out.println("  Aktueller Raumtemperatur-Sollwert: "
 					+ kuehlhaus.actualTargetValue());
-			System.out.println("  Aktueller Zustand Freigabe Kältemaschine: "
+			System.out.println("  Aktueller Zustand Freigabe Kï¿½ltemaschine: "
 					+ kuehlhaus.active());
 
 			System.out
@@ -60,7 +60,7 @@ public class TestClient implements Observer {
 			kuehlhaus.targetValue().set(-10);
 		}
 
-		obj = objectBroker.pullObByName("boiler_hesselbachweg_3");
+		obj = objectBroker.pullObj(new Uri("/boiler_hesselbachweg_3"));
 
 		if (obj instanceof BoilerActuator) {
 			BoilerActuator boiler = (BoilerActuator) obj;
@@ -73,7 +73,7 @@ public class TestClient implements Observer {
 			boiler.enabled().set(true);
 		}
 
-		obj = objectBroker.pullObByName("linbachstrasse_4_room_1");
+		obj = objectBroker.pullObj(new Uri("/linbachstrasse_4_room_1"));
 
 		if (obj instanceof TemperatureControlActuator) {
 			TemperatureControlActuator electroHeating = (TemperatureControlActuator) obj;
@@ -89,13 +89,13 @@ public class TestClient implements Observer {
 					+ electroHeating.active());
 		}
 
-		obj = objectBroker.pullObByName("heatpump_lienbachstrasse_5");
+		obj = objectBroker.pullObj(new Uri("/heatpump_lienbachstrasse_5"));
 
 		if (obj instanceof HeatPumpActuator) {
 			HeatPumpActuator heatPump = (HeatPumpActuator) obj;
-			System.out.println("\nWärmepumpe Lienbachstraße 5.");
+			System.out.println("\nWï¿½rmepumpe Lienbachstraï¿½e 5.");
 
-			System.out.println("  Sperre Wärmepumpe: "
+			System.out.println("  Sperre Wï¿½rmepumpe: "
 					+ heatPump.disabled());
 			System.out.println("  Sollwertbeeinflussung: "
 					+ heatPump.targetValueInfluence());
@@ -114,7 +114,7 @@ public class TestClient implements Observer {
 		if (obj.getName().equals("kuehlhaus_hesselbachweg_5")) {
 			if (obj instanceof TemperatureControlActuator) {
 				TemperatureControlActuator kuehlhaus = (TemperatureControlActuator) obj;
-				System.out.println("\nKühlhaus Hesselbachweg 5 (Observed).");
+				System.out.println("\nKï¿½hlhaus Hesselbachweg 5 (Observed).");
 
 				System.out.println("  Vorgabe Raumtemperatur-Sollwert: "
 						+ kuehlhaus.targetValue());
@@ -123,7 +123,7 @@ public class TestClient implements Observer {
 				System.out.println("  Aktueller Raumtemperatur-Sollwert: "
 						+ kuehlhaus.actualTargetValue());
 				System.out
-						.println("  Aktueller Zustand Freigabe Kältemaschine: "
+						.println("  Aktueller Zustand Freigabe Kï¿½ltemaschine: "
 								+ kuehlhaus.active());
 			}
 		}
@@ -138,7 +138,7 @@ public class TestClient implements Observer {
 		if (obj.getName().equals("linbachstrasse_4_room_1")) {
 			if (obj instanceof TemperatureControlActuator) {
 				TemperatureControlActuator kuehlhaus = (TemperatureControlActuator) obj;
-				System.out.println("\nKühlhaus Hesselbachweg 5 (Observed).");
+				System.out.println("\nKï¿½hlhaus Hesselbachweg 5 (Observed).");
 
 				System.out.println("  Vorgabe Raumtemperatur-Sollwert: "
 						+ kuehlhaus.targetValue());
@@ -153,7 +153,7 @@ public class TestClient implements Observer {
 		
 		if (obj instanceof HeatPumpActuator) {
 			HeatPumpActuator heatPump = (HeatPumpActuator) obj;
-			System.out.println("  Sperre Wärmepumpe: "
+			System.out.println("  Sperre Wï¿½rmepumpe: "
 					+ heatPump.disabled());
 			System.out.println("  Sollwertbeeinflussung: "
 					+ heatPump.targetValueInfluence());

@@ -3,6 +3,8 @@
  */
 package obix;
 
+import at.ac.tuwien.auto.iotsys.commons.OperationHandler;
+
 /**
  * Op is used to represent operation objects.
  *
@@ -114,6 +116,17 @@ public class Op
   {
     return obix.io.BinObix.OP;
   }
+  
+  
+  public OperationHandler getOperationHandler()
+  {
+	  return operationHandler;
+  }
+  
+  public void setOperationHandler(OperationHandler operationHandler)
+  {
+	  this.operationHandler = operationHandler;
+  }
 
 ////////////////////////////////////////////////////////////////
 // Fields
@@ -121,4 +134,5 @@ public class Op
 
   private Contract in;
   private Contract out;
+  private OperationHandler operationHandler;
 }

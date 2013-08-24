@@ -67,6 +67,15 @@ public class Enum
     	notifyObservers();
     }
   }
+  
+  /**
+   * Set to value of another Enum
+   */
+  public void set(Obj obj)
+  {
+	  if (!(obj instanceof Enum)) return;
+	  set(((Enum)obj).get());
+  }
 
 ////////////////////////////////////////////////////////////////
 // Val

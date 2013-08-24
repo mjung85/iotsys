@@ -22,6 +22,7 @@ package at.ac.tuwien.auto.iotsys.gateway.connectors.knx;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -46,7 +47,7 @@ public class KNXDeviceLoaderImpl implements DeviceLoader {
 
 	private XMLConfiguration devicesConfig;
 	
-	private ArrayList<String> myObjects = new ArrayList<String>();
+	private ArrayList<Obj> myObjects = new ArrayList<Obj>();
 
 	public ArrayList<Connector> initDevices(ObjectBroker objectBroker) {
 		setConfiguration(devicesConfig);
@@ -159,23 +160,19 @@ public class KNXDeviceLoaderImpl implements DeviceLoader {
 														.newInstance(args);
 											
 												knxDevice
-														.setHref(new Uri(href));
+														.setHref(new Uri(URLEncoder.encode(connectorName, "UTF-8") + "/" + href));
 												
 												if(name != null && name.length() > 0){
 													knxDevice.setName(name);
 												}
 
-												ArrayList<String> assignedHrefs = null;
-												
 												if (ipv6 != null) {
-													assignedHrefs = objectBroker.addObj(
-															knxDevice, ipv6);
+													objectBroker.addObj(knxDevice, ipv6);
 												} else {
-													assignedHrefs = objectBroker
-															.addObj(knxDevice);
+													objectBroker.addObj(knxDevice);
 												}
 												
-												myObjects.addAll(assignedHrefs);
+												myObjects.add(knxDevice);
 
 												knxDevice.initialize();
 
@@ -236,8 +233,8 @@ public class KNXDeviceLoaderImpl implements DeviceLoader {
 	@Override
 	public void removeDevices(ObjectBroker objectBroker) {
 		synchronized(myObjects){
-			for(String href : myObjects){
-				objectBroker.removeObj(href);
+			for(Obj obj : myObjects) {
+				objectBroker.removeObj(obj.getFullContextPath());
 			}
 		}
 	}

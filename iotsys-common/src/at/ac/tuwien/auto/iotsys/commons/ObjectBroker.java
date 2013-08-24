@@ -15,23 +15,19 @@ public interface ObjectBroker{
 	public abstract Obj pushObj(Uri href, Obj input, boolean isOp)
 			throws Exception;
 
-	public abstract ArrayList<String> addObj(Obj o, String ipv6Address);
+	public abstract void addObj(Obj o, String ipv6Address);
 
 	public abstract String getIPv6LinkedHref(String ipv6Address);
 
 	public abstract boolean containsIPv6(String ipv6Address);
 
-	public ArrayList<String> addObj(Obj o);
+	public void addObj(Obj o);
 
-	public ArrayList<String> addObj(Obj o, boolean listInLobby);
+	public void addObj(Obj o, boolean listInLobby);
 
 	public abstract void removeObj(String href);
 
-	public abstract Obj invokeOp(Uri uri, Obj input, boolean b);
-
-	public abstract void addOperationHandler(Uri uri, OperationHandler handler);
-	
-	public abstract void removeOperationHandler(Uri uri);
+	public abstract Obj invokeOp(Uri uri, Obj input);
 
 	public abstract String getCoRELinks();
 	
@@ -47,11 +43,7 @@ public interface ObjectBroker{
 
 	public void shutdown();
 	
-	public Obj pullObByName(String name);
+	public MDnsResolver getMDnsResolver();
 
-	public ArrayList<String> getObjNames();
-
-	public MdnsResolver getMdnsResolver();
-
-	public void setMdnsResolver(MdnsResolver resolver);
+	public void setMdnsResolver(MDnsResolver resolver);
 }

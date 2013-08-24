@@ -7,7 +7,7 @@
 
   <virtual>
     <connector>
-      <name>Virtual Devices</name>
+      <name>testDevices</name>
       <enabled>true</enabled>
       
       
@@ -67,7 +67,7 @@
       </device>
     </connector>
     <connector>
-      <name>Virtual Devices - Watch</name>
+      <name>testDevicesWatch</name>
       <enabled>true</enabled>
 	  
 	  <device>
@@ -130,13 +130,13 @@
       
     </connector>
     <connector>
-      <name>Virtual Devices - History</name>
+      <name>testDevicesHistory</name>
       <enabled>true</enabled>
 	  
 	  <device>
-        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.LightSwitchActuatorImpl
+        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.BrightnessActuatorImpl
         </type>
-        <href>switchHistory1</href>
+        <href>brightnessHistoryQuery</href>
         <historyEnabled>true</historyEnabled>
       </device>
       
@@ -191,6 +191,20 @@
         <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.BrightnessActuatorImpl
         </type>
         <href>brightnessHistoryAppendNothing</href>
+        <historyEnabled>true</historyEnabled>
+      </device>
+      
+      <device>
+        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.BrightnessActuatorImpl
+        </type>
+        <href>brightnessHistoryAppendFuture</href>
+        <historyEnabled>true</historyEnabled>
+      </device>
+      
+      <device>
+        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.BrightnessActuatorImpl
+        </type>
+        <href>brightnessHistoryFeedFuture</href>
         <historyEnabled>true</historyEnabled>
       </device>
       

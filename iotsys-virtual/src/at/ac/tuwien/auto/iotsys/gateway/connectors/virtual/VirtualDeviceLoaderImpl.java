@@ -33,13 +33,19 @@
 package at.ac.tuwien.auto.iotsys.gateway.connectors.virtual;
 
 import java.lang.reflect.Constructor;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.print.DocFlavor.URL;
+
+import obix.Bool;
+import obix.Int;
 import obix.Obj;
+import obix.Real;
 import obix.Uri;
 
 import org.apache.commons.configuration.HierarchicalConfiguration;
@@ -50,7 +56,7 @@ import at.ac.tuwien.auto.iotsys.commons.DeviceLoader;
 import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
 
 public class VirtualDeviceLoaderImpl implements DeviceLoader {
-	private final ArrayList<String> myObjects = new ArrayList<String>();
+	private final ArrayList<Obj> myObjects = new ArrayList<Obj>();
 
 	private XMLConfiguration devicesConfig;
 
@@ -71,6 +77,33 @@ public class VirtualDeviceLoaderImpl implements DeviceLoader {
 			virtualConnector.connect();
 
 			connectors.add(virtualConnector);
+			
+			Obj complexObj= new Obj();
+			complexObj.setHref(new Uri("examples/complexObj"));
+			Bool b1 = new Bool();
+			
+			b1.setHref(new Uri("b1"));
+			
+			Int i1 = new Int();
+			i1.setHref(new Uri("i1"));
+			
+			Int i2 = new Int();
+			i2.setHref(new Uri("i2"));
+			
+			Obj childObj = new Obj();
+			childObj.setHref(new Uri("childObj"));
+			
+			Real r1 = new Real();
+			r1.setHref(new Uri("r"));
+			
+			childObj.add(r1);
+			
+			complexObj.add(b1);
+			complexObj.add(i1);
+			complexObj.add(i2);
+			complexObj.add(childObj);
+					 					
+			objectBroker.addObj(complexObj);
 
 			// add virtual devices
 
@@ -108,6 +141,9 @@ public class VirtualDeviceLoaderImpl implements DeviceLoader {
 
 			// enable history yes/no?
 //			objectBroker.addHistoryToDatapoints(virtualLight1, 100);
+			
+			Obj obj = new Obj();
+			
 
 		} catch (Exception e) {
 
@@ -145,8 +181,6 @@ public class VirtualDeviceLoaderImpl implements DeviceLoader {
 			String connectorName = subConfig.getString("name");
 			Boolean enabled = subConfig.getBoolean("enabled", false);
 			
-			
-
 			if (enabled) {
 				try {
 					VirtualConnector vConn = new VirtualConnector();
@@ -201,22 +235,20 @@ public class VirtualDeviceLoaderImpl implements DeviceLoader {
 										}
 									}
 									
-									virtualObj.setHref(new Uri(href));
+									virtualObj.setHref(new Uri(URLEncoder.encode(connectorName, "UTF-8") + "/" + href));
 									
 									if(name != null && name.length() > 0){
 										virtualObj.setName(name);
 									}
-
+									
 									if (ipv6 != null) {
-										myObjects.addAll(objectBroker.addObj(
-												virtualObj, ipv6));
+										objectBroker.addObj(virtualObj, ipv6);
 									} else {
-										myObjects.addAll(objectBroker
-												.addObj(virtualObj));
+										objectBroker.addObj(virtualObj);
 									}
 									
-								
-
+									myObjects.add(virtualObj);
+									
 									virtualObj.initialize();
 
 									if (historyEnabled != null
@@ -257,15 +289,16 @@ public class VirtualDeviceLoaderImpl implements DeviceLoader {
 				}
 			}
 		}
-
+		
+	
 		return connectors;
 	}
 
 	@Override
 	public void removeDevices(ObjectBroker objectBroker) {
 		synchronized (myObjects) {
-			for (String href : myObjects) {
-				objectBroker.removeObj(href);
+			for (Obj obj : myObjects) {
+				objectBroker.removeObj(obj.getFullContextPath());
 			}
 		}
 

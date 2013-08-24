@@ -32,7 +32,7 @@
 
 package at.ac.tuwien.auto.iotsys.gateway.obix.objects;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import obix.Abstime;
 import obix.Contract;
@@ -51,7 +51,7 @@ public class HistoryAppendOutImpl extends Obj implements HistoryAppendOut {
 	private Abstime newEnd = new Abstime();
 
 
-	public HistoryAppendOutImpl(ArrayList<HistoryRecordImpl> newRecords, ArrayList<HistoryRecordImpl> historyRecords) {	
+	public HistoryAppendOutImpl(List<HistoryRecordImpl> newRecords, List<Obj> historyRecords) {	
 	
 		setIs(new Contract(HISTORY_APPENDOUT_CONTRACT));
 		
@@ -74,10 +74,10 @@ public class HistoryAppendOutImpl extends Obj implements HistoryAppendOut {
 			newStart.setNull(true);
 			newEnd.setNull(true);
 		} else {
-			Abstime start = historyRecords.get(0).timestamp();
+			Abstime start = ((HistoryRecordImpl) historyRecords.get(historyRecords.size()-1)).timestamp();
 			newStart.set(start.get(), start.getTimeZone());
 			
-			Abstime end = historyRecords.get(historyRecords.size()-1).timestamp();
+			Abstime end = ((HistoryRecordImpl) historyRecords.get(0)).timestamp();
 			newEnd.set(end.get(), end.getTimeZone());
 		}
 		

@@ -12,7 +12,8 @@ import obix.*;
 public interface PointAlarm
   extends IObj, Alarm
 {
-
+  public static final String POINT_ALARM_CONTRACT = "obix:PointAlarm";
+  
   public Obj alarmValue();
 
 }

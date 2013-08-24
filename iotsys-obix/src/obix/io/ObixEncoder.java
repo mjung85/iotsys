@@ -233,8 +233,12 @@ public class ObixEncoder extends XWriter {
 				attr(" max", String.valueOf(l.getMax()));
 		}
 
-		// if no children, close tag and be done
-		if (obj.size() == 0) {
+		// if no visible children, close tag and be done
+		int children = 0;
+		for (Obj o : obj.list()) {
+			if (!o.isHidden()) children++;
+		}
+		if (children == 0) {
 			w("/>\n");
 			return;
 		}
@@ -245,8 +249,10 @@ public class ObixEncoder extends XWriter {
 
 		// write children
 		Obj[] kids = obj.list();
-		for (int i = 0; i < kids.length; ++i)
-			encode(kids[i], useRelativePath);
+		for (int i = 0; i < kids.length; ++i) {
+			if (!kids[i].isHidden())
+				encode(kids[i], useRelativePath);
+		}
 
 		// end tag
 		indent--;

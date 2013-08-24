@@ -218,6 +218,14 @@ public class Int extends Val {
 	public void setUnit(Uri unit) {
 		this.unit = unit;
 	}
+	
+    /**
+     * Set to value of another Int
+     */
+    public void set(Obj obj) {
+	    if (!(obj instanceof Int)) return;
+	    set(((Int)obj).get());
+    }
 
 	// //////////////////////////////////////////////////////////////
 	// Fields
