@@ -33,24 +33,37 @@
 package at.ac.tuwien.auto.iotsys.gateway.obix.objects.knx.datapoint.impl;
 
 import obix.Contract;
+import obix.Obj;
 import obix.Real;
 import obix.Uri;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.knx.datapoint.DPST_9_1;
 
-public class DPST_9_1_Impl extends DataPointImpl implements DPST_9_1{
-
+public class DPST_9_1_Impl extends DataPointImpl implements DPST_9_1
+{
 	protected Real value = new Real();
-	
-	public DPST_9_1_Impl(){
+
+	public DPST_9_1_Impl()
+	{
 		value.setName(DPST_9_1.VALUE_NAME);
 		value.setHref(new Uri(DPST_9_1.VALUE_HREF));
-		
+		value.setUnit(new Uri("obix:units/celsius"));
+
 		this.setIs(new Contract(DPST_9_1.CONTRACT));
 		this.add(value);
+
+		this.function.set("°C-value (EIS5)");
+		this.unit.set("temperature (°C)");
 	}
+
 	@Override
-	public Real value() {
+	public Real value()
+	{
 		return value;
 	}
-	
+
+	public void writeObject(Obj input)
+	{
+		// not writable
+	}
+
 }

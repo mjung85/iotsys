@@ -12,7 +12,8 @@ import obix.*;
 public interface AlarmFilter
   extends IObj
 {
-
+  public static final String ALARM_FILTER_CONTRACT = "obix:AlarmFilter";
+  
   public static final String limitContract = "<int name='limit' val='0' null='true'/>";
   public Int limit();
 

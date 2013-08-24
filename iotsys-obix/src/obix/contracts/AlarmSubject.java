@@ -12,6 +12,8 @@ import obix.*;
 public interface AlarmSubject
   extends IObj
 {
+	
+  public static final String ALARM_SUBJECT_CONTRACT = "obix:AlarmSubject";
 
   public static final String countContract = "<int name='count' val='0' min='0'/>";
   public Int count();

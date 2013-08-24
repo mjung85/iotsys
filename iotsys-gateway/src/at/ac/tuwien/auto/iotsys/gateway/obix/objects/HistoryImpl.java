@@ -33,10 +33,10 @@
 package at.ac.tuwien.auto.iotsys.gateway.obix.objects;
 
 import java.util.ArrayList;
-import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.TimeZone;
-import java.util.logging.Logger;
 
 import obix.Abstime;
 import obix.Bool;
@@ -53,11 +53,9 @@ import obix.Str;
 import obix.Uri;
 import obix.contracts.History;
 import obix.contracts.HistoryAppendIn;
-import obix.contracts.HistoryFilter;
 import obix.contracts.HistoryRecord;
 import obix.contracts.HistoryRollupIn;
 import at.ac.tuwien.auto.iotsys.commons.OperationHandler;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objectbroker.ObjectBrokerImpl;
 import at.ac.tuwien.auto.iotsys.gateway.obix.observer.Observer;
 import at.ac.tuwien.auto.iotsys.gateway.obix.observer.Subject;
 
@@ -66,8 +64,6 @@ import at.ac.tuwien.auto.iotsys.gateway.obix.observer.Subject;
  * (bool, int, real, str).
  */
 public class HistoryImpl extends Obj implements History, Observer {
-	private static final Logger log = Logger.getLogger(HistoryImpl.class.getName());
-	
 	public static final String HISTORY_CONTRACT = "obix:History";
 
 	private Int count = new Int();
@@ -75,7 +71,7 @@ public class HistoryImpl extends Obj implements History, Observer {
 	private Abstime end = new Abstime("end");
 	private Str tz = new Str(TimeZone.getDefault().getID());
 	private Op query = new Op();
-	private HistoryFeed feed;
+	private Feed feed;
 	private Op rollup = new Op();
 	private Op append = new Op();
 
@@ -107,26 +103,31 @@ public class HistoryImpl extends Obj implements History, Observer {
 		add(end);
 		add(tz);
 		
-		feed = new HistoryFeed(historyCountMax);
+		feed = new Feed();
+		feed.setMaxEvents(historyCountMax);
 		feed.setIn(new Contract("obix:HistoryFilter"));
 		feed.setOf(new Contract("obix:HistoryRecord"));
 		feed.setHref(new Uri("feed"));
 		feed.setName("feed");
+		feed.setDefaultFilter(new HistoryFilterImpl());
 		add(feed);
 
 		query.setName("query");
+		query.setHref(new Uri("query"));
 		query.setIn(new Contract(HistoryFilterImpl.HISTORY_FILTER_CONTRACT));
 		query.setOut(new Contract(
 				HistoryQueryOutImpl.HISTORY_QUERY_OUT_CONTRACT));
 		add(query);
 
 		rollup.setName("rollup");
+		rollup.setHref(new Uri("rollup"));
 		rollup.setIn(new Contract(HistoryRollupInImpl.HISTORY_ROLLUPIN_CONTRACT));
 		rollup.setOut(new Contract(
 				HistoryRollupOutImpl.HISTORY_ROLLUPOUT_CONTRACT));
 		add(rollup);
 		
 		append.setName("append");
+		append.setHref(new Uri("append"));
 		append.setIn(new Contract(HistoryAppendIn.HISTORY_APPENDIN_CONTRACT));
 		append.setOut(new Contract(HistoryAppendOutImpl.HISTORY_APPENDOUT_CONTRACT));
 		add(append);
@@ -134,42 +135,29 @@ public class HistoryImpl extends Obj implements History, Observer {
 
 	@Override
 	public void initialize() {
-		this.setHref(new Uri(observedDatapoint.getFullContextPath()
-				+ "/history"));
-		ObjectBrokerImpl.getInstance().addObj(this, false);
-		
-		String queryHref = observedDatapoint.getFullContextPath()
-				+ "/history/query";
+		this.setHref(new Uri("history"));
+		observedDatapoint.add(this, false);
 
-		ObjectBrokerImpl.getInstance().addOperationHandler(
-
-		new Uri(queryHref), new OperationHandler() {
+		query.setOperationHandler(new OperationHandler() {
 			public Obj invoke(Obj in) {
 				return HistoryImpl.this.query(in);
 			}
 		});
 
-		String rollupHref = observedDatapoint.getFullContextPath()
-				+ "/history/rollup";
+		rollup.setOperationHandler(new OperationHandler() {
+			public Obj invoke(Obj in) {
+				return HistoryImpl.this.rollup(in);
+			}
+		});
 
-		ObjectBrokerImpl.getInstance().addOperationHandler(new Uri(rollupHref),
-				new OperationHandler() {
-					public Obj invoke(Obj in) {
-						return HistoryImpl.this.rollup(in);
-					}
-				});
-		
-		String appendHref = observedDatapoint.getFullContextPath()
-				+ "/history/append";
-
-		ObjectBrokerImpl.getInstance().addOperationHandler(new Uri(appendHref),
-				new OperationHandler() {
-					public Obj invoke(Obj in) {
-						return HistoryImpl.this.append(in);
-					}
-				});
+		append.setOperationHandler(new OperationHandler() {
+			public Obj invoke(Obj in) {
+				return HistoryImpl.this.append(in);
+			}
+		});
 
 		// add history reference in the parent element
+		this.setHidden(true);
 		if (observedDatapoint.getParent() != null) {
 			Ref ref = new Ref(observedDatapoint.getName() + " history", new Uri(
 					observedDatapoint.getHref() + "/history"));
@@ -179,8 +167,8 @@ public class HistoryImpl extends Obj implements History, Observer {
 	}
 
 	private Obj query(Obj in) {
-		HistoryFilter filter = (HistoryFilter) in;
-		return new HistoryQueryOutImpl(feed.filterRecords(feed.getEvents(), filter));
+		HistoryFilterImpl filter = new HistoryFilterImpl(in);
+		return new HistoryQueryOutImpl(filter.query(feed));
 	}
 
 	private Obj rollup(Obj in) {
@@ -217,21 +205,21 @@ public class HistoryImpl extends Obj implements History, Observer {
 		ArrayList<HistoryRecordImpl> currentInterval = new ArrayList<HistoryRecordImpl>();
 		
 		List<Obj> records = feed.getEvents();
-		int i = 0;
+		int i = records.size()-1;
 		
-		while (i < records.size()) {
+		while (i >= 0) {
 			HistoryRecordImpl record = (HistoryRecordImpl) records.get(i);
 			
 			// record before start time
 			if (record.timestamp().get() <= curInterval) {
-				i++;
+				i--;
 				continue;
 			}
 			
 			if (record.timestamp().get() <= curInterval + ival) {
 				// record inside interval
 				currentInterval.add(record);
-				i++;
+				i--;
 			} else {
 				// record belonging to next interval
 				
@@ -279,25 +267,23 @@ public class HistoryImpl extends Obj implements History, Observer {
 		Abstime timestamp = end;
 		ArrayList<HistoryRecordImpl> newRecords = new ArrayList<HistoryRecordImpl>();
 		
-		long now = Calendar.getInstance().getTimeInMillis();
-		
 		for (Obj record : records.list()) {
 			HistoryRecord historyRecord = (HistoryRecord) record;
 			newRecords.add(new HistoryRecordImpl(historyRecord));
 			
-			if (historyRecord.timestamp().compareTo(timestamp) != 1) {
+			if (!timestamp.isNull() && historyRecord.timestamp().compareTo(timestamp) != 1) {
 				// The HistoryRecords in the data list MUST be sorted by timestamp from oldest to newest,
 				// and MUST not include a timestamp equal to or older than History.end
-				return new Err("Records out of order");
+				return new Err("Cannot append before last event");
 			}
-			
-			if (historyRecord.timestamp().getMillis() > now) {
-				// history record with future time
-				log.info(getFullContextPath() + ": Appending future event!");
-			}
-			
-			timestamp = historyRecord.timestamp();
 		}
+		
+		// sort records
+		Collections.sort(newRecords, new Comparator<HistoryRecordImpl>() {
+			public int compare(HistoryRecordImpl r1, HistoryRecordImpl r2) {
+				return r1.timestamp().compareTo(r2.timestamp());
+			}
+		});
 		
 		
 		for (HistoryRecordImpl record : newRecords) {
@@ -306,7 +292,7 @@ public class HistoryImpl extends Obj implements History, Observer {
 		
 		updateKids();
 		
-		historyAppendOut = new HistoryAppendOutImpl(newRecords, feed.getRecords());
+		historyAppendOut = new HistoryAppendOutImpl(newRecords, feed.getEvents());
 		return historyAppendOut;
 	}
 	
@@ -429,6 +415,12 @@ public class HistoryImpl extends Obj implements History, Observer {
 		}
 	}
 	
+	@Override
+	public void notifyObservers() {
+		// don't notify observers of parents
+		// to changes of history
+	}
+	
 	/**
 	 * Update start, end and count after insertion of HistoryRecords
 	 */
@@ -436,8 +428,8 @@ public class HistoryImpl extends Obj implements History, Observer {
 		List<Obj> events = feed.getEvents();
 		
 		if (events.size() > 0) {
-			HistoryRecordImpl firstRecord = (HistoryRecordImpl) events.get(0);
-			HistoryRecordImpl lastRecord = (HistoryRecordImpl) events.get(events.size()-1);
+			HistoryRecordImpl firstRecord = (HistoryRecordImpl) events.get(events.size()-1);
+			HistoryRecordImpl lastRecord = (HistoryRecordImpl) events.get(0);
 			
 			count.setSilent(events.size());
 			this.start.set(firstRecord.timestamp().get(), TimeZone

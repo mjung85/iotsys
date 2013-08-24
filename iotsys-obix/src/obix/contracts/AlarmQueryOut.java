@@ -12,7 +12,8 @@ import obix.*;
 public interface AlarmQueryOut
   extends IObj
 {
-
+  public static final String ALARM_QUERYOUT_CONTRACT = "obix:AlarmQueryOut";
+  
   public static final String countContract = "<int name='count' val='0' min='0'/>";
   public Int count();
 

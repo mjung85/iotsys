@@ -12,7 +12,8 @@ import obix.*;
 public interface AckAlarmIn
   extends IObj
 {
-
+  public static final String ALARM_ACKIN_CONTRACT = "obix:AckAlarmIn";
+  
   public static final String ackUserContract = "<str name='ackUser' val='' null='true'/>";
   public Str ackUser();
 
