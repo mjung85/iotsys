@@ -211,6 +211,14 @@ public class Real extends Val {
 	public void setPrecision(int precision) {
 		this.precision = precision;
 	}
+	
+    /**
+     * Set to value of another Real
+     */
+    public void set(Obj obj) {
+		if (!(obj instanceof Real)) return;
+		set(((Real)obj).get());
+    }
 
 	// //////////////////////////////////////////////////////////////
 	// Fields

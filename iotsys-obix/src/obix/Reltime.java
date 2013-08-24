@@ -359,6 +359,15 @@ public class Reltime
   {
     this.max = max;
   }
+  
+  /**
+   * Set to value of another Reltime
+   */
+  public void set(Obj obj)
+  {
+	if (!(obj instanceof Reltime)) return;
+	set(((Reltime)obj).get());
+  }
 
     
 ////////////////////////////////////////////////////////////////

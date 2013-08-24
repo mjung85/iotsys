@@ -56,7 +56,7 @@ public class WMBusDeviceLoaderImpl implements DeviceLoader {
 
 	private XMLConfiguration devicesConfig;
 	
-	private ArrayList<String> myObjects = new ArrayList<String>();
+	private ArrayList<Obj> myObjects = new ArrayList<Obj>();
 
 	@Override
 	public ArrayList<Connector> initDevices(ObjectBroker objectBroker) {
@@ -168,20 +168,18 @@ public class WMBusDeviceLoaderImpl implements DeviceLoader {
 																	// device
 										smartMeter.setHref(new Uri(href));
 										
-										ArrayList<String> assignedHrefs = null;
 										if (ipv6 != null) {
-											assignedHrefs = objectBroker.addObj(smartMeter,
-													ipv6);
+											objectBroker.addObj(smartMeter, ipv6);
 										} else {
-											assignedHrefs = objectBroker.addObj(smartMeter);
+											objectBroker.addObj(smartMeter);
 										}
 										
 										if(name != null && name.length() > 0){
 											smartMeter.setName(name);
 										}
 										
-										synchronized(myObjects){
-											myObjects.addAll(assignedHrefs);
+										synchronized (myObjects) {
+											myObjects.add(smartMeter);
 										}
 										smartMeter.initialize();
 									
@@ -222,9 +220,9 @@ public class WMBusDeviceLoaderImpl implements DeviceLoader {
 
 	@Override
 	public void removeDevices(ObjectBroker objectBroker) {
-		synchronized(myObjects){
-			for(String href : myObjects){
-				objectBroker.removeObj(href);
+		synchronized(myObjects) {
+			for(Obj obj : myObjects) {
+				objectBroker.removeObj(obj.getFullContextPath());
 			}
 		}
 	}

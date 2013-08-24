@@ -667,6 +667,16 @@ public class Abstime
     if (timeZone != null)
       tz = timeZone.getID();
   }
+  
+  /**
+   * Set to value of another Abstime 
+   */
+  public void set(Obj obj)
+  {
+	if (!(obj instanceof Abstime)) return;
+	Abstime abstime = (Abstime) obj;
+	this.set(abstime.millis, abstime.timeZone);
+  }
 
 ////////////////////////////////////////////////////////////////
 // Val

@@ -65,6 +65,8 @@ import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.SmartMeter;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.SunIntensitySensor;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.TemperatureSensor;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sim.HVACSimulation;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.knx.datapoint.DPST_1_1;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.knx.datapoint.DPST_3_7;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.knx.datapoint.DPST_9_1;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.knx.datapoint.DataPoint;
 import obix.*;
@@ -123,6 +125,8 @@ public class ContractInit
 	  // KNX 
 	  ContractRegistry.put(DataPoint.CONTRACT, DataPoint.class.getName());
 	  ContractRegistry.put(DPST_9_1.CONTRACT, DPST_9_1.class.getName());
+	  ContractRegistry.put(DPST_1_1.CONTRACT, DPST_1_1.class.getName());
+	  ContractRegistry.put(DPST_3_7.CONTRACT, DPST_3_7.class.getName());
 	 
 	  ContractRegistry.buildReverseMap();
   }

@@ -223,7 +223,7 @@ public class BACnetConnector implements Connector{
 				if (bacnetDevice == null) continue;
 				
 				String name = objIdentifier.toString().replaceAll(" ", "");
-				String href = root.getHref().getPath() + "/" + device.getInstanceNumber() + "/" + name;
+				String href = root.getFullContextPath() + "/" + device.getInstanceNumber() + "/" + name;
 				bacnetDevice.setName(name);
 				bacnetDevice.setHref(new Uri(href));
 				
@@ -234,7 +234,7 @@ public class BACnetConnector implements Connector{
 				Obj devRoot;
 				if (!devices.containsKey(device.getInstanceNumber())) {
 					devRoot = new Obj();
-					devRoot.setHref(new Uri(root.getHref().getPath() + "/" + device.getInstanceNumber()));
+					devRoot.setHref(new Uri(root.getFullContextPath() + "/" + device.getInstanceNumber()));
 					root.add(new Ref(String.valueOf(device.getInstanceNumber()), devRoot.getHref()));
 					devices.put(device.getInstanceNumber(), devRoot);
 					notifyDiscoveryListeners(devRoot);

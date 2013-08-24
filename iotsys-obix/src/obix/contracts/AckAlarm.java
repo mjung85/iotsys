@@ -12,7 +12,8 @@ import obix.*;
 public interface AckAlarm
   extends IObj, Alarm
 {
-
+  public static final String ACK_ALARM_CONTRACT = "obix:AckAlarm";
+  
   public static final String ackTimestampContract = "<abstime name='ackTimestamp' val='1969-12-31T19:00:00.000-05:00' null='true'/>";
   public Abstime ackTimestamp();
 

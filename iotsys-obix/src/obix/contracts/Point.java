@@ -12,5 +12,6 @@ import obix.*;
 public interface Point
   extends IObj
 {
+  public static final String POINT_CONTRACT = "obix:Point";
 
 }

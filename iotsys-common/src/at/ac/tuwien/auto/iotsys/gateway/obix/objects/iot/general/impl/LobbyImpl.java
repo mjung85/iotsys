@@ -45,7 +45,7 @@ public class LobbyImpl extends Obj implements Lobby {
 	private Ref about = new Ref();
 	
 	public LobbyImpl(){
-		this.setHref(new Uri("http://localhost/obix"));
+		this.setHref(new Uri("obix"));
 		about.setName("about");
 		about.setHref(new Uri("about"));
 		this.add(about);
@@ -75,11 +75,11 @@ public class LobbyImpl extends Obj implements Lobby {
 	}
 	
 	public void removeReference(String href){
-		synchronized(references){
+		synchronized(references) {
 			Ref ref = references.get(href);
 			if(ref != null)
 				this.remove(ref);
-			references.remove(href);			
+			references.remove(href);
 		}
 	}
 }

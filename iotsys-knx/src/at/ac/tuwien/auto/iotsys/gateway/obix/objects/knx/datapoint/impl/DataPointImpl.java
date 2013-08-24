@@ -30,7 +30,6 @@
  * This file is part of the IoTSyS project.
  ******************************************************************************/
 
-
 package at.ac.tuwien.auto.iotsys.gateway.obix.objects.knx.datapoint.impl;
 
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.knx.datapoint.DataPoint;
@@ -39,33 +38,35 @@ import obix.Obj;
 import obix.Str;
 import obix.Uri;
 
-public class DataPointImpl extends Obj implements DataPoint{
+public class DataPointImpl extends Obj implements DataPoint
+{
 	protected Str function = new Str();
 	protected Str unit = new Str();
-	
-	public DataPointImpl(){
-		
+
+	public DataPointImpl()
+	{
 		this.setIs(new Contract(DataPoint.CONTRACT));
-		
+
 		this.function.setName(DataPoint.FUNCTION_NAME);
 		this.function.setHref(new Uri(DataPoint.FUNCTION_HREF));
-		
+
 		this.add(function);
-		
+
 		this.unit.setName(DataPoint.UNIT_NAME);
 		this.unit.setHref(new Uri(DataPoint.UNIT_HREF));
-		
+
 		this.add(unit);
 	}
-	
+
 	@Override
-	public Str function() {
+	public Str function()
+	{
 		return function;
 	}
 
 	@Override
-	public Str unit() {
+	public Str unit()
+	{
 		return unit;
 	}
-
 }
