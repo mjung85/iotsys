@@ -34,7 +34,6 @@ package at.ac.tuwien.auto.iotsys.gateway.obix.objectbroker;
 
 import java.net.Inet6Address;
 import java.net.UnknownHostException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.logging.Logger;
 
@@ -46,7 +45,7 @@ import obix.Obj;
 import obix.Op;
 import obix.Ref;
 import obix.Uri;
-import at.ac.tuwien.auto.iotsys.commons.MDnsResolver;
+import at.ac.tuwien.auto.iotsys.commons.MdnsResolver;
 import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.AboutImpl;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.AlarmSubjectImpl;
@@ -83,7 +82,7 @@ public class ObjectBrokerImpl implements ObjectBroker {
 
 	private ObjectRefresher objectRefresher = new ObjectRefresher();
 
-	private MDnsResolver resolver;
+	private MdnsResolver resolver;
 
 	private ObjectBrokerImpl() {
 		rootObject = new Obj();
@@ -420,11 +419,11 @@ public class ObjectBrokerImpl implements ObjectBroker {
 	}
 	
 	@Override
-	public MDnsResolver getMDnsResolver() {
+	public MdnsResolver getMDnsResolver() {
 		return resolver;
 	}
 	@Override
-	public void setMdnsResolver(MDnsResolver resolver){
+	public void setMdnsResolver(MdnsResolver resolver){
 		this.resolver = resolver;
 	}
 }
