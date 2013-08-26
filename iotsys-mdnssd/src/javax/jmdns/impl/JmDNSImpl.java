@@ -999,6 +999,7 @@ public class JmDNSImpl extends JmDNS implements DNSStatefulObject, DNSTaskStarte
         this.waitForAnnounced(DNSConstants.SERVICE_INFO_TIMEOUT);
 
         this.makeServiceNameUnique(info);
+        logger.info("PUTING INTO SERVICE REGISTRY: key:" + info.getKey() + " info: " + info.toString());
         while (_services.putIfAbsent(info.getKey(), info) != null) {
             this.makeServiceNameUnique(info);
         }
@@ -1006,8 +1007,8 @@ public class JmDNSImpl extends JmDNS implements DNSStatefulObject, DNSTaskStarte
         this.startProber();
         info.waitForAnnounced(DNSConstants.SERVICE_INFO_TIMEOUT);
 
-        if (logger.isLoggable(Level.FINE)) {
-            logger.fine("registerService() JmDNS registered service as " + info);
+        if (logger.isLoggable(Level.INFO)) {
+            logger.info("registerService() JmDNS registered service as " + info);
         }
     }
 

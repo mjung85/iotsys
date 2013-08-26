@@ -303,6 +303,10 @@ public class ObjectBrokerImpl implements ObjectBroker {
 			
 			String href = o.getFullContextPath();
 			ipv6Mapping.put(generateIPv6Address.toString(), href);
+			if(resolver != null) {
+                resolver.addToRecordDict(href, ipv6Address);
+                resolver.registerDevice(href, o.getClass(), ipv6Address);
+			}
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		}

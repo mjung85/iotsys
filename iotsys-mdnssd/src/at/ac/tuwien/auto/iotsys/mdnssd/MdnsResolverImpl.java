@@ -77,13 +77,25 @@ public class MdnsResolverImpl implements MdnsResolver {
 	public static MdnsResolver getInstance() {
 		return INSTANCE;
 	}
+	
+	public String hrefNorm(String href){
+		if (href.startsWith("/"))
+			href = href.substring(1);
+		
+		String[] ar = href.split("/");
+		String convertedName = "";
+		int i;
+		for (i = ar.length; i>0; i--){
+			convertedName += ar[i-1] + ".";
+		}
+		return convertedName;
+	}
 
 	@Override
 	public void addToRecordDict(String name, String addr) {
-		if (name.startsWith("/"))
-			name = name.substring(1);
+		name = hrefNorm(name);
 		try {
-			recordDict.putIfAbsent(name + "." + Named.AUTHORITATIVE_DOMAIN,
+			recordDict.putIfAbsent(name.toLowerCase() + Named.AUTHORITATIVE_DOMAIN,
 					addr);
 		} catch (NullPointerException e) {
 		}
@@ -91,7 +103,7 @@ public class MdnsResolverImpl implements MdnsResolver {
 
 	@Override
 	public String resolve(String name) {
-		return recordDict.get(name);
+		return recordDict.get(name.toLowerCase());
 	}
 
 	@Override
@@ -100,29 +112,44 @@ public class MdnsResolverImpl implements MdnsResolver {
 	}
 
 	@Override
-	public void registerDevice(String name, Class<?> deviceClass, String ipv6) {
-		if (name.startsWith("/"))
-			name = name.substring(1);
+	public void registerDevice(String deviceName, Class<?> deviceClass, String ipv6) {
+		deviceName = hrefNorm(deviceName).toLowerCase();
+		deviceName = deviceName.split("\\.")[0];
 
-		String serviceType = null;
+		String subServiceType = null;
 		Class<?>[] deviceInterfaces = deviceClass.getInterfaces();
 		if (deviceInterfaces.length == 0) {
-			serviceType = "generic-device";
+			subServiceType = "generic-device";
 		} else
 			for (Class<?> c : deviceInterfaces) {
 				if (Sensor.class.isAssignableFrom(c)
 						|| Actuator.class.isAssignableFrom(c)) {
-					serviceType = c.toString().substring(c.toString().lastIndexOf(".") + 1); 
+					subServiceType = c.toString().substring(c.toString().lastIndexOf(".") + 1); 
 				}
 			}
 
-		serviceType = serviceType.toLowerCase();
+		subServiceType = subServiceType.toLowerCase();
+		ServiceInfo obixService = ServiceInfo.create("_obix._coap.local.", deviceName, 5683, null);
+		try {
+			obixService.setIpv6Addr(ipv6);
+		} catch (IllegalStateException | UnknownHostException
+				| SecurityException e1) {
+			e1.printStackTrace();
+		}
+		
+		executor.execute(new ServiceRegistra(obixService));
+
+		//System.out.println("registering sub service type: " + subServiceType + " service name: " + deviceName);
 		final HashMap<String, String> values = new HashMap<String, String>();
 		values.put("IPv6", ipv6);
-		ServiceInfo pairservice = ServiceInfo.create("_" + serviceType
-				+ "._tcp.local.", name, 8080, 0, 0, values);
-		executor.execute(new ServiceRegistra(pairservice));
-
+		ServiceInfo pairservice = ServiceInfo.create("_" + subServiceType
+				+ "._coap.local.", deviceName, 8080, null);
+		try {
+			pairservice.setIpv6Addr(ipv6);
+		} catch (IllegalStateException | UnknownHostException
+				| SecurityException e) {
+			e.printStackTrace();
+		}
 	}
 
 	private class ServiceRegistra implements Runnable {

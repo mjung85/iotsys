@@ -42,16 +42,13 @@ import at.ac.tuwien.auto.iotsys.gateway.obix.objects.bacnet.BinaryValue;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.AirDamperActuator;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.BoilerActuator;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.BrightnessActuator;
-//import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.ChillerActuator;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.CoolerActuator;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.FanSpeedActuator;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.HVACvalveActuator;
-//import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.HeatPumpActuator;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.LightSwitchActuator;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.PumpActuator;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.SunblindActuator;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.logic.BinaryOperation;
-//import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.TemperatureControlActuator;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.logic.Comparator;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.logic.LogicBinaryOperation;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.logic.TemperatureController;
@@ -69,7 +66,9 @@ import at.ac.tuwien.auto.iotsys.gateway.obix.objects.knx.datapoint.DPST_1_1;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.knx.datapoint.DPST_3_7;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.knx.datapoint.DPST_9_1;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.knx.datapoint.DataPoint;
-import obix.*;
+//import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.ChillerActuator;
+//import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.HeatPumpActuator;
+//import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.TemperatureControlActuator;
 
 public class ContractInit
 {

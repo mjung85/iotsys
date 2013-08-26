@@ -5,6 +5,8 @@
 package javax.jmdns.impl;
 
 import java.net.InetAddress;
+import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -85,6 +87,7 @@ public class DNSQuestion extends DNSEntry {
      * Pointer question.
      */
     private static class Pointer extends DNSQuestion {
+    	Set<DNSRecord> addtnAnswers = new HashSet<DNSRecord>();
         Pointer(String name, DNSRecordType type, DNSRecordClass recordClass, boolean unique) {
             super(name, type, recordClass, unique);
         }
@@ -93,7 +96,7 @@ public class DNSQuestion extends DNSEntry {
         public void addAnswers(JmDNSImpl jmDNSImpl, Set<DNSRecord> answers) {
             // find matching services
             for (ServiceInfo serviceInfo : jmDNSImpl.getServices().values()) {
-                this.addAnswersForServiceInfo(jmDNSImpl, answers, (ServiceInfoImpl) serviceInfo);
+                this.addAnswersForServiceInfo(jmDNSImpl, answers, addtnAnswers, (ServiceInfoImpl) serviceInfo);
             }
             if (this.isServicesDiscoveryMetaQuery()) {
                 for (String serviceType : jmDNSImpl.getServiceTypes().keySet()) {
@@ -125,6 +128,7 @@ public class DNSQuestion extends DNSEntry {
      * Service question.
      */
     private static class Service extends DNSQuestion {
+    	Set<DNSRecord> addtnAnswers = new HashSet<DNSRecord>();
         Service(String name, DNSRecordType type, DNSRecordClass recordClass, boolean unique) {
             super(name, type, recordClass, unique);
         }
@@ -144,7 +148,7 @@ public class DNSQuestion extends DNSEntry {
                 return;
             }
 
-            this.addAnswersForServiceInfo(jmDNSImpl, answers, (ServiceInfoImpl) jmDNSImpl.getServices().get(loname));
+            this.addAnswersForServiceInfo(jmDNSImpl, answers, addtnAnswers, (ServiceInfoImpl) jmDNSImpl.getServices().get(loname));
         }
 
         @Override
@@ -159,13 +163,14 @@ public class DNSQuestion extends DNSEntry {
      * Text question.
      */
     private static class Text extends DNSQuestion {
+    	Set<DNSRecord> addtnAnswers = new HashSet<DNSRecord>();
         Text(String name, DNSRecordType type, DNSRecordClass recordClass, boolean unique) {
             super(name, type, recordClass, unique);
         }
 
         @Override
         public void addAnswers(JmDNSImpl jmDNSImpl, Set<DNSRecord> answers) {
-            this.addAnswersForServiceInfo(jmDNSImpl, answers, (ServiceInfoImpl) jmDNSImpl.getServices().get(this.getName().toLowerCase()));
+            this.addAnswersForServiceInfo(jmDNSImpl, answers, addtnAnswers, (ServiceInfoImpl) jmDNSImpl.getServices().get(this.getName().toLowerCase()));
         }
 
         @Override
@@ -180,6 +185,7 @@ public class DNSQuestion extends DNSEntry {
      * AllRecords question.
      */
     private static class AllRecords extends DNSQuestion {
+    	Set<DNSRecord> addtnAnswers = new HashSet<DNSRecord>();
         AllRecords(String name, DNSRecordType type, DNSRecordClass recordClass, boolean unique) {
             super(name, type, recordClass, unique);
         }
@@ -188,6 +194,11 @@ public class DNSQuestion extends DNSEntry {
         public boolean isSameType(DNSEntry entry) {
             // We match all non null entry
             return (entry != null);
+        }
+        
+        @Override
+        public void addAdditionalAnswers(JmDNSImpl jmDNSImpl, Set<DNSRecord> additionalAnswers){
+        	additionalAnswers.addAll(addtnAnswers);
         }
 
         @Override
@@ -204,8 +215,11 @@ public class DNSQuestion extends DNSEntry {
                 question.addAnswers(jmDNSImpl, answers);
                 return;
             }
-
-            this.addAnswersForServiceInfo(jmDNSImpl, answers, (ServiceInfoImpl) jmDNSImpl.getServices().get(loname));
+            //logger.info("Getting service infor for " + loname);
+            Map<String, ServiceInfo> servicesMap = jmDNSImpl.getServices();
+            ServiceInfoImpl sii = (ServiceInfoImpl) servicesMap.get(loname);
+            if (sii != null)
+            this.addAnswersForServiceInfo(jmDNSImpl, answers, addtnAnswers, (ServiceInfoImpl) jmDNSImpl.getServices().get(loname));
         }
 
         @Override
@@ -274,15 +288,20 @@ public class DNSQuestion extends DNSEntry {
     public void addAnswers(JmDNSImpl jmDNSImpl, Set<DNSRecord> answers) {
         // By default we do nothing
     }
+    
+    public void addAdditionalAnswers(JmDNSImpl jmDNSImpl, Set<DNSRecord> answers) {
+    	
+    }
 
-    protected void addAnswersForServiceInfo(JmDNSImpl jmDNSImpl, Set<DNSRecord> answers, ServiceInfoImpl info) {
-        if ((info != null) && info.isAnnounced()) {
+    protected void addAnswersForServiceInfo(JmDNSImpl jmDNSImpl, Set<DNSRecord> answers, Set<DNSRecord> addtnAnswers, ServiceInfoImpl info) {
+    	if ((info != null) && info.isAnnounced()) {
             if (this.getName().equalsIgnoreCase(info.getQualifiedName()) || this.getName().equalsIgnoreCase(info.getType())) {
-                answers.addAll(jmDNSImpl.getLocalHost().answers(DNSRecordClass.UNIQUE, DNSConstants.DNS_TTL));
+                //answers.addAll(jmDNSImpl.getLocalHost().answers(DNSRecordClass.UNIQUE, DNSConstants.DNS_TTL));
                 answers.addAll(info.answers(DNSRecordClass.UNIQUE, DNSConstants.DNS_TTL, jmDNSImpl.getLocalHost()));
+                //addtnAnswers.addAll(info.addtnAnswers(DNSRecordClass.UNIQUE, DNSConstants.DNS_TTL, jmDNSImpl.getLocalHost()));
             }
-            if (logger.isLoggable(Level.FINER)) {
-                logger.finer(jmDNSImpl.getName() + " DNSQuestion(" + this.getName() + ").addAnswersForServiceInfo(): info: " + info + "\n" + answers);
+            if (logger.isLoggable(Level.FINEST)) {
+                logger.info(jmDNSImpl.getName() + " DNSQuestion(" + this.getName() + ").addAnswersForServiceInfo(): info: " + info + "\n" + answers);
             }
         }
     }
