@@ -23,14 +23,7 @@ import javax.jmdns.impl.constants.DNSConstants;
 public class Responder extends DNSTask {
     static Logger             logger = Logger.getLogger(Responder.class.getName());
 
-    /**
-     *
-     */
     private final DNSIncoming _in;
-
-    /**
-     *
-     */
     private final boolean     _unicast;
 
     public Responder(JmDNSImpl jmDNSImpl, DNSIncoming in, int port) {
@@ -99,21 +92,22 @@ public class Responder extends DNSTask {
         // We use these sets to prevent duplicate records
         Set<DNSQuestion> questions = new HashSet<DNSQuestion>();
         Set<DNSRecord> answers = new HashSet<DNSRecord>();
+        Set<DNSRecord> additionalAnswers = new HashSet<DNSRecord>();
 
         if (this.getDns().isAnnounced()) {
             try {
                 // Answer questions
                 for (DNSQuestion question : _in.getQuestions()) {
-                    if (logger.isLoggable(Level.FINER)) {
-                        logger.finer(this.getName() + "run() JmDNS responding to: " + question);
+                    if (logger.isLoggable(Level.FINEST)) {
+                        logger.finest(this.getName() + "run() JmDNS responding to: " + question);
                     }
                     // for unicast responses the question must be included
                     if (_unicast) {
                         // out.addQuestion(q);
                         questions.add(question);
                     }
-
                     question.addAnswers(this.getDns(), answers);
+                    //question.addAdditionalAnswers(this.getDns(), additionalAnswers);
                 }
 
                 // remove known answers, if the ttl is at least half of the correct value. (See Draft Cheshire chapter 7.1.).
@@ -144,6 +138,11 @@ public class Responder extends DNSTask {
                             out = this.addAnswer(out, _in, answer);
 
                         }
+                    }
+                    for (DNSRecord additionalAnswer : additionalAnswers) {
+                    	if (additionalAnswer != null){
+                    		out = this.addAdditionalAnswer(out, _in, additionalAnswer);
+                    	}
                     }
                     if (!out.isEmpty()) this.getDns().send(out);
                 }
