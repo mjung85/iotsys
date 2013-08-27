@@ -30,7 +30,7 @@ public class AlarmServiceTest extends AbstractGatewayTest {
 	
 	private XmlPath getLatestAlarm() {
 		XmlPath lastAlarm = new XmlPath(post("/alarms/query").asString());
-		int alarms = lastAlarm.get("obj.list.obj.size()");
+		int alarms = lastAlarm.getInt("obj.list.obj.size()");
 		lastAlarm.setRoot(("obj.list.obj[" + (alarms-1) + "]"));
 		
 		return lastAlarm;
