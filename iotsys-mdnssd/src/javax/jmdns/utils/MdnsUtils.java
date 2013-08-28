@@ -16,6 +16,11 @@ public class MdnsUtils {
 	public static final int IPv6 = 2;
 
 	public static InetAddress getByAddress(String addr) {
+		if (addr.contains("/")){
+			String[] arr = addr.split("/");
+			addr = arr[arr.length - 1];
+		}
+			
 		try {
 
 			byte[] bytes;

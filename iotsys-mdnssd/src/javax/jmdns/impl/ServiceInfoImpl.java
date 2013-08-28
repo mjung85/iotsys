@@ -872,7 +872,7 @@ public class ServiceInfoImpl extends ServiceInfo implements DNSListener, DNSStat
      */
     @Override
     public void updateRecord(DNSCache dnsCache, long now, DNSEntry rec) {
-    	System.out.println("updateRecord called");
+    	logger.finest("updateRecord called");
         if ((rec instanceof DNSRecord) && !rec.isExpired(now)) {
             boolean serviceUpdated = false;
             switch (rec.getRecordType()) {
@@ -949,7 +949,7 @@ public class ServiceInfoImpl extends ServiceInfo implements DNSListener, DNSStat
      */
     @Override
     public synchronized boolean hasData() {
-        return this.getServer() != null && this.hasInetAddress() && this.getTextBytes() != null && this.getTextBytes().length > 0;
+        return this.getServer() != null && this.hasInetAddress();
         // return this.getServer() != null && (this.getAddress() != null || (this.getTextBytes() != null && this.getTextBytes().length > 0));
     }
 
@@ -1205,7 +1205,8 @@ public class ServiceInfoImpl extends ServiceInfo implements DNSListener, DNSStat
         list.add(new Service(this.getQualifiedName(), DNSRecordClass.CLASS_IN, unique, ttl, _priority, _weight, _port, localHost.getName()));
         if (this.getTextBytes() !=null )
         	list.add(new Text(this.getQualifiedName(), DNSRecordClass.CLASS_IN, unique, ttl, this.getTextBytes()));
-        list.add(new DNSRecord.IPv6Address(this.getQualifiedName(), DNSRecordClass.CLASS_IN, DNSRecordClass.UNIQUE, DNSConstants.DNS_TTL, MdnsUtils.getByAddress(this.getInet6Addresses()[0].toString().substring(1))));
+        if (this.getInet6Addresses().length > 0)
+        	list.add(new DNSRecord.IPv6Address(this.getQualifiedName(), DNSRecordClass.CLASS_IN, DNSRecordClass.UNIQUE, DNSConstants.DNS_TTL, MdnsUtils.getByAddress(this.getInet6Addresses()[0].toString().substring(1))));
         return list;
     }
 

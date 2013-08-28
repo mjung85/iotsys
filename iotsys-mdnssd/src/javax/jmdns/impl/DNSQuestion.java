@@ -8,7 +8,6 @@ import java.net.InetAddress;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.jmdns.ServiceInfo;
@@ -215,12 +214,16 @@ public class DNSQuestion extends DNSEntry {
                 question.addAnswers(jmDNSImpl, answers);
                 return;
             }
-            //logger.info("Getting service infor for " + loname);
-            Map<String, ServiceInfo> servicesMap = jmDNSImpl.getServices();
-            ServiceInfoImpl sii = (ServiceInfoImpl) servicesMap.get(loname);
-            if (sii != null)
-            this.addAnswersForServiceInfo(jmDNSImpl, answers, addtnAnswers, (ServiceInfoImpl) jmDNSImpl.getServices().get(loname));
-        }
+            logger.finest("--------------------Getting service infor for " + loname);
+			if (loname.contains("obix")) {
+				Map<String, ServiceInfo> servicesMap = jmDNSImpl.getServices();
+				ServiceInfoImpl sii = (ServiceInfoImpl) servicesMap.get(loname);
+
+				if (sii != null)
+					this.addAnswersForServiceInfo(jmDNSImpl, answers, addtnAnswers, (ServiceInfoImpl) jmDNSImpl
+							.getServices().get(loname));
+			}
+		}
 
         @Override
         public boolean iAmTheOnlyOne(JmDNSImpl jmDNSImpl) {
@@ -294,15 +297,13 @@ public class DNSQuestion extends DNSEntry {
     }
 
     protected void addAnswersForServiceInfo(JmDNSImpl jmDNSImpl, Set<DNSRecord> answers, Set<DNSRecord> addtnAnswers, ServiceInfoImpl info) {
-    	if ((info != null) && info.isAnnounced()) {
-            if (this.getName().equalsIgnoreCase(info.getQualifiedName()) || this.getName().equalsIgnoreCase(info.getType())) {
-                //answers.addAll(jmDNSImpl.getLocalHost().answers(DNSRecordClass.UNIQUE, DNSConstants.DNS_TTL));
-                answers.addAll(info.answers(DNSRecordClass.UNIQUE, DNSConstants.DNS_TTL, jmDNSImpl.getLocalHost()));
+    	if ((info != null) && info.isAnnounced() && this.getName().contains("obix")) {
+    		logger.fine("this.getName(): " + this.getName() + " info.getQualifiedName(): " + info.getQualifiedName() + " info.getType(): " + info.getTypeWithSubtype());
+            if (this.getName().equalsIgnoreCase(info.getQualifiedName()) || this.getName().equalsIgnoreCase(info.getType())  || this.getName().equalsIgnoreCase(info.getTypeWithSubtype())) {
+            	answers.addAll(info.answers(DNSRecordClass.UNIQUE, DNSConstants.DNS_TTL, jmDNSImpl.getLocalHost())); 
                 //addtnAnswers.addAll(info.addtnAnswers(DNSRecordClass.UNIQUE, DNSConstants.DNS_TTL, jmDNSImpl.getLocalHost()));
             }
-            if (logger.isLoggable(Level.FINEST)) {
-                logger.info(jmDNSImpl.getName() + " DNSQuestion(" + this.getName() + ").addAnswersForServiceInfo(): info: " + info + "\n" + answers);
-            }
+            logger.fine(jmDNSImpl.getName() + " DNSQuestion(" + this.getName() + ").addAnswersForServiceInfo(): info: " + info + "\n" + answers);
         }
     }
 
