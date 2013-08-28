@@ -99,10 +99,10 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader
 		Obj networks = new Obj();
 		networks.setName("networks");
 		networks.setHref(new Uri("/networks"));
+		objectBroker.addObj(networks, true);
 
 		// Workaround, addObj registers currently only the obj and direct
 		// children
-		objectBroker.addObj(networks, true);
 
 		// Network
 		Obj network = new Obj();
@@ -118,7 +118,7 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader
 		standard.setRange(new Uri("/enums/enumStandard"));
 		standard.set("knx");
 		network.add(standard);
-		objectBroker.addObj(standard);
+		objectBroker.addObj(standard, false);
 
 		// Network Reference
 		// Note: build references after building the real objects, so that href
@@ -150,11 +150,11 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader
 	{
 		// Functional View
 		Obj functional = new Obj();
+		functional.setHidden(true);
 		functional.setName("functional");
 		functional.setDisplay("Funktionale Sicht des Netzwerks");
 		functional.setHref(new Uri(network.getHref().getPath() + "/" + "views/functional"));
 		functional.setIs(new Contract("knx:viewFunctional"));
-
 		objectBroker.addObj(functional, false);
 
 		// Reference
@@ -179,7 +179,10 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader
 		all.setName("P-0341-0_GR-1");
 		all.setDisplayName("All component");
 		all.setIs(new Contract("knx:group"));
-		all.setHref(new Uri(list.getHref().getPath() + "/" + "all_component"));
+		
+		//TODO change relative HREFS !!!!!!!		
+		all.setHref(new Uri("all_component"));
+		
 		list.add(all);
 		objectBroker.addObj(all, false);
 
@@ -1239,7 +1242,7 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader
 			dpst.value().setHref(new Uri(dpst.getHref().getPath() + "/" + DPST_3_7.VALUE_HREF));
 
 			datapoints.add(dpst);
-			objectBroker.addObj(dpst);
+			objectBroker.addObj(dpst, false);
 		}
 		catch (KNXFormatException e)
 		{
@@ -1263,7 +1266,7 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader
 			dpst.value().setHref(new Uri(dpst.getHref().getPath() + "/" + DPST_1_1.VALUE_HREF));
 
 			datapoints.add(dpst);
-			objectBroker.addObj(dpst);
+			objectBroker.addObj(dpst, false);
 		}
 		catch (KNXFormatException e)
 		{
@@ -1285,7 +1288,7 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader
 			tempKanalA.unit().setHref(new Uri(tempKanalA.getHref().getPath() + "/" + DPST_9_1.UNIT_HREF));
 			tempKanalA.value().setHref(new Uri(tempKanalA.getHref().getPath() + "/" + DPST_9_1.VALUE_HREF));
 			datapoints.add(tempKanalA);
-			objectBroker.addObj(tempKanalA);
+			objectBroker.addObj(tempKanalA, false);
 
 			DPST_9_1_ImplKnx tempKanalB = new DPST_9_1_ImplKnx(knxConnector, new GroupAddress("1/1/1"));
 			tempKanalB.setName("M-0001_A-9814-01-5F7E_O-1_R-3");
@@ -1296,7 +1299,7 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader
 			tempKanalB.unit().setHref(new Uri(tempKanalB.getHref().getPath() + "/" + DPST_9_1.UNIT_HREF));
 			tempKanalB.value().setHref(new Uri(tempKanalB.getHref().getPath() + "/" + DPST_9_1.VALUE_HREF));
 			datapoints.add(tempKanalB);
-			objectBroker.addObj(tempKanalB);
+			objectBroker.addObj(tempKanalB, false);
 
 			DPST_9_1_ImplKnx tempKanalC = new DPST_9_1_ImplKnx(knxConnector, new GroupAddress("1/1/2"));
 			tempKanalC.setName("M-0001_A-9814-01-5F7E_O-2_R-1");
@@ -1307,7 +1310,7 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader
 			tempKanalC.unit().setHref(new Uri(tempKanalC.getHref().getPath() + "/" + DPST_9_1.UNIT_HREF));
 			tempKanalC.value().setHref(new Uri(tempKanalC.getHref().getPath() + "/" + DPST_9_1.VALUE_HREF));
 			datapoints.add(tempKanalC);
-			objectBroker.addObj(tempKanalC);
+			objectBroker.addObj(tempKanalC, false);
 
 			DPST_9_1_ImplKnx tempKanalD = new DPST_9_1_ImplKnx(knxConnector, new GroupAddress("1/1/3"));
 			tempKanalD.setName("M-0001_A-9814-01-5F7E_O-3_R-4");
@@ -1318,7 +1321,7 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader
 			tempKanalD.unit().setHref(new Uri(tempKanalD.getHref().getPath() + "/" + DPST_9_1.UNIT_HREF));
 			tempKanalD.value().setHref(new Uri(tempKanalD.getHref().getPath() + "/" + DPST_9_1.VALUE_HREF));
 			datapoints.add(tempKanalD);
-			objectBroker.addObj(tempKanalD);
+			objectBroker.addObj(tempKanalD, false);
 		}
 		catch (KNXFormatException e)
 		{
