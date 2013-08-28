@@ -98,6 +98,8 @@ public class Responder extends DNSTask {
             try {
                 // Answer questions
                 for (DNSQuestion question : _in.getQuestions()) {
+                	if (!question.getName().contains("obix"))
+                		continue;
                     if (logger.isLoggable(Level.FINEST)) {
                         logger.finest(this.getName() + "run() JmDNS responding to: " + question);
                     }

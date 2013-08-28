@@ -560,7 +560,7 @@ public abstract class DNSRecord extends DNSEntry {
         public ServiceEvent getServiceEvent(JmDNSImpl dns) {
             ServiceInfo info = this.getServiceInfo(false);
             ((ServiceInfoImpl) info).setDns(dns);
-            String domainName = info.getType();
+            String domainName = info.getTypeWithSubtype();
             String serviceName = JmDNSImpl.toUnqualifiedName(domainName, this.getAlias());
             return new ServiceEventImpl(dns, domainName, serviceName, info);
         }

@@ -749,7 +749,7 @@ public class JmDNSImpl extends JmDNS implements DNSStatefulObject, DNSTaskStarte
         ServiceInfoImpl info = new ServiceInfoImpl(type, name, subtype, 0, 0, 0, persistent, (byte[]) null);
         DNSEntry pointerEntry = this.getCache().getDNSEntry(new DNSRecord.Pointer(type, DNSRecordClass.CLASS_ANY, false, 0, info.getQualifiedName()));
         if (pointerEntry instanceof DNSRecord) {
-            ServiceInfoImpl cachedInfo = (ServiceInfoImpl) ((DNSRecord) pointerEntry).getServiceInfo(persistent);
+            ServiceInfoImpl cachedInfo = (ServiceInfoImpl) ((DNSRecord) pointerEntry).getServiceInfo(persistent);// basically create new serviceinfo based on the PTR record
             if (cachedInfo != null) {
                 // To get a complete info record we need to retrieve the service, address and the text bytes.
 
@@ -765,7 +765,11 @@ public class JmDNSImpl extends JmDNS implements DNSStatefulObject, DNSTaskStarte
                         server = cachedServiceEntryInfo.getServer();
                     }
                 }
-                DNSEntry addressEntry = this.getCache().getDNSEntry(server, DNSRecordType.TYPE_A, DNSRecordClass.CLASS_ANY);
+                
+                /// Differentiate between info.getQualifiedName() and server: in IoTSyS, 
+                /// all service is advertised via IoTSyS gateway --> gateway address should be replaced
+                /// by the individual service addresses
+                DNSEntry addressEntry = this.getCache().getDNSEntry(info.getQualifiedName(), DNSRecordType.TYPE_A, DNSRecordClass.CLASS_ANY);
                 if (addressEntry instanceof DNSRecord) {
                     ServiceInfo cachedAddressInfo = ((DNSRecord) addressEntry).getServiceInfo(persistent);
                     if (cachedAddressInfo != null) {
@@ -775,7 +779,7 @@ public class JmDNSImpl extends JmDNS implements DNSStatefulObject, DNSTaskStarte
                         cachedInfo._setText(cachedAddressInfo.getTextBytes());
                     }
                 }
-                addressEntry = this.getCache().getDNSEntry(server, DNSRecordType.TYPE_AAAA, DNSRecordClass.CLASS_ANY);
+                addressEntry = this.getCache().getDNSEntry(info.getQualifiedName(), DNSRecordType.TYPE_AAAA, DNSRecordClass.CLASS_ANY);
                 if (addressEntry instanceof DNSRecord) {
                     ServiceInfo cachedAddressInfo = ((DNSRecord) addressEntry).getServiceInfo(persistent);
                     if (cachedAddressInfo != null) {
@@ -792,7 +796,7 @@ public class JmDNSImpl extends JmDNS implements DNSStatefulObject, DNSTaskStarte
                         cachedInfo._setText(cachedTextInfo.getTextBytes());
                     }
                 }
-                if (cachedInfo.getTextBytes().length == 0) {
+                if (cachedInfo.getTextBytes() != null && cachedInfo.getTextBytes().length > 0) {
                     cachedInfo._setText(srvBytes);
                 }
                 if (cachedInfo.hasData()) {
@@ -993,8 +997,8 @@ public class JmDNSImpl extends JmDNS implements DNSStatefulObject, DNSTaskStarte
         // bind the service to this address
         info.recoverState();
         info.setServer(_localHost.getName());
-        info.addAddress(_localHost.getInet4Address());
-        info.addAddress(_localHost.getInet6Address());
+        //info.addAddress(_localHost.getInet4Address());
+        //info.addAddress(_localHost.getInet6Address());
 
         this.waitForAnnounced(DNSConstants.SERVICE_INFO_TIMEOUT);
 
@@ -1006,10 +1010,8 @@ public class JmDNSImpl extends JmDNS implements DNSStatefulObject, DNSTaskStarte
 
         this.startProber();
         info.waitForAnnounced(DNSConstants.SERVICE_INFO_TIMEOUT);
-
-        if (logger.isLoggable(Level.INFO)) {
-            logger.info("registerService() JmDNS registered service as " + info);
-        }
+        
+        logger.info("registerService() JmDNS registered service as " + info);
     }
 
     /**
@@ -1272,9 +1274,8 @@ public class JmDNSImpl extends JmDNS implements DNSStatefulObject, DNSTaskStarte
             } else {
                 serviceListenerList = Collections.emptyList();
             }
-            if (logger.isLoggable(Level.FINEST)) {
-                logger.finest(this.getName() + ".updating record for event: " + event + " list " + serviceListenerList + " operation: " + operation);
-            }
+            
+            logger.finest(this.getName() + ".updating record for event: " + event + " list " + serviceListenerList + " operation: " + operation);
             if (!serviceListenerList.isEmpty()) {
                 final ServiceEvent localEvent = event;
 
@@ -1319,11 +1320,11 @@ public class JmDNSImpl extends JmDNS implements DNSStatefulObject, DNSTaskStarte
     void handleRecord(DNSRecord record, long now) {
         DNSRecord newRecord = record;
 
+        if (!newRecord.getName().contains("obix"))
+        	return;
         Operation cacheOperation = Operation.Noop;
         final boolean expired = newRecord.isExpired(now);
-        if (logger.isLoggable(Level.FINE)) {
-            logger.fine(this.getName() + " handle response: " + newRecord);
-        }
+        logger.finest(this.getName() + " handle response: " + newRecord);
 
         // update the cache
         if (!newRecord.isServicesDiscoveryMetaQuery() && !newRecord.isDomainDiscoveryQuery()) {
@@ -1410,6 +1411,8 @@ public class JmDNSImpl extends JmDNS implements DNSStatefulObject, DNSTaskStarte
         boolean serviceConflictDetected = false;
 
         for (DNSRecord newRecord : msg.getAllAnswers()) {
+        	if (!newRecord.getName().contains("obix"))
+        		return;
             this.handleRecord(newRecord, now);
 
             if (DNSRecordType.TYPE_A.equals(newRecord.getRecordType()) || DNSRecordType.TYPE_AAAA.equals(newRecord.getRecordType())) {
@@ -2138,10 +2141,14 @@ public class JmDNSImpl extends JmDNS implements DNSStatefulObject, DNSTaskStarte
     static String toUnqualifiedName(String type, String qualifiedName) {
         String loType = type.toLowerCase();
         String loQualifiedName = qualifiedName.toLowerCase();
+        if (loType.contains("_sub"))
+        	loType = loType.substring(loType.indexOf("_sub") + 5);
+        	
         if (loQualifiedName.endsWith(loType) && !(loQualifiedName.equals(loType))) {
-            return qualifiedName.substring(0, qualifiedName.length() - type.length() - 1);
+            return qualifiedName.substring(0, qualifiedName.length() - loType.length() - 1);
         }
-        return qualifiedName;
+        
+      	return qualifiedName;
     }
 
     public Map<String, ServiceInfo> getServices() {

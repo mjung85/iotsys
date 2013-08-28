@@ -62,8 +62,8 @@ public class MdnsResolverImpl implements MdnsResolver {
 
 	private MdnsResolverImpl() {
 		try {
-			jmdns = JmDNS.create(InetAddress
-					.getByName(PropertiesLoader.getInstance().getProperties().getProperty("authNsAddr6", "fe80::acbc:b659:71db:5cb7%20")));
+			jmdns = JmDNS.create(InetAddress.getByName(PropertiesLoader.getInstance().getProperties()
+					.getProperty("authNsAddr6", "fe80::acbc:b659:71db:5cb7%20")));
 			executor = Executors.newFixedThreadPool(10);
 		} catch (UnknownHostException e) {
 			// TODO Auto-generated catch block
@@ -77,16 +77,16 @@ public class MdnsResolverImpl implements MdnsResolver {
 	public static MdnsResolver getInstance() {
 		return INSTANCE;
 	}
-	
-	public String hrefNorm(String href){
+
+	public String hrefNorm(String href) {
 		if (href.startsWith("/"))
 			href = href.substring(1);
-		
+
 		String[] ar = href.split("/");
 		String convertedName = "";
 		int i;
-		for (i = ar.length; i>0; i--){
-			convertedName += ar[i-1] + ".";
+		for (i = ar.length; i > 0; i--) {
+			convertedName += ar[i - 1] + ".";
 		}
 		return convertedName;
 	}
@@ -95,8 +95,7 @@ public class MdnsResolverImpl implements MdnsResolver {
 	public void addToRecordDict(String name, String addr) {
 		name = hrefNorm(name);
 		try {
-			recordDict.putIfAbsent(name.toLowerCase() + Named.AUTHORITATIVE_DOMAIN,
-					addr);
+			recordDict.putIfAbsent(name.toLowerCase() + Named.AUTHORITATIVE_DOMAIN, addr);
 		} catch (NullPointerException e) {
 		}
 	}
@@ -122,34 +121,23 @@ public class MdnsResolverImpl implements MdnsResolver {
 			subServiceType = "generic-device";
 		} else
 			for (Class<?> c : deviceInterfaces) {
-				if (Sensor.class.isAssignableFrom(c)
-						|| Actuator.class.isAssignableFrom(c)) {
-					subServiceType = c.toString().substring(c.toString().lastIndexOf(".") + 1); 
+				if (Sensor.class.isAssignableFrom(c) || Actuator.class.isAssignableFrom(c)) {
+					subServiceType = c.toString().substring(c.toString().lastIndexOf(".") + 1);
 				}
 			}
 
 		subServiceType = subServiceType.toLowerCase();
-		ServiceInfo obixService = ServiceInfo.create("_obix._coap.local.", deviceName, 5683, null);
+		ServiceInfo subTypedServiceCoAP = ServiceInfo.create("_obix._coap.local.", deviceName, "_" + subServiceType, 5683, null);
+		ServiceInfo subTypedServiceHTTP = ServiceInfo.create("_obix._http.local.", deviceName, "_" + subServiceType, 8080, null);
 		try {
-			obixService.setIpv6Addr(ipv6);
-		} catch (IllegalStateException | UnknownHostException
-				| SecurityException e1) {
-			e1.printStackTrace();
-		}
-		
-		executor.execute(new ServiceRegistra(obixService));
-
-		//System.out.println("registering sub service type: " + subServiceType + " service name: " + deviceName);
-		final HashMap<String, String> values = new HashMap<String, String>();
-		values.put("IPv6", ipv6);
-		ServiceInfo pairservice = ServiceInfo.create("_" + subServiceType
-				+ "._coap.local.", deviceName, 8080, null);
-		try {
-			pairservice.setIpv6Addr(ipv6);
-		} catch (IllegalStateException | UnknownHostException
-				| SecurityException e) {
+			subTypedServiceCoAP.setIpv6Addr(ipv6);
+			subTypedServiceHTTP.setIpv6Addr(ipv6);
+		} catch (IllegalStateException | UnknownHostException | SecurityException e) {
 			e.printStackTrace();
 		}
+		
+		executor.execute(new ServiceRegistra(subTypedServiceCoAP));
+		executor.execute(new ServiceRegistra(subTypedServiceHTTP));
 	}
 
 	private class ServiceRegistra implements Runnable {
