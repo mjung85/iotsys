@@ -216,6 +216,7 @@ public class AlarmServiceTest extends AbstractGatewayTest {
 		long statefulAlarmValue = 15;
 		long ackedAlarmValue = 25;
 		long noAlarmValue = 0;
+		int alarms = getAlarmCount();
 		
 		assertEquals(Status.ok, source.getStatus());
 
@@ -244,6 +245,7 @@ public class AlarmServiceTest extends AbstractGatewayTest {
 		// generate alarm
 		val.set(statefulAlarmValue);
 		assertTrue(source.inAlarmState());
+		assertEquals(++alarms, getAlarmCount());
 		assertEquals(Status.alarm, source.getStatus());
 		
 		source.setFaulty(true);
@@ -267,6 +269,7 @@ public class AlarmServiceTest extends AbstractGatewayTest {
 		
 		// generate AckAlarm
 		val.set(ackedAlarmValue);
+		assertEquals(++alarms, getAlarmCount());
 		assertEquals(Status.unackedAlarm, source.getStatus());
 		
 		// ack the alarm
@@ -278,6 +281,7 @@ public class AlarmServiceTest extends AbstractGatewayTest {
 				+ "</obj>").
 		post(alarmHref + "/ack");
 		
+		
 		assertEquals(Status.alarm, source.getStatus());
 		// unset alarm 
 		val.set(noAlarmValue);
@@ -285,6 +289,7 @@ public class AlarmServiceTest extends AbstractGatewayTest {
 		
 		// generate AckAlarm
 		val.set(ackedAlarmValue);
+		assertEquals(++alarms, getAlarmCount());
 		assertEquals(Status.unackedAlarm, source.getStatus());
 		alarmHref = getLatestAlarm().get("@href");
 		
@@ -292,6 +297,7 @@ public class AlarmServiceTest extends AbstractGatewayTest {
 		assertEquals(Status.unacked, source.getStatus());
 		
 		val.set(statefulAlarmValue);
+		assertEquals(++alarms, getAlarmCount());
 		assertEquals(Status.alarm, source.getStatus());
 		
 		val.set(noAlarmValue);

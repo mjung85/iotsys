@@ -653,18 +653,18 @@ public class Obj implements IObj, Subject, AlarmSource, Cloneable {
 		while (childHref.contains("//"))
 			childHref = childHref.replaceAll("//", "/");
 		
-		
-		
-		for (Obj p = kidsHead; p != null; p = p.next) {
-			if (p.getHref() != null && !p.isRef()) {
-				String pHref = p.getHref().get();
-				while (pHref.endsWith("/"))
-					pHref = pHref.substring(0, pHref.length()-1);
-				while (pHref.contains("//"))
-					pHref = pHref.replaceAll("//", "/");
-				
-				if (pHref.equals(childHref))
-					return p;
+		synchronized (this) {
+			for (Obj p = kidsHead; p != null; p = p.next) {
+				if (p.getHref() != null && !p.isRef()) {
+					String pHref = p.getHref().get();
+					while (pHref.endsWith("/"))
+						pHref = pHref.substring(0, pHref.length()-1);
+					while (pHref.contains("//"))
+						pHref = pHref.replaceAll("//", "/");
+					
+					if (pHref.equals(childHref))
+						return p;
+				}
 			}
 		}
 		
@@ -724,7 +724,7 @@ public class Obj implements IObj, Subject, AlarmSource, Cloneable {
 	/**
 	 * Get an array of all the children.
 	 */
-	public Obj[] list() {
+	public synchronized Obj[] list() {
 		Obj[] list = new Obj[kidsCount];
 		int n = 0;
 		for (Obj p = kidsHead; p != null && n < kidsCount; p = p.next)
@@ -736,7 +736,7 @@ public class Obj implements IObj, Subject, AlarmSource, Cloneable {
 	 * Get all the children which are instances of the specified class. The
 	 * return array will be of the specified class.
 	 */
-	public Object[] list(Class cls) {
+	public synchronized Object[] list(Class cls) {
 		Object[] temp = new Object[kidsCount];
 		int count = 0;
 		for (Obj p = kidsHead; p != null; p = p.next) {
@@ -761,7 +761,7 @@ public class Obj implements IObj, Subject, AlarmSource, Cloneable {
 	/**
 	 * Add a child Obj. Return this.
 	 */
-	public Obj add(Obj kid, boolean checkDuplicates) {
+	public synchronized Obj add(Obj kid, boolean checkDuplicates) {
 		// sanity check
 		// if (kid.parent != null || kid.prev != null || kid.next != null)
 		// throw new IllegalStateException("Child is already parented");
@@ -807,7 +807,7 @@ public class Obj implements IObj, Subject, AlarmSource, Cloneable {
 	/**
 	 * Add all the specified objects as my children. Return this.
 	 */
-	public Obj addAll(Obj[] kids) {
+	public synchronized Obj addAll(Obj[] kids) {
 		for (int i = 0; i < kids.length; ++i)
 			add(kids[i]);
 		return this;
@@ -816,7 +816,7 @@ public class Obj implements IObj, Subject, AlarmSource, Cloneable {
 	/**
 	 * Remove the specified child Obj.
 	 */
-	public void remove(Obj kid) {
+	public synchronized void remove(Obj kid) {
 		// sanity checks
 		if (kid.parent != this)
 			throw new IllegalStateException("Not parented by me");
@@ -847,7 +847,7 @@ public class Obj implements IObj, Subject, AlarmSource, Cloneable {
 	/**
 	 * Replace the old obj with the newObj (they must have the same name).
 	 */
-	public void replace(Obj oldObj, Obj newObj) {
+	public synchronized void replace(Obj oldObj, Obj newObj) {
 		if (!oldObj.name.equals(newObj.name))
 			throw new IllegalStateException("Mismatched names: " + oldObj.name
 					+ " != " + newObj.name);
