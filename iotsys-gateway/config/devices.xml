@@ -645,7 +645,7 @@
 
 	<virtual>
 		<connector>
-			<name>Virtual Devices</name>
+			<name>VirtualDevices</name>
 			<enabled>true</enabled>
 
 			<!-- SENSOREN -->

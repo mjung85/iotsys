@@ -62,8 +62,7 @@ public class ObixServerImpl implements ObixServer{
 	}
 
 	public Obj readObj(URI href, String user) {
-		Obj o = new Obj();
-		o = objectBroker.pullObj(new Uri(href.toASCIIString()));
+		Obj o = objectBroker.pullObj(new Uri(href.toASCIIString()));
 		return o;
 	}
 
@@ -97,13 +96,10 @@ public class ObixServerImpl implements ObixServer{
 			input = ObixDecoder.fromString(xmlStream);
 		}
 		try {
-			Obj o = new Obj();
-			o = objectBroker.invokeOp(new Uri(href.toASCIIString()), input,
-					true);
-
+			Obj o = objectBroker.invokeOp(new Uri(href.toASCIIString()), input);
 			return o;
 		} catch (Exception ex) {
-			Err e = new Err("Error invoking operation" + ex.getMessage());
+			Err e = new Err("Error invoking operation: " + ex.getMessage());
 			ex.printStackTrace();
 			return e;
 		}

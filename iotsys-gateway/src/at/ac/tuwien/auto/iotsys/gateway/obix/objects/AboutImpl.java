@@ -61,8 +61,8 @@ public class AboutImpl extends Obj implements About {
 	private Str productVersion = new Str("0.1");
 	private Uri productURL = new Uri("http://code.google.com/p/iotsys");
 	
-	public AboutImpl(){
-		this.setHref(new Uri("http://localhost/obix/about"));
+	public AboutImpl() {
+		this.setHref(new Uri("/obix/about"));
 		this.setIs(new Contract("obix:About"));
 		try {
 			serverName = new Str(java.net.InetAddress.getLocalHost().getHostName());

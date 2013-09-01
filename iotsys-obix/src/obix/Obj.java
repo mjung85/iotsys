@@ -3,15 +3,19 @@
  */
 package obix;
 
+import java.lang.reflect.Array;
+import java.net.URI;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.lang.reflect.Array;
+import java.util.LinkedList;
 
+import obix.contracts.Alarm;
+import obix.io.BinObix;
+import obix.io.ObixEncoder;
 import at.ac.tuwien.auto.iotsys.gateway.obix.observer.ExternalObserver;
 import at.ac.tuwien.auto.iotsys.gateway.obix.observer.Observer;
 import at.ac.tuwien.auto.iotsys.gateway.obix.observer.Subject;
-import obix.io.*;
 
 /**
  * Obj is the base class for representing Obix objects and managing their tree
@@ -21,7 +25,7 @@ import obix.io.*;
  * @creation 27 Apr 05
  * @version $Revision$ $Date$
  */
-public class Obj implements IObj, Subject, Cloneable {
+public class Obj implements IObj, Subject, AlarmSource, Cloneable {
 
 	// //////////////////////////////////////////////////////////////
 	// Factory
@@ -184,13 +188,15 @@ public class Obj implements IObj, Subject, Cloneable {
 	 */
 	public Uri getNormalizedHref() {
 		if (href == null)
-			return null;
-		Obj root = getRoot();
-		if (root != null && root.getHref() != null && root.getHref().isAbsolute()) {
-			return href.normalize(root.getHref());		
-		} else {
-			return href;
-		}
+            return null;
+	    
+	    if (getParent() != null &&
+	            getParent().getNormalizedHref() != null &&
+	            getParent().getNormalizedHref().isAbsolute()) {
+	        return href.normalize(getParent().getNormalizedHref());
+	    }
+	    
+	    return href;
 	}
 	
 	public Uri getRelativePath(){
@@ -208,25 +214,26 @@ public class Obj implements IObj, Subject, Cloneable {
 		String path = "";
 
 		Obj current = this;
-		while (current != null) {			
+		while (current != null) {
 			Uri normalizedHref = current.getNormalizedHref();
 			if (normalizedHref != null) {
-				if(normalizedHref.isAbsolute()){
+				if(normalizedHref.isAbsolute()) {
 					String fullContextPath = current.getNormalizedHref().getPath().toString() + path;
 					return fullContextPath;
-				}else{
+				} else {
+					if (!path.isEmpty() && !path.startsWith("/"))  path = "/" + path;
 					path = current.getNormalizedHref().getPath().toString() + path;
 				}
 			} else if (current.getHref() != null) {
 				path = current.getHref().toString() + path;
 			} else {
-				path = "" + path;
+				path = path + "/";
 			}
 
 			current = current.getParent();
 		}
+		
 		return path;
-
 	}
 
 	/**
@@ -385,6 +392,11 @@ public class Obj implements IObj, Subject, Cloneable {
 	public void setStr(String val) {
 		((Str) this).set(val);
 	}
+	
+	/** Convenience for setting the value to the value of another Obj */
+	public void set(Obj obj) {
+		return;
+	}
 
 	// //////////////////////////////////////////////////////////////
 	// Facets
@@ -487,6 +499,22 @@ public class Obj implements IObj, Subject, Cloneable {
 	public void setNull(boolean isNull) {
 		this.isNull = isNull;
 	}
+	
+	/**
+	 * Get hidden flag or default to false.
+	 * Hidden objects are not printed when printing an ancestor
+	 */
+	public boolean isHidden() {
+		return isHidden;
+	}
+	
+	/**
+	 * Set hidden flag.
+	 * Hidden objects are not printed when printing an ancestor
+	 */ 
+	public void setHidden(boolean isHidden) {
+		this.isHidden = isHidden;
+	}
 
 	/**
 	 * Get writable flag or default to false.
@@ -548,6 +576,80 @@ public class Obj implements IObj, Subject, Cloneable {
 		if (kid.getHref() == null)
 			throw new IllegalStateException("Child missing href : " + name);
 		return kid.getNormalizedHref();
+	}
+	
+	/**
+	 * Get a child object with the specified href
+	 */
+	public Obj getChildByHref(Uri href) {
+		if (href == null) return null;
+		
+		String childHref = href.get();
+		
+		while (childHref.endsWith("/"))
+			childHref = childHref.substring(0, childHref.length()-1);
+		while (childHref.contains("//"))
+			childHref = childHref.replaceAll("//", "/");
+		
+		
+		
+		for (Obj p = kidsHead; p != null; p = p.next) {
+			if (p.getHref() != null && !p.isRef()) {
+				String pHref = p.getHref().get();
+				while (pHref.endsWith("/"))
+					pHref = pHref.substring(0, pHref.length()-1);
+				while (pHref.contains("//"))
+					pHref = pHref.replaceAll("//", "/");
+				
+				if (pHref.equals(childHref))
+					return p;
+			}
+		}
+		
+		return null;
+	}
+	
+	/**
+	 * Get a sub object with the specified href
+	 */
+	public Obj getByHref(Uri href) {
+		if (href == null) return null;
+		if (getRoot() != this) {
+			if (href.get().startsWith("/") || href.isAbsolute())
+				return getRoot().getByHref(href);
+			
+			return getRoot().getByHref(new Uri(this.getFullContextPath() + "/" + href.get()));
+		}
+		
+		String uri = href.get();
+		while (uri.startsWith("/"))
+			uri = uri.substring(1);
+		
+		uri = URI.create(uri).normalize().getPath();
+		
+		String unresolvedUri = uri;
+		Obj current = this;
+		
+		while (!unresolvedUri.isEmpty()) {
+			Obj child = current.getChildByHref(new Uri(uri));
+			if (child == null)
+				child = current.getChildByHref(new Uri(current.getFullContextPath() + "/" + uri));
+			
+			if (child == null) {
+				int slash = uri.lastIndexOf('/');
+				if (slash == -1) return null;
+				uri = uri.substring(0, slash);
+			} else {
+				current = child;
+				unresolvedUri = unresolvedUri.substring(uri.length());
+				while (unresolvedUri.startsWith("/"))
+					unresolvedUri = unresolvedUri.substring(1);
+				uri = unresolvedUri;
+			}
+		}
+		
+		
+		return current;
 	}
 
 	/**
@@ -772,7 +874,8 @@ public class Obj implements IObj, Subject, Cloneable {
 	private String displayName;
 	private Uri icon;
 	private boolean writable;
-	private boolean isNull;	
+	private boolean isNull;
+	private boolean isHidden;
 	
 	private String invokedHref= new String(); 
 	
@@ -850,15 +953,8 @@ public class Obj implements IObj, Subject, Cloneable {
 		// objects (bool, int,...) it
 		// is quite common that these objects are part of the extent of other
 		// objects
-		Obj current = null;
-
 		if (this.getParent() != null) {
-			current = this.getParent();
-		}
-
-		while (current != null) {
-			current.notifyObservers();
-			current = current.getParent();
+			getParent().notifyObservers();
 		}
 
 		// notify CoAP observers, managed in ObixObservingManager
@@ -879,10 +975,40 @@ public class Obj implements IObj, Subject, Cloneable {
 		Obj.extObserver = extObserver; 	
 	}
 	
+	
+	
+	
+	
+	private LinkedList<Alarm> alarms = new LinkedList<Alarm>();
+	
+	@Override
+	public void setOffNormal(Alarm alarm) {
+		alarms.add(alarm);
+	}
+
+	@Override
+	public void setToNormal(Alarm alarm) {
+		alarms.remove(alarm);
+	}
+	
+	@Override
+	public boolean inAlarmState() {
+		return !(alarms.isEmpty());
+	}
+	
+	@Override
+	public LinkedList<Alarm> getAlarms() {
+		if (alarms == null)
+			alarms = new LinkedList<Alarm>();
+		
+		return alarms;
+	}
+	
 	/**
 	 * Method that can be overridden to contain logic that should be executed if all fields are set.
 	 */
 	public void initialize(){
 		
 	}
+
 }

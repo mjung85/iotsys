@@ -136,6 +136,15 @@ public class Time
     sec  = (int)(millis / 1000L);    millis -= sec*1000L;                         
     ms   = (int)(millis);
   }
+  
+  /**
+   * Set to value of another Time
+   */
+  public void set(Obj obj)
+  {
+	if (!(obj instanceof Time)) return;
+	set(((Time)obj).getMillis());
+  }
 
 ////////////////////////////////////////////////////////////////
 // Val

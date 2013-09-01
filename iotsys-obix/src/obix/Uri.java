@@ -492,6 +492,15 @@ public class Uri
     this.parsed = false;
     this.val = val;
   }
+  
+  /**
+   * Set to value of another Uri
+   */
+  public void set(Obj obj)
+  {
+	if (!(obj instanceof Uri)) return;
+	set(((Uri)obj).get());
+  }
 
 ////////////////////////////////////////////////////////////////
 // Val

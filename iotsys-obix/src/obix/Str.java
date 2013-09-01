@@ -155,6 +155,14 @@ public class Str extends Val {
 			throw new IllegalArgumentException("max < 0");
 		this.max = max;
 	}
+	
+	/**
+     * Set to value of another Str
+     */
+    public void set(Obj obj) {
+		if (!(obj instanceof Str)) return;
+		set(((Str)obj).get());
+    }
 
 	// //////////////////////////////////////////////////////////////
 	// Fields

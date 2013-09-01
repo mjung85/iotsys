@@ -138,6 +138,14 @@ public class Bool extends Val
 			set(false);
 		}
 	}
+	
+	/**
+	 * Set to value of another Bool 
+	 */
+	public void set(Obj obj){
+		if (!(obj instanceof Bool)) return;
+		set(((Bool)obj).get());
+	}
 
 	// //////////////////////////////////////////////////////////////
 	// Val

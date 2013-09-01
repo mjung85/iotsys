@@ -12,7 +12,7 @@ import obix.*;
 public interface WatchService
   extends IObj
 {
-
+  public static final String watchServiceContract = "obix:WatchService";
   public static final String makeContract = "<op name='make' in='obix:Nil' out='obix:Watch'/>";
   public Op make();
 
