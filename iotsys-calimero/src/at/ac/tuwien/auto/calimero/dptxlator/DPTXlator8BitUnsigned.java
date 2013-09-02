@@ -155,6 +155,21 @@ public class DPTXlator8BitUnsigned extends DPTXlator
 		return fromDPT(data[0]);
 	}
 
+	
+	/**
+	 * Returns the specified translation item formatted as float.
+	 * <p>
+	 * 
+	 * @return value as float
+	 * @author Juergen Weidinger
+	 */
+	public final short getValueUnsigned(int index)
+	{
+		return fromDPT(data[index]);
+	}
+	
+	
+	
 	/**
 	 * Sets one new translation item from an unsigned unscaled value, replacing any old
 	 * items.

@@ -1,4 +1,4 @@
-<devices>
+﻿<devices>
 
   <deviceloaders>
     <device-loader>at.ac.tuwien.auto.iotsys.gateway.connectors.knx.KNXDeviceLoaderImpl
@@ -34,9 +34,9 @@
     </connector>
 		
 		<connector>
-      <name>XBee</name>
+      <name>XBee HESSO</name>
       <enabled>false</enabled>
-      <serialPort>COM3</serialPort>
+      <serialPort>/dev/ttyUSB0</serialPort>
       <device>
         <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.xbee.TemperatureSensorImplXBee
         </type>
@@ -407,7 +407,7 @@
       <name>KNX HESSO</name>
       <enabled>true</enabled>
       <router>
-        <ip>153.109.130.116</ip>
+        <ip>153.109.130.108</ip>
         <port>3671</port>
       </router>
       <localIP>auto</localIP>

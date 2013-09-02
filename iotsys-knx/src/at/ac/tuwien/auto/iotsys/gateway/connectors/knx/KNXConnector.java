@@ -24,22 +24,25 @@ import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.net.UnknownHostException;
-
 import java.net.InetSocketAddress;
-
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.logging.Logger;
 
 import at.ac.tuwien.auto.calimero.CloseEvent;
+import at.ac.tuwien.auto.calimero.DetachEvent;
+import at.ac.tuwien.auto.calimero.FrameEvent;
 import at.ac.tuwien.auto.calimero.GroupAddress;
 import at.ac.tuwien.auto.calimero.cemi.CEMILData;
 import at.ac.tuwien.auto.calimero.datapoint.Datapoint;
 import at.ac.tuwien.auto.calimero.exception.KNXException;
+import at.ac.tuwien.auto.calimero.exception.KNXFormatException;
 import at.ac.tuwien.auto.calimero.link.KNXNetworkLinkIP;
 import at.ac.tuwien.auto.calimero.link.event.NetworkLinkListener;
 import at.ac.tuwien.auto.calimero.link.medium.TPSettings;
+import at.ac.tuwien.auto.calimero.mgmt.Destination;
+import at.ac.tuwien.auto.calimero.mgmt.TransportListener;
 import at.ac.tuwien.auto.calimero.process.ProcessCommunicator;
 import at.ac.tuwien.auto.calimero.process.ProcessCommunicatorImpl;
 import at.ac.tuwien.auto.iotsys.commons.Connector;
@@ -72,7 +75,9 @@ public class KNXConnector implements Connector {
 		synchronized (this) {
 			log.info("Connecting KNX tunnel - Tunnel, " + localIP + ", "
 					+ routerHostname + ", " + routerPort);
-
+			
+		
+			
 			if ("auto".equals(localIP)) {
 				log.finest("auto detetecting local IP.");
 				String detectedLocalIP = "";
@@ -119,6 +124,7 @@ public class KNXConnector implements Connector {
 
 			connected = true;
 
+			
 			nl.addLinkListener(new KNXListener());
 			log.info("KNX tunnel established.");
 		}
@@ -246,23 +252,39 @@ public class KNXConnector implements Connector {
 		}
 	}
 
+
 	class KNXListener implements NetworkLinkListener {
 
+		//for debug
+//		public String getHexString(byte[] b) {
+//			
+//			   StringBuffer sb = new StringBuffer();
+//			   for (int i = 0; i < b.length; i++){
+//			      if (i > 0)
+//			         sb.append(':');
+//			      sb.append(Integer.toString((b[i] & 0xff) + 0x100, 16).substring(1));
+//			   }
+//			   return sb.toString();
+//			   
+//		}
+		
 		@Override
 		public void indication(at.ac.tuwien.auto.calimero.FrameEvent e) {
 			CEMILData data = (CEMILData) e.getFrame();
-
+			
 			GroupAddress target = (GroupAddress) data.getDestination(); // getDestinationAddress();
-			log.fine("Received frame for " + target);
-			synchronized (watchDogs) {
-
-				if (watchDogs.containsKey(target.getRawAddress())) {
-					for (KNXWatchDog dog : watchDogs
-							.get(target.getRawAddress())) {
-						dog.notifyWatchDog(data.getPayload());// getData());
+			log.fine("Received frame for " + target);				
+				
+				synchronized (watchDogs) {
+					
+					if (watchDogs.containsKey(target.getRawAddress())) {
+						for (KNXWatchDog dog : watchDogs
+								.get(target.getRawAddress())) {
+							dog.notifyWatchDog(data.getPayload());// getData());
+						}
 					}
-				}
-			}
+				}        	
+			
 		}
 
 		@Override
