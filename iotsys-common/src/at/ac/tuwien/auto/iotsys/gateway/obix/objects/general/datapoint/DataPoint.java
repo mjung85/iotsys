@@ -1,6 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013
- * Institute of Computer Aided Automation, Automation Systems Group, TU Wien.
+ * Copyright (c) 2013, Automation Systems Group, TU Wien.
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -30,43 +29,24 @@
  * This file is part of the IoTSyS project.
  ******************************************************************************/
 
-package at.ac.tuwien.auto.iotsys.gateway.obix.objects.knx.datapoint.impl;
 
-import obix.Contract;
-import obix.Obj;
+package at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.datapoint;
+
+import obix.IObj;
 import obix.Str;
-import obix.Uri;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.datapoint.DataPoint;
 
-public class DataPointImpl extends Obj implements DataPoint
-{
-	protected Str function = new Str();
-	protected Str unit = new Str();
+public interface DataPoint extends IObj {
+	public static final String FUNCTION_NAME="function";
+	public static final String FUNCTION_HREF="function";
+	
+	public static final String FUNCTION_CONTRACT = "<str name='"+ FUNCTION_NAME +"' href='"+ FUNCTION_HREF +"' val=''/>";
+	public Str function();
 
-	public DataPointImpl()
-	{
-		this.setIs(new Contract(DataPoint.CONTRACT));
-
-		this.function.setName(DataPoint.FUNCTION_NAME);
-		this.function.setHref(new Uri(DataPoint.FUNCTION_HREF));
-
-		this.add(function);
-
-		this.unit.setName(DataPoint.UNIT_NAME);
-		this.unit.setHref(new Uri(DataPoint.UNIT_HREF));
-
-		this.add(unit);
-	}
-
-	@Override
-	public Str function()
-	{
-		return function;
-	}
-
-	@Override
-	public Str unit()
-	{
-		return unit;
-	}
+	public static final String UNIT_NAME ="unit";
+	public static final String UNIT_HREF ="unit";
+	
+	public static final String UNIT_CONTRACT = "<str name='"+ UNIT_NAME +"' href='"+ UNIT_HREF +"' val=''/>";
+	public Str unit();
+	
+	public static final String CONTRACT="knx:datapoint";
 }

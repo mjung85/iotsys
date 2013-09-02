@@ -30,43 +30,21 @@
  * This file is part of the IoTSyS project.
  ******************************************************************************/
 
-package at.ac.tuwien.auto.iotsys.gateway.obix.objects.knx.datapoint.impl;
+package at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.view.impl;
 
 import obix.Contract;
 import obix.Obj;
-import obix.Str;
 import obix.Uri;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.datapoint.DataPoint;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.view.View;
 
-public class DataPointImpl extends Obj implements DataPoint
+public abstract class ViewImpl extends Obj implements View
 {
-	protected Str function = new Str();
-	protected Str unit = new Str();
-
-	public DataPointImpl()
+	public ViewImpl(String name, Uri href, Contract is)
 	{
-		this.setIs(new Contract(DataPoint.CONTRACT));
-
-		this.function.setName(DataPoint.FUNCTION_NAME);
-		this.function.setHref(new Uri(DataPoint.FUNCTION_HREF));
-
-		this.add(function);
-
-		this.unit.setName(DataPoint.UNIT_NAME);
-		this.unit.setHref(new Uri(DataPoint.UNIT_HREF));
-
-		this.add(unit);
+		this.setName(name);
+		this.setHref(href);	
+		this.setIs(is);
+		this.setHidden(true);
 	}
 
-	@Override
-	public Str function()
-	{
-		return function;
-	}
-
-	@Override
-	public Str unit()
-	{
-		return unit;
-	}
 }

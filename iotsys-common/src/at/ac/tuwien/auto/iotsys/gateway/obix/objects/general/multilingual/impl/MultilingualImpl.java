@@ -30,43 +30,49 @@
  * This file is part of the IoTSyS project.
  ******************************************************************************/
 
-package at.ac.tuwien.auto.iotsys.gateway.obix.objects.knx.datapoint.impl;
+package at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.multilingual.impl;
+
+import java.util.ArrayList;
 
 import obix.Contract;
+import obix.List;
 import obix.Obj;
-import obix.Str;
 import obix.Uri;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.datapoint.DataPoint;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.multilingual.Multilingual;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.multilingual.Translation;
 
-public class DataPointImpl extends Obj implements DataPoint
+public abstract class MultilingualImpl extends Obj implements Multilingual
 {
-	protected Str function = new Str();
-	protected Str unit = new Str();
+	private List list = null;
+	protected ArrayList<Translation> translations;
 
-	public DataPointImpl()
+	public void addTranslation(TranslationImpl translation)
 	{
-		this.setIs(new Contract(DataPoint.CONTRACT));
+		if (translations == null)
+		{
+			this.list = new List("translations", new Contract("knx:translation"));
+			this.list.setHref(new Uri("translations"));
+			this.add(this.list);
 
-		this.function.setName(DataPoint.FUNCTION_NAME);
-		this.function.setHref(new Uri(DataPoint.FUNCTION_HREF));
-
-		this.add(function);
-
-		this.unit.setName(DataPoint.UNIT_NAME);
-		this.unit.setHref(new Uri(DataPoint.UNIT_HREF));
-
-		this.add(unit);
+			this.translations = new ArrayList<Translation>();
+		}
+		this.list.add(translation);
+		this.translations.add(translation);
 	}
 
 	@Override
-	public Str function()
+	public String getTranslation(String language, String attribute)
 	{
-		return function;
-	}
-
-	@Override
-	public Str unit()
-	{
-		return unit;
+		if (translations != null)
+		{
+			for (Translation t : this.translations)
+			{
+				if (t.getLanguage().equals(language) && t.getAttribute().equals(attribute))
+				{
+					return t.getValue();
+				}
+			}
+		}
+		return null;
 	}
 }

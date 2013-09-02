@@ -1,5 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2013, Automation Systems Group, TU Wien.
+ * Copyright (c) 2013
+ * Institute of Computer Aided Automation, Automation Systems Group, TU Wien.
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -29,18 +30,16 @@
  * This file is part of the IoTSyS project.
  ******************************************************************************/
 
-package at.ac.tuwien.auto.iotsys.gateway.obix.objects.knx.datapoint;
+package at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.view.impl;
 
-import obix.Real;
+import obix.Contract;
+import obix.Uri;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.view.ViewDomains;
 
-public interface DPST_9_1 extends DataPoint {
-	public static final String VALUE_NAME = "value";
-	public static final String VALUE_HREF = "value";
-	
-	public static final String VALUE_CONTRACT = "<real name='"+ VALUE_NAME +"' href='"+ VALUE_HREF +"' val=''/>";
-	public Real value();
-	
-	public static final String CONTRACT="knx:DPST_9_1";
-	
-
+public class ViewDomainsImpl extends ViewImpl implements ViewDomains
+{
+	public ViewDomainsImpl()
+	{
+		super(ViewDomains.NAME, new Uri(ViewDomains.HREF), new Contract(ViewDomains.CONTRACT));
+	}
 }

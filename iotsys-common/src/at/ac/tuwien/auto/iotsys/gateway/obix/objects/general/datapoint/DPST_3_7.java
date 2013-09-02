@@ -29,18 +29,18 @@
  * This file is part of the IoTSyS project.
  ******************************************************************************/
 
-package at.ac.tuwien.auto.iotsys.gateway.obix.objects.knx.datapoint;
+package at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.datapoint;
 
-import obix.Bool;
+import obix.Int;
 
-public interface DPST_1_1 extends DataPoint {
+public interface DPST_3_7 extends DataPoint {
 	public static final String VALUE_NAME = "value";
 	public static final String VALUE_HREF = "value";
 	
-	public static final String VALUE_CONTRACT = "<bool name='"+ VALUE_NAME +"' href='"+ VALUE_HREF +"' val=''/>";
-	public Bool value();
+	public static final String VALUE_CONTRACT = "<int name='"+ VALUE_NAME +"' href='"+ VALUE_HREF +"' val=''/>";	
+	public Int value();
 	
-	public static final String CONTRACT="knx:DPST_1_1";
+	public static final String CONTRACT="knx:DPST_3_7";
 	
 
 }

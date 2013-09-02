@@ -1,6 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013
- * Institute of Computer Aided Automation, Automation Systems Group, TU Wien.
+ * Copyright (c) 2013, Automation Systems Group, TU Wien.
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -30,43 +29,57 @@
  * This file is part of the IoTSyS project.
  ******************************************************************************/
 
-package at.ac.tuwien.auto.iotsys.gateway.obix.objects.knx.datapoint.impl;
+package at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.enumeration.impl;
+
+import java.util.HashMap;
+import java.util.Map.Entry;
 
 import obix.Contract;
+import obix.List;
 import obix.Obj;
-import obix.Str;
 import obix.Uri;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.datapoint.DataPoint;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.enumeration.EnumStandard;
 
-public class DataPointImpl extends Obj implements DataPoint
+public class EnumStandardImpl extends List implements EnumStandard
 {
-	protected Str function = new Str();
-	protected Str unit = new Str();
-
-	public DataPointImpl()
+	private HashMap<String, String> values; 
+	
+	public EnumStandardImpl()
 	{
-		this.setIs(new Contract(DataPoint.CONTRACT));
-
-		this.function.setName(DataPoint.FUNCTION_NAME);
-		this.function.setHref(new Uri(DataPoint.FUNCTION_HREF));
-
-		this.add(function);
-
-		this.unit.setName(DataPoint.UNIT_NAME);
-		this.unit.setHref(new Uri(DataPoint.UNIT_HREF));
-
-		this.add(unit);
+		this.setName("enumStandard");
+		this.setIs(new Contract("obix:range"));
+		this.setHref(new Uri(EnumStandard.HREF));
+		
+		this.initValues();
 	}
-
-	@Override
-	public Str function()
+	
+	public void initValues()
 	{
-		return function;
+		values = new HashMap<String, String>();
+		
+		values.put("knx", "KNX");
+		values.put("lonworks", "LonWorks");
+		values.put("bacnet", "BACnet");
+		values.put("undef", "undefined");
+			
+		for (Entry<String, String> e : values.entrySet())
+		{
+			Obj o = new Obj();
+			o.setName(e.getKey());
+			o.setDisplayName(e.getValue());
+			this.add(o);
+		}
 	}
-
-	@Override
-	public Str unit()
+	
+	public String getKey(String name)
 	{
-		return unit;
+		for (Entry<String, String> e : values.entrySet())
+		{
+			if (e.getValue().equals(name))
+			{
+				return e.getKey();
+			}
+		}
+		return null;
 	}
 }
