@@ -22,6 +22,8 @@ public interface IObj
   public String getName();
   public Obj getParent();
   public Obj getRoot();
+  public Ref getReference(boolean absolute);
+  public Ref getReference();
   public Uri getHref();
   public Uri getNormalizedHref();
   public void setHref(Uri href);

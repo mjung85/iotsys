@@ -29,18 +29,11 @@
  * This file is part of the IoTSyS project.
  ******************************************************************************/
 
-package at.ac.tuwien.auto.iotsys.gateway.obix.objects.knx.datapoint;
+package at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.enumeration;
 
-import obix.Int;
+import obix.IObj;
 
-public interface DPST_3_7 extends DataPoint {
-	public static final String VALUE_NAME = "value";
-	public static final String VALUE_HREF = "value";
-	
-	public static final String VALUE_CONTRACT = "<int name='"+ VALUE_NAME +"' href='"+ VALUE_HREF +"' val=''/>";	
-	public Int value();
-	
-	public static final String CONTRACT="knx:DPST_3_7";
-	
-
+public interface EnumAttribute extends IObj
+{
+	public static final String HREF = "/enums/enumAttribute";
 }

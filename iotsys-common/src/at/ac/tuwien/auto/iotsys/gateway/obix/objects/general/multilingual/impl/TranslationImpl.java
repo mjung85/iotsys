@@ -30,43 +30,49 @@
  * This file is part of the IoTSyS project.
  ******************************************************************************/
 
-package at.ac.tuwien.auto.iotsys.gateway.obix.objects.knx.datapoint.impl;
+package at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.multilingual.impl;
 
 import obix.Contract;
+import obix.Enum;
 import obix.Obj;
 import obix.Str;
 import obix.Uri;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.datapoint.DataPoint;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.enumeration.EnumAttribute;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.enumeration.EnumLanguage;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.multilingual.Translation;
 
-public class DataPointImpl extends Obj implements DataPoint
+public abstract class TranslationImpl extends Obj implements Translation
 {
-	protected Str function = new Str();
-	protected Str unit = new Str();
+	private Enum language;
+	private Enum attribute;
+	private Str value;
 
-	public DataPointImpl()
+	public TranslationImpl(String language, String attribute, String value)
 	{
-		this.setIs(new Contract(DataPoint.CONTRACT));
+		this.setIs(new Contract("knx:translation"));
 
-		this.function.setName(DataPoint.FUNCTION_NAME);
-		this.function.setHref(new Uri(DataPoint.FUNCTION_HREF));
+		// Language
+		this.language = new Enum();
+		this.language.setName("language");
+		this.language.setHref(new Uri("language"));
+		this.language.setRange(new Uri(EnumLanguage.HREF));
+		this.language.set(language);
+		this.add(this.language);
 
-		this.add(function);
+		// Attribute
+		this.attribute = new Enum();
+		this.attribute.setName("attribute");
+		this.attribute.setHref(new Uri("attribute"));
+		this.attribute.setRange(new Uri(EnumAttribute.HREF));
+		this.attribute.set(attribute);
+		this.add(this.attribute);
 
-		this.unit.setName(DataPoint.UNIT_NAME);
-		this.unit.setHref(new Uri(DataPoint.UNIT_HREF));
-
-		this.add(unit);
+		// Attribute
+		this.value = new Str();
+		this.value.setName("value");
+		this.value.setHref(new Uri("value"));
+		this.value.set(value);
+		this.add(this.value);
 	}
 
-	@Override
-	public Str function()
-	{
-		return function;
-	}
-
-	@Override
-	public Str unit()
-	{
-		return unit;
-	}
 }

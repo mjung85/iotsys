@@ -30,43 +30,36 @@
  * This file is part of the IoTSyS project.
  ******************************************************************************/
 
-package at.ac.tuwien.auto.iotsys.gateway.obix.objects.knx.datapoint.impl;
+package at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.view.impl;
 
 import obix.Contract;
+import obix.List;
 import obix.Obj;
-import obix.Str;
 import obix.Uri;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.datapoint.DataPoint;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.view.Part;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.view.ViewBuilding;
 
-public class DataPointImpl extends Obj implements DataPoint
+public class ViewBuildingImpl extends ViewImpl implements ViewBuilding
 {
-	protected Str function = new Str();
-	protected Str unit = new Str();
+	private List parts = null;
 
-	public DataPointImpl()
+	public ViewBuildingImpl()
 	{
-		this.setIs(new Contract(DataPoint.CONTRACT));
-
-		this.function.setName(DataPoint.FUNCTION_NAME);
-		this.function.setHref(new Uri(DataPoint.FUNCTION_HREF));
-
-		this.add(function);
-
-		this.unit.setName(DataPoint.UNIT_NAME);
-		this.unit.setHref(new Uri(DataPoint.UNIT_HREF));
-
-		this.add(unit);
+		super(ViewBuilding.NAME, new Uri(ViewBuilding.HREF), new Contract(ViewBuilding.CONTRACT));
 	}
 
-	@Override
-	public Str function()
+	public void addPart(Part part)
 	{
-		return function;
+		if (part instanceof Obj)
+		{
+			if (parts == null)
+			{
+				this.parts = new List("parts", new Contract(Part.CONTRACT));
+				this.parts.setHref(new Uri("parts"));
+				this.add(this.parts);
+			}
+			this.parts.add((Obj) part);
+		}
 	}
 
-	@Override
-	public Str unit()
-	{
-		return unit;
-	}
 }

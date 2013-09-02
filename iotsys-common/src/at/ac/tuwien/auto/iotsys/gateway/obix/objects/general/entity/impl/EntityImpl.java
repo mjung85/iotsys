@@ -30,43 +30,20 @@
  * This file is part of the IoTSyS project.
  ******************************************************************************/
 
-package at.ac.tuwien.auto.iotsys.gateway.obix.objects.knx.datapoint.impl;
+package at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.entity.impl;
 
 import obix.Contract;
-import obix.Obj;
-import obix.Str;
-import obix.Uri;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.datapoint.DataPoint;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.entity.Entity;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.multilingual.impl.MultilingualImpl;
 
-public class DataPointImpl extends Obj implements DataPoint
+public class EntityImpl extends MultilingualImpl implements Entity
 {
-	protected Str function = new Str();
-	protected Str unit = new Str();
-
-	public DataPointImpl()
+	public EntityImpl(String name, String displayName, String display)
 	{
-		this.setIs(new Contract(DataPoint.CONTRACT));
-
-		this.function.setName(DataPoint.FUNCTION_NAME);
-		this.function.setHref(new Uri(DataPoint.FUNCTION_HREF));
-
-		this.add(function);
-
-		this.unit.setName(DataPoint.UNIT_NAME);
-		this.unit.setHref(new Uri(DataPoint.UNIT_HREF));
-
-		this.add(unit);
-	}
-
-	@Override
-	public Str function()
-	{
-		return function;
-	}
-
-	@Override
-	public Str unit()
-	{
-		return unit;
+		this.setName(name);
+		this.setDisplay(display);
+		this.setDisplayName(displayName);
+		this.setIs(new Contract("knx:entity"));
+		this.setHidden(true);
 	}
 }

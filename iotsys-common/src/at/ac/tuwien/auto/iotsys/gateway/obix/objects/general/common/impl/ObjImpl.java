@@ -30,43 +30,30 @@
  * This file is part of the IoTSyS project.
  ******************************************************************************/
 
-package at.ac.tuwien.auto.iotsys.gateway.obix.objects.knx.datapoint.impl;
+package at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.common.impl;
 
-import obix.Contract;
-import obix.Obj;
-import obix.Str;
-import obix.Uri;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.datapoint.DataPoint;
 
-public class DataPointImpl extends Obj implements DataPoint
-{
-	protected Str function = new Str();
-	protected Str unit = new Str();
-
-	public DataPointImpl()
-	{
-		this.setIs(new Contract(DataPoint.CONTRACT));
-
-		this.function.setName(DataPoint.FUNCTION_NAME);
-		this.function.setHref(new Uri(DataPoint.FUNCTION_HREF));
-
-		this.add(function);
-
-		this.unit.setName(DataPoint.UNIT_NAME);
-		this.unit.setHref(new Uri(DataPoint.UNIT_HREF));
-
-		this.add(unit);
-	}
-
-	@Override
-	public Str function()
-	{
-		return function;
-	}
-
-	@Override
-	public Str unit()
-	{
-		return unit;
-	}
-}
+//public abstract class ObjImpl extends Obj implements Object
+//{
+//	public ObjImpl(String name, String displayName, String display, Uri href)
+//	{
+//		this.setName(name);
+//		this.setDisplay(display);
+//		this.setDisplayName(displayName);
+//		this.setHref(href);
+//		this.setIs(getContract());
+//	}
+//	
+//	public Ref getRef()
+//	{
+//		Ref reference = new Ref();
+//
+//		reference.setName(this.getName());
+//		reference.setHref(this.getHref());
+//		reference.setDisplayName(this.getDisplayName());
+//		reference.setIs(this.getIs());
+//
+//		return reference;
+//	}
+//
+//}

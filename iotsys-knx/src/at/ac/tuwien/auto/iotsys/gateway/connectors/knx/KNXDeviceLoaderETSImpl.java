@@ -20,7 +20,6 @@
 
 package at.ac.tuwien.auto.iotsys.gateway.connectors.knx;
 
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -36,14 +35,17 @@ import obix.Uri;
 import org.apache.commons.configuration.XMLConfiguration;
 
 import at.ac.tuwien.auto.calimero.GroupAddress;
-import at.ac.tuwien.auto.calimero.exception.KNXException;
 import at.ac.tuwien.auto.calimero.exception.KNXFormatException;
 import at.ac.tuwien.auto.iotsys.commons.Connector;
 import at.ac.tuwien.auto.iotsys.commons.DeviceLoader;
 import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.knx.datapoint.DPST_1_1;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.knx.datapoint.DPST_3_7;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.knx.datapoint.DPST_9_1;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.datapoint.DPST_1_1;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.datapoint.DPST_3_7;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.datapoint.DPST_9_1;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.entity.impl.EntityImpl;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.enumeration.impl.EnumStandardImpl;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.network.impl.NetworkImpl;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.view.impl.PartImpl;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.knx.datapoint.impl.DPST_1_1_ImplKnx;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.knx.datapoint.impl.DPST_3_7_ImplKnx;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.knx.datapoint.impl.DPST_9_1_ImplKnx;
@@ -75,20 +77,20 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader
 
 	private void connect(KNXConnector knxConnector)
 	{
-		try
-		{
-			knxConnector.connect();
-		}
-		catch (UnknownHostException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		catch (KNXException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		// try
+		// {
+		// knxConnector.connect();
+		// }
+		// catch (UnknownHostException e)
+		// {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// }
+		// catch (KNXException e)
+		// {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// }
 	}
 
 	private void initNetworks(KNXConnector knxConnector, ObjectBroker objectBroker)
@@ -99,7 +101,6 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader
 		Obj networks = new Obj();
 		networks.setName("networks");
 		networks.setHref(new Uri("/networks"));
-		objectBroker.addObj(networks, true);
 
 		// Workaround, addObj registers currently only the obj and direct
 		// children
@@ -136,6 +137,33 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader
 
 		// Views
 		initViews(knxConnector, objectBroker, network);
+
+		
+		// Phase II
+		
+		// Enumerations
+		EnumStandardImpl e = new EnumStandardImpl();
+		objectBroker.addObj(e, true);
+		
+		// Units
+		
+		// Network
+		NetworkImpl n = new NetworkImpl("P-0341/2", "Suitcase2", null, e.getKey("KNX"));
+		networks.add(n);
+		networks.add(n.getReference());
+		
+		EntityImpl entity = new EntityImpl("P-0944-0_DI-1","Temperature Sensor N 258/02", null);
+		
+		n.getEntities().addEntity(entity);
+		
+		PartImpl part = new PartImpl("P-01EE-0_BP-0", "Treitlstraﬂe 1-3", null);
+
+		n.getBuilding().addPart(part);
+		
+		part.addInstance(entity);
+		
+		objectBroker.addObj(networks, true);
+
 	}
 
 	private void initViews(KNXConnector knxConnector, ObjectBroker objectBroker, Obj network)
@@ -179,10 +207,10 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader
 		all.setName("P-0341-0_GR-1");
 		all.setDisplayName("All component");
 		all.setIs(new Contract("knx:group"));
-		
-		//TODO change relative HREFS !!!!!!!		
+
+		// TODO change relative HREFS !!!!!!!
 		all.setHref(new Uri("all_component"));
-		
+
 		list.add(all);
 		objectBroker.addObj(all, false);
 

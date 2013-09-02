@@ -30,43 +30,52 @@
  * This file is part of the IoTSyS project.
  ******************************************************************************/
 
-package at.ac.tuwien.auto.iotsys.gateway.obix.objects.knx.datapoint.impl;
+package at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.entity.impl;
+
+import java.util.ArrayList;
 
 import obix.Contract;
+import obix.List;
 import obix.Obj;
-import obix.Str;
 import obix.Uri;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.datapoint.DataPoint;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.entity.Entities;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.entity.Entity;
+import at.ac.tuwien.auto.iotsys.gateway.util.UriEncoder;
 
-public class DataPointImpl extends Obj implements DataPoint
+public class EntitiesImpl extends List implements Entities
 {
-	protected Str function = new Str();
-	protected Str unit = new Str();
+	private ArrayList<Entity> entities;
 
-	public DataPointImpl()
+	public EntitiesImpl()
 	{
-		this.setIs(new Contract(DataPoint.CONTRACT));
+		this.setName("entities");
+		this.setIs(new Contract("knx:entities"));
+		this.setHref(new Uri("entities"));
+		this.setHidden(true);
 
-		this.function.setName(DataPoint.FUNCTION_NAME);
-		this.function.setHref(new Uri(DataPoint.FUNCTION_HREF));
-
-		this.add(function);
-
-		this.unit.setName(DataPoint.UNIT_NAME);
-		this.unit.setHref(new Uri(DataPoint.UNIT_HREF));
-
-		this.add(unit);
+		this.entities = new ArrayList<Entity>();
 	}
 
-	@Override
-	public Str function()
+	public void addEntity(Entity entity)
 	{
-		return function;
+		if (entity instanceof Obj)
+		{
+			entity.setHref(getHref(entity.getDisplayName()));
+			this.add((Obj)entity);
+			this.add(entity.getReference());
+		}
 	}
 
-	@Override
-	public Str unit()
+	private Uri getHref(String displayName)
 	{
-		return unit;
+		int count = 1;
+		for (Entity e : entities)
+		{
+			if (UriEncoder.getEscapedUri(e.getDisplayName()).equals(UriEncoder.getEscapedUri(displayName)))
+			{
+				count++;
+			}
+		}
+		return new Uri(UriEncoder.getEscapedUri(displayName) + "/" + count);
 	}
 }
