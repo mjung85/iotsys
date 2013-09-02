@@ -1,0 +1,103 @@
+@import "bootstrap";
+@import "bootstrapSwitch";
+
+body {
+  background: #f2f2f2;
+  padding-top: 40px + 20px;
+}
+
+.device {
+  background: white;
+  .header {
+    color: #444;
+    border-bottom: 1px solid #ddd;
+    margin: 0px -5px;
+    padding-left: 10px;
+    padding-bottom: 3px;
+    margin-bottom: 5px;
+    .name {
+      font-weight: bold;
+      color: black;
+    }
+    .autofetch {
+      input {
+        display: none;
+      }
+      input + div {
+        width: 10px;
+        height: 10px;
+        border-radius: 10px;
+        background: none;
+      }
+      input:checked + div {
+        background: #ccc;
+      }
+      float: left;
+      padding: 5px 10px 0 0px;
+    }
+  }
+  border: 2px solid #ccc;
+
+  input[type=text] {
+    &:disabled {
+      background: none;
+      border: none;
+      margin-top: 1px;
+      margin-bottom: 2px;
+      box-shadow: none;
+    };
+  }
+
+  .range {
+    text-align: right;
+    input {
+      width: 160px;
+    }
+  }
+
+  .property .groupcomm {
+    border-radius: 16px;
+    border: 3px solid #8dd5ed;
+    width: 16px;
+    height: 16px;
+    float: right;
+    margin-top: 4px;
+    margin-right: 4px;
+    display: none;
+    &.selected {
+      background: #8dd5ed;
+    }
+
+    &.hidden {
+      display: none;
+    }
+  }
+}
+
+.creatingGroup .property .groupcomm {
+  display: block;
+}
+
+.navbar {
+  #groupbar {
+    float: right;
+  }
+}
+
+.device.fetching .header .autofetch input + div {
+  background: #52be7f;
+  box-shadow: 0 0 2px #52be7f;
+}
+
+.form-horizontal .control-group {
+  margin-bottom: 5px;
+}
+
+.input-mini {
+  width: 40px !important;
+}
+.select-mini {
+  margin-top: 5px;
+  height: 24px;
+  width: 100px;
+}

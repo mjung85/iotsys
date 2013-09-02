@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration
+    xmlns="http://an.com/configuration"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://an.com/configuration configuration.xsd">
+    <DefaultLog
+        path="@LOG_DIR@/pdpsample.log"
+        an.log.Logger="an.log.DefaultLogger"
+        rolloverSize="-1"
+        level="all"/>
+
+    <PDP
+        domainName="IOTSYS PDP"
+        multiPoliciesCombineAlg="an:multiple-policies-deny-overrides"
+        supportMustBePresent="true">
+        <FileDataStore
+            path="@POLICY_DIR@"
+            pattern=".*xml"
+            an.xacml.engine.DataStore="an.xacml.adapter.file.XMLFileDataStore"/>
+        <DefaultContextFactory/>
+        <CacheManager>
+            <PolicyCache size="20000"/>
+            <EvaluationResultCache/>
+        </CacheManager>
+        <PolicyResolverRegistry>
+            <DefaultDataStorePolicyResolver an.xacml.engine.PolicyResolver="an.xacml.engine.DefaultDataStorePolicyResolver"/>
+        </PolicyResolverRegistry>
+    </PDP>
+</Configuration>
