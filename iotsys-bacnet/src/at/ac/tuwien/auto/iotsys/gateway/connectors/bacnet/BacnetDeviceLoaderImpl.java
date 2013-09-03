@@ -101,15 +101,22 @@ public class BacnetDeviceLoaderImpl implements DeviceLoader {
 					if (discoveryEnabled) bacnetConnector.discover(new DeviceDiscoveryListener(objectBroker, groupCommEnabled, historyEnabled));
 					
 					connectors.add(bacnetConnector);
-
+					
+					int numberOfDevices = 0;
+					if (bacnetConfiguredDevices != null) {
+						numberOfDevices = 1; // there is at least one device.
+					}
 					if (bacnetConfiguredDevices instanceof Collection<?>) {
-
 						Collection<?> bacnetDevices = (Collection<?>) bacnetConfiguredDevices;
-						log.info(bacnetDevices.size()
+						numberOfDevices = bacnetDevices.size();
+					}
+					
+					if (numberOfDevices > 0) {
+						log.info(numberOfDevices
 								+ " BACnet devices found in configuration for connector "
 								+ connectorName);
 
-						for (int i = 0; i < bacnetDevices.size(); i++) {
+						for (int i = 0; i < numberOfDevices; i++) {
 							String type = subConfig.getString("device(" + i
 									+ ").type");
 							List<Object> address = subConfig.getList("device("

@@ -129,6 +129,7 @@
       </device>
       
     </connector>
+    
     <connector>
       <name>testDevicesHistory</name>
       <enabled>true</enabled>
@@ -223,8 +224,32 @@
       </device>
       
    </connector>
-    
-    
+   
+   <connector>
+      <name>testDevicesAlarm</name>
+      <enabled>true</enabled>
+      
+      <device>
+         <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.virtual.AlarmingFanSpeedActuatorImplVirtual
+         </type>
+         <href>fanSpeed1</href>
+         <historyEnabled>false</historyEnabled>
+      </device>
+      
+      <device>
+         <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.virtual.AlarmingFanSpeedActuatorImplVirtual
+         </type>
+         <href>fanSpeed2</href>
+         <historyEnabled>false</historyEnabled>
+      </device>
+      
+      <device>
+         <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.virtual.AlarmingFanSpeedActuatorImplVirtual
+         </type>
+         <href>fanSpeed3</href>
+         <historyEnabled>false</historyEnabled>
+      </device>
+    </connector>
     
     <connector>
       <name>HVAC Simulation</name>

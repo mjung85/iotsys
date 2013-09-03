@@ -36,11 +36,12 @@ configurations {
 	testProvided
 }
 
-sourceSets{
+sourceSets {
 	main { compileClasspath += configurations.provided }
 	
 	test {
 		java { srcDir 'test' }
+		compileClasspath += configurations.testProvided
 		runtimeClasspath += configurations.provided
 		runtimeClasspath += configurations.testProvided
 	}
@@ -86,7 +87,7 @@ dependencies {
 	provided project(':iotsys-obix')
 	provided project(':iotsys-common')
 	provided project(':iotsys-encoding-json')
-	provided project(':iotsys-control');
+	provided project(':iotsys-control')
 
 	provided project(':iotsys-xacml')
 	provided project(':iotsys-mdnssd')
@@ -111,7 +112,12 @@ dependencies {
 	compile ":nagasena:"
 	compile ":californium-0.12.0-mif_mc:"
 
+	testProvided project(':iotsys-obix')
+	testProvided project(':iotsys-common')
 	testProvided project(':iotsys-virtual')
+	testProvided project(':iotsys-common')
+	testCompile project(':iotsys-obix')
+	
 	testCompile group: 'junit',name:'junit',version: '4.8+' 
 	testCompile group: 'com.jayway.restassured', name: 'rest-assured', version: '1.2.1'
 	testCompile "org.hamcrest:hamcrest-library:1.3"

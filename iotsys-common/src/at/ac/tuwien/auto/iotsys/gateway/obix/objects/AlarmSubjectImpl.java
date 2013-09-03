@@ -46,9 +46,9 @@ public class AlarmSubjectImpl extends Obj implements IAlarmSubject {
 		
 		if (alarmdb == null) {
 			alarmdb = new obix.List("alarmdb", new Contract(Alarm.ALARM_CONTRACT));
-			alarmdb.setHref(new Uri("http://localhost/alarmdb"));
-			// If alarmdb should be accessible directly:
-			// broker.addObj(alarmdb, false);
+			alarmdb.setHref(new Uri("alarmdb"));
+			
+			broker.addObj(alarmdb, false);
 		}
 		
 		add(count());

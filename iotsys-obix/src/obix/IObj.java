@@ -84,6 +84,8 @@ public interface IObj
 ////////////////////////////////////////////////////////////////
   
   public Obj get(String name);
+  public Obj getByHref(Uri href);
+  public Obj getChildByHref(Uri href);
   public int size();
   public Obj[] list();
   public Obj add(Obj kid);
