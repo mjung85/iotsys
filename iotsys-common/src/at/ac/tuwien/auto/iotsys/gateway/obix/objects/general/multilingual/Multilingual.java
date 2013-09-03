@@ -35,5 +35,7 @@ import obix.IObj;
 
 public interface Multilingual extends IObj
 {
+	public static final String CONTRACT = "knx:multilingual";
+	
 	public String getTranslation(String language, String attribute);
 }

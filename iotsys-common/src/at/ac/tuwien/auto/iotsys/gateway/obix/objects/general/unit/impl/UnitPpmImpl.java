@@ -29,61 +29,22 @@
  * This file is part of the IoTSyS project.
  ******************************************************************************/
 
-package at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.enumeration;
+package at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.unit.impl;
 
-import obix.contracts.Range;
+import obix.Uri;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.enumeration.EnumLanguage;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.enumeration.EnumTranslation;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.multilingual.Multilingual;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.multilingual.impl.TranslationImpl;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.unit.UnitPpm;
 
-public interface EnumLanguage extends Range
+public class UnitPpmImpl extends UnitImpl implements UnitPpm, Multilingual
 {
-	public static final String HREF = "/enums/enumLanguage";
-	
-	public static final String en_EN = "en-EN";
-	
-	public static enum Enum
+	public UnitPpmImpl()
 	{
-		en_EN("en-EN", "English"),
-		de_DE("de-DE", "German"),
-		it_IT("it-IT", "Italian"),
-		es_ES("es-ES", "Spanish"),
-		en_US("en-US", "English (United States)"),
-		fr_FR("fr-FR", "French"),
-		id_ID("id-ID", "Indonesian"),
-		nb_NO("nb-NO", "Norwegian"),
-		sv_SE("sv-SE", "Swedish"),
-		da_DK("da-DK", "Danish"),
-		nl_NL("nl-NL", "Dutch"),
-		el_GR("el-GR", "Greek"),
-		ru_RU("ru-RU", "Russian");
-		
-		private String key;
-		private String name;
-		
-		private Enum(String key, String name)
-		{
-			this.key = key;
-			this.name = name;
-		}
-		
-		public String getName()
-		{
-			return name;
-		}
-		
-		public String getKey()
-		{
-			return key;
-		}
-		
-		public Enum getLanguage(String key)
-		{
-			for(Enum l : Enum.values())
-			{
-				if (l.key.toLowerCase().equals(key.toLowerCase()))
-				{
-					return l;
-				}
-			}
-			return null;
-		}
+		super("ppm", "parts/million (ppm)", new Uri(UnitPpm.HREF), "ppm", 1, 0, new DimensionImpl(0, 0, 0, 0, 0, 0, 0));
+
+		// Translations
+		this.addTranslation(new TranslationImpl(EnumLanguage.Enum.de_DE, EnumTranslation.Enum.display, "Teile/Million (ppm)"));
 	}
 }

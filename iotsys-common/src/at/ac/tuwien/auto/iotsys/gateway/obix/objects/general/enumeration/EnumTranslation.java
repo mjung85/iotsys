@@ -29,11 +29,48 @@
  * This file is part of the IoTSyS project.
  ******************************************************************************/
 
-package at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.view;
+package at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.enumeration;
 
-import obix.IObj;
+import obix.contracts.Range;
 
-public interface View extends IObj
+public interface EnumTranslation extends Range
 {
+	public static final String HREF = "/enums/enumTranslation";
 	
+	public static enum Enum
+	{
+		display("display","Display"),
+		displayname("displayname","DisplayName");
+		
+		private String key;
+		private String name;
+		
+		private Enum(String key, String name)
+		{
+			this.key = key;
+			this.name = name;
+		}
+		
+		public String getName()
+		{
+			return name;
+		}
+		
+		public String getKey()
+		{
+			return key;
+		}
+		
+		public Enum getLanguage(String key)
+		{
+			for(Enum l : Enum.values())
+			{
+				if (l.key.toLowerCase().equals(key.toLowerCase()))
+				{
+					return l;
+				}
+			}
+			return null;
+		}
+	}
 }

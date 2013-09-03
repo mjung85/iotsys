@@ -877,7 +877,7 @@ public class Obj implements IObj, Subject, AlarmSource, Cloneable
 			int lastIndexOf = href.getPath().lastIndexOf("/");
 			if (lastIndexOf > -1)
 			{
-				new Uri(href.getPath().substring(lastIndexOf));
+				 return new Uri(href.getPath().substring(lastIndexOf + 1));
 			}
 		}
 		return href;

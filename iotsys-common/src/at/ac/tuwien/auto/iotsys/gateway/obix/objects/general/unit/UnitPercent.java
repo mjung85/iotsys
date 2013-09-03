@@ -29,11 +29,11 @@
  * This file is part of the IoTSyS project.
  ******************************************************************************/
 
-package at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.enumeration;
+package at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.unit;
 
-import obix.IObj;
+import obix.contracts.Unit;
 
-public interface EnumAttribute extends IObj
+public interface UnitPercent extends Unit
 {
-	public static final String HREF = "/enums/enumAttribute";
+	public static final String HREF = "percent";
 }

@@ -49,6 +49,7 @@ public class EnumStandardImpl extends List implements EnumStandard
 		this.setName("enumStandard");
 		this.setIs(new Contract("obix:range"));
 		this.setHref(new Uri(EnumStandard.HREF));
+		this.setHidden(true);
 		
 		this.initValues();
 	}

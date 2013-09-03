@@ -31,7 +31,9 @@
 
 package at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.view;
 
-public interface ViewTopology extends View
+import obix.IObj;
+
+public interface ViewTopology extends IObj
 {
 	public static final String NAME = "topology";
 	public static final String CONTRACT = "knx:viewTopology";

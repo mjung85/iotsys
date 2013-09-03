@@ -45,6 +45,7 @@ public abstract class MultilingualImpl extends Obj implements Multilingual
 {
 	private List list = null;
 	protected ArrayList<Translation> translations;
+	private int translationCount = 0;
 
 	public void addTranslation(TranslationImpl translation)
 	{
@@ -56,6 +57,9 @@ public abstract class MultilingualImpl extends Obj implements Multilingual
 
 			this.translations = new ArrayList<Translation>();
 		}
+		
+		translation.setHref(new Uri(String.valueOf(++translationCount)));
+		
 		this.list.add(translation);
 		this.translations.add(translation);
 	}

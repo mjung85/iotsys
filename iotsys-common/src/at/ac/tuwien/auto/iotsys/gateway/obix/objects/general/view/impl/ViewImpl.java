@@ -33,11 +33,11 @@
 package at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.view.impl;
 
 import obix.Contract;
+import obix.IObj;
 import obix.Obj;
 import obix.Uri;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.view.View;
 
-public abstract class ViewImpl extends Obj implements View
+public abstract class ViewImpl extends Obj implements IObj
 {
 	public ViewImpl(String name, Uri href, Contract is)
 	{
