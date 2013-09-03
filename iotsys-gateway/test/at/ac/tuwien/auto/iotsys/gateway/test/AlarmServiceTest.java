@@ -118,44 +118,46 @@ public class AlarmServiceTest extends AbstractGatewayTest {
 	}
 	
 	
-//	@Test
-//	public void testAckAlarm() {
-//		BrightnessActuatorImpl source = new BrightnessActuatorImpl();
-//		source.value().attach(new DefaultAlarmObserver(new IntRangeAlarmCondition(10l, 20l))
-//										.setAcked(true).setStateful(false));
-//		
-//		// generate alarm
-//		source.value().set(15l);
-//		String alarmHref = getLatestAlarm().get("@href");
-//
-//		expect().
-//		body(hasXPath("/obj/op[@name='ack' and @href='ack' and @in='obix:AckAlarmIn' and @out='obix:AckAlarmOut']")).
-//		body(hasXPath("/obj/str[@name='ackUser' and @null='true']")).
-//		body(hasXPath("/obj/abstime[@name='ackTimestamp' and @null='true']")).
-//		when().get(alarmHref);
-//		
-//		
-//		given().
-//		param("data", "<obj is='obix:AckAlarmIn'>"
-//				+ " <str name='ackUser' val='someUser'/>"
-//				+ "</obj>").
-//		expect().
-//		body(hasXPath("/obj[@is='obix:AckAlarmOut']")).
-//		body(hasXPath("/obj/obj[@href='" + alarmHref + "']")).
-//		body(hasXPath("/obj/obj/str[@name='ackUser' and not(@null) and @val='someUser']")).
-//		body(hasXPath("/obj/obj/abstime[@name='ackTimestamp' and not(@null)]")).
-//		when().post(alarmHref + "/ack");
-//		long expectedAckTimestamp = System.currentTimeMillis();
-//		
-//		String response = expect().
-//		body(hasXPath("/obj/op[@name='ack' and @href='ack' and @in='obix:AckAlarmIn' and @out='obix:AckAlarmOut']")).
-//		body(hasXPath("/obj/str[@name='ackUser' and @val='someUser']")).
-//		body(hasXPath("/obj/abstime[@name='ackTimestamp']")).
-//		when().get(alarmHref).asString();
-//		
-//		long ackTimestamp = DatatypeConverter.parseDateTime(XmlPath.from(response).getString("obj.abstime.find { it.@name='ackTimestamp' }.@val")).getTimeInMillis();
-//		assertEquals(expectedAckTimestamp, ackTimestamp, 1000);
-//	}
+	@Test
+	public void testAckAlarm() {
+		BrightnessActuatorImpl source = new BrightnessActuatorImpl();
+		source.value().attach(new DefaultAlarmObserver(new IntRangeAlarmCondition(10l, 20l))
+										.setAcked(true).setStateful(false));
+		int alarms = getAlarmCount();
+		
+		// generate alarm
+		source.value().set(25l);
+		assertEquals(++alarms, getAlarmCount());
+		String alarmHref = getLatestAlarm().get("@href");
+
+		expect().
+		body(hasXPath("/obj/op[@name='ack' and @href='ack' and @in='obix:AckAlarmIn' and @out='obix:AckAlarmOut']")).
+		body(hasXPath("/obj/str[@name='ackUser' and @null='true']")).
+		body(hasXPath("/obj/abstime[@name='ackTimestamp' and @null='true']")).
+		when().get(alarmHref);
+		
+		
+		given().
+		param("data", "<obj is='obix:AckAlarmIn'>"
+				+ " <str name='ackUser' val='someUser'/>"
+				+ "</obj>").
+		expect().
+		body(hasXPath("/obj[@is='obix:AckAlarmOut']")).
+		body(hasXPath("/obj/obj[@href='" + alarmHref + "']")).
+		body(hasXPath("/obj/obj/str[@name='ackUser' and not(@null) and @val='someUser']")).
+		body(hasXPath("/obj/obj/abstime[@name='ackTimestamp' and not(@null)]")).
+		when().post(alarmHref + "/ack");
+		long expectedAckTimestamp = System.currentTimeMillis();
+		
+		String response = expect().
+		body(hasXPath("/obj/op[@name='ack' and @href='ack' and @in='obix:AckAlarmIn' and @out='obix:AckAlarmOut']")).
+		body(hasXPath("/obj/str[@name='ackUser' and @val='someUser']")).
+		body(hasXPath("/obj/abstime[@name='ackTimestamp']")).
+		when().get(alarmHref).asString();
+		
+		long ackTimestamp = DatatypeConverter.parseDateTime(XmlPath.from(response).getString("obj.abstime.find { it.@name='ackTimestamp' }.@val")).getTimeInMillis();
+		assertEquals(expectedAckTimestamp, ackTimestamp, 1000);
+	}
 
 	@Test
 	public void testStatefulAlarmObj() {
