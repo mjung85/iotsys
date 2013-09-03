@@ -34,7 +34,6 @@ package at.ac.tuwien.auto.iotsys.gateway.obix.objectbroker;
 
 import java.net.Inet6Address;
 import java.net.UnknownHostException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.logging.Logger;
 

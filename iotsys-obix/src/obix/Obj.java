@@ -5,11 +5,13 @@ package obix;
 
 import java.lang.reflect.Array;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 
+import obix.contracts.AckAlarm;
 import obix.contracts.Alarm;
 import obix.io.BinObix;
 import obix.io.ObixEncoder;
@@ -26,6 +28,36 @@ import at.ac.tuwien.auto.iotsys.gateway.obix.observer.Subject;
  * @version $Revision$ $Date$
  */
 public class Obj implements IObj, Subject, AlarmSource, Cloneable {
+
+	// //////////////////////////////////////////////////////////////
+	// Fields
+	// //////////////////////////////////////////////////////////////
+
+	private String name;
+	private Uri href;
+	private Contract is;
+	private Obj parent;
+	private HashMap kidsByName = new HashMap();
+
+	private Obj kidsHead, kidsTail;
+	private int kidsCount;
+	private Obj prev, next;
+	private String display;
+	private String displayName;
+	private Uri icon;
+	private boolean writable;
+	private boolean isNull;
+	private boolean isHidden;
+
+	private boolean isDisabled = false;
+	private boolean isFaulty = false;
+	private boolean isDown = false;
+	private boolean isOverridden = false;
+
+	private String invokedHref = new String();
+	
+	private LinkedList<Alarm> alarms = new LinkedList<Alarm>();
+	private LinkedList<Alarm> unackedAlarms = new LinkedList<Alarm>();
 
 	// //////////////////////////////////////////////////////////////
 	// Factory
@@ -127,6 +159,39 @@ public class Obj implements IObj, Subject, AlarmSource, Cloneable {
 	}
 
 	/**
+	 * Returns a reference to the Obj
+	 */
+	public Ref getReference() {
+		return getReference(false);
+	}
+
+	public Ref getReference(boolean absolute) {
+		Ref ref = new Ref();
+		ref.setName(this.getName());
+
+		if (absolute) {
+			Obj tmp = this;
+			String uri = "";
+
+			do {
+				if (uri.isEmpty())
+					uri = tmp.getHref().getPath();
+				else
+					uri = tmp.getHref().getPath() + "/" + uri;
+				tmp = tmp.parent;
+			} while (tmp != null && !tmp.getHref().isAbsolute());
+
+			ref.setHref(new Uri(uri));
+
+			// ref.setHref(this.getNormalizedHref());
+		} else {
+			ref.setHref(this.getHref());
+		}
+		ref.setIs(this.getIs());
+		return ref;
+	}
+
+	/**
 	 * Get name of this Obj or null if unnamed.
 	 */
 	public String getName() {
@@ -144,12 +209,15 @@ public class Obj implements IObj, Subject, AlarmSource, Cloneable {
 			throw new IllegalStateException("obj is already parented");
 		this.name = name;
 	}
-	
+
 	/**
 	 * Set name of this Obj. The name may only be set if name is currently null
 	 * and this Obj hasn't been added a child to another Obj yet.
-	 * @param name New name for this Obj
-	 * @param force If true, ignore that name or parent may have already been set
+	 * 
+	 * @param name
+	 *            New name for this Obj
+	 * @param force
+	 *            If true, ignore that name or parent may have already been set
 	 */
 	public void setName(String name, boolean force) {
 		if (force)
@@ -188,27 +256,25 @@ public class Obj implements IObj, Subject, AlarmSource, Cloneable {
 	 */
 	public Uri getNormalizedHref() {
 		if (href == null)
-            return null;
-	    
-	    if (getParent() != null &&
-	            getParent().getNormalizedHref() != null &&
-	            getParent().getNormalizedHref().isAbsolute()) {
-	        return href.normalize(getParent().getNormalizedHref());
-	    }
-	    
-	    return href;
+			return null;
+
+		if (getParent() != null && getParent().getNormalizedHref() != null
+				&& getParent().getNormalizedHref().isAbsolute()) {
+			return href.normalize(getParent().getNormalizedHref());
+		}
+
+		return href;
 	}
-	
-	public Uri getRelativePath(){
-		if(href != null && href.getPath() != null){
+
+	public Uri getRelativePath() {
+		if (href != null && href.getPath() != null) {
 			int lastIndexOf = href.getPath().lastIndexOf("/");
-			if(lastIndexOf > -1){
+			if (lastIndexOf > -1) {
 				new Uri(href.getPath().substring(lastIndexOf));
 			}
 		}
 		return href;
 	}
-	
 
 	public String getFullContextPath() {
 		String path = "";
@@ -217,12 +283,16 @@ public class Obj implements IObj, Subject, AlarmSource, Cloneable {
 		while (current != null) {
 			Uri normalizedHref = current.getNormalizedHref();
 			if (normalizedHref != null) {
-				if(normalizedHref.isAbsolute()) {
-					String fullContextPath = current.getNormalizedHref().getPath().toString() + path;
+				if (normalizedHref.isAbsolute()) {
+					String fullContextPath = current.getNormalizedHref()
+							.getPath().toString()
+							+ path;
 					return fullContextPath;
 				} else {
-					if (!path.isEmpty() && !path.startsWith("/"))  path = "/" + path;
-					path = current.getNormalizedHref().getPath().toString() + path;
+					if (!path.isEmpty() && !path.startsWith("/"))
+						path = "/" + path;
+					path = current.getNormalizedHref().getPath().toString()
+							+ path;
 				}
 			} else if (current.getHref() != null) {
 				path = current.getHref().toString() + path;
@@ -232,15 +302,15 @@ public class Obj implements IObj, Subject, AlarmSource, Cloneable {
 
 			current = current.getParent();
 		}
-		
+
 		return path;
 	}
 
 	/**
 	 * Set uri of this object.
 	 */
-	public void setHref(Uri href) {		
-		this.href = href;				
+	public void setHref(Uri href) {
+		this.href = href;
 	}
 
 	/**
@@ -273,12 +343,11 @@ public class Obj implements IObj, Subject, AlarmSource, Cloneable {
 	public void setIs(Contract is) {
 		this.is = is;
 	}
-	
-	@Override
+
 	public Object clone() throws CloneNotSupportedException {
 		return super.clone();
 	}
-	
+
 	// //////////////////////////////////////////////////////////////
 	// Convenience
 	// //////////////////////////////////////////////////////////////
@@ -392,7 +461,7 @@ public class Obj implements IObj, Subject, AlarmSource, Cloneable {
 	public void setStr(String val) {
 		((Str) this).set(val);
 	}
-	
+
 	/** Convenience for setting the value to the value of another Obj */
 	public void set(Obj obj) {
 		return;
@@ -473,7 +542,32 @@ public class Obj implements IObj, Subject, AlarmSource, Cloneable {
 	 * Get status for this object.
 	 */
 	public Status getStatus() {
-		return status;
+		if (isDisabled())
+			return Status.disabled;
+
+		if (isFaulty())
+			return Status.fault;
+
+		if (isDown())
+			return Status.down;
+
+		if (inAlarmState()) {
+			ArrayList<Alarm> unackedActiveAlarms = new ArrayList<Alarm>(alarms);
+			unackedActiveAlarms.retainAll(unackedAlarms);
+
+			if (!unackedActiveAlarms.isEmpty())
+				return Status.unackedAlarm;
+			else
+				return Status.alarm;
+		}
+
+		if (!unackedAlarms.isEmpty())
+			return Status.unacked;
+
+		if (isOverridden())
+			return Status.overridden;
+
+		return Status.ok;
 	}
 
 	/**
@@ -483,7 +577,43 @@ public class Obj implements IObj, Subject, AlarmSource, Cloneable {
 	public void setStatus(Status status) {
 		if (status == null)
 			status = Status.ok;
-		this.status = status;
+
+		setDisabled(status == Status.disabled);
+		setFaulty(status == Status.fault);
+		setDown(status == Status.down);
+		setOverridden(status == Status.overridden);
+	}
+
+	public boolean isDisabled() {
+		return isDisabled;
+	}
+
+	public void setDisabled(boolean isDisabled) {
+		this.isDisabled = isDisabled;
+	}
+
+	public boolean isFaulty() {
+		return isFaulty;
+	}
+
+	public void setFaulty(boolean isFaulty) {
+		this.isFaulty = isFaulty;
+	}
+
+	public boolean isDown() {
+		return isDown;
+	}
+
+	public void setDown(boolean isDown) {
+		this.isDown = isDown;
+	}
+
+	public boolean isOverridden() {
+		return isOverridden;
+	}
+
+	public void setOverridden(boolean isOverridden) {
+		this.isOverridden = isOverridden;
 	}
 
 	/**
@@ -499,19 +629,18 @@ public class Obj implements IObj, Subject, AlarmSource, Cloneable {
 	public void setNull(boolean isNull) {
 		this.isNull = isNull;
 	}
-	
+
 	/**
-	 * Get hidden flag or default to false.
-	 * Hidden objects are not printed when printing an ancestor
+	 * Get hidden flag or default to false. Hidden objects are not printed when
+	 * printing an ancestor
 	 */
 	public boolean isHidden() {
 		return isHidden;
 	}
-	
+
 	/**
-	 * Set hidden flag.
-	 * Hidden objects are not printed when printing an ancestor
-	 */ 
+	 * Set hidden flag. Hidden objects are not printed when printing an ancestor
+	 */
 	public void setHidden(boolean isHidden) {
 		this.isHidden = isHidden;
 	}
@@ -577,67 +706,72 @@ public class Obj implements IObj, Subject, AlarmSource, Cloneable {
 			throw new IllegalStateException("Child missing href : " + name);
 		return kid.getNormalizedHref();
 	}
-	
+
 	/**
 	 * Get a child object with the specified href
 	 */
 	public Obj getChildByHref(Uri href) {
-		if (href == null) return null;
-		
+		if (href == null)
+			return null;
+
 		String childHref = href.get();
-		
+
 		while (childHref.endsWith("/"))
-			childHref = childHref.substring(0, childHref.length()-1);
+			childHref = childHref.substring(0, childHref.length() - 1);
 		while (childHref.contains("//"))
 			childHref = childHref.replaceAll("//", "/");
-		
-		
-		
-		for (Obj p = kidsHead; p != null; p = p.next) {
-			if (p.getHref() != null && !p.isRef()) {
-				String pHref = p.getHref().get();
-				while (pHref.endsWith("/"))
-					pHref = pHref.substring(0, pHref.length()-1);
-				while (pHref.contains("//"))
-					pHref = pHref.replaceAll("//", "/");
-				
-				if (pHref.equals(childHref))
-					return p;
+
+		synchronized (this) {
+			for (Obj p = kidsHead; p != null; p = p.next) {
+				if (p.getHref() != null && !p.isRef()) {
+					String pHref = p.getHref().get();
+					while (pHref.endsWith("/"))
+						pHref = pHref.substring(0, pHref.length() - 1);
+					while (pHref.contains("//"))
+						pHref = pHref.replaceAll("//", "/");
+
+					if (pHref.equals(childHref))
+						return p;
+				}
 			}
 		}
-		
+
 		return null;
 	}
-	
+
 	/**
 	 * Get a sub object with the specified href
 	 */
 	public Obj getByHref(Uri href) {
-		if (href == null) return null;
+		if (href == null)
+			return null;
 		if (getRoot() != this) {
 			if (href.get().startsWith("/") || href.isAbsolute())
 				return getRoot().getByHref(href);
-			
-			return getRoot().getByHref(new Uri(this.getFullContextPath() + "/" + href.get()));
+
+			return getRoot().getByHref(
+					new Uri(this.getFullContextPath() + "/" + href.get()));
 		}
-		
+
 		String uri = href.get();
 		while (uri.startsWith("/"))
 			uri = uri.substring(1);
-		
+
 		uri = URI.create(uri).normalize().getPath();
-		
+
 		String unresolvedUri = uri;
 		Obj current = this;
-		
+
 		while (!unresolvedUri.isEmpty()) {
 			Obj child = current.getChildByHref(new Uri(uri));
 			if (child == null)
-				child = current.getChildByHref(new Uri(current.getFullContextPath() + "/" + uri));
-			
+				child = current.getChildByHref(new Uri(current
+						.getFullContextPath() + "/" + uri));
+
 			if (child == null) {
 				int slash = uri.lastIndexOf('/');
-				if (slash == -1) return null;
+				if (slash == -1)
+					return null;
 				uri = uri.substring(0, slash);
 			} else {
 				current = child;
@@ -647,8 +781,7 @@ public class Obj implements IObj, Subject, AlarmSource, Cloneable {
 				uri = unresolvedUri;
 			}
 		}
-		
-		
+
 		return current;
 	}
 
@@ -662,7 +795,7 @@ public class Obj implements IObj, Subject, AlarmSource, Cloneable {
 	/**
 	 * Get an array of all the children.
 	 */
-	public Obj[] list() {
+	public synchronized Obj[] list() {
 		Obj[] list = new Obj[kidsCount];
 		int n = 0;
 		for (Obj p = kidsHead; p != null && n < kidsCount; p = p.next)
@@ -674,7 +807,7 @@ public class Obj implements IObj, Subject, AlarmSource, Cloneable {
 	 * Get all the children which are instances of the specified class. The
 	 * return array will be of the specified class.
 	 */
-	public Object[] list(Class cls) {
+	public synchronized Object[] list(Class cls) {
 		Object[] temp = new Object[kidsCount];
 		int count = 0;
 		for (Obj p = kidsHead; p != null; p = p.next) {
@@ -699,24 +832,25 @@ public class Obj implements IObj, Subject, AlarmSource, Cloneable {
 	/**
 	 * Add a child Obj. Return this.
 	 */
-	public Obj add(Obj kid, boolean checkDuplicates) {
+	public synchronized Obj add(Obj kid, boolean checkDuplicates) {
 		// sanity check
 		// if (kid.parent != null || kid.prev != null || kid.next != null)
 		// throw new IllegalStateException("Child is already parented");
-		
-		if(checkDuplicates){
+
+		// check only, if the current and the stored kid are not hidden
+		// now it is possible to store a visible reference and the hidden obj
+		if (checkDuplicates && !isHidden()) {
 			if (kid.name != null && kidsByName != null
-					&& kidsByName.containsKey(kid.name))
-				throw new IllegalStateException("Duplicate child name '" + kid.name
-						+ "'");
+					&& kidsByName.containsKey(kid.name)
+					&& !((Obj) kidsByName.get(kid.name)).isHidden())
+				throw new IllegalStateException("Duplicate child name '"
+						+ kid.name + "'");
 		}
 
-		// if named, add to name map
-		if (kid.name != null) {
-			
+		// if named and key is not contained, add to name map
+		if (kid.name != null && !kidsByName.containsKey(kid.name)) {
 			kidsByName.put(kid.name, kid);
 		}
-		
 
 		// add to ordered linked list
 		if (kidsTail == null) {
@@ -734,7 +868,7 @@ public class Obj implements IObj, Subject, AlarmSource, Cloneable {
 		kidsCount++;
 		return this;
 	}
-	
+
 	/**
 	 * Add a child Obj. Return this.
 	 */
@@ -745,7 +879,7 @@ public class Obj implements IObj, Subject, AlarmSource, Cloneable {
 	/**
 	 * Add all the specified objects as my children. Return this.
 	 */
-	public Obj addAll(Obj[] kids) {
+	public synchronized Obj addAll(Obj[] kids) {
 		for (int i = 0; i < kids.length; ++i)
 			add(kids[i]);
 		return this;
@@ -754,7 +888,8 @@ public class Obj implements IObj, Subject, AlarmSource, Cloneable {
 	/**
 	 * Remove the specified child Obj.
 	 */
-	public void remove(Obj kid) {
+	public synchronized void remove(Obj kid) 
+	{
 		// sanity checks
 		if (kid.parent != this)
 			throw new IllegalStateException("Not parented by me");
@@ -764,14 +899,20 @@ public class Obj implements IObj, Subject, AlarmSource, Cloneable {
 			kidsByName.remove(kid.name);
 
 		// remove from linked list
-		if (kidsHead == kid) {
+		if (kidsHead == kid)
+		{
 			kidsHead = kid.next;
-		} else {
+		}
+		else
+		{
 			kid.prev.next = kid.next;
 		}
-		if (kidsTail == kid) {
+		if (kidsTail == kid)
+		{
 			kidsTail = kid.prev;
-		} else {
+		}
+		else
+		{
 			kid.next.prev = kid.prev;
 		}
 
@@ -785,10 +926,10 @@ public class Obj implements IObj, Subject, AlarmSource, Cloneable {
 	/**
 	 * Replace the old obj with the newObj (they must have the same name).
 	 */
-	public void replace(Obj oldObj, Obj newObj) {
+	public synchronized void replace(Obj oldObj, Obj newObj){
+		
 		if (!oldObj.name.equals(newObj.name))
-			throw new IllegalStateException("Mismatched names: " + oldObj.name
-					+ " != " + newObj.name);
+			throw new IllegalStateException("Mismatched names: " + oldObj.name + " != " + newObj.name);
 
 		// sanity checks
 		if (oldObj.parent != this)
@@ -821,7 +962,8 @@ public class Obj implements IObj, Subject, AlarmSource, Cloneable {
 	/**
 	 * Convenience for <code>getParent().remove(this)</code>.
 	 */
-	public void removeThis() {
+	public void removeThis()
+	{
 		if (parent == null)
 			throw new IllegalStateException("Not parented");
 
@@ -835,7 +977,8 @@ public class Obj implements IObj, Subject, AlarmSource, Cloneable {
 	/**
 	 * Get a debug string.
 	 */
-	public String toString() {
+	public String toString()
+	{
 		StringBuffer s = new StringBuffer();
 		s.append("<").append(getElement());
 		if (name != null)
@@ -851,40 +994,20 @@ public class Obj implements IObj, Subject, AlarmSource, Cloneable {
 	/**
 	 * Dump in XML to standard output.
 	 */
-	public void dump() {
+	public void dump()
+	{
 		ObixEncoder.dump(this);
 	}
 
-	// //////////////////////////////////////////////////////////////
-	// Fields
-	// //////////////////////////////////////////////////////////////
-
-	private String name;
-	private Uri href;
-	private Contract is;
-	private Obj parent;
-	private HashMap kidsByName = new HashMap();
 	
 
-	private Obj kidsHead, kidsTail;
-	private int kidsCount;
-	private Obj prev, next;
-	private Status status = Status.ok;
-	private String display;
-	private String displayName;
-	private Uri icon;
-	private boolean writable;
-	private boolean isNull;
-	private boolean isHidden;
-	
-	private String invokedHref= new String(); 
-	
-	
-	public String getInvokedHref() {
+	public String getInvokedHref()
+	{
 		return invokedHref;
 	}
 
-	public void setInvokedHref(String invokedHref) {
+	public void setInvokedHref(String invokedHref)
+	{
 		this.invokedHref = invokedHref;
 	}
 
@@ -894,14 +1017,16 @@ public class Obj implements IObj, Subject, AlarmSource, Cloneable {
 	 * 
 	 * @param input
 	 */
-	public void writeObject(Obj input) {
+	public void writeObject(Obj input)
+	{
 	}
 
 	/**
 	 * If an object is read, then the concrete implementation should refresh the
 	 * data.
 	 */
-	public void refreshObject() {
+	public void refreshObject()
+	{
 	}
 
 	/**
@@ -913,8 +1038,10 @@ public class Obj implements IObj, Subject, AlarmSource, Cloneable {
 	 * Attach an observer that will be notified if the state changes.
 	 */
 	@Override
-	public void attach(Observer observer) {
-		synchronized (observers) {
+	public void attach(Observer observer)
+	{
+		synchronized (observers)
+		{
 			observers.add(observer);
 			observer.setSubject(this);
 		}
@@ -924,8 +1051,10 @@ public class Obj implements IObj, Subject, AlarmSource, Cloneable {
 	 * Detach an observer.
 	 */
 	@Override
-	public void detach(Observer observer) {
-		synchronized (observers) {
+	public void detach(Observer observer)
+	{
+		synchronized (observers)
+		{
 			observers.remove(observer);
 		}
 	}
@@ -938,13 +1067,16 @@ public class Obj implements IObj, Subject, AlarmSource, Cloneable {
 	 */
 
 	@Override
-	public void notifyObservers() {
+	public void notifyObservers()
+	{
 
 		// first notify observers directly observing this object
-		synchronized (observers) {
+		synchronized (observers)
+		{
 			Iterator<Observer> iterator = observers.iterator();
 
-			while (iterator.hasNext()) {
+			while (iterator.hasNext())
+			{
 				((Observer) iterator.next()).update(getCurrentState());
 			}
 		}
@@ -953,62 +1085,68 @@ public class Obj implements IObj, Subject, AlarmSource, Cloneable {
 		// objects (bool, int,...) it
 		// is quite common that these objects are part of the extent of other
 		// objects
-		if (this.getParent() != null) {
+		if (this.getParent() != null)
+		{
 			getParent().notifyObservers();
 		}
 
 		// notify CoAP observers, managed in ObixObservingManager
-		if(extObserver != null){
+		if (extObserver != null)
+		{
 			extObserver.objectChanged(this.getFullContextPath());
-		}		
+		}
 	}
-	
 
-	
 	@Override
-	public Object getCurrentState() {
+	public Object getCurrentState()
+	{
 		return this;
 	}
 
-	public static void setExternalObserver(
-			ExternalObserver extObserver) {
-		Obj.extObserver = extObserver; 	
-	}
-	
-	
-	
-	
-	
-	private LinkedList<Alarm> alarms = new LinkedList<Alarm>();
-	
-	@Override
-	public void setOffNormal(Alarm alarm) {
-		alarms.add(alarm);
+	public static void setExternalObserver(ExternalObserver extObserver)
+	{
+		Obj.extObserver = extObserver;
 	}
 
-	@Override
-	public void setToNormal(Alarm alarm) {
+	
+
+	public void setOffNormal(Alarm alarm)
+	{
+		alarms.add(alarm);
+		
+		if (alarm instanceof AckAlarm) {
+			Abstime ackTimestamp = ((AckAlarm)alarm).ackTimestamp();
+			if (ackTimestamp != null && ackTimestamp.isNull())
+				unackedAlarms.add(alarm);
+		}
+	}
+
+	public void setToNormal(Alarm alarm)
+	{
 		alarms.remove(alarm);
 	}
+
+	public void alarmAcknowledged(Alarm alarm) {
+		unackedAlarms.remove(alarm);
+	}
 	
-	@Override
 	public boolean inAlarmState() {
 		return !(alarms.isEmpty());
 	}
 	
-	@Override
 	public LinkedList<Alarm> getAlarms() {
 		if (alarms == null)
 			alarms = new LinkedList<Alarm>();
 		
 		return alarms;
 	}
-	
+
 	/**
-	 * Method that can be overridden to contain logic that should be executed if all fields are set.
+	 * Method that can be overridden to contain logic that should be executed if
+	 * all fields are set.
 	 */
-	public void initialize(){
-		
+	public void initialize() {
+
 	}
 
 }

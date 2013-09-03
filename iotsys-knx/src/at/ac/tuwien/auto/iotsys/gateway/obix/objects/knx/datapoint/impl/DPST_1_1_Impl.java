@@ -40,7 +40,7 @@ import obix.Int;
 import obix.Obj;
 import obix.Real;
 import obix.Uri;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.knx.datapoint.DPST_1_1;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.datapoint.DPST_1_1;
 
 public class DPST_1_1_Impl extends DataPointImpl implements DPST_1_1
 {

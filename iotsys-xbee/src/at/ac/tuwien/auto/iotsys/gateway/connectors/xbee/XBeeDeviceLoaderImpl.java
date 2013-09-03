@@ -72,7 +72,8 @@ public class XBeeDeviceLoaderImpl implements DeviceLoader {
 					int numberOfDevices = 0;
 					if (xbeeConfiguredDevices != null) {
 						numberOfDevices = 1; // there is at least one device.
-					} else if (xbeeConfiguredDevices instanceof Collection<?>) {
+					}
+					if (xbeeConfiguredDevices instanceof Collection<?>) {
 						Collection<?> xbeeDevices = (Collection<?>) xbeeConfiguredDevices;
 						numberOfDevices = xbeeDevices.size();
 					}

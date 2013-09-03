@@ -21,12 +21,16 @@ public class AlarmQueryOutImpl extends Obj implements AlarmQueryOut {
 			for(Obj obj : alarms) {
 				AlarmImpl alarm = (AlarmImpl) obj;
 				
-				data.add(alarm);
-				if (data.size() == 1 || start.get() > alarm.timestamp().get())
-					start.set(alarm.timestamp().get(), start.getTimeZone());
-				
-				if (data.size() == 1 || end.get() < alarm.timestamp().get())
-					end.set(alarm.timestamp().get(), end.getTimeZone());
+				try {
+					data.add((Obj) alarm.clone());
+					if (data.size() == 1 || start.get() > alarm.timestamp().get())
+						start.set(alarm.timestamp().get(), start.getTimeZone());
+					
+					if (data.size() == 1 || end.get() < alarm.timestamp().get())
+						end.set(alarm.timestamp().get(), end.getTimeZone());
+				} catch (CloneNotSupportedException e) {
+					e.printStackTrace();
+				}
 			}
 		}
 		

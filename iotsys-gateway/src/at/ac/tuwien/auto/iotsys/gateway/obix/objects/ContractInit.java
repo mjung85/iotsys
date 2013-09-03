@@ -39,6 +39,10 @@ import at.ac.tuwien.auto.iotsys.gateway.obix.objects.bacnet.AnalogValue;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.bacnet.BinaryInput;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.bacnet.BinaryOutput;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.bacnet.BinaryValue;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.datapoint.DPST_1_1;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.datapoint.DPST_3_7;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.datapoint.DPST_9_1;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.datapoint.DataPoint;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.AirDamperActuator;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.BoilerActuator;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.BrightnessActuator;
@@ -65,11 +69,6 @@ import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.SmartMeter;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.SunIntensitySensor;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.TemperatureSensor;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sim.HVACSimulation;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.knx.datapoint.DPST_1_1;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.knx.datapoint.DPST_3_7;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.knx.datapoint.DPST_9_1;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.knx.datapoint.DataPoint;
-import obix.*;
 
 public class ContractInit
 {

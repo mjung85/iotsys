@@ -32,11 +32,11 @@
 
 package at.ac.tuwien.auto.iotsys.gateway.obix.objects.knx.datapoint.impl;
 
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.knx.datapoint.DataPoint;
 import obix.Contract;
 import obix.Obj;
 import obix.Str;
 import obix.Uri;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.datapoint.DataPoint;
 
 public class DataPointImpl extends Obj implements DataPoint
 {

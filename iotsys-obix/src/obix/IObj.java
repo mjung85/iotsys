@@ -22,6 +22,8 @@ public interface IObj
   public String getName();
   public Obj getParent();
   public Obj getRoot();
+  public Ref getReference(boolean absolute);
+  public Ref getReference();
   public Uri getHref();
   public Uri getNormalizedHref();
   public void setHref(Uri href);
@@ -82,6 +84,8 @@ public interface IObj
 ////////////////////////////////////////////////////////////////
   
   public Obj get(String name);
+  public Obj getByHref(Uri href);
+  public Obj getChildByHref(Uri href);
   public int size();
   public Obj[] list();
   public Obj add(Obj kid);

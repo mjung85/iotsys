@@ -29,24 +29,18 @@
  * This file is part of the IoTSyS project.
  ******************************************************************************/
 
+package at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.datapoint;
 
-package at.ac.tuwien.auto.iotsys.gateway.obix.objects.knx.datapoint;
+import obix.Bool;
 
-import obix.IObj;
-import obix.Str;
-
-public interface DataPoint extends IObj {
-	public static final String FUNCTION_NAME="function";
-	public static final String FUNCTION_HREF="function";
+public interface DPST_1_1 extends DataPoint {
+	public static final String VALUE_NAME = "value";
+	public static final String VALUE_HREF = "value";
 	
-	public static final String FUNCTION_CONTRACT = "<str name='"+ FUNCTION_NAME +"' href='"+ FUNCTION_HREF +"' val=''/>";
-	public Str function();
+	public static final String VALUE_CONTRACT = "<bool name='"+ VALUE_NAME +"' href='"+ VALUE_HREF +"' val=''/>";
+	public Bool value();
+	
+	public static final String CONTRACT="knx:DPST_1_1";
+	
 
-	public static final String UNIT_NAME ="unit";
-	public static final String UNIT_HREF ="unit";
-	
-	public static final String UNIT_CONTRACT = "<str name='"+ UNIT_NAME +"' href='"+ UNIT_HREF +"' val=''/>";
-	public Str unit();
-	
-	public static final String CONTRACT="knx:datapoint";
 }

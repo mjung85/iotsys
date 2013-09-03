@@ -38,13 +38,13 @@ subprojects{
             			srcDir 'src'
         		}
     		}
-	
 	}
 			
 	task deploy(dependsOn: jar) << {
 		println "copying $jar.archivePath to $distLib"
 		ant.copy(file:jar.archivePath, todir:distLib)
 	}
+	
 	task deployOsgi(dependsOn: jar) << {
 		println "copying $jar.archivePath to $felixBundle"
 		ant.copy(file:jar.archivePath, todir:felixBundle)

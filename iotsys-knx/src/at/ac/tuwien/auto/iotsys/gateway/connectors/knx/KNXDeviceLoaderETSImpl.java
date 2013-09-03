@@ -20,7 +20,6 @@
 
 package at.ac.tuwien.auto.iotsys.gateway.connectors.knx;
 
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -36,14 +35,17 @@ import obix.Uri;
 import org.apache.commons.configuration.XMLConfiguration;
 
 import at.ac.tuwien.auto.calimero.GroupAddress;
-import at.ac.tuwien.auto.calimero.exception.KNXException;
 import at.ac.tuwien.auto.calimero.exception.KNXFormatException;
 import at.ac.tuwien.auto.iotsys.commons.Connector;
 import at.ac.tuwien.auto.iotsys.commons.DeviceLoader;
 import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.knx.datapoint.DPST_1_1;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.knx.datapoint.DPST_3_7;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.knx.datapoint.DPST_9_1;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.datapoint.DPST_1_1;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.datapoint.DPST_3_7;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.datapoint.DPST_9_1;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.entity.impl.EntityImpl;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.enumeration.impl.EnumStandardImpl;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.network.impl.NetworkImpl;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.view.impl.PartImpl;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.knx.datapoint.impl.DPST_1_1_ImplKnx;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.knx.datapoint.impl.DPST_3_7_ImplKnx;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.knx.datapoint.impl.DPST_9_1_ImplKnx;
@@ -75,20 +77,20 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader
 
 	private void connect(KNXConnector knxConnector)
 	{
-		try
-		{
-			knxConnector.connect();
-		}
-		catch (UnknownHostException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		catch (KNXException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		// try
+		// {
+		// knxConnector.connect();
+		// }
+		// catch (UnknownHostException e)
+		// {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// }
+		// catch (KNXException e)
+		// {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// }
 	}
 
 	private void initNetworks(KNXConnector knxConnector, ObjectBroker objectBroker)
@@ -102,7 +104,6 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader
 
 		// Workaround, addObj registers currently only the obj and direct
 		// children
-		objectBroker.addObj(networks, true);
 
 		// Network
 		Obj network = new Obj();
@@ -118,7 +119,7 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader
 		standard.setRange(new Uri("/enums/enumStandard"));
 		standard.set("knx");
 		network.add(standard);
-		objectBroker.addObj(standard);
+		objectBroker.addObj(standard, false);
 
 		// Network Reference
 		// Note: build references after building the real objects, so that href
@@ -136,6 +137,33 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader
 
 		// Views
 		initViews(knxConnector, objectBroker, network);
+
+		
+		// Phase II
+		
+		// Enumerations
+		EnumStandardImpl e = new EnumStandardImpl();
+		objectBroker.addObj(e, true);
+		
+		// Units
+		
+		// Network
+		NetworkImpl n = new NetworkImpl("P-0341/2", "Suitcase2", null, e.getKey("KNX"));
+		networks.add(n);
+		networks.add(n.getReference());
+		
+		EntityImpl entity = new EntityImpl("P-0944-0_DI-1","Temperature Sensor N 258/02", null);
+		
+		n.getEntities().addEntity(entity);
+		
+		PartImpl part = new PartImpl("P-01EE-0_BP-0", "Treitlstraﬂe 1-3", null);
+
+		n.getBuilding().addPart(part);
+		
+		part.addInstance(entity);
+		
+		objectBroker.addObj(networks, true);
+
 	}
 
 	private void initViews(KNXConnector knxConnector, ObjectBroker objectBroker, Obj network)
@@ -150,11 +178,11 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader
 	{
 		// Functional View
 		Obj functional = new Obj();
+		functional.setHidden(true);
 		functional.setName("functional");
 		functional.setDisplay("Funktionale Sicht des Netzwerks");
 		functional.setHref(new Uri(network.getHref().getPath() + "/" + "views/functional"));
 		functional.setIs(new Contract("knx:viewFunctional"));
-
 		objectBroker.addObj(functional, false);
 
 		// Reference
@@ -179,7 +207,10 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader
 		all.setName("P-0341-0_GR-1");
 		all.setDisplayName("All component");
 		all.setIs(new Contract("knx:group"));
-		all.setHref(new Uri(list.getHref().getPath() + "/" + "all_component"));
+
+		// TODO change relative HREFS !!!!!!!
+		all.setHref(new Uri("all_component"));
+
 		list.add(all);
 		objectBroker.addObj(all, false);
 
@@ -1239,7 +1270,7 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader
 			dpst.value().setHref(new Uri(dpst.getHref().getPath() + "/" + DPST_3_7.VALUE_HREF));
 
 			datapoints.add(dpst);
-			objectBroker.addObj(dpst);
+			objectBroker.addObj(dpst, false);
 		}
 		catch (KNXFormatException e)
 		{
@@ -1263,7 +1294,7 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader
 			dpst.value().setHref(new Uri(dpst.getHref().getPath() + "/" + DPST_1_1.VALUE_HREF));
 
 			datapoints.add(dpst);
-			objectBroker.addObj(dpst);
+			objectBroker.addObj(dpst, false);
 		}
 		catch (KNXFormatException e)
 		{
@@ -1285,7 +1316,7 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader
 			tempKanalA.unit().setHref(new Uri(tempKanalA.getHref().getPath() + "/" + DPST_9_1.UNIT_HREF));
 			tempKanalA.value().setHref(new Uri(tempKanalA.getHref().getPath() + "/" + DPST_9_1.VALUE_HREF));
 			datapoints.add(tempKanalA);
-			objectBroker.addObj(tempKanalA);
+			objectBroker.addObj(tempKanalA, false);
 
 			DPST_9_1_ImplKnx tempKanalB = new DPST_9_1_ImplKnx(knxConnector, new GroupAddress("1/1/1"));
 			tempKanalB.setName("M-0001_A-9814-01-5F7E_O-1_R-3");
@@ -1296,7 +1327,7 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader
 			tempKanalB.unit().setHref(new Uri(tempKanalB.getHref().getPath() + "/" + DPST_9_1.UNIT_HREF));
 			tempKanalB.value().setHref(new Uri(tempKanalB.getHref().getPath() + "/" + DPST_9_1.VALUE_HREF));
 			datapoints.add(tempKanalB);
-			objectBroker.addObj(tempKanalB);
+			objectBroker.addObj(tempKanalB, false);
 
 			DPST_9_1_ImplKnx tempKanalC = new DPST_9_1_ImplKnx(knxConnector, new GroupAddress("1/1/2"));
 			tempKanalC.setName("M-0001_A-9814-01-5F7E_O-2_R-1");
@@ -1307,7 +1338,7 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader
 			tempKanalC.unit().setHref(new Uri(tempKanalC.getHref().getPath() + "/" + DPST_9_1.UNIT_HREF));
 			tempKanalC.value().setHref(new Uri(tempKanalC.getHref().getPath() + "/" + DPST_9_1.VALUE_HREF));
 			datapoints.add(tempKanalC);
-			objectBroker.addObj(tempKanalC);
+			objectBroker.addObj(tempKanalC, false);
 
 			DPST_9_1_ImplKnx tempKanalD = new DPST_9_1_ImplKnx(knxConnector, new GroupAddress("1/1/3"));
 			tempKanalD.setName("M-0001_A-9814-01-5F7E_O-3_R-4");
@@ -1318,7 +1349,7 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader
 			tempKanalD.unit().setHref(new Uri(tempKanalD.getHref().getPath() + "/" + DPST_9_1.UNIT_HREF));
 			tempKanalD.value().setHref(new Uri(tempKanalD.getHref().getPath() + "/" + DPST_9_1.VALUE_HREF));
 			datapoints.add(tempKanalD);
-			objectBroker.addObj(tempKanalD);
+			objectBroker.addObj(tempKanalD, false);
 		}
 		catch (KNXFormatException e)
 		{
