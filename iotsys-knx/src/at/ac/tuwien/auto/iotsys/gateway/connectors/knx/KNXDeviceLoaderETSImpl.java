@@ -43,8 +43,9 @@ import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.datapoint.DPST_1_1;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.datapoint.DPST_3_7;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.datapoint.DPST_9_1;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.entity.impl.EntityImpl;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.enumeration.impl.EnumStandardImpl;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.enumeration.impl.EnumsImpl;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.network.impl.NetworkImpl;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.unit.impl.UnitsImpl;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.view.impl.PartImpl;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.knx.datapoint.impl.DPST_1_1_ImplKnx;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.knx.datapoint.impl.DPST_3_7_ImplKnx;
@@ -142,13 +143,15 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader
 		// Phase II
 		
 		// Enumerations
-		EnumStandardImpl e = new EnumStandardImpl();
-		objectBroker.addObj(e, true);
+		EnumsImpl enums = new EnumsImpl();
+		objectBroker.addObj(enums, true);
 		
 		// Units
+		UnitsImpl units = new UnitsImpl();
+		objectBroker.addObj(units, true);
 		
 		// Network
-		NetworkImpl n = new NetworkImpl("P-0341/2", "Suitcase2", null, e.getKey("KNX"));
+		NetworkImpl n = new NetworkImpl("P-0341/2", "Suitcase2", null, enums.getEnumStandard().getKey("KNX"));
 		networks.add(n);
 		networks.add(n.getReference(false));
 		

@@ -31,11 +31,15 @@
 
 package at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.multilingual;
 
-public interface Translation extends Multilingual
-{
-	public String getLanguage();
+import obix.IObj;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.enumeration.EnumTranslation;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.enumeration.EnumLanguage;
 
-	public String getAttribute();
+public interface Translation extends IObj
+{
+	public EnumLanguage.Enum getLanguage();
+
+	public EnumTranslation.Enum getAttribute();
 
 	public String getValue();
 }

@@ -31,7 +31,9 @@
 
 package at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.view;
 
-public interface ViewFunctional extends View
+import obix.IObj;
+
+public interface ViewFunctional extends IObj
 {
 	public static final String NAME = "functional";
 	public static final String CONTRACT = "knx:viewFunctional";

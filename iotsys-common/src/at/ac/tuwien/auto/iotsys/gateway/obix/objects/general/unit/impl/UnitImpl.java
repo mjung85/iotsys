@@ -29,61 +29,73 @@
  * This file is part of the IoTSyS project.
  ******************************************************************************/
 
-package at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.enumeration;
+package at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.unit.impl;
 
-import obix.contracts.Range;
+import obix.Contract;
+import obix.Real;
+import obix.Str;
+import obix.Uri;
+import obix.contracts.Dimension;
+import obix.contracts.Unit;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.multilingual.Multilingual;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.multilingual.impl.MultilingualImpl;
 
-public interface EnumLanguage extends Range
+public abstract class UnitImpl extends MultilingualImpl implements Unit, Multilingual
 {
-	public static final String HREF = "/enums/enumLanguage";
-	
-	public static final String en_EN = "en-EN";
-	
-	public static enum Enum
+	private Str symbol;
+	private DimensionImpl dimension;
+	private Real scale;
+	private Real offset;
+
+	public UnitImpl(String name, String display, Uri href, String symbol, double scale, double offset, DimensionImpl dimension)
 	{
-		en_EN("en-EN", "English"),
-		de_DE("de-DE", "German"),
-		it_IT("it-IT", "Italian"),
-		es_ES("es-ES", "Spanish"),
-		en_US("en-US", "English (United States)"),
-		fr_FR("fr-FR", "French"),
-		id_ID("id-ID", "Indonesian"),
-		nb_NO("nb-NO", "Norwegian"),
-		sv_SE("sv-SE", "Swedish"),
-		da_DK("da-DK", "Danish"),
-		nl_NL("nl-NL", "Dutch"),
-		el_GR("el-GR", "Greek"),
-		ru_RU("ru-RU", "Russian");
-		
-		private String key;
-		private String name;
-		
-		private Enum(String key, String name)
+		this.setName(name);
+		this.setDisplay(display);
+		this.setIs(new Contract(new String[] { Multilingual.CONTRACT, "obix:Unit" }));
+		this.setHref(href);
+		this.setHidden(true);
+
+		this.symbol = new Str("symbol", symbol);
+		this.add(this.symbol);
+
+		if (scale != 0)
 		{
-			this.key = key;
-			this.name = name;
+			this.scale = new Real("scale", scale);
+			this.add(this.scale);
 		}
 		
-		public String getName()
+		if (offset != 0)
 		{
-			return name;
+			this.offset = new Real("offset", offset);
+			this.add(this.offset);
 		}
-		
-		public String getKey()
-		{
-			return key;
-		}
-		
-		public Enum getLanguage(String key)
-		{
-			for(Enum l : Enum.values())
-			{
-				if (l.key.toLowerCase().equals(key.toLowerCase()))
-				{
-					return l;
-				}
-			}
-			return null;
-		}
+
+		this.dimension = dimension;
+		this.add(this.dimension);
+
+	}
+
+	@Override
+	public Str symbol()
+	{
+		return symbol;
+	}
+
+	@Override
+	public Dimension dimension()
+	{
+		return dimension;
+	}
+
+	@Override
+	public Real scale()
+	{
+		return scale;
+	}
+
+	@Override
+	public Real offset()
+	{
+		return offset;
 	}
 }

@@ -29,61 +29,87 @@
  * This file is part of the IoTSyS project.
  ******************************************************************************/
 
-package at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.enumeration;
+package at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.unit.impl;
 
-import obix.contracts.Range;
+import obix.Contract;
+import obix.Int;
+import obix.Obj;
+import obix.contracts.Dimension;
 
-public interface EnumLanguage extends Range
+public class DimensionImpl extends Obj implements Dimension
 {
-	public static final String HREF = "/enums/enumLanguage";
-	
-	public static final String en_EN = "en-EN";
-	
-	public static enum Enum
+	private Int kg, m, sec, K, A, mol, cd;
+
+	public DimensionImpl(int kg, int m, int sec, int K, int A, int mol, int cd)
 	{
-		en_EN("en-EN", "English"),
-		de_DE("de-DE", "German"),
-		it_IT("it-IT", "Italian"),
-		es_ES("es-ES", "Spanish"),
-		en_US("en-US", "English (United States)"),
-		fr_FR("fr-FR", "French"),
-		id_ID("id-ID", "Indonesian"),
-		nb_NO("nb-NO", "Norwegian"),
-		sv_SE("sv-SE", "Swedish"),
-		da_DK("da-DK", "Danish"),
-		nl_NL("nl-NL", "Dutch"),
-		el_GR("el-GR", "Greek"),
-		ru_RU("ru-RU", "Russian");
+		this.setName("dimension");
+		this.setIs(new Contract("obix:Dimension"));
 		
-		private String key;
-		private String name;
-		
-		private Enum(String key, String name)
-		{
-			this.key = key;
-			this.name = name;
-		}
-		
-		public String getName()
-		{
-			return name;
-		}
-		
-		public String getKey()
-		{
-			return key;
-		}
-		
-		public Enum getLanguage(String key)
-		{
-			for(Enum l : Enum.values())
-			{
-				if (l.key.toLowerCase().equals(key.toLowerCase()))
-				{
-					return l;
-				}
-			}
-			return null;
-		}
+		if (kg != 0)
+			this.add(this.kg = new Int("kg",kg));
+
+		if (m != 0)
+			this.add(this.m = new Int("m",m));
+
+		if (sec != 0)
+			this.add(this.sec = new Int("sec",sec));
+
+		if (K != 0)
+			this.add(this.K = new Int("K",K));
+
+		if (A != 0)
+			this.add(this.A = new Int("A",A));
+
+		if (mol != 0)
+			this.add(this.mol = new Int("mol",mol));
+
+		if (cd != 0)
+			this.add(this.cd = new Int("cd",cd));
+	}
+
+	@Override
+	public Int kg()
+	{
+		return kg;
+	}
+
+	@Override
+	public Int m()
+	{
+		return m;
+	}
+
+	@Override
+	public Int sec()
+	{
+		return sec;
+	}
+
+	@Override
+	public Int K()
+	{
+
+		return K;
+	}
+
+	@Override
+	public Int A()
+	{
+
+		return A;
+	}
+
+	@Override
+	public Int mol()
+	{
+
+		return mol;
+	}
+
+	@Override
+	public Int cd()
+	{
+
+		return cd;
 	}
 }

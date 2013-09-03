@@ -31,7 +31,9 @@
 
 package at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.view;
 
-public interface ViewDomains extends View
+import obix.IObj;
+
+public interface ViewDomains extends IObj
 {
 	public static final String NAME = "domains";
 	public static final String CONTRACT = "knx:viewDomains";

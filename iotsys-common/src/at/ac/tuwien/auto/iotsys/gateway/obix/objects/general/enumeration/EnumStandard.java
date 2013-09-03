@@ -31,11 +31,11 @@
 
 package at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.enumeration;
 
-import obix.IObj;
+import obix.contracts.Range;
 
-public interface EnumStandard extends IObj
+public interface EnumStandard extends Range
 {
-	public static final String HREF = "/enums/enumStandard";
+	public static final String HREF = "enumStandard";
 
 	public String getKey(String name);
 }

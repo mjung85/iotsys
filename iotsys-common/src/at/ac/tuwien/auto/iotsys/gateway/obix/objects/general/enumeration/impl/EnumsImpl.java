@@ -29,61 +29,31 @@
  * This file is part of the IoTSyS project.
  ******************************************************************************/
 
-package at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.enumeration;
+package at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.enumeration.impl;
 
-import obix.contracts.Range;
+import obix.Contract;
+import obix.IObj;
+import obix.List;
+import obix.Uri;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.enumeration.EnumStandard;
 
-public interface EnumLanguage extends Range
+public class EnumsImpl extends List implements IObj
 {
-	public static final String HREF = "/enums/enumLanguage";
+	private EnumStandardImpl enumStandard;
 	
-	public static final String en_EN = "en-EN";
-	
-	public static enum Enum
+	public EnumsImpl()
 	{
-		en_EN("en-EN", "English"),
-		de_DE("de-DE", "German"),
-		it_IT("it-IT", "Italian"),
-		es_ES("es-ES", "Spanish"),
-		en_US("en-US", "English (United States)"),
-		fr_FR("fr-FR", "French"),
-		id_ID("id-ID", "Indonesian"),
-		nb_NO("nb-NO", "Norwegian"),
-		sv_SE("sv-SE", "Swedish"),
-		da_DK("da-DK", "Danish"),
-		nl_NL("nl-NL", "Dutch"),
-		el_GR("el-GR", "Greek"),
-		ru_RU("ru-RU", "Russian");
-		
-		private String key;
-		private String name;
-		
-		private Enum(String key, String name)
-		{
-			this.key = key;
-			this.name = name;
-		}
-		
-		public String getName()
-		{
-			return name;
-		}
-		
-		public String getKey()
-		{
-			return key;
-		}
-		
-		public Enum getLanguage(String key)
-		{
-			for(Enum l : Enum.values())
-			{
-				if (l.key.toLowerCase().equals(key.toLowerCase()))
-				{
-					return l;
-				}
-			}
-			return null;
-		}
+		this.setName("enums");
+		this.setOf(new Contract("obix:Range"));
+		this.setHref(new Uri("/enums"));
+
+		this.enumStandard = new EnumStandardImpl();
+		this.add(this.enumStandard);
+		this.add(this.enumStandard.getReference(false));
+	}
+	
+	public EnumStandard getEnumStandard()
+	{
+		return enumStandard;
 	}
 }

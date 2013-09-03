@@ -78,7 +78,7 @@ public class ObixEncoder extends XWriter {
 	/**
 	 * Encode a full obix XML document including prolog and header information.
 	 */
-	public void encodeDocument(Obj obj, boolean useRelativePath)
+	private void encodeDocument(Obj obj, boolean useRelativePath)
 			throws IOException {
 		prolog();
 		encode(obj, useRelativePath);
@@ -95,7 +95,7 @@ public class ObixEncoder extends XWriter {
 	/**
 	 * Encode an object and it's children.
 	 */
-	public void encode(Obj obj, boolean useRelativePath) throws IOException {
+	private void encode(Obj obj, boolean useRelativePath) throws IOException {
 		// open start tag
 		String elemName = obj.getElement();
 		indent(indent * 2).w('<').w(elemName);
@@ -110,11 +110,11 @@ public class ObixEncoder extends XWriter {
 
 		// avoid to encode the absolute URI, provide only relative URI
 		if (obj.getParent() != null) {
-			if (useRelativePath) {
-				contextPath = obj.getRelativePath();
-			} else {
+//			if (useRelativePath) {
+//				contextPath = obj.getRelativePath();
+//			} else {
 				contextPath = href;
-			}
+//			}
 		}
 
 		if (href != null)

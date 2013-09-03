@@ -37,42 +37,59 @@ import obix.Enum;
 import obix.Obj;
 import obix.Str;
 import obix.Uri;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.enumeration.EnumAttribute;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.enumeration.EnumTranslation;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.enumeration.EnumLanguage;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.multilingual.Translation;
 
-public abstract class TranslationImpl extends Obj implements Translation
+public class TranslationImpl extends Obj implements Translation
 {
-	private Enum language;
-	private Enum attribute;
-	private Str value;
-
-	public TranslationImpl(String language, String attribute, String value)
+	private EnumLanguage.Enum language;
+	private EnumTranslation.Enum attribute;
+	private String value;
+	
+	public TranslationImpl(EnumLanguage.Enum language, EnumTranslation.Enum attribute, String value)
 	{
 		this.setIs(new Contract("knx:translation"));
 
 		// Language
-		this.language = new Enum();
-		this.language.setName("language");
-		this.language.setHref(new Uri("language"));
-		this.language.setRange(new Uri(EnumLanguage.HREF));
-		this.language.set(language);
-		this.add(this.language);
+		Enum l = new Enum();
+		l.setName("language");
+		l.setHref(new Uri("language"));
+		l.setRange(new Uri(EnumLanguage.HREF));
+		l.set(language.getKey());
+		this.add(l);
 
 		// Attribute
-		this.attribute = new Enum();
-		this.attribute.setName("attribute");
-		this.attribute.setHref(new Uri("attribute"));
-		this.attribute.setRange(new Uri(EnumAttribute.HREF));
-		this.attribute.set(attribute);
-		this.add(this.attribute);
+		Enum a = new Enum();
+		a.setName("attribute");
+		a.setHref(new Uri("attribute"));
+		a.setRange(new Uri(EnumTranslation.HREF));
+		a.set(attribute.getKey());
+		this.add(a);
 
 		// Attribute
-		this.value = new Str();
-		this.value.setName("value");
-		this.value.setHref(new Uri("value"));
-		this.value.set(value);
-		this.add(this.value);
+		Str v = new Str();
+		v.setName("value");
+		v.setHref(new Uri("value"));
+		v.set(value);
+		this.add(v);
 	}
 
+	@Override
+	public EnumLanguage.Enum getLanguage()
+	{
+		return language;
+	}
+
+	@Override
+	public EnumTranslation.Enum getAttribute()
+	{
+		return attribute;
+	}
+
+	@Override
+	public String getValue()
+	{
+		return value;
+	}
 }
