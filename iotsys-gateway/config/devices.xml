@@ -411,7 +411,17 @@
         <port>3671</port>
       </router>
       <localIP>auto</localIP>
-
+			
+			<device>
+        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.knx.ComplexSunblindActuatorImplKnx
+        </type>
+				<address>0/0/3,0/0/5,0/0/6,0/0/7</address>
+        <href>ComplexSunBlindTest</href>
+        <historyEnabled>false</historyEnabled>
+        <historyCount>200</historyCount>
+        <groupCommEnabled>true</groupCommEnabled>
+      </device>
+			
       <!--device>
         <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.knx.TemperatureSensorImplKnx
         </type>
