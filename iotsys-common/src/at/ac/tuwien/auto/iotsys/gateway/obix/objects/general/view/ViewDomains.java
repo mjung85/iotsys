@@ -36,4 +36,6 @@ public interface ViewDomains extends View
 	public static final String NAME = "domains";
 	public static final String CONTRACT = "knx:viewDomains";
 	public static final String HREF = "views/domains";
+
+	public void addDomain(Domain domain);
 }

@@ -42,6 +42,7 @@ import java.util.logging.Logger;
 
 import obix.Contract;
 import obix.Feed;
+import obix.IObj;
 import obix.Obj;
 import obix.Op;
 import obix.Reltime;
@@ -131,7 +132,7 @@ public class WatchImpl extends Obj implements Watch {
 					// then the server SHOULD only return the object once.
 					// Therefore filter out duplicate URIs
 					ArrayList<Uri> uris = new ArrayList<Uri>();
-					for(Obj u : watchIn.get("hrefs").list()) {
+					for(IObj u : watchIn.get("hrefs").list()) {
 						if (!uris.contains(u)) uris.add((Uri) u);
 					}
 					
@@ -197,7 +198,7 @@ public class WatchImpl extends Obj implements Watch {
 				if(in instanceof WatchIn){
 					WatchIn watchIn = (WatchIn) in;
 	
-					for(Obj u : watchIn.get("hrefs").list()) {
+					for(IObj u : watchIn.get("hrefs").list()) {
 						Uri uri = (Uri) u;
 
 						Observer observer = observers.get(uri.getPath());

@@ -81,23 +81,23 @@ public class NetworkImpl extends Obj implements Network
 		this.functional = new ViewFunctionalImpl();
 		this.functional.setHidden(true);
 		this.add(functional);
-		this.add(functional.getReference());
+		this.add(functional.getReference(false));
 
 		this.domains = new ViewDomainsImpl();
 		this.add(domains);
-		this.add(domains.getReference());
+		this.add(domains.getReference(false));
 
 		this.topology = new ViewTopologyImpl();
 		this.add(topology);
-		this.add(topology.getReference());
+		this.add(topology.getReference(false));
 
 		this.building = new ViewBuildingImpl();
 		this.add(building);
-		this.add(building.getReference());
+		this.add(building.getReference(false));
 
 		this.entities = new EntitiesImpl();
 		this.add(entities);
-		this.add(entities.getReference());
+		this.add(entities.getReference(false));
 	}
 
 	@Override

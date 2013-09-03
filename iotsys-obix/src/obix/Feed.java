@@ -17,7 +17,8 @@ import at.ac.tuwien.auto.iotsys.commons.FeedFilter;
  * @creation 30 Mar 06
  * @version $Revision$ $Date$
  */
-public class Feed extends Obj {
+public class Feed extends Obj
+{
 
 	// //////////////////////////////////////////////////////////////
 	// Construction
@@ -26,7 +27,8 @@ public class Feed extends Obj {
 	/**
 	 * Construct named Feed with in and of contracts.
 	 */
-	public Feed(String name, Contract in, Contract of) {
+	public Feed(String name, Contract in, Contract of)
+	{
 		super(name);
 		setIn(in);
 		setOf(of);
@@ -35,14 +37,16 @@ public class Feed extends Obj {
 	/**
 	 * Construct named Feed.
 	 */
-	public Feed(String name) {
+	public Feed(String name)
+	{
 		this(name, null, null);
 	}
 
 	/**
 	 * Construct unnamed Feed.
 	 */
-	public Feed() {
+	public Feed()
+	{
 		this(null, null, null);
 	}
 
@@ -53,28 +57,32 @@ public class Feed extends Obj {
 	/**
 	 * Get input contract.
 	 */
-	public Contract getIn() {
+	public Contract getIn()
+	{
 		return in;
 	}
 
 	/**
 	 * Set the input contract.
 	 */
-	public void setIn(Contract in) {
+	public void setIn(Contract in)
+	{
 		this.in = (in != null) ? in : Contract.Obj;
 	}
 
 	/**
 	 * Get of contract.
 	 */
-	public Contract getOf() {
+	public Contract getOf()
+	{
 		return of;
 	}
 
 	/**
 	 * Set the of contract.
 	 */
-	public void setOf(Contract of) {
+	public void setOf(Contract of)
+	{
 		this.of = (of != null) ? of : Contract.Obj;
 	}
 
@@ -85,14 +93,16 @@ public class Feed extends Obj {
 	/**
 	 * Return "feed".
 	 */
-	public String getElement() {
+	public String getElement()
+	{
 		return "feed";
 	}
 
 	/**
 	 * Return BinObix.FEED.
 	 */
-	public int getBinCode() {
+	public int getBinCode()
+	{
 		return obix.io.BinObix.FEED;
 	}
 
@@ -103,8 +113,10 @@ public class Feed extends Obj {
 	/**
 	 * Return all events in the feed
 	 */
-	public List<Obj> getEvents() {
-		synchronized (events) {
+	public List<Obj> getEvents()
+	{
+		synchronized (events)
+		{
 			return new ArrayList<Obj>(events);
 		}
 	}
@@ -115,8 +127,10 @@ public class Feed extends Obj {
 	 * @param event
 	 *            Event to be added
 	 */
-	public void addEvent(Obj event) {
-		synchronized (events) {
+	public void addEvent(Obj event)
+	{
+		synchronized (events)
+		{
 			events.addFirst(event);
 			while (maxEvents > 0 && events.size() > maxEvents)
 				removeEvent(events.getLast());
@@ -133,7 +147,8 @@ public class Feed extends Obj {
 	 *            Maximum number of events. If 0, an unlimited number of events
 	 *            are stored.
 	 */
-	public void setMaxEvents(int maxEvents) {
+	public void setMaxEvents(int maxEvents)
+	{
 		this.maxEvents = maxEvents;
 	}
 
@@ -143,19 +158,23 @@ public class Feed extends Obj {
 	 * @param event
 	 *            Event to remove from the feed
 	 */
-	public void removeEvent(Obj event) {
+	public void removeEvent(Obj event)
+	{
 		this.events.remove(event);
 	}
 
-	public Obj getLatestEvent() {
+	public Obj getLatestEvent()
+	{
 		return latestEvent;
 	}
-	
-	public void setDefaultFilter(FeedFilter filter) {
+
+	public void setDefaultFilter(FeedFilter filter)
+	{
 		this.defaultFilter = filter;
 	}
-	
-	public FeedFilter getDefaultFilter() {
+
+	public FeedFilter getDefaultFilter()
+	{
 		return defaultFilter;
 	}
 

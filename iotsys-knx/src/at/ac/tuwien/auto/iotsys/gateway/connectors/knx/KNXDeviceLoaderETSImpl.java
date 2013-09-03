@@ -150,7 +150,7 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader
 		// Network
 		NetworkImpl n = new NetworkImpl("P-0341/2", "Suitcase2", null, e.getKey("KNX"));
 		networks.add(n);
-		networks.add(n.getReference());
+		networks.add(n.getReference(false));
 		
 		EntityImpl entity = new EntityImpl("P-0944-0_DI-1","Temperature Sensor N 258/02", null);
 		

@@ -226,7 +226,7 @@ public class HistoryRollupInImpl extends Obj implements HistoryRollupIn{
 	}
 
 	@Override
-	public String toDisplayString() {
+	public String toDisplay() {
 		// TODO Auto-generated method stub
 		return null;
 	}
