@@ -62,7 +62,7 @@ public class EntitiesImpl extends List implements Entities
 		{
 			entity.setHref(getHref(entity.getDisplayName()));
 			this.add((Obj)entity);
-			this.add(entity.getReference());
+			this.add(entity.getReference(false));
 		}
 	}
 

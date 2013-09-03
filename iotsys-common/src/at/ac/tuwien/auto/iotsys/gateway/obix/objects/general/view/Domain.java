@@ -29,11 +29,12 @@
  * This file is part of the IoTSyS project.
  ******************************************************************************/
 
-package at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.common;
+package at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.view;
 
+import obix.IObj;
 
-//public interface Object extends IObj
-//{	
-//	
-//	public Contract getContract();
-//}
+public interface Domain extends IObj
+{
+	public static final String CONTRACT = "knx:domain";
+	public static final String CONTRACT_INSTANCE = "knx:instanceDomain";
+}

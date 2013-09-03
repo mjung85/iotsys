@@ -143,7 +143,7 @@ public class WatchView
       {
         case 0:  return watch.get(row).getHref();
         case 1:  return doContractsStr(watch.get(row));
-        case 2:  return watch.get(row).toDisplayString();
+        case 2:  return watch.get(row).toDisplay();
         case 3:  return Utils.millisAgo(watch.getLastUpdate(row));
         default: return "?";
       }
