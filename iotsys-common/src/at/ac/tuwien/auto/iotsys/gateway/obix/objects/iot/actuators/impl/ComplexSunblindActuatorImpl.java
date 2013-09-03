@@ -17,7 +17,7 @@ public class ComplexSunblindActuatorImpl extends ActuatorImpl implements Complex
 	protected Int positonBlindValue = new Int(0);
 	protected Int positonSlatValue = new Int(0);
 
-	private static final Logger log = Logger.getLogger(SimpleHVACvalveActuatorImpl.class.getName());
+	private static final Logger log = Logger.getLogger(ComplexSunblindActuatorImpl.class.getName());
 
 	
 	

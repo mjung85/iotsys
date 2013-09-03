@@ -20,7 +20,7 @@ public class SimpleHVACvalveActuatorImplKnx extends SimpleHVACvalveActuatorImpl{
 	private GroupAddress valuePosition;
 	
 	private KNXConnector knxConnector;
-	private static final Logger log = Logger.getLogger(SimpleHVACvalveActuatorImplKnx.class.getName());;
+	private static final Logger log = Logger.getLogger(SimpleHVACvalveActuatorImplKnx.class.getName());
 	
 //	public String getHexString(byte[] b) {
 //		
