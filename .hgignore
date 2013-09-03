@@ -13,7 +13,6 @@ obelix/.sass-cache
 obelix/build
 iotsys-gateway/KNX.txt*
 iotsys-gateway/iotsys-log.*
-
 *.lck
 *.1
 *.txt
@@ -22,3 +21,5 @@ iotsys-gateway/iotsys-log.*
 **/build.properties
 .gradle/1.6/taskArtifacts/cache.properties
 .gradle/1.6/taskArtifacts/cache.properties.lock
+.DS_Store
+.git
