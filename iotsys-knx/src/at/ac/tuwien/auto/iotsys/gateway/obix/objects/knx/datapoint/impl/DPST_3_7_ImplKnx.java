@@ -9,6 +9,7 @@ import at.ac.tuwien.auto.calimero.exception.KNXFormatException;
 import at.ac.tuwien.auto.calimero.process.ProcessCommunicator;
 import at.ac.tuwien.auto.iotsys.gateway.connectors.knx.KNXConnector;
 import at.ac.tuwien.auto.iotsys.gateway.connectors.knx.KNXWatchDog;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.datapoint.impl.DPST_3_7_Impl;
 
 public class DPST_3_7_ImplKnx extends DPST_3_7_Impl
 {

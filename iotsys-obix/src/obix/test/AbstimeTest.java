@@ -138,13 +138,13 @@ public class AbstimeTest
     verify(t.getYear()        == 2005);   
     verify(t.getMonth()       == 9);
     verify(t.getDay()         == 21);
-    verify(t.getHour()        == 10);
+    verify(t.getHour()        == 16);
     verify(t.getMinute()      == 59);
     verify(t.getSecond()      == 1);
     verify(t.getMillisecond() == 310);  
     verify(t.inDaylightTime());
-    verify(t.getTimeZoneOffset() == -4*60*60*1000); 
-    verify(t.encodeVal().equals("2005-09-21T10:59:01.310-04:00"));  
+    verify(t.getTimeZoneOffset() == +2*60*60*1000); 
+    verify(t.encodeVal().equals("2005-09-21T16:59:01.310+02:00"));  
   }
     
 ////////////////////////////////////////////////////////////////

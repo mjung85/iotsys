@@ -33,13 +33,28 @@
 package at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.view.impl;
 
 import obix.Contract;
+import obix.List;
 import obix.Uri;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.view.Area;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.view.ViewTopology;
 
 public class ViewTopologyImpl extends ViewImpl implements ViewTopology
 {
 	public ViewTopologyImpl()
 	{
-		super(ViewTopology.NAME, new Uri(ViewTopology.HREF), new Contract(ViewTopology.CONTRACT));
+		super("topology", new Uri(ViewTopology.HREF), new Contract(ViewTopology.CONTRACT));
+	}
+
+	@Override
+	public void initElements(List elements)
+	{
+		elements.setName("areas");
+		elements.setHref(new Uri("areas"));
+		elements.setOf(new Contract(Area.CONTRACT));
+	}
+
+	public void addArea(AreaImpl area)
+	{
+		this.addElement(area);
 	}
 }

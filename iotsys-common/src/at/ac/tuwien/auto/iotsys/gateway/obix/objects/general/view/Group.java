@@ -29,11 +29,12 @@
  * This file is part of the IoTSyS project.
  ******************************************************************************/
 
-package at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.enumeration;
+package at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.view;
 
 import obix.IObj;
 
-public interface EnumAttribute extends IObj
+public interface Group extends IObj
 {
-	public static final String HREF = "/enums/enumAttribute";
+	public static final String CONTRACT = "knx:Group";
+	public static final String CONTRACT_INSTANCE = "knx:InstanceGroup";
 }

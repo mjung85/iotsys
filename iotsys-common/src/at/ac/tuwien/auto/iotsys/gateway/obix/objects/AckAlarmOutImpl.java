@@ -10,7 +10,7 @@ public class AckAlarmOutImpl extends Obj implements AckAlarmOut {
 	
 	public AckAlarmOutImpl(AlarmImpl alarm) {
 		add(alarm);
-		setIs(new Contract(AckAlarmOut.ALARM_ACKOUT_CONTRACT));
+		setIs(new Contract(AckAlarmOut.CONTRACT));
 	}
 	
 	@Override

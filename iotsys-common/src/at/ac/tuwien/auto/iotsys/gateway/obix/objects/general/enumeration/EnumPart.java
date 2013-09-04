@@ -1,6 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013
- * Institute of Computer Aided Automation, Automation Systems Group, TU Wien.
+ * Copyright (c) 2013, Automation Systems Group, TU Wien.
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -30,64 +29,20 @@
  * This file is part of the IoTSyS project.
  ******************************************************************************/
 
-package at.ac.tuwien.auto.iotsys.gateway.obix.objects.knx.datapoint.impl;
+package at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.enumeration;
 
-import java.util.logging.Logger;
+import obix.contracts.Range;
 
-import obix.Bool;
-import obix.Contract;
-import obix.Int;
-import obix.Obj;
-import obix.Real;
-import obix.Uri;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.datapoint.DPST_1_1;
-
-public class DPST_1_1_Impl extends DataPointImpl implements DPST_1_1
+public interface EnumPart extends Range
 {
-	private static final Logger log = Logger.getLogger(DPST_1_1_Impl.class.getName());
+	public static final String HREF = "/enums/enumPart";
 
-	protected Bool value = new Bool();
-
-	public DPST_1_1_Impl()
-	{
-		value.setName(DPST_1_1.VALUE_NAME);
-		value.setHref(new Uri(DPST_1_1.VALUE_HREF));
-		value.setWritable(true);
-
-		this.setIs(new Contract(DPST_1_1.CONTRACT));
-		this.add(value);
-
-		this.function.set("On / Off");
-		this.unit.set("on/off");
-	}
-
-	@Override
-	public Bool value()
-	{
-		return value;
-	}
-
-	@Override
-	public void writeObject(Obj input)
-	{
-		if (input instanceof DPST_1_1)
-		{
-			DPST_1_1 in = (DPST_1_1) input;
-			log.info("Writing on data point.");
-			this.value.set(in.value().get());
-		}
-		else if (input instanceof Bool)
-		{
-			this.value.set(((Bool) input).get());
-		}
-		else if (input instanceof Real)
-		{
-			this.value.set(((Real) input).get());
-		}
-		else if (input instanceof Int)
-		{
-			this.value.set(((Int) input).get());
-		}
-	}
+	public static final String KEY_BUILDING = "building";
+	public static final String KEY_BUILDINGPART = "buildingpart";
+	public static final String KEY_FLOOR = "floor";
+	public static final String KEY_STAIRWAY = "stairway";
+	public static final String KEY_ROOM = "room";
+	public static final String KEY_CORRIDOR = "corridor";
+	public static final String KEY_DISTRIBUTIONBOARD = "distributionboard";
 
 }

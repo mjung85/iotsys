@@ -35,56 +35,50 @@ package at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.view.impl;
 import obix.Contract;
 import obix.List;
 import obix.Obj;
-import obix.Ref;
 import obix.Uri;
+import obix.Enum;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.entity.impl.EntityImpl;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.enumeration.EnumPart;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.view.Part;
-import at.ac.tuwien.auto.iotsys.gateway.util.UriEncoder;
 
-public class PartImpl extends Obj implements Part
+public class PartImpl extends ElementImpl implements Part
 {
-	private List parts = null;
-	private List instances = null;
-	private int instanceCount = 0;
-
-	public PartImpl(String name, String displayName, String display)
+	public PartImpl(String name, String displayName, String display, String type)
 	{
-		this.setName(name);
-		this.setDisplay(display);
-		this.setDisplayName(displayName);
-		this.setHref(new Uri(UriEncoder.getEscapedUri(displayName)));
-		this.setIs(new Contract(Part.CONTRACT));
+		super(name, displayName, display, new Contract(Part.CONTRACT));
+		
+		Enum t = new Enum();
+		t.setName("type");
+		t.setHref(new Uri("type"));
+		t.setRange(new Uri(EnumPart.HREF));
+		t.set(type);
+		this.add(t);
 	}
 
+	@Override
+	public void initElements(List elements)
+	{
+		elements.setName("parts");
+		elements.setHref(new Uri("parts"));
+		elements.setOf(new Contract(Part.CONTRACT));
+	}
+
+	@Override
+	public void initInstances(List instances)
+	{
+		instances.setName("instances");
+		instances.setHref(new Uri("instances"));
+		instances.setOf(new Contract(Part.CONTRACT_INSTANCE));
+	}
+	
 	public void addPart(PartImpl part)
 	{
-		if (parts == null)
-		{
-			this.parts = new List("parts", new Contract(Part.CONTRACT));
-			this.parts.setHref(new Uri("parts"));
-			this.add(this.parts);
-		}
-		this.parts.add(part);
+		this.addElement(part);
 	}
 
-	public void addInstance(EntityImpl entity)
+	
+	public Obj addInstance(EntityImpl entity)
 	{
-		if (instances == null)
-		{
-			this.instances = new List("instances", new Contract(Part.CONTRACT_INSTANCE));
-			this.instances.setHref(new Uri("instances"));
-			this.add(this.instances);
-		}
-
-		Obj instance = new Obj();
-		instance.setName(entity.getName());
-		instance.setHref(new Uri(String.valueOf(++instanceCount)));
-
-		Ref ref = entity.getReference(true);
-		ref.setName("reference", true);
-
-		instance.add(ref);
-
-		this.instances.add(instance);
+		return addInstance((Obj)entity, new Contract(Part.CONTRACT_INSTANCE));
 	}
 }

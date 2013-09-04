@@ -29,11 +29,11 @@
  * This file is part of the IoTSyS project.
  ******************************************************************************/
 
-package at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.view;
+package at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.unit;
 
-import obix.IObj;
+import obix.contracts.Unit;
 
-public interface View extends IObj
+public interface UnitPercent extends Unit
 {
-	
+	public static final String HREF = "/units/percent";
 }

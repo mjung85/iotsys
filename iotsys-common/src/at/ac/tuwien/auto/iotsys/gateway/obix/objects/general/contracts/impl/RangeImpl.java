@@ -1,6 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013
- * Institute of Computer Aided Automation, Automation Systems Group, TU Wien.
+ * Copyright (c) 2013, Automation Systems Group, TU Wien.
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -30,43 +29,82 @@
  * This file is part of the IoTSyS project.
  ******************************************************************************/
 
-package at.ac.tuwien.auto.iotsys.gateway.obix.objects.knx.datapoint.impl;
+package at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.contracts.impl;
+
+import java.util.ArrayList;
 
 import obix.Contract;
+import obix.List;
 import obix.Obj;
-import obix.Str;
 import obix.Uri;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.datapoint.DataPoint;
+import obix.contracts.Range;
 
-public class DataPointImpl extends Obj implements DataPoint
+public abstract class RangeImpl extends List implements Range
 {
-	protected Str function = new Str();
-	protected Str unit = new Str();
-
-	public DataPointImpl()
+	protected class EnumElement extends Obj
 	{
-		this.setIs(new Contract(DataPoint.CONTRACT));
+		private String key;
 
-		this.function.setName(DataPoint.FUNCTION_NAME);
-		this.function.setHref(new Uri(DataPoint.FUNCTION_HREF));
+		public EnumElement(String key, String displayName)
+		{
+			this.key = key;
 
-		this.add(function);
+			this.setName(key);
+			this.setDisplayName(displayName);
+		}
 
-		this.unit.setName(DataPoint.UNIT_NAME);
-		this.unit.setHref(new Uri(DataPoint.UNIT_HREF));
-
-		this.add(unit);
+		public String getKey()
+		{
+			return key;
+		}
 	}
 
-	@Override
-	public Str function()
+	private ArrayList<EnumElement> elements;
+
+	public RangeImpl(Uri href)
 	{
-		return function;
+		this.setHref(href);
+		this.setIs(new Contract(Range.CONTRACT));
+		this.setHidden(true);
+
+		this.elements = new ArrayList<EnumElement>();
+
+		this.initValues();
+
+		for (EnumElement e : elements)
+		{
+			this.add(e);
+		}
 	}
 
-	@Override
-	public Str unit()
+	protected abstract void initValues();
+
+	protected ArrayList<EnumElement> getElements()
 	{
-		return unit;
+		return elements;
+	}
+
+	public String getKey(String name)
+	{
+		for (EnumElement e : elements)
+		{
+			if (e.getName().toLowerCase().equals(name.toLowerCase()))
+			{
+				return e.getKey();
+			}
+		}
+		return null;
+	}
+
+	public String getName(String key)
+	{
+		for (EnumElement e : elements)
+		{
+			if (e.getKey().toLowerCase().equals(key.toLowerCase()))
+			{
+				return e.getName();
+			}
+		}
+		return null;
 	}
 }

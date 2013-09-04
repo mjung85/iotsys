@@ -31,9 +31,24 @@
 
 package at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.enumeration;
 
-import obix.IObj;
+import obix.contracts.Range;
 
-public interface EnumLanguage extends IObj
+public interface EnumLanguage extends Range
 {
 	public static final String HREF = "/enums/enumLanguage";
+
+	public static final String KEY_EN_EN = "en-EN";
+	public static final String KEY_DE_DE = "de-DE";
+	public static final String KEY_IT_IT = "it-IT";
+	public static final String KEY_ES_ES = "es-ES";
+	public static final String KEY_EN_US = "en-US";
+	public static final String KEY_FR_FR = "fr-FR";
+	public static final String KEY_ID_ID = "id-ID";
+	public static final String KEY_NB_NO = "nb-NO";
+	public static final String KEY_SV_SE = "sv-SE";
+	public static final String KEY_DA_DK = "da-DK";
+	public static final String KEY_NL_NL = "nl-NL";
+	public static final String KEY_EL_GR = "el-GR";
+	public static final String KEY_RU_RU = "ru-RU";
+
 }

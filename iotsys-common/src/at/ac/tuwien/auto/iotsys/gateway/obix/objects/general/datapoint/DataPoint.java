@@ -35,7 +35,7 @@ package at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.datapoint;
 import obix.IObj;
 import obix.Str;
 
-public interface DataPoint extends IObj {
+public interface Datapoint extends IObj {
 	public static final String FUNCTION_NAME="function";
 	public static final String FUNCTION_HREF="function";
 	
@@ -48,5 +48,5 @@ public interface DataPoint extends IObj {
 	public static final String UNIT_CONTRACT = "<str name='"+ UNIT_NAME +"' href='"+ UNIT_HREF +"' val=''/>";
 	public Str unit();
 	
-	public static final String CONTRACT="knx:datapoint";
+	public static final String CONTRACT="knx:Datapoint";
 }
