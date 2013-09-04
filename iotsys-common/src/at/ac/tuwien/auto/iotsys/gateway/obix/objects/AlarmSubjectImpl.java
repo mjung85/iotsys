@@ -42,10 +42,10 @@ public class AlarmSubjectImpl extends Obj implements IAlarmSubject {
 		this.broker = broker;
 		
 		this.setHref(new Uri("alarms"));
-		this.setIs(new Contract(AlarmSubject.ALARM_SUBJECT_CONTRACT));
+		this.setIs(new Contract(AlarmSubject.CONTRACT));
 		
 		if (alarmdb == null) {
-			alarmdb = new obix.List("alarmdb", new Contract(Alarm.ALARM_CONTRACT));
+			alarmdb = new obix.List("alarmdb", new Contract(Alarm.CONTRACT));
 			alarmdb.setHref(new Uri("alarmdb"));
 			
 			broker.addObj(alarmdb, false);
@@ -70,7 +70,7 @@ public class AlarmSubjectImpl extends Obj implements IAlarmSubject {
 
 	public Op query() {
 		if (query == null) {
-			query = new Op("query", new Contract(AlarmFilter.ALARM_FILTER_CONTRACT), new Contract(AlarmQueryOut.ALARM_QUERYOUT_CONTRACT));
+			query = new Op("query", new Contract(AlarmFilter.CONTRACT), new Contract(AlarmQueryOut.CONTRACT));
 			query.setHref(new Uri("query"));
 			query.setOperationHandler(new OperationHandler() {
 				public Obj invoke(Obj in) {
@@ -83,7 +83,7 @@ public class AlarmSubjectImpl extends Obj implements IAlarmSubject {
 
 	public Feed feed() {
 		if (feed == null) {
-			feed = new Feed("feed", new Contract(AlarmFilter.ALARM_FILTER_CONTRACT), new Contract(Alarm.ALARM_CONTRACT));
+			feed = new Feed("feed", new Contract(AlarmFilter.CONTRACT), new Contract(Alarm.CONTRACT));
 			feed.setHref(new Uri("feed"));
 		}
 		return feed;

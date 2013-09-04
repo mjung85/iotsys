@@ -1,6 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013
- * Institute of Computer Aided Automation, Automation Systems Group, TU Wien.
+ * Copyright (c) 2013, Automation Systems Group, TU Wien.
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -30,30 +29,11 @@
  * This file is part of the IoTSyS project.
  ******************************************************************************/
 
-package at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.common.impl;
+package at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.unit;
 
+import obix.contracts.Unit;
 
-//public abstract class ObjImpl extends Obj implements Object
-//{
-//	public ObjImpl(String name, String displayName, String display, Uri href)
-//	{
-//		this.setName(name);
-//		this.setDisplay(display);
-//		this.setDisplayName(displayName);
-//		this.setHref(href);
-//		this.setIs(getContract());
-//	}
-//	
-//	public Ref getRef()
-//	{
-//		Ref reference = new Ref();
-//
-//		reference.setName(this.getName());
-//		reference.setHref(this.getHref());
-//		reference.setDisplayName(this.getDisplayName());
-//		reference.setIs(this.getIs());
-//
-//		return reference;
-//	}
-//
-//}
+public interface UnitCelsius extends Unit
+{
+	public static final String HREF = "/units/celsius";
+}

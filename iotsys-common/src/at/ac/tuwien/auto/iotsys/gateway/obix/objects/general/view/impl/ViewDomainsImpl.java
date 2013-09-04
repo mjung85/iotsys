@@ -33,13 +33,28 @@
 package at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.view.impl;
 
 import obix.Contract;
+import obix.List;
 import obix.Uri;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.view.Domain;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.view.ViewDomains;
 
 public class ViewDomainsImpl extends ViewImpl implements ViewDomains
 {
 	public ViewDomainsImpl()
 	{
-		super(ViewDomains.NAME, new Uri(ViewDomains.HREF), new Contract(ViewDomains.CONTRACT));
+		super("domains", new Uri(ViewDomains.HREF), new Contract(ViewDomains.CONTRACT));
+	}
+
+	@Override
+	public void initElements(List elements)
+	{
+		elements.setName("domains");
+		elements.setHref(new Uri("domains"));
+		elements.setOf(new Contract(Domain.CONTRACT));
+	}
+
+	public void addDomain(DomainImpl domain)
+	{
+		this.addElement(domain);
 	}
 }

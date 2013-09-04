@@ -128,7 +128,7 @@ public class HistoryImpl extends Obj implements History, Observer {
 		
 		append.setName("append");
 		append.setHref(new Uri("append"));
-		append.setIn(new Contract(HistoryAppendIn.HISTORY_APPENDIN_CONTRACT));
+		append.setIn(new Contract(HistoryAppendIn.CONTRACT));
 		append.setOut(new Contract(HistoryAppendOutImpl.HISTORY_APPENDOUT_CONTRACT));
 		add(append);
 	}

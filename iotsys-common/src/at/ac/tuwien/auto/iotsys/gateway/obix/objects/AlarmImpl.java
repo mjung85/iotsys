@@ -51,21 +51,21 @@ public class AlarmImpl extends Obj implements Alarm, AckAlarm, StatefulAlarm, Po
 		this.stateful = stateful;
 		this.acked = acked;
 		
-		String contract = Alarm.ALARM_CONTRACT;
+		String contract = Alarm.CONTRACT;
 		
 		add(source());
 		add(timestamp());
 		
 		if (stateful) {
 			add(normalTimestamp());
-			contract += " " + StatefulAlarm.STATEFUL_ALARM_CONTRACT;
+			contract += " " + StatefulAlarm.CONTRACT;
 		}
 		
 		if (acked) {
 			add(ackTimestamp());
 			add(ackUser());
 			add(ack());
-			contract += " " + AckAlarm.ACK_ALARM_CONTRACT;
+			contract += " " + AckAlarm.CONTRACT;
 		}
 		
 		
@@ -77,13 +77,13 @@ public class AlarmImpl extends Obj implements Alarm, AckAlarm, StatefulAlarm, Po
 		Contract sourceContract = ((Obj)source).getIs();
 		if (sourceContract != null) {
 			pointAlarm = 
-					   sourceContract.contains(new Uri(Point.POINT_CONTRACT))
-					|| sourceContract.contains(new Uri(WritablePoint.WRITABLE_POINT_CONTRACT));
+					   sourceContract.contains(new Uri(Point.CONTRACT))
+					|| sourceContract.contains(new Uri(WritablePoint.CONTRACT));
 		}
 		
 		if (pointAlarm) {
 			add(alarmValue());
-			contract += " " + PointAlarm.POINT_ALARM_CONTRACT;
+			contract += " " + PointAlarm.CONTRACT;
 		}
 		
 		this.setIs(new Contract(contract));
@@ -129,7 +129,7 @@ public class AlarmImpl extends Obj implements Alarm, AckAlarm, StatefulAlarm, Po
 		if (!isAcked()) return null;
 		
 		if (ack == null) {
-			ack = new Op("ack", new Contract(AckAlarmIn.ALARM_ACKIN_CONTRACT), new Contract(AckAlarmOut.ALARM_ACKOUT_CONTRACT));
+			ack = new Op("ack", new Contract(AckAlarmIn.CONTRACT), new Contract(AckAlarmOut.CONTRACT));
 			ack.setHref(new Uri("ack"));
 			ack.setOperationHandler(new OperationHandler() {
 				public Obj invoke(Obj in) {

@@ -1,6 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013
- * Institute of Computer Aided Automation, Automation Systems Group, TU Wien.
+ * Copyright (c) 2013, Automation Systems Group, TU Wien.
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -30,49 +29,87 @@
  * This file is part of the IoTSyS project.
  ******************************************************************************/
 
-package at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.multilingual.impl;
+package at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.contracts.impl;
 
 import obix.Contract;
-import obix.Enum;
+import obix.Int;
 import obix.Obj;
-import obix.Str;
-import obix.Uri;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.enumeration.EnumAttribute;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.enumeration.EnumLanguage;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.multilingual.Translation;
+import obix.contracts.Dimension;
 
-public abstract class TranslationImpl extends Obj implements Translation
+public class DimensionImpl extends Obj implements Dimension
 {
-	private Enum language;
-	private Enum attribute;
-	private Str value;
+	private Int kg, m, sec, K, A, mol, cd;
 
-	public TranslationImpl(String language, String attribute, String value)
+	public DimensionImpl(int kg, int m, int sec, int K, int A, int mol, int cd)
 	{
-		this.setIs(new Contract("knx:translation"));
+		this.setName("dimension");
+		this.setIs(new Contract(Dimension.CONTRACT));
+		
+		if (kg != 0)
+			this.add(this.kg = new Int("kg",kg));
 
-		// Language
-		this.language = new Enum();
-		this.language.setName("language");
-		this.language.setHref(new Uri("language"));
-		this.language.setRange(new Uri(EnumLanguage.HREF));
-		this.language.set(language);
-		this.add(this.language);
+		if (m != 0)
+			this.add(this.m = new Int("m",m));
 
-		// Attribute
-		this.attribute = new Enum();
-		this.attribute.setName("attribute");
-		this.attribute.setHref(new Uri("attribute"));
-		this.attribute.setRange(new Uri(EnumAttribute.HREF));
-		this.attribute.set(attribute);
-		this.add(this.attribute);
+		if (sec != 0)
+			this.add(this.sec = new Int("sec",sec));
 
-		// Attribute
-		this.value = new Str();
-		this.value.setName("value");
-		this.value.setHref(new Uri("value"));
-		this.value.set(value);
-		this.add(this.value);
+		if (K != 0)
+			this.add(this.K = new Int("K",K));
+
+		if (A != 0)
+			this.add(this.A = new Int("A",A));
+
+		if (mol != 0)
+			this.add(this.mol = new Int("mol",mol));
+
+		if (cd != 0)
+			this.add(this.cd = new Int("cd",cd));
 	}
 
+	@Override
+	public Int kg()
+	{
+		return kg;
+	}
+
+	@Override
+	public Int m()
+	{
+		return m;
+	}
+
+	@Override
+	public Int sec()
+	{
+		return sec;
+	}
+
+	@Override
+	public Int K()
+	{
+
+		return K;
+	}
+
+	@Override
+	public Int A()
+	{
+
+		return A;
+	}
+
+	@Override
+	public Int mol()
+	{
+
+		return mol;
+	}
+
+	@Override
+	public Int cd()
+	{
+
+		return cd;
+	}
 }

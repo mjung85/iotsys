@@ -1,5 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2013, Automation Systems Group, TU Wien.
+ * Copyright (c) 2013
+ * Institute of Computer Aided Automation, Automation Systems Group, TU Wien.
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -29,13 +30,40 @@
  * This file is part of the IoTSyS project.
  ******************************************************************************/
 
-package at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.multilingual;
+package at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.datapoint.impl;
 
-public interface Translation extends Multilingual
+import obix.Contract;
+import obix.Obj;
+import obix.Real;
+import obix.Uri;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.datapoint.DPST_9_1;
+
+public class DPST_9_1_Impl extends DatapointImpl implements DPST_9_1
 {
-	public String getLanguage();
+	protected Real value = new Real();
 
-	public String getAttribute();
+	public DPST_9_1_Impl()
+	{
+		value.setName(DPST_9_1.VALUE_NAME);
+		value.setHref(new Uri(DPST_9_1.VALUE_HREF));
+		value.setUnit(new Uri("obix:units/celsius"));
 
-	public String getValue();
+		this.setIs(new Contract(DPST_9_1.CONTRACT));
+		this.add(value);
+
+		this.function.set("°C-value (EIS5)");
+		this.unit.set("temperature (°C)");
+	}
+
+	@Override
+	public Real value()
+	{
+		return value;
+	}
+
+	public void writeObject(Obj input)
+	{
+		// not writable
+	}
+
 }

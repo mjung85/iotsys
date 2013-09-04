@@ -33,7 +33,7 @@ package at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.datapoint;
 
 import obix.Real;
 
-public interface DPST_9_1 extends DataPoint {
+public interface DPST_9_1 extends Datapoint {
 	public static final String VALUE_NAME = "value";
 	public static final String VALUE_HREF = "value";
 	

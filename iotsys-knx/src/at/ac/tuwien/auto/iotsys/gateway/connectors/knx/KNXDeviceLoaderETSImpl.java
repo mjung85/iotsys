@@ -42,9 +42,18 @@ import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.datapoint.DPST_1_1;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.datapoint.DPST_3_7;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.datapoint.DPST_9_1;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.datapoint.impl.DPST_1_1_Impl;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.encoding.impl.EncodingsImpl;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.entity.impl.EntityImpl;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.enumeration.impl.EnumStandardImpl;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.enumeration.EnumPart;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.enumeration.EnumStandard;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.enumeration.impl.EnumsImpl;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.network.Network;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.network.impl.NetworkImpl;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.unit.impl.UnitsImpl;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.view.impl.AreaImpl;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.view.impl.DomainImpl;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.view.impl.GroupImpl;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.view.impl.PartImpl;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.knx.datapoint.impl.DPST_1_1_ImplKnx;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.knx.datapoint.impl.DPST_3_7_ImplKnx;
@@ -95,23 +104,23 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader
 
 	private void initNetworks(KNXConnector knxConnector, ObjectBroker objectBroker)
 	{
-		// skip standard element since for KNX mapping only knx is relevant.
-
 		// Networks
-		Obj networks = new Obj();
+		List networks = new List();
 		networks.setName("networks");
+		networks.setOf(new Contract(Network.CONTRACT));
 		networks.setHref(new Uri("/networks"));
 
-		// Workaround, addObj registers currently only the obj and direct
-		// children
+		// ================================================================================
+
+		// Phase I
 
 		// Network
 		Obj network = new Obj();
-		network.setName("P-0341");
-		network.setHref(new Uri(networks.getHref().getPath() + "/" + "suitcase"));
-		network.setDisplayName("Suitcase");
+		network.setName("P-0341/M");
+		network.setHref(new Uri(networks.getHref().getPath() + "/" + "suitcase_manual"));
+		network.setDisplayName("Suitcase (manual)");
 		network.setDisplay("...");
-		network.setIs(new Contract("knx:network"));
+		network.setIs(new Contract("knx:Network"));
 
 		obix.Enum standard = new obix.Enum();
 		standard.setName("standard");
@@ -125,10 +134,10 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader
 		// Note: build references after building the real objects, so that href
 		// is registered for real object
 		Ref networkRef = new Ref();
-		networkRef.setName("P-0341");
-		networkRef.setHref(new Uri("suitcase"));
-		networkRef.setDisplayName("Suitcase");
-		networkRef.setIs(new Contract("knx:network"));
+		networkRef.setName("P-0341/M");
+		networkRef.setHref(new Uri("suitcase_manual"));
+		networkRef.setDisplayName("Suitcase (manual)");
+		networkRef.setIs(new Contract("knx:Network"));
 		networks.add(networkRef);
 		objectBroker.addObj(networkRef, false);
 
@@ -138,30 +147,68 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader
 		// Views
 		initViews(knxConnector, objectBroker, network);
 
-		
+		// ================================================================================
+
 		// Phase II
-		
+
 		// Enumerations
-		EnumStandardImpl e = new EnumStandardImpl();
-		objectBroker.addObj(e, true);
-		
+		EnumsImpl enums = new EnumsImpl();
+		objectBroker.addObj(enums, true);
+
 		// Units
-		
+		UnitsImpl units = new UnitsImpl();
+		objectBroker.addObj(units, true);
+
+		// Encoding
+		EncodingsImpl encodings = new EncodingsImpl();
+		objectBroker.addObj(encodings, true);
+
 		// Network
-		NetworkImpl n = new NetworkImpl("P-0341/2", "Suitcase2", null, e.getKey("KNX"));
+		NetworkImpl n = new NetworkImpl("P-0341", "Suitcase", null, enums.getEnum(EnumStandard.HREF).getKey("KNX"));
 		networks.add(n);
-		networks.add(n.getReference());
-		
-		EntityImpl entity = new EntityImpl("P-0944-0_DI-1","Temperature Sensor N 258/02", null);
-		
+		networks.add(n.getReference(false));
+
+		// Entities
+		EntityImpl entity = new EntityImpl("P-0944-0_DI-1", "Temperature Sensor N 258/02", null);
 		n.getEntities().addEntity(entity);
-		
-		PartImpl part = new PartImpl("P-01EE-0_BP-0", "Treitlstraﬂe 1-3", null);
+
+		// Views
+		PartImpl part = new PartImpl("P-01EE-0_BP-0", "Treitlstraﬂe 1-3", null, EnumPart.KEY_BUILDING);
+
+		part.addInstance(entity);
+
+		PartImpl subpart = new PartImpl("P-subpart", "4. Stock", null, EnumPart.KEY_FLOOR);
+
+		part.addPart(subpart);
 
 		n.getBuilding().addPart(part);
+
+		GroupImpl group = new GroupImpl("P-0944-0_GA-28", "Top Group", null, 17342, null);
+		n.getFunctional().addGroup(group);
 		
-		part.addInstance(entity);
+		GroupImpl subgroup = new GroupImpl("P-Subgroup", "Light", null, 17343, null);
+		group.addGroup(subgroup);
 		
+		DPST_1_1_Impl datapoint = new DPST_1_1_Impl();
+		datapoint.setHref(new Uri("/networks/suitcase/entities/temperature_sensor_N_258_02/1"));
+		
+		group.addInstance(datapoint, "send");
+
+		AreaImpl area = new AreaImpl("P-Area", "Main zone", null, 8, null);
+		n.getTopology().addArea(area);
+
+		AreaImpl subarea = new AreaImpl("P-Subarea", "Main line", null, 1, "Twisted Pair");
+		area.addArea(subarea);
+		area.addInstance(entity, 3);
+
+		DomainImpl domain = new DomainImpl("P-Domain", "General", null);
+		n.getDomains().addDomain(domain);
+
+		DomainImpl subdomain = new DomainImpl("P-Subdomain", "Light", null);
+		domain.addDomain(subdomain);
+
+		domain.addInstance(entity);
+
 		objectBroker.addObj(networks, true);
 
 	}

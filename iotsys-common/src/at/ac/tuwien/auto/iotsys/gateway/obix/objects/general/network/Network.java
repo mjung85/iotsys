@@ -40,7 +40,7 @@ import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.view.ViewTopology;
 
 public interface Network extends IObj
 {
-	public static final String CONTRACT = "knx:network";
+	public static final String CONTRACT = "knx:Network";
 	
 	public ViewFunctional getFunctional();
 

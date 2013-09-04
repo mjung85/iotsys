@@ -1,6 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013
- * Institute of Computer Aided Automation, Automation Systems Group, TU Wien.
+ * Copyright (c) 2013, Automation Systems Group, TU Wien.
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -30,66 +29,31 @@
  * This file is part of the IoTSyS project.
  ******************************************************************************/
 
-package at.ac.tuwien.auto.iotsys.gateway.obix.objects.knx.datapoint.impl;
+package at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.unit.impl;
 
-import java.util.logging.Logger;
-
-import obix.Bool;
 import obix.Contract;
-import obix.Int;
-import obix.Obj;
-import obix.Real;
+import obix.IObj;
+import obix.List;
 import obix.Uri;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.datapoint.DPST_3_7;
+import obix.contracts.Unit;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.contracts.impl.UnitImpl;
 
-public class DPST_3_7_Impl extends DataPointImpl implements DPST_3_7
+public class UnitsImpl extends List implements IObj
 {
-	private static final Logger log = Logger.getLogger(DPST_3_7_Impl.class.getName());
-	protected Int value = new Int();
-
-	public DPST_3_7_Impl()
+	public UnitsImpl()
 	{
-		value.setName(DPST_3_7.VALUE_NAME);
-		value.setHref(new Uri(DPST_3_7.VALUE_HREF));
-		value.setUnit(new Uri("obix:units/dimming"));
-		value.setWritable(true);
-		value.setMin(0);
-		value.setMax(100);
+		this.setName("units");
+		this.setOf(new Contract(Unit.CONTRACT));
+		this.setHref(new Uri("/units"));
 
-		this.setIs(new Contract(DPST_3_7.CONTRACT));
-		this.add(value);
+		UnitImpl[] units = new UnitImpl[] { new UnitCelsiusImpl(), new UnitPercentImpl(), new UnitPpmImpl() };
 
-		this.function.set("Brighter / Darker");
-		this.unit.set("dimming control");
-	}
+		for (UnitImpl unit : units)
+		{
+			unit.setHref(unit.getRelativePath());
 
-	@Override
-	public Int value()
-	{
-		return value;
-	}
-
-	@Override
-	public void writeObject(Obj input)
-	{
-		if (input instanceof DPST_3_7)
-		{
-			DPST_3_7 in = (DPST_3_7) input;
-			log.info("Writing on data point.");
-			this.value.set(in.value().get());
-		}
-		else if (input instanceof Bool)
-		{
-			this.value.set(((Bool) input).get());
-		}
-		else if (input instanceof Real)
-		{
-			this.value.set(((Real) input).get());
-		}
-		else if (input instanceof Int)
-		{
-			this.value.set(((Int) input).get());
+			this.add(unit);
+			this.add(unit.getReference(false));
 		}
 	}
-
 }
