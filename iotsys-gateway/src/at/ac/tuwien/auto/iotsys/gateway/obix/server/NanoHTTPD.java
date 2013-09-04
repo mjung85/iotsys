@@ -35,6 +35,7 @@ import obix.io.BinObixDecoder;
 import obix.io.BinObixEncoder;
 import obix.io.ObixDecoder;
 import obix.io.ObixEncoder;
+import obix.io.RelativeObixEncoder;
 
 import org.json.JSONException;
 
@@ -166,12 +167,9 @@ public class NanoHTTPD {
 		if (data != null)
 			log.finest("serve: " + uri + ", method: " + method + ", data.length(): " + data.length());
 		log.finest("Data: " + data);
-		
-		
-		String resourcePath = getResourcePath(uri, ipv6Address);
 
 		try {
-			StringBuffer obixResponse = getObixResponse(resourcePath, data, method, header);
+			StringBuffer obixResponse = getObixResponse(requestUri, ipv6Address, data, method, header);
 			response = encodeResponse(uri, header, obixResponse);
 		} catch (URISyntaxException usex) {
 			response = new Response(HTTP_BADREQUEST, MIME_PLAINTEXT, "URI Syntax Exception");
@@ -306,7 +304,7 @@ public class NanoHTTPD {
 	
 				try {
 					Obj obj = BinObixDecoder.fromBytes(unbox(payload));
-					return ObixEncoder.toString(obj, true);
+					return ObixEncoder.toString(obj);
 				} catch (Exception e1) {
 					e1.printStackTrace();
 				}
@@ -358,6 +356,8 @@ public class NanoHTTPD {
 		}
 		
 		// normalize resource path
+		while (resourcePath.startsWith(("/")))  resourcePath = resourcePath.substring(1);
+		
 		try {
 			resourcePath = URI.create("//localhost/" + URLEncoder.encode(resourcePath, "UTF-8")).normalize().getPath();
 		} catch (UnsupportedEncodingException e) {
@@ -371,41 +371,48 @@ public class NanoHTTPD {
 		return header.containsKey("accept") && header.getProperty("accept").contains(mimeType);
 	}
 
-	private StringBuffer getObixResponse(String resourcePath, String data, String method, Properties header)
+	private StringBuffer getObixResponse(String uri, String ipv6Address, String data, String method, Properties header)
 				throws URISyntaxException {
 		
 		StringBuffer obixResponse = null;
 		
-		if (resourcePath.endsWith("soap")) {
+		if (uri.endsWith("soap")) {
 			log.finest("Forward to SOAP handler!");
 
 			obixResponse = new StringBuffer(soapHandler.process(data,
-					header.getProperty("soapAction")));
+					header.getProperty("soapaction")));
 			log.finest("oBIX Response: " + obixResponse);
 
 		} else {
+			Obj responseObj = null;
+			String resourcePath = getResourcePath(uri, ipv6Address);
+			
 			if (method.equals("GET")) {
-				obixResponse = new StringBuffer(
-						ObixEncoder.toString(obixServer.readObj(new URI(
-								resourcePath), "guest"), true));
+				responseObj = obixServer.readObj(new URI(resourcePath), "guest");
+			} else if (method.equals("PUT")) {
+				responseObj = obixServer.writeObj(new URI(resourcePath), data);
+			} else if (method.equals("POST")) {
+				responseObj = obixServer.invokeOp(new URI(resourcePath), data);
 			}
-
-			if (method.equals("PUT")) {
-				obixResponse = new StringBuffer(
-						ObixEncoder.toString(obixServer.writeObj(new URI(
-								resourcePath), data), true));
-			}
-
-			if (method.equals("POST")) {
-				Obj obj = obixServer.invokeOp(new URI(resourcePath), data);
-				obixResponse = new StringBuffer(ObixEncoder.toString(obj, false));
-			}
+			
+			
+			URI rootUri, baseUri;
+			
+			if (ipv6Address == null)
+				rootUri = new URI("/");
+			else
+				rootUri = new URI(getResourcePath("", ipv6Address));
+			
+			baseUri = new URI(resourcePath.substring(0, resourcePath.lastIndexOf('/')+1));
+			obixResponse = new StringBuffer(RelativeObixEncoder.toString(responseObj, rootUri, baseUri));
 		}
 
 		// in case of a method call don't fix the HREF
+		/*
 		if (!method.equals("POST")) {
-//				fixHref(requestUri, obixResponse);
+				fixHref(requestUri, obixResponse);
 		}
+		*/
 		
 		return obixResponse;
 	}

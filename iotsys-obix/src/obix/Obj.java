@@ -283,10 +283,8 @@ public class Obj implements IObj, Subject, AlarmSource, Cloneable {
 		while (current != null) {
 			Uri normalizedHref = current.getNormalizedHref();
 			if (normalizedHref != null) {
-				if (normalizedHref.isAbsolute()) {
-					String fullContextPath = current.getNormalizedHref()
-							.getPath().toString()
-							+ path;
+				if (normalizedHref.isAbsolute() || normalizedHref.getPath().startsWith("/")) {
+					String fullContextPath = normalizedHref.getPath() + path;
 					return fullContextPath;
 				} else {
 					if (!path.isEmpty() && !path.startsWith("/"))
