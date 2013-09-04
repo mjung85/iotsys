@@ -35,20 +35,23 @@ import obix.Contract;
 import obix.IObj;
 import obix.List;
 import obix.Uri;
+import obix.contracts.Unit;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.contracts.impl.UnitImpl;
 
 public class UnitsImpl extends List implements IObj
 {
-
 	public UnitsImpl()
 	{
 		this.setName("units");
-		this.setOf(new Contract("obix:Unit"));
+		this.setOf(new Contract(Unit.CONTRACT));
 		this.setHref(new Uri("/units"));
 
 		UnitImpl[] units = new UnitImpl[] { new UnitCelsiusImpl(), new UnitPercentImpl(), new UnitPpmImpl() };
 
 		for (UnitImpl unit : units)
 		{
+			unit.setHref(unit.getRelativePath());
+
 			this.add(unit);
 			this.add(unit.getReference(false));
 		}

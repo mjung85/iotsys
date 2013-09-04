@@ -30,53 +30,40 @@
  * This file is part of the IoTSyS project.
  ******************************************************************************/
 
-package at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.multilingual.impl;
-
-import java.util.ArrayList;
+package at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.datapoint.impl;
 
 import obix.Contract;
-import obix.List;
 import obix.Obj;
+import obix.Real;
 import obix.Uri;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.multilingual.Multilingual;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.multilingual.Translation;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.datapoint.DPST_9_1;
 
-public abstract class MultilingualImpl extends Obj implements Multilingual
+public class DPST_9_1_Impl extends DatapointImpl implements DPST_9_1
 {
-	private List list = null;
-	protected ArrayList<Translation> translations;
-	private int translationCount = 0;
+	protected Real value = new Real();
 
-	public void addTranslation(TranslationImpl translation)
+	public DPST_9_1_Impl()
 	{
-		if (translations == null)
-		{
-			this.list = new List("translations", new Contract("knx:translation"));
-			this.list.setHref(new Uri("translations"));
-			this.add(this.list);
+		value.setName(DPST_9_1.VALUE_NAME);
+		value.setHref(new Uri(DPST_9_1.VALUE_HREF));
+		value.setUnit(new Uri("obix:units/celsius"));
 
-			this.translations = new ArrayList<Translation>();
-		}
-		
-		translation.setHref(new Uri(String.valueOf(++translationCount)));
-		
-		this.list.add(translation);
-		this.translations.add(translation);
+		this.setIs(new Contract(DPST_9_1.CONTRACT));
+		this.add(value);
+
+		this.function.set("°C-value (EIS5)");
+		this.unit.set("temperature (°C)");
 	}
 
 	@Override
-	public String getTranslation(String language, String attribute)
+	public Real value()
 	{
-		if (translations != null)
-		{
-			for (Translation t : this.translations)
-			{
-				if (t.getLanguage().equals(language) && t.getAttribute().equals(attribute))
-				{
-					return t.getValue();
-				}
-			}
-		}
-		return null;
+		return value;
 	}
+
+	public void writeObject(Obj input)
+	{
+		// not writable
+	}
+
 }

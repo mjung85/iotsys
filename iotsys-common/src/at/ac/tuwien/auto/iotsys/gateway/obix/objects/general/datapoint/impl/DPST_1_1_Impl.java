@@ -30,66 +30,64 @@
  * This file is part of the IoTSyS project.
  ******************************************************************************/
 
-package at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.multilingual.impl;
+package at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.datapoint.impl;
 
+import java.util.logging.Logger;
+
+import obix.Bool;
 import obix.Contract;
-import obix.Enum;
+import obix.Int;
 import obix.Obj;
-import obix.Str;
+import obix.Real;
 import obix.Uri;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.enumeration.EnumTranslation;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.enumeration.EnumLanguage;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.multilingual.Translation;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.datapoint.DPST_1_1;
 
-public class TranslationImpl extends Obj implements Translation
+public class DPST_1_1_Impl extends DatapointImpl implements DPST_1_1
 {
-	private EnumLanguage.Enum language;
-	private EnumTranslation.Enum attribute;
-	private String value;
-	
-	public TranslationImpl(EnumLanguage.Enum language, EnumTranslation.Enum attribute, String value)
+	private static final Logger log = Logger.getLogger(DPST_1_1_Impl.class.getName());
+
+	protected Bool value = new Bool();
+
+	public DPST_1_1_Impl()
 	{
-		this.setIs(new Contract("knx:translation"));
+		value.setName(DPST_1_1.VALUE_NAME);
+		value.setHref(new Uri(DPST_1_1.VALUE_HREF));
+		value.setWritable(true);
 
-		// Language
-		Enum l = new Enum();
-		l.setName("language");
-		l.setHref(new Uri("language"));
-		l.setRange(new Uri(EnumLanguage.HREF));
-		l.set(language.getKey());
-		this.add(l);
+		this.setIs(new Contract(DPST_1_1.CONTRACT));
+		this.add(value);
 
-		// Attribute
-		Enum a = new Enum();
-		a.setName("attribute");
-		a.setHref(new Uri("attribute"));
-		a.setRange(new Uri(EnumTranslation.HREF));
-		a.set(attribute.getKey());
-		this.add(a);
-
-		// Attribute
-		Str v = new Str();
-		v.setName("value");
-		v.setHref(new Uri("value"));
-		v.set(value);
-		this.add(v);
+		this.function.set("On / Off");
+		this.unit.set("on/off");
 	}
 
 	@Override
-	public EnumLanguage.Enum getLanguage()
-	{
-		return language;
-	}
-
-	@Override
-	public EnumTranslation.Enum getAttribute()
-	{
-		return attribute;
-	}
-
-	@Override
-	public String getValue()
+	public Bool value()
 	{
 		return value;
 	}
+
+	@Override
+	public void writeObject(Obj input)
+	{
+		if (input instanceof DPST_1_1)
+		{
+			DPST_1_1 in = (DPST_1_1) input;
+			log.info("Writing on data point.");
+			this.value.set(in.value().get());
+		}
+		else if (input instanceof Bool)
+		{
+			this.value.set(((Bool) input).get());
+		}
+		else if (input instanceof Real)
+		{
+			this.value.set(((Real) input).get());
+		}
+		else if (input instanceof Int)
+		{
+			this.value.set(((Int) input).get());
+		}
+	}
+
 }

@@ -35,57 +35,40 @@ package at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.view.impl;
 import obix.Contract;
 import obix.List;
 import obix.Obj;
-import obix.Ref;
 import obix.Uri;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.entity.impl.EntityImpl;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.view.Domain;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.view.Part;
-import at.ac.tuwien.auto.iotsys.gateway.util.UriEncoder;
 
-public class DomainImpl extends Obj implements Part
+public class DomainImpl extends ElementImpl implements Domain
 {
-	private List domains = null;
-	private List instances = null;
-	private int instanceCount = 0;
-
 	public DomainImpl(String name, String displayName, String display)
 	{
-		this.setName(name);
-		this.setDisplay(display);
-		this.setDisplayName(displayName);
-		this.setHref(new Uri(UriEncoder.getEscapedUri(displayName)));
-		this.setIs(new Contract(Domain.CONTRACT));
+		super(name, displayName, display, new Contract(Domain.CONTRACT));
 	}
 
+	@Override
+	public void initElements(List elements)
+	{
+		elements.setName("domains");
+		elements.setHref(new Uri("domains"));
+		elements.setOf(new Contract(Domain.CONTRACT));
+	}
+
+	@Override
+	public void initInstances(List instances)
+	{
+		instances.setName("instances");
+		instances.setHref(new Uri("instances"));
+		instances.setOf(new Contract(Domain.CONTRACT_INSTANCE));
+	}
+	
 	public void addDomain(DomainImpl domain)
 	{
-		if (domains == null)
-		{
-			this.domains = new List("domains", new Contract(Part.CONTRACT));
-			this.domains.setHref(new Uri("domains"));
-			this.add(this.domains);
-		}
-		this.domains.add(domain);
+		this.addElement(domain);
 	}
-
-	public void addInstance(EntityImpl entity)
+	
+	public Obj addInstance(EntityImpl entity)
 	{
-		if (instances == null)
-		{
-			this.instances = new List("instances", new Contract(Domain.CONTRACT_INSTANCE));
-			this.instances.setHref(new Uri("instances"));
-			this.add(this.instances);
-		}
-
-		Obj instance = new Obj();
-		instance.setName(entity.getName());
-		instance.setHref(new Uri(String.valueOf(++instanceCount)));
-
-		Ref ref = entity.getReference(true);
-		ref.setName("reference", true);
-
-		instance.add(ref);
-
-		this.instances.add(instance);
+		return addInstance((Obj)entity, new Contract(Domain.CONTRACT_INSTANCE));
 	}
 }

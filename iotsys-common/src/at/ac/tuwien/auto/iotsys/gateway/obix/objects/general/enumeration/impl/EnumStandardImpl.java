@@ -31,56 +31,22 @@
 
 package at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.enumeration.impl;
 
-import java.util.HashMap;
-import java.util.Map.Entry;
-
-import obix.Contract;
-import obix.List;
-import obix.Obj;
 import obix.Uri;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.contracts.impl.RangeImpl;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.enumeration.EnumStandard;
 
-public class EnumStandardImpl extends List implements EnumStandard
+public class EnumStandardImpl extends RangeImpl implements EnumStandard
 {
-	private HashMap<String, String> values; 
-	
 	public EnumStandardImpl()
 	{
-		this.setName("enumStandard");
-		this.setIs(new Contract("obix:range"));
-		this.setHref(new Uri(EnumStandard.HREF));
-		this.setHidden(true);
-		
-		this.initValues();
+		super(new Uri(EnumStandard.HREF));
 	}
-	
-	public void initValues()
+
+	protected void initValues()
 	{
-		values = new HashMap<String, String>();
-		
-		values.put("knx", "KNX");
-		values.put("lonworks", "LonWorks");
-		values.put("bacnet", "BACnet");
-		values.put("undef", "undefined");
-			
-		for (Entry<String, String> e : values.entrySet())
-		{
-			Obj o = new Obj();
-			o.setName(e.getKey());
-			o.setDisplayName(e.getValue());
-			this.add(o);
-		}
-	}
-	
-	public String getKey(String name)
-	{
-		for (Entry<String, String> e : values.entrySet())
-		{
-			if (e.getValue().equals(name))
-			{
-				return e.getKey();
-			}
-		}
-		return null;
+		getElements().add(new EnumElement(EnumStandard.KEY_BACNET, "BACnet"));
+		getElements().add(new EnumElement(EnumStandard.KEY_KNX, "KNX"));
+		getElements().add(new EnumElement(EnumStandard.KEY_LONWORKS, "LonWorks"));
+		getElements().add(new EnumElement(EnumStandard.KEY_UNDEF, "undefined"));
 	}
 }

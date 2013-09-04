@@ -30,40 +30,69 @@
  * This file is part of the IoTSyS project.
  ******************************************************************************/
 
-package at.ac.tuwien.auto.iotsys.gateway.obix.objects.knx.datapoint.impl;
+package at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.view.impl;
 
 import obix.Contract;
+import obix.Enum;
+import obix.Int;
+import obix.List;
 import obix.Obj;
-import obix.Real;
 import obix.Uri;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.datapoint.DPST_9_1;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.datapoint.impl.DatapointImpl;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.enumeration.EnumConnector;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.view.Group;
 
-public class DPST_9_1_Impl extends DataPointImpl implements DPST_9_1
+public class GroupImpl extends ElementImpl implements Group
 {
-	protected Real value = new Real();
-
-	public DPST_9_1_Impl()
+	public GroupImpl(String name, String displayName, String display, long address, DatapointImpl function)
 	{
-		value.setName(DPST_9_1.VALUE_NAME);
-		value.setHref(new Uri(DPST_9_1.VALUE_HREF));
-		value.setUnit(new Uri("obix:units/celsius"));
-
-		this.setIs(new Contract(DPST_9_1.CONTRACT));
-		this.add(value);
-
-		this.function.set("°C-value (EIS5)");
-		this.unit.set("temperature (°C)");
+		super(name, displayName, display, new Contract(Group.CONTRACT));
+		
+		Int adr = new Int();
+		adr.setName("address");
+		adr.setHref(new Uri("address"));
+		adr.setMin(0);
+		adr.set(address);
+		this.add(adr);
+		
+		if (function != null)
+		{
+			this.add(function);
+		}
 	}
 
 	@Override
-	public Real value()
+	public void initElements(List elements)
 	{
-		return value;
+		elements.setName("groups");
+		elements.setHref(new Uri("groups"));
+		elements.setOf(new Contract(Group.CONTRACT));
 	}
 
-	public void writeObject(Obj input)
+	@Override
+	public void initInstances(List instances)
 	{
-		// not writable
+		instances.setName("instances");
+		instances.setHref(new Uri("instances"));
+		instances.setOf(new Contract(Group.CONTRACT_INSTANCE));
 	}
 
+	public void addGroup(GroupImpl group)
+	{
+		this.addElement(group);
+	}
+
+	public Obj addInstance(DatapointImpl datapoint, String connector)
+	{
+		Obj instance = addInstance(datapoint, new Contract(Group.CONTRACT_INSTANCE));
+
+		Enum con = new Enum();
+		con.setName("connector");
+		con.setHref(new Uri("connector"));
+		con.setRange(new Uri(EnumConnector.HREF));
+		con.set(connector);
+		instance.add(con);
+
+		return instance;
+	}
 }

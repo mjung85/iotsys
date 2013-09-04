@@ -12,10 +12,10 @@ public class AlarmQueryOutImpl extends Obj implements AlarmQueryOut {
 	private Int count = new Int("count");
 	private Abstime start = new Abstime("start");
 	private Abstime end = new Abstime("end");
-	private List data = new List("data", new Contract(Alarm.ALARM_CONTRACT));
+	private List data = new List("data", new Contract(Alarm.CONTRACT));
 	
 	public AlarmQueryOutImpl(java.util.List<Obj> alarms) {
-		setIs(new Contract(AlarmQueryOut.ALARM_QUERYOUT_CONTRACT));
+		setIs(new Contract(AlarmQueryOut.CONTRACT));
 		
 		if (alarms != null) {
 			for(Obj obj : alarms) {

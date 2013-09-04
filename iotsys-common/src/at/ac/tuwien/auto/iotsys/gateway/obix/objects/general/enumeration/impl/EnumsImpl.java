@@ -31,29 +31,55 @@
 
 package at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.enumeration.impl;
 
+import java.util.HashMap;
+
 import obix.Contract;
 import obix.IObj;
 import obix.List;
 import obix.Uri;
+import obix.contracts.Range;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.contracts.impl.RangeImpl;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.enumeration.EnumConnector;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.enumeration.EnumEnabled;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.enumeration.EnumLanguage;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.enumeration.EnumPart;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.enumeration.EnumPriority;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.enumeration.EnumStandard;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.enumeration.EnumTranslation;
 
 public class EnumsImpl extends List implements IObj
 {
-	private EnumStandardImpl enumStandard;
+	private HashMap<String, RangeImpl> enums;
 	
 	public EnumsImpl()
 	{
 		this.setName("enums");
-		this.setOf(new Contract("obix:Range"));
+		this.setOf(new Contract(Range.CONTRACT));
 		this.setHref(new Uri("/enums"));
 
-		this.enumStandard = new EnumStandardImpl();
-		this.add(this.enumStandard);
-		this.add(this.enumStandard.getReference(false));
+		// Create enumerations
+		enums = new HashMap<String, RangeImpl>();
+
+		enums.put(EnumConnector.HREF, new EnumConnectorImpl());
+		enums.put(EnumEnabled.HREF, new EnumEnabledImpl());
+		enums.put(EnumLanguage.HREF, new EnumLanguageImpl());
+		enums.put(EnumPart.HREF, new EnumPartImpl());
+		enums.put(EnumPriority.HREF, new EnumPriorityImpl());
+		enums.put(EnumStandard.HREF, new EnumStandardImpl());
+		enums.put(EnumTranslation.HREF, new EnumTranslationImpl());
+		
+		// Add enumerations
+		for(RangeImpl e: enums.values())
+		{
+			e.setHref(e.getRelativePath());
+			
+			this.add(e);
+			this.add(e.getReference(false));
+		}
 	}
 	
-	public EnumStandard getEnumStandard()
+	public RangeImpl getEnum(String href)
 	{
-		return enumStandard;
+		return enums.get(href);
 	}
 }

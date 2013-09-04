@@ -47,7 +47,7 @@ public class WatchServiceImpl extends Obj implements WatchService {
 	public WatchServiceImpl(final ObjectBroker broker){
 		this.broker = broker;
 		setHref(new Uri("watchService"));
-		setIs(new Contract(WatchService.watchServiceContract));
+		setIs(new Contract(WatchService.CONTRACT));
 		add(make()); 
 	}
 	

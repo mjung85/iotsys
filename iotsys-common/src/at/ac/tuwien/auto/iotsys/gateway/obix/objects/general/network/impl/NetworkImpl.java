@@ -36,14 +36,9 @@ import obix.Contract;
 import obix.Enum;
 import obix.Obj;
 import obix.Uri;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.entity.Entities;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.entity.impl.EntitiesImpl;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.enumeration.EnumStandard;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.network.Network;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.view.ViewBuilding;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.view.ViewDomains;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.view.ViewFunctional;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.view.ViewTopology;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.view.impl.ViewBuildingImpl;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.view.impl.ViewDomainsImpl;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.view.impl.ViewFunctionalImpl;
@@ -83,10 +78,6 @@ public class NetworkImpl extends Obj implements Network
 		this.add(functional);
 		this.add(functional.getReference(false));
 
-		this.domains = new ViewDomainsImpl();
-		this.add(domains);
-		this.add(domains.getReference(false));
-
 		this.topology = new ViewTopologyImpl();
 		this.add(topology);
 		this.add(topology.getReference(false));
@@ -94,38 +85,43 @@ public class NetworkImpl extends Obj implements Network
 		this.building = new ViewBuildingImpl();
 		this.add(building);
 		this.add(building.getReference(false));
+		
+		this.domains = new ViewDomainsImpl();
+		this.add(domains);
+		this.add(domains.getReference(false));
 
+		// Entities
 		this.entities = new EntitiesImpl();
 		this.add(entities);
 		this.add(entities.getReference(false));
 	}
 
 	@Override
-	public ViewFunctional getFunctional()
+	public ViewFunctionalImpl getFunctional()
 	{
 		return this.functional;
 	}
 
 	@Override
-	public ViewTopology getTopology()
+	public ViewTopologyImpl getTopology()
 	{
 		return this.topology;
 	}
 
 	@Override
-	public ViewBuilding getBuilding()
+	public ViewBuildingImpl getBuilding()
 	{
 		return this.building;
 	}
 
 	@Override
-	public ViewDomains getDomains()
+	public ViewDomainsImpl getDomains()
 	{
 		return this.domains;
 	}
 
 	@Override
-	public Entities getEntities()
+	public EntitiesImpl getEntities()
 	{
 		return this.entities;
 	}

@@ -34,11 +34,14 @@ package at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.view.impl;
 
 import obix.Contract;
 import obix.IObj;
+import obix.List;
 import obix.Obj;
 import obix.Uri;
 
 public abstract class ViewImpl extends Obj implements IObj
 {
+	private List elements = null;
+	
 	public ViewImpl(String name, Uri href, Contract is)
 	{
 		this.setName(name);
@@ -46,5 +49,17 @@ public abstract class ViewImpl extends Obj implements IObj
 		this.setIs(is);
 		this.setHidden(true);
 	}
+	
+	protected void addElement(ElementImpl element)
+	{
+		if (this.elements == null)
+		{
+			this.elements = new List();
+			this.initElements(elements);
+			this.add(this.elements);
+		}
+		this.elements.add(element);
+	}
 
+	public abstract void initElements(List elements);
 }

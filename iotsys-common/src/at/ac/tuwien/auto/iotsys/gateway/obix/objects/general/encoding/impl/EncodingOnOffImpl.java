@@ -29,17 +29,21 @@
  * This file is part of the IoTSyS project.
  ******************************************************************************/
 
-package at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.multilingual;
+package at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.encoding.impl;
 
-import obix.IObj;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.enumeration.EnumTranslation;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.enumeration.EnumLanguage;
+import obix.Uri;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.encoding.EncodingOnOff;
 
-public interface Translation extends IObj
+public class EncodingOnOffImpl extends EncodingImpl implements EncodingOnOff
 {
-	public EnumLanguage.Enum getLanguage();
+	public EncodingOnOffImpl()
+	{
+		super(new Uri(EncodingOnOff.HREF));
+	}
 
-	public EnumTranslation.Enum getAttribute();
-
-	public String getValue();
+	protected void initValues()
+	{
+		getElements().add(new BoolElement(EncodingOnOff.KEY_ON, "On",true));
+		getElements().add(new BoolElement(EncodingOnOff.KEY_OFF, "Off",false));
+	}
 }
