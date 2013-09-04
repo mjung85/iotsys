@@ -1,29 +1,28 @@
 package at.ac.tuwien.auto.iotsys.gateway.obix.server;
 
+import static at.ac.tuwien.auto.iotsys.gateway.obix.server.ObixServer.DEFAULT_OBIX_URL_PROTOCOL;
+
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
 
+import obix.Obj;
+import obix.io.RelativeObixEncoder;
 import at.ac.tuwien.auto.iotsys.gateway.obix.observer.ExternalObserver;
 import at.ac.tuwien.auto.iotsys.gateway.obix.observer.ObjObserver;
 import at.ac.tuwien.auto.iotsys.gateway.util.ExiUtil;
-import obix.Obj;
-import obix.io.ObixEncoder;
 import ch.ethz.inf.vs.californium.coap.GETRequest;
-import ch.ethz.inf.vs.californium.coap.Option;
-import ch.ethz.inf.vs.californium.coap.POSTRequest;
-import ch.ethz.inf.vs.californium.coap.PUTRequest;
-import ch.ethz.inf.vs.californium.coap.Request;
 import ch.ethz.inf.vs.californium.coap.Message.messageType;
+import ch.ethz.inf.vs.californium.coap.Option;
+import ch.ethz.inf.vs.californium.coap.Request;
 import ch.ethz.inf.vs.californium.coap.registries.CodeRegistry;
 import ch.ethz.inf.vs.californium.coap.registries.MediaTypeRegistry;
 import ch.ethz.inf.vs.californium.coap.registries.OptionNumberRegistry;
 import ch.ethz.inf.vs.californium.endpoint.resources.LocalResource;
 import ch.ethz.inf.vs.californium.layers.TransactionLayer;
 import ch.ethz.inf.vs.californium.util.Properties;
-import static at.ac.tuwien.auto.iotsys.gateway.obix.server.ObixServer.DEFAULT_OBIX_URL_PROTOCOL;
 
 /**
  * Modified CoAP Observing Manager for oBIX Resources.
@@ -142,14 +141,14 @@ public class ObixObservingManager implements ExternalObserver{
 				payloadString = payloadString.replaceFirst(CoAPServer.COAP_URL_PROTOCOL,
 						DEFAULT_OBIX_URL_PROTOCOL);
 
-				String obixMessage = "";
 				try {
 					StringBuffer obixResponse = new StringBuffer("");
 					
-
-					obixResponse = new StringBuffer(ObixEncoder.toString(obixServer.readObj(new URI(
-								resourcePath), "guest"), true));
-				
+					Obj responseObj = obixServer.readObj(new URI(resourcePath), "guest");
+					URI rootUri = new URI("/");
+					URI baseUri = new URI(resourcePath);
+					obixResponse = new StringBuffer(RelativeObixEncoder.toString(responseObj, rootUri, baseUri));
+					
 					obixResponse = new StringBuffer(obixResponse.toString()
 							.replaceFirst(DEFAULT_OBIX_URL_PROTOCOL,
 									CoAPServer.COAP_URL_PROTOCOL));

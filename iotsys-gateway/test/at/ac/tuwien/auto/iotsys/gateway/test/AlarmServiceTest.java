@@ -134,7 +134,7 @@ public class AlarmServiceTest extends AbstractGatewayTest {
 		body(hasXPath("/obj/op[@name='ack' and @href='ack' and @in='obix:AckAlarmIn' and @out='obix:AckAlarmOut']")).
 		body(hasXPath("/obj/str[@name='ackUser' and @null='true']")).
 		body(hasXPath("/obj/abstime[@name='ackTimestamp' and @null='true']")).
-		when().get(alarmHref);
+		when().get(alarmHref + "/");
 		
 		
 		given().
@@ -153,7 +153,7 @@ public class AlarmServiceTest extends AbstractGatewayTest {
 		body(hasXPath("/obj/op[@name='ack' and @href='ack' and @in='obix:AckAlarmIn' and @out='obix:AckAlarmOut']")).
 		body(hasXPath("/obj/str[@name='ackUser' and @val='someUser']")).
 		body(hasXPath("/obj/abstime[@name='ackTimestamp']")).
-		when().get(alarmHref).asString();
+		when().get(alarmHref + "/").asString();
 		
 		long ackTimestamp = DatatypeConverter.parseDateTime(XmlPath.from(response).getString("obj.abstime.find { it.@name='ackTimestamp' }.@val")).getTimeInMillis();
 		assertEquals(expectedAckTimestamp, ackTimestamp, 1000);

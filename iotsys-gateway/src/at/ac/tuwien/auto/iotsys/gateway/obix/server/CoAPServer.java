@@ -33,10 +33,12 @@
 package at.ac.tuwien.auto.iotsys.gateway.obix.server;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.Inet6Address;
 import java.net.SocketException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URLEncoder;
 import java.util.logging.Logger;
 
 import obix.Obj;
@@ -44,6 +46,7 @@ import obix.io.BinObixDecoder;
 import obix.io.BinObixEncoder;
 import obix.io.ObixDecoder;
 import obix.io.ObixEncoder;
+import obix.io.RelativeObixEncoder;
 
 import org.json.JSONException;
 
@@ -227,27 +230,26 @@ public class CoAPServer extends Endpoint {
 					obixResponse.toString(),
 					MediaTypeRegistry.APPLICATION_LINK_FORMAT);
 		} else {
-
+			Obj responseObj = null;
+			
 			if (request instanceof GETRequest) {
-
-				obixResponse = new StringBuffer(ObixEncoder.toString(
-						obixServer.readObj(new URI(resourcePath), "guest"),
-						true));
-
+				responseObj = obixServer.readObj(new URI(resourcePath), "guest");
+			} else if (request instanceof PUTRequest) {
+				responseObj = obixServer.writeObj(new URI(resourcePath), payloadString);
+			} else if (request instanceof POSTRequest) {
+				responseObj = obixServer.invokeOp(new URI(resourcePath), payloadString);
 			}
-
-			if (request instanceof PUTRequest) {
-
-				obixResponse = new StringBuffer(ObixEncoder.toString(
-						obixServer.writeObj(new URI(resourcePath),
-								payloadString), true));
-
-			}
-			if (request instanceof POSTRequest) {
-				obixResponse = new StringBuffer(ObixEncoder.toString(
-						obixServer.invokeOp(new URI(resourcePath),
-								payloadString), true));
-			}
+			
+			String ipv6Address = getIPv6Address(request);
+			
+			URI rootUri, baseUri;
+			if (ipv6Address == null)
+				rootUri = new URI("/");
+			else
+				rootUri = new URI(getResourcePath("", ipv6Address));
+			
+			baseUri = new URI(resourcePath.substring(0, resourcePath.lastIndexOf('/')+1));
+			obixResponse = new StringBuffer(RelativeObixEncoder.toString(responseObj, rootUri, baseUri));
 		}
 
 		obixResponse = new StringBuffer(obixResponse.toString()
@@ -281,8 +283,7 @@ public class CoAPServer extends Endpoint {
 			}
 		} else if (request.getContentType() == MediaTypeRegistry.APPLICATION_X_OBIX_BINARY) {
 			try {
-				payloadString = ObixEncoder.toString(
-						BinObixDecoder.fromBytes(request.getPayload()), true);
+				payloadString = ObixEncoder.toString(BinObixDecoder.fromBytes(request.getPayload()));
 			} catch (Exception e) {
 				e.printStackTrace();
 				payloadString = request.getPayloadString();
@@ -424,9 +425,26 @@ public class CoAPServer extends Endpoint {
 		String resourcePath = request.getUriPath();
 		String ipv6Address = getIPv6Address(request);
 		
-		if (request.getPeerAddress().getAddress() instanceof Inet6Address
-				&& obixServer.containsIPv6(ipv6Address)) {
-			resourcePath = obixServer.getIPv6LinkedHref(ipv6Address) + resourcePath;
+		return getResourcePath(resourcePath, ipv6Address);
+	}
+	
+	private String getResourcePath(String uri, String ipv6Address) {
+		String resourcePath = uri;
+		
+		if (obixServer.containsIPv6(ipv6Address)) {
+			log.finest("IPv6 Adresse -> IoT6 Object");
+			resourcePath = obixServer.getIPv6LinkedHref(ipv6Address);
+			resourcePath += uri;
+		}
+		
+		// normalize resource path
+		while (resourcePath.startsWith(("/")))  resourcePath = resourcePath.substring(1);
+		
+		try {
+			resourcePath = URI.create("//localhost/" + URLEncoder.encode(resourcePath, "UTF-8")).normalize().getPath();
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		return resourcePath;
 	}

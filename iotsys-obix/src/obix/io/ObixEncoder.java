@@ -3,10 +3,29 @@
  */
 package obix.io;
 
-import java.io.*;
-import obix.*;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.OutputStream;
+
+import obix.Abstime;
+import obix.Bool;
+import obix.Contract;
+import obix.Date;
 import obix.Enum;
-import obix.xml.*;
+import obix.Feed;
+import obix.Int;
+import obix.List;
+import obix.Obj;
+import obix.Op;
+import obix.Real;
+import obix.Reltime;
+import obix.Status;
+import obix.Str;
+import obix.Time;
+import obix.Uri;
+import obix.Val;
+import obix.xml.XWriter;
 
 /**
  * ObixEncoder is used to serialize an Obj tree to an XML stream.
@@ -27,7 +46,7 @@ public class ObixEncoder extends XWriter {
 	public static void dump(Obj obj) {
 		try {
 			ObixEncoder encoder = new ObixEncoder(System.out);
-			encoder.encodeDocument(obj, false);
+			encoder.encodeDocument(obj);
 			encoder.flush();
 		} catch (IOException e) {
 			throw new RuntimeException(e.toString());
@@ -37,20 +56,16 @@ public class ObixEncoder extends XWriter {
 	/**
 	 * Encode the specified obj to an internal String.
 	 */
-	public static String toString(Obj obj, boolean useRelativePath) {
+	public static String toString(Obj obj) {
 		try {
 			ByteArrayOutputStream out = new ByteArrayOutputStream();
 			ObixEncoder encoder = new ObixEncoder(out);
-			encoder.encode(obj, useRelativePath);
+			encoder.encode(obj);
 			encoder.flush();
 			return new String(out.toByteArray());
 		} catch (IOException e) {
 			throw new RuntimeException(e.toString());
 		}
-	}
-	
-	public static String toString(Obj obj){
-		return toString(obj, true);
 	}
 
 	// //////////////////////////////////////////////////////////////
@@ -78,24 +93,16 @@ public class ObixEncoder extends XWriter {
 	/**
 	 * Encode a full obix XML document including prolog and header information.
 	 */
-	public void encodeDocument(Obj obj, boolean useRelativePath)
-			throws IOException {
+	public void encodeDocument(Obj obj) throws IOException {
 		prolog();
-		encode(obj, useRelativePath);
+		encode(obj);
 		flush();
-	}
-	
-	public void encodeDocument(Obj obj)
-			throws IOException {
-		
-		encode(obj, true);
-		
 	}
 
 	/**
 	 * Encode an object and it's children.
 	 */
-	public void encode(Obj obj, boolean useRelativePath) throws IOException {
+	public void encode(Obj obj) throws IOException {
 		// open start tag
 		String elemName = obj.getElement();
 		indent(indent * 2).w('<').w(elemName);
@@ -104,21 +111,10 @@ public class ObixEncoder extends XWriter {
 		String name = obj.getName();
 		if (name != null)
 			attr(" name", name);
-
-		Uri href = obj.getHref();
-		Uri contextPath = new Uri(obj.getFullContextPath());
-
-		// avoid to encode the absolute URI, provide only relative URI
-		if (obj.getParent() != null) {
-			if (useRelativePath) {
-				contextPath = obj.getRelativePath();
-			} else {
-				contextPath = href;
-			}
-		}
-
+		
+		String href = encodedHref(obj);
 		if (href != null)
-			attr(" href", contextPath.encodeVal());
+			attr(" href", href);
 
 		// val attribute
 		if (obj instanceof Val) {
@@ -251,12 +247,26 @@ public class ObixEncoder extends XWriter {
 		Obj[] kids = obj.list();
 		for (int i = 0; i < kids.length; ++i) {
 			if (!kids[i].isHidden())
-				encode(kids[i], useRelativePath);
+				encode(kids[i]);
 		}
 
 		// end tag
 		indent--;
 		indent(indent * 2).w("</").w(elemName).w(">\n");
+	}
+	
+	protected String encodedHref(Obj obj) {
+		Uri href = obj.getHref();
+		if (href == null) return null;
+		
+		Uri contextPath = new Uri(obj.getFullContextPath());
+
+		// avoid to encode the absolute URI, provide only relative URI
+		if (obj.getParent() != null) {
+			contextPath = href;
+		}
+		
+		return contextPath.encodeVal();
 	}
 
 	// //////////////////////////////////////////////////////////////
