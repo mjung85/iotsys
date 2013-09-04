@@ -31,16 +31,7 @@
 
 package at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.datapoint;
 
-import obix.Real;
-
-public interface DPST_9_1 extends Datapoint {
-	public static final String VALUE_NAME = "value";
-	public static final String VALUE_HREF = "value";
-	
-	public static final String VALUE_CONTRACT = "<real name='"+ VALUE_NAME +"' href='"+ VALUE_HREF +"' val=''/>";
-	public Real value();
-	
-	public static final String CONTRACT="knx:DPST_9_1";
-	
-
+public interface DPST_9_1 extends DPT_9
+{
+	public static final String CONTRACT = "knx:DPST_9_1";
 }

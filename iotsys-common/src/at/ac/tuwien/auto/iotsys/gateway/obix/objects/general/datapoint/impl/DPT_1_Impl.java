@@ -30,55 +30,29 @@
  * This file is part of the IoTSyS project.
  ******************************************************************************/
 
-package at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.language.impl;
+package at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.datapoint.impl;
 
-import java.util.ArrayList;
-
+import obix.Bool;
 import obix.Contract;
-import obix.List;
-import obix.Obj;
 import obix.Uri;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.language.Multilingual;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.language.Translation;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.datapoint.DPT_1;
 
-public abstract class MultilingualImpl extends Obj implements Multilingual
+public abstract class DPT_1_Impl extends DatapointImpl implements DPT_1
 {
-	private List list = null;
-	protected ArrayList<Translation> translations;
-	private int translationCount = 0;
+	protected Bool value = new Bool();
 
-	public void addTranslation(TranslationImpl translation)
+	public DPT_1_Impl(String name, String displayName, String display, Contract is)
 	{
-		if (translations == null)
-		{
-			this.list = new List("translations", new Contract(Translation.CONTRACT));
-			this.list.setHref(new Uri("translations"));
-			this.list.setHidden(true);
-			this.add(this.list);
-			this.add(this.list.getReference(false));
+		super(name, displayName, display, is);
 
-			this.translations = new ArrayList<Translation>();
-		}
-		
-		translation.setHref(new Uri(String.valueOf(++translationCount)));
-		
-		this.list.add(translation);
-		this.translations.add(translation);
+		this.value.setName("value");
+		this.value.setHref(new Uri("value"));
+		this.add(value);
 	}
 
 	@Override
-	public String getTranslation(String language, String attribute)
+	public Bool value()
 	{
-		if (translations != null)
-		{
-			for (Translation t : this.translations)
-			{
-				if (t.getLanguage().equals(language) && t.getAttribute().equals(attribute))
-				{
-					return t.getValue();
-				}
-			}
-		}
-		return null;
+		return value;
 	}
 }

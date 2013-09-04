@@ -1,6 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013
- * Institute of Computer Aided Automation, Automation Systems Group, TU Wien.
+ * Copyright (c) 2013, Automation Systems Group, TU Wien.
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -30,55 +29,21 @@
  * This file is part of the IoTSyS project.
  ******************************************************************************/
 
-package at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.language.impl;
+package at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.parameter.impl;
 
-import java.util.ArrayList;
-
-import obix.Contract;
-import obix.List;
-import obix.Obj;
+import obix.Int;
 import obix.Uri;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.language.Multilingual;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.language.Translation;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.parameter.ParameterDimming;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.unit.UnitPercent;
 
-public abstract class MultilingualImpl extends Obj implements Multilingual
+public class ParameterDimmingImpl extends Int implements ParameterDimming
 {
-	private List list = null;
-	protected ArrayList<Translation> translations;
-	private int translationCount = 0;
-
-	public void addTranslation(TranslationImpl translation)
+	public ParameterDimmingImpl()
 	{
-		if (translations == null)
-		{
-			this.list = new List("translations", new Contract(Translation.CONTRACT));
-			this.list.setHref(new Uri("translations"));
-			this.list.setHidden(true);
-			this.add(this.list);
-			this.add(this.list.getReference(false));
-
-			this.translations = new ArrayList<Translation>();
-		}
-		
-		translation.setHref(new Uri(String.valueOf(++translationCount)));
-		
-		this.list.add(translation);
-		this.translations.add(translation);
+		setHref(new Uri(ParameterDimming.HREF));
+		setUnit(new Uri(UnitPercent.HREF));
+		setMin(0);
+		setMax(100);
 	}
 
-	@Override
-	public String getTranslation(String language, String attribute)
-	{
-		if (translations != null)
-		{
-			for (Translation t : this.translations)
-			{
-				if (t.getLanguage().equals(language) && t.getAttribute().equals(attribute))
-				{
-					return t.getValue();
-				}
-			}
-		}
-		return null;
-	}
 }

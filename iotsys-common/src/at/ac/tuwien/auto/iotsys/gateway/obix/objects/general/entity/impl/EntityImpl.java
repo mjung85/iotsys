@@ -32,18 +32,62 @@
 
 package at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.entity.impl;
 
+import java.util.ArrayList;
+
 import obix.Contract;
+import obix.List;
+import obix.Str;
+import obix.Uri;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.datapoint.Datapoint;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.datapoint.impl.DatapointImpl;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.entity.Entity;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.language.Multilingual;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.language.impl.MultilingualImpl;
 
 public class EntityImpl extends MultilingualImpl implements Entity
 {
-	public EntityImpl(String name, String displayName, String display)
+	private List list;
+	private ArrayList<Datapoint> datapoints;
+
+	public EntityImpl(String name, String displayName, String display, String manufacturer, String ordernumber)
 	{
 		this.setName(name);
 		this.setDisplay(display);
 		this.setDisplayName(displayName);
-		this.setIs(new Contract("knx:Entity"));
+		this.setIs(new Contract(Entity.CONTRACT));
 		this.setHidden(true);
+
+		if (manufacturer != null)
+		{
+			Str man = new Str();
+			man.setName("manufacturer");
+			man.setHref(new Uri("manufacturer"));
+			man.set(manufacturer);
+			this.add(man);
+		}
+
+		if (ordernumber != null)
+		{
+			Str order = new Str();
+			order.setName("mediaType");
+			order.setHref(new Uri("mediaType"));
+			order.set(ordernumber);
+			this.add(order);
+		}
+	}
+
+	public void addDatapoint(DatapointImpl datapoint)
+	{
+		if (this.datapoints == null)
+		{
+			this.list = new List("datapoints", new Contract(new String[] { Datapoint.CONTRACT, Multilingual.CONTRACT }));
+			this.list.setHref(new Uri("datapoints"));
+			this.add(this.list);
+
+			this.datapoints = new ArrayList<Datapoint>();
+		}
+
+		this.list.add(datapoint);
+		this.datapoints.add(datapoint);
 	}
 }

@@ -49,7 +49,7 @@ public class TranslationImpl extends Obj implements Translation
 	
 	public TranslationImpl(String language, String attribute, String value)
 	{
-		this.setIs(new Contract("knx:Translation"));
+		this.setIs(new Contract(Translation.CONTRACT));
 
 		// Language
 		this.language = new Enum();

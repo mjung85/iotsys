@@ -37,5 +37,4 @@ public interface Entities extends IObj
 {
 	public static final String CONTRACT = "knx:Entities";
 	
-	public void addEntity(Entity entity);
 }

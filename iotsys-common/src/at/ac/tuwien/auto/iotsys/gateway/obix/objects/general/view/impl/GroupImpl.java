@@ -44,21 +44,18 @@ import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.view.Group;
 
 public class GroupImpl extends ElementImpl implements Group
 {
-	public GroupImpl(String name, String displayName, String display, long address, DatapointImpl function)
+	private DatapointImpl function = null;
+
+	public GroupImpl(String name, String displayName, String display, long address)
 	{
 		super(name, displayName, display, new Contract(Group.CONTRACT));
-		
+
 		Int adr = new Int();
 		adr.setName("address");
 		adr.setHref(new Uri("address"));
 		adr.setMin(0);
 		adr.set(address);
 		this.add(adr);
-		
-		if (function != null)
-		{
-			this.add(function);
-		}
 	}
 
 	@Override
@@ -80,6 +77,23 @@ public class GroupImpl extends ElementImpl implements Group
 	public void addGroup(GroupImpl group)
 	{
 		this.addElement(group);
+	}
+
+	public void addFunction(DatapointImpl function)
+	{
+		if (this.function == null && function != null)
+		{
+			this.function = function;
+
+			if (!this.function.getName().equals("function"))
+				this.function.setName("function", true);
+			
+			this.function.setHref(new Uri("function"));
+			this.function.setDisplay(null);
+			this.function.setDisplayName(null);
+
+			this.add(function);
+		}
 	}
 
 	public Obj addInstance(DatapointImpl datapoint, String connector)

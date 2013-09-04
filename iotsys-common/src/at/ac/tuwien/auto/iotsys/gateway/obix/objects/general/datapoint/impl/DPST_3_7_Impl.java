@@ -32,64 +32,41 @@
 
 package at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.datapoint.impl;
 
-import java.util.logging.Logger;
-
-import obix.Bool;
 import obix.Contract;
-import obix.Int;
 import obix.Obj;
-import obix.Real;
-import obix.Uri;
+import obix.Op;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.datapoint.DPST_3_7;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.datapoint.DPT_3;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.datapoint.Datapoint;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.language.Multilingual;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.parameter.ParameterDimming;
 
-public class DPST_3_7_Impl extends DatapointImpl implements DPST_3_7
+public class DPST_3_7_Impl extends DPT_3_Impl implements DPST_3_7
 {
-	private static final Logger log = Logger.getLogger(DPST_3_7_Impl.class.getName());
-	protected Int value = new Int();
+	private Op increase;
+	private Op decrease;
 
-	public DPST_3_7_Impl()
+	public DPST_3_7_Impl(String name, String displayName, String display)
 	{
-		value.setName(DPST_3_7.VALUE_NAME);
-		value.setHref(new Uri(DPST_3_7.VALUE_HREF));
-		value.setUnit(new Uri("obix:units/dimming"));
-		value.setWritable(true);
-		value.setMin(0);
-		value.setMax(100);
+		super(name, displayName, display, new Contract(new String[] { DPST_3_7.CONTRACT, DPT_3.CONTRACT, Datapoint.CONTRACT, Multilingual.CONTRACT }));
 
-		this.setIs(new Contract(DPST_3_7.CONTRACT));
-		this.add(value);
+		// Operation increase
+		this.increase = new Op();
+		this.increase.setName("increase");
+		this.increase.setIn(new Contract(ParameterDimming.HREF));
+		this.add(increase);
 
-		this.function.set("Brighter / Darker");
-		this.unit.set("dimming control");
-	}
-
-	@Override
-	public Int value()
-	{
-		return value;
+		// Operation decrease
+		this.decrease = new Op();
+		this.decrease.setName("decrease");
+		this.decrease.setIn(new Contract(ParameterDimming.HREF));
+		this.add(decrease);
 	}
 
 	@Override
 	public void writeObject(Obj input)
 	{
-		if (input instanceof DPST_3_7)
-		{
-			DPST_3_7 in = (DPST_3_7) input;
-			log.info("Writing on data point.");
-			this.value.set(in.value().get());
-		}
-		else if (input instanceof Bool)
-		{
-			this.value.set(((Bool) input).get());
-		}
-		else if (input instanceof Real)
-		{
-			this.value.set(((Real) input).get());
-		}
-		else if (input instanceof Int)
-		{
-			this.value.set(((Int) input).get());
-		}
+		// TODO
 	}
 
 }

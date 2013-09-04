@@ -29,24 +29,11 @@
  * This file is part of the IoTSyS project.
  ******************************************************************************/
 
-
 package at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.datapoint;
 
-import obix.IObj;
-import obix.Str;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.language.Multilingual;
 
-public interface Datapoint extends IObj {
-	public static final String FUNCTION_NAME="function";
-	public static final String FUNCTION_HREF="function";
-	
-	public static final String FUNCTION_CONTRACT = "<str name='"+ FUNCTION_NAME +"' href='"+ FUNCTION_HREF +"' val=''/>";
-	public Str function();
-
-	public static final String UNIT_NAME ="unit";
-	public static final String UNIT_HREF ="unit";
-	
-	public static final String UNIT_CONTRACT = "<str name='"+ UNIT_NAME +"' href='"+ UNIT_HREF +"' val=''/>";
-	public Str unit();
-	
-	public static final String CONTRACT="knx:Datapoint";
+public interface Datapoint extends Multilingual
+{
+	public static final String CONTRACT = "knx:Datapoint";
 }

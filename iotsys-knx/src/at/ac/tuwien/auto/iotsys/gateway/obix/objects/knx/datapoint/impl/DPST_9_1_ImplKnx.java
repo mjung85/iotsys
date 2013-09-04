@@ -21,9 +21,9 @@ public class DPST_9_1_ImplKnx extends DPST_9_1_Impl
 										// configuration
 
 	// if more group addresses are needed just add more constructor parameters.
-	public DPST_9_1_ImplKnx(KNXConnector connector, GroupAddress groupAddress)
+	public DPST_9_1_ImplKnx(KNXConnector connector, GroupAddress groupAddress, String name, String displayName, String display)
 	{
-		super();
+		super(name, displayName, display);
 
 		this.groupAddress = groupAddress;
 		this.connector = connector;

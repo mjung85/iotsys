@@ -34,31 +34,22 @@ package at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.datapoint.impl;
 
 import obix.Contract;
 import obix.Obj;
-import obix.Real;
 import obix.Uri;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.datapoint.DPST_9_1;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.datapoint.DPT_9;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.datapoint.Datapoint;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.language.Multilingual;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.unit.UnitCelsius;
 
-public class DPST_9_1_Impl extends DatapointImpl implements DPST_9_1
+public class DPST_9_1_Impl extends DPT_9_Impl implements DPST_9_1
 {
-	protected Real value = new Real();
-
-	public DPST_9_1_Impl()
+	public DPST_9_1_Impl(String name, String displayName, String display)
 	{
-		value.setName(DPST_9_1.VALUE_NAME);
-		value.setHref(new Uri(DPST_9_1.VALUE_HREF));
-		value.setUnit(new Uri("obix:units/celsius"));
+		super(name, displayName, display, new Contract(new String[] { DPST_9_1.CONTRACT, DPT_9.CONTRACT, Datapoint.CONTRACT, Multilingual.CONTRACT }));
 
-		this.setIs(new Contract(DPST_9_1.CONTRACT));
-		this.add(value);
-
-		this.function.set("°C-value (EIS5)");
-		this.unit.set("temperature (°C)");
-	}
-
-	@Override
-	public Real value()
-	{
-		return value;
+		this.value.setUnit(new Uri(UnitCelsius.HREF));
+		this.value.setMin(-273);
+		this.value.setMax(670760);
 	}
 
 	public void writeObject(Obj input)
