@@ -30,55 +30,33 @@
  * This file is part of the IoTSyS project.
  ******************************************************************************/
 
-package at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.language.impl;
-
-import java.util.ArrayList;
+package at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.datapoint.impl;
 
 import obix.Contract;
-import obix.List;
 import obix.Obj;
 import obix.Uri;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.datapoint.DPST_5_1;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.datapoint.DPT_5_A;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.datapoint.Datapoint;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.language.Multilingual;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.language.Translation;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.unit.UnitPercent;
 
-public abstract class MultilingualImpl extends Obj implements Multilingual
+public class DPST_5_1_Impl extends DPT_5_A_Impl implements DPST_5_1
 {
-	private List list = null;
-	protected ArrayList<Translation> translations;
-	private int translationCount = 0;
-
-	public void addTranslation(TranslationImpl translation)
+	public DPST_5_1_Impl(String name, String displayName, String display, boolean writable)
 	{
-		if (translations == null)
-		{
-			this.list = new List("translations", new Contract(Translation.CONTRACT));
-			this.list.setHref(new Uri("translations"));
-			this.list.setHidden(true);
-			this.add(this.list);
-			this.add(this.list.getReference(false));
+		super(name, displayName, display, new Contract(new String[] { DPST_5_1.CONTRACT, DPT_5_A.CONTRACT, Datapoint.CONTRACT, Multilingual.CONTRACT }));
 
-			this.translations = new ArrayList<Translation>();
-		}
+		this.value.setWritable(writable);
 		
-		translation.setHref(new Uri(String.valueOf(++translationCount)));
-		
-		this.list.add(translation);
-		this.translations.add(translation);
+		this.value.setUnit(new Uri(UnitPercent.HREF));
+		this.value.setMin(0);
+		this.value.setMax(100);
 	}
 
-	@Override
-	public String getTranslation(String language, String attribute)
+	public void writeObject(Obj input)
 	{
-		if (translations != null)
-		{
-			for (Translation t : this.translations)
-			{
-				if (t.getLanguage().equals(language) && t.getAttribute().equals(attribute))
-				{
-					return t.getValue();
-				}
-			}
-		}
-		return null;
+		// TODO
 	}
+
 }

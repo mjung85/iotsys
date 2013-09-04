@@ -30,55 +30,31 @@
  * This file is part of the IoTSyS project.
  ******************************************************************************/
 
-package at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.language.impl;
-
-import java.util.ArrayList;
+package at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.datapoint.impl;
 
 import obix.Contract;
-import obix.List;
 import obix.Obj;
 import obix.Uri;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.datapoint.DPST_9_8;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.datapoint.DPT_9;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.datapoint.Datapoint;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.language.Multilingual;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.language.Translation;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.unit.UnitPpm;
 
-public abstract class MultilingualImpl extends Obj implements Multilingual
+public class DPST_9_8_Impl extends DPT_9_Impl implements DPST_9_8
 {
-	private List list = null;
-	protected ArrayList<Translation> translations;
-	private int translationCount = 0;
-
-	public void addTranslation(TranslationImpl translation)
+	public DPST_9_8_Impl(String name, String displayName, String display)
 	{
-		if (translations == null)
-		{
-			this.list = new List("translations", new Contract(Translation.CONTRACT));
-			this.list.setHref(new Uri("translations"));
-			this.list.setHidden(true);
-			this.add(this.list);
-			this.add(this.list.getReference(false));
+		super(name, displayName, display, new Contract(new String[] { DPST_9_8.CONTRACT, DPT_9.CONTRACT, Datapoint.CONTRACT, Multilingual.CONTRACT }));
 
-			this.translations = new ArrayList<Translation>();
-		}
-		
-		translation.setHref(new Uri(String.valueOf(++translationCount)));
-		
-		this.list.add(translation);
-		this.translations.add(translation);
+		this.value.setUnit(new Uri(UnitPpm.HREF));
+		this.value.setMin(0);
+		this.value.setMax(670760);
 	}
 
-	@Override
-	public String getTranslation(String language, String attribute)
+	public void writeObject(Obj input)
 	{
-		if (translations != null)
-		{
-			for (Translation t : this.translations)
-			{
-				if (t.getLanguage().equals(language) && t.getAttribute().equals(attribute))
-				{
-					return t.getValue();
-				}
-			}
-		}
-		return null;
+		// not writable
 	}
+
 }

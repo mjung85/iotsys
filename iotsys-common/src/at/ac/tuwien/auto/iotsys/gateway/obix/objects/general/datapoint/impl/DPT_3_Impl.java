@@ -30,55 +30,15 @@
  * This file is part of the IoTSyS project.
  ******************************************************************************/
 
-package at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.language.impl;
-
-import java.util.ArrayList;
+package at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.datapoint.impl;
 
 import obix.Contract;
-import obix.List;
-import obix.Obj;
-import obix.Uri;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.language.Multilingual;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.language.Translation;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.datapoint.DPT_3;
 
-public abstract class MultilingualImpl extends Obj implements Multilingual
+public abstract class DPT_3_Impl extends DatapointImpl implements DPT_3
 {
-	private List list = null;
-	protected ArrayList<Translation> translations;
-	private int translationCount = 0;
-
-	public void addTranslation(TranslationImpl translation)
+	public DPT_3_Impl(String name, String displayName, String display, Contract is)
 	{
-		if (translations == null)
-		{
-			this.list = new List("translations", new Contract(Translation.CONTRACT));
-			this.list.setHref(new Uri("translations"));
-			this.list.setHidden(true);
-			this.add(this.list);
-			this.add(this.list.getReference(false));
-
-			this.translations = new ArrayList<Translation>();
-		}
-		
-		translation.setHref(new Uri(String.valueOf(++translationCount)));
-		
-		this.list.add(translation);
-		this.translations.add(translation);
-	}
-
-	@Override
-	public String getTranslation(String language, String attribute)
-	{
-		if (translations != null)
-		{
-			for (Translation t : this.translations)
-			{
-				if (t.getLanguage().equals(language) && t.getAttribute().equals(attribute))
-				{
-					return t.getValue();
-				}
-			}
-		}
-		return null;
+		super(name, displayName, display, is);
 	}
 }

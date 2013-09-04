@@ -37,34 +37,32 @@ import java.util.logging.Logger;
 import obix.Bool;
 import obix.Contract;
 import obix.Int;
+import obix.Enum;
 import obix.Obj;
 import obix.Real;
 import obix.Uri;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.datapoint.DPST_1_1;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.datapoint.DPT_1;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.datapoint.Datapoint;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.encoding.EncodingOnOff;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.language.Multilingual;
 
-public class DPST_1_1_Impl extends DatapointImpl implements DPST_1_1
+public class DPST_1_1_Impl extends DPT_1_Impl implements DPST_1_1
 {
 	private static final Logger log = Logger.getLogger(DPST_1_1_Impl.class.getName());
 
-	protected Bool value = new Bool();
+	private Enum encoding = new Enum();
 
-	public DPST_1_1_Impl()
+	public DPST_1_1_Impl(String name, String displayName, String display, boolean writable)
 	{
-		value.setName(DPST_1_1.VALUE_NAME);
-		value.setHref(new Uri(DPST_1_1.VALUE_HREF));
-		value.setWritable(true);
+		super(name, displayName, display, new Contract(new String[] { DPST_1_1.CONTRACT, DPT_1.CONTRACT, Datapoint.CONTRACT, Multilingual.CONTRACT }));
+		
+		this.value.setWritable(writable);
 
-		this.setIs(new Contract(DPST_1_1.CONTRACT));
-		this.add(value);
-
-		this.function.set("On / Off");
-		this.unit.set("on/off");
-	}
-
-	@Override
-	public Bool value()
-	{
-		return value;
+		this.encoding.setName("encoding");
+		this.encoding.setHref(new Uri("encoding"));
+		this.encoding.setRange(new Uri(EncodingOnOff.HREF));
+		this.add(encoding);
 	}
 
 	@Override

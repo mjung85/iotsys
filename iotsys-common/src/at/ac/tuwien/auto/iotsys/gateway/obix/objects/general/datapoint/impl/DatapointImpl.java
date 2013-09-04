@@ -33,40 +33,28 @@
 package at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.datapoint.impl;
 
 import obix.Contract;
-import obix.Obj;
 import obix.Str;
 import obix.Uri;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.datapoint.Datapoint;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.language.impl.MultilingualImpl;
+import at.ac.tuwien.auto.iotsys.gateway.util.UriEncoder;
 
-public class DatapointImpl extends Obj implements Datapoint
+public abstract class DatapointImpl extends MultilingualImpl implements Datapoint
 {
 	protected Str function = new Str();
 	protected Str unit = new Str();
 
-	public DatapointImpl()
+	public DatapointImpl(String name, String displayName, String display, Contract is)
 	{
-		this.setIs(new Contract(Datapoint.CONTRACT));
-
-		this.function.setName(Datapoint.FUNCTION_NAME);
-		this.function.setHref(new Uri(Datapoint.FUNCTION_HREF));
-
-		this.add(function);
-
-		this.unit.setName(Datapoint.UNIT_NAME);
-		this.unit.setHref(new Uri(Datapoint.UNIT_HREF));
-
-		this.add(unit);
-	}
-
-	@Override
-	public Str function()
-	{
-		return function;
-	}
-
-	@Override
-	public Str unit()
-	{
-		return unit;
+		this.setName(name);
+		this.setDisplay(display);
+		this.setDisplayName(displayName);
+		
+		if (displayName != null)
+			this.setHref(new Uri(UriEncoder.getEscapedUri(displayName)));
+		else
+			this.setHref(new Uri(UriEncoder.getEscapedUri(name)));
+		
+		this.setIs(is);
 	}
 }

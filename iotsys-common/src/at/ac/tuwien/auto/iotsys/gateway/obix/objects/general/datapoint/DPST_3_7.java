@@ -31,16 +31,8 @@
 
 package at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.datapoint;
 
-import obix.Int;
-
-public interface DPST_3_7 extends Datapoint {
-	public static final String VALUE_NAME = "value";
-	public static final String VALUE_HREF = "value";
-	
-	public static final String VALUE_CONTRACT = "<int name='"+ VALUE_NAME +"' href='"+ VALUE_HREF +"' val=''/>";	
-	public Int value();
-	
-	public static final String CONTRACT="knx:DPST_3_7";
-	
+public interface DPST_3_7 extends DPT_3
+{
+	public static final String CONTRACT = "knx:DPST_3_7";
 
 }

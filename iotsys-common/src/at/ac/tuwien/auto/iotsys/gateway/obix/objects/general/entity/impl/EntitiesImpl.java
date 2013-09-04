@@ -57,7 +57,7 @@ public class EntitiesImpl extends List implements Entities
 		this.entities = new ArrayList<Entity>();
 	}
 
-	public void addEntity(Entity entity)
+	public void addEntity(EntityImpl entity)
 	{
 		if (entity instanceof Obj)
 		{
