@@ -33,13 +33,28 @@
 package at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.view.impl;
 
 import obix.Contract;
+import obix.List;
 import obix.Uri;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.view.Group;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.view.ViewFunctional;
 
 public class ViewFunctionalImpl extends ViewImpl implements ViewFunctional
 {
 	public ViewFunctionalImpl()
 	{
-		super(ViewFunctional.NAME, new Uri(ViewFunctional.HREF), new Contract(ViewFunctional.CONTRACT));
+		super("functional", new Uri(ViewFunctional.HREF), new Contract(ViewFunctional.CONTRACT));
+	}
+	
+	@Override
+	public void initElements(List elements)
+	{
+		elements.setName("groups");
+		elements.setHref(new Uri("groups"));
+		elements.setOf(new Contract(Group.CONTRACT));
+	}
+
+	public void addGroup(GroupImpl group)
+	{
+		this.addElement(group);
 	}
 }

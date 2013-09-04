@@ -35,6 +35,6 @@ import obix.IObj;
 
 public interface Domain extends IObj
 {
-	public static final String CONTRACT = "knx:domain";
-	public static final String CONTRACT_INSTANCE = "knx:instanceDomain";
+	public static final String CONTRACT = "knx:Domain";
+	public static final String CONTRACT_INSTANCE = "knx:InstanceDomain";
 }

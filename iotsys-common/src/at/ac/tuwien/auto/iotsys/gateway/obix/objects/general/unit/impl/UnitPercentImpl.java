@@ -32,10 +32,12 @@
 package at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.unit.impl;
 
 import obix.Uri;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.contracts.impl.DimensionImpl;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.contracts.impl.UnitImpl;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.enumeration.EnumLanguage;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.enumeration.EnumTranslation;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.multilingual.Multilingual;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.multilingual.impl.TranslationImpl;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.language.Multilingual;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.language.impl.TranslationImpl;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.unit.UnitPercent;
 
 public class UnitPercentImpl extends UnitImpl implements UnitPercent, Multilingual
@@ -45,6 +47,6 @@ public class UnitPercentImpl extends UnitImpl implements UnitPercent, Multilingu
 		super("percent", "percentage (0..100%)", new Uri(UnitPercent.HREF), "%", 1, 0, new DimensionImpl(0, 0, 0, 0, 0, 0, 0));
 
 		// Translations
-		this.addTranslation(new TranslationImpl(EnumLanguage.Enum.de_DE, EnumTranslation.Enum.display, "Prozent (0..100%)"));
+		this.addTranslation(new TranslationImpl(EnumLanguage.KEY_DE_DE, EnumTranslation.KEY_DISPLAY, "Prozent (0..100%)"));
 	}
 }

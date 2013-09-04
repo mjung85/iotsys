@@ -29,87 +29,82 @@
  * This file is part of the IoTSyS project.
  ******************************************************************************/
 
-package at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.unit.impl;
+package at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.contracts.impl;
+
+import java.util.ArrayList;
 
 import obix.Contract;
-import obix.Int;
+import obix.List;
 import obix.Obj;
-import obix.contracts.Dimension;
+import obix.Uri;
+import obix.contracts.Range;
 
-public class DimensionImpl extends Obj implements Dimension
+public abstract class RangeImpl extends List implements Range
 {
-	private Int kg, m, sec, K, A, mol, cd;
-
-	public DimensionImpl(int kg, int m, int sec, int K, int A, int mol, int cd)
+	protected class EnumElement extends Obj
 	{
-		this.setName("dimension");
-		this.setIs(new Contract("obix:Dimension"));
-		
-		if (kg != 0)
-			this.add(this.kg = new Int("kg",kg));
+		private String key;
 
-		if (m != 0)
-			this.add(this.m = new Int("m",m));
+		public EnumElement(String key, String displayName)
+		{
+			this.key = key;
 
-		if (sec != 0)
-			this.add(this.sec = new Int("sec",sec));
+			this.setName(key);
+			this.setDisplayName(displayName);
+		}
 
-		if (K != 0)
-			this.add(this.K = new Int("K",K));
-
-		if (A != 0)
-			this.add(this.A = new Int("A",A));
-
-		if (mol != 0)
-			this.add(this.mol = new Int("mol",mol));
-
-		if (cd != 0)
-			this.add(this.cd = new Int("cd",cd));
+		public String getKey()
+		{
+			return key;
+		}
 	}
 
-	@Override
-	public Int kg()
+	private ArrayList<EnumElement> elements;
+
+	public RangeImpl(Uri href)
 	{
-		return kg;
+		this.setHref(href);
+		this.setIs(new Contract(Range.CONTRACT));
+		this.setHidden(true);
+
+		this.elements = new ArrayList<EnumElement>();
+
+		this.initValues();
+
+		for (EnumElement e : elements)
+		{
+			this.add(e);
+		}
 	}
 
-	@Override
-	public Int m()
+	protected abstract void initValues();
+
+	protected ArrayList<EnumElement> getElements()
 	{
-		return m;
+		return elements;
 	}
 
-	@Override
-	public Int sec()
+	public String getKey(String name)
 	{
-		return sec;
+		for (EnumElement e : elements)
+		{
+			if (e.getName().toLowerCase().equals(name.toLowerCase()))
+			{
+				return e.getKey();
+			}
+		}
+		return null;
 	}
 
-	@Override
-	public Int K()
+	public String getName(String key)
 	{
-
-		return K;
-	}
-
-	@Override
-	public Int A()
-	{
-
-		return A;
-	}
-
-	@Override
-	public Int mol()
-	{
-
-		return mol;
-	}
-
-	@Override
-	public Int cd()
-	{
-
-		return cd;
+		for (EnumElement e : elements)
+		{
+			if (e.getKey().toLowerCase().equals(key.toLowerCase()))
+			{
+				return e.getName();
+			}
+		}
+		return null;
 	}
 }

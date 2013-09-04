@@ -35,5 +35,5 @@ import obix.contracts.Unit;
 
 public interface UnitPercent extends Unit
 {
-	public static final String HREF = "percent";
+	public static final String HREF = "/units/percent";
 }

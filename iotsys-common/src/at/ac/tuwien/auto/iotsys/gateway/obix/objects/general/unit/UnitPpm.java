@@ -35,5 +35,5 @@ import obix.contracts.Unit;
 
 public interface UnitPpm extends Unit
 {
-	public static final String HREF = "ppm";
+	public static final String HREF = "/units/ppm";
 }

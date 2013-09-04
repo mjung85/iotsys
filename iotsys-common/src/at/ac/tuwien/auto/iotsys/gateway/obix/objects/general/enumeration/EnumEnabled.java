@@ -29,73 +29,15 @@
  * This file is part of the IoTSyS project.
  ******************************************************************************/
 
-package at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.unit.impl;
+package at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.enumeration;
 
-import obix.Contract;
-import obix.Real;
-import obix.Str;
-import obix.Uri;
-import obix.contracts.Dimension;
-import obix.contracts.Unit;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.multilingual.Multilingual;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.multilingual.impl.MultilingualImpl;
+import obix.contracts.Range;
 
-public abstract class UnitImpl extends MultilingualImpl implements Unit, Multilingual
+public interface EnumEnabled extends Range
 {
-	private Str symbol;
-	private DimensionImpl dimension;
-	private Real scale;
-	private Real offset;
+	public static final String HREF = "/enums/enumEnabled";
 
-	public UnitImpl(String name, String display, Uri href, String symbol, double scale, double offset, DimensionImpl dimension)
-	{
-		this.setName(name);
-		this.setDisplay(display);
-		this.setIs(new Contract(new String[] { Multilingual.CONTRACT, "obix:Unit" }));
-		this.setHref(href);
-		this.setHidden(true);
+	public static final String KEY_ENABLED = "enabled";
+	public static final String KEY_DISABLED = "disabled";
 
-		this.symbol = new Str("symbol", symbol);
-		this.add(this.symbol);
-
-		if (scale != 0)
-		{
-			this.scale = new Real("scale", scale);
-			this.add(this.scale);
-		}
-		
-		if (offset != 0)
-		{
-			this.offset = new Real("offset", offset);
-			this.add(this.offset);
-		}
-
-		this.dimension = dimension;
-		this.add(this.dimension);
-
-	}
-
-	@Override
-	public Str symbol()
-	{
-		return symbol;
-	}
-
-	@Override
-	public Dimension dimension()
-	{
-		return dimension;
-	}
-
-	@Override
-	public Real scale()
-	{
-		return scale;
-	}
-
-	@Override
-	public Real offset()
-	{
-		return offset;
-	}
 }

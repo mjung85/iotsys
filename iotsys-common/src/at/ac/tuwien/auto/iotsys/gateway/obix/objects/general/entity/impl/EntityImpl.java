@@ -34,7 +34,7 @@ package at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.entity.impl;
 
 import obix.Contract;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.entity.Entity;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.multilingual.impl.MultilingualImpl;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.language.impl.MultilingualImpl;
 
 public class EntityImpl extends MultilingualImpl implements Entity
 {
@@ -43,7 +43,7 @@ public class EntityImpl extends MultilingualImpl implements Entity
 		this.setName(name);
 		this.setDisplay(display);
 		this.setDisplayName(displayName);
-		this.setIs(new Contract("knx:entity"));
+		this.setIs(new Contract("knx:Entity"));
 		this.setHidden(true);
 	}
 }

@@ -1,6 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013
- * Institute of Computer Aided Automation, Automation Systems Group, TU Wien.
+ * Copyright (c) 2013, Automation Systems Group, TU Wien.
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -30,66 +29,87 @@
  * This file is part of the IoTSyS project.
  ******************************************************************************/
 
-package at.ac.tuwien.auto.iotsys.gateway.obix.objects.knx.datapoint.impl;
+package at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.contracts.impl;
 
-import java.util.logging.Logger;
-
-import obix.Bool;
 import obix.Contract;
 import obix.Int;
 import obix.Obj;
-import obix.Real;
-import obix.Uri;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.datapoint.DPST_3_7;
+import obix.contracts.Dimension;
 
-public class DPST_3_7_Impl extends DataPointImpl implements DPST_3_7
+public class DimensionImpl extends Obj implements Dimension
 {
-	private static final Logger log = Logger.getLogger(DPST_3_7_Impl.class.getName());
-	protected Int value = new Int();
+	private Int kg, m, sec, K, A, mol, cd;
 
-	public DPST_3_7_Impl()
+	public DimensionImpl(int kg, int m, int sec, int K, int A, int mol, int cd)
 	{
-		value.setName(DPST_3_7.VALUE_NAME);
-		value.setHref(new Uri(DPST_3_7.VALUE_HREF));
-		value.setUnit(new Uri("obix:units/dimming"));
-		value.setWritable(true);
-		value.setMin(0);
-		value.setMax(100);
+		this.setName("dimension");
+		this.setIs(new Contract(Dimension.CONTRACT));
+		
+		if (kg != 0)
+			this.add(this.kg = new Int("kg",kg));
 
-		this.setIs(new Contract(DPST_3_7.CONTRACT));
-		this.add(value);
+		if (m != 0)
+			this.add(this.m = new Int("m",m));
 
-		this.function.set("Brighter / Darker");
-		this.unit.set("dimming control");
+		if (sec != 0)
+			this.add(this.sec = new Int("sec",sec));
+
+		if (K != 0)
+			this.add(this.K = new Int("K",K));
+
+		if (A != 0)
+			this.add(this.A = new Int("A",A));
+
+		if (mol != 0)
+			this.add(this.mol = new Int("mol",mol));
+
+		if (cd != 0)
+			this.add(this.cd = new Int("cd",cd));
 	}
 
 	@Override
-	public Int value()
+	public Int kg()
 	{
-		return value;
+		return kg;
 	}
 
 	@Override
-	public void writeObject(Obj input)
+	public Int m()
 	{
-		if (input instanceof DPST_3_7)
-		{
-			DPST_3_7 in = (DPST_3_7) input;
-			log.info("Writing on data point.");
-			this.value.set(in.value().get());
-		}
-		else if (input instanceof Bool)
-		{
-			this.value.set(((Bool) input).get());
-		}
-		else if (input instanceof Real)
-		{
-			this.value.set(((Real) input).get());
-		}
-		else if (input instanceof Int)
-		{
-			this.value.set(((Int) input).get());
-		}
+		return m;
 	}
 
+	@Override
+	public Int sec()
+	{
+		return sec;
+	}
+
+	@Override
+	public Int K()
+	{
+
+		return K;
+	}
+
+	@Override
+	public Int A()
+	{
+
+		return A;
+	}
+
+	@Override
+	public Int mol()
+	{
+
+		return mol;
+	}
+
+	@Override
+	public Int cd()
+	{
+
+		return cd;
+	}
 }

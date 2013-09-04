@@ -31,7 +31,7 @@
 
 package at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.entity;
 
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.multilingual.Multilingual;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.language.Multilingual;
 
 public interface Entity extends Multilingual
 {

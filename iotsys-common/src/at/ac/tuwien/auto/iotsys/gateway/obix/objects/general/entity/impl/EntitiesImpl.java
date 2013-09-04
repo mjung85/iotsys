@@ -49,7 +49,8 @@ public class EntitiesImpl extends List implements Entities
 	public EntitiesImpl()
 	{
 		this.setName("entities");
-		this.setIs(new Contract("knx:entities"));
+		this.setIs(new Contract(Entities.CONTRACT));
+		this.setOf(new Contract(Entity.CONTRACT));
 		this.setHref(new Uri("entities"));
 		this.setHidden(true);
 

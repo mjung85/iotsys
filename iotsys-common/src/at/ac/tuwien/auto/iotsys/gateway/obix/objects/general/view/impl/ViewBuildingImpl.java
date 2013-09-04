@@ -34,32 +34,27 @@ package at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.view.impl;
 
 import obix.Contract;
 import obix.List;
-import obix.Obj;
 import obix.Uri;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.view.Part;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.view.ViewBuilding;
 
 public class ViewBuildingImpl extends ViewImpl implements ViewBuilding
 {
-	private List parts = null;
-
 	public ViewBuildingImpl()
 	{
-		super(ViewBuilding.NAME, new Uri(ViewBuilding.HREF), new Contract(ViewBuilding.CONTRACT));
+		super("building", new Uri(ViewBuilding.HREF), new Contract(ViewBuilding.CONTRACT));
 	}
 
-	public void addPart(Part part)
+	@Override
+	public void initElements(List elements)
 	{
-		if (part instanceof Obj)
-		{
-			if (parts == null)
-			{
-				this.parts = new List("parts", new Contract(Part.CONTRACT));
-				this.parts.setHref(new Uri("parts"));
-				this.add(this.parts);
-			}
-			this.parts.add((Obj) part);
-		}
+		elements.setName("parts");
+		elements.setHref(new Uri("parts"));
+		elements.setOf(new Contract(Part.CONTRACT));
 	}
 
+	public void addPart(PartImpl part)
+	{
+		this.addElement(part);
+	}
 }

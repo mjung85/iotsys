@@ -29,13 +29,22 @@
  * This file is part of the IoTSyS project.
  ******************************************************************************/
 
-package at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.multilingual;
+package at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.enumeration.impl;
 
-import obix.IObj;
+import obix.Uri;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.contracts.impl.RangeImpl;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.enumeration.EnumTranslation;
 
-public interface Multilingual extends IObj
+public class EnumTranslationImpl extends RangeImpl implements EnumTranslation
 {
-	public static final String CONTRACT = "knx:multilingual";
-	
-	public String getTranslation(String language, String attribute);
+	public EnumTranslationImpl()
+	{
+		super(new Uri(EnumTranslation.HREF));
+	}
+
+	protected void initValues()
+	{
+		getElements().add(new EnumElement(EnumTranslation.KEY_DISPLAY, "Display"));
+		getElements().add(new EnumElement(EnumTranslation.KEY_DISPLAYNAME, "DisplayName"));
+	}
 }

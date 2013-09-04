@@ -36,54 +36,19 @@ import obix.contracts.Range;
 public interface EnumLanguage extends Range
 {
 	public static final String HREF = "/enums/enumLanguage";
-	
-	public static final String en_EN = "en-EN";
-	
-	public static enum Enum
-	{
-		en_EN("en-EN", "English"),
-		de_DE("de-DE", "German"),
-		it_IT("it-IT", "Italian"),
-		es_ES("es-ES", "Spanish"),
-		en_US("en-US", "English (United States)"),
-		fr_FR("fr-FR", "French"),
-		id_ID("id-ID", "Indonesian"),
-		nb_NO("nb-NO", "Norwegian"),
-		sv_SE("sv-SE", "Swedish"),
-		da_DK("da-DK", "Danish"),
-		nl_NL("nl-NL", "Dutch"),
-		el_GR("el-GR", "Greek"),
-		ru_RU("ru-RU", "Russian");
-		
-		private String key;
-		private String name;
-		
-		private Enum(String key, String name)
-		{
-			this.key = key;
-			this.name = name;
-		}
-		
-		public String getName()
-		{
-			return name;
-		}
-		
-		public String getKey()
-		{
-			return key;
-		}
-		
-		public Enum getLanguage(String key)
-		{
-			for(Enum l : Enum.values())
-			{
-				if (l.key.toLowerCase().equals(key.toLowerCase()))
-				{
-					return l;
-				}
-			}
-			return null;
-		}
-	}
+
+	public static final String KEY_EN_EN = "en-EN";
+	public static final String KEY_DE_DE = "de-DE";
+	public static final String KEY_IT_IT = "it-IT";
+	public static final String KEY_ES_ES = "es-ES";
+	public static final String KEY_EN_US = "en-US";
+	public static final String KEY_FR_FR = "fr-FR";
+	public static final String KEY_ID_ID = "id-ID";
+	public static final String KEY_NB_NO = "nb-NO";
+	public static final String KEY_SV_SE = "sv-SE";
+	public static final String KEY_DA_DK = "da-DK";
+	public static final String KEY_NL_NL = "nl-NL";
+	public static final String KEY_EL_GR = "el-GR";
+	public static final String KEY_RU_RU = "ru-RU";
+
 }

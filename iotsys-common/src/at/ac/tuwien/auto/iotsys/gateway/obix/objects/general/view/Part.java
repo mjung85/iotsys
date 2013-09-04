@@ -35,6 +35,6 @@ import obix.IObj;
 
 public interface Part extends IObj
 {
-	public static final String CONTRACT = "knx:part";
-	public static final String CONTRACT_INSTANCE = "knx:instanceBuilding";
+	public static final String CONTRACT = "knx:Part";
+	public static final String CONTRACT_INSTANCE = "knx:InstancePart";
 }

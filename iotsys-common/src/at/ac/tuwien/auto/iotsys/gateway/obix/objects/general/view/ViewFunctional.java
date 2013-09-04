@@ -35,7 +35,6 @@ import obix.IObj;
 
 public interface ViewFunctional extends IObj
 {
-	public static final String NAME = "functional";
-	public static final String CONTRACT = "knx:viewFunctional";
+	public static final String CONTRACT = "knx:ViewFunctional";
 	public static final String HREF = "views/functional";
 }

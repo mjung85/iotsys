@@ -35,5 +35,5 @@ import obix.contracts.Unit;
 
 public interface UnitCelsius extends Unit
 {
-	public static final String HREF = "celsius";
+	public static final String HREF = "/units/celsius";
 }

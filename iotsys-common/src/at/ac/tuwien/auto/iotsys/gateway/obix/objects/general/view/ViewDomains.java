@@ -35,9 +35,6 @@ import obix.IObj;
 
 public interface ViewDomains extends IObj
 {
-	public static final String NAME = "domains";
-	public static final String CONTRACT = "knx:viewDomains";
+	public static final String CONTRACT = "knx:ViewDomains";
 	public static final String HREF = "views/domains";
-
-	public void addDomain(Domain domain);
 }

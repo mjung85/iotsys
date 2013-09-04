@@ -35,7 +35,6 @@ import obix.IObj;
 
 public interface ViewTopology extends IObj
 {
-	public static final String NAME = "topology";
-	public static final String CONTRACT = "knx:viewTopology";
+	public static final String CONTRACT = "knx:ViewTopology";
 	public static final String HREF = "views/topology";
 }
