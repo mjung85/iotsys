@@ -733,6 +733,16 @@
 				<groupCommEnabled>true</groupCommEnabled>
 			</device>
 			<device>
+				<type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.SunblindActuatorImpl
+				</type>
+				<address>null, 5/3/7, 5/3/8</address>
+				<href>sunblindMiddleB</href>
+				<ipv6>2001:629:2500:570::12b</ipv6>
+				<historyEnabled>false</historyEnabled>
+				<historyCount>200</historyCount>
+				<groupCommEnabled>true</groupCommEnabled>
+			</device>
+			<device>
 				<type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.FanSpeedActuatorImpl
 				</type>
 				<address>null, 5/3/6</address>

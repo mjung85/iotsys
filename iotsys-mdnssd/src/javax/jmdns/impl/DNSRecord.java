@@ -404,7 +404,7 @@ public abstract class DNSRecord extends DNSEntry {
         public ServiceEvent getServiceEvent(JmDNSImpl dns) {
             ServiceInfo info = this.getServiceInfo(false);
             ((ServiceInfoImpl) info).setDns(dns);
-            return new ServiceEventImpl(dns, info.getType(), info.getName(), info);
+            return new ServiceEventImpl(dns, info.getTypeWithSubtype(), info.getName(), info);
         }
 
         /*
@@ -875,7 +875,7 @@ public abstract class DNSRecord extends DNSEntry {
             // domainName = this.getServer().substring(index + 1);
             // }
             // return new ServiceEventImpl(dns, domainName, serviceName, info);
-            return new ServiceEventImpl(dns, info.getType(), info.getName(), info);
+            return new ServiceEventImpl(dns, info.getTypeWithSubtype(), info.getName(), info);
 
         }
 

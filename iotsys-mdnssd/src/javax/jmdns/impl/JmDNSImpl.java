@@ -75,7 +75,8 @@ public class JmDNSImpl extends JmDNS implements DNSStatefulObject, DNSTaskStarte
     private final List<DNSListener>                                  _listeners;
 
     /**
-     * Holds instances of ServiceListener's. Keys are Strings holding a fully qualified service type. Values are LinkedList's of ServiceListener's.
+     * Holds instances of ServiceListener's. Keys are Strings holding a fully qualified service type. 
+     * Values are LinkedList's of ServiceListener's.
      */
     private final ConcurrentMap<String, List<ServiceListenerStatus>> _serviceListeners;
 
@@ -1253,69 +1254,100 @@ public class JmDNSImpl extends JmDNS implements DNSStatefulObject, DNSTaskStarte
                 listener.updateRecord(this.getCache(), now, rec);
             }
         }
-        if (DNSRecordType.TYPE_PTR.equals(rec.getRecordType()))
-        // if (DNSRecordType.TYPE_PTR.equals(rec.getRecordType()) || DNSRecordType.TYPE_SRV.equals(rec.getRecordType()))
-        {
-            ServiceEvent event = rec.getServiceEvent(this);
-            if ((event.getInfo() == null) || !event.getInfo().hasData()) {
-                // We do not care about the subtype because the info is only used if complete and the subtype will then be included.
-                ServiceInfo info = this.getServiceInfoFromCache(event.getType(), event.getName(), "", false);
-                if (info.hasData()) {
-                    event = new ServiceEventImpl(this, event.getType(), event.getName(), info);
-                }
-            }
-
-            List<ServiceListenerStatus> list = _serviceListeners.get(event.getType().toLowerCase());
-            final List<ServiceListenerStatus> serviceListenerList;
-            if (list != null) {
-                synchronized (list) {
-                    serviceListenerList = new ArrayList<ServiceListenerStatus>(list);
-                }
-            } else {
-                serviceListenerList = Collections.emptyList();
-            }
-            
-            logger.finest(this.getName() + ".updating record for event: " + event + " list " + serviceListenerList + " operation: " + operation);
-            if (!serviceListenerList.isEmpty()) {
-                final ServiceEvent localEvent = event;
-
-                switch (operation) {
-                    case Add:
-                        for (final ServiceListenerStatus listener : serviceListenerList) {
-                            if (listener.isSynchronous()) {
-                                listener.serviceAdded(localEvent);
-                            } else {
-                                _executor.submit(new Runnable() {
-                                    /** {@inheritDoc} */
-                                    @Override
-                                    public void run() {
-                                        listener.serviceAdded(localEvent);
-                                    }
-                                });
-                            }
-                        }
-                        break;
-                    case Remove:
-                        for (final ServiceListenerStatus listener : serviceListenerList) {
-                            if (listener.isSynchronous()) {
-                                listener.serviceRemoved(localEvent);
-                            } else {
-                                _executor.submit(new Runnable() {
-                                    /** {@inheritDoc} */
-                                    @Override
-                                    public void run() {
-                                        listener.serviceRemoved(localEvent);
-                                    }
-                                });
-                            }
-                        }
-                        break;
-                    default:
-                        break;
-                }
+        
+        ServiceEvent event = rec.getServiceEvent(this);// Warning! Alias - type = name, sometimes name gets the value of afanspeed._fanspeedactuator._sub, not afanspeed due to PTR record does not HAS sub type while its alias include sub type portion
+        if ((event.getInfo() == null) || !event.getInfo().hasData() || (event.getInfo().getPort() == 0)) {
+            // We do not care about the subtype because the info is only used if complete and the subtype will then be included.
+            ServiceInfo info = this.getServiceInfoFromCache(event.getType(), event.getName(),event.getInfo().getSubtype(), false);
+            if (info.hasData() || info.getPort() != 0) {
+                event = new ServiceEventImpl(this, event.getType(), event.getName(), info);
             }
         }
-    }
+
+        /// Here should retrieve listener for both sub-typed and inferred typed service
+        /// For example, if use register to typed service, if the service's sub types are found, the listener should also be called
+        List<ServiceListenerStatus> list = _serviceListeners.get(event.getInfo().getType().toLowerCase());
+        List<ServiceListenerStatus> subtypedList = _serviceListeners.get(event.getInfo().getTypeWithSubtype().toLowerCase());
+                
+        final List<ServiceListenerStatus> serviceListenerList;
+        if (list != null) {
+            synchronized (list) {
+                serviceListenerList = new ArrayList<ServiceListenerStatus>(list);
+            }
+            if (subtypedList != null)
+            	synchronized (subtypedList) {
+            		serviceListenerList.addAll(subtypedList);
+				}
+        } else if (subtypedList != null) {
+        	synchronized (subtypedList) {
+                serviceListenerList = new ArrayList<ServiceListenerStatus>(subtypedList);
+            }
+        } else {
+            serviceListenerList = Collections.emptyList();
+        }
+        
+        if (serviceListenerList.isEmpty()) 
+        	return;
+        
+		final ServiceEvent localEvent = event;
+
+		if (DNSRecordType.TYPE_PTR.equals(rec.getRecordType())) {
+			logger.finest(this.getName() + ".updating record for event: " + event + " list " + serviceListenerList
+					+ " operation: " + operation);
+
+			switch (operation) {
+			case Add:
+				for (final ServiceListenerStatus listener : serviceListenerList) {
+					if (listener.isSynchronous()) {
+						listener.serviceAdded(localEvent);
+					} else {
+						_executor.submit(new Runnable() {
+							/** {@inheritDoc} */
+							@Override
+							public void run() {
+								listener.serviceAdded(localEvent);
+							}
+						});
+					}
+				}
+				break;
+			case Remove:
+				for (final ServiceListenerStatus listener : serviceListenerList) {
+					if (listener.isSynchronous()) {
+						listener.serviceRemoved(localEvent);
+					} else {
+						_executor.submit(new Runnable() {
+							/** {@inheritDoc} */
+							@Override
+							public void run() {
+								listener.serviceRemoved(localEvent);
+							}
+						});
+					}
+				}
+				break;
+			default:
+				break;
+
+			}
+		}
+        
+        if (localEvent.getInfo() != null && localEvent.getInfo().hasData()) {
+        	for (final ServiceListenerStatus listener : serviceListenerList) {
+        		if (listener.isSynchronous()) {
+        			listener.serviceResolved(localEvent);
+        		} else {
+        			_executor.submit(new Runnable() {
+        				/** {@inheritDoc} */
+        				@Override
+        				public void run() {
+        					listener.serviceResolved(localEvent);
+        				}
+        			});
+        		}
+        	}
+    	}        
+	}
 
     void handleRecord(DNSRecord record, long now) {
         DNSRecord newRecord = record;
@@ -2141,8 +2173,8 @@ public class JmDNSImpl extends JmDNS implements DNSStatefulObject, DNSTaskStarte
     static String toUnqualifiedName(String type, String qualifiedName) {
         String loType = type.toLowerCase();
         String loQualifiedName = qualifiedName.toLowerCase();
-        if (loType.contains("_sub"))
-        	loType = loType.substring(loType.indexOf("_sub") + 5);
+        //if (loType.contains("_sub"))
+        //	loType = loType.substring(loType.indexOf("_sub") + 5);
         	
         if (loQualifiedName.endsWith(loType) && !(loQualifiedName.equals(loType))) {
             return qualifiedName.substring(0, qualifiedName.length() - loType.length() - 1);

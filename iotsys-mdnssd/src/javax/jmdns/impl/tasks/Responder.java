@@ -16,6 +16,7 @@ import javax.jmdns.impl.DNSQuestion;
 import javax.jmdns.impl.DNSRecord;
 import javax.jmdns.impl.JmDNSImpl;
 import javax.jmdns.impl.constants.DNSConstants;
+import javax.jmdns.impl.constants.DNSRecordType;
 
 /**
  * The Responder sends a single answer for the specified service infos and for the host name.
@@ -92,7 +93,6 @@ public class Responder extends DNSTask {
         // We use these sets to prevent duplicate records
         Set<DNSQuestion> questions = new HashSet<DNSQuestion>();
         Set<DNSRecord> answers = new HashSet<DNSRecord>();
-        Set<DNSRecord> additionalAnswers = new HashSet<DNSRecord>();
 
         if (this.getDns().isAnnounced()) {
             try {
@@ -109,7 +109,6 @@ public class Responder extends DNSTask {
                         questions.add(question);
                     }
                     question.addAnswers(this.getDns(), answers);
-                    //question.addAdditionalAnswers(this.getDns(), additionalAnswers);
                 }
 
                 // remove known answers, if the ttl is at least half of the correct value. (See Draft Cheshire chapter 7.1.).
@@ -137,14 +136,12 @@ public class Responder extends DNSTask {
                     }
                     for (DNSRecord answer : answers) {
                         if (answer != null) {
-                            out = this.addAnswer(out, _in, answer);
+                        	if (answer.getRecordType().equals(DNSRecordType.TYPE_PTR))
+                        		out = this.addAnswer(out, _in, answer);
+                        	else 
+                        		out = this.addAdditionalAnswer(out, _in, answer);
 
                         }
-                    }
-                    for (DNSRecord additionalAnswer : additionalAnswers) {
-                    	if (additionalAnswer != null){
-                    		out = this.addAdditionalAnswer(out, _in, additionalAnswer);
-                    	}
                     }
                     if (!out.isEmpty()) this.getDns().send(out);
                 }

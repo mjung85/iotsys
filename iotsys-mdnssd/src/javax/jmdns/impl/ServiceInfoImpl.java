@@ -433,14 +433,14 @@ public class ServiceInfoImpl extends ServiceInfo implements DNSListener, DNSStat
      */
     @Override
     public String getQualifiedName() {
-        String domain = this.getDomain();
-        String protocol = this.getProtocol();
-        String application = this.getApplication();
-        String instance = this.getName();
-        // String subtype = this.getSubtype();
+        String domain = this.getDomain();//local
+        String protocol = this.getProtocol();//coap
+        String application = this.getApplication();//obix
+        String instance = this.getName();//aFanSpeed
+        String subtype = this.getSubtype();//sunblindActuator
         // return (instance.length() > 0 ? instance + "." : "") + (application.length() > 0 ? "_" + application + "." : "") + (protocol.length() > 0 ? "_" + protocol + (subtype.length() > 0 ? ",_" + subtype.toLowerCase() + "." : ".") : "") + domain
         // + ".";
-        return (instance.length() > 0 ? instance + "." : "") + (application.length() > 0 ? "_" + application + "." : "") + (protocol.length() > 0 ? "_" + protocol + "." : "") + domain + ".";
+        return (instance.length() > 0 ? instance + "." : "") + (subtype.length() > 0 ? "_" + subtype + "._sub." : "") + (application.length() > 0 ? "_" + application + "." : "") + (protocol.length() > 0 ? "_" + protocol + "." : "") + domain + ".";
     }
 
     /**
