@@ -52,31 +52,35 @@ public class Uri extends Val
 	// Uri
 	// //////////////////////////////////////////////////////////////
 
-	/**
-	 * Normalize this uri against the specified absolute base uri to produce an
-	 * absolute uri.
-	 */
-	public Uri normalize(Uri base)
-	{
-		if (base == null)
-		{
-			return null;
-		}
+	 /**
+	   * Normalize this uri against the specified absolute
+	   * base uri to produce an absolute uri.
+	   */
+	  public Uri normalize(Uri base)
+	  {      
+		  if(base == null){
+			  return null;
+		  }
 
-		try
-		{
-			if (val.startsWith("obix:"))
-				return this;
-
-			base.checkAbsolute();
-			URL url = new URL(new URL(base.val), val);
-			return new Uri(url.toString());
-		}
-		catch (MalformedURLException e)
-		{
-			throw new RuntimeException("Cannot normalize " + base.val + " + " + val);
-		}
-	}
+	    try
+	    {                         
+	      if (val.startsWith("obix:"))
+	        return this;
+	       
+	      base.checkAbsolute();  
+	      URL url = url = new URL(new URL(base.val), val);  
+	      if(!base.val.endsWith("/")){
+	    	 url = new URL(new URL(base.val + "/"), val);
+	      }
+	    
+	      
+	      return new Uri(url.toString());
+	    }
+	    catch(MalformedURLException e)
+	    {                      
+	      throw new RuntimeException("Cannot normalize " + base.val + " + " + val);
+	    }
+	  }    
 
 	/**
 	 * Return if this uri is a well formed absolute uri including
