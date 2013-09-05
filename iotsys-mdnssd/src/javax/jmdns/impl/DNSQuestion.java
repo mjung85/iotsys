@@ -86,7 +86,6 @@ public class DNSQuestion extends DNSEntry {
      * Pointer question.
      */
     private static class Pointer extends DNSQuestion {
-    	Set<DNSRecord> addtnAnswers = new HashSet<DNSRecord>();
         Pointer(String name, DNSRecordType type, DNSRecordClass recordClass, boolean unique) {
             super(name, type, recordClass, unique);
         }
@@ -95,7 +94,7 @@ public class DNSQuestion extends DNSEntry {
         public void addAnswers(JmDNSImpl jmDNSImpl, Set<DNSRecord> answers) {
             // find matching services
             for (ServiceInfo serviceInfo : jmDNSImpl.getServices().values()) {
-                this.addAnswersForServiceInfo(jmDNSImpl, answers, addtnAnswers, (ServiceInfoImpl) serviceInfo);
+                this.addAnswersForServiceInfo(jmDNSImpl, answers, (ServiceInfoImpl) serviceInfo);
             }
             if (this.isServicesDiscoveryMetaQuery()) {
                 for (String serviceType : jmDNSImpl.getServiceTypes().keySet()) {
@@ -127,7 +126,6 @@ public class DNSQuestion extends DNSEntry {
      * Service question.
      */
     private static class Service extends DNSQuestion {
-    	Set<DNSRecord> addtnAnswers = new HashSet<DNSRecord>();
         Service(String name, DNSRecordType type, DNSRecordClass recordClass, boolean unique) {
             super(name, type, recordClass, unique);
         }
@@ -147,7 +145,7 @@ public class DNSQuestion extends DNSEntry {
                 return;
             }
 
-            this.addAnswersForServiceInfo(jmDNSImpl, answers, addtnAnswers, (ServiceInfoImpl) jmDNSImpl.getServices().get(loname));
+            this.addAnswersForServiceInfo(jmDNSImpl, answers, (ServiceInfoImpl) jmDNSImpl.getServices().get(loname));
         }
 
         @Override
@@ -162,14 +160,13 @@ public class DNSQuestion extends DNSEntry {
      * Text question.
      */
     private static class Text extends DNSQuestion {
-    	Set<DNSRecord> addtnAnswers = new HashSet<DNSRecord>();
         Text(String name, DNSRecordType type, DNSRecordClass recordClass, boolean unique) {
             super(name, type, recordClass, unique);
         }
 
         @Override
         public void addAnswers(JmDNSImpl jmDNSImpl, Set<DNSRecord> answers) {
-            this.addAnswersForServiceInfo(jmDNSImpl, answers, addtnAnswers, (ServiceInfoImpl) jmDNSImpl.getServices().get(this.getName().toLowerCase()));
+            this.addAnswersForServiceInfo(jmDNSImpl, answers, (ServiceInfoImpl) jmDNSImpl.getServices().get(this.getName().toLowerCase()));
         }
 
         @Override
@@ -220,7 +217,7 @@ public class DNSQuestion extends DNSEntry {
 				ServiceInfoImpl sii = (ServiceInfoImpl) servicesMap.get(loname);
 
 				if (sii != null)
-					this.addAnswersForServiceInfo(jmDNSImpl, answers, addtnAnswers, (ServiceInfoImpl) jmDNSImpl
+					this.addAnswersForServiceInfo(jmDNSImpl, answers, (ServiceInfoImpl) jmDNSImpl
 							.getServices().get(loname));
 			}
 		}
@@ -296,7 +293,7 @@ public class DNSQuestion extends DNSEntry {
     	
     }
 
-    protected void addAnswersForServiceInfo(JmDNSImpl jmDNSImpl, Set<DNSRecord> answers, Set<DNSRecord> addtnAnswers, ServiceInfoImpl info) {
+    protected void addAnswersForServiceInfo(JmDNSImpl jmDNSImpl, Set<DNSRecord> answers, ServiceInfoImpl info) {
     	if ((info != null) && info.isAnnounced() && this.getName().contains("obix")) {
     		logger.fine("this.getName(): " + this.getName() + " info.getQualifiedName(): " + info.getQualifiedName() + " info.getType(): " + info.getTypeWithSubtype());
             if (this.getName().equalsIgnoreCase(info.getQualifiedName()) || this.getName().equalsIgnoreCase(info.getType())  || this.getName().equalsIgnoreCase(info.getTypeWithSubtype())) {
