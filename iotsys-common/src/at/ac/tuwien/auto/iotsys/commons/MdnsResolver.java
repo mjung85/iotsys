@@ -37,8 +37,9 @@ package at.ac.tuwien.auto.iotsys.commons;
  * 
  */
 
-public interface MDnsResolver {
+public interface MdnsResolver {
 	public void addToRecordDict(String name, String addr);
+	public void registerDevice(String name, Class<?> deviceClass, String ipv6);
 	public String resolve(String name);
 	public int getNumberOfRecord();
 }
