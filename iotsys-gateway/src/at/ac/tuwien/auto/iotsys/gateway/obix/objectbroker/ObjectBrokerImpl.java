@@ -40,7 +40,6 @@ import java.util.logging.Logger;
 import obix.Contract;
 import obix.ContractRegistry;
 import obix.Err;
-import obix.List;
 import obix.Obj;
 import obix.Op;
 import obix.Ref;
@@ -53,8 +52,6 @@ import at.ac.tuwien.auto.iotsys.gateway.obix.objects.HistoryHelper;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.WatchImpl;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.WatchServiceImpl;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.general.impl.LobbyImpl;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.logic.BinaryOperation;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.logic.LogicBinaryOperation;
 import at.ac.tuwien.auto.iotsys.gateway.service.GroupCommHelper;
 
 public class ObjectBrokerImpl implements ObjectBroker {

@@ -4,10 +4,13 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URI;
+import java.util.logging.Logger;
 
 import obix.Obj;
 
-public class RelativeObixEncoder extends ObixEncoder { 
+public class RelativeObixEncoder extends ObixEncoder {
+	private static final Logger log = Logger.getLogger(RelativeObixEncoder.class.getName());
+	
 	private URI rootUri, baseUri;
 	private String globalPrefix = "//localhost/";
 	
@@ -27,17 +30,30 @@ public class RelativeObixEncoder extends ObixEncoder {
 	public RelativeObixEncoder(OutputStream out, URI rootUri, URI baseUri) throws IOException {
 		super(out);
 		
-		if (baseUri.getPath().isEmpty())
-			baseUri = URI.create("/");
-		
-		while (rootUri.getPath().endsWith("/"))
-			rootUri = URI.create(rootUri.getPath().substring(0, rootUri.getPath().length()-1));
-		
-		while (baseUri.getPath().endsWith("/"))
-			baseUri = URI.create(baseUri.getPath().substring(0, baseUri.getPath().length()-1));
-		
-		if (rootUri.getPath().isEmpty())
+		try {
+			rootUri = rootUri.normalize();
+			while (rootUri.getPath().endsWith("/"))
+				rootUri = URI.create(rootUri.getPath().substring(0, rootUri.getPath().length()-1));
+			
+			if (rootUri.getPath().isEmpty())
+				rootUri = URI.create("/");
+		} catch (IllegalArgumentException e) {
+			log.warning("Invalid rootUri: " + rootUri);
 			rootUri = URI.create("/");
+		}
+		
+		try {
+			baseUri = baseUri.normalize();
+			while (baseUri.getPath().endsWith("/"))
+				baseUri = URI.create(baseUri.getPath().substring(0, baseUri.getPath().length()-1));
+			
+			if (baseUri.getPath().isEmpty())
+				baseUri = URI.create("/");
+		} catch (IllegalArgumentException e) {
+			log.warning("Invalid baseUri: " + baseUri);
+			baseUri = URI.create("/");
+			
+		}
 		
 		this.rootUri = rootUri;
 		this.baseUri = baseUri;
@@ -70,11 +86,10 @@ public class RelativeObixEncoder extends ObixEncoder {
 		uri = URI.create(href);
 		uri = rootUri.relativize(uri);
 		
-		if (uri.getPath().isEmpty()) {
+		if (uri.getPath().isEmpty())
 			return "/";
-		} else {
-			return globalPrefix + uri.getPath();
-		}
+		
+		return globalPrefix + uri.getPath();
 	}
 
 	

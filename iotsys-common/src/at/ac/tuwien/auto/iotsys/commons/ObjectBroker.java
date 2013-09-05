@@ -1,6 +1,5 @@
 package at.ac.tuwien.auto.iotsys.commons;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import obix.Obj;
