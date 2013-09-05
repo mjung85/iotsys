@@ -68,7 +68,7 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader
 
 		KNXConnector knxConnector = new KNXConnector("192.168.161.59", 3671, "auto");
 
-		connect(knxConnector);
+//		connect(knxConnector);
 
 		initNetworks(knxConnector, objectBroker);
 

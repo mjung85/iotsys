@@ -351,119 +351,181 @@ public class Obj implements IObj, Subject, AlarmSource, Cloneable {
 	// //////////////////////////////////////////////////////////////
 
 	/** Return if this is an instance of Val */
-	public boolean isVal() {
+	@Override
+	public boolean isVal()
+	{
 		return this instanceof Val;
 	}
 
 	/** Return if this is an instance of Bool */
-	public boolean isBool() {
+	@Override
+	public boolean isBool()
+	{
 		return this instanceof Bool;
 	}
 
 	/** Return if this is an instance of Int */
-	public boolean isInt() {
+	@Override
+	public boolean isInt()
+	{
 		return this instanceof Int;
 	}
 
 	/** Return if this is an instance of Real */
-	public boolean isReal() {
+	@Override
+	public boolean isReal()
+	{
 		return this instanceof Real;
 	}
 
-	/** Return if this is an instance of Enum */
-	public boolean isEnum() {
-		return this instanceof Enum;
-	}
-
 	/** Return if this is an instance of Str */
-	public boolean isStr() {
+	@Override
+	public boolean isStr()
+	{
 		return this instanceof Str;
 	}
 
+	/** Return if this is an instance of Enum */
+	@Override
+	public boolean isEnum()
+	{
+		return this instanceof Enum;
+	}
+
+	/** Return if this is an instance of Uri */
+	@Override
+	public boolean isUri()
+	{
+		return this instanceof Uri;
+	}
+
 	/** Return if this is an instance of Abstime */
-	public boolean isAbstime() {
+	@Override
+	public boolean isAbstime()
+	{
 		return this instanceof Abstime;
 	}
 
 	/** Return if this is an instance of Reltime */
-	public boolean isReltime() {
+	@Override
+	public boolean isReltime()
+	{
 		return this instanceof Reltime;
 	}
 
-	/** Return if this is an instance of Uri */
-	public boolean isUri() {
-		return this instanceof Uri;
+	/** Return if this is an instance of Date */
+	@Override
+	public boolean isDate()
+	{
+		return this instanceof Date;
+	}
+
+	/** Return if this is an instance of Time */
+	@Override
+	public boolean isTime()
+	{
+		return this instanceof Time;
 	}
 
 	/** Return if this is an instance of List */
-	public boolean isList() {
+	@Override
+	public boolean isList()
+	{
 		return this instanceof List;
 	}
 
 	/** Return if this is an instance of Op */
-	public boolean isOp() {
+	@Override
+	public boolean isOp()
+	{
 		return this instanceof Op;
 	}
 
-	/** Return if this is an instance of Ref */
-	public boolean isRef() {
-		return this instanceof Ref;
-	}
-
 	/** Return if this is an instance of Feed */
-	public boolean isFeed() {
+	@Override
+	public boolean isFeed()
+	{
 		return this instanceof Feed;
 	}
 
-	/** Return if this is an instance of Err */
-	public boolean isErr() {
-		return this instanceof Err;
+	/** Return if this is an instance of Ref */
+	@Override
+	public boolean isRef()
+	{
+		return this instanceof Ref;
 	}
 
+	/** Return if this is an instance of Err */
+	@Override
+	public boolean isErr()
+	{
+		return this instanceof Err;
+	}
+	
 	/** Convenience for getting the value as if a Bool */
-	public boolean getBool() {
+	@Override
+	public boolean getBool()
+	{
 		return ((Bool) this).get();
 	}
 
-	/** Convenience for getting the value as if an Int */
-	public long getInt() {
-		return ((Int) this).get();
-	}
-
-	/** Convenience for getting the value as if a Real */
-	public double getReal() {
-		return ((Real) this).get();
-	}
-
-	/** Convenience for getting the value as if a Str */
-	public String getStr() {
-		return ((Str) this).get();
-	}
-
 	/** Convenience for setting the value as if a Bool */
-	public void setBool(boolean val) {
+	@Override
+	public void setBool(boolean val)
+	{
 		((Bool) this).set(val);
 	}
 
+	/** Convenience for getting the value as if an Int */
+	@Override
+	public long getInt()
+	{
+		return ((Int) this).get();
+	}
+
 	/** Convenience for setting the value as if an Int */
-	public void setInt(long val) {
+	@Override
+	public void setInt(long val)
+	{
 		((Int) this).set(val);
 	}
 
+	/** Convenience for getting the value as if a Real */
+	@Override
+	public double getReal()
+	{
+		return ((Real) this).get();
+	}
+
 	/** Convenience for setting the value as if a Real */
-	public void setReal(double val) {
+	@Override
+	public void setReal(double val)
+	{
 		((Real) this).set(val);
 	}
 
-	/** Convenience for setting the value as if a Str */
-	public void setStr(String val) {
-		((Str) this).set(val);
+	/** Convenience for getting the value as if a Str */
+	@Override
+	public String getStr()
+	{
+		return ((Str) this).get();
 	}
 
-	/** Convenience for setting the value to the value of another Obj */
-	public void set(Obj obj) {
-		return;
+	/** Convenience for setting the value as if a Str */
+	@Override
+	public void setStr(String val)
+	{
+		((Str) this).set(val);
 	}
+	
+	/** Convenience for setting the value to the value of another Obj */
+	@Override
+	public void set(IObj obj)
+	{
+		throw new RuntimeException("Not implemented yet.");
+	}
+
+
 
 	// //////////////////////////////////////////////////////////////
 	// Facets
@@ -1146,5 +1208,24 @@ public class Obj implements IObj, Subject, AlarmSource, Cloneable {
 	public void initialize() {
 
 	}
+	
+	/**
+	 * Get the display string for this obj. If the display facet is specified
+	 * return it, otherwise return type information.
+	 */
+	@Override
+	public String toDisplay()
+	{
+		if (display != null)
+			return display;
+		if (this instanceof Val)
+			return ((Val) this).encodeVal();
+		if (is != null && is.size() > 0)
+			return is.toString();
+		return "obix:" + getElement();
+	}
+	
+
+	
 
 }
