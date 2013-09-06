@@ -37,7 +37,7 @@ import obix.Obj;
 import obix.Uri;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.datapoint.DPST_9_1;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.datapoint.DPT_9;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.datapoint.DataPoint;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.datapoint.Datapoint;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.language.Multilingual;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.unit.UnitCelsius;
 
@@ -45,7 +45,7 @@ public class DPST_9_1_Impl extends DPT_9_Impl implements DPST_9_1
 {
 	public DPST_9_1_Impl(String name, String displayName, String display)
 	{
-		super(name, displayName, display, new Contract(new String[] { DPST_9_1.CONTRACT, DPT_9.CONTRACT, DataPoint.CONTRACT, Multilingual.CONTRACT }));
+		super(name, displayName, display, new Contract(new String[] { DPST_9_1.CONTRACT, DPT_9.CONTRACT, Datapoint.CONTRACT, Multilingual.CONTRACT }));
 
 		this.value.setUnit(new Uri(UnitCelsius.HREF));
 		this.value.setMin(-273);
