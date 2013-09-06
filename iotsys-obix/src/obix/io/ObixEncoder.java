@@ -44,10 +44,12 @@ public class ObixEncoder extends XWriter {
 	 * Dump an obj tree to stdout using an ObixEncoder.
 	 */
 	public static void dump(Obj obj) {
+		ObixEncoder encoder;
 		try {
-			ObixEncoder encoder = new ObixEncoder(System.out);
+			encoder = new ObixEncoder(System.out);
 			encoder.encodeDocument(obj);
 			encoder.flush();
+			encoder.close();
 		} catch (IOException e) {
 			throw new RuntimeException(e.toString());
 		}
@@ -62,6 +64,7 @@ public class ObixEncoder extends XWriter {
 			ObixEncoder encoder = new ObixEncoder(out);
 			encoder.encode(obj);
 			encoder.flush();
+			encoder.close();
 			return new String(out.toByteArray());
 		} catch (IOException e) {
 			throw new RuntimeException(e.toString());
@@ -267,6 +270,10 @@ public class ObixEncoder extends XWriter {
 		}
 		
 		return contextPath.encodeVal();
+	}
+	
+	protected final int getIndentation() {
+		return indent;
 	}
 
 	// //////////////////////////////////////////////////////////////

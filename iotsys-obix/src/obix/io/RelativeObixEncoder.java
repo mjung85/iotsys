@@ -65,7 +65,6 @@ public class RelativeObixEncoder extends ObixEncoder {
 		if (obj.getHref() == null || obj.getHref().get().isEmpty())
 			return null;
 		
-		
 		String fullPath = obj.getFullContextPath();
 		URI uri = URI.create(fullPath);
 		
@@ -73,11 +72,16 @@ public class RelativeObixEncoder extends ObixEncoder {
 		String href = baseUri.relativize(uri).getPath();
 		
 		// relative href can be returned
-		if (href.isEmpty())
-			return "/" + rootUri.relativize(uri).getPath();
+		if (href.isEmpty()) {
+			href = rootUri.relativize(uri).getPath();
+			if (getIndentation() == 0 && !href.endsWith("/")) href += "/";
+			return "/" + href;
+		}
 		
-		if (!href.startsWith("/"))
+		if (!href.startsWith("/")) {
+			if (getIndentation() == 0 && !href.endsWith("/")) href += "/";
 			return href;
+		}
 		
 		if (rootUri.getPath().equals("/")) {
 			return href;
