@@ -16,6 +16,7 @@ import javax.jmdns.impl.DNSQuestion;
 import javax.jmdns.impl.DNSRecord;
 import javax.jmdns.impl.JmDNSImpl;
 import javax.jmdns.impl.constants.DNSConstants;
+import javax.jmdns.impl.constants.DNSRecordType;
 
 /**
  * The Responder sends a single answer for the specified service infos and for the host name.
@@ -23,14 +24,7 @@ import javax.jmdns.impl.constants.DNSConstants;
 public class Responder extends DNSTask {
     static Logger             logger = Logger.getLogger(Responder.class.getName());
 
-    /**
-     *
-     */
     private final DNSIncoming _in;
-
-    /**
-     *
-     */
     private final boolean     _unicast;
 
     public Responder(JmDNSImpl jmDNSImpl, DNSIncoming in, int port) {
@@ -104,15 +98,16 @@ public class Responder extends DNSTask {
             try {
                 // Answer questions
                 for (DNSQuestion question : _in.getQuestions()) {
-                    if (logger.isLoggable(Level.FINER)) {
-                        logger.finer(this.getName() + "run() JmDNS responding to: " + question);
+                	if (!question.getName().contains("obix"))
+                		continue;
+                    if (logger.isLoggable(Level.FINEST)) {
+                        logger.finest(this.getName() + "run() JmDNS responding to: " + question);
                     }
                     // for unicast responses the question must be included
                     if (_unicast) {
                         // out.addQuestion(q);
                         questions.add(question);
                     }
-
                     question.addAnswers(this.getDns(), answers);
                 }
 
@@ -141,7 +136,10 @@ public class Responder extends DNSTask {
                     }
                     for (DNSRecord answer : answers) {
                         if (answer != null) {
-                            out = this.addAnswer(out, _in, answer);
+                        	if (answer.getRecordType().equals(DNSRecordType.TYPE_PTR))
+                        		out = this.addAnswer(out, _in, answer);
+                        	else 
+                        		out = this.addAdditionalAnswer(out, _in, answer);
 
                         }
                     }

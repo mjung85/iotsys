@@ -5,7 +5,7 @@ import java.util.logging.Logger;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 
-import at.ac.tuwien.auto.iotsys.commons.MDnsResolver;
+import at.ac.tuwien.auto.iotsys.commons.MdnsResolver;
 
 
 public class MdnssdActivator  implements BundleActivator {
@@ -18,7 +18,7 @@ public class MdnssdActivator  implements BundleActivator {
 	@Override
 	public void start(BundleContext context) throws Exception {
 		log.info("Starting Mdnssd module");
-		context.registerService(MDnsResolver.class.getName(), MDnsResolverImpl.getInstance(), null);
+		context.registerService(MdnsResolver.class.getName(), MdnsResolverImpl.getInstance(), null);
 		log.info("Register Mdnssd resolver");
 		
 		named = new Named();

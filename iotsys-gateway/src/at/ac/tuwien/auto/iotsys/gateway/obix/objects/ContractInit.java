@@ -42,7 +42,7 @@ import at.ac.tuwien.auto.iotsys.gateway.obix.objects.bacnet.BinaryValue;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.datapoint.DPST_1_1;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.datapoint.DPST_3_7;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.datapoint.DPST_9_1;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.datapoint.Datapoint;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.datapoint.DataPoint;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.AirDamperActuator;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.BoilerActuator;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.BrightnessActuator;
@@ -122,7 +122,7 @@ public class ContractInit
 	  
 	  
 	  // KNX 
-	  ContractRegistry.put(Datapoint.CONTRACT, Datapoint.class.getName());
+	  ContractRegistry.put(DataPoint.CONTRACT, DataPoint.class.getName());
 	  ContractRegistry.put(DPST_9_1.CONTRACT, DPST_9_1.class.getName());
 	  ContractRegistry.put(DPST_1_1.CONTRACT, DPST_1_1.class.getName());
 	  ContractRegistry.put(DPST_3_7.CONTRACT, DPST_3_7.class.getName());

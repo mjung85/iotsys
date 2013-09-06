@@ -42,7 +42,7 @@ public interface ObjectBroker{
 
 	public void shutdown();
 	
-	public MDnsResolver getMDnsResolver();
+	public MdnsResolver getMDnsResolver();
 
-	public void setMdnsResolver(MDnsResolver resolver);
+	public void setMdnsResolver(MdnsResolver resolver);
 }

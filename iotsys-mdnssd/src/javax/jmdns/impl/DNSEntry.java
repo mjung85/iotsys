@@ -49,7 +49,9 @@ public abstract class DNSEntry {
         String protocol = _qualifiedNameMap.get(Fields.Protocol);
         String application = _qualifiedNameMap.get(Fields.Application);
         String instance = _qualifiedNameMap.get(Fields.Instance).toLowerCase();
-        _type = (application.length() > 0 ? "_" + application + "." : "") + (protocol.length() > 0 ? "_" + protocol + "." : "") + domain + ".";
+		/// Changing from type to subtype to distinguish the key for both main and sub-typed services 
+        String subType = _qualifiedNameMap.get(Fields.Subtype).toLowerCase();
+        _type = (subType.length() > 0 ? "_" + subType + "._sub." : "") + (application.length() > 0 ? "_" + application + "." : "") + (protocol.length() > 0 ? "_" + protocol + "." : "") + domain + ".";
         _key = ((instance.length() > 0 ? instance + "." : "") + _type).toLowerCase();
     }
 
