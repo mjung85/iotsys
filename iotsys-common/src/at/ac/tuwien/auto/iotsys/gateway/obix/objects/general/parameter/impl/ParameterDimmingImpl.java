@@ -31,6 +31,7 @@
 
 package at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.parameter.impl;
 
+import obix.Contract;
 import obix.Int;
 import obix.Uri;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.parameter.ParameterDimming;
@@ -40,8 +41,10 @@ public class ParameterDimmingImpl extends Int implements ParameterDimming
 {
 	public ParameterDimmingImpl()
 	{
-		setHref(new Uri(ParameterDimming.HREF));
+		setHref(new Uri("/parameters/dimming"));
+		setIs(new Contract(ParameterDimming.CONTRACT));
 		setUnit(new Uri(UnitPercent.HREF));
+		setHidden(true);
 		setMin(0);
 		setMax(100);
 	}

@@ -36,8 +36,8 @@ import java.util.logging.Logger;
 
 import obix.Bool;
 import obix.Contract;
-import obix.Int;
 import obix.Enum;
+import obix.Int;
 import obix.Obj;
 import obix.Real;
 import obix.Uri;
@@ -86,6 +86,11 @@ public class DPST_1_1_Impl extends DPT_1_Impl implements DPST_1_1
 		{
 			this.value.set(((Int) input).get());
 		}
+	}
+	
+	public obix.Enum encoding()
+	{
+		return encoding;
 	}
 
 }

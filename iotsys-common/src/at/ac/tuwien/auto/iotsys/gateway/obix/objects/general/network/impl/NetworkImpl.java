@@ -96,31 +96,26 @@ public class NetworkImpl extends Obj implements Network
 		this.add(entities.getReference(false));
 	}
 
-	@Override
 	public ViewFunctionalImpl getFunctional()
 	{
 		return this.functional;
 	}
 
-	@Override
 	public ViewTopologyImpl getTopology()
 	{
 		return this.topology;
 	}
 
-	@Override
 	public ViewBuildingImpl getBuilding()
 	{
 		return this.building;
 	}
 
-	@Override
 	public ViewDomainsImpl getDomains()
 	{
 		return this.domains;
 	}
 
-	@Override
 	public EntitiesImpl getEntities()
 	{
 		return this.entities;

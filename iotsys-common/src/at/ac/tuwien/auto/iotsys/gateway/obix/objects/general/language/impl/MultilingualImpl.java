@@ -44,41 +44,45 @@ import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.language.Translatio
 public abstract class MultilingualImpl extends Obj implements Multilingual
 {
 	private List list = null;
-	protected ArrayList<Translation> translations;
+	protected ArrayList<TranslationImpl> translations;
 	private int translationCount = 0;
 
+	public MultilingualImpl()
+	{
+		setHref(new Uri(Multilingual.CONTRACT));
+	}
+	
 	public void addTranslation(TranslationImpl translation)
 	{
 		if (translations == null)
 		{
 			this.list = new List("translations", new Contract(Translation.CONTRACT));
 			this.list.setHref(new Uri("translations"));
-			//this.list.setHidden(true);
+			// this.list.setHidden(true);
 			this.add(this.list);
-			//this.add(this.list.getReference(false));
+			// this.add(this.list.getReference(false));
 
-			this.translations = new ArrayList<Translation>();
+			this.translations = new ArrayList<TranslationImpl>();
 		}
-		
+
 		translation.setHref(new Uri(String.valueOf(++translationCount)));
-		
+
 		this.list.add(translation);
 		this.translations.add(translation);
 	}
 
-//	@Override
-//	public String getTranslation(String language, String attribute)
-//	{
-//		if (translations != null)
-//		{
-//			for (Translation t : this.translations)
-//			{
-//				if (t.getLanguage().equals(language) && t.getAttribute().equals(attribute))
-//				{
-//					return t.getValue();
-//				}
-//			}
-//		}
-//		return null;
-//	}
+	public String getTranslation(String language, String attribute)
+	{
+		if (translations != null)
+		{
+			for (TranslationImpl t : this.translations)
+			{
+				if (t.getLanguage().equals(language) && t.getAttribute().equals(attribute))
+				{
+					return t.getValue();
+				}
+			}
+		}
+		return null;
+	}
 }
