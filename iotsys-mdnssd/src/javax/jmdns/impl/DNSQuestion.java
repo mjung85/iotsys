@@ -5,8 +5,9 @@
 package javax.jmdns.impl;
 
 import java.net.InetAddress;
+import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.jmdns.ServiceInfo;
@@ -180,6 +181,7 @@ public class DNSQuestion extends DNSEntry {
      * AllRecords question.
      */
     private static class AllRecords extends DNSQuestion {
+    	Set<DNSRecord> addtnAnswers = new HashSet<DNSRecord>();
         AllRecords(String name, DNSRecordType type, DNSRecordClass recordClass, boolean unique) {
             super(name, type, recordClass, unique);
         }
@@ -188,6 +190,11 @@ public class DNSQuestion extends DNSEntry {
         public boolean isSameType(DNSEntry entry) {
             // We match all non null entry
             return (entry != null);
+        }
+        
+        @Override
+        public void addAdditionalAnswers(JmDNSImpl jmDNSImpl, Set<DNSRecord> additionalAnswers){
+        	additionalAnswers.addAll(addtnAnswers);
         }
 
         @Override
@@ -204,9 +211,16 @@ public class DNSQuestion extends DNSEntry {
                 question.addAnswers(jmDNSImpl, answers);
                 return;
             }
+            logger.finest("--------------------Getting service infor for " + loname);
+			if (loname.contains("obix")) {
+				Map<String, ServiceInfo> servicesMap = jmDNSImpl.getServices();
+				ServiceInfoImpl sii = (ServiceInfoImpl) servicesMap.get(loname);
 
-            this.addAnswersForServiceInfo(jmDNSImpl, answers, (ServiceInfoImpl) jmDNSImpl.getServices().get(loname));
-        }
+				if (sii != null)
+					this.addAnswersForServiceInfo(jmDNSImpl, answers, (ServiceInfoImpl) jmDNSImpl
+							.getServices().get(loname));
+			}
+		}
 
         @Override
         public boolean iAmTheOnlyOne(JmDNSImpl jmDNSImpl) {
@@ -274,16 +288,19 @@ public class DNSQuestion extends DNSEntry {
     public void addAnswers(JmDNSImpl jmDNSImpl, Set<DNSRecord> answers) {
         // By default we do nothing
     }
+    
+    public void addAdditionalAnswers(JmDNSImpl jmDNSImpl, Set<DNSRecord> answers) {
+    	
+    }
 
     protected void addAnswersForServiceInfo(JmDNSImpl jmDNSImpl, Set<DNSRecord> answers, ServiceInfoImpl info) {
-        if ((info != null) && info.isAnnounced()) {
-            if (this.getName().equalsIgnoreCase(info.getQualifiedName()) || this.getName().equalsIgnoreCase(info.getType())) {
-                answers.addAll(jmDNSImpl.getLocalHost().answers(DNSRecordClass.UNIQUE, DNSConstants.DNS_TTL));
-                answers.addAll(info.answers(DNSRecordClass.UNIQUE, DNSConstants.DNS_TTL, jmDNSImpl.getLocalHost()));
+    	if ((info != null) && info.isAnnounced() && this.getName().contains("obix")) {
+    		logger.fine("this.getName(): " + this.getName() + " info.getQualifiedName(): " + info.getQualifiedName() + " info.getType(): " + info.getTypeWithSubtype());
+            if (this.getName().equalsIgnoreCase(info.getQualifiedName()) || this.getName().equalsIgnoreCase(info.getType())  || this.getName().equalsIgnoreCase(info.getTypeWithSubtype())) {
+            	answers.addAll(info.answers(DNSRecordClass.UNIQUE, DNSConstants.DNS_TTL, jmDNSImpl.getLocalHost())); 
+                //addtnAnswers.addAll(info.addtnAnswers(DNSRecordClass.UNIQUE, DNSConstants.DNS_TTL, jmDNSImpl.getLocalHost()));
             }
-            if (logger.isLoggable(Level.FINER)) {
-                logger.finer(jmDNSImpl.getName() + " DNSQuestion(" + this.getName() + ").addAnswersForServiceInfo(): info: " + info + "\n" + answers);
-            }
+            logger.fine(jmDNSImpl.getName() + " DNSQuestion(" + this.getName() + ").addAnswersForServiceInfo(): info: " + info + "\n" + answers);
         }
     }
 

@@ -41,7 +41,7 @@ import org.osgi.framework.ServiceListener;
 import org.osgi.framework.ServiceReference;
 
 import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
-import at.ac.tuwien.auto.iotsys.commons.MDnsResolver;
+import at.ac.tuwien.auto.iotsys.commons.MdnsResolver;
 import at.ac.tuwien.auto.iotsys.commons.interceptor.InterceptorBroker;
 import at.ac.tuwien.auto.iotsys.gateway.interceptor.InterceptorBrokerImpl;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objectbroker.ObjectBrokerImpl;
@@ -58,19 +58,18 @@ public class IoTSySGatewayActivator implements BundleActivator, ServiceListener{
 	
 	private DeviceLoaderListener deviceLoaderListener = new DeviceLoaderListener();
 	
-	private MDnsResolver resolver;
+	private MdnsResolver resolver;
 	
 	@Override
 	public void start(BundleContext bundleContext) throws Exception {
 		log.info("Starting IoTSySGateway.");
 		
 		ServiceReference serviceReference = bundleContext
-				.getServiceReference(MDnsResolver.class.getName());
+				.getServiceReference(MdnsResolver.class.getName());
 		if (serviceReference == null) {
 			log.severe("Could not find mDNS-SD Service!");
-
 		} else {
-				resolver = (MDnsResolver) bundleContext
+				resolver = (MdnsResolver) bundleContext
 						.getService(serviceReference);
 		}
 		
