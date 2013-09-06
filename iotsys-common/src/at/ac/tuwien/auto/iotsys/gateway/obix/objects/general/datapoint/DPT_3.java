@@ -31,7 +31,7 @@
 
 package at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.datapoint;
 
-public interface DPT_3 extends Datapoint
+public interface DPT_3 extends DataPoint
 {
 	public static final String CONTRACT = "knx:DPT-3";
 }

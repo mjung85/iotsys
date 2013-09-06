@@ -3,6 +3,8 @@
  */
 package javax.jmdns.impl;
 
+import java.net.InetAddress;
+import java.util.Arrays;
 import java.util.EventListener;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -119,10 +121,28 @@ public class ListenerStatus<T extends EventListener> {
             if (!info.equals(lastInfo)) return false;
             byte[] text = info.getTextBytes();
             byte[] lastText = lastInfo.getTextBytes();
-            if (text.length != lastText.length) return false;
-            for (int i = 0; i < text.length; i++) {
-                if (text[i] != lastText[i]) return false;
+            InetAddress[] addresses = info.getInetAddresses();
+            InetAddress[] lastAddresses = lastInfo.getInetAddresses();
+            boolean addressEqual = true;
+            for (InetAddress address : addresses) {
+            	if (!Arrays.asList(lastAddresses).contains(address)){
+            		addressEqual = false;
+            		break;
+            	}
             }
+            
+            if (addresses != null && !addressEqual){
+            	return false;
+            }
+            
+			if (text != null) {
+				if (text.length != lastText.length)
+					return false;
+				for (int i = 0; i < text.length; i++) {
+					if (text[i] != lastText[i])
+						return false;
+				}
+			}
             return true;
         }
 

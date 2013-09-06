@@ -75,7 +75,8 @@ public class JmDNSImpl extends JmDNS implements DNSStatefulObject, DNSTaskStarte
     private final List<DNSListener>                                  _listeners;
 
     /**
-     * Holds instances of ServiceListener's. Keys are Strings holding a fully qualified service type. Values are LinkedList's of ServiceListener's.
+     * Holds instances of ServiceListener's. Keys are Strings holding a fully qualified service type. 
+     * Values are LinkedList's of ServiceListener's.
      */
     private final ConcurrentMap<String, List<ServiceListenerStatus>> _serviceListeners;
 
@@ -749,7 +750,7 @@ public class JmDNSImpl extends JmDNS implements DNSStatefulObject, DNSTaskStarte
         ServiceInfoImpl info = new ServiceInfoImpl(type, name, subtype, 0, 0, 0, persistent, (byte[]) null);
         DNSEntry pointerEntry = this.getCache().getDNSEntry(new DNSRecord.Pointer(type, DNSRecordClass.CLASS_ANY, false, 0, info.getQualifiedName()));
         if (pointerEntry instanceof DNSRecord) {
-            ServiceInfoImpl cachedInfo = (ServiceInfoImpl) ((DNSRecord) pointerEntry).getServiceInfo(persistent);
+            ServiceInfoImpl cachedInfo = (ServiceInfoImpl) ((DNSRecord) pointerEntry).getServiceInfo(persistent);// basically create new serviceinfo based on the PTR record
             if (cachedInfo != null) {
                 // To get a complete info record we need to retrieve the service, address and the text bytes.
 
@@ -765,7 +766,11 @@ public class JmDNSImpl extends JmDNS implements DNSStatefulObject, DNSTaskStarte
                         server = cachedServiceEntryInfo.getServer();
                     }
                 }
-                DNSEntry addressEntry = this.getCache().getDNSEntry(server, DNSRecordType.TYPE_A, DNSRecordClass.CLASS_ANY);
+                
+                /// Differentiate between info.getQualifiedName() and server: in IoTSyS, 
+                /// all service is advertised via IoTSyS gateway --> gateway address should be replaced
+                /// by the individual service addresses
+                DNSEntry addressEntry = this.getCache().getDNSEntry(info.getQualifiedName(), DNSRecordType.TYPE_A, DNSRecordClass.CLASS_ANY);
                 if (addressEntry instanceof DNSRecord) {
                     ServiceInfo cachedAddressInfo = ((DNSRecord) addressEntry).getServiceInfo(persistent);
                     if (cachedAddressInfo != null) {
@@ -775,7 +780,7 @@ public class JmDNSImpl extends JmDNS implements DNSStatefulObject, DNSTaskStarte
                         cachedInfo._setText(cachedAddressInfo.getTextBytes());
                     }
                 }
-                addressEntry = this.getCache().getDNSEntry(server, DNSRecordType.TYPE_AAAA, DNSRecordClass.CLASS_ANY);
+                addressEntry = this.getCache().getDNSEntry(info.getQualifiedName(), DNSRecordType.TYPE_AAAA, DNSRecordClass.CLASS_ANY);
                 if (addressEntry instanceof DNSRecord) {
                     ServiceInfo cachedAddressInfo = ((DNSRecord) addressEntry).getServiceInfo(persistent);
                     if (cachedAddressInfo != null) {
@@ -792,7 +797,7 @@ public class JmDNSImpl extends JmDNS implements DNSStatefulObject, DNSTaskStarte
                         cachedInfo._setText(cachedTextInfo.getTextBytes());
                     }
                 }
-                if (cachedInfo.getTextBytes().length == 0) {
+                if (cachedInfo.getTextBytes() != null && cachedInfo.getTextBytes().length > 0) {
                     cachedInfo._setText(srvBytes);
                 }
                 if (cachedInfo.hasData()) {
@@ -993,22 +998,21 @@ public class JmDNSImpl extends JmDNS implements DNSStatefulObject, DNSTaskStarte
         // bind the service to this address
         info.recoverState();
         info.setServer(_localHost.getName());
-        info.addAddress(_localHost.getInet4Address());
-        info.addAddress(_localHost.getInet6Address());
+        //info.addAddress(_localHost.getInet4Address());
+        //info.addAddress(_localHost.getInet6Address());
 
         this.waitForAnnounced(DNSConstants.SERVICE_INFO_TIMEOUT);
 
         this.makeServiceNameUnique(info);
+        logger.info("PUTING INTO SERVICE REGISTRY: key:" + info.getKey() + " info: " + info.toString());
         while (_services.putIfAbsent(info.getKey(), info) != null) {
             this.makeServiceNameUnique(info);
         }
 
         this.startProber();
         info.waitForAnnounced(DNSConstants.SERVICE_INFO_TIMEOUT);
-
-        if (logger.isLoggable(Level.FINE)) {
-            logger.fine("registerService() JmDNS registered service as " + info);
-        }
+        
+        logger.info("registerService() JmDNS registered service as " + info);
     }
 
     /**
@@ -1250,79 +1254,109 @@ public class JmDNSImpl extends JmDNS implements DNSStatefulObject, DNSTaskStarte
                 listener.updateRecord(this.getCache(), now, rec);
             }
         }
-        if (DNSRecordType.TYPE_PTR.equals(rec.getRecordType()))
-        // if (DNSRecordType.TYPE_PTR.equals(rec.getRecordType()) || DNSRecordType.TYPE_SRV.equals(rec.getRecordType()))
-        {
-            ServiceEvent event = rec.getServiceEvent(this);
-            if ((event.getInfo() == null) || !event.getInfo().hasData()) {
-                // We do not care about the subtype because the info is only used if complete and the subtype will then be included.
-                ServiceInfo info = this.getServiceInfoFromCache(event.getType(), event.getName(), "", false);
-                if (info.hasData()) {
-                    event = new ServiceEventImpl(this, event.getType(), event.getName(), info);
-                }
-            }
-
-            List<ServiceListenerStatus> list = _serviceListeners.get(event.getType().toLowerCase());
-            final List<ServiceListenerStatus> serviceListenerList;
-            if (list != null) {
-                synchronized (list) {
-                    serviceListenerList = new ArrayList<ServiceListenerStatus>(list);
-                }
-            } else {
-                serviceListenerList = Collections.emptyList();
-            }
-            if (logger.isLoggable(Level.FINEST)) {
-                logger.finest(this.getName() + ".updating record for event: " + event + " list " + serviceListenerList + " operation: " + operation);
-            }
-            if (!serviceListenerList.isEmpty()) {
-                final ServiceEvent localEvent = event;
-
-                switch (operation) {
-                    case Add:
-                        for (final ServiceListenerStatus listener : serviceListenerList) {
-                            if (listener.isSynchronous()) {
-                                listener.serviceAdded(localEvent);
-                            } else {
-                                _executor.submit(new Runnable() {
-                                    /** {@inheritDoc} */
-                                    @Override
-                                    public void run() {
-                                        listener.serviceAdded(localEvent);
-                                    }
-                                });
-                            }
-                        }
-                        break;
-                    case Remove:
-                        for (final ServiceListenerStatus listener : serviceListenerList) {
-                            if (listener.isSynchronous()) {
-                                listener.serviceRemoved(localEvent);
-                            } else {
-                                _executor.submit(new Runnable() {
-                                    /** {@inheritDoc} */
-                                    @Override
-                                    public void run() {
-                                        listener.serviceRemoved(localEvent);
-                                    }
-                                });
-                            }
-                        }
-                        break;
-                    default:
-                        break;
-                }
+        
+        ServiceEvent event = rec.getServiceEvent(this);// Warning! Alias - type = name, sometimes name gets the value of afanspeed._fanspeedactuator._sub, not afanspeed due to PTR record does not HAS sub type while its alias include sub type portion
+        if ((event.getInfo() == null) || !event.getInfo().hasData() || (event.getInfo().getPort() == 0)) {
+            // We do not care about the subtype because the info is only used if complete and the subtype will then be included.
+            ServiceInfo info = this.getServiceInfoFromCache(event.getType(), event.getName(),event.getInfo().getSubtype(), false);
+            if (info.hasData() || info.getPort() != 0) {
+                event = new ServiceEventImpl(this, event.getType(), event.getName(), info);
             }
         }
-    }
+
+        /// Here should retrieve listener for both sub-typed and inferred typed service
+        /// For example, if use register to typed service, if the service's sub types are found, the listener should also be called
+        List<ServiceListenerStatus> list = _serviceListeners.get(event.getInfo().getType().toLowerCase());
+        List<ServiceListenerStatus> subtypedList = _serviceListeners.get(event.getInfo().getTypeWithSubtype().toLowerCase());
+                
+        final List<ServiceListenerStatus> serviceListenerList;
+        if (list != null) {
+            synchronized (list) {
+                serviceListenerList = new ArrayList<ServiceListenerStatus>(list);
+            }
+            if (subtypedList != null)
+            	synchronized (subtypedList) {
+            		serviceListenerList.addAll(subtypedList);
+				}
+        } else if (subtypedList != null) {
+        	synchronized (subtypedList) {
+                serviceListenerList = new ArrayList<ServiceListenerStatus>(subtypedList);
+            }
+        } else {
+            serviceListenerList = Collections.emptyList();
+        }
+        
+        if (serviceListenerList.isEmpty()) 
+        	return;
+        
+		final ServiceEvent localEvent = event;
+
+		if (DNSRecordType.TYPE_PTR.equals(rec.getRecordType())) {
+			logger.finest(this.getName() + ".updating record for event: " + event + " list " + serviceListenerList
+					+ " operation: " + operation);
+
+			switch (operation) {
+			case Add:
+				for (final ServiceListenerStatus listener : serviceListenerList) {
+					if (listener.isSynchronous()) {
+						listener.serviceAdded(localEvent);
+					} else {
+						_executor.submit(new Runnable() {
+							/** {@inheritDoc} */
+							@Override
+							public void run() {
+								listener.serviceAdded(localEvent);
+							}
+						});
+					}
+				}
+				break;
+			case Remove:
+				for (final ServiceListenerStatus listener : serviceListenerList) {
+					if (listener.isSynchronous()) {
+						listener.serviceRemoved(localEvent);
+					} else {
+						_executor.submit(new Runnable() {
+							/** {@inheritDoc} */
+							@Override
+							public void run() {
+								listener.serviceRemoved(localEvent);
+							}
+						});
+					}
+				}
+				break;
+			default:
+				break;
+
+			}
+		}
+        
+        if (localEvent.getInfo() != null && localEvent.getInfo().hasData()) {
+        	for (final ServiceListenerStatus listener : serviceListenerList) {
+        		if (listener.isSynchronous()) {
+        			listener.serviceResolved(localEvent);
+        		} else {
+        			_executor.submit(new Runnable() {
+        				/** {@inheritDoc} */
+        				@Override
+        				public void run() {
+        					listener.serviceResolved(localEvent);
+        				}
+        			});
+        		}
+        	}
+    	}        
+	}
 
     void handleRecord(DNSRecord record, long now) {
         DNSRecord newRecord = record;
 
+        if (!newRecord.getName().contains("obix"))
+        	return;
         Operation cacheOperation = Operation.Noop;
         final boolean expired = newRecord.isExpired(now);
-        if (logger.isLoggable(Level.FINE)) {
-            logger.fine(this.getName() + " handle response: " + newRecord);
-        }
+        logger.finest(this.getName() + " handle response: " + newRecord);
 
         // update the cache
         if (!newRecord.isServicesDiscoveryMetaQuery() && !newRecord.isDomainDiscoveryQuery()) {
@@ -1409,6 +1443,8 @@ public class JmDNSImpl extends JmDNS implements DNSStatefulObject, DNSTaskStarte
         boolean serviceConflictDetected = false;
 
         for (DNSRecord newRecord : msg.getAllAnswers()) {
+        	if (!newRecord.getName().contains("obix"))
+        		return;
             this.handleRecord(newRecord, now);
 
             if (DNSRecordType.TYPE_A.equals(newRecord.getRecordType()) || DNSRecordType.TYPE_AAAA.equals(newRecord.getRecordType())) {
@@ -2137,10 +2173,14 @@ public class JmDNSImpl extends JmDNS implements DNSStatefulObject, DNSTaskStarte
     static String toUnqualifiedName(String type, String qualifiedName) {
         String loType = type.toLowerCase();
         String loQualifiedName = qualifiedName.toLowerCase();
+        //if (loType.contains("_sub"))
+        //	loType = loType.substring(loType.indexOf("_sub") + 5);
+        	
         if (loQualifiedName.endsWith(loType) && !(loQualifiedName.equals(loType))) {
-            return qualifiedName.substring(0, qualifiedName.length() - type.length() - 1);
+            return qualifiedName.substring(0, qualifiedName.length() - loType.length() - 1);
         }
-        return qualifiedName;
+        
+      	return qualifiedName;
     }
 
     public Map<String, ServiceInfo> getServices() {

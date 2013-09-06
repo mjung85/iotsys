@@ -68,7 +68,7 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader
 
 		KNXConnector knxConnector = new KNXConnector("192.168.161.59", 3671, "auto");
 
-//		connect(knxConnector);
+		connect(knxConnector);
 
 		initNetworks(knxConnector, objectBroker);
 
@@ -79,20 +79,20 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader
 
 	private void connect(KNXConnector knxConnector)
 	{
-		try
-		{
-			knxConnector.connect();
-		}
-		catch (UnknownHostException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		catch (KNXException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+//		try
+//		{
+//			knxConnector.connect();
+//		}
+//		catch (UnknownHostException e)
+//		{
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		catch (KNXException e)
+//		{
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 	}
 
 	private void initNetworks(KNXConnector knxConnector, ObjectBroker objectBroker)

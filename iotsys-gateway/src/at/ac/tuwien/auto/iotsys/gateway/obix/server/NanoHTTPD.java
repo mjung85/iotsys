@@ -12,7 +12,6 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
 import java.net.Inet6Address;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -347,24 +346,7 @@ public class NanoHTTPD {
 	}
 	
 	private String getResourcePath(String uri, String ipv6Address) {
-		String resourcePath = uri;
-		
-		if (obixServer.containsIPv6(ipv6Address)) {
-			log.finest("IPv6 Adresse -> IoT6 Object");
-			resourcePath = obixServer.getIPv6LinkedHref(ipv6Address);
-			resourcePath += uri;
-		}
-		
-		// normalize resource path
-		while (resourcePath.startsWith(("/")))  resourcePath = resourcePath.substring(1);
-		
-		try {
-			resourcePath = URI.create("//localhost/" + URLEncoder.encode(resourcePath, "UTF-8")).normalize().getPath();
-		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return resourcePath;
+		return new CoAPHelper(obixServer).getResourcePath(uri, ipv6Address);
 	}
 
 	private boolean accepts(Properties header, String mimeType) {
@@ -406,13 +388,6 @@ public class NanoHTTPD {
 			baseUri = new URI(resourcePath.substring(0, resourcePath.lastIndexOf('/')+1));
 			obixResponse = new StringBuffer(RelativeObixEncoder.toString(responseObj, rootUri, baseUri));
 		}
-
-		// in case of a method call don't fix the HREF
-		/*
-		if (!method.equals("POST")) {
-				fixHref(requestUri, obixResponse);
-		}
-		*/
 		
 		return obixResponse;
 	}
@@ -468,30 +443,6 @@ public class NanoHTTPD {
 			}
 		}
 		return response;
-	}
-
-	private void fixHref(String href, StringBuffer obixResponse) {
-
-		int hrefIndex = obixResponse.indexOf("href");
-
-		// get index of first quota - " - this is the start of the href
-		int firstQuota = obixResponse.indexOf("\"", hrefIndex);
-
-		// get index of the second quota - " - this is the end of the href
-		int secondQuota = obixResponse.indexOf("\"", firstQuota + 1);
-
-		if (hrefIndex >= 0 && firstQuota > hrefIndex
-				&& secondQuota > firstQuota) {
-
-			// now delete everything from localhost to the position of the
-			// closing quota
-
-			obixResponse.delete(firstQuota + 1, secondQuota);
-
-			// put the IPv6 address there instead
-
-			obixResponse.insert(firstQuota + 1, href);
-		}
 	}
 
 	public static Byte[] box(byte[] byteArray) {

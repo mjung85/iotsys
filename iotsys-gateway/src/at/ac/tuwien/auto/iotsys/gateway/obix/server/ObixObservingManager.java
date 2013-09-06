@@ -9,16 +9,12 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 import obix.Obj;
-import obix.io.RelativeObixEncoder;
 import at.ac.tuwien.auto.iotsys.gateway.obix.observer.ExternalObserver;
 import at.ac.tuwien.auto.iotsys.gateway.obix.observer.ObjObserver;
-import at.ac.tuwien.auto.iotsys.gateway.util.ExiUtil;
 import ch.ethz.inf.vs.californium.coap.GETRequest;
 import ch.ethz.inf.vs.californium.coap.Message.messageType;
 import ch.ethz.inf.vs.californium.coap.Option;
 import ch.ethz.inf.vs.californium.coap.Request;
-import ch.ethz.inf.vs.californium.coap.registries.CodeRegistry;
-import ch.ethz.inf.vs.californium.coap.registries.MediaTypeRegistry;
 import ch.ethz.inf.vs.californium.coap.registries.OptionNumberRegistry;
 import ch.ethz.inf.vs.californium.endpoint.resources.LocalResource;
 import ch.ethz.inf.vs.californium.layers.TransactionLayer;
@@ -45,7 +41,9 @@ public class ObixObservingManager implements ExternalObserver{
 			request.setMID(-1);
 
 			this.clientID = request.getPeerAddress().toString();
-			this.resourcePath = request.getUriPath();
+			this.resourcePath = new CoAPHelper(obixServer).getResourcePath(request);
+			this.resourcePath = obixServer.getNormalizedPath(resourcePath);
+			
 			this.request = request;
 			this.lastMID = -1;
 			
@@ -117,73 +115,22 @@ public class ObixObservingManager implements ExternalObserver{
 			} else {
 				intervalByResource.put(resourcePath, check);
 			}
-
+			
 			for (ObservingRelationship observer : resourceObservers.values()) {
-
 				GETRequest request = observer.request;
-				
-				
-				String payloadString = "";
-
-				// check for application/exi content
-				if (request.getContentType() == MediaTypeRegistry.APPLICATION_EXI) {
-					try {
-						payloadString = ExiUtil.getInstance().decodeEXI(request.getPayload());
-					} catch (Exception e) {
-						e.printStackTrace();
-						payloadString = request.getPayloadString();
-					}
-				} else {
-					payloadString = request.getPayloadString();
-				}
-
-
-				payloadString = payloadString.replaceFirst(CoAPServer.COAP_URL_PROTOCOL,
-						DEFAULT_OBIX_URL_PROTOCOL);
 
 				try {
-					StringBuffer obixResponse = new StringBuffer("");
-					
+					String obixResponse;
 					Obj responseObj = obixServer.readObj(new URI(resourcePath), "guest");
-					URI rootUri = new URI("/");
-					URI baseUri = new URI(resourcePath);
-					obixResponse = new StringBuffer(RelativeObixEncoder.toString(responseObj, rootUri, baseUri));
+					obixResponse = new CoAPHelper(obixServer).encodeObj(responseObj, request);
+					obixResponse = obixResponse.replaceFirst(DEFAULT_OBIX_URL_PROTOCOL,
+									CoAPServer.COAP_URL_PROTOCOL);
 					
-					obixResponse = new StringBuffer(obixResponse.toString()
-							.replaceFirst(DEFAULT_OBIX_URL_PROTOCOL,
-									CoAPServer.COAP_URL_PROTOCOL));
-					obixResponse = new StringBuffer(obixResponse.toString());
-
-					fixHref(request, obixResponse);
-
-					if (request.getFirstAccept() == MediaTypeRegistry.APPLICATION_EXI) {
-						try {
-							byte[] exiData = ExiUtil.getInstance().encodeEXI(obixResponse.toString());
-							request.respond(CodeRegistry.RESP_CONTENT, exiData,
-									MediaTypeRegistry.APPLICATION_EXI);						
-						} catch (Exception e) {
-							e.printStackTrace();
-							request.respond(CodeRegistry.RESP_CONTENT,
-									obixResponse.toString(), MediaTypeRegistry.TEXT_XML);
-						}
-					} else {
-					
-						if (request.getUriPath().endsWith(".well-known/core")) {
-							request.respond(CodeRegistry.RESP_CONTENT,
-									obixResponse.toString(),
-									MediaTypeRegistry.APPLICATION_LINK_FORMAT);
-						} else {
-							request.respond(CodeRegistry.RESP_CONTENT,
-									obixResponse.toString(), MediaTypeRegistry.TEXT_XML);
-						}
-
-					}
-
+					new CoAPHelper(obixServer).encodeResponse(obixResponse.toString(), request);
 				} catch (URISyntaxException e) {
-				
 					e.printStackTrace();
 				}
-														
+				
 				// check
 				if (check <= 0) {
 					request.setType(messageType.CON);
@@ -215,9 +162,10 @@ public class ObixObservingManager implements ExternalObserver{
 				request.getUriPath(), request.getResponse().getMID());
 	}
 
-	public synchronized void addObserver(GETRequest request, String resourcePath) {
-
+	public synchronized void addObserver(GETRequest request) {
 		ObservingRelationship toAdd = new ObservingRelationship(request);
+		String resourcePath = toAdd.resourcePath;
+		
 
 		// get clients map for the given resource path
 		Map<String, ObservingRelationship> resourceObservers = observersByResource
@@ -227,6 +175,7 @@ public class ObixObservingManager implements ExternalObserver{
 			resourceObservers = new HashMap<String, ObservingRelationship>();
 			observersByResource.put(resourcePath, resourceObservers);
 		}
+		
 		// get resource map for given client address
 		Map<String, ObservingRelationship> clientObservees = observersByClient
 				.get(request.getPeerAddress().toString());
@@ -389,56 +338,5 @@ public class ObixObservingManager implements ExternalObserver{
 	@Override
 	public void objectChanged(String fullContextPath) {
 		this.notifyObservers(fullContextPath);
-	
-	}
-	
-	private void fixHref(Request request, StringBuffer obixResponse) {
-		
-		String localSocket = request.getPeerAddress().getAddress().toString();
-
-		int lastIndex = localSocket.lastIndexOf("%");
-		String localSocketSplitted = "";
-		
-		if(lastIndex > 0){
-			localSocketSplitted = localSocket.substring(0,lastIndex);
-		}
-		else{
-			localSocketSplitted = localSocket; 
-		}
-		
-		String ipv6Address = localSocketSplitted.substring(1);
-		
-		if(obixServer.containsIPv6(localSocketSplitted)){
-			// replace localhost with IPv6 address and remove first context path element
-			
-			// get first localhost element
-			int localhostIndex = obixResponse.indexOf("localhost");
-			
-			// get index of quota - " - this is the end of the href
-			int quotaIndex = obixResponse.indexOf( "\"", localhostIndex);
-			
-			if(localhostIndex >= 0  && quotaIndex > localhostIndex){
-				// now delete everything from localhost to the position of the closing quota
-				
-				obixResponse.delete(localhostIndex, quotaIndex);
-				
-				// put the IPv6 address there instead
-				
-				obixResponse.insert(localhostIndex, ipv6Address);
-			}
-			
-		}
-		else{
-			// replace localhost with IPv6 address
-			int localhostIndex = obixResponse.indexOf("localhost");
-			
-			if(localhostIndex >= 0){
-			
-				// delete "localhost" --> 9 characaters
-				obixResponse.delete(localhostIndex, localhostIndex + 9);
-				
-				obixResponse.insert(localhostIndex, ipv6Address);
-			}
-		}
 	}
 }
