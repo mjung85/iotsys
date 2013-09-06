@@ -66,19 +66,19 @@ public abstract class MultilingualImpl extends Obj implements Multilingual
 		this.translations.add(translation);
 	}
 
-	@Override
-	public String getTranslation(String language, String attribute)
-	{
-		if (translations != null)
-		{
-			for (Translation t : this.translations)
-			{
-				if (t.getLanguage().equals(language) && t.getAttribute().equals(attribute))
-				{
-					return t.getValue();
-				}
-			}
-		}
-		return null;
-	}
+//	@Override
+//	public String getTranslation(String language, String attribute)
+//	{
+//		if (translations != null)
+//		{
+//			for (Translation t : this.translations)
+//			{
+//				if (t.getLanguage().equals(language) && t.getAttribute().equals(attribute))
+//				{
+//					return t.getValue();
+//				}
+//			}
+//		}
+//		return null;
+//	}
 }

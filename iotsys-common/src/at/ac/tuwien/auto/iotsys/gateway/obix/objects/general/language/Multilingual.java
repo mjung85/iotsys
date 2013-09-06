@@ -37,5 +37,5 @@ public interface Multilingual extends IObj
 {
 	public static final String CONTRACT = "knx:Multilingual";
 	
-	public String getTranslation(String language, String attribute);
+//	public String getTranslation(String language, String attribute);
 }
