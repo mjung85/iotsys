@@ -164,7 +164,5 @@ public interface IObj
 	public void setStr(String val);
 
 	public void set(IObj obj);
-	
-	
 
 }

@@ -47,8 +47,7 @@ public class DPST_5_1_Impl extends DPT_5_A_Impl implements DPST_5_1
 	{
 		super(name, displayName, display, new Contract(new String[] { DPST_5_1.CONTRACT, DPT_5_A.CONTRACT, Datapoint.CONTRACT, Multilingual.CONTRACT }));
 
-		this.value.setWritable(writable);
-		
+		this.value.setWritable(writable);		
 		this.value.setUnit(new Uri(UnitPercent.HREF));
 		this.value.setMin(0);
 		this.value.setMax(100);

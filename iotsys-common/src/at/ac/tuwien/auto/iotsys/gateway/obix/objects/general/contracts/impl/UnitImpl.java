@@ -40,7 +40,7 @@ import obix.contracts.Unit;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.language.Multilingual;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.language.impl.MultilingualImpl;
 
-public abstract class UnitImpl extends MultilingualImpl implements Unit, Multilingual
+public class UnitImpl extends MultilingualImpl implements Unit, Multilingual
 {
 	private Str symbol;
 	private DimensionImpl dimension;

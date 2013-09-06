@@ -53,9 +53,9 @@ public abstract class MultilingualImpl extends Obj implements Multilingual
 		{
 			this.list = new List("translations", new Contract(Translation.CONTRACT));
 			this.list.setHref(new Uri("translations"));
-			this.list.setHidden(true);
+			//this.list.setHidden(true);
 			this.add(this.list);
-			this.add(this.list.getReference(false));
+			//this.add(this.list.getReference(false));
 
 			this.translations = new ArrayList<Translation>();
 		}

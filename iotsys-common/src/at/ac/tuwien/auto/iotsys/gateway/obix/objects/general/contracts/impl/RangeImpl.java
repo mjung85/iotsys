@@ -35,21 +35,24 @@ import java.util.ArrayList;
 
 import obix.Contract;
 import obix.List;
-import obix.Obj;
 import obix.Uri;
 import obix.contracts.Range;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.language.impl.MultilingualImpl;
 
 public abstract class RangeImpl extends List implements Range
 {
-	protected class EnumElement extends Obj
+	protected class EnumElement extends MultilingualImpl
 	{
 		private String key;
 
 		public EnumElement(String key, String displayName)
 		{
+			super();
+			
 			this.key = key;
 
 			this.setName(key);
+			this.setHref(new Uri(key));
 			this.setDisplayName(displayName);
 		}
 
