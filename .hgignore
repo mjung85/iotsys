@@ -1,0 +1,24 @@
+syntax: glob
+bin
+build
+META-INF
+.settings
+.metadata
+.classpath
+.project
+felix-framework*
+felix-cache*
+org.apache.felix.main.distribution-4.2.1.zip
+obelix/.sass-cache
+obelix/build
+iotsys-gateway/KNX.txt*
+iotsys-gateway/iotsys-log.*
+
+*.lck
+*.1
+*.txt
+*.orig
+*.bin
+**/build.properties
+.gradle/1.6/taskArtifacts/cache.properties
+.gradle/1.6/taskArtifacts/cache.properties.lock
