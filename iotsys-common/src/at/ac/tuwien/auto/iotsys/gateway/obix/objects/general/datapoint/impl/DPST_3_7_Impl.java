@@ -53,13 +53,13 @@ public class DPST_3_7_Impl extends DPT_3_Impl implements DPST_3_7
 		// Operation increase
 		this.increase = new Op();
 		this.increase.setName("increase");
-		this.increase.setIn(new Contract(ParameterDimming.HREF));
+		this.increase.setIn(new Contract(ParameterDimming.CONTRACT));
 		this.add(increase);
 
 		// Operation decrease
 		this.decrease = new Op();
 		this.decrease.setName("decrease");
-		this.decrease.setIn(new Contract(ParameterDimming.HREF));
+		this.decrease.setIn(new Contract(ParameterDimming.CONTRACT));
 		this.add(decrease);
 	}
 
@@ -68,5 +68,14 @@ public class DPST_3_7_Impl extends DPT_3_Impl implements DPST_3_7
 	{
 		// TODO
 	}
+	
+	public Op increase()
+	{
+		return increase;
+	}
 
+	public Op decrease()
+	{
+		return decrease;
+	}
 }

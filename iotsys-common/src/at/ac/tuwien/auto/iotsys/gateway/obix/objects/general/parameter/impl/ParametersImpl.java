@@ -29,11 +29,30 @@
  * This file is part of the IoTSyS project.
  ******************************************************************************/
 
-package at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.parameter;
+package at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.parameter.impl;
 
+import obix.Contract;
 import obix.IObj;
+import obix.List;
+import obix.Obj;
+import obix.Uri;
 
-public interface ParameterDimming extends IObj
-{	
-	public static final String CONTRACT = "knx:ParameterDimming";
+public class ParametersImpl extends List implements IObj
+{
+	public ParametersImpl()
+	{
+		this.setName("parameters");
+		this.setOf(new Contract("obix:obj"));
+		this.setHref(new Uri("/parameters"));
+
+		Obj[] parameters = new Obj[] { new ParameterDimmingImpl() };
+
+		for (Obj obj : parameters)
+		{
+			obj.setHref(obj.getRelativePath());
+
+			this.add(obj);
+			this.add(obj.getReference(false));
+		}
+	}
 }
