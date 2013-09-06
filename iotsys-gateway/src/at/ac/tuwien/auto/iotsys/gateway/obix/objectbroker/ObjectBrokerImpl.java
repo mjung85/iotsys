@@ -44,7 +44,7 @@ import obix.Obj;
 import obix.Op;
 import obix.Ref;
 import obix.Uri;
-import at.ac.tuwien.auto.iotsys.commons.MDnsResolver;
+import at.ac.tuwien.auto.iotsys.commons.MdnsResolver;
 import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.AboutImpl;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.AlarmSubjectImpl;
@@ -79,7 +79,7 @@ public class ObjectBrokerImpl implements ObjectBroker {
 
 	private ObjectRefresher objectRefresher = new ObjectRefresher();
 
-	private MDnsResolver resolver;
+	private MdnsResolver resolver;
 
 	private ObjectBrokerImpl() {
 		rootObject = new Obj();
@@ -106,102 +106,102 @@ public class ObjectBrokerImpl implements ObjectBroker {
 		
 		alarmSubjectImpl.initialize();
 
-//		Obj enums = new Obj();
-//		enums.setName("enums");
-//		enums.setHref(new Uri("enums"));
-//
-//		// compareType enum
-//		List compareTypes = new List();
-//
-//		compareTypes.setIs(new Contract("obix:Range"));
-//		compareTypes.setHref(new Uri("compareTypes"));
-//		compareTypes.setName("compareTypes");
-//
-//		Obj eq = new Obj();
-//		eq.setName("eq");
-//		Obj gte = new Obj();
-//		gte.setName("gte");
-//		Obj gt = new Obj();
-//		gt.setName("gt");
-//
-//		Obj lt = new Obj();
-//		lt.setName("lt");
-//
-//		Obj lte = new Obj();
-//		lte.setName("lte");
-//
-//		compareTypes.add(eq);
-//		compareTypes.add(lt);
-//		compareTypes.add(lte);
-//		compareTypes.add(gt);
-//		compareTypes.add(gte);
-//
-//		enums.add(compareTypes);
-//
-//		// operation type enums
-//
-//		List operationTypes = new List();
-//
-//		operationTypes.setIs(new Contract("obix:Range"));
-//		operationTypes.setHref(new Uri("operationTypes"));
-//		operationTypes.setName("operationTypes");
-//
-//		Obj opAdd = new Obj();
-//		opAdd.setName(BinaryOperation.BIN_OP_ADD);
-//
-//		Obj opSub = new Obj();
-//		opSub.setName(BinaryOperation.BIN_OP_SUB);
-//
-//		Obj opMul = new Obj();
-//		opMul.setName(BinaryOperation.BIN_OP_MUL);
-//
-//		Obj opMod = new Obj();
-//		opMod.setName(BinaryOperation.BIN_OP_MOD);
-//
-//		Obj opDiv = new Obj();
-//		opDiv.setName(BinaryOperation.BIN_OP_DIV);
-//
-//		operationTypes.add(opAdd);
-//		operationTypes.add(opSub);
-//		operationTypes.add(opMul);
-//		operationTypes.add(opDiv);
-//		operationTypes.add(opMod);
-//
-//		enums.add(operationTypes);
-//
-//		// binary logic operations
-//		// operation type enums
-//
-//		List logicOperationTypes = new List();
-//
-//		logicOperationTypes.setIs(new Contract("obix:Range"));
-//		logicOperationTypes.setHref(new Uri("logicOperationTypes"));
-//		logicOperationTypes.setName("logicOperationTypes");
-//
-//		Obj opAnd = new Obj();
-//		opAnd.setName(LogicBinaryOperation.BIN_OP_AND);
-//
-//		Obj opOr = new Obj();
-//		opOr.setName(LogicBinaryOperation.BIN_OP_OR);
-//
-//		Obj opXor = new Obj();
-//		opXor.setName(LogicBinaryOperation.BIN_OP_XOR);
-//
-//		Obj opNand = new Obj();
-//		opNand.setName(LogicBinaryOperation.BIN_OP_NAND);
-//
-//		Obj opNor = new Obj();
-//		opNor.setName(LogicBinaryOperation.BIN_OP_NOR);
-//
-//		logicOperationTypes.add(opAnd);
-//		logicOperationTypes.add(opOr);
-//		logicOperationTypes.add(opXor);
-//		logicOperationTypes.add(opNand);
-//		logicOperationTypes.add(opNor);
-//
-//		enums.add(logicOperationTypes);
-//
-//		addObj(enums, true);
+		Obj enums = new Obj();
+		enums.setName("enums");
+		enums.setHref(new Uri("enums"));
+
+		// compareType enum
+		List compareTypes = new List();
+
+		compareTypes.setIs(new Contract("obix:Range"));
+		compareTypes.setHref(new Uri("compareTypes"));
+		compareTypes.setName("compareTypes");
+
+		Obj eq = new Obj();
+		eq.setName("eq");
+		Obj gte = new Obj();
+		gte.setName("gte");
+		Obj gt = new Obj();
+		gt.setName("gt");
+
+		Obj lt = new Obj();
+		lt.setName("lt");
+
+		Obj lte = new Obj();
+		lte.setName("lte");
+
+		compareTypes.add(eq);
+		compareTypes.add(lt);
+		compareTypes.add(lte);
+		compareTypes.add(gt);
+		compareTypes.add(gte);
+
+		enums.add(compareTypes);
+
+		// operation type enums
+
+		List operationTypes = new List();
+
+		operationTypes.setIs(new Contract("obix:Range"));
+		operationTypes.setHref(new Uri("operationTypes"));
+		operationTypes.setName("operationTypes");
+
+		Obj opAdd = new Obj();
+		opAdd.setName(BinaryOperation.BIN_OP_ADD);
+
+		Obj opSub = new Obj();
+		opSub.setName(BinaryOperation.BIN_OP_SUB);
+
+		Obj opMul = new Obj();
+		opMul.setName(BinaryOperation.BIN_OP_MUL);
+
+		Obj opMod = new Obj();
+		opMod.setName(BinaryOperation.BIN_OP_MOD);
+
+		Obj opDiv = new Obj();
+		opDiv.setName(BinaryOperation.BIN_OP_DIV);
+
+		operationTypes.add(opAdd);
+		operationTypes.add(opSub);
+		operationTypes.add(opMul);
+		operationTypes.add(opDiv);
+		operationTypes.add(opMod);
+
+		enums.add(operationTypes);
+
+		// binary logic operations
+		// operation type enums
+
+		List logicOperationTypes = new List();
+
+		logicOperationTypes.setIs(new Contract("obix:Range"));
+		logicOperationTypes.setHref(new Uri("logicOperationTypes"));
+		logicOperationTypes.setName("logicOperationTypes");
+
+		Obj opAnd = new Obj();
+		opAnd.setName(LogicBinaryOperation.BIN_OP_AND);
+
+		Obj opOr = new Obj();
+		opOr.setName(LogicBinaryOperation.BIN_OP_OR);
+
+		Obj opXor = new Obj();
+		opXor.setName(LogicBinaryOperation.BIN_OP_XOR);
+
+		Obj opNand = new Obj();
+		opNand.setName(LogicBinaryOperation.BIN_OP_NAND);
+
+		Obj opNor = new Obj();
+		opNor.setName(LogicBinaryOperation.BIN_OP_NOR);
+
+		logicOperationTypes.add(opAnd);
+		logicOperationTypes.add(opOr);
+		logicOperationTypes.add(opXor);
+		logicOperationTypes.add(opNand);
+		logicOperationTypes.add(opNor);
+
+		enums.add(logicOperationTypes);
+
+		addObj(enums, true);
 		
 		// create default watch
 		WatchImpl watchImpl = new WatchImpl(this);	
@@ -300,6 +300,10 @@ public class ObjectBrokerImpl implements ObjectBroker {
 			
 			String href = o.getFullContextPath();
 			ipv6Mapping.put(generateIPv6Address.toString(), href);
+			if(resolver != null) {
+                resolver.addToRecordDict(href, ipv6Address);
+                resolver.registerDevice(href, o.getClass(), ipv6Address);
+			}
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		}
@@ -416,11 +420,11 @@ public class ObjectBrokerImpl implements ObjectBroker {
 	}
 	
 	@Override
-	public MDnsResolver getMDnsResolver() {
+	public MdnsResolver getMDnsResolver() {
 		return resolver;
 	}
 	@Override
-	public void setMdnsResolver(MDnsResolver resolver){
+	public void setMdnsResolver(MdnsResolver resolver){
 		this.resolver = resolver;
 	}
 }
