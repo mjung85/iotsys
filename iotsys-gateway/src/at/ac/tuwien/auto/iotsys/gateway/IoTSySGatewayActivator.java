@@ -94,8 +94,7 @@ public class IoTSySGatewayActivator implements BundleActivator, ServiceListener{
 
 	@Override
 	public void serviceChanged(ServiceEvent arg0) {
-		// TODO Auto-generated method stub
-		
+		//System.out.println(arg0);
 	}
 
 }

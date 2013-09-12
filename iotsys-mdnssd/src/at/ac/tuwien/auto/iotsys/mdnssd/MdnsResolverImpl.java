@@ -108,6 +108,11 @@ public class MdnsResolverImpl implements MdnsResolver {
 	public int getNumberOfRecord() {
 		return recordDict.size();
 	}
+	
+	@Override
+	public void unregisterAllDevice(){
+		jmdns.unregisterAllServices();
+	}
 
 	@Override
 	public void registerDevice(String deviceName, Class<?> deviceClass, String ipv6) {
