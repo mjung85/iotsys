@@ -10,7 +10,8 @@ package obix;
  * @creation 27 Apr 05
  * @version $Revision$ $Date$
  */
-public class Int extends Val {
+public class Int extends Val
+{
 
 	// //////////////////////////////////////////////////////////////
 	// Constructor
@@ -19,7 +20,8 @@ public class Int extends Val {
 	/**
 	 * Construct named Int with specified value.
 	 */
-	public Int(String name, long val) {
+	public Int(String name, long val)
+	{
 		super(name);
 		// set(val);
 		this.val = val;// we don't want to notify observers here
@@ -29,7 +31,8 @@ public class Int extends Val {
 	/**
 	 * Construct named Int with value of 0.
 	 */
-	public Int(String name) {
+	public Int(String name)
+	{
 		super(name);
 		// set(0);
 		this.val = 0;// we don't want to notify observers here
@@ -38,7 +41,8 @@ public class Int extends Val {
 	/**
 	 * Construct unnamed Int with specified value.
 	 */
-	public Int(long val) {
+	public Int(long val)
+	{
 		// set(val);
 		this.val = val;// we don't want to notify observers here
 	}
@@ -46,7 +50,8 @@ public class Int extends Val {
 	/**
 	 * Construct unnamed Int with value of 0.
 	 */
-	public Int() {
+	public Int()
+	{
 		this.val = 0; // we don't want to notify observers here
 		// set(0);
 	}
@@ -58,54 +63,65 @@ public class Int extends Val {
 	/**
 	 * Get value as a long.
 	 */
-	public long get() {
+	public long get()
+	{
 		return val;
 	}
 
 	/**
 	 * Set value.
 	 */
-	public void set(long val) {
+	public void set(long val)
+	{
 		long oldVal = this.val;
-		
-		if( val < this.getMin()){
+
+		if (val < this.getMin())
+		{
 			this.val = (int) this.getMin();
 		}
-		else if(val > this.getMax()){
+		else if (val > this.getMax())
+		{
 			this.val = (int) this.getMax();
 		}
-		else{
+		else
+		{
 			this.val = val;
 		}
-		
-		if(oldVal != this.val)
+
+		if (oldVal != this.val)
 			notifyObservers();
 	}
-	
+
 	/**
 	 * Auto cast for double
 	 */
-	public void set(double val){
+	public void set(double val)
+	{
 		set((long) val);
 	}
-	
+
 	/**
 	 * Auto cast for double
 	 */
-	public void set(boolean val){
-		if(val){
+	public void set(boolean val)
+	{
+		if (val)
+		{
 			set(100);
 		}
-		else{
+		else
+		{
 			set(0);
 		}
 	}
-	
+
 	/**
 	 * Set value without notifying observers
+	 * 
 	 * @param val
 	 */
-	public void setSilent(long val){
+	public void setSilent(long val)
+	{
 		this.val = val;
 	}
 
@@ -116,21 +132,24 @@ public class Int extends Val {
 	/**
 	 * Return "int".
 	 */
-	public String getElement() {
+	public String getElement()
+	{
 		return "int";
 	}
 
 	/**
 	 * Return BinObix.INT.
 	 */
-	public int getBinCode() {
+	public int getBinCode()
+	{
 		return obix.io.BinObix.INT;
 	}
 
 	/**
 	 * Return if specified Val has equivalent int value.
 	 */
-	public boolean valEquals(Val that) {
+	public boolean valEquals(Val that)
+	{
 		if (that instanceof Int)
 			return ((Int) that).val == val;
 		return false;
@@ -141,7 +160,8 @@ public class Int extends Val {
 	 * negative integer, zero, or a positive integer as this object is less
 	 * than, equal to, or greater than the specified object.
 	 */
-	public int compareTo(Object that) {
+	public int compareTo(Object that)
+	{
 		long a = val;
 		long b = ((Int) that).val;
 		if (a == b)
@@ -155,21 +175,24 @@ public class Int extends Val {
 	/**
 	 * Encode the value as a string
 	 */
-	public String encodeVal() {
+	public String encodeVal()
+	{
 		return String.valueOf(val);
 	}
 
 	/**
 	 * Decode the value from a string.
 	 */
-	public void decodeVal(String val) throws Exception {
+	public void decodeVal(String val) throws Exception
+	{
 		this.val = Long.parseLong(val);
 	}
 
 	/**
 	 * Encode the value as a Java code literal to pass to the constructor.
 	 */
-	public String encodeJava() {
+	public String encodeJava()
+	{
 		return String.valueOf(val) + "L";
 	}
 
@@ -180,43 +203,59 @@ public class Int extends Val {
 	/**
 	 * Get the min facet or MIN_DEFAULT if unspecified.
 	 */
-	public long getMin() {
+	public long getMin()
+	{
 		return min;
 	}
 
 	/**
 	 * Set the min facet.
 	 */
-	public void setMin(long min) {
+	public void setMin(long min)
+	{
 		this.min = min;
 	}
 
 	/**
 	 * Get the max facet or MAX_DEFAULT if unspecified.
 	 */
-	public long getMax() {
+	public long getMax()
+	{
 		return max;
 	}
 
 	/**
 	 * Set the max facet.
 	 */
-	public void setMax(long max) {
+	public void setMax(long max)
+	{
 		this.max = max;
 	}
 
 	/**
 	 * Get the unit facet or null if unspecified.
 	 */
-	public Uri getUnit() {
+	public Uri getUnit()
+	{
 		return unit;
 	}
 
 	/**
 	 * Set the unit facet.
 	 */
-	public void setUnit(Uri unit) {
+	public void setUnit(Uri unit)
+	{
 		this.unit = unit;
+	}
+
+	/**
+	 * Set to value of another Int
+	 */
+	public void set(Obj obj)
+	{
+		if (!(obj instanceof Int))
+			return;
+		set(((Int) obj).get());
 	}
 
 	// //////////////////////////////////////////////////////////////
@@ -234,15 +273,19 @@ public class Int extends Val {
 	private long max = MAX_DEFAULT;
 	private Uri unit = null;
 
-	public void writeObject(Obj input) {
-		if (this.getParent() != null) {
+	public void writeObject(Obj input)
+	{
+		if (this.getParent() != null)
+		{
 			this.getParent().writeObject(input);
-		} else {
-			if (input instanceof Int) {
+		}
+		else
+		{
+			if (input instanceof Int)
+			{
 				this.set(((Int) input).get());
 			}
 		}
 	}
-	
 
 }

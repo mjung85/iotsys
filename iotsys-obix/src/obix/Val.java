@@ -4,83 +4,80 @@
 package obix;
 
 /**
- * Val is base class for value types: Bool, Int, 
- * Real, Enum, Abstime, Reltime, and Uri
- *
- * @author    Brian Frank
- * @creation  27 Apr 05
- * @version   $Revision$ $Date$
+ * Val is base class for value types: Bool, Int, Real, Enum, Abstime, Reltime,
+ * and Uri
+ * 
+ * @author Brian Frank
+ * @creation 27 Apr 05
+ * @version $Revision$ $Date$
  */
-public abstract class Val
-  extends Obj    
-  implements Comparable
-{ 
+public abstract class Val extends Obj implements Comparable<Object>
+{
 
-////////////////////////////////////////////////////////////////
-// Constructor
-////////////////////////////////////////////////////////////////
-  
-  /**
-   * Construct a named Val.
-   */
-  public Val(String name)
-  {               
-    super(name);
-  }
+	// //////////////////////////////////////////////////////////////
+	// Constructor
+	// //////////////////////////////////////////////////////////////
 
-  /**
-   * Construct an unnamed Val.
-   */
-  public Val()
-  {
-  }
+	/**
+	 * Construct a named Val.
+	 */
+	public Val(String name)
+	{
+		super(name);
+	}
 
-////////////////////////////////////////////////////////////////
-// Val
-////////////////////////////////////////////////////////////////
-  
-  /**
-   * For now return valEquals() 
-   * TODO maybe should implement name, facet equality in Obj.equals()?
-   */
-  public final boolean equals(Object that)
-  {                                                   
-    if (that instanceof Val)
-      return valEquals((Val)that);
-    return false;
-  }
+	/**
+	 * Construct an unnamed Val.
+	 */
+	public Val()
+	{
+	}
 
-  /**
-   * Return if the value is equal to the specified Val's value
-   * regardless of other aspects like name and facets.
-   */
-  public abstract boolean valEquals(Val that);
+	// //////////////////////////////////////////////////////////////
+	// Val
+	// //////////////////////////////////////////////////////////////
 
-  /**
-   * Encode the value as a string
-   */
-  public abstract String encodeVal();
+	/**
+	 * For now return valEquals() TODO maybe should implement name, facet
+	 * equality in Obj.equals()?
+	 */
+	public final boolean equals(Object that)
+	{
+		if (that instanceof Val)
+			return valEquals((Val) that);
+		return false;
+	}
 
-  /**
-   * Decode the value from a string.
-   */
-  public abstract void decodeVal(String val)
-    throws Exception;    
+	/**
+	 * Return if the value is equal to the specified Val's value regardless of
+	 * other aspects like name and facets.
+	 */
+	public abstract boolean valEquals(Val that);
 
-  /**
-   * Encode the value as a Java code literal to pass to the constructor.
-   */
-  public String encodeJava()
-  {
-    return encodeVal();
-  }
-  
-  /**
-   * Debug to string is encodeVal
-   */
-  public final String toString()   
-  {
-    return encodeVal();
-  }
-  
+	/**
+	 * Encode the value as a string
+	 */
+	public abstract String encodeVal();
+
+	/**
+	 * Decode the value from a string.
+	 */
+	public abstract void decodeVal(String val) throws Exception;
+
+	/**
+	 * Encode the value as a Java code literal to pass to the constructor.
+	 */
+	public String encodeJava()
+	{
+		return encodeVal();
+	}
+
+	/**
+	 * Debug to string is encodeVal
+	 */
+	public final String toString()
+	{
+		return encodeVal();
+	}
+
 }

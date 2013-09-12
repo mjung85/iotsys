@@ -32,12 +32,20 @@
 
 package at.ac.tuwien.auto.iotsys.gateway.obix.objects;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
+import at.ac.tuwien.auto.iotsys.commons.FeedFilter;
+
 import obix.Abstime;
+import obix.Feed;
 import obix.Int;
 import obix.Obj;
 import obix.contracts.HistoryFilter;
 
-public class HistoryFilterImpl extends Obj implements HistoryFilter {
+public class HistoryFilterImpl extends Obj implements HistoryFilter, FeedFilter {
 	
 	private Int limit = new Int();
 	private Abstime start = new Abstime();
@@ -45,26 +53,99 @@ public class HistoryFilterImpl extends Obj implements HistoryFilter {
 	
 	public static final String HISTORY_FILTER_CONTRACT = "obix:HistoryFilter";
 	
-	public HistoryFilterImpl(){
-		
+	public HistoryFilterImpl() {
 		add(limit);
 		add(start);
 		add(end);
 	}
 	
-	public Int limit() {
+	public HistoryFilterImpl(Obj filter) {
+		this();
 		
+		if (filter instanceof HistoryFilter) {
+			HistoryFilter histFilter = (HistoryFilter) filter;
+			limit.set(histFilter.limit());
+			start.set(histFilter.start());
+			end.set(histFilter.end());
+			
+			limit.setNull(histFilter.limit().isNull());
+			start.setNull(histFilter.start().isNull());
+			end.setNull(histFilter.end().isNull());
+		}
+	}
+	
+	public Int limit() {
 		return limit;
 	}
 
 	public Abstime start() {
-
 		return start;
 	}
 
 	public Abstime end() {
-
 		return end;
+	}
+
+	
+	@Override
+	public List<Obj> query(Feed feed) {
+		ArrayList<HistoryRecordImpl> records = filterRecords(feed.getEvents());
+		
+		while (limit.get() > 0 & records.size() > limit.get())
+			records.remove(records.size()-1);
+		
+		return new ArrayList<Obj>(records);
+	}
+
+	@Override
+	public List<Obj> poll(List<Obj> events) {
+		ArrayList<HistoryRecordImpl> records = filterRecords(events);
+		Collections.reverse(records);
+		
+		while (limit.get() > 0 & records.size() > limit.get())
+			records.remove(records.size()-1);
+		
+		return new ArrayList<Obj>(records);
+	}
+	
+	
+	private ArrayList<HistoryRecordImpl> filterRecords(List<Obj> events) {
+		ArrayList<HistoryRecordImpl> filteredRecords = new ArrayList<HistoryRecordImpl>();
+
+		// sort records
+		Collections.sort(events, new Comparator<Obj>() {
+			public int compare(Obj obj1, Obj obj2) {
+				HistoryRecordImpl r1 = (HistoryRecordImpl) obj1;
+				HistoryRecordImpl r2 = (HistoryRecordImpl) obj2;
+				return r1.timestamp().compareTo(r2.timestamp());
+			}
+		});
+		
+		for (Obj event : events) {
+			if (!(event instanceof HistoryRecordImpl))
+				continue;
+			
+			HistoryRecordImpl record = (HistoryRecordImpl) event;
+			
+			if (start.get() != end.get()) {
+				if (!start.isNull() && record.timestamp().get() < start.get()) {
+					continue;
+				}
+
+				if (!end.isNull() && record.timestamp().get() > end.get()) {
+					continue;
+				}
+			}
+
+			filteredRecords.add(record);
+		}
+		
+		return filteredRecords;
+	}
+
+	@Override
+	public FeedFilter getFilter(Obj filter) {
+		return new HistoryFilterImpl(filter);
 	}
 
 }

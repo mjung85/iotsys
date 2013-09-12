@@ -12,6 +12,7 @@ eclipse{
 			withXml {
 				def node = it.asNode()
 				node.appendNode('classpathentry', [kind: 'src', path: '/iotsys-common', exported:'true'])
+				node.appendNode('classpathentry', [kind: 'src', path: '/iotsys-osgi', exported:'true'])
 			}
 		}
 	}

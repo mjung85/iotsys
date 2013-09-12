@@ -34,19 +34,28 @@ package at.ac.tuwien.auto.iotsys.gateway.obix.objects;
 
 import java.util.ArrayList;
 import java.util.Hashtable;
-import java.util.LinkedList;
+import java.util.List;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
 import obix.Contract;
+import obix.Feed;
+import obix.IObj;
 import obix.Obj;
 import obix.Op;
 import obix.Reltime;
 import obix.Uri;
 import obix.contracts.Watch;
 import obix.contracts.WatchIn;
+import at.ac.tuwien.auto.iotsys.commons.FeedFilter;
 import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
 import at.ac.tuwien.auto.iotsys.commons.OperationHandler;
+import at.ac.tuwien.auto.iotsys.gateway.obix.observer.EventObserver;
+import at.ac.tuwien.auto.iotsys.gateway.obix.observer.FeedObserver;
 import at.ac.tuwien.auto.iotsys.gateway.obix.observer.ObjObserver;
+import at.ac.tuwien.auto.iotsys.gateway.obix.observer.Observer;
 
 /**
  * Implements the watch logic, representing a per-client state object.
@@ -62,24 +71,58 @@ public class WatchImpl extends Obj implements Watch {
 	public static final String WATCH_CONTRACT = "obix:Watch";
 	public static final String OBIX_NIL = "obix:Nil";
 	
+	private static ScheduledThreadPoolExecutor timers = new ScheduledThreadPoolExecutor(1);
+	private ScheduledFuture<?> expirationTimer;
+	private Runnable expireTask;
+	
+	private ObjectBroker broker;
+	
 	// holds an observer object for each obix object that is watched using the normalized href path as key.
-	private final Hashtable <String, ObjObserver> observers = new Hashtable<String, ObjObserver>();
+	private final Hashtable <String, EventObserver<Obj>> observers = new Hashtable<String, EventObserver<Obj>>();
 
 	private final Hashtable<String, Uri> observedObjects = new Hashtable<String, Uri>();
 	
-	public WatchImpl(final ObjectBroker broker){
+	private static final int DEFAULT_LEASE = 60 * 1000; // 1 minute
+	private Reltime lease;
+	
+	public WatchImpl(final ObjectBroker broker) {
+		this.broker = broker;
+		
 		setIs(new Contract(WATCH_CONTRACT));
+		setHref(new Uri("watch" + (numInstance++)));
+		
 		add(add());
 		add(remove());
 		add(lease());
 		add(pollChanges());
 		add(pollRefresh());
 		add(delete());
-		this.setHref(new Uri("http://localhost/watch" + (numInstance++)));
-		broker.addOperationHandler(new Uri(this.getNormalizedHref().getPath() + "/add"), new OperationHandler() {
+		
+		resetExpiration();
+	}
+	
+	public Watch thisWatch(){
+		return this;
+	}
+
+	public Reltime lease() {
+		if (lease == null) {
+			lease = new Reltime("lease", DEFAULT_LEASE);
+			lease.setHref(new Uri("lease"));
+			lease.setWritable(true);
+		}
+		
+		return lease;
+	}
+
+	public Op add() {
+		Op add = new Op("add", new Contract(WATCH_IN_CONTRACT), new Contract(WATCH_OUT_CONTRACT));
+		add.setHref(new Uri("add"));
+		add.setOperationHandler(new OperationHandler() {
 			@Override
 			public Obj invoke(Obj in) {
 				// Perform add logic
+				resetExpiration();
 				WatchOutImpl ret = new WatchOutImpl();
 				
 				if(in instanceof WatchIn) {
@@ -89,16 +132,24 @@ public class WatchImpl extends Obj implements Watch {
 					// then the server SHOULD only return the object once.
 					// Therefore filter out duplicate URIs
 					ArrayList<Uri> uris = new ArrayList<Uri>();
-					for(Obj u : watchIn.get("hrefs").list()) {
+					for(IObj u : watchIn.get("hrefs").list()) {
 						if (!uris.contains(u)) uris.add((Uri) u);
 					}
 					
 					for(Uri uri : uris) {
 						Obj o = broker.pullObj(uri);
+						EventObserver<Obj> observer = null;
+						
 						if(!observedObjects.containsKey(uri.get())) {
 							observedObjects.put(uri.get(), uri);
-	
-							ObjObserver observer = new ObjObserver();
+							
+							if (o.isFeed()) {
+								FeedFilter filter = ((Feed)o).getDefaultFilter();
+								if (uri.size() > 0) filter = filter.getFilter(uri.list()[0]);
+								observer = new FeedObserver(filter);
+							} else {
+								observer = new ObjObserver<Obj>();
+							}
 							observers.put(uri.getPath(), observer);
 							
 							o.attach(observer);
@@ -118,58 +169,88 @@ public class WatchImpl extends Obj implements Watch {
 							}
 						}
 						
+						if (o.isFeed()) {
+							List<Obj> events = ((FeedObserver) observer).pollRefresh();
+							for (Obj event : events) {
+								obj.add(event);
+							}
+						}
+						
 						obj.setHref(uri);
 						ret.values().add(obj, false);
 					}
-				}						
+				}
+				
 				return ret;
 			}			
 		});
-		
-		broker.addOperationHandler(new Uri(this.getNormalizedHref().getPath() + "/remove"), new OperationHandler(){
+		return add;
+	}
+
+	public Op remove() {
+		Op remove = new Op("remove", new Contract(WATCH_IN_CONTRACT), new Contract(OBIX_NIL));
+		remove.setHref(new Uri("remove"));
+		remove.setOperationHandler(new OperationHandler(){
 			@Override
 			public Obj invoke(Obj in) {
 				// Perform remove logic
+				resetExpiration();
 				if(in instanceof WatchIn){
 					WatchIn watchIn = (WatchIn) in;
 	
-					for(Obj u : watchIn.get("hrefs").list()){
+					for(IObj u : watchIn.get("hrefs").list()) {
 						Uri uri = (Uri) u;
 
-						ObjObserver observer = observers.get(uri.getPath());
+						Observer observer = observers.get(uri.getPath());
+
 						observedObjects.remove(uri.getPath());
+
 						observers.remove(uri.getPath());
 						Obj o = broker.pullObj(uri);
 						o.detach(observer);
 					}					
-				}		
+				}
+
 				return new NilImpl();
 			}			
 		});
 		
-		broker.addOperationHandler(new Uri(this.getNormalizedHref().getPath() + "/pollChanges"), new OperationHandler(){
+		return remove;
+	}
+
+	public Op pollChanges() {
+		Op pollChanges = new Op("pollChanges", new Contract(WATCH_IN_CONTRACT), new Contract(WATCH_OUT_CONTRACT));
+		pollChanges.setHref(new Uri("pollChanges"));
+		pollChanges.setOperationHandler(new OperationHandler(){
 			@Override
 			public Obj invoke(Obj in) {
+				resetExpiration();
 				WatchOutImpl out = new WatchOutImpl();
 				synchronized(observers) {
 					// check for modified objects
 					// NOTE pollChanges does not need to provide the events, only the latest state.
 					
-					
 					for (String uri : observers.keySet()) {
-						ObjObserver objObserver = observers.get(uri);
-						LinkedList<Obj> events = objObserver.getEvents();
+						EventObserver<Obj> observer = observers.get(uri);
+						List<Obj> events = observer.pollChanges();
 						if(events.size() > 0) {
 							// needs to be an obix object
-							Obj obj = (Obj) objObserver.getSubject();
+							Obj obj = (Obj) observer.getSubject();
+							Obj outItem = null;
 							
 							try {
-								Obj outItem = (Obj) obj.clone();
+								outItem = (Obj) obj.clone();
 								outItem.setName(null, true);
 								outItem.setHref(new Uri(uri));
 								out.values().add(outItem, false);
 							} catch (CloneNotSupportedException e) {
 								log.info("Obj not clonable" + e.getMessage());
+							}
+							
+							if (obj.isFeed()) {
+								for (Obj event : events) {
+									outItem.add(event);
+								}
 							}
 						}
 					}
@@ -178,19 +259,27 @@ public class WatchImpl extends Obj implements Watch {
 				return out;
 			}		
 		});
-		broker.addOperationHandler(new Uri(this.getNormalizedHref().getPath() + "/pollRefresh"), new OperationHandler(){
+		
+		return pollChanges;
+	}
+
+	public Op pollRefresh() {	
+		Op pollRefresh = new Op("pollRefresh", new Contract(WATCH_IN_CONTRACT), new Contract(WATCH_OUT_CONTRACT));
+		pollRefresh.setHref(new Uri("pollRefresh"));
+		pollRefresh.setOperationHandler(new OperationHandler(){
 			@Override
 			public Obj invoke(Obj in) {
+				resetExpiration();
 				WatchOutImpl out = new WatchOutImpl();
-				// Perform refresh logic	
+				// Perform refresh logic
 				// Get a list of being-observed URI; get the corresponding object; notify the observer --> performing an update
 				synchronized(observers){
 					for (String uri : observers.keySet()) {
-						ObjObserver observer = observers.get(uri);
+						EventObserver<Obj> observer = observers.get(uri);
 						Obj beingObservedObject = (Obj) observer.getSubject();
 						beingObservedObject.notifyObservers();
 						
-						Obj outItem;
+						Obj outItem = null;
 						try {
 							outItem = (Obj) beingObservedObject.clone();
 							outItem.setName(null, true);
@@ -200,62 +289,85 @@ public class WatchImpl extends Obj implements Watch {
 							log.info("Obj not clonable" + e.getMessage());
 						}
 						
-						observer.getEvents();
+						if (beingObservedObject.isFeed()) {
+							FeedObserver feedObserver = (FeedObserver) observer;
+							List<Obj> events = feedObserver.pollRefresh();
+							for (Obj event : events) {
+								outItem.add(event);
+							}
+						}
+						
+						observer.pollChanges();
 					}
 				}
 				return out;
 			}		
 		});
 		
-		broker.addOperationHandler(new Uri(this.getNormalizedHref().getPath() + "/delete"), new OperationHandler(){
-			@Override
-			public Obj invoke(Obj in) {
-				// Perform delete logic
-				for (ObjObserver observer : observers.values()){
-					Obj beingObservedObject = (Obj) observer.getSubject();
-					beingObservedObject.detach(observer);
-					observers.remove(observer);
-					observer = null;
-				}
-				numInstance = 0;
-				broker.removeOperationHandler(new Uri(thisWatch().getNormalizedHref().getPath() + "/add"));
-				broker.removeOperationHandler(new Uri(thisWatch().getNormalizedHref().getPath() + "/remove"));
-				broker.removeOperationHandler(new Uri(thisWatch().getNormalizedHref().getPath() + "/pollChanges"));
-				broker.removeOperationHandler(new Uri(thisWatch().getNormalizedHref().getPath() + "/pollRefresh"));
-				broker.removeOperationHandler(new Uri(thisWatch().getNormalizedHref().getPath() + "/delete"));
-				broker.removeObj(thisWatch().getHref().getPath());
-				return new NilImpl();
-			}		
-		});
-	}
-	
-	public Watch thisWatch(){
-		return this;
-	}
-
-	public Reltime lease() {
-		// TODO make lease time writeable
-		return new Reltime("lease", 60 * 1000); // 1 minute by defaults, not writable
-	}
-
-	public Op add() {
-		return new Op("add", new Contract(WATCH_IN_CONTRACT), new Contract(WATCH_OUT_CONTRACT));
-	}
-
-	public Op remove() {
-		return new Op("remove", new Contract(WATCH_IN_CONTRACT), new Contract(OBIX_NIL));
-	}
-
-	public Op pollChanges() {
-		return new Op("pollChanges", new Contract(WATCH_IN_CONTRACT), new Contract(WATCH_OUT_CONTRACT));
-	}
-
-	public Op pollRefresh() {	
-		return new Op("pollRefresh", new Contract(WATCH_IN_CONTRACT), new Contract(WATCH_OUT_CONTRACT));
+		return pollRefresh;
 	}
 
 	public Op delete() {
-		return new Op("delete", new Contract(OBIX_NIL), new Contract(OBIX_NIL));
-	}
+		Op delete = new Op("delete", new Contract(OBIX_NIL), new Contract(OBIX_NIL));
+		delete.setHref(new Uri("delete"));
+		delete.setOperationHandler(new OperationHandler(){
+			@Override
+			public Obj invoke(Obj in) {
+				// Perform delete logic
+				deleteWatch();
 
+				return new NilImpl();
+			}		
+		});
+		
+		return delete;
+	}
+	
+	private void deleteWatch() {
+		for (Observer observer : observers.values()) {
+			Obj beingObservedObject = (Obj) observer.getSubject();
+			beingObservedObject.detach(observer);
+			observers.remove(observer);
+			observer = null;
+		}
+		
+		expirationTimer.cancel(false);
+		broker.removeObj(getFullContextPath());
+	}
+	
+	/**
+	 * Resets the lease timer
+	 */
+	private void resetExpiration() {
+		if (expireTask == null) {
+			expireTask = new Runnable() {
+				public void run() {
+					log.info("Lease for watch " + thisWatch().getHref().getPath() +  " expired");
+					deleteWatch();
+				}
+			};
+		}
+		
+		if (expirationTimer != null) {
+			expirationTimer.cancel(false);
+		}
+		expirationTimer = timers.schedule(expireTask, lease.get(), TimeUnit.MILLISECONDS);
+	}
+	
+	@Override
+	public void refreshObject() {
+		super.refreshObject();
+		if (!expirationTimer.isCancelled())
+			resetExpiration();
+	}
+	
+	@Override
+	public void writeObject(Obj input) {
+		super.writeObject(input);
+		
+		if (input instanceof Reltime) {
+			lease.set(((Reltime) input).get());
+			resetExpiration();
+		}
+	}
 }

@@ -34,6 +34,7 @@ package at.ac.tuwien.auto.iotsys.gateway.connectors.enocean;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -52,25 +53,17 @@ import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
 
 public class EnoceanDeviceLoaderImpl implements DeviceLoader {
 
-	private final ArrayList<String> myObjects = new ArrayList<String>();
+	private final ArrayList<Obj> myObjects = new ArrayList<Obj>();
 
-	private XMLConfiguration devicesConfig = new XMLConfiguration();
+	private XMLConfiguration devicesConfig;
 
 	private final static Logger log = Logger
 			.getLogger(EnoceanDeviceLoaderImpl.class.getName());
 
-	public EnoceanDeviceLoaderImpl() {
-		String devicesConfigFile = DEVICE_CONFIGURATION_LOCATION;
-
-		try {
-			devicesConfig = new XMLConfiguration(devicesConfigFile);
-		} catch (Exception e) {
-			log.log(Level.SEVERE, e.getMessage(), e);
-		}
-	}
-
 	@Override
 	public ArrayList<Connector> initDevices(ObjectBroker objectBroker) {
+		setConfiguration(devicesConfig);
+		
 		// Hard-coded connections and object creation
 
 		ArrayList<Connector> connectors = new ArrayList<Connector>();
@@ -111,7 +104,8 @@ public class EnoceanDeviceLoaderImpl implements DeviceLoader {
 					int numberOfDevices = 0;
 					if (enoceanConfiguredDevices != null) {
 						numberOfDevices = 1; // there is at least one device.
-					} else if (enoceanConfiguredDevices instanceof Collection<?>) {
+					}
+					if (enoceanConfiguredDevices instanceof Collection<?>) {
 						Collection<?> enoceanDevices = (Collection<?>) enoceanConfiguredDevices;
 						numberOfDevices = enoceanDevices.size();
 					}
@@ -188,24 +182,20 @@ public class EnoceanDeviceLoaderImpl implements DeviceLoader {
 											Obj enoceanDevice = (Obj) declaredConstructors[k]
 													.newInstance(args);
 
-											enoceanDevice.setHref(new Uri(href));
+											enoceanDevice.setHref(new Uri(URLEncoder.encode(connectorName, "UTF-8") + "/" + href));
 
 											if (name != null
 													&& name.length() > 0) {
 												enoceanDevice.setName(name);
 											}
 
-											ArrayList<String> assignedHrefs = null;
-
 											if (ipv6 != null) {
-												assignedHrefs = objectBroker
-														.addObj(enoceanDevice, ipv6);
+												objectBroker.addObj(enoceanDevice, ipv6);
 											} else {
-												assignedHrefs = objectBroker
-														.addObj(enoceanDevice);
+												objectBroker.addObj(enoceanDevice);
 											}
 
-											myObjects.addAll(assignedHrefs);
+											myObjects.add(enoceanDevice);
 
 											enoceanDevice.initialize();
 
@@ -289,11 +279,24 @@ public class EnoceanDeviceLoaderImpl implements DeviceLoader {
 	@Override
 	public void removeDevices(ObjectBroker objectBroker) {
 		synchronized (myObjects) {
-			for (String href : myObjects) {
-				objectBroker.removeObj(href);
+			for (Obj obj : myObjects) {
+				objectBroker.removeObj(obj.getFullContextPath());
 			}
 		}
 
+	}
+	
+
+	@Override
+	public void setConfiguration(XMLConfiguration devicesConfiguration) {
+		this.devicesConfig = devicesConfiguration;
+		if (devicesConfiguration == null) {
+			try {
+				devicesConfig = new XMLConfiguration(DEVICE_CONFIGURATION_LOCATION);
+			} catch (Exception e) {
+				log.log(Level.SEVERE, e.getMessage(), e);
+			}
+		}
 	}
 
 }

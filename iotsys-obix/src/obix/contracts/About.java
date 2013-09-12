@@ -4,31 +4,31 @@ import obix.*;
 
 /**
  * About
- *
- * @author    obix.tools.Obixc
- * @creation  24 May 06
- * @version   $Revision$ $Date$
+ * 
+ * @author obix.tools.Obixc
+ * @creation 24 May 06
+ * @version $Revision$ $Date$
  */
-public interface About
-  extends IObj
+public interface About extends IObj
 {
+	public static final String CONTRACT = "obix:About";
 
-  public Str obixVersion();
+	public Str obixVersion();
 
-  public Str serverName();
+	public Str serverName();
 
-  public Abstime serverTime();
+	public Abstime serverTime();
 
-  public Abstime serverBootTime();
+	public Abstime serverBootTime();
 
-  public Str vendorName();
+	public Str vendorName();
 
-  public Uri vendorUrl();
+	public Uri vendorUrl();
 
-  public Str productName();
+	public Str productName();
 
-  public Str productVersion();
+	public Str productVersion();
 
-  public Uri productUrl();
+	public Uri productUrl();
 
 }

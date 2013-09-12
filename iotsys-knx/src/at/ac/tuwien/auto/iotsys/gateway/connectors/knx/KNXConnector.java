@@ -123,6 +123,10 @@ public class KNXConnector implements Connector {
 			log.info("KNX tunnel established.");
 		}
 	}
+	
+	public ProcessCommunicator getProcessCommunicator(){
+		return pc;
+	}
 
 	public boolean isConnected() {
 		synchronized (this) {
@@ -253,7 +257,8 @@ public class KNXConnector implements Connector {
 			CEMILData data = (CEMILData) e.getFrame();
 
 			GroupAddress target = (GroupAddress) data.getDestination(); // getDestinationAddress();
-			log.fine("Received frame for " + target);
+			log.info("Received frame for " + target + " from " + data.getSource());
+			
 			synchronized (watchDogs) {
 
 				if (watchDogs.containsKey(target.getRawAddress())) {

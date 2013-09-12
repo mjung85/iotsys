@@ -9,6 +9,7 @@ eclipse{
 				node.appendNode('classpathentry', [kind: 'src', path: '/iotsys-bacnet4j', exported:'true'])
 				node.appendNode('classpathentry', [kind: 'src', path: '/iotsys-common', exported:'true'])
 				node.appendNode('classpathentry', [kind: 'src', path: '/iotsys-obix', exported:'true'])
+				node.appendNode('classpathentry', [kind: 'src', path: '/iotsys-osgi', exported:'true'])
 			}
 		}
 	}
@@ -81,6 +82,7 @@ dependencies {
 	provided project(':iotsys-obix')
 	provided project(':iotsys-common')
 	provided project(':iotsys-bacnet4j')
+	provided project(':iotsys-osgi')
 	
 	
 	provided group: 'org.apache.felix', name: 'org.osgi.core', version: '1.4.0'

@@ -32,7 +32,9 @@
 
 package at.ac.tuwien.auto.iotsys.gateway.obix.objects;
 
+import at.ac.tuwien.auto.iotsys.gateway.obix.groupcomm.GroupComm;
 import obix.Obj;
+import obix.contracts.History;
 
 public class HistoryHelper {
 	public static final int HISTORY_COUNT_DEFAULT = 10;
@@ -58,8 +60,11 @@ public class HistoryHelper {
 			impl.initialize();
 		}
 		
-		for(Obj child : obj.list()){
-			addHistoryToDatapoints(child, countMax);
+		for(Obj child : obj.list()) {
+			if (child.isHidden()) continue;
+			
+			if (!(child instanceof History || child instanceof GroupComm))
+				addHistoryToDatapoints(child, countMax);
 		}
 	}
 }
