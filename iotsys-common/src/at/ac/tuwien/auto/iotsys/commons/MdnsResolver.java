@@ -42,4 +42,5 @@ public interface MdnsResolver {
 	public void registerDevice(String name, Class<?> deviceClass, String ipv6);
 	public String resolve(String name);
 	public int getNumberOfRecord();
+	public void unregisterAllDevice();
 }

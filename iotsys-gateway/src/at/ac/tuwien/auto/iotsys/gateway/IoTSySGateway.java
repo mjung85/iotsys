@@ -247,6 +247,7 @@ public class IoTSySGateway
 
 	public void stopGateway()
 	{
+		objectBroker.getMDnsResolver().unregisterAllDevice();
 		objectBroker.shutdown();
 		// CsvCreator.instance.close();
 		closeConnectors();

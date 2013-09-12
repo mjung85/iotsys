@@ -4,6 +4,7 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 
 import at.ac.tuwien.auto.iotsys.gateway.IoTSySGateway;
+import at.ac.tuwien.auto.iotsys.mdnssd.MdnsResolverImpl;
 
 public class AbstractGatewayTest {
 	private static IoTSySGateway gateway;
@@ -11,6 +12,7 @@ public class AbstractGatewayTest {
 	@BeforeClass
 	public static void setUp() {
 		gateway = new IoTSySGateway();
+		gateway.setMdnsResolver(MdnsResolverImpl.getInstance());
 		gateway.startGateway("config/devices.test.xml");
 	}
 	
