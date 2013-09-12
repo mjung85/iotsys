@@ -109,102 +109,102 @@ public class ObjectBrokerImpl implements ObjectBroker {
 		
 		alarmSubjectImpl.initialize();
 
-		Obj enums = new Obj();
-		enums.setName("enums");
-		enums.setHref(new Uri("enums"));
+//		Obj enums = new Obj();
+//		enums.setName("enums");
+//		enums.setHref(new Uri("enums"));
+//
+//		// compareType enum
+//		List compareTypes = new List();
+//
+//		compareTypes.setIs(new Contract("obix:Range"));
+//		compareTypes.setHref(new Uri("compareTypes"));
+//		compareTypes.setName("compareTypes");
+//
+//		Obj eq = new Obj();
+//		eq.setName("eq");
+//		Obj gte = new Obj();
+//		gte.setName("gte");
+//		Obj gt = new Obj();
+//		gt.setName("gt");
+//
+//		Obj lt = new Obj();
+//		lt.setName("lt");
+//
+//		Obj lte = new Obj();
+//		lte.setName("lte");
+//
+//		compareTypes.add(eq);
+//		compareTypes.add(lt);
+//		compareTypes.add(lte);
+//		compareTypes.add(gt);
+//		compareTypes.add(gte);
+//
+//		enums.add(compareTypes);
+//
+//		// operation type enums
+//
+//		List operationTypes = new List();
+//
+//		operationTypes.setIs(new Contract("obix:Range"));
+//		operationTypes.setHref(new Uri("operationTypes"));
+//		operationTypes.setName("operationTypes");
+//
+//		Obj opAdd = new Obj();
+//		opAdd.setName(BinaryOperation.BIN_OP_ADD);
+//
+//		Obj opSub = new Obj();
+//		opSub.setName(BinaryOperation.BIN_OP_SUB);
+//
+//		Obj opMul = new Obj();
+//		opMul.setName(BinaryOperation.BIN_OP_MUL);
+//
+//		Obj opMod = new Obj();
+//		opMod.setName(BinaryOperation.BIN_OP_MOD);
+//
+//		Obj opDiv = new Obj();
+//		opDiv.setName(BinaryOperation.BIN_OP_DIV);
+//
+//		operationTypes.add(opAdd);
+//		operationTypes.add(opSub);
+//		operationTypes.add(opMul);
+//		operationTypes.add(opDiv);
+//		operationTypes.add(opMod);
+//
+//		enums.add(operationTypes);
+//
+//		// binary logic operations
+//		// operation type enums
+//
+//		List logicOperationTypes = new List();
+//
+//		logicOperationTypes.setIs(new Contract("obix:Range"));
+//		logicOperationTypes.setHref(new Uri("logicOperationTypes"));
+//		logicOperationTypes.setName("logicOperationTypes");
+//
+//		Obj opAnd = new Obj();
+//		opAnd.setName(LogicBinaryOperation.BIN_OP_AND);
+//
+//		Obj opOr = new Obj();
+//		opOr.setName(LogicBinaryOperation.BIN_OP_OR);
+//
+//		Obj opXor = new Obj();
+//		opXor.setName(LogicBinaryOperation.BIN_OP_XOR);
+//
+//		Obj opNand = new Obj();
+//		opNand.setName(LogicBinaryOperation.BIN_OP_NAND);
+//
+//		Obj opNor = new Obj();
+//		opNor.setName(LogicBinaryOperation.BIN_OP_NOR);
+//
+//		logicOperationTypes.add(opAnd);
+//		logicOperationTypes.add(opOr);
+//		logicOperationTypes.add(opXor);
+//		logicOperationTypes.add(opNand);
+//		logicOperationTypes.add(opNor);
 
-		// compareType enum
-		List compareTypes = new List();
+//		enums.add(logicOperationTypes);
 
-		compareTypes.setIs(new Contract("obix:Range"));
-		compareTypes.setHref(new Uri("compareTypes"));
-		compareTypes.setName("compareTypes");
-
-		Obj eq = new Obj();
-		eq.setName("eq");
-		Obj gte = new Obj();
-		gte.setName("gte");
-		Obj gt = new Obj();
-		gt.setName("gt");
-
-		Obj lt = new Obj();
-		lt.setName("lt");
-
-		Obj lte = new Obj();
-		lte.setName("lte");
-
-		compareTypes.add(eq);
-		compareTypes.add(lt);
-		compareTypes.add(lte);
-		compareTypes.add(gt);
-		compareTypes.add(gte);
-
-		enums.add(compareTypes);
-
-		// operation type enums
-
-		List operationTypes = new List();
-
-		operationTypes.setIs(new Contract("obix:Range"));
-		operationTypes.setHref(new Uri("operationTypes"));
-		operationTypes.setName("operationTypes");
-
-		Obj opAdd = new Obj();
-		opAdd.setName(BinaryOperation.BIN_OP_ADD);
-
-		Obj opSub = new Obj();
-		opSub.setName(BinaryOperation.BIN_OP_SUB);
-
-		Obj opMul = new Obj();
-		opMul.setName(BinaryOperation.BIN_OP_MUL);
-
-		Obj opMod = new Obj();
-		opMod.setName(BinaryOperation.BIN_OP_MOD);
-
-		Obj opDiv = new Obj();
-		opDiv.setName(BinaryOperation.BIN_OP_DIV);
-
-		operationTypes.add(opAdd);
-		operationTypes.add(opSub);
-		operationTypes.add(opMul);
-		operationTypes.add(opDiv);
-		operationTypes.add(opMod);
-
-		enums.add(operationTypes);
-
-		// binary logic operations
-		// operation type enums
-
-		List logicOperationTypes = new List();
-
-		logicOperationTypes.setIs(new Contract("obix:Range"));
-		logicOperationTypes.setHref(new Uri("logicOperationTypes"));
-		logicOperationTypes.setName("logicOperationTypes");
-
-		Obj opAnd = new Obj();
-		opAnd.setName(LogicBinaryOperation.BIN_OP_AND);
-
-		Obj opOr = new Obj();
-		opOr.setName(LogicBinaryOperation.BIN_OP_OR);
-
-		Obj opXor = new Obj();
-		opXor.setName(LogicBinaryOperation.BIN_OP_XOR);
-
-		Obj opNand = new Obj();
-		opNand.setName(LogicBinaryOperation.BIN_OP_NAND);
-
-		Obj opNor = new Obj();
-		opNor.setName(LogicBinaryOperation.BIN_OP_NOR);
-
-		logicOperationTypes.add(opAnd);
-		logicOperationTypes.add(opOr);
-		logicOperationTypes.add(opXor);
-		logicOperationTypes.add(opNand);
-		logicOperationTypes.add(opNor);
-
-		enums.add(logicOperationTypes);
-
-		addObj(enums, true);
+//		addObj(enums, true);
 		
 		// create default watch
 		WatchImpl watchImpl = new WatchImpl(this);	

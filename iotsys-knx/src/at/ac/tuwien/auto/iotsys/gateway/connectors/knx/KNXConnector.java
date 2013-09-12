@@ -257,7 +257,7 @@ public class KNXConnector implements Connector {
 			CEMILData data = (CEMILData) e.getFrame();
 
 			GroupAddress target = (GroupAddress) data.getDestination(); // getDestinationAddress();
-			log.info("Received frame for " + target);
+			log.info("Received frame for " + target + " from " + data.getSource());
 			
 			synchronized (watchDogs) {
 

@@ -29,20 +29,21 @@ public class DPST_1_1_ImplKnx extends DPST_1_1_Impl
 		this.connector = connector;
 
 		// if it is not possible to read from the group address --> create a
-		// watchdog that monitors the communicaiton
+		// watchdog that monitors the communication
 
-		if (readFlag)
+		if (!readFlag)
 			this.createWatchDog();
 	}
 
 	public void createWatchDog()
 	{
-
+		System.out.println("Creating watch dog for " + groupAddress);
 		connector.addWatchDog(groupAddress, new KNXWatchDog()
 		{
 			@Override
 			public void notifyWatchDog(byte[] apdu)
 			{
+				System.out.println("Notifywatchdog!" + groupAddress);
 				try
 				{
 					DPTXlatorBoolean x = new DPTXlatorBoolean(DPTXlatorBoolean.DPT_SWITCH);
