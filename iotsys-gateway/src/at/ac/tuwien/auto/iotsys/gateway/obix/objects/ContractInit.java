@@ -48,7 +48,7 @@ import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.datapoint.DPT_1;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.datapoint.DPT_3;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.datapoint.DPT_5_A;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.datapoint.DPT_9;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.datapoint.DataPoint;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.datapoint.Datapoint;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.AirDamperActuator;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.BoilerActuator;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.BrightnessActuator;
@@ -127,7 +127,7 @@ public class ContractInit
 	  ContractRegistry.put(HVACSimulation.CONTRACT, HVACSimulation.class.getName());
 
 	  // Gateway
-	  ContractRegistry.put(DataPoint.CONTRACT, DataPoint.class.getName());
+	  ContractRegistry.put(Datapoint.CONTRACT, Datapoint.class.getName());
 	  ContractRegistry.put(DPT_1.CONTRACT, DPT_1.class.getName());
 	  ContractRegistry.put(DPT_3.CONTRACT, DPT_3.class.getName());
 	  ContractRegistry.put(DPT_5_A.CONTRACT, DPT_5_A.class.getName());

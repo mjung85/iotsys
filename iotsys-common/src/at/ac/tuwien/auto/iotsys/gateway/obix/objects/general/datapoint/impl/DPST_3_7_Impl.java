@@ -37,7 +37,7 @@ import obix.Obj;
 import obix.Op;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.datapoint.DPST_3_7;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.datapoint.DPT_3;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.datapoint.DataPoint;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.datapoint.Datapoint;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.language.Multilingual;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.parameter.ParameterDimming;
 
@@ -48,7 +48,7 @@ public class DPST_3_7_Impl extends DPT_3_Impl implements DPST_3_7
 
 	public DPST_3_7_Impl(String name, String displayName, String display)
 	{
-		super(name, displayName, display, new Contract(new String[] { DPST_3_7.CONTRACT, DPT_3.CONTRACT, DataPoint.CONTRACT, Multilingual.CONTRACT }));
+		super(name, displayName, display, new Contract(new String[] { DPST_3_7.CONTRACT, DPT_3.CONTRACT, Datapoint.CONTRACT, Multilingual.CONTRACT }));
 
 		// Operation increase
 		this.increase = new Op();
