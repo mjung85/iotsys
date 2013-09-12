@@ -45,12 +45,17 @@ import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.enumeration.impl.En
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.language.impl.TranslationImpl;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.network.Network;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.network.impl.NetworkImpl;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.parameter.impl.ParametersImpl;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.unit.impl.UnitsImpl;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.view.impl.AreaImpl;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.view.impl.DomainImpl;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.view.impl.GroupImpl;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.view.impl.PartImpl;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.knx.datapoint.impl.DPST_1_1_ImplKnx;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.knx.datapoint.impl.DPST_3_7_ImplKnx;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.knx.datapoint.impl.DPST_5_1_ImplKnx;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.knx.datapoint.impl.DPST_9_1_ImplKnx;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.knx.datapoint.impl.DPST_9_8_ImplKnx;
 
 public class KNXDeviceLoaderETSImpl implements DeviceLoader
 {
@@ -154,6 +159,10 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader
 		UnitsImpl units = new UnitsImpl();
 		objectBroker.addObj(units, true);
 
+		// Parameters
+		ParametersImpl parameters = new ParametersImpl();
+		objectBroker.addObj(parameters, true);
+
 		// Encoding
 		EncodingsImpl encodings = new EncodingsImpl();
 		objectBroker.addObj(encodings, true);
@@ -163,15 +172,38 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader
 		networks.add(n);
 		networks.add(n.getReference(false));
 
-		// Entities
+		// Entities and Datapoints
 		EntityImpl entity = new EntityImpl("P-0341-0_DI-3", "Switching actuator N 567/01, (8 Amp)", null, "Siemens", "5WG1 567-1AB01");
 		entity.addTranslation(new TranslationImpl("de-DE", "displayName", "Schaltaktor N 567/01, (8 Amp)"));
 		n.getEntities().addEntity(entity);
 
-		// Datapoint
-		DPST_1_1_ImplKnx datapoint = new DPST_1_1_ImplKnx(knxConnector, new GroupAddress(1, 0, 0), "P-0341-0_DI-3_M-0001_A-9803-03-3F77_O-3_R-4", "Switch, Channel A", "On / Off", true);
-		datapoint.addTranslation(new TranslationImpl("de-DE", "displayName", "Schalten, Kanal A"));
-		entity.addDatapoint(datapoint);
+		DPST_1_1_ImplKnx datapoint_lightonoff = new DPST_1_1_ImplKnx(knxConnector, new GroupAddress(1, 0, 0), "P-0341-0_DI-3_M-0001_A-9803-03-3F77_O-3_R-4", "Switch, Channel A", "On / Off", true);
+		datapoint_lightonoff.addTranslation(new TranslationImpl("de-DE", "displayName", "Schalten, Kanal A"));
+		entity.addDatapoint(datapoint_lightonoff);
+
+		entity = new EntityImpl("P-0341-0_DI-2", "Universal dimmer N 527", null, "Siemens", "5WG1 527-1AB01");
+		entity.addTranslation(new TranslationImpl("de-DE", "displayName", "Universal-Dimmer N 527"));
+		n.getEntities().addEntity(entity);
+
+		DPST_3_7_ImplKnx datapoint_dimming = new DPST_3_7_ImplKnx(knxConnector, new GroupAddress(1, 0, 1), "P-0341-0_DI-2_M-0001_A-6102-01-A218_O-1_R-1", "Dimming", "Brighter / Darker");
+		entity.addDatapoint(datapoint_dimming);
+
+		DPST_5_1_ImplKnx datapoint_dimming_status = new DPST_5_1_ImplKnx(knxConnector, new GroupAddress(1, 0, 3), "P-0341-0_DI-2_M-0001_A-6102-01-A218_O-3_R-3", "Status", "8-bit Value", false);
+		entity.addDatapoint(datapoint_dimming_status);
+
+		entity = new EntityImpl("P-0341-0_DI-11", "Temperature Sensor N 258/02", null, "Siemens", "5WG1 258-1AB02");
+		entity.addTranslation(new TranslationImpl("de-DE", "displayName", "Temperatursensor N 258/02"));
+		n.getEntities().addEntity(entity);
+
+		DPST_9_1_ImplKnx datapoint_temperature = new DPST_9_1_ImplKnx(knxConnector, new GroupAddress(1, 1, 0), "P-0341-0_DI-11_M-0001_A-9814-01-5F7E_O-0_R-2", "Temperature, Channel A", "∞C-value (EIS5)");
+		entity.addDatapoint(datapoint_temperature);
+
+		entity = new EntityImpl("P-0341-0_DI-7", "KNX CO≤, Humidity and Temperature Sensor", null, "Schneider Electric Industries SAS", "MTN6005-0001");
+		entity.addTranslation(new TranslationImpl("de-DE", "displayName", "KNX CO2-, Feuchte- und Temperatursensor"));
+		n.getEntities().addEntity(entity);
+
+		DPST_9_8_ImplKnx datapoint_co2 = new DPST_9_8_ImplKnx(knxConnector, new GroupAddress(1, 3, 0), "P-0341-0_DI-7_M-0064_A-FF21-11-DDFC-O0048_O-0_R-1", "CO2 Value", "Physical Value");
+		entity.addDatapoint(datapoint_co2);
 
 		// Views
 		PartImpl building = new PartImpl("P-0341-0_BP-1", "Treitlstraﬂe 1-3", null, EnumPart.KEY_BUILDING);
@@ -190,7 +222,7 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader
 		all.addGroup(light);
 		light.addGroup(lightonoff);
 		lightonoff.addFunction(new DPST_1_1_ImplKnx(knxConnector, new GroupAddress(1, 0, 0), "function", null, null, true));
-		lightonoff.addInstance(datapoint, EnumConnector.KEY_SEND);
+		lightonoff.addInstance(datapoint_lightonoff, EnumConnector.KEY_SEND);
 		n.getFunctional().addGroup(all);
 
 		AreaImpl area = new AreaImpl("P-0341-0_A-2", "All component", "Zone 8", 8, null);

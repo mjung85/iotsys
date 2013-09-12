@@ -32,24 +32,8 @@
 package at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.network;
 
 import obix.IObj;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.entity.Entities;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.view.ViewBuilding;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.view.ViewDomains;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.view.ViewFunctional;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.view.ViewTopology;
 
 public interface Network extends IObj
 {
 	public static final String CONTRACT = "knx:Network";
-	
-	public ViewFunctional getFunctional();
-
-	public ViewTopology getTopology();
-
-	public ViewBuilding getBuilding();
-
-	public ViewDomains getDomains();
-
-	public Entities getEntities();
-
 }

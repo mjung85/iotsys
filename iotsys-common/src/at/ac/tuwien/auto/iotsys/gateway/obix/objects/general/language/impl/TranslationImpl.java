@@ -37,8 +37,8 @@ import obix.Enum;
 import obix.Obj;
 import obix.Str;
 import obix.Uri;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.enumeration.EnumTranslation;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.enumeration.EnumLanguage;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.enumeration.EnumTranslation;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.language.Translation;
 
 public class TranslationImpl extends Obj implements Translation
@@ -46,7 +46,7 @@ public class TranslationImpl extends Obj implements Translation
 	private Enum language;
 	private Enum attribute;
 	private Str value;
-	
+
 	public TranslationImpl(String language, String attribute, String value)
 	{
 		this.setIs(new Contract(Translation.CONTRACT));
@@ -75,19 +75,16 @@ public class TranslationImpl extends Obj implements Translation
 		this.add(this.value);
 	}
 
-	@Override
 	public String getLanguage()
 	{
 		return language.get();
 	}
 
-	@Override
 	public String getAttribute()
 	{
 		return attribute.get();
 	}
 
-	@Override
 	public String getValue()
 	{
 		return value.get();
