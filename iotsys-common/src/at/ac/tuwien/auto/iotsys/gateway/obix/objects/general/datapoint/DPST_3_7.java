@@ -31,8 +31,13 @@
 
 package at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.datapoint;
 
+import obix.Op;
+
 public interface DPST_3_7 extends DPT_3
 {
 	public static final String CONTRACT = "knx:DPST-3-7";
 
+	public Op increase();
+	
+	public Op decrease();
 }

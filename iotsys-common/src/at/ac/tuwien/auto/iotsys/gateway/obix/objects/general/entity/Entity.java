@@ -35,5 +35,5 @@ import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.language.Multilingu
 
 public interface Entity extends Multilingual
 {
-	public static final String[] CONTRACT = {"knx:Entity", Multilingual.CONTRACT};
+	public static final String CONTRACT = "knx:Entity";
 }

@@ -51,10 +51,12 @@ public class EntityImpl extends MultilingualImpl implements Entity
 
 	public EntityImpl(String name, String displayName, String display, String manufacturer, String ordernumber)
 	{
+		super();
+
 		this.setName(name);
 		this.setDisplay(display);
 		this.setDisplayName(displayName);
-		this.setIs(new Contract(Entity.CONTRACT));
+		this.setIs(new Contract(new String[] { Entity.CONTRACT, Multilingual.CONTRACT }));
 		this.setHidden(true);
 
 		if (manufacturer != null)
