@@ -38,7 +38,7 @@ import obix.Contract;
 import obix.List;
 import obix.Str;
 import obix.Uri;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.datapoint.Datapoint;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.datapoint.DataPoint;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.datapoint.impl.DatapointImpl;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.entity.Entity;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.language.Multilingual;
@@ -47,7 +47,7 @@ import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.language.impl.Multi
 public class EntityImpl extends MultilingualImpl implements Entity
 {
 	private List list;
-	private ArrayList<Datapoint> datapoints;
+	private ArrayList<DataPoint> datapoints;
 
 	public EntityImpl(String name, String displayName, String display, String manufacturer, String ordernumber)
 	{
@@ -82,11 +82,11 @@ public class EntityImpl extends MultilingualImpl implements Entity
 	{
 		if (this.datapoints == null)
 		{
-			this.list = new List("datapoints", new Contract(new String[] { Datapoint.CONTRACT, Multilingual.CONTRACT }));
+			this.list = new List("datapoints", new Contract(new String[] { DataPoint.CONTRACT, Multilingual.CONTRACT }));
 			this.list.setHref(new Uri("datapoints"));
 			this.add(this.list);
 
-			this.datapoints = new ArrayList<Datapoint>();
+			this.datapoints = new ArrayList<DataPoint>();
 		}
 
 		this.list.add(datapoint);
