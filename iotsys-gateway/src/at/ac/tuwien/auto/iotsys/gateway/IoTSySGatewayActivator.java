@@ -36,29 +36,46 @@ import java.util.logging.Logger;
 
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceEvent;
+import org.osgi.framework.ServiceListener;
+import org.osgi.framework.ServiceReference;
 
-import at.ac.tuwien.auto.iotsys.commons.DeviceLoader;
 import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
+import at.ac.tuwien.auto.iotsys.commons.MdnsResolver;
 import at.ac.tuwien.auto.iotsys.commons.interceptor.InterceptorBroker;
 import at.ac.tuwien.auto.iotsys.gateway.interceptor.InterceptorBrokerImpl;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objectbroker.ObjectBrokerImpl;
 
+
 /**
  * Gateway activator for an OSGI container.
  */
-public class IoTSySGatewayActivator implements BundleActivator{
+public class IoTSySGatewayActivator implements BundleActivator, ServiceListener{
 	
 	private IoTSySGateway iotsysGateway = null;
 	
 	private static final Logger log = Logger.getLogger(IoTSySGatewayActivator.class.getName());
 	
 	private DeviceLoaderListener deviceLoaderListener = new DeviceLoaderListener();
-
+	
+	private MdnsResolver resolver;
+	
 	@Override
 	public void start(BundleContext bundleContext) throws Exception {
 		log.info("Starting IoTSySGateway.");
+		
+		ServiceReference serviceReference = bundleContext
+				.getServiceReference(MdnsResolver.class.getName());
+		if (serviceReference == null) {
+			log.severe("Could not find mDNS-SD Service!");
+		} else {
+				resolver = (MdnsResolver) bundleContext
+						.getService(serviceReference);
+		}
+		
 		iotsysGateway = new IoTSySGateway();
 		iotsysGateway.setOsgiEnvironment(true);
+		iotsysGateway.setMdnsResolver(resolver);
 		iotsysGateway.startGateway();	
 		
 		bundleContext.registerService(ObjectBroker.class.getName(), ObjectBrokerImpl.getInstance(), null);
@@ -73,6 +90,12 @@ public class IoTSySGatewayActivator implements BundleActivator{
 	public void stop(BundleContext bundleContext) throws Exception {
 		log.info("Stopping IoTSySGateway.");
 		iotsysGateway.stopGateway();	
+	}
+
+	@Override
+	public void serviceChanged(ServiceEvent arg0) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

@@ -36,7 +36,6 @@ import java.net.URI;
 import java.util.logging.Logger;
 
 import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
-
 import obix.Err;
 import obix.Obj;
 import obix.Uri;
@@ -62,8 +61,7 @@ public class ObixServerImpl implements ObixServer{
 	}
 
 	public Obj readObj(URI href, String user) {
-		Obj o = new Obj();
-		o = objectBroker.pullObj(new Uri(href.toASCIIString()));
+		Obj o = objectBroker.pullObj(new Uri(href.toASCIIString()));
 		return o;
 	}
 
@@ -97,16 +95,21 @@ public class ObixServerImpl implements ObixServer{
 			input = ObixDecoder.fromString(xmlStream);
 		}
 		try {
-			Obj o = new Obj();
-			o = objectBroker.invokeOp(new Uri(href.toASCIIString()), input,
-					true);
-
+			Obj o = objectBroker.invokeOp(new Uri(href.toASCIIString()), input);
 			return o;
 		} catch (Exception ex) {
-			Err e = new Err("Error invoking operation" + ex.getMessage());
+			Err e = new Err("Error invoking operation: " + ex.getMessage());
 			ex.printStackTrace();
 			return e;
 		}
+	}
+	
+	@Override
+	public String getNormalizedPath(String href) {
+		Obj o = objectBroker.pullObj(new Uri(href));
+		if (o == null) return null;
+		
+		return o.getFullContextPath();
 	}
 
 }

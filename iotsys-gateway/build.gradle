@@ -20,13 +20,15 @@ eclipse{
 				node.appendNode('classpathentry', [kind: 'src', path: '/iotsys-demoapp', exported:'true'])
 				node.appendNode('classpathentry', [kind: 'src', path: '/iotsys-xacml', exported:'true'])
 				node.appendNode('classpathentry', [kind: 'lib', path: '/iotsys-xacml/res', exported:'true'])
+				node.appendNode('classpathentry', [kind: 'src', path: '/iotsys-osgi', exported:'true'])
+				node.appendNode('classpathentry', [kind: 'src', path: '/iotsys-mdnssd', exported:'true'])
 			}
 		}
 	}
 }
 
 repositories {	
-	flatDir { dirs "lib/exi", "lib/jnetpcap" }
+	flatDir { dirs "lib/exi", "lib/californium" }
 }
 
 configurations {
@@ -34,11 +36,12 @@ configurations {
 	testProvided
 }
 
-sourceSets{
+sourceSets {
 	main { compileClasspath += configurations.provided }
 	
 	test {
 		java { srcDir 'test' }
+		compileClasspath += configurations.testProvided
 		runtimeClasspath += configurations.provided
 		runtimeClasspath += configurations.testProvided
 	}
@@ -63,7 +66,7 @@ jar {
 									   "at.ac.tuwien.auto.iotsys.gateway.obix.observer, at.ac.tuwien.auto.iotsys.gateway.obix.objects.bacnet, at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot," +
 									   "at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.general.impl,"+
 									   "at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators, at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl, " +
-									   "at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors, at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl, at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.logic, at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.logic.impl,at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sim," +
+									   "at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors, at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl, at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.logic, at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.logic.impl,at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sim,at.ac.tuwien.auto.iotsys.gateway.obix.objects.knx.datapoint," +
 									   "org.xml.sax, org.xml.sax.helpers, org.xml.sax.ext,  com.sun.org.apache.xalan.internal, com.sun.org.apache.xalan.internal.res, " +
 									   "org.w3c.dom, org.w3c.dom.traversal, org.w3c.dom.ls, javax.xml.parsers,  javax.xml.xpath, javax.xml.transform.sax, javax.xml.transform.dom, " +
 									   "javax.xml.namespace, javax.xml.transform, javax.xml.transform.stream, javax.xml.validation, javax.xml.datatype, "+
@@ -75,7 +78,7 @@ jar {
 									   "org.apache.commons.jexl2, org.apache.commons.jexl2.internal, org.apache.commons.jexl2.internal.introspection, org.apache.commons.jexl2.introspection, org.apache.commons.jexl2.parser, org.apache.commons.jexl2.scripting, " +
 									   "org.apache.commons.jxpath, org.apache.commons.jxpath.functions, org.apache.commons.jxpath.ri, org.apache.commons.jxpath.ri.axes, org.apache.commons.jxpath.ri.compiler, org.apache.commons.jxpath.ri.model, org.apache.commons.jxpath.ri.model.beans, org.apache.commons.jxpath.ri.model.container, org.apache.commons.jxpath.ri.model.dom, org.apache.commons.jxpath.ri.model.dynabeans, org.apache.commons.jxpath.ri.model.dynamic, org.apache.commons.jxpath.ri.model.jdom, org.apache.commons.jxpath.ri.parser,org.apache.commons.jxpath.servlet, org.apache.commons.jxpath.util, org.apache.commons.jxpath.xml, " +
 									   "org.apache.commons.lang, org.apache.commons.lang.builder, org.apache.commons.lang.enums, org.apache.commons.lang.exception, org.apache.commons.lang.math, org.apache.commons.lang.mutable, org.apache.commons.lang.text, org.apache.commons.lang.time, " +
-									   "org.apache.commons.logging, org.apache.commons.logging.impl"
+									   "org.apache.commons.logging, org.apache.commons.logging.impl, at.ac.tuwien.auto.iotsys.mdnssd"
 				   )
 	}
 }
@@ -84,9 +87,10 @@ dependencies {
 	provided project(':iotsys-obix')
 	provided project(':iotsys-common')
 	provided project(':iotsys-encoding-json')
-	provided project(':iotsys-control');
+	provided project(':iotsys-control')
 
 	provided project(':iotsys-xacml')
+	provided project(':iotsys-mdnssd')
 	
 	//provided group: 'org.apache.felix', name: 'org.apache.felix.framework', version: '4.2.0'
 	provided group: 'org.apache.felix', name: 'org.osgi.core', version: '1.4.0'
@@ -106,8 +110,10 @@ dependencies {
 	compile group: 'net.sourceforge.javacsv', name: 'javacsv', version: '2.0'
 	
 	compile ":nagasena:"
-	compile ":jnetpcap:"
+	compile ":californium-0.12.0-mif_mc:"
 
+	testProvided project(':iotsys-obix')
+	testProvided project(':iotsys-common')
 	testProvided project(':iotsys-virtual')
 	testCompile group: 'junit',name:'junit',version: '4.8+' 
 	testCompile group: 'com.jayway.restassured', name: 'rest-assured', version: '1.2.1'

@@ -54,23 +54,14 @@ public class WMBusDeviceLoaderImpl implements DeviceLoader {
 	private static Logger log = Logger.getLogger(WMBusDeviceLoaderImpl.class
 			.getName());
 
-	private XMLConfiguration devicesConfig = new XMLConfiguration();
+	private XMLConfiguration devicesConfig;
 	
-	private ArrayList<String> myObjects = new ArrayList<String>();
-
-	public WMBusDeviceLoaderImpl() {
-		
-		String devicesConfigFile = DEVICE_CONFIGURATION_LOCATION;
-
-		try {
-			devicesConfig = new XMLConfiguration(devicesConfigFile);
-		} catch (Exception e) {
-			log.log(Level.SEVERE, e.getMessage(), e);
-		}
-	}
+	private ArrayList<Obj> myObjects = new ArrayList<Obj>();
 
 	@Override
 	public ArrayList<Connector> initDevices(ObjectBroker objectBroker) {
+		setConfiguration(devicesConfig);
+		
 		ArrayList<Connector> connectors = new ArrayList<Connector>();
 
 		int connectorsSize = 0;
@@ -177,20 +168,18 @@ public class WMBusDeviceLoaderImpl implements DeviceLoader {
 																	// device
 										smartMeter.setHref(new Uri(href));
 										
-										ArrayList<String> assignedHrefs = null;
 										if (ipv6 != null) {
-											assignedHrefs = objectBroker.addObj(smartMeter,
-													ipv6);
+											objectBroker.addObj(smartMeter, ipv6);
 										} else {
-											assignedHrefs = objectBroker.addObj(smartMeter);
+											objectBroker.addObj(smartMeter);
 										}
 										
 										if(name != null && name.length() > 0){
 											smartMeter.setName(name);
 										}
 										
-										synchronized(myObjects){
-											myObjects.addAll(assignedHrefs);
+										synchronized (myObjects) {
+											myObjects.add(smartMeter);
 										}
 										smartMeter.initialize();
 									
@@ -231,9 +220,22 @@ public class WMBusDeviceLoaderImpl implements DeviceLoader {
 
 	@Override
 	public void removeDevices(ObjectBroker objectBroker) {
-		synchronized(myObjects){
-			for(String href : myObjects){
-				objectBroker.removeObj(href);
+		synchronized(myObjects) {
+			for(Obj obj : myObjects) {
+				objectBroker.removeObj(obj.getFullContextPath());
+			}
+		}
+	}
+	
+
+	@Override
+	public void setConfiguration(XMLConfiguration devicesConfiguration) {
+		this.devicesConfig = devicesConfiguration;
+		if (devicesConfiguration == null) {
+			try {
+				devicesConfig = new XMLConfiguration(DEVICE_CONFIGURATION_LOCATION);
+			} catch (Exception e) {
+				log.log(Level.SEVERE, e.getMessage(), e);
 			}
 		}
 	}

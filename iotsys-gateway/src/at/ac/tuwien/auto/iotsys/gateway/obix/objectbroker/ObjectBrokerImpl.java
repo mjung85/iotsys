@@ -34,46 +34,45 @@ package at.ac.tuwien.auto.iotsys.gateway.obix.objectbroker;
 
 import java.net.Inet6Address;
 import java.net.UnknownHostException;
-import java.util.*;
-import java.util.logging.Level;
+import java.util.HashMap;
 import java.util.logging.Logger;
 
+import obix.Contract;
+import obix.ContractRegistry;
+import obix.Err;
+import obix.List;
+import obix.Obj;
+import obix.Op;
+import obix.Ref;
+import obix.Uri;
+import at.ac.tuwien.auto.iotsys.commons.MdnsResolver;
 import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
-import at.ac.tuwien.auto.iotsys.commons.OperationHandler;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.*;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.AboutImpl;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.AlarmSubjectImpl;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.HistoryHelper;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.WatchImpl;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.WatchServiceImpl;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.general.impl.LobbyImpl;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.logic.BinaryOperation;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.logic.LogicBinaryOperation;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.logic.impl.BinaryOperationImpl;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.logic.impl.ComparatorImpl;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.logic.impl.LogicBinaryOperationImpl;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.logic.impl.TemperatureControllerImpl;
 import at.ac.tuwien.auto.iotsys.gateway.service.GroupCommHelper;
-
-import obix.*;
-import obix.List;
 
 public class ObjectBrokerImpl implements ObjectBroker {
 
 	private static final Logger log = Logger.getLogger(ObjectBrokerImpl.class
 			.getName());
 
-	// href, obj
-	private final HashMap<String, Obj> objects;
-
-	private final HashMap<String, String> nameToHref;
+	private final Obj rootObject;
 
 	private LobbyImpl iotLobby = null;
 
 	private WatchServiceImpl watchServiceImpl = null;
+	
+	private AlarmSubjectImpl alarmSubjectImpl = null;
 
 	private AboutImpl aboutImpl = null;
 
-	private final Hashtable<String, OperationHandler> operationHandler = new Hashtable<String, OperationHandler>();
-
 	private final HashMap<String, String> ipv6Mapping = new HashMap<String, String>();
-
-	private final ArrayList<Obj> orderedObjects = new ArrayList<Obj>();
 
 	private static final ObjectBroker instance = new ObjectBrokerImpl();
 
@@ -83,14 +82,18 @@ public class ObjectBrokerImpl implements ObjectBroker {
 
 	private ObjectRefresher objectRefresher = new ObjectRefresher();
 
+	private MdnsResolver resolver;
+
 	private ObjectBrokerImpl() {
-		objects = new HashMap<String, Obj>();
-		nameToHref = new HashMap<String, String>();
+		rootObject = new Obj();
+		rootObject.setHref(new Uri("http://localhost/"));
+		
 		iotLobby = new LobbyImpl();
 
 		aboutImpl = new AboutImpl();
-
+		
 		watchServiceImpl = new WatchServiceImpl(this);
+		alarmSubjectImpl = new AlarmSubjectImpl(this);
 	}
 
 	@Override
@@ -99,105 +102,109 @@ public class ObjectBrokerImpl implements ObjectBroker {
 	}
 
 	private void initInternals() {
+		addObj(iotLobby, false);
 		addObj(watchServiceImpl);
+		addObj(alarmSubjectImpl);
 		addObj(aboutImpl, false); // About is added directly in lobby as local
+		
+		alarmSubjectImpl.initialize();
 
-		Obj enums = new Obj();
-		enums.setName("enums");
-		enums.setHref(new Uri("enums"));
+//		Obj enums = new Obj();
+//		enums.setName("enums");
+//		enums.setHref(new Uri("enums"));
+//
+//		// compareType enum
+//		List compareTypes = new List();
+//
+//		compareTypes.setIs(new Contract("obix:Range"));
+//		compareTypes.setHref(new Uri("compareTypes"));
+//		compareTypes.setName("compareTypes");
+//
+//		Obj eq = new Obj();
+//		eq.setName("eq");
+//		Obj gte = new Obj();
+//		gte.setName("gte");
+//		Obj gt = new Obj();
+//		gt.setName("gt");
+//
+//		Obj lt = new Obj();
+//		lt.setName("lt");
+//
+//		Obj lte = new Obj();
+//		lte.setName("lte");
+//
+//		compareTypes.add(eq);
+//		compareTypes.add(lt);
+//		compareTypes.add(lte);
+//		compareTypes.add(gt);
+//		compareTypes.add(gte);
+//
+//		enums.add(compareTypes);
+//
+//		// operation type enums
+//
+//		List operationTypes = new List();
+//
+//		operationTypes.setIs(new Contract("obix:Range"));
+//		operationTypes.setHref(new Uri("operationTypes"));
+//		operationTypes.setName("operationTypes");
+//
+//		Obj opAdd = new Obj();
+//		opAdd.setName(BinaryOperation.BIN_OP_ADD);
+//
+//		Obj opSub = new Obj();
+//		opSub.setName(BinaryOperation.BIN_OP_SUB);
+//
+//		Obj opMul = new Obj();
+//		opMul.setName(BinaryOperation.BIN_OP_MUL);
+//
+//		Obj opMod = new Obj();
+//		opMod.setName(BinaryOperation.BIN_OP_MOD);
+//
+//		Obj opDiv = new Obj();
+//		opDiv.setName(BinaryOperation.BIN_OP_DIV);
+//
+//		operationTypes.add(opAdd);
+//		operationTypes.add(opSub);
+//		operationTypes.add(opMul);
+//		operationTypes.add(opDiv);
+//		operationTypes.add(opMod);
+//
+//		enums.add(operationTypes);
+//
+//		// binary logic operations
+//		// operation type enums
+//
+//		List logicOperationTypes = new List();
+//
+//		logicOperationTypes.setIs(new Contract("obix:Range"));
+//		logicOperationTypes.setHref(new Uri("logicOperationTypes"));
+//		logicOperationTypes.setName("logicOperationTypes");
+//
+//		Obj opAnd = new Obj();
+//		opAnd.setName(LogicBinaryOperation.BIN_OP_AND);
+//
+//		Obj opOr = new Obj();
+//		opOr.setName(LogicBinaryOperation.BIN_OP_OR);
+//
+//		Obj opXor = new Obj();
+//		opXor.setName(LogicBinaryOperation.BIN_OP_XOR);
+//
+//		Obj opNand = new Obj();
+//		opNand.setName(LogicBinaryOperation.BIN_OP_NAND);
+//
+//		Obj opNor = new Obj();
+//		opNor.setName(LogicBinaryOperation.BIN_OP_NOR);
+//
+//		logicOperationTypes.add(opAnd);
+//		logicOperationTypes.add(opOr);
+//		logicOperationTypes.add(opXor);
+//		logicOperationTypes.add(opNand);
+//		logicOperationTypes.add(opNor);
 
-		// compareType enum
-		List compareTypes = new List();
+//		enums.add(logicOperationTypes);
 
-		compareTypes.setIs(new Contract("obix:Range"));
-		compareTypes.setHref(new Uri("compareTypes"));
-		compareTypes.setName("compareTypes");
-
-		Obj eq = new Obj();
-		eq.setName("eq");
-		Obj gte = new Obj();
-		gte.setName("gte");
-		Obj gt = new Obj();
-		gt.setName("gt");
-
-		Obj lt = new Obj();
-		lt.setName("lt");
-
-		Obj lte = new Obj();
-		lte.setName("lte");
-
-		compareTypes.add(eq);
-		compareTypes.add(lt);
-		compareTypes.add(lte);
-		compareTypes.add(gt);
-		compareTypes.add(gte);
-
-		enums.add(compareTypes);
-
-		// operation type enums
-
-		List operationTypes = new List();
-
-		operationTypes.setIs(new Contract("obix:Range"));
-		operationTypes.setHref(new Uri("operationTypes"));
-		operationTypes.setName("operationTypes");
-
-		Obj opAdd = new Obj();
-		opAdd.setName(BinaryOperation.BIN_OP_ADD);
-
-		Obj opSub = new Obj();
-		opSub.setName(BinaryOperation.BIN_OP_SUB);
-
-		Obj opMul = new Obj();
-		opMul.setName(BinaryOperation.BIN_OP_MUL);
-
-		Obj opMod = new Obj();
-		opMod.setName(BinaryOperation.BIN_OP_MOD);
-
-		Obj opDiv = new Obj();
-		opDiv.setName(BinaryOperation.BIN_OP_DIV);
-
-		operationTypes.add(opAdd);
-		operationTypes.add(opSub);
-		operationTypes.add(opMul);
-		operationTypes.add(opDiv);
-		operationTypes.add(opMod);
-
-		enums.add(operationTypes);
-
-		// binary logic operations
-		// operation type enums
-
-		List logicOperationTypes = new List();
-
-		logicOperationTypes.setIs(new Contract("obix:Range"));
-		logicOperationTypes.setHref(new Uri("logicOperationTypes"));
-		logicOperationTypes.setName("logicOperationTypes");
-
-		Obj opAnd = new Obj();
-		opAnd.setName(LogicBinaryOperation.BIN_OP_AND);
-
-		Obj opOr = new Obj();
-		opOr.setName(LogicBinaryOperation.BIN_OP_OR);
-
-		Obj opXor = new Obj();
-		opXor.setName(LogicBinaryOperation.BIN_OP_XOR);
-
-		Obj opNand = new Obj();
-		opNand.setName(LogicBinaryOperation.BIN_OP_NAND);
-
-		Obj opNor = new Obj();
-		opNor.setName(LogicBinaryOperation.BIN_OP_NOR);
-
-		logicOperationTypes.add(opAnd);
-		logicOperationTypes.add(opOr);
-		logicOperationTypes.add(opXor);
-		logicOperationTypes.add(opNand);
-		logicOperationTypes.add(opNor);
-
-		enums.add(logicOperationTypes);
-
-		addObj(enums, true);
+//		addObj(enums, true);
 		
 		// create default watch
 		WatchImpl watchImpl = new WatchImpl(this);	
@@ -254,27 +261,16 @@ public class ObjectBrokerImpl implements ObjectBroker {
 
 	@Override
 	public synchronized Obj pullObj(Uri href) {
-
-		// if the path pointing to the lobby has been entered, the lobby is
-		// returned
-		String path = href.getPath();
-
-		// oBIX lobby
-		if (path.equals("/obix") || path.equals("/obix/"))
-			return iotLobby;
-
-		// else, the href references an internal object -> look it up in the
-		// object database
-
-		Obj o = objects.get(href.getPath());
-		if (o != null) {
-			o.refreshObject();
-		}
-
+		Obj o = rootObject.getByHref(href);
+		
 		// if the object could not be found, return an error
-		if (o == null)
-			return new Err("Object not found");
-
+		if (o == null) {
+			Err error = new Err("Object not found");
+			error.setIs(new Contract("obix:BadUriErr"));
+			return error;
+		}
+		
+		o.refreshObject();
 		return o;
 	}
 
@@ -282,7 +278,7 @@ public class ObjectBrokerImpl implements ObjectBroker {
 	public synchronized Obj pushObj(Uri href, Obj input, boolean isOp)
 			throws Exception {
 
-		Obj o = objects.get(href.getPath());
+		Obj o = pullObj(href);
 
 		if (o == null)
 			throw new Exception("Object with URI " + href.get() + " not found");
@@ -298,48 +294,22 @@ public class ObjectBrokerImpl implements ObjectBroker {
 	}
 
 	@Override
-	public synchronized ArrayList<String> addObj(Obj o, String ipv6Address) {
-
+	public synchronized void addObj(Obj o, String ipv6Address) {
+		addObj(o);
+		
 		try {
 			// generate Inet6Address in format "/:::::::"
-			Inet6Address generateIPv6Address = (Inet6Address) Inet6Address
-					.getByName(ipv6Address);
-
-			if (o.getParent() == null && !o.getHref().isAbsolute()) { // root
-																		// obj
-																		// need
-																		// to
-																		// have
-																		// an
-																		// absolute
-																		// URL
-				o.setHref(new Uri("http://localhost"
-						+ (o.getHref().toString().startsWith("/") ? "" : "/")
-						+ o.getHref().toString()));
-			}
+			Inet6Address generateIPv6Address = (Inet6Address) Inet6Address.getByName(ipv6Address);
+			
 			String href = o.getFullContextPath();
-
 			ipv6Mapping.put(generateIPv6Address.toString(), href);
-
-			// add kids
-			if (o.size() > 0) {
-				Obj[] kids = o.list();
-				for (int i = 0; i < o.size(); i++) {
-					if (kids[i].getHref() != null) {
-						ipv6Mapping.put(generateIPv6Address.toString() + "/"
-								+ kids[i].getHref(), href);
-
-					}
-				}
+			if(resolver != null) {
+                resolver.addToRecordDict(href, ipv6Address);
+                resolver.registerDevice(href, o.getClass(), ipv6Address);
 			}
-
-			log.info(o.getName());
-			return addObj(o);
-
-		} catch (UnknownHostException e2) {
-			e2.printStackTrace();
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
 		}
-		return null;
 	}
 
 	@Override
@@ -353,109 +323,69 @@ public class ObjectBrokerImpl implements ObjectBroker {
 	}
 
 	@Override
-	public synchronized ArrayList<String> addObj(Obj o) {
-		return addObj(o, true);
+	public synchronized void addObj(Obj o) {
+		addObj(o, true);
 	}
 
 	@Override
-	public synchronized ArrayList<String> addObj(Obj o, boolean listInLobby) {
-		ArrayList<String> hrefs = new ArrayList<String>();
-		if (o.getParent() == null && !o.getHref().isAbsolute()) {
-			o.setHref(new Uri("http://localhost"
-					+ (o.getHref().toString().startsWith("/") ? "" : "/")
-					+ o.getHref().toString()));
+	public synchronized void addObj(Obj o, boolean listInLobby) {
+		Obj root = o.getRoot();
+		if (root != rootObject) {
+			rootObject.add(root, false);
 		}
-
-		String href = o.getFullContextPath();
-		log.finest("======add object: " + href);
 		
-		// don't add object if href is already assigned
-		if (objects.containsKey(href)) {
-			log.log(Level.WARNING, "Object with href: " + href
-					+ " already registered.");
-			return null;
+		if (listInLobby) {
+			Ref ref = new Ref(null, new Uri(o.getFullContextPath()));
+			ref.setIs(o.getIs());
+			ref.setName(o.getName());
+			iotLobby.addReference(o.getFullContextPath(), ref);
 		}
-		hrefs.add(href);
-		objects.put(href, o);
-
-		orderedObjects.add(o);
-
-		// add root objects (objects without parent to the KNX lobby)
-		if (listInLobby && !(o instanceof LobbyImpl) && o.getParent() == null) {
-			Ref r = new Ref();
-			r.setName(o.getName());
-			r.setIs(ContractRegistry.lookupContract(o.getClass()));
-			r.setHref(new Uri(o.getFullContextPath()));
-			iotLobby.addReference(href, r);
-
-			// also allow to query them by name
-			nameToHref.put(o.getName(), href);
-		}
-
-		// add kids
-		if (o.size() > 0) {
-			Obj[] kids = o.list();
-			for (int i = 0; i < o.size(); i++)
-				if (kids[i].getHref() != null)
-					hrefs.addAll(addObj(kids[i]));
-			// FIXME: should we store kid's href as absolute rather than relative href?
-		}
-
-		return hrefs;
 	}
 
 	@Override
 	public synchronized void removeObj(String href) {
-		Obj toRemove = objects.get(href);
-		objects.remove(href);
-
-		orderedObjects.remove(toRemove);
-		objectRefresher.removeObject(toRemove);
-
-		if (toRemove.getName() != null) {
-			nameToHref.remove(toRemove.getName());
-		}
+		Obj toRemove = pullObj(new Uri(href));
+		toRemove.removeThis();
 
 		iotLobby.removeReference(href);
-
+		// TODO remove references to descendants of referenced object?
+		
 		// TODO deal with group comm objects.
 	}
 
 	@Override
-	public synchronized Obj invokeOp(Uri uri, Obj input, boolean b) {
-		if (operationHandler.get(uri.toString()) != null) {
-			return operationHandler.get(uri.toString()).invoke(input);
+	public synchronized Obj invokeOp(Uri uri, Obj input) {
+		Obj obj = pullObj(uri);
+		
+		if (obj instanceof Op) {
+			Op op = (Op) obj;
+			if (op.getOperationHandler() != null)
+				return op.getOperationHandler().invoke(input);
 		}
+		
 		return new Err("No handler for operation defined.");
 	}
 
 	@Override
-	public synchronized void addOperationHandler(Uri uri,
-			OperationHandler handler) {
-		operationHandler.put(uri.toString(), handler);
+	public synchronized String getCoRELinks() {
+		return getCoRELinks(rootObject).toString();
 	}
 	
-	@Override
-	public void removeOperationHandler(Uri uri){
-		operationHandler.remove(uri.getPath());
-	}
-
-	@Override
-	public synchronized String getCoRELinks() {
-
+	private StringBuffer getCoRELinks(Obj obj) {
 		StringBuffer coreLinks = new StringBuffer("");
-
-		Iterator<Obj> objs = orderedObjects.iterator();
-		while (objs.hasNext()) {
-			Obj obj = objs.next();
-			if (obj.getFullContextPath().startsWith("/")) {
-				coreLinks.append("<" + obj.getFullContextPath() + ">;rt=\""
-						+ ContractRegistry.lookupContract(obj.getClass())
-						+ "\";if=\"obix\"");
-			}
+		if (obj.getHref() == null) return coreLinks;
+		
+		if (obj != rootObject && obj != iotLobby)
+			coreLinks.append(String.format("<%s>;rt=\"%s\";if=\"obix\"",
+					obj.getFullContextPath(),
+					ContractRegistry.lookupContract(obj.getClass())));
+		
+		for (Obj child : obj.list()) {
+			if (child.isRef()) continue;
+			coreLinks.append(getCoRELinks(child));
 		}
-
-		return coreLinks.toString();
+		
+		return coreLinks;
 	}
 
 	public static ObjectBroker getInstance() {
@@ -488,29 +418,16 @@ public class ObjectBrokerImpl implements ObjectBroker {
 	}
 
 	@Override
-	public synchronized Obj pullObByName(String name) {
-		String href = nameToHref.get(name);
-		if (href != null) {
-			return objects.get(href);
-		}
-		return null;
-	}
-
-	@Override
-	public synchronized ArrayList<String> getObjNames() {
-
-		ArrayList<String> ret = new ArrayList<String>();
-		for (String name : nameToHref.keySet()) {
-			if (name != null && name.length() > 0) {
-				ret.add(name);
-			}
-		}
-		return ret;
-	}
-
-	@Override
 	public void enableGroupComm(Obj obj) {
 		GroupCommHelper.enableGroupCommForObject(obj);
 	}
-
+	
+	@Override
+	public MdnsResolver getMDnsResolver() {
+		return resolver;
+	}
+	@Override
+	public void setMdnsResolver(MdnsResolver resolver){
+		this.resolver = resolver;
+	}
 }

@@ -20,7 +20,7 @@ import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
 
 public class XBeeDeviceLoaderImpl implements DeviceLoader {
 
-	private final ArrayList<String> myObjects = new ArrayList<String>();
+	private final ArrayList<Obj> myObjects = new ArrayList<Obj>();
 
 	private XMLConfiguration devicesConfig = new XMLConfiguration();
 
@@ -185,17 +185,17 @@ public class XBeeDeviceLoaderImpl implements DeviceLoader {
 												xBeeDevice.setName(name);
 											}
 
-											ArrayList<String> assignedHrefs = null;
+											
 
 											if (ipv6 != null) {
-												assignedHrefs = objectBroker
+												objectBroker
 														.addObj(xBeeDevice, ipv6);
 											} else {
-												assignedHrefs = objectBroker
+												objectBroker
 														.addObj(xBeeDevice);
 											}
 
-											myObjects.addAll(assignedHrefs);
+											myObjects.add(xBeeDevice);
 
 											xBeeDevice.initialize();
 
@@ -278,13 +278,25 @@ public class XBeeDeviceLoaderImpl implements DeviceLoader {
 	}
 
 	@Override
-	public void removeDevices(ObjectBroker objectBroker) {
-		synchronized (myObjects) {
-			for (String href : myObjects) {
-				objectBroker.removeObj(href);
+    public void removeDevices(ObjectBroker objectBroker) {
+            synchronized (myObjects) {
+                    for (Obj obj : myObjects) {
+                            objectBroker.removeObj(obj.getFullContextPath());
+                    }
+            }
+    }
+    
+	
+	@Override
+	public void setConfiguration(XMLConfiguration devicesConfiguration) {
+		this.devicesConfig = devicesConfiguration;
+		if (devicesConfiguration == null) {
+			try {
+				devicesConfig = new XMLConfiguration(DEVICE_CONFIGURATION_LOCATION);
+			} catch (Exception e) {
+				log.log(Level.SEVERE, e.getMessage(), e);
 			}
 		}
-
 	}
 
 }

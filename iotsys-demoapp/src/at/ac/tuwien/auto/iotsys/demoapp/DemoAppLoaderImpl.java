@@ -34,6 +34,8 @@ package at.ac.tuwien.auto.iotsys.demoapp;
 
 import java.util.ArrayList;
 
+import org.apache.commons.configuration.XMLConfiguration;
+
 import obix.Obj;
 import obix.Uri;
 
@@ -56,7 +58,7 @@ public class DemoAppLoaderImpl implements DeviceLoader {
 		
 		synchronized(myObjects){
 //			myObjects.addAll(objectBroker.addObj(application));
-			myObjects.addAll(objectBroker.addObj(xacml));
+//			myObjects.addAll(objectBroker.addObj(xacml));
 			objectBroker.enableGroupComm(application);
 		}
 		return null;
@@ -72,4 +74,6 @@ public class DemoAppLoaderImpl implements DeviceLoader {
 		
 	}
 
+	@Override
+	public void setConfiguration(XMLConfiguration devicesConfiguration) {}
 }

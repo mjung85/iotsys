@@ -77,17 +77,17 @@ public class XacmlRequestTest {
 		log.info(request.getRequestAbstract());
 	}
 
-	@Test
-	public void testPdpRequestNoSecurity() {
-		String content = request.getRequestAbstract();
-
-		// default pdp at http://localhost:8080/SwgPdp?wsdl
-		PDPBeanService pdpService = new PDPBeanService();
-		PDP pdp = pdpService.getPDPPort();
-		DecisionType dt = pdp.authorize(content);
-		log.info(dt.toString());
-		Assert.assertEquals("Decision objects are not the same", DecisionType.PERMIT, dt);
-	}
+//	@Test
+//	public void testPdpRequestNoSecurity() {
+//		String content = request.getRequestAbstract();
+//
+//		// default pdp at http://localhost:8080/SwgPdp?wsdl
+//		PDPBeanService pdpService = new PDPBeanService();
+//		PDP pdp = pdpService.getPDPPort();
+//		DecisionType dt = pdp.authorize(content);
+//		log.info(dt.toString());
+//		Assert.assertEquals("Decision objects are not the same", DecisionType.PERMIT, dt);
+//	}
 
 	@Test
 	public void testEnterpriseXacml() {

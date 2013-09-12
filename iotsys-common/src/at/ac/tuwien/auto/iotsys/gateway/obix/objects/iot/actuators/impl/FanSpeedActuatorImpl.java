@@ -34,14 +34,12 @@ package at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl;
 
 import java.util.logging.Logger;
 
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.AirDamperActuator;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.FanSpeedActuator;
-
 import obix.Bool;
 import obix.Contract;
 import obix.Int;
 import obix.Obj;
 import obix.Uri;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.FanSpeedActuator;
 
 public class FanSpeedActuatorImpl extends ActuatorImpl implements
 		FanSpeedActuator {

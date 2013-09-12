@@ -82,6 +82,11 @@ public interface ObixServer
 	 */
 	public Obj invokeOp(URI href, String xmlStream);
 	
+	/**
+	 * Get the absolute normalized path of this referred object.
+	 * Returns null if this object doesn't exist.
+	 */
+	public String getNormalizedPath(String href);
 	
 	public String getCoRELinks();
 }

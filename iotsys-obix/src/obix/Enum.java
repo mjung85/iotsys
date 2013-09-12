@@ -5,171 +5,184 @@ package obix;
 
 /**
  * Enum models a discrete value within a value set range.
- *
- * @author    Brian Frank
- * @creation  27 Apr 05
- * @version   $Revision$ $Date$
+ * 
+ * @author Brian Frank
+ * @creation 27 Apr 05
+ * @version $Revision$ $Date$
  */
-public class Enum
-  extends Val
-{ 
+public class Enum extends Val
+{
 
-////////////////////////////////////////////////////////////////
-// Constructor
-////////////////////////////////////////////////////////////////
-  
-  /**
-   * Construct named Enum with specified value.
-   */
-  public Enum(String name, String val) 
-  { 
-    super(name); 
-    set(val);
-  }                 
-  
-  /**
-   * Construct unnamed Enum with specified value.
-   */      
-  public Enum(String val) 
-  {          
-    set(val);
-  } 
-    
-  /**
-   * Construct unnamed Enum with value of ""
-   */
-  public Enum() 
-  { 
-    set("");
-  }
+	// //////////////////////////////////////////////////////////////
+	// Constructor
+	// //////////////////////////////////////////////////////////////
 
-////////////////////////////////////////////////////////////////
-// Enum
-////////////////////////////////////////////////////////////////
+	/**
+	 * Construct named Enum with specified value.
+	 */
+	public Enum(String name, String val)
+	{
+		super(name);
+		set(val);
+	}
 
-  /**
-   * Get value as string key. 
-   */
-  public String get()
-  {
-    return val;
-  }
+	/**
+	 * Construct unnamed Enum with specified value.
+	 */
+	public Enum(String val)
+	{
+		set(val);
+	}
 
-  /**
-   * Set value as string key. 
-   */
-  public void set(String val)
-  {
-    if (val == null) throw new IllegalArgumentException("val cannot be null");
-    String oldVal = this.val;
-    this.val = val;
-    if(!this.val.equals(oldVal)){
-    	notifyObservers();
-    }
-  }
+	/**
+	 * Construct unnamed Enum with value of ""
+	 */
+	public Enum()
+	{
+		set("");
+	}
 
-////////////////////////////////////////////////////////////////
-// Val
-////////////////////////////////////////////////////////////////
+	// //////////////////////////////////////////////////////////////
+	// Enum
+	// //////////////////////////////////////////////////////////////
 
-  /**
-   * Return "enum".
-   */
-  public String getElement()
-  {
-    return "enum";
-  }
+	/**
+	 * Get value as string key.
+	 */
+	public String get()
+	{
+		return val;
+	}
 
-  /**
-   * Return BinObix.ENUM.
-   */
-  public int getBinCode()
-  {
-    return obix.io.BinObix.ENUM;
-  }
+	/**
+	 * Set value as string key.
+	 */
+	public void set(String val)
+	{
+		if (val == null)
+			throw new IllegalArgumentException("val cannot be null");
+		String oldVal = this.val;
+		this.val = val;
+		if (!this.val.equals(oldVal))
+		{
+			notifyObservers();
+		}
+	}
 
-  /**
-   * Return if specified Val has equivalent enum value.
-   */
-  public boolean valEquals(Val that)
-  {
-    if (that  instanceof Enum)
-      return ((Enum)that).val == val;
-    return false;
-  }
+	/**
+	 * Set to value of another Enum
+	 */
+	public void set(Obj obj)
+	{
+		if (!(obj instanceof Enum))
+			return;
+		set(((Enum) obj).get());
+	}
 
-  /**
-   * Compares this object with the specified object for 
-   * order. Returns a negative integer, zero, or a positive 
-   * integer as this object is less than, equal to, or greater 
-   * than the specified object.
-   */
-  public int compareTo(Object that)
-  {       
-    return val.compareTo(((Enum)that).val);
-  }
+	// //////////////////////////////////////////////////////////////
+	// Val
+	// //////////////////////////////////////////////////////////////
 
-  /**
-   * Encode the value as a string
-   */
-  public String encodeVal()
-  {
-    return val;
-  }
+	/**
+	 * Return "enum".
+	 */
+	public String getElement()
+	{
+		return "enum";
+	}
 
-  /**
-   * Decode the value from a string.
-   */
-  public void decodeVal(String val)
-    throws Exception
-  {       
-    set(val);      
-  }
+	/**
+	 * Return BinObix.ENUM.
+	 */
+	public int getBinCode()
+	{
+		return obix.io.BinObix.ENUM;
+	}
 
-  /**
-   * Encode the value as a Java code literal to pass to the constructor.
-   */
-  public String encodeJava()
-  {
-    return '"' + val + '"';
-  }    
+	/**
+	 * Return if specified Val has equivalent enum value.
+	 */
+	public boolean valEquals(Val that)
+	{
+		if (that instanceof Enum)
+			return ((Enum) that).val == val;
+		return false;
+	}
 
-////////////////////////////////////////////////////////////////
-// Facets
-////////////////////////////////////////////////////////////////
-  
-  /**
-   * Get the range facet or null if unspecified.
-   */
-  public Uri getRange()
-  {
-    return range;
-  }
+	/**
+	 * Compares this object with the specified object for order. Returns a
+	 * negative integer, zero, or a positive integer as this object is less
+	 * than, equal to, or greater than the specified object.
+	 */
+	public int compareTo(Object that)
+	{
+		return val.compareTo(((Enum) that).val);
+	}
 
-  /**
-   * Set the range facet.
-   */
-  public void setRange(Uri range)
-  {
-    this.range = range;
-  }
-    
-////////////////////////////////////////////////////////////////
-// Fields
-////////////////////////////////////////////////////////////////
-  
-  private String val;
-  private Uri range;
-  
-  
-  public void writeObject(Obj input) {
-		if (this.getParent() != null) {
+	/**
+	 * Encode the value as a string
+	 */
+	public String encodeVal()
+	{
+		return val;
+	}
+
+	/**
+	 * Decode the value from a string.
+	 */
+	public void decodeVal(String val) throws Exception
+	{
+		set(val);
+	}
+
+	/**
+	 * Encode the value as a Java code literal to pass to the constructor.
+	 */
+	public String encodeJava()
+	{
+		return '"' + val + '"';
+	}
+
+	// //////////////////////////////////////////////////////////////
+	// Facets
+	// //////////////////////////////////////////////////////////////
+
+	/**
+	 * Get the range facet or null if unspecified.
+	 */
+	public Uri getRange()
+	{
+		return range;
+	}
+
+	/**
+	 * Set the range facet.
+	 */
+	public void setRange(Uri range)
+	{
+		this.range = range;
+	}
+
+	// //////////////////////////////////////////////////////////////
+	// Fields
+	// //////////////////////////////////////////////////////////////
+
+	private String val;
+	private Uri range;
+
+	public void writeObject(Obj input)
+	{
+		if (this.getParent() != null)
+		{
 			this.getParent().writeObject(input);
-		} else {
-			if (input instanceof obix.Enum) {
+		}
+		else
+		{
+			if (input instanceof obix.Enum)
+			{
 				this.set(((obix.Enum) input).get());
 			}
 		}
 	}
-  
+
 }

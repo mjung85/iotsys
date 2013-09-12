@@ -7,7 +7,8 @@ eclipse{
 			withXml {
 				def node = it.asNode()				
 				node.appendNode('classpathentry', [kind: 'src', path: '/iotsys-common', exported:'true'])
-				node.appendNode('classpathentry', [kind: 'src', path: '/iotsys-obix', exported:'true'])			
+				node.appendNode('classpathentry', [kind: 'src', path: '/iotsys-obix', exported:'true'])		
+				node.appendNode('classpathentry', [kind: 'src', path: '/iotsys-osgi', exported:'true'])	
 			}
 		}
 	}
@@ -29,6 +30,7 @@ jar {
 	from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
 	
 	manifest {
+		// removed  "Bundle-Activator": "at.ac.tuwien.auto.iotsys.control.TestClientActivator",
 		attributes("Main-Class": "at.ac.tuwien.auto.iotsys.control.TestClient",
 				   "Manifest-Version": "1.0",
 				   "Bundle-Name": "IoTSyS-Control", 
@@ -37,7 +39,7 @@ jar {
 				   "Bundle-Vendor": "Vienna University of Technology, Automation Systems Group, www.auto.tuwien.ac.at",
 				   "Bundle-Version": "0.1", 
 				   "Bundle-Classpath": ".",
-				   "Bundle-Activator": "at.ac.tuwien.auto.iotsys.control.TestClientActivator",
+				 
 				   "Import-Package": "obix, obix.asm, obix.contracts, obix.io, obix.net, obix.test, obix.toos, obix.ui, obix.ui.fields, obix.ui.views, obix.xml,"+ 
 					"org.osgi.framework,at.ac.tuwien.auto.iotsys.commons,at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot, at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators,"+
 					"at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl, at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors,"+ 
@@ -49,4 +51,5 @@ jar {
 dependencies {
 	provided project(':iotsys-obix')
 	provided project(':iotsys-common')
+	provided project(':iotsys-osgi')
 }

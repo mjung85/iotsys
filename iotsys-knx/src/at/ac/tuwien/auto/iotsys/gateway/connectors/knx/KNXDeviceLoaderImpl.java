@@ -22,6 +22,7 @@ package at.ac.tuwien.auto.iotsys.gateway.connectors.knx;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -44,21 +45,13 @@ public class KNXDeviceLoaderImpl implements DeviceLoader {
 	private static Logger log = Logger.getLogger(KNXDeviceLoaderImpl.class
 			.getName());
 
-	private XMLConfiguration devicesConfig = new XMLConfiguration();
+	private XMLConfiguration devicesConfig;
 	
-	private ArrayList<String> myObjects = new ArrayList<String>();
-
-	public KNXDeviceLoaderImpl() {
-		String devicesConfigFile = DEVICE_CONFIGURATION_LOCATION;
-
-		try {
-			devicesConfig = new XMLConfiguration(devicesConfigFile);
-		} catch (Exception e) {
-			log.log(Level.SEVERE, e.getMessage(), e);
-		}
-	}
+	private ArrayList<Obj> myObjects = new ArrayList<Obj>();
 
 	public ArrayList<Connector> initDevices(ObjectBroker objectBroker) {
+		setConfiguration(devicesConfig);
+		
 		ArrayList<Connector> connectors = new ArrayList<Connector>();
 
 		Object knxConnectors = devicesConfig.getProperty("knx.connector.name");
@@ -89,15 +82,22 @@ public class KNXDeviceLoaderImpl implements DeviceLoader {
 							routerPort, localIP);
 					knxConnector.connect();
 					connectors.add(knxConnector);
-
+					
+					int numberOfDevices = 0;
+					if (knxConfiguredDevices != null) {
+						numberOfDevices = 1; // there is at least one device.
+					}
 					if (knxConfiguredDevices instanceof Collection<?>) {
-
 						Collection<?> knxDevices = (Collection<?>) knxConfiguredDevices;
-						log.info(knxDevices.size()
+						numberOfDevices = knxDevices.size();
+					}
+					
+					if (numberOfDevices > 0) {
+						log.info(numberOfDevices
 								+ " KNX devices found in configuration for connector "
 								+ connectorName);
 
-						for (int i = 0; i < knxDevices.size(); i++) {
+						for (int i = 0; i < numberOfDevices; i++) {
 							String type = subConfig.getString("device(" + i
 									+ ").type");
 							List<Object> address = subConfig.getList("device("
@@ -167,23 +167,19 @@ public class KNXDeviceLoaderImpl implements DeviceLoader {
 														.newInstance(args);
 											
 												knxDevice
-														.setHref(new Uri(href));
+														.setHref(new Uri(URLEncoder.encode(connectorName, "UTF-8") + "/" + href));
 												
 												if(name != null && name.length() > 0){
 													knxDevice.setName(name);
 												}
 
-												ArrayList<String> assignedHrefs = null;
-												
 												if (ipv6 != null) {
-													assignedHrefs = objectBroker.addObj(
-															knxDevice, ipv6);
+													objectBroker.addObj(knxDevice, ipv6);
 												} else {
-													assignedHrefs = objectBroker
-															.addObj(knxDevice);
+													objectBroker.addObj(knxDevice);
 												}
 												
-												myObjects.addAll(assignedHrefs);
+												myObjects.add(knxDevice);
 
 												knxDevice.initialize();
 
@@ -244,8 +240,21 @@ public class KNXDeviceLoaderImpl implements DeviceLoader {
 	@Override
 	public void removeDevices(ObjectBroker objectBroker) {
 		synchronized(myObjects){
-			for(String href : myObjects){
-				objectBroker.removeObj(href);
+			for(Obj obj : myObjects) {
+				objectBroker.removeObj(obj.getFullContextPath());
+			}
+		}
+	}
+	
+
+	@Override
+	public void setConfiguration(XMLConfiguration devicesConfiguration) {
+		this.devicesConfig = devicesConfiguration;
+		if (devicesConfiguration == null) {
+			try {
+				devicesConfig = new XMLConfiguration(DEVICE_CONFIGURATION_LOCATION);
+			} catch (Exception e) {
+				log.log(Level.SEVERE, e.getMessage(), e);
 			}
 		}
 	}

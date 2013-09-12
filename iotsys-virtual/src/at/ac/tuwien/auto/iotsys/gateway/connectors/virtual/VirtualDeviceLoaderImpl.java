@@ -33,43 +33,38 @@
 package at.ac.tuwien.auto.iotsys.gateway.connectors.virtual;
 
 import java.lang.reflect.Constructor;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import obix.Bool;
+import obix.Int;
+import obix.Obj;
+import obix.Real;
+import obix.Uri;
+
 import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.commons.configuration.XMLConfiguration;
-
-import obix.Obj;
-import obix.Uri;
 
 import at.ac.tuwien.auto.iotsys.commons.Connector;
 import at.ac.tuwien.auto.iotsys.commons.DeviceLoader;
 import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
-import at.ac.tuwien.auto.iotsys.gateway.connectors.virtual.simulation.HVACSimulationImpl;
 
 public class VirtualDeviceLoaderImpl implements DeviceLoader {
-	private final ArrayList<String> myObjects = new ArrayList<String>();
+	private final ArrayList<Obj> myObjects = new ArrayList<Obj>();
 
-	private XMLConfiguration devicesConfig = new XMLConfiguration();
+	private XMLConfiguration devicesConfig;
 
 	private static final Logger log = Logger
 			.getLogger(VirtualDeviceLoaderImpl.class.getName());
 
-	public VirtualDeviceLoaderImpl() {
-		String devicesConfigFile = DEVICE_CONFIGURATION_LOCATION;
-
-		try {
-			devicesConfig = new XMLConfiguration(devicesConfigFile);
-		} catch (Exception e) {
-			log.log(Level.SEVERE, e.getMessage(), e);
-		}
-	}
-
 	@Override
 	public ArrayList<Connector> initDevices(ObjectBroker objectBroker) {
+		setConfiguration(devicesConfig);
+		
 		// Hard-coded connections and object creation
 
 		// store all created connectors, will be used by the gateway for closing
@@ -80,6 +75,33 @@ public class VirtualDeviceLoaderImpl implements DeviceLoader {
 			virtualConnector.connect();
 
 			connectors.add(virtualConnector);
+			
+			Obj complexObj= new Obj();
+			complexObj.setHref(new Uri("examples/complexObj"));
+			Bool b1 = new Bool();
+			
+			b1.setHref(new Uri("b1"));
+			
+			Int i1 = new Int();
+			i1.setHref(new Uri("i1"));
+			
+			Int i2 = new Int();
+			i2.setHref(new Uri("i2"));
+			
+			Obj childObj = new Obj();
+			childObj.setHref(new Uri("childObj"));
+			
+			Real r1 = new Real();
+			r1.setHref(new Uri("r"));
+			
+			childObj.add(r1);
+			
+			complexObj.add(b1);
+			complexObj.add(i1);
+			complexObj.add(i2);
+			complexObj.add(childObj);
+					 					
+			objectBroker.addObj(complexObj);
 
 			// add virtual devices
 
@@ -117,6 +139,7 @@ public class VirtualDeviceLoaderImpl implements DeviceLoader {
 
 			// enable history yes/no?
 //			objectBroker.addHistoryToDatapoints(virtualLight1, 100);
+			
 
 		} catch (Exception e) {
 
@@ -154,18 +177,25 @@ public class VirtualDeviceLoaderImpl implements DeviceLoader {
 			String connectorName = subConfig.getString("name");
 			Boolean enabled = subConfig.getBoolean("enabled", false);
 			
-			
-
 			if (enabled) {
 				try {
 					VirtualConnector vConn = new VirtualConnector();
+
+					int numberOfDevices = 0;
+					if (virtualConfiguredDevices != null) {
+						numberOfDevices = 1; // there is at least one device.
+					}
 					if (virtualConfiguredDevices instanceof Collection<?>) {
-						Collection<?> wmbusDevice = (Collection<?>) virtualConfiguredDevices;
-						log.info(wmbusDevice.size()
+						Collection<?> virtualDevices = (Collection<?>) virtualConfiguredDevices;
+						numberOfDevices = virtualDevices.size();
+					}
+					
+					if (numberOfDevices > 0) {
+						log.info(numberOfDevices
 								+ " virtual devices found in configuration for connector "
 								+ connectorName);
 
-						for (int i = 0; i < wmbusDevice.size(); i++) {
+						for (int i = 0; i < numberOfDevices; i++) {
 							String type = subConfig.getString("device(" + i
 									+ ").type");
 							List<Object> address = subConfig.getList("device("
@@ -210,22 +240,20 @@ public class VirtualDeviceLoaderImpl implements DeviceLoader {
 										}
 									}
 									
-									virtualObj.setHref(new Uri(href));
+									virtualObj.setHref(new Uri(URLEncoder.encode(connectorName, "UTF-8") + "/" + href));
 									
 									if(name != null && name.length() > 0){
 										virtualObj.setName(name);
 									}
-
+									
 									if (ipv6 != null) {
-										myObjects.addAll(objectBroker.addObj(
-												virtualObj, ipv6));
+										objectBroker.addObj(virtualObj, ipv6);
 									} else {
-										myObjects.addAll(objectBroker
-												.addObj(virtualObj));
+										objectBroker.addObj(virtualObj);
 									}
 									
-								
-
+									myObjects.add(virtualObj);
+									
 									virtualObj.initialize();
 
 									if (historyEnabled != null
@@ -266,17 +294,30 @@ public class VirtualDeviceLoaderImpl implements DeviceLoader {
 				}
 			}
 		}
-
+		
+	
 		return connectors;
 	}
 
 	@Override
 	public void removeDevices(ObjectBroker objectBroker) {
 		synchronized (myObjects) {
-			for (String href : myObjects) {
-				objectBroker.removeObj(href);
+			for (Obj obj : myObjects) {
+				objectBroker.removeObj(obj.getFullContextPath());
 			}
 		}
 
+	}
+
+	@Override
+	public void setConfiguration(XMLConfiguration devicesConfiguration) {
+		this.devicesConfig = devicesConfiguration;
+		if (devicesConfiguration == null) {
+			try {
+				devicesConfig = new XMLConfiguration(DEVICE_CONFIGURATION_LOCATION);
+			} catch (Exception e) {
+				log.log(Level.SEVERE, e.getMessage(), e);
+			}
+		}
 	}
 }
