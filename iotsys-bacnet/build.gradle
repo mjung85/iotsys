@@ -1,6 +1,8 @@
 // Variables
 description = 'BACnet/IP connector for the IoTSyS gateway project based on BACnet4J'
 
+sourceCompatibility = 1.6
+
 eclipse{
 	classpath{
 		file {

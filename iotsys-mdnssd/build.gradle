@@ -1,6 +1,8 @@
 // Variables
 description = 'mDNS-SD module for IoTSyS gateway'
 
+sourceCompatibility = 1.6
+
 eclipse{
 	classpath{
 		file {

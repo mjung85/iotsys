@@ -1,6 +1,8 @@
 // Variables
 description = 'IoTSyS Control'
 
+sourceCompatibility = 1.6
+
 eclipse{
 	classpath{
 		file {
