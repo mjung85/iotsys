@@ -30,7 +30,7 @@ public class TestRegisterService {
             	subTypedService.setIpv6Addr("2001:629:2500:570::11d");
             	aService.setIpv6Addr("2001:629:2500:570::11f");
             	subTypedService2.setIpv6Addr("2001:629:2500:570::11a");
-    		} catch (IllegalStateException | UnknownHostException | SecurityException e1) {
+    		} catch (Exception e1){
     			e1.printStackTrace();
     		}
             jmdns.registerService(subTypedService);

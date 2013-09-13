@@ -1,6 +1,8 @@
 // Variables
 description = 'Virtual connector for the IoTSyS Gateway projects'
 
+sourceCompatibility = 1.6
+
 eclipse{
 	classpath{
 		file {

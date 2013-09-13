@@ -131,7 +131,7 @@ public class MdnsResolverImpl implements MdnsResolver {
 		try {
 			subTypedServiceCoAP.setIpv6Addr(ipv6);
 			subTypedServiceHTTP.setIpv6Addr(ipv6);
-		} catch (IllegalStateException | UnknownHostException | SecurityException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		

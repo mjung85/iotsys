@@ -1,6 +1,8 @@
 // Variables
 description = 'Common classes for the IoTSyS project'
 
+sourceCompatibility = 1.6
+
 jar {
 	from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
 	

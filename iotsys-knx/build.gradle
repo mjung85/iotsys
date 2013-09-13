@@ -1,6 +1,8 @@
 // Variables
 description = 'KNX bundle based on Calimero including IoTSyS specific oBIX object implementations.'
 
+sourceCompatibility = 1.6
+
 eclipse{
 	classpath{
 		file {

@@ -1,5 +1,8 @@
 // Variables
-description = 'IoTSyS Control'
+description = 'IoTSyS Demo App'
+
+sourceCompatibility = 1.6
+
 
 eclipse{
 	classpath{

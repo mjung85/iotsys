@@ -1,6 +1,8 @@
 // Variables
 description = 'IoTSyS Gateway'
 
+sourceCompatibility = 1.6
+
 eclipse{
 	classpath{
 		file {
