@@ -1,0 +1,43 @@
+<samlp:RequestAbstract xmlns:samlp="urn:oasis:names:tc:SAML:2.0:protocol"
+  xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion" xmlns:xacml-samlp="urn:oasis:xacml:2.0:saml:protocol:schema:os"
+  xmlns="urn:oasis:names:tc:xacml:2.0:context:schema:os" ID="ID_a9bd16e8-bfa2-450d-b131-2d953adae395"
+  Version="2.0" IssueInstant="2012-04-23T16:36:50.764+02:00"
+  xacml-samlp:InputContextOnly="true" xacml-samlp:ReturnContext="true"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  xsi:type="xacml-samlp:XACMLAuthzDecisionQueryType">
+  <Request xmlns="urn:oasis:names:tc:xacml:2.0:context:schema:os"
+    xmlns:ns2="urn:oasis:names:tc:xacml:2.0:policy:schema:os">
+    <Subject xmlns="urn:oasis:names:tc:xacml:2.0:context:schema:os"
+      SubjectCategory="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject">
+      <Attribute xmlns="urn:oasis:names:tc:xacml:2.0:context:schema:os"
+        AttributeId="urn:oasis:names:tc:xacml:1.0:subject:subject-id"
+        DataType="http://www.w3.org/2001/XMLSchema#string" Issuer="smartwebgrid">
+        <AttributeValue xmlns="urn:oasis:names:tc:xacml:2.0:context:schema:os">PUBLIC_KEY_HASH</AttributeValue>
+      </Attribute>
+    </Subject>
+    <Resource xmlns="urn:oasis:names:tc:xacml:2.0:context:schema:os">
+      <Attribute xmlns="urn:oasis:names:tc:xacml:2.0:context:schema:os"
+        AttributeId="urn:oasis:names:tc:xacml:1.0:resource:resource-id"
+        DataType="http://www.w3.org/2001/XMLSchema#string" Issuer="smartwebgrid">
+        <AttributeValue xmlns="urn:oasis:names:tc:xacml:2.0:context:schema:os">DATAOWNERIDENTIFIER</AttributeValue>
+      </Attribute>
+      <Attribute xmlns="urn:oasis:names:tc:xacml:2.0:context:schema:os"
+        AttributeId="urn:tuwien:auto:smartwebgrid:resource:servicetype"
+        DataType="http://www.w3.org/2001/XMLSchema#string" Issuer="smartwebgrid">
+        <AttributeValue xmlns="urn:oasis:names:tc:xacml:2.0:context:schema:os">http://obix.org/ns/wsdl/1.1</AttributeValue>
+      </Attribute>
+      <Attribute xmlns="urn:oasis:names:tc:xacml:2.0:context:schema:os"
+        AttributeId="urn:tuwien:auto:smartwebgrid:resource:resource-object"
+        DataType="http://www.w3.org/2001/XMLSchema#string" Issuer="smartwebgrid">
+        <AttributeValue xmlns="urn:oasis:names:tc:xacml:2.0:context:schema:os">/smartmeter</AttributeValue>
+      </Attribute>
+    </Resource>
+    <Action xmlns="urn:oasis:names:tc:xacml:2.0:context:schema:os">
+      <Attribute xmlns="urn:oasis:names:tc:xacml:2.0:context:schema:os"
+        AttributeId="urn:oasis:names:tc:xacml:1.0:action:action-id"
+        DataType="http://www.w3.org/2001/XMLSchema#string" Issuer="smartwebgrid">
+        <AttributeValue xmlns="urn:oasis:names:tc:xacml:2.0:context:schema:os">read</AttributeValue>
+      </Attribute>
+    </Action>
+  </Request>
+</samlp:RequestAbstract>
