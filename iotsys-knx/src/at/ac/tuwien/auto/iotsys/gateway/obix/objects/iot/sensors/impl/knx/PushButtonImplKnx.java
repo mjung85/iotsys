@@ -37,10 +37,10 @@ import java.util.logging.Logger;
 import at.ac.tuwien.auto.calimero.GroupAddress;
 import at.ac.tuwien.auto.calimero.dptxlator.DPTXlatorBoolean;
 import at.ac.tuwien.auto.calimero.exception.KNXException;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.sensors.impl.PushButtonImpl;
+import at.ac.tuwien.auto.iotsys.commons.util.CsvCreator;
 import at.ac.tuwien.auto.iotsys.gateway.connectors.knx.KNXConnector;
 import at.ac.tuwien.auto.iotsys.gateway.connectors.knx.KNXWatchDog;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.PushButtonImpl;
-import at.ac.tuwien.auto.iotsys.gateway.util.CsvCreator;
 
 public class PushButtonImplKnx extends PushButtonImpl {
 	private GroupAddress observation;

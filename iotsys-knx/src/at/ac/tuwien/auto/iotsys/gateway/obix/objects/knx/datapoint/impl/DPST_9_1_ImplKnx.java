@@ -5,9 +5,9 @@ import java.util.logging.Logger;
 import at.ac.tuwien.auto.calimero.GroupAddress;
 import at.ac.tuwien.auto.calimero.dptxlator.DPTXlator2ByteFloat;
 import at.ac.tuwien.auto.calimero.exception.KNXException;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.datapoint.impl.DPST_9_1_Impl;
 import at.ac.tuwien.auto.iotsys.gateway.connectors.knx.KNXConnector;
 import at.ac.tuwien.auto.iotsys.gateway.connectors.knx.KNXWatchDog;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.datapoint.impl.DPST_9_1_Impl;
 
 public class DPST_9_1_ImplKnx extends DPST_9_1_Impl
 {

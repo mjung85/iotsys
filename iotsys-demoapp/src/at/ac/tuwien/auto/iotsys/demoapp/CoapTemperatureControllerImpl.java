@@ -52,8 +52,10 @@ import org.w3c.dom.NodeList;
 //import ch.ethz.inf.vs.californium.coap.Response;
 //import ch.ethz.inf.vs.californium.coap.ResponseHandler;
 //import ch.ethz.inf.vs.californium.coap.Message.messageType;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.logic.CoapTemperatureController;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.logic.impl.TemperatureControllerImpl;
+
+
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.logic.CoapTemperatureController;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.logic.impl.TemperatureControllerImpl;
 import obix.Obj;
 import obix.Str;
 import obix.Uri;
