@@ -13,7 +13,7 @@ public class MdnssdActivator  implements BundleActivator {
 	private static final Logger log = Logger.getLogger(MdnssdActivator.class
 			.getName());
 	
-	private Named named;
+	private NamedImpl named;
 		
 	@Override
 	public void start(BundleContext context) throws Exception {
@@ -21,7 +21,7 @@ public class MdnssdActivator  implements BundleActivator {
 		context.registerService(MdnsResolver.class.getName(), MdnsResolverImpl.getInstance(), null);
 		log.info("Register Mdnssd resolver");
 		
-		named = new Named();
+		named = new NamedImpl();
 		named.startNamedService();
 		log.info("Started named service");
 	}

@@ -34,9 +34,7 @@ package at.ac.tuwien.auto.iotsys.mdnssd;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
-import java.net.InetAddress;
 import java.net.SocketException;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -52,13 +50,14 @@ import javax.jmdns.impl.constants.DNSRecordClass;
 import javax.jmdns.impl.constants.DNSRecordType;
 import javax.jmdns.utils.MdnsUtils;
 
+import at.ac.tuwien.auto.iotsys.commons.Named;
 import at.ac.tuwien.auto.iotsys.commons.PropertiesLoader;
 
 /**
  * @author Nam Giang - zang at kaist dot ac dot kr
  * 
  */
-public class Named {
+public class NamedImpl implements Named {
 
 	public static final String AUTHORITATIVE_DOMAIN = PropertiesLoader.getInstance().getProperties()
 			.getProperty("authDomain", "iotsys.auto.tuwien.ac.at.");
@@ -76,24 +75,27 @@ public class Named {
 
 	UDPListener ul;
 
-	public Named() {
+	public NamedImpl() {
 		ul = new UDPListener(this);
 	}
-
+	
+	@Override
 	public boolean isStart(){
 		return ul.isAlive();
 	}
 	
+	@Override
 	public void startNamedService() {
 		ul.start();
 	}
 
+	@Override
 	public void stopNamedService() {
 		ul.stopThread();
 		try {
 			ul.join();
 		} catch (InterruptedException ex) {
-			Logger.getLogger(Named.class.getName()).log(Level.SEVERE, null, ex);
+			Logger.getLogger(NamedImpl.class.getName()).log(Level.SEVERE, null, ex);
 		}
 	}
 
@@ -105,11 +107,11 @@ public class Named {
 		boolean stop = true;
 		Logger logger = Logger.getLogger(UDPListener.class.getName());
 
-		public UDPListener(Named sn) {
+		public UDPListener(NamedImpl sn) {
 			try {
 				sock = new DatagramSocket(53, MdnsUtils.getByAddress("0.0.0.0"));
 			} catch (SocketException ex) {
-				Logger.getLogger(Named.class.getName()).log(Level.SEVERE, null, ex);
+				Logger.getLogger(NamedImpl.class.getName()).log(Level.SEVERE, null, ex);
 			}
 		}
 
@@ -134,7 +136,7 @@ public class Named {
 						handleQuery(msg);
 					}
 				} catch (IOException ex) {
-					Logger.getLogger(Named.class.getName()).log(Level.SEVERE, null, ex);
+					Logger.getLogger(NamedImpl.class.getName()).log(Level.SEVERE, null, ex);
 				}
 			}
 		}
@@ -179,7 +181,7 @@ public class Named {
 				try {
 					out.addQuestion(aQuestion);
 				} catch (IOException ex) {
-					Logger.getLogger(Named.class.getName()).log(Level.SEVERE, null, ex);
+					Logger.getLogger(NamedImpl.class.getName()).log(Level.SEVERE, null, ex);
 				}
 			}
 
@@ -206,7 +208,7 @@ public class Named {
 							out.addAdditionalAnswer(msg, r);
 						}
 					} catch (IOException ex) {
-						Logger.getLogger(Named.class.getName()).log(Level.SEVERE, null, ex);
+						Logger.getLogger(NamedImpl.class.getName()).log(Level.SEVERE, null, ex);
 					}
 				}
 			}
@@ -218,7 +220,7 @@ public class Named {
 			try {
 				sock.send(packet);
 			} catch (IOException ex) {
-				Logger.getLogger(Named.class.getName()).log(Level.SEVERE, null, ex);
+				Logger.getLogger(NamedImpl.class.getName()).log(Level.SEVERE, null, ex);
 			}
 		}
 

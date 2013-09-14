@@ -38,7 +38,7 @@ import javax.jmdns.impl.tasks.DNSTask;
 import javax.jmdns.utils.MdnsUtils;
 
 import at.ac.tuwien.auto.iotsys.commons.PropertiesLoader;
-import at.ac.tuwien.auto.iotsys.mdnssd.Named;
+import at.ac.tuwien.auto.iotsys.mdnssd.NamedImpl;
 
 /**
  * JmDNS service information.

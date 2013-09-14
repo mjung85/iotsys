@@ -5,7 +5,7 @@ import java.net.UnknownHostException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import at.ac.tuwien.auto.iotsys.mdnssd.Named;
+import at.ac.tuwien.auto.iotsys.mdnssd.NamedImpl;
 
 /**
  * @author Mr.Nam
@@ -37,7 +37,7 @@ public class MdnsUtils {
 			throw new UnknownHostException("Invalid address: " + addr);
 
 		} catch (UnknownHostException ex) {
-			Logger.getLogger(Named.class.getName()).log(Level.SEVERE, null, ex);
+			Logger.getLogger(NamedImpl.class.getName()).log(Level.SEVERE, null, ex);
 			return null;
 		}
 	}

@@ -15,8 +15,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import at.ac.tuwien.auto.iotsys.commons.Named;
 import at.ac.tuwien.auto.iotsys.gateway.test.AbstractGatewayTest;
-import at.ac.tuwien.auto.iotsys.mdnssd.Named;
 
 /**
  * @author Nam Giang - zang at kaist dot ac dot kr
@@ -24,7 +24,7 @@ import at.ac.tuwien.auto.iotsys.mdnssd.Named;
  */
 public class DnsServiceTest extends AbstractGatewayTest {
 
-	Named n = new Named();
+	Named n;
 
 	String[] testDeviceNames;
 	String[] testDeviceAddr;
@@ -34,6 +34,24 @@ public class DnsServiceTest extends AbstractGatewayTest {
 	@Before
 	public void initialize() {
 		
+		try {
+			n = (Named) Class.forName("at.ac.tuwien.auto.iotsys.mdnssd.NamedImpl").newInstance();
+		} catch (InstantiationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (IllegalArgumentException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SecurityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 		testDeviceNames = new String[2];
 		testDeviceAddr = new String[2];
 		env = new Hashtable<String, String>();

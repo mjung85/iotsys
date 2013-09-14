@@ -94,7 +94,7 @@ public class MdnsResolverImpl implements MdnsResolver {
 	public void addToRecordDict(String name, String addr) {
 		name = hrefNorm(name);
 		try {
-			recordDict.putIfAbsent(name.toLowerCase() + Named.AUTHORITATIVE_DOMAIN, addr);
+			recordDict.putIfAbsent(name.toLowerCase() + NamedImpl.AUTHORITATIVE_DOMAIN, addr);
 		} catch (NullPointerException e) {
 		}
 	}
@@ -156,5 +156,10 @@ public class MdnsResolverImpl implements MdnsResolver {
 			}
 		}
 
+	}
+
+	@Override
+	public void unregisterAllDevice() {
+		jmdns.unregisterAllServices();
 	}
 }

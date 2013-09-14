@@ -16,9 +16,7 @@ public class TestDiscoverService {
 
 	public static void main(String[] args) throws UnknownHostException, IOException {
 		final JmDNS jmdns = JmDNS.create(InetAddress.getByName("fe80::acbc:b659:71db:5cb7%20"));
-		
 		jmdns.addServiceListener("_presencedetectorsensor._sub._obix._coap.local.", new SampleListener());
-
 	}
 
 	static class SampleListener implements ServiceListener {
