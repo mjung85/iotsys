@@ -43,11 +43,11 @@ import obix.Op;
 import obix.Ref;
 import obix.Str;
 import obix.Uri;
-import at.ac.tuwien.auto.iotsys.commons.OperationHandler;
-import at.ac.tuwien.auto.iotsys.gateway.obix.observer.Observer;
-import at.ac.tuwien.auto.iotsys.gateway.obix.observer.Subject;
 import at.ac.tuwien.auto.iotsys.gateway.service.GroupCommService;
 import at.ac.tuwien.auto.iotsys.gateway.service.impl.GroupCommServiceImpl;
+import at.ac.tuwien.auto.iotsys.obix.OperationHandler;
+import at.ac.tuwien.auto.iotsys.obix.observer.Observer;
+import at.ac.tuwien.auto.iotsys.obix.observer.Subject;
 import ch.ethz.inf.vs.californium.layers.MulticastUDPLayer;
 
 public class GroupCommImpl extends Obj implements GroupComm, Observer{

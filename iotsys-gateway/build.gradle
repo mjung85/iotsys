@@ -65,10 +65,10 @@ jar {
 				   "Bundle-Activator": "at.ac.tuwien.auto.iotsys.gateway.IoTSySGatewayActivator",
 				   "Import-Package": "org.osgi.framework, at.ac.tuwien.auto.iotsys.commons, at.ac.tuwien.auto.iotsys.commons.interceptor, org.json, obix, obix.asm, obix.contracts, " +
 				   					"obix.io, obix.net, obix.test, obix.toos, obix.ui, obix.ui.fields, obix.ui.views, obix.xml, " +
-									   "at.ac.tuwien.auto.iotsys.gateway.obix.observer, at.ac.tuwien.auto.iotsys.gateway.obix.objects.bacnet, at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot," +
-									   "at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.general.impl,"+
-									   "at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators, at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl, " +
-									   "at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors, at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl, at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.logic, at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.logic.impl,at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sim,at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.datapoint, at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.entity, at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.enumeration," +
+									   "at.ac.tuwien.auto.iotsys.obix.observer, at.ac.tuwien.auto.iotsys.obix, at.ac.tuwien.auto.iotsys.commons.obix.objects.bacnet, at.ac.tuwien.auto.iotsys.commons.obix.objects.iot," +
+									   "at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.general.impl,"+
+									   "at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators, at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators.impl, " +
+									   "at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.sensors, at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.sensors.impl, at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.logic, at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.logic.impl,at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.sim,at.ac.tuwien.auto.iotsys.commons.obix.objects.knx.datapoint," +
 									   "org.xml.sax, org.xml.sax.helpers, org.xml.sax.ext,  com.sun.org.apache.xalan.internal, com.sun.org.apache.xalan.internal.res, " +
 									   "org.w3c.dom, org.w3c.dom.traversal, org.w3c.dom.ls, javax.xml.parsers,  javax.xml.xpath, javax.xml.transform.sax, javax.xml.transform.dom, " +
 									   "javax.xml.namespace, javax.xml.transform, javax.xml.transform.stream, javax.xml.validation, javax.xml.datatype, "+
@@ -80,7 +80,10 @@ jar {
 									   "org.apache.commons.jexl2, org.apache.commons.jexl2.internal, org.apache.commons.jexl2.internal.introspection, org.apache.commons.jexl2.introspection, org.apache.commons.jexl2.parser, org.apache.commons.jexl2.scripting, " +
 									   "org.apache.commons.jxpath, org.apache.commons.jxpath.functions, org.apache.commons.jxpath.ri, org.apache.commons.jxpath.ri.axes, org.apache.commons.jxpath.ri.compiler, org.apache.commons.jxpath.ri.model, org.apache.commons.jxpath.ri.model.beans, org.apache.commons.jxpath.ri.model.container, org.apache.commons.jxpath.ri.model.dom, org.apache.commons.jxpath.ri.model.dynabeans, org.apache.commons.jxpath.ri.model.dynamic, org.apache.commons.jxpath.ri.model.jdom, org.apache.commons.jxpath.ri.parser,org.apache.commons.jxpath.servlet, org.apache.commons.jxpath.util, org.apache.commons.jxpath.xml, " +
 									   "org.apache.commons.lang, org.apache.commons.lang.builder, org.apache.commons.lang.enums, org.apache.commons.lang.exception, org.apache.commons.lang.math, org.apache.commons.lang.mutable, org.apache.commons.lang.text, org.apache.commons.lang.time, " +
-									   "org.apache.commons.logging, org.apache.commons.logging.impl, at.ac.tuwien.auto.iotsys.mdnssd"
+									   "org.apache.commons.logging, org.apache.commons.logging.impl, at.ac.tuwien.auto.iotsys.mdnssd," +
+									   "at.ac.tuwien.auto.iotsys.commons.obix.objects, at.ac.tuwien.auto.iotsys.commons.obix.objects.general, at.ac.tuwien.auto.iotsys.commons.obix.objects.general.contracts.impl, at.ac.tuwien.auto.iotsys.commons.obix.objects.general.datapoint, at.ac.tuwien.auto.iotsys.commons.obix.objects.general.datapoint.impl, at.ac.tuwien.auto.iotsys.commons.obix.objects.general.encoding, at.ac.tuwien.auto.iotsys.commons.obix.objects.general.encoding.impl, at.ac.tuwien.auto.iotsys.commons.obix.objects.general.entity, at.ac.tuwien.auto.iotsys.commons.obix.objects.general.entity.impl, at.ac.tuwien.auto.iotsys.commons.obix.objects.general.enumeration, at.ac.tuwien.auto.iotsys.commons.obix.objects.general.enumeration.impl, at.ac.tuwien.auto.iotsys.commons.obix.objects.general.language, at.ac.tuwien.auto.iotsys.commons.obix.objects.general.language.impl," +
+									   "at.ac.tuwien.auto.iotsys.commons.obix.objects.general.network,at.ac.tuwien.auto.iotsys.commons.obix.objects.general.network.impl, at.ac.tuwien.auto.iotsys.commons.obix.objects.general.parameter, at.ac.tuwien.auto.iotsys.commons.obix.objects.general.parameter.impl, at.ac.tuwien.auto.iotsys.commons.obix.objects.general.unit, at.ac.tuwien.auto.iotsys.commons.obix.objects.general.unit.impl, at.ac.tuwien.auto.iotsys.commons.obix.objects.general.view, at.ac.tuwien.auto.iotsys.commons.obix.objects.general.view.impl",
+									   
 				   )
 	}
 }

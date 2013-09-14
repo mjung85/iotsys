@@ -26,10 +26,9 @@ import static at.ac.tuwien.auto.iotsys.gateway.connectors.bacnet.BACnetConnector
 import java.util.logging.Logger;
 
 import obix.Obj;
-
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators.impl.BoilerActuatorImpl;
 import at.ac.tuwien.auto.iotsys.gateway.connectors.bacnet.BACnetConnector;
 import at.ac.tuwien.auto.iotsys.gateway.connectors.bacnet.BacnetDataPointInfo;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.BoilerActuatorImpl;
 
 import com.serotonin.bacnet4j.exception.BACnetException;
 import com.serotonin.bacnet4j.exception.PropertyValueException;

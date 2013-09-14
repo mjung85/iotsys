@@ -35,11 +35,10 @@ package at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.enocean;
 import java.util.logging.Logger;
 
 import obix.Bool;
-
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.sensors.impl.PushButtonImpl;
 import at.ac.tuwien.auto.iotsys.gateway.connectors.enocean.EnoceanConnector;
 import at.ac.tuwien.auto.iotsys.gateway.connectors.enocean.EnoceanWatchdog;
 import at.ac.tuwien.auto.iotsys.gateway.connectors.enocean.util.ESP3Frame;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.PushButtonImpl;
 
 public class PushButtonImplEnocean extends PushButtonImpl {
 	private static final Logger log = Logger.getLogger(PushButtonImplEnocean.class.getName());

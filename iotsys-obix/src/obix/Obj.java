@@ -15,9 +15,9 @@ import obix.contracts.AckAlarm;
 import obix.contracts.Alarm;
 import obix.io.BinObix;
 import obix.io.ObixEncoder;
-import at.ac.tuwien.auto.iotsys.gateway.obix.observer.ExternalObserver;
-import at.ac.tuwien.auto.iotsys.gateway.obix.observer.Observer;
-import at.ac.tuwien.auto.iotsys.gateway.obix.observer.Subject;
+import at.ac.tuwien.auto.iotsys.obix.observer.ExternalObserver;
+import at.ac.tuwien.auto.iotsys.obix.observer.Observer;
+import at.ac.tuwien.auto.iotsys.obix.observer.Subject;
 
 /**
  * Obj is the base class for representing Obix objects and managing their tree

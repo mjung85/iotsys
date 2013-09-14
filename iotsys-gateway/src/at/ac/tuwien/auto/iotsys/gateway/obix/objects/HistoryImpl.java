@@ -55,9 +55,9 @@ import obix.contracts.History;
 import obix.contracts.HistoryAppendIn;
 import obix.contracts.HistoryRecord;
 import obix.contracts.HistoryRollupIn;
-import at.ac.tuwien.auto.iotsys.commons.OperationHandler;
-import at.ac.tuwien.auto.iotsys.gateway.obix.observer.Observer;
-import at.ac.tuwien.auto.iotsys.gateway.obix.observer.Subject;
+import at.ac.tuwien.auto.iotsys.obix.OperationHandler;
+import at.ac.tuwien.auto.iotsys.obix.observer.Observer;
+import at.ac.tuwien.auto.iotsys.obix.observer.Subject;
 
 /**
  * Generic history implementation. Should only be used for basic value types

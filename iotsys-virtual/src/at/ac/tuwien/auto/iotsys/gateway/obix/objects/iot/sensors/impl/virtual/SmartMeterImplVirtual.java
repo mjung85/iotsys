@@ -35,9 +35,9 @@ package at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.virtual;
 import java.util.logging.Logger;
 
 import obix.Obj;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.sensors.impl.SmartMeterImpl;
 import at.ac.tuwien.auto.iotsys.gateway.connectors.virtual.VirtualConnector;
 import at.ac.tuwien.auto.iotsys.gateway.connectors.virtual.simulation.HVACSimulationImpl;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.SmartMeterImpl;
 
 public class SmartMeterImplVirtual extends SmartMeterImpl {
 	

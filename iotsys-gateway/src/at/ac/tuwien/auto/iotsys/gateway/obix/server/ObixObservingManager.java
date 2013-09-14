@@ -9,8 +9,8 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 import obix.Obj;
-import at.ac.tuwien.auto.iotsys.gateway.obix.observer.ExternalObserver;
-import at.ac.tuwien.auto.iotsys.gateway.obix.observer.ObjObserver;
+import at.ac.tuwien.auto.iotsys.obix.observer.ExternalObserver;
+import at.ac.tuwien.auto.iotsys.obix.observer.ObjObserver;
 import ch.ethz.inf.vs.californium.coap.GETRequest;
 import ch.ethz.inf.vs.californium.coap.Message.messageType;
 import ch.ethz.inf.vs.californium.coap.Option;

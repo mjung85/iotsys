@@ -32,10 +32,10 @@
 
 package at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.wmbus;
 
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.sensors.impl.SmartMeterImpl;
 import at.ac.tuwien.auto.iotsys.gateway.connector.wmbus.telegrams.SimpleTelegram;
 import at.ac.tuwien.auto.iotsys.gateway.connector.wmbus.WMBusConnector;
 import at.ac.tuwien.auto.iotsys.gateway.connector.wmbus.WMBusWatchDog;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.SmartMeterImpl;
 
 public class SmartMeterImplWMBus extends SmartMeterImpl {
 	private WMBusConnector connector;

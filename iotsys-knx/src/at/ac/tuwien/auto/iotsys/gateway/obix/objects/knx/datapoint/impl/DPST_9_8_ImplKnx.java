@@ -1,9 +1,9 @@
 package at.ac.tuwien.auto.iotsys.gateway.obix.objects.knx.datapoint.impl;
 
 import at.ac.tuwien.auto.calimero.GroupAddress;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.datapoint.impl.DPST_9_8_Impl;
 import at.ac.tuwien.auto.iotsys.gateway.connectors.knx.KNXConnector;
 import at.ac.tuwien.auto.iotsys.gateway.connectors.knx.KNXWatchDog;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.datapoint.impl.DPST_9_8_Impl;
 
 public class DPST_9_8_ImplKnx extends DPST_9_8_Impl
 {
