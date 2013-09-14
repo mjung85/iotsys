@@ -432,7 +432,7 @@
 				<historyEnabled>true</historyEnabled>
 				<historyCount>200</historyCount>
 				<groupCommEnabled>true</groupCommEnabled>
-      </device-->
+      		</device>
 
 			<device>
         <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.knx.TemperatureSensorImplKnx

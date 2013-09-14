@@ -316,5 +316,7 @@ public class IoTSySGateway
 	public void setMdnsResolver(MdnsResolver mdnsResolver)
 	{
 		this.mdnsResolver = mdnsResolver;
+		if (objectBroker != null)
+			objectBroker.setMdnsResolver(mdnsResolver);
 	}
 }

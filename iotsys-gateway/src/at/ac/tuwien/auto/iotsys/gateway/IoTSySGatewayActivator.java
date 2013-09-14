@@ -36,6 +36,8 @@ import java.util.logging.Logger;
 
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.BundleEvent;
+import org.osgi.framework.BundleListener;
 import org.osgi.framework.ServiceEvent;
 import org.osgi.framework.ServiceListener;
 import org.osgi.framework.ServiceReference;
@@ -60,22 +62,16 @@ public class IoTSySGatewayActivator implements BundleActivator, ServiceListener{
 	
 	private MdnsResolver resolver;
 	
+	private BundleContext context = null;
+	
 	@Override
 	public void start(BundleContext bundleContext) throws Exception {
 		log.info("Starting IoTSySGateway.");
 		
-		ServiceReference serviceReference = bundleContext
-				.getServiceReference(MdnsResolver.class.getName());
-		if (serviceReference == null) {
-			log.severe("Could not find mDNS-SD Service!");
-		} else {
-				resolver = (MdnsResolver) bundleContext
-						.getService(serviceReference);
-		}
+		this.context = bundleContext;
 		
 		iotsysGateway = new IoTSySGateway();
 		iotsysGateway.setOsgiEnvironment(true);
-		iotsysGateway.setMdnsResolver(resolver);
 		iotsysGateway.startGateway();	
 		
 		bundleContext.registerService(ObjectBroker.class.getName(), ObjectBrokerImpl.getInstance(), null);
@@ -84,6 +80,18 @@ public class IoTSySGatewayActivator implements BundleActivator, ServiceListener{
 		log.info("Register InterceptorBroker");
 
 		bundleContext.registerService(InterceptorBroker.class.getName(),InterceptorBrokerImpl.getInstance(), null);
+
+		ServiceReference serviceReference = bundleContext
+				.getServiceReference(MdnsResolver.class.getName());
+		if (serviceReference == null) {
+			log.severe("Could not find mDNS-SD Service!");
+		} else {
+			resolver = (MdnsResolver) bundleContext
+					.getService(serviceReference);
+			iotsysGateway.setMdnsResolver(resolver);
+		}
+		
+		context.addServiceListener(this);	
 	}
 
 	@Override
@@ -93,9 +101,21 @@ public class IoTSySGatewayActivator implements BundleActivator, ServiceListener{
 	}
 
 	@Override
-	public void serviceChanged(ServiceEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void serviceChanged(ServiceEvent event) {
+		String[] objectClass = (String[]) event.getServiceReference()
+				.getProperty("objectClass");
 
+		if (event.getType() == ServiceEvent.REGISTERED) {
+			if (objectClass[0].equals(MdnsResolver.class.getName())) {
+
+				synchronized (this) {
+					log.info(">>>>>>>>>> Mdnssd detected.");
+					resolver = (MdnsResolver) context
+							.getService(event.getServiceReference());
+					iotsysGateway.setMdnsResolver(resolver);
+				}
+			}
+		}
+
+	}
 }
