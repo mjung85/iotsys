@@ -949,7 +949,7 @@ public class ServiceInfoImpl extends ServiceInfo implements DNSListener, DNSStat
      */
     @Override
     public synchronized boolean hasData() {
-        return this.getServer() != null && this.hasInetAddress();
+        return this.getServer() != null && this.hasInetAddress() && this.getPort() !=0;
         // return this.getServer() != null && (this.getAddress() != null || (this.getTextBytes() != null && this.getTextBytes().length > 0));
     }
 
