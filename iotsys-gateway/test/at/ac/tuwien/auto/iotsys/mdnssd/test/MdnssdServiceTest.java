@@ -1,14 +1,13 @@
 package at.ac.tuwien.auto.iotsys.mdnssd.test;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.io.IOException;
-import java.net.Inet6Address;
+import java.lang.reflect.InvocationTargetException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
@@ -20,8 +19,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import at.ac.tuwien.auto.iotsys.commons.MdnsResolver;
 import at.ac.tuwien.auto.iotsys.gateway.test.AbstractGatewayTest;
-import at.ac.tuwien.auto.iotsys.mdnssd.MdnsResolverImpl;
 
 /**
  * @author Nam Giang - zang at kaist dot ac dot kr
@@ -31,7 +30,9 @@ public class MdnssdServiceTest extends AbstractGatewayTest {
 
 	String[] testDeviceNames;
 	String[] testDeviceAddr;
-
+	
+	MdnsResolver m;
+	
 	private CountDownLatch lock = new CountDownLatch(1);
 	ArrayList<ServiceEvent> resolvedEvents = new ArrayList<ServiceEvent>();
 	
@@ -42,6 +43,30 @@ public class MdnssdServiceTest extends AbstractGatewayTest {
 	 */
 	@Before
 	public void initialize() {
+		
+		try {
+			Class mc = Class.forName("at.ac.tuwien.auto.iotsys.mdnssd.MdnsResolverImpl");
+			m = (MdnsResolver) mc.getDeclaredMethod("getInstance", null).invoke(null, null);
+
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (IllegalArgumentException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NoSuchMethodException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SecurityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		testDeviceNames = new String[2];
 		testDeviceAddr = new String[2];
 
@@ -70,7 +95,7 @@ public class MdnssdServiceTest extends AbstractGatewayTest {
 	@Test
 	public void testResolve() {
 		for (int i = 0; i < testDeviceNames.length; i++) {
-			assertEquals(MdnsResolverImpl.getInstance().resolve(testDeviceNames[i]), testDeviceAddr[i]);
+			assertEquals(m.resolve(testDeviceNames[i]), testDeviceAddr[i]);
 		}
 	}
 
@@ -81,17 +106,6 @@ public class MdnssdServiceTest extends AbstractGatewayTest {
 	 */
 	@Test
 	public void testRegisterDevice() {
-		try {
-			MdnsResolverImpl.getInstance().registerDevice("aTestDeviceName1", Class
-					.forName("at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.IndoorBrightnessSensorImpl"),
-					"2001:629:2500:570::10d");
-			MdnsResolverImpl.getInstance().registerDevice("aTestDeviceName2", Class
-					.forName("at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.SunblindActuatorImpl"), 
-					"2001:629:2500:570::11b");
-		} catch (ClassNotFoundException e2) {
-			// TODO Auto-generated catch block
-			e2.printStackTrace();
-		}
 
 		try {
 			JmDNS jmdns = JmDNS.create(InetAddress.getByName("fe80::acbc:b659:71db:5cb7%20"));
@@ -111,13 +125,17 @@ public class MdnssdServiceTest extends AbstractGatewayTest {
 				}
 			});
 			lock.await(10000, TimeUnit.MILLISECONDS);
-			ArrayList<String> eventName = new ArrayList<String>();
+			ArrayList<String> eventNames = new ArrayList<String>();
 			for (ServiceEvent e : resolvedEvents){
-				eventName.add(e.getName());
+				eventNames.add(e.getName());
 			}
-			
-			assertTrue(eventName.contains("aTestDeviceName1".toLowerCase()));
-			assertTrue(eventName.contains("aTestDeviceName2".toLowerCase()));
+			// test all elements in testDeviceNames are returned in eventNames
+			for (String qName : testDeviceNames){
+				// if eventNames not contain qName -> fail
+				String fk = qName.split("\\.")[0].toLowerCase();
+				if (!eventNames.contains(fk))
+					fail();
+			}
 			
 		} catch (UnknownHostException e1) {
 			// TODO Auto-generated catch block
