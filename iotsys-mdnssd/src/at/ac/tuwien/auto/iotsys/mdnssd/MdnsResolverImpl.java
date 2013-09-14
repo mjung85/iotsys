@@ -45,8 +45,8 @@ import javax.jmdns.ServiceInfo;
 
 import at.ac.tuwien.auto.iotsys.commons.MdnsResolver;
 import at.ac.tuwien.auto.iotsys.commons.PropertiesLoader;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.Actuator;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.Sensor;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators.Actuator;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.sensors.Sensor;
 
 /**
  * @author Nam Giang - zang at kaist dot ac dot kr

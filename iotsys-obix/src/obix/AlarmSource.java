@@ -3,7 +3,7 @@ package obix;
 import java.util.LinkedList;
 
 import obix.contracts.Alarm;
-import at.ac.tuwien.auto.iotsys.gateway.obix.observer.Subject;
+import at.ac.tuwien.auto.iotsys.obix.observer.Subject;
 
 public interface AlarmSource extends Subject
 {

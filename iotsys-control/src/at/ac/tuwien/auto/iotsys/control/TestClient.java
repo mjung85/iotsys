@@ -5,11 +5,11 @@ import java.util.logging.Logger;
 import obix.Obj;
 import obix.Uri;
 import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.BoilerActuator;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.HeatPumpActuator;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.TemperatureControlActuator;
-import at.ac.tuwien.auto.iotsys.gateway.obix.observer.Observer;
-import at.ac.tuwien.auto.iotsys.gateway.obix.observer.Subject;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators.BoilerActuator;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators.HeatPumpActuator;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators.TemperatureControlActuator;
+import at.ac.tuwien.auto.iotsys.obix.observer.Observer;
+import at.ac.tuwien.auto.iotsys.obix.observer.Subject;
 
 /**
  * Basic client interaction with the oBIX object broker.

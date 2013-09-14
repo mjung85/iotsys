@@ -34,8 +34,8 @@ package at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.virtual
 
 import obix.AlarmCondition;
 import obix.AlarmSource;
+import at.ac.tuwien.auto.iotsys.commons.obix.observer.DefaultAlarmObserver;
 import at.ac.tuwien.auto.iotsys.gateway.connectors.virtual.VirtualConnector;
-import at.ac.tuwien.auto.iotsys.gateway.obix.observer.DefaultAlarmObserver;
 
 public class AlarmingFanSpeedActuatorImplVirtual extends FanSpeedActuatorImplVirtual {
 	public AlarmingFanSpeedActuatorImplVirtual(VirtualConnector virtualConnector) {

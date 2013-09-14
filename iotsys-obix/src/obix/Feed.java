@@ -7,8 +7,8 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import at.ac.tuwien.auto.iotsys.commons.DefaultFeedFilter;
-import at.ac.tuwien.auto.iotsys.commons.FeedFilter;
+import at.ac.tuwien.auto.iotsys.obix.DefaultFeedFilter;
+import at.ac.tuwien.auto.iotsys.obix.FeedFilter;
 
 /**
  * Feed models a event feed topic.

@@ -10,8 +10,7 @@ import org.openexi.proc.common.EXIOptionsException;
 import org.openexi.sax.TransmogrifierException;
 import org.xml.sax.SAXException;
 
-import at.ac.tuwien.auto.iotsys.gateway.util.CsvCreator;
-
+import at.ac.tuwien.auto.iotsys.commons.util.CsvCreator;
 import obix.Bool;
 import obix.Int;
 import obix.Obj;

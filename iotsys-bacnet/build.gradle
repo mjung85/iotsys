@@ -59,9 +59,9 @@ jar {
 										"com.serotonin.web.remote, com.serotonin.web.servlet, com.serotonin.web.spring, com.serotonin.taglib, com.serotonin.web.util," +
 										"org.osgi.framework," +
 										"obix, obix.asm, obix.contracts, obix.io, obix.net, obix.test, obix.toos, obix.ui, obix.ui.fields, obix.ui.views, obix.xml," +
-										"at.ac.tuwien.auto.iotsys.gateway.obix.objects.bacnet, at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot, at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators," +
-										"at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl, at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors," +
-										"at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl," +
+										"at.ac.tuwien.auto.iotsys.commons.obix.objects.bacnet, at.ac.tuwien.auto.iotsys.commons.obix.objects.iot, at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators," +
+										"at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators.impl, at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.sensors," +
+										"at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.sensors.impl," +
 										"org.xml.sax, org.xml.sax.helpers, org.xml.sax.ext,  com.sun.org.apache.xalan.internal, com.sun.org.apache.xalan.internal.res," +
 										"org.w3c.dom, org.w3c.dom.traversal, org.w3c.dom.ls, javax.xml.parsers,  javax.xml.xpath, javax.xml.transform.sax, javax.xml.transform.dom," +
 										"javax.xml.namespace, javax.xml.transform, javax.xml.transform.stream, javax.xml.validation, javax.xml.datatype," +

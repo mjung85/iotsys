@@ -33,7 +33,7 @@
 package at.ac.tuwien.auto.iotsys.gateway.obix.objects;
 
 import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
-import at.ac.tuwien.auto.iotsys.commons.OperationHandler;
+import at.ac.tuwien.auto.iotsys.obix.OperationHandler;
 import obix.Contract;
 import obix.Obj;
 import obix.Op;
