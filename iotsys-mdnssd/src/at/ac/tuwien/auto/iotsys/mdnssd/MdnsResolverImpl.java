@@ -45,8 +45,8 @@ import javax.jmdns.ServiceInfo;
 
 import at.ac.tuwien.auto.iotsys.commons.MdnsResolver;
 import at.ac.tuwien.auto.iotsys.commons.PropertiesLoader;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.Actuator;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.Sensor;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators.Actuator;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.sensors.Sensor;
 
 /**
  * @author Nam Giang - zang at kaist dot ac dot kr
@@ -94,7 +94,7 @@ public class MdnsResolverImpl implements MdnsResolver {
 	public void addToRecordDict(String name, String addr) {
 		name = hrefNorm(name);
 		try {
-			recordDict.putIfAbsent(name.toLowerCase() + NamedImpl.AUTHORITATIVE_DOMAIN, addr);
+			recordDict.putIfAbsent(name.toLowerCase() + Named.AUTHORITATIVE_DOMAIN, addr);
 		} catch (NullPointerException e) {
 		}
 	}
@@ -156,10 +156,5 @@ public class MdnsResolverImpl implements MdnsResolver {
 			}
 		}
 
-	}
-
-	@Override
-	public void unregisterAllDevice() {
-		jmdns.unregisterAllServices();
 	}
 }

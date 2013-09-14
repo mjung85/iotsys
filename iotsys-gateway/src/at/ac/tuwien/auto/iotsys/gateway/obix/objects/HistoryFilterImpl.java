@@ -37,8 +37,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import at.ac.tuwien.auto.iotsys.commons.FeedFilter;
-
+import at.ac.tuwien.auto.iotsys.obix.FeedFilter;
 import obix.Abstime;
 import obix.Feed;
 import obix.Int;

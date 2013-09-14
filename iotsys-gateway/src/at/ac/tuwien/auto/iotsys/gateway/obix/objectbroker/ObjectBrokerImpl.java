@@ -47,14 +47,14 @@ import obix.Ref;
 import obix.Uri;
 import at.ac.tuwien.auto.iotsys.commons.MdnsResolver;
 import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.AlarmSubjectImpl;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.general.impl.LobbyImpl;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.logic.BinaryOperation;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.logic.LogicBinaryOperation;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.AboutImpl;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.AlarmSubjectImpl;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.HistoryHelper;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.WatchImpl;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.WatchServiceImpl;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.general.impl.LobbyImpl;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.logic.BinaryOperation;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.logic.LogicBinaryOperation;
 import at.ac.tuwien.auto.iotsys.gateway.service.GroupCommHelper;
 
 public class ObjectBrokerImpl implements ObjectBroker {

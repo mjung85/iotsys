@@ -38,9 +38,9 @@ jar {
 				   "Bundle-Classpath": ".",
 				   "Bundle-Activator": "at.ac.tuwien.auto.iotsys.gateway.connectors.virtual.VirtualBundleActivator",
 				   "Import-Package": "at.ac.tuwien.auto.iotsys.mdnssd, obix, obix.asm, obix.contracts, obix.io, obix.net, obix.test, obix.toos, obix.ui, obix.ui.fields, obix.ui.views, obix.xml," +
-									 "at.ac.tuwien.auto.iotsys.commons, at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot, at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators," +
-									 "at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl, at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors,at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sim,at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.logic,at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.logic.impl," +
-									 "at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl, org.osgi.framework," +
+									 "at.ac.tuwien.auto.iotsys.commons, at.ac.tuwien.auto.iotsys.commons.obix.objects.iot, at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators," +
+									 "at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators.impl, at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.sensors,at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.sim,at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.logic,at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.logic.impl," +
+									 "at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.sensors.impl, org.osgi.framework," +
 									 "javax.crypto, javax.crypto.interfaces, javax.crypto.spec," +
 									 "org.xml.sax, org.xml.sax.helpers, org.xml.sax.ext,  com.sun.org.apache.xalan.internal, com.sun.org.apache.xalan.internal.res," +
 									 "org.w3c.dom, org.w3c.dom.traversal, org.w3c.dom.ls, javax.xml.parsers,  javax.xml.xpath, javax.xml.transform.sax, javax.xml.transform.dom," +
