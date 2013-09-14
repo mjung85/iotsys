@@ -25,10 +25,10 @@ import java.util.logging.Logger;
 import at.ac.tuwien.auto.calimero.GroupAddress;
 import at.ac.tuwien.auto.calimero.dptxlator.DPTXlatorBoolean;
 import at.ac.tuwien.auto.calimero.exception.KNXException;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators.impl.LightSwitchActuatorImpl;
+import at.ac.tuwien.auto.iotsys.commons.util.CsvCreator;
 import at.ac.tuwien.auto.iotsys.gateway.connectors.knx.KNXConnector;
 import at.ac.tuwien.auto.iotsys.gateway.connectors.knx.KNXWatchDog;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.LightSwitchActuatorImpl;
-import at.ac.tuwien.auto.iotsys.gateway.util.CsvCreator;
 import obix.Obj;
 
 /**

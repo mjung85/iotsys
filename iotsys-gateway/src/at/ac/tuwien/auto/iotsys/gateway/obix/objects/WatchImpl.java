@@ -49,13 +49,13 @@ import obix.Reltime;
 import obix.Uri;
 import obix.contracts.Watch;
 import obix.contracts.WatchIn;
-import at.ac.tuwien.auto.iotsys.commons.FeedFilter;
 import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
-import at.ac.tuwien.auto.iotsys.commons.OperationHandler;
-import at.ac.tuwien.auto.iotsys.gateway.obix.observer.EventObserver;
-import at.ac.tuwien.auto.iotsys.gateway.obix.observer.FeedObserver;
-import at.ac.tuwien.auto.iotsys.gateway.obix.observer.ObjObserver;
-import at.ac.tuwien.auto.iotsys.gateway.obix.observer.Observer;
+import at.ac.tuwien.auto.iotsys.commons.obix.observer.FeedObserver;
+import at.ac.tuwien.auto.iotsys.obix.FeedFilter;
+import at.ac.tuwien.auto.iotsys.obix.OperationHandler;
+import at.ac.tuwien.auto.iotsys.obix.observer.EventObserver;
+import at.ac.tuwien.auto.iotsys.obix.observer.ObjObserver;
+import at.ac.tuwien.auto.iotsys.obix.observer.Observer;
 
 /**
  * Implements the watch logic, representing a per-client state object.

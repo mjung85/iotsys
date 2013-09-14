@@ -6,9 +6,9 @@ import obix.Obj;
 import at.ac.tuwien.auto.calimero.GroupAddress;
 import at.ac.tuwien.auto.calimero.dptxlator.DPTXlatorBoolean;
 import at.ac.tuwien.auto.calimero.exception.KNXException;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.datapoint.impl.DPST_1_1_Impl;
 import at.ac.tuwien.auto.iotsys.gateway.connectors.knx.KNXConnector;
 import at.ac.tuwien.auto.iotsys.gateway.connectors.knx.KNXWatchDog;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.general.datapoint.impl.DPST_1_1_Impl;
 
 public class DPST_1_1_ImplKnx extends DPST_1_1_Impl
 {

@@ -40,8 +40,7 @@ import obix.Obj;
 import obix.Real;
 import obix.Str;
 import obix.Uri;
-
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sim.HVACSimulation;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.sim.HVACSimulation;
 
 /**
  * Singleton used for simulating a HVAC system.

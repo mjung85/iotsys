@@ -8,7 +8,7 @@ import com.rapplogic.xbee.api.XBeeResponse;
 import com.rapplogic.xbee.api.XBeeTimeoutException;
 import com.rapplogic.xbee.api.zigbee.ZNetRxIoSampleResponse;
 
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.IndoorBrightnessSensorImpl;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.sensors.impl.IndoorBrightnessSensorImpl;
 import at.ac.tuwien.auto.iotsys.gateway.connectors.xbee.XBeeConnector;
 import at.ac.tuwien.auto.iotsys.gateway.connectors.xbee.XBeeWatchdog;
 

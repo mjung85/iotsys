@@ -10,7 +10,8 @@ import obix.Feed;
 import obix.Int;
 import obix.Obj;
 import obix.contracts.AlarmFilter;
-import at.ac.tuwien.auto.iotsys.commons.FeedFilter;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.AlarmImpl;
+import at.ac.tuwien.auto.iotsys.obix.FeedFilter;
 
 public class AlarmFilterImpl extends Obj implements AlarmFilter, FeedFilter {
 	

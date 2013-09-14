@@ -17,8 +17,8 @@ import obix.Status;
 import org.junit.Test;
 
 import at.ac.tuwien.auto.iotsys.commons.alarms.IntRangeAlarmCondition;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.BrightnessActuatorImpl;
-import at.ac.tuwien.auto.iotsys.gateway.obix.observer.DefaultAlarmObserver;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators.impl.BrightnessActuatorImpl;
+import at.ac.tuwien.auto.iotsys.commons.obix.observer.DefaultAlarmObserver;
 
 import com.jayway.restassured.path.xml.XmlPath;
 

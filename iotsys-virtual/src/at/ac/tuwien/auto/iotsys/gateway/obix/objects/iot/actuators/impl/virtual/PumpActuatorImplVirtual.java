@@ -33,9 +33,9 @@
 package at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.virtual;
 
 import obix.Obj;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators.impl.PumpActuatorImpl;
 import at.ac.tuwien.auto.iotsys.gateway.connectors.virtual.VirtualConnector;
 import at.ac.tuwien.auto.iotsys.gateway.connectors.virtual.simulation.HVACSimulationImpl;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.PumpActuatorImpl;
 
 public class PumpActuatorImplVirtual extends PumpActuatorImpl {
 	private VirtualConnector virtualConnector;
