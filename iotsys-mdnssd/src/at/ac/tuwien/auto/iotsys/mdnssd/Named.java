@@ -60,21 +60,30 @@ import at.ac.tuwien.auto.iotsys.commons.PropertiesLoader;
  */
 public class Named {
 
-	public static final String AUTHORITATIVE_DOMAIN = PropertiesLoader.getInstance().getProperties().getProperty("authDomain", "iotsys.auto.tuwien.ac.at.");
-	public static final String AUTHORITATIVE_NAME_SERVER =  PropertiesLoader.getInstance().getProperties().getProperty("authNs", "ns.iotsys.auto.tuwien.ac.at.");
-	public static final String AUTHORITATIVE_NAME_SERVER_ADDR =  PropertiesLoader.getInstance().getProperties().getProperty("authNsAddr", "143.248.56.162");
-	public static final String AUTHORITATIVE_NAME_SERVER_ADDR6 =  PropertiesLoader.getInstance().getProperties().getProperty("authNsAddr6", "2002:8ff8:38a2::8ff8:38a2");
-	public static final String AUTHORITATIVE_NAME_REVERSE =  PropertiesLoader.getInstance().getProperties().getProperty("authNr", "143.in-addr.arpa.");
-	public static final String AUTHORITATIVE_NAME_ADDR_REVERSE =  PropertiesLoader.getInstance().getProperties().getProperty("authNar", "162.248.56.143.in-addr.arpa.");
+	public static final String AUTHORITATIVE_DOMAIN = PropertiesLoader.getInstance().getProperties()
+			.getProperty("authDomain", "iotsys.auto.tuwien.ac.at.");
+	public static final String AUTHORITATIVE_NAME_SERVER = PropertiesLoader.getInstance().getProperties()
+			.getProperty("authNs", "ns.iotsys.auto.tuwien.ac.at.");
+	public static final String AUTHORITATIVE_NAME_SERVER_ADDR = PropertiesLoader.getInstance().getProperties()
+			.getProperty("authNsAddr", "143.248.56.162");
+	public static final String AUTHORITATIVE_NAME_SERVER_ADDR6 = PropertiesLoader.getInstance().getProperties()
+			.getProperty("authNsAddr6", "2002:8ff8:38a2::8ff8:38a2");
+	public static final String AUTHORITATIVE_NAME_REVERSE = PropertiesLoader.getInstance().getProperties()
+			.getProperty("authNr", "143.in-addr.arpa.");
+	public static final String AUTHORITATIVE_NAME_ADDR_REVERSE = PropertiesLoader.getInstance().getProperties()
+			.getProperty("authNar", "162.248.56.143.in-addr.arpa.");
 	static final int AUTHORITATIVE_STACK = 46;
 
 	UDPListener ul;
-	
 
 	public Named() {
 		ul = new UDPListener(this);
 	}
 
+	public boolean isStart(){
+		return ul.isAlive();
+	}
+	
 	public void startNamedService() {
 		ul.start();
 	}
@@ -89,7 +98,7 @@ public class Named {
 	}
 
 	private class UDPListener extends Thread {
-		
+
 		DatagramSocket sock;// = new DatagramSocket(port, addr);
 		public static final int IPv4 = 1;
 		public static final int IPv6 = 2;
@@ -103,8 +112,8 @@ public class Named {
 				Logger.getLogger(Named.class.getName()).log(Level.SEVERE, null, ex);
 			}
 		}
-		
-		public void stopThread(){
+
+		public void stopThread() {
 			stop = true;
 			sock.close();
 			sock = null;
@@ -136,8 +145,8 @@ public class Named {
 			ArrayList<DNSRecord> authRcrdList = new ArrayList<DNSRecord>();
 			ArrayList<DNSRecord> addtnRcrdList = new ArrayList<DNSRecord>();
 
-			DNSOutgoing out = new DNSOutgoing(DNSConstants.FLAGS_QR_RESPONSE
-					| DNSConstants.FLAGS_AA, false, msg.getSenderUDPPayload());
+			DNSOutgoing out = new DNSOutgoing(DNSConstants.FLAGS_QR_RESPONSE | DNSConstants.FLAGS_AA, false,
+					msg.getSenderUDPPayload());
 
 			Collection<? extends DNSQuestion> questions = msg.getQuestions();
 			Iterator i = questions.iterator();
@@ -146,18 +155,20 @@ public class Named {
 				String requestedName = aQuestion.getName();
 
 				if (aQuestion.getRecordType() == DNSRecordType.TYPE_PTR) {
-					ansRcrdList.add(new DNSRecord.Pointer(AUTHORITATIVE_NAME_ADDR_REVERSE, DNSRecordClass.CLASS_IN, true, DNSConstants.DNS_TTL, AUTHORITATIVE_DOMAIN));
+					ansRcrdList.add(new DNSRecord.Pointer(AUTHORITATIVE_NAME_ADDR_REVERSE, DNSRecordClass.CLASS_IN,
+							true, DNSConstants.DNS_TTL, AUTHORITATIVE_DOMAIN));
 					authRcrdList.add(createAuthRecord(true));
 					break;
 				} else {
-					if (!((requestedName.endsWith("." + AUTHORITATIVE_DOMAIN)) || (requestedName.equals(AUTHORITATIVE_DOMAIN)))) {
-						out = new DNSOutgoing(DNSConstants.FLAGS_QR_RESPONSE
-								| DNSConstants.FLAGS_RF, false, msg.getSenderUDPPayload());
+					if (!((requestedName.endsWith("." + AUTHORITATIVE_DOMAIN)) || (requestedName
+							.equals(AUTHORITATIVE_DOMAIN)))) {
+						out = new DNSOutgoing(DNSConstants.FLAGS_QR_RESPONSE | DNSConstants.FLAGS_RF, false,
+								msg.getSenderUDPPayload());
 						break;
 					}
 
-					DNSRecord ansRcrd = createAnsRecord(requestedName, (aQuestion.getRecordType() == DNSRecordType.TYPE_A) ? false
-							: true);
+					DNSRecord ansRcrd = createAnsRecord(requestedName,
+							(aQuestion.getRecordType() == DNSRecordType.TYPE_A) ? false : true);
 					if (ansRcrd != null) {
 						ansRcrdList.add(ansRcrd);
 					}
@@ -176,11 +187,13 @@ public class Named {
 				// Acceptable, in-domain request
 				if (ansRcrdList.isEmpty()) {
 					// Not exist
-					out = new DNSOutgoing(DNSConstants.FLAGS_QR_RESPONSE
-							| DNSConstants.FLAGS_NE, false, msg.getSenderUDPPayload());
+					out = new DNSOutgoing(DNSConstants.FLAGS_QR_RESPONSE | DNSConstants.FLAGS_NE, false,
+							msg.getSenderUDPPayload());
 				} else {
-					addtnRcrdList.add(createAddtnRecord(AUTHORITATIVE_NAME_SERVER, AUTHORITATIVE_NAME_SERVER_ADDR, false));
-					addtnRcrdList.add(createAddtnRecord(AUTHORITATIVE_NAME_SERVER, AUTHORITATIVE_NAME_SERVER_ADDR6, true));
+					addtnRcrdList.add(createAddtnRecord(AUTHORITATIVE_NAME_SERVER, AUTHORITATIVE_NAME_SERVER_ADDR,
+							false));
+					addtnRcrdList.add(createAddtnRecord(AUTHORITATIVE_NAME_SERVER, AUTHORITATIVE_NAME_SERVER_ADDR6,
+							true));
 
 					try {
 						for (DNSRecord r : ansRcrdList) {
@@ -200,7 +213,8 @@ public class Named {
 
 			out.setId(msg.getId());
 			byte[] message = out.data();
-			DatagramPacket packet = new DatagramPacket(message, message.length, msg.getPacket().getAddress(), msg.getPacket().getPort());
+			DatagramPacket packet = new DatagramPacket(message, message.length, msg.getPacket().getAddress(), msg
+					.getPacket().getPort());
 			try {
 				sock.send(packet);
 			} catch (IOException ex) {
@@ -213,11 +227,14 @@ public class Named {
 
 			// look up
 			String resolved = MdnsResolverImpl.getInstance().resolve(requestedName); // virtualLight.iotsys.auto.tuwien.ac.at.
-			if (resolved != null){
+			if (resolved != null) {
 				if (!ipv6) {
-					//result = new DNSRecord.IPv4Address(requestedName, DNSRecordClass.CLASS_IN, DNSRecordClass.UNIQUE, DNSConstants.DNS_TTL, getByAddress(resolved));
+					// result = new DNSRecord.IPv4Address(requestedName,
+					// DNSRecordClass.CLASS_IN, DNSRecordClass.UNIQUE,
+					// DNSConstants.DNS_TTL, getByAddress(resolved));
 				} else {
-					result = new DNSRecord.IPv6Address(requestedName, DNSRecordClass.CLASS_IN, DNSRecordClass.UNIQUE, DNSConstants.DNS_TTL, MdnsUtils.getByAddress(resolved));
+					result = new DNSRecord.IPv6Address(requestedName, DNSRecordClass.CLASS_IN, DNSRecordClass.UNIQUE,
+							DNSConstants.DNS_TTL, MdnsUtils.getByAddress(resolved));
 				}
 			}
 
@@ -227,17 +244,20 @@ public class Named {
 
 		private DNSRecord createAuthRecord(boolean reverse) {
 			if (reverse) {
-				return new DNSRecord.Authoritative(AUTHORITATIVE_NAME_REVERSE, DNSRecordClass.CLASS_IN, DNSRecordClass.UNIQUE, DNSConstants.DNS_TTL, AUTHORITATIVE_NAME_SERVER);
+				return new DNSRecord.Authoritative(AUTHORITATIVE_NAME_REVERSE, DNSRecordClass.CLASS_IN,
+						DNSRecordClass.UNIQUE, DNSConstants.DNS_TTL, AUTHORITATIVE_NAME_SERVER);
 			}
-			return new DNSRecord.Authoritative(AUTHORITATIVE_DOMAIN, DNSRecordClass.CLASS_IN, DNSRecordClass.UNIQUE, DNSConstants.DNS_TTL, AUTHORITATIVE_NAME_SERVER);
+			return new DNSRecord.Authoritative(AUTHORITATIVE_DOMAIN, DNSRecordClass.CLASS_IN, DNSRecordClass.UNIQUE,
+					DNSConstants.DNS_TTL, AUTHORITATIVE_NAME_SERVER);
 		}
 
-		private DNSRecord createAddtnRecord(String serverName,
-				String serverAddr, boolean ipv6) {
+		private DNSRecord createAddtnRecord(String serverName, String serverAddr, boolean ipv6) {
 			if (!ipv6) {
-				return new DNSRecord.IPv4Address(serverName, DNSRecordClass.CLASS_IN, DNSRecordClass.UNIQUE, DNSConstants.DNS_TTL, MdnsUtils.getByAddress(serverAddr));
+				return new DNSRecord.IPv4Address(serverName, DNSRecordClass.CLASS_IN, DNSRecordClass.UNIQUE,
+						DNSConstants.DNS_TTL, MdnsUtils.getByAddress(serverAddr));
 			}
-			return new DNSRecord.IPv6Address(serverName, DNSRecordClass.CLASS_IN, DNSRecordClass.UNIQUE, DNSConstants.DNS_TTL, MdnsUtils.getByAddress(serverAddr));
+			return new DNSRecord.IPv6Address(serverName, DNSRecordClass.CLASS_IN, DNSRecordClass.UNIQUE,
+					DNSConstants.DNS_TTL, MdnsUtils.getByAddress(serverAddr));
 		}
 	}
 }
