@@ -1,4 +1,4 @@
-<devices>
+﻿<devices>
 
 	<deviceloaders>
 		<device-loader>at.ac.tuwien.auto.iotsys.gateway.connectors.knx.KNXDeviceLoaderImpl

@@ -39,8 +39,8 @@ import obix.*;
 
 /**
  * Refreshes the provided objects within a specified interval.
- * @author Markus Jung
  */
+
 public class ObjectRefresher implements Runnable {
 	public static int REFRESH_INTERVAL_MS = 3000; // refresh objects
 	
