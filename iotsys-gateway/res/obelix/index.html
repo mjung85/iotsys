@@ -16,7 +16,7 @@
       </label>
       <ul class='devices' ng-show='directory.expanded'>
         <li class='device' ng-repeat='device in directory.devices'>
-          <label draggable>{{device.name}}</label>
+          <label draggable='device'>{{device.name}}</label>
         </li>
       </ul>
       <ul class='subdirectories' ng-show='directory.expanded'>
@@ -24,9 +24,17 @@
       </ul>
     </script>
     <div id='sidebar' ng-class='{expanded: sidebarExpanded}'>
-      <div class='content' ng-include="'directory_template'"></div>
+      <div class='content' ng-include="'directory_template'" not-droppable></div>
       <div class='toggle' ng-click='sidebarExpanded = !sidebarExpanded; $event.stopPropagation()'></div>
     </div>
-    <div droppable id='canvas' ng-click='sidebarExpanded = false'></div>
+    <div droppable='deviceDropped' id='canvas' ng-click='sidebarExpanded = false' plumbcontainer>
+      <div ng-repeat='device in droppedDevices'>
+        <div class='device' ng-style='{left: device.droppedLeft, top: device.droppedTop}' plumb>
+          <label class='name'>
+            {{device.name}}
+          </label>
+        </div>
+      </div>
+    </div>
   </body>
 </html>
