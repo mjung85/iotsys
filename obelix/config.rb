@@ -8,7 +8,8 @@ configure :build do
 end
 
 require 'rack/reverse_proxy'
-use Rack::ReverseProxy do 
-   reverse_proxy /^\/([^\.]+)$/, 'http://localhost:8080/$1'
+use Rack::ReverseProxy do
+  host = ENV['GATEWAY_HOST'] || 'localhost'
+  port = ENV['GATEWAY_PORT'] || '8080'
+  reverse_proxy /^\/([^\.]+)$/, "http://#{host}:#{port}/$1"
 end
-
