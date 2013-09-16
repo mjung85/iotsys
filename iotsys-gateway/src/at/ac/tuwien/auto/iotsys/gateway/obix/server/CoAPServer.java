@@ -33,23 +33,15 @@
 package at.ac.tuwien.auto.iotsys.gateway.obix.server;
 
 import java.io.IOException;
-import java.net.Inet6Address;
-import java.net.SocketException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.logging.Logger;
 
 import obix.Obj;
 import obix.io.BinObixDecoder;
-import obix.io.BinObixEncoder;
 import obix.io.ObixDecoder;
 import obix.io.ObixEncoder;
-
-import org.json.JSONException;
-
 import at.ac.tuwien.auto.iotsys.commons.PropertiesLoader;
-import at.ac.tuwien.auto.iotsys.commons.interceptor.InterceptorBroker;
-import at.ac.tuwien.auto.iotsys.gateway.interceptor.InterceptorBrokerImpl;
 import at.ac.tuwien.auto.iotsys.gateway.service.impl.GroupCommServiceImpl;
 import at.ac.tuwien.auto.iotsys.gateway.util.EXIDecoder;
 import at.ac.tuwien.auto.iotsys.gateway.util.ExiUtil;
@@ -78,9 +70,9 @@ public class CoAPServer extends Endpoint {
 
 	private ObixServer obixServer;
 	private SOAPHandler soapHandler;
+	private CoAPHelper coapHelper;
 
-	private InterceptorBroker interceptorBroker = InterceptorBrokerImpl
-			.getInstance();
+	//private InterceptorBroker interceptorBroker = InterceptorBrokerImpl.getInstance();
 
 	// exit codes for runtime errors
 	public static final int ERR_INIT_FAILED = 1;
@@ -91,7 +83,7 @@ public class CoAPServer extends Endpoint {
 	 * <p>
 	 * Add all initial {@link LocalResource}s here.
 	 */
-	public void InitCoAPServer() throws SocketException {
+	public void InitCoAPServer() {
 		CommunicatorFactory factory = CommunicatorFactory.getInstance();
 
 		// set the parameters of the communicator
@@ -106,23 +98,21 @@ public class CoAPServer extends Endpoint {
 
 		// register the endpoint as a receiver
 		communicator.registerReceiver(this);
-
 	}
 
-	public CoAPServer(ObixServer obixServer) throws IOException {
+	public CoAPServer(ObixServer obixServer) {
 		this.obixServer = obixServer;
 		this.soapHandler = new SOAPHandler(obixServer);
+		this.coapHelper = new CoAPHelper(obixServer);
 
 		InitCoAPServer();
 	}
 
 	@Override
 	public void execute(Request request) throws IOException {
-		
 		String resourcePath = getResourcePath(request);
 		log.info("Coap serving " + resourcePath + " for "
 				+ request.getPeerAddress().getAddress());
-		
 		
 		if (intercept(request)) return;
 		
@@ -139,8 +129,7 @@ public class CoAPServer extends Endpoint {
 
 		if (request instanceof GETRequest) {
 			if (request.hasOption(OptionNumberRegistry.OBSERVE)) {
-				ObixObservingManager.getInstance().addObserver(
-						(GETRequest) request, resourcePath);
+				ObixObservingManager.getInstance().addObserver((GETRequest) request);
 			}
 		}
 
@@ -150,115 +139,46 @@ public class CoAPServer extends Endpoint {
 	}
 
 	private void setCoAPResponse(Request request) throws URISyntaxException {
-		StringBuffer obixResponse = getObixResponse(request);
-		
-		if (request.getFirstAccept() == MediaTypeRegistry.APPLICATION_EXI) {
-			try {
-				byte[] exiData = ExiUtil.getInstance().encodeEXI(
-						obixResponse.toString());
-				request.respond(CodeRegistry.RESP_CONTENT, exiData,
-						MediaTypeRegistry.APPLICATION_EXI);
-
-			} catch (Exception e) {
-				e.printStackTrace();
-				request.respond(CodeRegistry.RESP_CONTENT,
-						obixResponse.toString(), MediaTypeRegistry.TEXT_XML);
-			}
-		} else if (request.getFirstAccept() == MediaTypeRegistry.APPLICATION_OCTET_STREAM) {
-			try {
-				byte[] exiData = ExiUtil.getInstance().encodeEXI(
-						obixResponse.toString(), true);
-				request.respond(CodeRegistry.RESP_CONTENT, exiData,
-						MediaTypeRegistry.APPLICATION_EXI);
-
-			} catch (Exception e) {
-				e.printStackTrace();
-				request.respond(CodeRegistry.RESP_CONTENT,
-						obixResponse.toString(), MediaTypeRegistry.TEXT_XML);
-			}
-		} else if (request.getFirstAccept() == MediaTypeRegistry.APPLICATION_X_OBIX_BINARY) {
-			try {
-				byte[] exiData = BinObixEncoder.toBytes(ObixDecoder
-						.fromString(obixResponse.toString()));
-				request.respond(CodeRegistry.RESP_CONTENT, exiData,
-						MediaTypeRegistry.APPLICATION_X_OBIX_BINARY);
-
-			} catch (Exception e) {
-				e.printStackTrace();
-				request.respond(CodeRegistry.RESP_CONTENT,
-						obixResponse.toString(), MediaTypeRegistry.TEXT_XML);
-			}
-		}
-
-		else if (request.getFirstAccept() == MediaTypeRegistry.APPLICATION_JSON) {
-			try {
-				request.respond(CodeRegistry.RESP_CONTENT,
-						JsonUtil.fromXMLtoJSON(obixResponse.toString()),
-						MediaTypeRegistry.APPLICATION_JSON);
-			} catch (JSONException e) {
-				e.printStackTrace();
-				request.respond(CodeRegistry.RESP_CONTENT,
-						obixResponse.toString(), MediaTypeRegistry.TEXT_XML);
-			}
-		} else if (request.getUriPath().endsWith(".well-known/core")  && !obixServer.containsIPv6(getIPv6Address(request))) {
-			obixResponse = new StringBuffer(obixServer.getCoRELinks());
-			request.respond(CodeRegistry.RESP_CONTENT,
-					obixResponse.toString(),
-					MediaTypeRegistry.APPLICATION_LINK_FORMAT);
-
-		} else {
-			request.respond(CodeRegistry.RESP_CONTENT,
-					obixResponse.toString(), MediaTypeRegistry.TEXT_XML);
-		}
+		String obixResponse = getObixResponse(request);
+		coapHelper.encodeResponse(obixResponse, request);
 	}
 
-	private StringBuffer getObixResponse(Request request) throws URISyntaxException {
-		
+	private String getObixResponse(Request request) throws URISyntaxException {
 		String resourcePath = getResourcePath(request);
 		String payloadString = getPayload(request);
+		String ipv6address = coapHelper.getIPv6Address(request);
 		
-		StringBuffer obixResponse = new StringBuffer("");
+		StringBuffer obixResponse;
+		
 		if (resourcePath.endsWith("/soap")) {
-			obixResponse = new StringBuffer(soapHandler.process(
-					payloadString, null));
-		} else if (resourcePath.endsWith(".well-known/core") && !obixServer.containsIPv6(getIPv6Address(request))) {
+			obixResponse = new StringBuffer(soapHandler.process(payloadString, null));
+			
+		} else if (resourcePath.endsWith(".well-known/core") && !obixServer.containsIPv6(ipv6address)) {
 			obixResponse = new StringBuffer(obixServer.getCoRELinks());
 			request.respond(CodeRegistry.RESP_CONTENT,
 					obixResponse.toString(),
 					MediaTypeRegistry.APPLICATION_LINK_FORMAT);
+			
 		} else {
-
+			Obj responseObj = null;
+			
 			if (request instanceof GETRequest) {
-
-				obixResponse = new StringBuffer(ObixEncoder.toString(
-						obixServer.readObj(new URI(resourcePath), "guest"),
-						true));
-
+				responseObj = obixServer.readObj(new URI(resourcePath), "guest");
+			} else if (request instanceof PUTRequest) {
+				responseObj = obixServer.writeObj(new URI(resourcePath), payloadString);
+			} else if (request instanceof POSTRequest) {
+				responseObj = obixServer.invokeOp(new URI(resourcePath), payloadString);
 			}
-
-			if (request instanceof PUTRequest) {
-
-				obixResponse = new StringBuffer(ObixEncoder.toString(
-						obixServer.writeObj(new URI(resourcePath),
-								payloadString), true));
-
-			}
-			if (request instanceof POSTRequest) {
-				obixResponse = new StringBuffer(ObixEncoder.toString(
-						obixServer.invokeOp(new URI(resourcePath),
-								payloadString), true));
-			}
+			
+			obixResponse = new StringBuffer(coapHelper.encodeObj(responseObj, request));
 		}
 
 		obixResponse = new StringBuffer(obixResponse.toString()
-				.replaceFirst(ObixServer.DEFAULT_OBIX_URL_PROTOCOL,
-						COAP_URL_PROTOCOL));
-		obixResponse = new StringBuffer(obixResponse.toString());
+				.replaceFirst(ObixServer.DEFAULT_OBIX_URL_PROTOCOL, COAP_URL_PROTOCOL));
 		
-		// fixHref(request.getUriPath(), obixResponse);
-		return obixResponse;
+		return obixResponse.toString();
 	}
-
+	
 	private String getPayload(Request request) {
 		String payloadString = "";
 
@@ -281,8 +201,7 @@ public class CoAPServer extends Endpoint {
 			}
 		} else if (request.getContentType() == MediaTypeRegistry.APPLICATION_X_OBIX_BINARY) {
 			try {
-				payloadString = ObixEncoder.toString(
-						BinObixDecoder.fromBytes(request.getPayload()), true);
+				payloadString = ObixEncoder.toString(BinObixDecoder.fromBytes(request.getPayload()));
 			} catch (Exception e) {
 				e.printStackTrace();
 				payloadString = request.getPayloadString();
@@ -328,25 +247,6 @@ public class CoAPServer extends Endpoint {
 		}
 		
 		return false;
-	}
-
-	private String getIPv6Address(Request request) {
-		String localSocket = request.getNetworkInterface().getHostAddress()
-				.toString();
-
-		int lastIndex = localSocket.lastIndexOf("%");
-		String localSocketSplitted = request.getNetworkInterface()
-				.getHostAddress().toString();
-
-		if (lastIndex > 0) {
-			localSocketSplitted = localSocket.substring(0, lastIndex);
-		}
-
-		if (!localSocketSplitted.startsWith("/")) {
-			localSocketSplitted = "/" + localSocketSplitted;
-		}
-		
-		return localSocketSplitted;
 	}
 	
 	private boolean intercept(Request request) {
@@ -401,34 +301,9 @@ public class CoAPServer extends Endpoint {
 		
 		return false;
 	}
-
-	private void fixHref(String href, StringBuffer obixResponse) {
-		int hrefIndex = obixResponse.indexOf("href");
-		// get index of first quota - " - this is the start of the href
-		int firstQuota = obixResponse.indexOf("\"", hrefIndex);
-		// get index of the second quota - " - this is the end of the href
-		int secondQuota = obixResponse.indexOf("\"", firstQuota + 1);
-
-		if (hrefIndex >= 0 && firstQuota > hrefIndex
-				&& secondQuota > firstQuota) {
-			// now delete everything from localhost to the position of the
-			// closing quota
-			obixResponse.delete(firstQuota + 1, secondQuota);
-
-			// put the IPv6 address there instead
-			obixResponse.insert(firstQuota + 1, href);
-		}
-	}
 	
 	private String getResourcePath(Request request) {
-		String resourcePath = request.getUriPath();
-		String ipv6Address = getIPv6Address(request);
-		
-		if (request.getPeerAddress().getAddress() instanceof Inet6Address
-				&& obixServer.containsIPv6(ipv6Address)) {
-			resourcePath = obixServer.getIPv6LinkedHref(ipv6Address) + resourcePath;
-		}
-		return resourcePath;
+		return coapHelper.getResourcePath(request);
 	}
 
 	@Override

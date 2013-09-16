@@ -1,104 +1,105 @@
 /*
  * This code licensed to public domain
  */
-package obix;      
-
+package obix;
 
 /**
  * Ref models a reference object.
- *
- * @author    Brian Frank
- * @creation  30 Mar 06
- * @version   $Revision$ $Date$
+ * 
+ * @author Brian Frank
+ * @creation 30 Mar 06
+ * @version $Revision$ $Date$
  */
-public class Ref
-  extends Obj
-{ 
+public class Ref extends Obj
+{
 
-////////////////////////////////////////////////////////////////
-// Construction
-////////////////////////////////////////////////////////////////
-  
-  /**
-   * Construct named Ref with specified and and href.
-   */
-  public Ref(String name, Uri href) 
-  { 
-    super(name);  
-    setHref(href);
-  }                 
+	// //////////////////////////////////////////////////////////////
+	// Construction
+	// //////////////////////////////////////////////////////////////
 
-  /**
-   * Construct named Ref.
-   */
-  public Ref(String name) 
-  {                
-    super(name);
-  }                 
-    
-  /**
-   * Construct unnamed Ref.
-   */
-  public Ref() 
-  { 
-  }
+	/**
+	 * Construct named Ref with specified and and href.
+	 */
+	public Ref(String name, Uri href)
+	{
+		super(name);
+		setHref(href);
+	}
 
-////////////////////////////////////////////////////////////////
-// Ref
-////////////////////////////////////////////////////////////////
-  
-  /**
-   * Convenience for <code>getHref().isResolved()</code>.
-   */
-  public boolean isResolved()
-  {
-    Uri href = getHref();
-    if (href == null) return false;
-    return href.isResolved();
-  }
+	/**
+	 * Construct named Ref.
+	 */
+	public Ref(String name)
+	{
+		super(name);
+	}
 
-  /**
-   * Convenience for <code>getHref().getResolved()</code>.
-   */
-  public Obj getResolved()
-  {
-    Uri href = getHref();
-    if (href == null) return null;
-    return href.getResolved();
-  }
+	/**
+	 * Construct unnamed Ref.
+	 */
+	public Ref()
+	{
+	}
 
-////////////////////////////////////////////////////////////////
-// Obj
-////////////////////////////////////////////////////////////////
+	// //////////////////////////////////////////////////////////////
+	// Ref
+	// //////////////////////////////////////////////////////////////
 
-  /**
-   * Return "ref".
-   */
-  public String getElement()
-  {
-    return "ref";
-  }
+	/**
+	 * Convenience for <code>getHref().isResolved()</code>.
+	 */
+	public boolean isResolved()
+	{
+		Uri href = getHref();
+		if (href == null)
+			return false;
+		return href.isResolved();
+	}
 
-  /**
-   * Return BinObix.REF.
-   */
-  public int getBinCode()
-  {
-    return obix.io.BinObix.REF;
-  }
+	/**
+	 * Convenience for <code>getHref().getResolved()</code>.
+	 */
+	public Obj getResolved()
+	{
+		Uri href = getHref();
+		if (href == null)
+			return null;
+		return href.getResolved();
+	}
 
-  /**
-   * Debug to string is href
-   */
-  public final String toString()   
-  {       
-    Uri href = getHref();
-    if (href == null) return "null";
-    return href.toString();
-  }
-    
-////////////////////////////////////////////////////////////////
-// Fields
-////////////////////////////////////////////////////////////////
-    
+	// //////////////////////////////////////////////////////////////
+	// Obj
+	// //////////////////////////////////////////////////////////////
+
+	/**
+	 * Return "ref".
+	 */
+	public String getElement()
+	{
+		return "ref";
+	}
+
+	/**
+	 * Return BinObix.REF.
+	 */
+	public int getBinCode()
+	{
+		return obix.io.BinObix.REF;
+	}
+
+	/**
+	 * Debug to string is href
+	 */
+	public final String toString()
+	{
+		Uri href = getHref();
+		if (href == null)
+			return "null";
+		return href.toString();
+	}
+
+	// //////////////////////////////////////////////////////////////
+	// Fields
+	// //////////////////////////////////////////////////////////////
+
 }

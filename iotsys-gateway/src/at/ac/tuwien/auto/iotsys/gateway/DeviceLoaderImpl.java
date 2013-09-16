@@ -93,6 +93,7 @@ public class DeviceLoaderImpl implements DeviceLoader {
 				e.printStackTrace();
 			} catch (ClassNotFoundException e) {
 				log.severe("Could not instantiate device loader " + deviceLoaderName + " - not found on classpath!");
+				log.severe(" Debug Info:" + e.getMessage());
 			}
 		}
 	

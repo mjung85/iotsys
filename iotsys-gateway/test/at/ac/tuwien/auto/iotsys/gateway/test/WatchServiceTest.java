@@ -18,14 +18,14 @@ import com.jayway.restassured.path.xml.element.Node;
 public class WatchServiceTest extends AbstractGatewayTest {
 	@Test
 	public void testLobbyHasWatchService() {
-		expect().body(hasXPath("/obj/ref[@href='/watchService' and @is='obix:WatchService']")).
+		expect().body(hasXPath("/obj/ref[@href='watchService' and @is='obix:WatchService']")).
 		when().get("/obix");
 	}
 	
 	private String makeWatch() {
 		String watch = post("/watchService/make").asString();
 		Node watchNode = XmlPath.from(watch).get("/obj");
-		return "/" + watchNode.getAttribute("href");
+		return watchNode.getAttribute("href");
 	}
 	
 	@Test
@@ -316,7 +316,7 @@ public class WatchServiceTest extends AbstractGatewayTest {
 	}
 	
 	@Test
-	public void testWatchFeedPollChanges() throws InterruptedException {
+	public void testWatchFeedPollChanges() {
 		String watchHref = makeWatch();
 		String addUri = watchHref + "/add";
 		String pollChangesUri = watchHref + "/pollChanges";
@@ -365,7 +365,7 @@ public class WatchServiceTest extends AbstractGatewayTest {
 	}
 	
 	@Test
-	public void testWatchExtent() throws InterruptedException {
+	public void testWatchExtent() {
 		String watchHref = makeWatch();
 		String addUri = watchHref + "/add";
 		String pollChangesUri = watchHref + "/pollChanges";
@@ -392,7 +392,7 @@ public class WatchServiceTest extends AbstractGatewayTest {
 	
 	
 	@Test
-	public void testWatchHistoryFeedFiltered() throws InterruptedException {
+	public void testWatchHistoryFeedFiltered() {
 		String watchHref = makeWatch();
 		String addUri = watchHref + "/add";
 		String pollRefreshUri = watchHref + "/pollRefresh";

@@ -42,19 +42,20 @@ import java.util.logging.Logger;
 
 import obix.Contract;
 import obix.Feed;
+import obix.IObj;
 import obix.Obj;
 import obix.Op;
 import obix.Reltime;
 import obix.Uri;
 import obix.contracts.Watch;
 import obix.contracts.WatchIn;
-import at.ac.tuwien.auto.iotsys.commons.FeedFilter;
 import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
-import at.ac.tuwien.auto.iotsys.commons.OperationHandler;
-import at.ac.tuwien.auto.iotsys.gateway.obix.observer.EventObserver;
-import at.ac.tuwien.auto.iotsys.gateway.obix.observer.FeedObserver;
-import at.ac.tuwien.auto.iotsys.gateway.obix.observer.ObjObserver;
-import at.ac.tuwien.auto.iotsys.gateway.obix.observer.Observer;
+import at.ac.tuwien.auto.iotsys.commons.obix.observer.FeedObserver;
+import at.ac.tuwien.auto.iotsys.obix.FeedFilter;
+import at.ac.tuwien.auto.iotsys.obix.OperationHandler;
+import at.ac.tuwien.auto.iotsys.obix.observer.EventObserver;
+import at.ac.tuwien.auto.iotsys.obix.observer.ObjObserver;
+import at.ac.tuwien.auto.iotsys.obix.observer.Observer;
 
 /**
  * Implements the watch logic, representing a per-client state object.
@@ -131,7 +132,7 @@ public class WatchImpl extends Obj implements Watch {
 					// then the server SHOULD only return the object once.
 					// Therefore filter out duplicate URIs
 					ArrayList<Uri> uris = new ArrayList<Uri>();
-					for(Obj u : watchIn.get("hrefs").list()) {
+					for(IObj u : watchIn.get("hrefs").list()) {
 						if (!uris.contains(u)) uris.add((Uri) u);
 					}
 					
@@ -197,7 +198,7 @@ public class WatchImpl extends Obj implements Watch {
 				if(in instanceof WatchIn){
 					WatchIn watchIn = (WatchIn) in;
 	
-					for(Obj u : watchIn.get("hrefs").list()) {
+					for(IObj u : watchIn.get("hrefs").list()) {
 						Uri uri = (Uri) u;
 
 						Observer observer = observers.get(uri.getPath());

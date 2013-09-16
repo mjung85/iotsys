@@ -42,7 +42,7 @@ import java.util.logging.Logger;
 
 import at.ac.tuwien.auto.iotsys.commons.Connector;
 import at.ac.tuwien.auto.iotsys.commons.DeviceLoader;
-import at.ac.tuwien.auto.iotsys.commons.MDnsResolver;
+import at.ac.tuwien.auto.iotsys.commons.MdnsResolver;
 import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
 import at.ac.tuwien.auto.iotsys.commons.PropertiesLoader;
 import at.ac.tuwien.auto.iotsys.commons.interceptor.ClassAlreadyRegisteredException;
@@ -56,7 +56,7 @@ import at.ac.tuwien.auto.iotsys.gateway.obix.server.ObixObservingManager;
 import at.ac.tuwien.auto.iotsys.gateway.obix.server.ObixServer;
 import at.ac.tuwien.auto.iotsys.gateway.obix.server.ObixServerImpl;
 import at.ac.tuwien.auto.iotsys.gateway.util.ExiUtil;
-import at.ac.tuwien.auto.iotsys.mdnssd.MDnsResolverImpl;
+import at.ac.tuwien.auto.iotsys.mdnssd.MdnsResolverImpl;
 import at.ac.tuwien.auto.iotsys.mdnssd.Named;
 import at.ac.tuwien.auto.iotsys.xacml.pdp.PDPInterceptorSettings;
 
@@ -79,7 +79,7 @@ public class IoTSySGateway
 
 	private ObixServer obixServer = null;
 
-	private MDnsResolver mdnsResolver;
+	private MdnsResolver mdnsResolver;
 
 	public IoTSySGateway()
 	{
@@ -256,7 +256,7 @@ public class IoTSySGateway
 	{
 		final IoTSySGateway iotsys = new IoTSySGateway();
 		(new Named()).startNamedService();
-		iotsys.setMdnsResolver(MDnsResolverImpl.getInstance());
+		iotsys.setMdnsResolver(MdnsResolverImpl.getInstance());
 		iotsys.startGateway();
 
 		// TestClient testClient = new TestClient(iotsys.objectBroker);
@@ -308,12 +308,12 @@ public class IoTSySGateway
 		return objectBroker;
 	}
 
-	public MDnsResolver getMdnsResolver()
+	public MdnsResolver getMdnsResolver()
 	{
 		return mdnsResolver;
 	}
 
-	public void setMdnsResolver(MDnsResolver mdnsResolver)
+	public void setMdnsResolver(MdnsResolver mdnsResolver)
 	{
 		this.mdnsResolver = mdnsResolver;
 	}

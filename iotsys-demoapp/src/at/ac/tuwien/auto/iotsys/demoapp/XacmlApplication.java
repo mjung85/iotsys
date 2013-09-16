@@ -3,7 +3,7 @@ package at.ac.tuwien.auto.iotsys.demoapp;
 import obix.Bool;
 import obix.Obj;
 import obix.Uri;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.logic.Application;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.logic.Application;
 import at.ac.tuwien.auto.iotsys.xacml.pdp.PDPInterceptorSettings;
 
 public class XacmlApplication extends Obj implements Application{

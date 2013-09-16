@@ -1,6 +1,8 @@
 // Variables
 description = 'Wrapper for OSGI libraries'
 
+sourceCompatibility = 1.6
+
 jar {
 	from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
 	

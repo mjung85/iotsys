@@ -1,6 +1,8 @@
 // Variables
 description = 'IoTSyS Control'
 
+sourceCompatibility = 1.6
+
 eclipse{
 	classpath{
 		file {
@@ -38,12 +40,11 @@ jar {
 				   "Bundle-Description": "Test client",
 				   "Bundle-Vendor": "Vienna University of Technology, Automation Systems Group, www.auto.tuwien.ac.at",
 				   "Bundle-Version": "0.1", 
-				   "Bundle-Classpath": ".",
-				 
+				   "Bundle-Classpath": ".",				 
 				   "Import-Package": "obix, obix.asm, obix.contracts, obix.io, obix.net, obix.test, obix.toos, obix.ui, obix.ui.fields, obix.ui.views, obix.xml,"+ 
-					"org.osgi.framework,at.ac.tuwien.auto.iotsys.commons,at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot, at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators,"+
-					"at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl, at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors,"+ 
-					"at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl, at.ac.tuwien.auto.iotsys.gateway.obix.observer",
+					"org.osgi.framework,at.ac.tuwien.auto.iotsys.commons,at.ac.tuwien.auto.iotsys.commons.obix.objects.iot, at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators,"+
+					"at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators.impl, at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.sensors,"+ 
+					"at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.sensors.impl, at.ac.tuwien.auto.iotsys.obix.observer",
 				   )
 	}
 }

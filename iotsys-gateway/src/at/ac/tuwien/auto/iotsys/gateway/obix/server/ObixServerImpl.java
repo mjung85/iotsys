@@ -36,7 +36,6 @@ import java.net.URI;
 import java.util.logging.Logger;
 
 import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
-
 import obix.Err;
 import obix.Obj;
 import obix.Uri;
@@ -103,6 +102,14 @@ public class ObixServerImpl implements ObixServer{
 			ex.printStackTrace();
 			return e;
 		}
+	}
+	
+	@Override
+	public String getNormalizedPath(String href) {
+		Obj o = objectBroker.pullObj(new Uri(href));
+		if (o == null) return null;
+		
+		return o.getFullContextPath();
 	}
 
 }

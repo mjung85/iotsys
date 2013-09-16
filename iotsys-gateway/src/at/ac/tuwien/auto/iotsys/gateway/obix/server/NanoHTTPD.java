@@ -12,7 +12,6 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
 import java.net.Inet6Address;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -35,6 +34,7 @@ import obix.io.BinObixDecoder;
 import obix.io.BinObixEncoder;
 import obix.io.ObixDecoder;
 import obix.io.ObixEncoder;
+import obix.io.RelativeObixEncoder;
 
 import org.json.JSONException;
 
@@ -166,12 +166,9 @@ public class NanoHTTPD {
 		if (data != null)
 			log.finest("serve: " + uri + ", method: " + method + ", data.length(): " + data.length());
 		log.finest("Data: " + data);
-		
-		
-		String resourcePath = getResourcePath(uri, ipv6Address);
 
 		try {
-			StringBuffer obixResponse = getObixResponse(resourcePath, data, method, header);
+			StringBuffer obixResponse = getObixResponse(requestUri, ipv6Address, data, method, header);
 			response = encodeResponse(uri, header, obixResponse);
 		} catch (URISyntaxException usex) {
 			response = new Response(HTTP_BADREQUEST, MIME_PLAINTEXT, "URI Syntax Exception");
@@ -306,7 +303,7 @@ public class NanoHTTPD {
 	
 				try {
 					Obj obj = BinObixDecoder.fromBytes(unbox(payload));
-					return ObixEncoder.toString(obj, true);
+					return ObixEncoder.toString(obj);
 				} catch (Exception e1) {
 					e1.printStackTrace();
 				}
@@ -349,62 +346,47 @@ public class NanoHTTPD {
 	}
 	
 	private String getResourcePath(String uri, String ipv6Address) {
-		String resourcePath = uri;
-		
-		if (obixServer.containsIPv6(ipv6Address)) {
-			log.finest("IPv6 Adresse -> IoT6 Object");
-			resourcePath = obixServer.getIPv6LinkedHref(ipv6Address);
-			resourcePath += uri;
-		}
-		
-		// normalize resource path
-		try {
-			resourcePath = URI.create("//localhost/" + URLEncoder.encode(resourcePath, "UTF-8")).normalize().getPath();
-		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return resourcePath;
+		return new CoAPHelper(obixServer).getResourcePath(uri, ipv6Address);
 	}
 
 	private boolean accepts(Properties header, String mimeType) {
 		return header.containsKey("accept") && header.getProperty("accept").contains(mimeType);
 	}
 
-	private StringBuffer getObixResponse(String resourcePath, String data, String method, Properties header)
+	private StringBuffer getObixResponse(String uri, String ipv6Address, String data, String method, Properties header)
 				throws URISyntaxException {
 		
 		StringBuffer obixResponse = null;
 		
-		if (resourcePath.endsWith("soap")) {
+		if (uri.endsWith("soap")) {
 			log.finest("Forward to SOAP handler!");
 
 			obixResponse = new StringBuffer(soapHandler.process(data,
-					header.getProperty("soapAction")));
+					header.getProperty("soapaction")));
 			log.finest("oBIX Response: " + obixResponse);
 
 		} else {
+			Obj responseObj = null;
+			String resourcePath = getResourcePath(uri, ipv6Address);
+			
 			if (method.equals("GET")) {
-				obixResponse = new StringBuffer(
-						ObixEncoder.toString(obixServer.readObj(new URI(
-								resourcePath), "guest"), true));
+				responseObj = obixServer.readObj(new URI(resourcePath), "guest");
+			} else if (method.equals("PUT")) {
+				responseObj = obixServer.writeObj(new URI(resourcePath), data);
+			} else if (method.equals("POST")) {
+				responseObj = obixServer.invokeOp(new URI(resourcePath), data);
 			}
-
-			if (method.equals("PUT")) {
-				obixResponse = new StringBuffer(
-						ObixEncoder.toString(obixServer.writeObj(new URI(
-								resourcePath), data), true));
-			}
-
-			if (method.equals("POST")) {
-				Obj obj = obixServer.invokeOp(new URI(resourcePath), data);
-				obixResponse = new StringBuffer(ObixEncoder.toString(obj, false));
-			}
-		}
-
-		// in case of a method call don't fix the HREF
-		if (!method.equals("POST")) {
-//				fixHref(requestUri, obixResponse);
+			
+			
+			URI rootUri, baseUri;
+			
+			if (ipv6Address == null)
+				rootUri = new URI("/");
+			else
+				rootUri = new URI(getResourcePath("", ipv6Address));
+			
+			baseUri = new URI(resourcePath.substring(0, resourcePath.lastIndexOf('/')+1));
+			obixResponse = new StringBuffer(RelativeObixEncoder.toString(responseObj, rootUri, baseUri));
 		}
 		
 		return obixResponse;
@@ -461,30 +443,6 @@ public class NanoHTTPD {
 			}
 		}
 		return response;
-	}
-
-	private void fixHref(String href, StringBuffer obixResponse) {
-
-		int hrefIndex = obixResponse.indexOf("href");
-
-		// get index of first quota - " - this is the start of the href
-		int firstQuota = obixResponse.indexOf("\"", hrefIndex);
-
-		// get index of the second quota - " - this is the end of the href
-		int secondQuota = obixResponse.indexOf("\"", firstQuota + 1);
-
-		if (hrefIndex >= 0 && firstQuota > hrefIndex
-				&& secondQuota > firstQuota) {
-
-			// now delete everything from localhost to the position of the
-			// closing quota
-
-			obixResponse.delete(firstQuota + 1, secondQuota);
-
-			// put the IPv6 address there instead
-
-			obixResponse.insert(firstQuota + 1, href);
-		}
 	}
 
 	public static Byte[] box(byte[] byteArray) {
