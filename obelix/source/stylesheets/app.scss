@@ -140,7 +140,6 @@ body > label {
   background: $sidebarColor;
   padding: 4px;
   position: absolute;
-  top: 5 * 25px;
-  left: 3 * 25px;
+
   @include border-radius(4px);
 }

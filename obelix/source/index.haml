@@ -14,10 +14,14 @@
         {{directory.name}}
       %ul.devices(ng-show="directory.expanded")
         %li.device(ng-repeat="device in directory.devices")
-          %label(draggable) {{device.name}}
+          %label(draggable="device") {{device.name}}
       %ul.subdirectories(ng-show="directory.expanded")
         %li.subdirectory(ng-class="{expanded:directory.expanded}" ng-repeat="directory in directory.subdirectories" ng-include="'directory_template'")
     #sidebar(ng-class="{expanded: sidebarExpanded}")
-      .content(ng-include="'directory_template'")
+      .content(ng-include="'directory_template'" not-droppable)
       .toggle(ng-click="sidebarExpanded = !sidebarExpanded; $event.stopPropagation()")
-    #canvas(ng-click="sidebarExpanded = false" droppable)
+    #canvas(ng-click="sidebarExpanded = false" droppable="deviceDropped" plumbcontainer)
+      %div(ng-repeat="device in droppedDevices")
+        .device(ng-style="{left: device.droppedLeft, top: device.droppedTop}" plumb)
+          %label.name
+            {{device.name}}

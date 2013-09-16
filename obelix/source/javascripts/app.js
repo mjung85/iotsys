@@ -1,7 +1,8 @@
-//= require 'sugar-1.4.0'
 //= require 'jquery-2.0.3'
 //= require 'angular-1.0.7'
 //= require 'html5slider'
+//= require 'jquery.jsPlumb-1.5.2'
+//= require 'sugar-1.4.0'
 //= require_self
 
 var app = angular.module('Obelix', []);
@@ -29,7 +30,7 @@ app.service('Lobby', function($http, Device, Directory) {
 
 app.factory('Directory', function() {
   var Directory = function(name) {
-    this.name = name.replace('+',' ');
+    this.name = name;
     this.subdirectories = [];
     this.devices = [];
     this.expanded = false;
@@ -39,11 +40,12 @@ app.factory('Directory', function() {
   Directory.prototype.make = function(components) {
     if (components.isEmpty()) return this;
 
-    var head = components.shift();
+    var name = components.shift();
+    name = name.replace('+',' ');
     
-    var subdirectory = this.subdirectories.find({name:head});
+    var subdirectory = this.subdirectories.find({name:name});
     if (!subdirectory) {
-      subdirectory = new Directory(head);
+      subdirectory = new Directory(name);
       this.subdirectories.push(subdirectory);
     }
 
@@ -76,6 +78,17 @@ app.factory('Device', function($http) {
     this.name = name;
     return this;
   };
+
+  Device.prototype.drop = function(left, top) {
+    this.dropped = true;
+    this.droppedLeft = left;
+    this.droppedTop = top;
+  };
+
+  Device.prototype.fetch = function() {
+
+  };
+
   return Device;
 });
 
@@ -87,27 +100,92 @@ app.controller('MainCtrl', ['$scope','Lobby', function($scope, Lobby) {
   });
 
   $scope.sidebarExpanded = true;
+
+  $scope.droppedDevices = [];
+  $scope.deviceDropped = function(dev, position) {
+    $scope.sidebarExpanded = false;
+    dev.fetch();
+    dev.drop(position.left, position.top);
+    $scope.droppedDevices.push(dev);
+  };
 }]);
 
+// Simple angularJS directives for use of jquery-ui draggable
+//
+// On source, define draggable="model"
+// On drop target define droppable="callback(draggable)"
+// callback(model, position) will be called on drop
 app.directive('draggable', function() {
   return {
     restrict: 'A',
     link: function(scope, el, attrs) {
-      var device = scope.$eval("device");
+      var device = scope.$eval(attrs['draggable']);
       el.draggable({
-        revert: true,
         appendTo: 'body',
         helper: 'clone',
         start: function() {
+          console.log("Start",this,arguments);
           $(this).addClass('disabled');
         },
         stop: function() {
           $(this).removeClass('disabled');
         }
-        // helper: function() {
-        //   return $('<div class="dragger"></div>');
-        // }
       });
     }
   };
+});
+
+// app.directive('notDroppable', function() {
+//   return {
+//     restrict: 'A',
+//     link: function(scope, el, attrs) {
+//       el.droppable({
+//         greedy: true,
+//         drop: function(event,ui) {
+//           console.log('swallow');
+//         }
+//       });
+//     }
+//   }
+// });
+
+app.directive('droppable', function($parse) {
+  return {
+    restrict: 'A',
+    link: function(scope, el, attrs) {
+      var callback = $parse(attrs['droppable'])(scope);
+      el.droppable({
+        drop: function(event, ui) {
+          var currentPos = ui.helper.position();
+          var draggable = angular.element(ui.draggable);
+          var model = draggable.scope().$eval(draggable.attr('draggable'));
+          callback(model, ui.helper.position());
+          scope.$apply();
+          jsPlumb.repaintEverything();
+        }
+      });
+    }
+  }
+});
+
+app.directive('plumbcontainer', function() {
+  return {
+    restrict: 'A',
+    link: function(scope, el, attrs) {
+      jsPlumb.ready(function() {
+        jsPlumb.Defaults.Container = el;
+      });
+    }
+  }
+});
+
+app.directive('plumb', function() {
+  return {
+    restrict: 'A',
+    link: function(scope, el, attrs) {
+      jsPlumb.addEndpoint(el, {isSource: true, isTarget:true, connector:[ "Bezier", { curviness:100 }], endpoint: ["Dot", {
+        radius: 6
+      }],paintStyle:{ fillStyle:"black"}, connectorStyle: { lineWidth: 4, strokeStyle: "#5b9ada"}});
+    }
+  }
 });
