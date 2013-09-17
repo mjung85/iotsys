@@ -1,8 +1,11 @@
 package at.ac.tuwien.auto.iotsys.gateway.test;
 
+import java.lang.reflect.InvocationTargetException;
+
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 
+import at.ac.tuwien.auto.iotsys.commons.MdnsResolver;
 import at.ac.tuwien.auto.iotsys.gateway.IoTSySGateway;
 
 public class AbstractGatewayTest {
@@ -11,6 +14,31 @@ public class AbstractGatewayTest {
 	@BeforeClass
 	public static void setUp() {
 		gateway = new IoTSySGateway();
+
+		try {
+			Class mc = Class.forName("at.ac.tuwien.auto.iotsys.mdnssd.MdnsResolverImpl");
+			MdnsResolver m = (MdnsResolver) mc.getDeclaredMethod("getInstance", null).invoke(null, null);
+			gateway.setMdnsResolver(m);
+
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (IllegalArgumentException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NoSuchMethodException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SecurityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		gateway.startGateway("config/devices.test.xml");
 	}
 	
