@@ -200,6 +200,7 @@ public class ContractRegistry
 		baseContracts.put("obix:op", "obix.Op");
 		baseContracts.put("obix:event", "obix.Event");
 		baseContracts.put("obix:ref", "obix.Ref");
+		baseContracts.put("obix:feed", "obix.Feed");
 		baseContracts.put("obix:err", "obix.Err");
 		obix.contracts.ContractInit.init();
 

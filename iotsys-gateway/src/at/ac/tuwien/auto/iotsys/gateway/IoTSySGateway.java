@@ -98,15 +98,16 @@ public class IoTSySGateway
 
 		// init exi util
 		ExiUtil.getInstance();
-		// init contracts, this try is to catch re-initiation exception when
-		// restart the bundle
+		
+		// init contracts, this try is to catch re-initiation exception when restart the bundle
 		try
 		{
 			at.ac.tuwien.auto.iotsys.gateway.obix.objects.ContractInit.init();
 		} catch (IllegalStateException e)
 		{
-
+			log.warning("Problem initializing contracts: " + e.getMessage());
 		}
+		
 		String httpPort = PropertiesLoader.getInstance().getProperties().getProperty("iotsys.gateway.http.port", "8080");
 
 		log.info("HTTP-Port: " + httpPort);

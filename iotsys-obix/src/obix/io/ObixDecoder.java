@@ -3,13 +3,34 @@
  */
 package obix.io;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.StringTokenizer;
-import obix.*;
+
+import obix.Abstime;
+import obix.Bool;
+import obix.Contract;
+import obix.ContractRegistry;
+import obix.Date;
 import obix.Enum;
-import obix.xml.*;
+import obix.Feed;
+import obix.Int;
+import obix.List;
+import obix.Obj;
+import obix.Op;
+import obix.Real;
+import obix.Ref;
+import obix.Reltime;
+import obix.Status;
+import obix.Str;
+import obix.Time;
+import obix.Uri;
+import obix.Val;
+import obix.xml.XElem;
+import obix.xml.XException;
+import obix.xml.XParser;
 
 /**
  * ObixDecoder is used to deserialize an XML stream
@@ -36,7 +57,11 @@ public class ObixDecoder
     {
       ByteArrayInputStream in = new ByteArrayInputStream(xml.getBytes("UTF-8"));
       ObixDecoder decoder = new ObixDecoder(in);
-      return decoder.decodeDocument();      
+      return decoder.decodeDocument();
+    }
+    catch(XException e)
+    {
+    	throw e;
     }
     catch(Exception e)
     {
