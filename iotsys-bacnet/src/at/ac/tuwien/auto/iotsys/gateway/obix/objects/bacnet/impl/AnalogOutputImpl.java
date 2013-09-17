@@ -23,9 +23,9 @@
 package at.ac.tuwien.auto.iotsys.gateway.obix.objects.bacnet.impl;
 
 import obix.Contract;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.bacnet.AnalogOutput;
 import at.ac.tuwien.auto.iotsys.gateway.connectors.bacnet.BACnetConnector;
 import at.ac.tuwien.auto.iotsys.gateway.connectors.bacnet.BacnetDataPointInfo;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.bacnet.AnalogOutput;
 
 public class AnalogOutputImpl extends AnalogBacnetObj implements AnalogOutput {
 	

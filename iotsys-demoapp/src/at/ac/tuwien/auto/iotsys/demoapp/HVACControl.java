@@ -51,18 +51,8 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import at.ac.tuwien.auto.iotsys.commons.PropertiesLoader;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.logic.Application;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.logic.CoapTemperatureController;
-//
-//import ch.ethz.inf.vs.californium.coap.GETRequest;
-//import ch.ethz.inf.vs.californium.coap.MediaTypeRegistry;
-//import ch.ethz.inf.vs.californium.coap.Option;
-//import ch.ethz.inf.vs.californium.coap.OptionNumberRegistry;
-//import ch.ethz.inf.vs.californium.coap.PUTRequest;
-//import ch.ethz.inf.vs.californium.coap.Request;
-//import ch.ethz.inf.vs.californium.coap.Response;
-//import ch.ethz.inf.vs.californium.coap.Message.messageType;
-//import ch.ethz.inf.vs.californium.coap.ResponseHandler;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.logic.Application;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.logic.CoapTemperatureController;
 
 public class HVACControl extends Obj implements Application {
 

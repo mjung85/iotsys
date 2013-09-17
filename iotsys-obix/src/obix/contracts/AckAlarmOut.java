@@ -4,17 +4,17 @@ import obix.*;
 
 /**
  * AckAlarmOut
- *
- * @author    obix.tools.Obixc
- * @creation  24 May 06
- * @version   $Revision$ $Date$
+ * 
+ * @author obix.tools.Obixc
+ * @creation 24 May 06
+ * @version $Revision$ $Date$
  */
-public interface AckAlarmOut
-  extends IObj
+public interface AckAlarmOut extends IObj
 {
-  public static final String ALARM_ACKOUT_CONTRACT = "obix:AckAlarmOut";
-  
-  public static final String alarmContract = "<obj name='alarm' is='obix:AckAlarm obix:Alarm'/>";
-  public AckAlarm alarm();
+	public static final String CONTRACT = "obix:AckAlarmOut";
+
+	public static final String alarmContract = "<obj name='alarm' is='" + AckAlarm.CONTRACT + " " + Alarm.CONTRACT + "'/>";
+
+	public AckAlarm alarm();
 
 }

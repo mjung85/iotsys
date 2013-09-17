@@ -123,21 +123,20 @@ public class SOAPHandler {
 			e.printStackTrace();
 			return e.getMessage();
 		}
-
+		
 		if (op == OPERATION.READ) {
 			// read on object, find href attribute
-
 			StringBuffer obixObj = new StringBuffer(ObixEncoder.toString(obixServer.readObj(hrefURI,
-					"guest"), true));
+					"guest")));
 			return SOAP_RESPONSE_START + obixObj.toString() + SOAP_RESPONSE_END;
 
 		} else if (op == OPERATION.INVOKE) {
 			String obj = extractObject(soapPayload, nameSpacePrefix, false);
-			return SOAP_RESPONSE_START + ObixEncoder.toString(obixServer.invokeOp(hrefURI, obj), true)
+			return SOAP_RESPONSE_START + ObixEncoder.toString(obixServer.invokeOp(hrefURI, obj))
 					+ SOAP_RESPONSE_END;
 		} else if (op == OPERATION.WRITE) {
 			String obj = extractObject(soapPayload, nameSpacePrefix, true);
-			return SOAP_RESPONSE_START + ObixEncoder.toString(obixServer.writeObj(hrefURI, obj), true)
+			return SOAP_RESPONSE_START + ObixEncoder.toString(obixServer.writeObj(hrefURI, obj))
 					+ SOAP_RESPONSE_END;
 		}
 

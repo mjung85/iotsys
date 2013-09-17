@@ -1,6 +1,5 @@
 package at.ac.tuwien.auto.iotsys.commons;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import obix.Obj;
@@ -43,7 +42,7 @@ public interface ObjectBroker{
 
 	public void shutdown();
 	
-	public MDnsResolver getMDnsResolver();
+	public MdnsResolver getMDnsResolver();
 
-	public void setMdnsResolver(MDnsResolver resolver);
+	public void setMdnsResolver(MdnsResolver resolver);
 }

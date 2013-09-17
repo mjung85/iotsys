@@ -6,6 +6,7 @@ package javax.jmdns;
 import java.net.Inet4Address;
 import java.net.Inet6Address;
 import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.Enumeration;
 import java.util.Map;
 
@@ -668,6 +669,18 @@ public abstract class ServiceInfo implements Cloneable {
      */
     public abstract void setText(final Map<String, ?> props) throws IllegalStateException;
 
+    /**
+     * Set the text for the service. Setting the text will fore a re-announce of the service.
+     * 
+     * @param text
+     *            the raw byte representation of the text field.
+     * @exception IllegalStateException
+     *                if attempting to set the text for a non persistent service info.
+     * @throws SecurityException 
+     * @throws UnknownHostException 
+     */
+    public abstract void setIpv6Addr(String ipv6Addr) throws IllegalStateException, UnknownHostException, SecurityException;
+    
     /**
      * Returns <code>true</code> if ServiceListener.resolveService will be called whenever new new information is received.
      * 

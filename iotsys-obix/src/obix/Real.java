@@ -10,7 +10,8 @@ package obix;
  * @creation 27 Apr 05
  * @version $Revision$ $Date$
  */
-public class Real extends Val {
+public class Real extends Val
+{
 
 	// //////////////////////////////////////////////////////////////
 	// Constructor
@@ -19,7 +20,8 @@ public class Real extends Val {
 	/**
 	 * Construct named Real with specified value.
 	 */
-	public Real(String name, double val) {
+	public Real(String name, double val)
+	{
 		super(name);
 		this.val = val; // we don't want to notify observers here
 
@@ -29,7 +31,8 @@ public class Real extends Val {
 	/**
 	 * Construct named Real with default of 0.
 	 */
-	public Real(String name) {
+	public Real(String name)
+	{
 		super(name);
 		this.val = 0; // we don't want to notify observers here
 
@@ -39,7 +42,8 @@ public class Real extends Val {
 	/**
 	 * Construct unnamed Real with specified value.
 	 */
-	public Real(double val) {
+	public Real(double val)
+	{
 		this.val = val; // we don't want to notify observers here
 
 		// set(val);
@@ -48,7 +52,8 @@ public class Real extends Val {
 	/**
 	 * Construct unnamed Real with value of 0.
 	 */
-	public Real() {
+	public Real()
+	{
 		this.val = 0; // we don't want to notify observers here
 		// set(0);
 	}
@@ -60,37 +65,45 @@ public class Real extends Val {
 	/**
 	 * Get value as a double.
 	 */
-	public double get() {
+	public double get()
+	{
 		return val;
 	}
 
 	/**
 	 * Set value.
 	 */
-	public void set(double val) {
+	public void set(double val)
+	{
 		double oldVal = this.val;
-		
-		if(val < this.getMin()){
+
+		if (val < this.getMin())
+		{
 			this.val = this.getMin();
 		}
-		else if(val > this.getMax()){
+		else if (val > this.getMax())
+		{
 			this.val = this.getMax();
 		}
-		else{
+		else
+		{
 			this.val = val;
 		}
-		if(this.val != oldVal)
+		if (this.val != oldVal)
 			notifyObservers();
 	}
-	
+
 	/**
 	 * Auto cast for double
 	 */
-	public void set(boolean val){
-		if(val){
+	public void set(boolean val)
+	{
+		if (val)
+		{
 			set(100);
 		}
-		else{
+		else
+		{
 			set(0);
 		}
 	}
@@ -102,21 +115,24 @@ public class Real extends Val {
 	/**
 	 * Return "real".
 	 */
-	public String getElement() {
+	public String getElement()
+	{
 		return "real";
 	}
 
 	/**
 	 * Return BinObix.REAL.
 	 */
-	public int getBinCode() {
+	public int getBinCode()
+	{
 		return obix.io.BinObix.REAL;
 	}
 
 	/**
 	 * Return if specified Val has equivalent real value.
 	 */
-	public boolean valEquals(Val that) {
+	public boolean valEquals(Val that)
+	{
 		if (that instanceof Real)
 			return ((Real) that).val == val;
 		return false;
@@ -127,7 +143,8 @@ public class Real extends Val {
 	 * negative integer, zero, or a positive integer as this object is less
 	 * than, equal to, or greater than the specified object.
 	 */
-	public int compareTo(Object that) {
+	public int compareTo(Object that)
+	{
 		double a = val;
 		double b = ((Real) that).val;
 		if (a == b)
@@ -141,14 +158,16 @@ public class Real extends Val {
 	/**
 	 * Encode the value as a string
 	 */
-	public String encodeVal() {
+	public String encodeVal()
+	{
 		return String.valueOf(val);
 	}
 
 	/**
 	 * Decode the value from a string.
 	 */
-	public void decodeVal(String val) throws Exception {
+	public void decodeVal(String val) throws Exception
+	{
 		this.val = Double.parseDouble(val);
 	}
 
@@ -159,66 +178,76 @@ public class Real extends Val {
 	/**
 	 * Get the min facet or MIN_DEFAULT if unspecified.
 	 */
-	public double getMin() {
+	public double getMin()
+	{
 		return min;
 	}
 
 	/**
 	 * Set the min facet.
 	 */
-	public void setMin(double min) {
+	public void setMin(double min)
+	{
 		this.min = min;
 	}
 
 	/**
 	 * Get the max facet or MAX_DEFAULT if unspecified.
 	 */
-	public double getMax() {
+	public double getMax()
+	{
 		return max;
 	}
 
 	/**
 	 * Set the max facet.
 	 */
-	public void setMax(double max) {
+	public void setMax(double max)
+	{
 		this.max = max;
 	}
 
 	/**
 	 * Get the unit facet or null if unspecified.
 	 */
-	public Uri getUnit() {
+	public Uri getUnit()
+	{
 		return unit;
 	}
 
 	/**
 	 * Set the unit facet.
 	 */
-	public void setUnit(Uri unit) {
+	public void setUnit(Uri unit)
+	{
 		this.unit = unit;
 	}
 
 	/**
 	 * Get the precision facet or PRECISION_DEFAULT if unspecified.
 	 */
-	public int getPrecision() {
+	public int getPrecision()
+	{
 		return precision;
 	}
 
 	/**
 	 * Set the precision facet.
 	 */
-	public void setPrecision(int precision) {
+	public void setPrecision(int precision)
+	{
 		this.precision = precision;
 	}
-	
-    /**
-     * Set to value of another Real
-     */
-    public void set(Obj obj) {
-		if (!(obj instanceof Real)) return;
-		set(((Real)obj).get());
-    }
+
+	/**
+	 * Set to value of another Real
+	 */
+	public void set(Obj obj)
+	{
+		if (!(obj instanceof Real))
+			return;
+		set(((Real) obj).get());
+	}
 
 	// //////////////////////////////////////////////////////////////
 	// Fields
@@ -238,14 +267,20 @@ public class Real extends Val {
 	private double max = MAX_DEFAULT;
 	private Uri unit = null;
 	private int precision = PRECISION_DEFAULT;
-	
-	public void writeObject(Obj input) {
-		if (this.getParent() != null) {
+
+	public void writeObject(Obj input)
+	{
+		if (this.getParent() != null)
+		{
 			this.getParent().writeObject(input);
-		} else {
-			if (input instanceof Real) {
+		}
+		else
+		{
+			if (input instanceof Real)
+			{
 				Real inputReal = (Real) input;
-				if (this.get() != inputReal.get()) {
+				if (this.get() != inputReal.get())
+				{
 					this.set(inputReal.get());
 				}
 			}

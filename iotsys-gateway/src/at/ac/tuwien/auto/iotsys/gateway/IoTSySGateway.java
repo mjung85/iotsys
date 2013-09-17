@@ -42,7 +42,8 @@ import java.util.logging.Logger;
 
 import at.ac.tuwien.auto.iotsys.commons.Connector;
 import at.ac.tuwien.auto.iotsys.commons.DeviceLoader;
-import at.ac.tuwien.auto.iotsys.commons.MDnsResolver;
+import at.ac.tuwien.auto.iotsys.commons.MdnsResolver;
+import at.ac.tuwien.auto.iotsys.commons.Named;
 import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
 import at.ac.tuwien.auto.iotsys.commons.PropertiesLoader;
 import at.ac.tuwien.auto.iotsys.commons.interceptor.ClassAlreadyRegisteredException;
@@ -56,8 +57,6 @@ import at.ac.tuwien.auto.iotsys.gateway.obix.server.ObixObservingManager;
 import at.ac.tuwien.auto.iotsys.gateway.obix.server.ObixServer;
 import at.ac.tuwien.auto.iotsys.gateway.obix.server.ObixServerImpl;
 import at.ac.tuwien.auto.iotsys.gateway.util.ExiUtil;
-import at.ac.tuwien.auto.iotsys.mdnssd.MDnsResolverImpl;
-import at.ac.tuwien.auto.iotsys.mdnssd.Named;
 import at.ac.tuwien.auto.iotsys.xacml.pdp.PDPInterceptorSettings;
 
 // import at.ac.tuwien.auto.iotsys.xacml.pdp.PDPInterceptor;
@@ -79,7 +78,7 @@ public class IoTSySGateway
 
 	private ObixServer obixServer = null;
 
-	private MDnsResolver mdnsResolver;
+	private MdnsResolver mdnsResolver;
 
 	public IoTSySGateway()
 	{
@@ -255,8 +254,35 @@ public class IoTSySGateway
 	public static void main(String[] args)
 	{
 		final IoTSySGateway iotsys = new IoTSySGateway();
-		(new Named()).startNamedService();
-		iotsys.setMdnsResolver(MDnsResolverImpl.getInstance());
+		try {
+			Named n = (Named) Class.forName("at.ac.tuwien.auto.iotsys.mdnssd.NamedImpl").newInstance();
+			Class mc = Class.forName("at.ac.tuwien.auto.iotsys.mdnssd.MdnsResolverImpl");
+			MdnsResolver m = (MdnsResolver) mc.getDeclaredMethod("getInstance", null).invoke(null, null);
+
+			n.startNamedService();
+			iotsys.setMdnsResolver(m);
+		} catch (InstantiationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			log.info(">>>>>>>>>>>>mdnssd service not found");
+		} catch (IllegalArgumentException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NoSuchMethodException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SecurityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		iotsys.startGateway();
 
 		// TestClient testClient = new TestClient(iotsys.objectBroker);
@@ -308,13 +334,15 @@ public class IoTSySGateway
 		return objectBroker;
 	}
 
-	public MDnsResolver getMdnsResolver()
+	public MdnsResolver getMdnsResolver()
 	{
 		return mdnsResolver;
 	}
 
-	public void setMdnsResolver(MDnsResolver mdnsResolver)
+	public void setMdnsResolver(MdnsResolver mdnsResolver)
 	{
 		this.mdnsResolver = mdnsResolver;
+		if (objectBroker != null)
+			objectBroker.setMdnsResolver(mdnsResolver);
 	}
 }

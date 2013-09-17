@@ -3,91 +3,166 @@
  */
 package obix;
 
-
 /**
- * IObj is the base interface for contract interfaces.  IObj should
- * only be implemented by subclasses of Obj.
- *
- * @author    Brian Frank
- * @creation  27 Apr 05
- * @version   $Revision$ $Date$
+ * IObj is the base interface for contract interfaces. IObj should only be
+ * implemented by subclasses of Obj.
+ * 
+ * @author Brian Frank
+ * @creation 27 Apr 05
+ * @version $Revision$ $Date$
  */
 public interface IObj
-{ 
+{
+	// //////////////////////////////////////////////////////////////
+	// Attributes
+	// //////////////////////////////////////////////////////////////
 
-////////////////////////////////////////////////////////////////
-// Identity
-////////////////////////////////////////////////////////////////
+	public String getDisplayName();
 
-  public String getName();
-  public Obj getParent();
-  public Obj getRoot();
-  public Uri getHref();
-  public Uri getNormalizedHref();
-  public void setHref(Uri href);
-  public Contract getIs();
-  public void setIs(Contract is);
+	public void setDisplayName(String displayName);
 
-////////////////////////////////////////////////////////////////
-// Convenience
-////////////////////////////////////////////////////////////////
-  
-  public boolean isVal();
-  public boolean isBool();
-  public boolean isInt();
-  public boolean isReal();
-  public boolean isEnum();
-  public boolean isStr();
-  public boolean isAbstime();
-  public boolean isReltime();
-  public boolean isUri();
-  public boolean isList();
-  public boolean isOp();
-  public boolean isRef();
-  public boolean isFeed();
-  public boolean isErr();
-  
-  public boolean getBool();
-  public long getInt();
-  public double getReal();
-  public String getStr();
+	public String toDisplayName();
 
-  public void setBool(boolean val);
-  public void setInt(long val);
-  public void setReal(double val);
-  public void setStr(String val);
+	public String getDisplay();
 
-////////////////////////////////////////////////////////////////
-// Facets
-////////////////////////////////////////////////////////////////
+	public void setDisplay(String display);
 
-  public String toDisplayString();
-  public String getDisplay();
-  public void setDisplay(String display);
-  public String toDisplayName();
-  public String getDisplayName();
-  public void setDisplayName(String displayName);
-  public Uri getIcon();
-  public void setIcon(Uri icon);
-  public Status getStatus();
-  public void setStatus(Status status);
-  public boolean isNull();
-  public void setNull(boolean isNull);
-  public boolean isWritable();
-  public void setWritable(boolean writable);
-  public void setWritable(boolean writable, boolean recursive);
+	public String toDisplay();
 
-////////////////////////////////////////////////////////////////
-// Children
-////////////////////////////////////////////////////////////////
-  
-  public Obj get(String name);
-  public int size();
-  public Obj[] list();
-  public Obj add(Obj kid);
-  public Obj addAll(Obj[] kid);
-  public void remove(Obj kid);
-  public void replace(Obj oldObj, Obj newObj);
-  public void removeThis();
-  
+	public Uri getHref();
+
+	public void setHref(Uri href);
+
+	public Uri getIcon();
+
+	public void setIcon(Uri icon);
+
+	public Contract getIs();
+
+	public void setIs(Contract is);
+
+	public String getName();
+
+	public void setName(String name);
+
+	public void setName(String name, boolean force);
+
+	public boolean isNull();
+
+	public void setNull(boolean isNull);
+
+	public Status getStatus();
+
+	public void setStatus(Status status);
+
+	public boolean isWritable();
+
+	public void setWritable(boolean writable);
+
+	public void setWritable(boolean writable, boolean recursive);
+
+	// //////////////////////////////////////////////////////////////
+	// Extended Attributes
+	// //////////////////////////////////////////////////////////////
+
+	public boolean isHidden();
+
+	public void setHidden(boolean hidden);
+
+	public boolean isOverridden();
+
+	public void setOverridden(boolean overridden);
+
+	public boolean isDisabled();
+
+	public void setDisabled(boolean isDisabled);
+
+	public boolean isFaulty();
+
+	public void setFaulty(boolean isFaulty);
+
+	public boolean isDown();
+
+	public void setDown(boolean isDown);
+
+	// //////////////////////////////////////////////////////////////
+	// Identity / Children
+	// //////////////////////////////////////////////////////////////
+
+	public boolean is(String is);
+
+	public String getElement();
+
+	public int getBinCode();
+
+	public IObj getParent();
+
+	public IObj getRoot();
+
+	public Ref getReference(boolean absolute);
+
+	public IObj get(String name);
+
+	public int size();
+
+	public IObj[] list();
+
+	// //////////////////////////////////////////////////////////////
+	// Convenience
+	// //////////////////////////////////////////////////////////////
+
+	public boolean isVal();
+
+	public boolean isBool();
+
+	public boolean isInt();
+
+	public boolean isReal();
+
+	public boolean isStr();
+
+	public boolean isEnum();
+
+	public boolean isUri();
+
+	public boolean isAbstime();
+
+	public boolean isReltime();
+
+	public boolean isDate();
+
+	public boolean isTime();
+
+	public boolean isList();
+
+	public boolean isOp();
+
+	public boolean isFeed();
+
+	public boolean isRef();
+
+	public boolean isErr();
+
+	// //////////////////////////////////////////////////////////////
+	// Values
+	// //////////////////////////////////////////////////////////////
+
+	public boolean getBool();
+
+	public void setBool(boolean val);
+
+	public long getInt();
+
+	public void setInt(long val);
+
+	public double getReal();
+
+	public void setReal(double val);
+
+	public String getStr();
+
+	public void setStr(String val);
+
+	public void set(IObj obj);
+
 }

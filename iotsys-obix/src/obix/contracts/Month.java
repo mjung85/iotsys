@@ -4,13 +4,12 @@ import obix.*;
 
 /**
  * Month
- *
- * @author    obix.tools.Obixc
- * @creation  24 May 06
- * @version   $Revision$ $Date$
+ * 
+ * @author obix.tools.Obixc
+ * @creation 24 May 06
+ * @version $Revision$ $Date$
  */
-public interface Month
-  extends IObj
+public interface Month extends IObj
 {
-
+	public static final String CONTRACT = "obix:Month";
 }

@@ -1,5 +1,8 @@
 // Variables
-description = 'IoTSyS Control'
+description = 'IoTSyS Demo App'
+
+sourceCompatibility = 1.6
+
 
 eclipse{
 	classpath{
@@ -40,9 +43,9 @@ jar {
 				   "Bundle-Classpath": ".",
 				   "Bundle-Activator":  "at.ac.tuwien.auto.iotsys.demoapp.DemoAppActivator",
 				   "Import-Package": "obix, obix.asm, obix.contracts, obix.io, obix.net, obix.test, obix.toos, obix.ui, obix.ui.fields, obix.ui.views, obix.xml,"+ 
-					"org.osgi.framework,at.ac.tuwien.auto.iotsys.commons,at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot, at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators,"+
-					"at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl, at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors,"+ 
-					"at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl, at.ac.tuwien.auto.iotsys.gateway.obix.observer,at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.logic, at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.logic.impl," +
+					"org.osgi.framework,at.ac.tuwien.auto.iotsys.commons,at.ac.tuwien.auto.iotsys.commons.obix.objects.iot, at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators,"+
+					"at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators.impl, at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.sensors,"+ 
+					"at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.sensors.impl, at.ac.tuwien.auto.iotsys.obix.observer,at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.logic, at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.logic.impl," +
 					"org.xml.sax, org.xml.sax.helpers, org.xml.sax.ext,  com.sun.org.apache.xalan.internal, com.sun.org.apache.xalan.internal.res, " +
 									   "org.w3c.dom, org.w3c.dom.traversal, org.w3c.dom.ls, javax.xml.parsers,  javax.xml.xpath, javax.xml.transform.sax, javax.xml.transform.dom, " +
 									   "javax.xml.namespace, javax.xml.transform, javax.xml.transform.stream, javax.xml.validation, javax.xml.datatype, at.ac.tuwien.auto.iotsys.xacml.pdp",

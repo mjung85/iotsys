@@ -104,7 +104,8 @@ public class EnoceanDeviceLoaderImpl implements DeviceLoader {
 					int numberOfDevices = 0;
 					if (enoceanConfiguredDevices != null) {
 						numberOfDevices = 1; // there is at least one device.
-					} else if (enoceanConfiguredDevices instanceof Collection<?>) {
+					}
+					if (enoceanConfiguredDevices instanceof Collection<?>) {
 						Collection<?> enoceanDevices = (Collection<?>) enoceanConfiguredDevices;
 						numberOfDevices = enoceanDevices.size();
 					}

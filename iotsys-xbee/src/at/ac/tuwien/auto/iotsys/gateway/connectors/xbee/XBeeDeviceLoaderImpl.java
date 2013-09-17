@@ -22,21 +22,29 @@ public class XBeeDeviceLoaderImpl implements DeviceLoader {
 
 	private final ArrayList<Obj> myObjects = new ArrayList<Obj>();
 
-	private XMLConfiguration devicesConfig;
+	private XMLConfiguration devicesConfig = new XMLConfiguration();
 
 	private final static Logger log = Logger
 			.getLogger(XBeeDeviceLoaderImpl.class.getName());
 
+	public XBeeDeviceLoaderImpl() {
+		String devicesConfigFile = DEVICE_CONFIGURATION_LOCATION;
+
+		try {
+			devicesConfig = new XMLConfiguration(devicesConfigFile);
+		} catch (Exception e) {
+			log.log(Level.SEVERE, e.getMessage(), e);
+		}
+	}
+
 	@Override
 	public ArrayList<Connector> initDevices(ObjectBroker objectBroker) {
-		setConfiguration(devicesConfig);
-		
 		// Hard-coded connections and object creation
 
 		ArrayList<Connector> connectors = new ArrayList<Connector>();
 
 		int connectorsSize = 0;
-		// WMBus
+	
 		Object xbeeConnectors = devicesConfig
 				.getProperty("xbee.connector.name");
 		if (xbeeConnectors != null) {
@@ -68,13 +76,18 @@ public class XBeeDeviceLoaderImpl implements DeviceLoader {
 					xBeeConnector.connect();
 
 					connectors.add(xBeeConnector);
-
+					
+					log.info(xbeeConfiguredDevices.getClass().getName());
+					
 					int numberOfDevices = 0;
 					if (xbeeConfiguredDevices != null) {
 						numberOfDevices = 1; // there is at least one device.
-					} else if (xbeeConfiguredDevices instanceof Collection<?>) {
+					} 
+
+					if (xbeeConfiguredDevices instanceof Collection<?>) {
 						Collection<?> xbeeDevices = (Collection<?>) xbeeConfiguredDevices;
 						numberOfDevices = xbeeDevices.size();
+						log.info("device size: " + numberOfDevices);
 					}
 
 					log.info(numberOfDevices
@@ -108,14 +121,22 @@ public class XBeeDeviceLoaderImpl implements DeviceLoader {
 								+ i + ").refreshEnabled", false);
 
 						if (type != null && address != null) {
-							int addressCount = address.size();
+							//int addressCount = address.size();
+							
+							
+							Object[] args = new Object[2];
+							args[0] = xBeeConnector;
+							args[1] = (String) address.get(0);
+							//args[2] = (String) address.get(1);
+							
+	
 							try {
 								Constructor<?>[] declaredConstructors = Class
 										.forName(type)
 										.getDeclaredConstructors();
 								for (int k = 0; k < declaredConstructors.length; k++) {
 									if (declaredConstructors[k]
-											.getParameterTypes().length == addressCount + 1) { // constructor
+											.getParameterTypes().length == args.length) { // constructor
 																								// that
 																								// takes
 																								// the
@@ -126,23 +147,31 @@ public class XBeeDeviceLoaderImpl implements DeviceLoader {
 																								// address
 																								// as
 																								// argument
-										Object[] args = new Object[address
-												.size() + 1];
+									//	Object[] args = new Object[address
+									//			.size() + 1];
 										// first arg is KNX connector
-
-										args[0] = xBeeConnector;
-										for (int l = 1; l <= address.size(); l++) {
-
-											String adr = (String) address
-													.get(l - 1);
-											if (adr == null
-													|| adr.equals("null")) {
-												args[l] = null;
-											} else {
-												args[l] = new String(adr);
-											}
-
-										}
+										
+//										Object[] args = new Object[2];
+//										args[0] = xBeeConnector;
+//										args[1] = (String) address.get(0);
+										
+										//args[2] = (String) address.get(1);
+										
+//										for (int l = 1; l <= address.size(); l++) {
+//
+//											String adr = (String) address
+//													.get(l - 1);
+//											if (adr == null
+//													|| adr.equals("null")) {
+//												args[l] = null;
+//											} else {
+//												args[l] = new String(adr);
+//											}
+//
+//										}
+										
+										
+										
 										try {
 											// create a instance of the
 											// specified KNX device
@@ -156,10 +185,14 @@ public class XBeeDeviceLoaderImpl implements DeviceLoader {
 												xBeeDevice.setName(name);
 											}
 
+											
+
 											if (ipv6 != null) {
-												objectBroker.addObj(xBeeDevice, ipv6);
+												objectBroker
+														.addObj(xBeeDevice, ipv6);
 											} else {
-												objectBroker.addObj(xBeeDevice);
+												objectBroker
+														.addObj(xBeeDevice);
 											}
 
 											myObjects.add(xBeeDevice);
@@ -203,6 +236,7 @@ public class XBeeDeviceLoaderImpl implements DeviceLoader {
 									}
 								}
 							} catch (SecurityException e) {
+								log.info(e.getMessage());
 								e.printStackTrace();
 							} catch (ClassNotFoundException e) {
 								e.printStackTrace();
@@ -244,16 +278,15 @@ public class XBeeDeviceLoaderImpl implements DeviceLoader {
 	}
 
 	@Override
-	public void removeDevices(ObjectBroker objectBroker) {
-		synchronized (myObjects) {
-			for (Obj obj : myObjects) {
-				objectBroker.removeObj(obj.getFullContextPath());
-			}
-		}
-
-	}
+    public void removeDevices(ObjectBroker objectBroker) {
+            synchronized (myObjects) {
+                    for (Obj obj : myObjects) {
+                            objectBroker.removeObj(obj.getFullContextPath());
+                    }
+            }
+    }
+    
 	
-
 	@Override
 	public void setConfiguration(XMLConfiguration devicesConfiguration) {
 		this.devicesConfig = devicesConfiguration;

@@ -5,6 +5,7 @@ import java.util.logging.Logger;
 import at.ac.tuwien.auto.calimero.GroupAddress;
 import at.ac.tuwien.auto.calimero.dptxlator.DPTXlator2ByteFloat;
 import at.ac.tuwien.auto.calimero.exception.KNXException;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.datapoint.impl.DPST_9_1_Impl;
 import at.ac.tuwien.auto.iotsys.gateway.connectors.knx.KNXConnector;
 import at.ac.tuwien.auto.iotsys.gateway.connectors.knx.KNXWatchDog;
 
@@ -20,9 +21,9 @@ public class DPST_9_1_ImplKnx extends DPST_9_1_Impl
 										// configuration
 
 	// if more group addresses are needed just add more constructor parameters.
-	public DPST_9_1_ImplKnx(KNXConnector connector, GroupAddress groupAddress)
+	public DPST_9_1_ImplKnx(KNXConnector connector, GroupAddress groupAddress, String name, String displayName, String display)
 	{
-		super();
+		super(name, displayName, display);
 
 		this.groupAddress = groupAddress;
 		this.connector = connector;

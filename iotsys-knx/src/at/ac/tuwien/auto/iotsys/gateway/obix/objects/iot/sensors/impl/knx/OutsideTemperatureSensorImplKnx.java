@@ -35,9 +35,9 @@ package at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.knx;
 import at.ac.tuwien.auto.calimero.GroupAddress;
 import at.ac.tuwien.auto.calimero.dptxlator.DPTXlator2ByteFloat;
 import at.ac.tuwien.auto.calimero.exception.KNXException;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.sensors.impl.OutsideTemperatureSensorImpl;
 import at.ac.tuwien.auto.iotsys.gateway.connectors.knx.KNXConnector;
 import at.ac.tuwien.auto.iotsys.gateway.connectors.knx.KNXWatchDog;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.OutsideTemperatureSensorImpl;
 
 public class OutsideTemperatureSensorImplKnx extends OutsideTemperatureSensorImpl{
 	private KNXConnector connector;

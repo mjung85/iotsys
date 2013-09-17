@@ -10,6 +10,7 @@ import java.io.OutputStream;
 import java.net.Inet4Address;
 import java.net.Inet6Address;
 import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -29,10 +30,15 @@ import javax.jmdns.ServiceInfo;
 import javax.jmdns.impl.DNSRecord.Pointer;
 import javax.jmdns.impl.DNSRecord.Service;
 import javax.jmdns.impl.DNSRecord.Text;
+import javax.jmdns.impl.constants.DNSConstants;
 import javax.jmdns.impl.constants.DNSRecordClass;
 import javax.jmdns.impl.constants.DNSRecordType;
 import javax.jmdns.impl.constants.DNSState;
 import javax.jmdns.impl.tasks.DNSTask;
+import javax.jmdns.utils.MdnsUtils;
+
+import at.ac.tuwien.auto.iotsys.commons.PropertiesLoader;
+import at.ac.tuwien.auto.iotsys.mdnssd.NamedImpl;
 
 /**
  * JmDNS service information.
@@ -54,7 +60,7 @@ public class ServiceInfoImpl extends ServiceInfo implements DNSListener, DNSStat
     private byte                    _text[];
     private Map<String, byte[]>     _props;
     private final Set<Inet4Address> _ipv4Addresses;
-    private final Set<Inet6Address> _ipv6Addresses;
+    private Set<Inet6Address> _ipv6Addresses;
 
     private transient String        _key;
 
@@ -126,14 +132,17 @@ public class ServiceInfoImpl extends ServiceInfo implements DNSListener, DNSStat
      */
     public ServiceInfoImpl(String type, String name, String subtype, int port, int weight, int priority, boolean persistent, String text) {
         this(ServiceInfoImpl.decodeQualifiedNameMap(type, name, subtype), port, weight, priority, persistent, (byte[]) null);
-        _server = text;
-        try {
-            ByteArrayOutputStream out = new ByteArrayOutputStream(text.length());
-            writeUTF(out, text);
-            this._text = out.toByteArray();
-        } catch (IOException e) {
-            throw new RuntimeException("unexpected exception: " + e);
-        }
+		if (text != null) {
+			_server = text;
+			try {
+				ByteArrayOutputStream out = new ByteArrayOutputStream(
+						text.length());
+				writeUTF(out, text);
+				this._text = out.toByteArray();
+			} catch (IOException e) {
+				throw new RuntimeException("unexpected exception: " + e);
+			}
+		}
     }
 
     /**
@@ -424,14 +433,14 @@ public class ServiceInfoImpl extends ServiceInfo implements DNSListener, DNSStat
      */
     @Override
     public String getQualifiedName() {
-        String domain = this.getDomain();
-        String protocol = this.getProtocol();
-        String application = this.getApplication();
-        String instance = this.getName();
-        // String subtype = this.getSubtype();
+        String domain = this.getDomain();//local
+        String protocol = this.getProtocol();//coap
+        String application = this.getApplication();//obix
+        String instance = this.getName();//aFanSpeed
+        String subtype = this.getSubtype();//sunblindActuator
         // return (instance.length() > 0 ? instance + "." : "") + (application.length() > 0 ? "_" + application + "." : "") + (protocol.length() > 0 ? "_" + protocol + (subtype.length() > 0 ? ",_" + subtype.toLowerCase() + "." : ".") : "") + domain
         // + ".";
-        return (instance.length() > 0 ? instance + "." : "") + (application.length() > 0 ? "_" + application + "." : "") + (protocol.length() > 0 ? "_" + protocol + "." : "") + domain + ".";
+        return (instance.length() > 0 ? instance + "." : "") + (subtype.length() > 0 ? "_" + subtype + "._sub." : "") + (application.length() > 0 ? "_" + application + "." : "") + (protocol.length() > 0 ? "_" + protocol + "." : "") + domain + ".";
     }
 
     /**
@@ -591,7 +600,7 @@ public class ServiceInfoImpl extends ServiceInfo implements DNSListener, DNSStat
      */
     @Override
     public byte[] getTextBytes() {
-        return (this._text != null && this._text.length > 0 ? this._text : DNSRecord.EMPTY_TXT);
+        return (this._text != null && this._text.length > 0 ? this._text : null);
     }
 
     /**
@@ -863,6 +872,7 @@ public class ServiceInfoImpl extends ServiceInfo implements DNSListener, DNSStat
      */
     @Override
     public void updateRecord(DNSCache dnsCache, long now, DNSEntry rec) {
+    	logger.finest("updateRecord called");
         if ((rec instanceof DNSRecord) && !rec.isExpired(now)) {
             boolean serviceUpdated = false;
             switch (rec.getRecordType()) {
@@ -939,7 +949,7 @@ public class ServiceInfoImpl extends ServiceInfo implements DNSListener, DNSStat
      */
     @Override
     public synchronized boolean hasData() {
-        return this.getServer() != null && this.hasInetAddress() && this.getTextBytes() != null && this.getTextBytes().length > 0;
+        return this.getServer() != null && this.hasInetAddress() && this.getPort() !=0;
         // return this.getServer() != null && (this.getAddress() != null || (this.getTextBytes() != null && this.getTextBytes().length > 0));
     }
 
@@ -1169,7 +1179,7 @@ public class ServiceInfoImpl extends ServiceInfo implements DNSListener, DNSStat
         buf.append(" has ");
         buf.append(this.hasData() ? "" : "NO ");
         buf.append("data");
-        if (this.getTextBytes().length > 0) {
+        if ((this.getTextBytes() != null) && (this.getTextBytes().length > 0)) {
             // buf.append("\n");
             // buf.append(this.getNiceTextString());
             Map<String, byte[]> properties = this.getProperties();
@@ -1185,7 +1195,7 @@ public class ServiceInfoImpl extends ServiceInfo implements DNSListener, DNSStat
         buf.append(']');
         return buf.toString();
     }
-
+	
     public Collection<DNSRecord> answers(boolean unique, int ttl, HostInfo localHost) {
         List<DNSRecord> list = new ArrayList<DNSRecord>();
         if (this.getSubtype().length() > 0) {
@@ -1193,7 +1203,10 @@ public class ServiceInfoImpl extends ServiceInfo implements DNSListener, DNSStat
         }
         list.add(new Pointer(this.getType(), DNSRecordClass.CLASS_IN, DNSRecordClass.NOT_UNIQUE, ttl, this.getQualifiedName()));
         list.add(new Service(this.getQualifiedName(), DNSRecordClass.CLASS_IN, unique, ttl, _priority, _weight, _port, localHost.getName()));
-        list.add(new Text(this.getQualifiedName(), DNSRecordClass.CLASS_IN, unique, ttl, this.getTextBytes()));
+        if (this.getTextBytes() !=null )
+        	list.add(new Text(this.getQualifiedName(), DNSRecordClass.CLASS_IN, unique, ttl, this.getTextBytes()));
+        if (this.getInet6Addresses().length > 0)
+        	list.add(new DNSRecord.IPv6Address(this.getQualifiedName(), DNSRecordClass.CLASS_IN, DNSRecordClass.UNIQUE, DNSConstants.DNS_TTL, MdnsUtils.getByAddress(this.getInet6Addresses()[0].toString().substring(1))));
         return list;
     }
 
@@ -1319,5 +1332,22 @@ public class ServiceInfoImpl extends ServiceInfo implements DNSListener, DNSStat
     void setDelegate(Delegate delegate) {
         this._delegate = delegate;
     }
+
+	@Override
+	public void setIpv6Addr(String ipv6Addr) throws IllegalStateException, UnknownHostException, SecurityException {
+		//_ipv6Addresses
+		Inet6Address ipv6 = getInet6AddressByName(ipv6Addr);
+		this._ipv6Addresses.add(ipv6);
+	}
+	
+	private Inet6Address getInet6AddressByName(String host) throws UnknownHostException, SecurityException
+	{
+	    for(InetAddress addr : InetAddress.getAllByName(host))
+	    {
+	        if(addr instanceof Inet6Address)
+	            return (Inet6Address)addr;
+	    }
+	    throw new UnknownHostException("No IPv6 address found for " + host);
+	}
 
 }

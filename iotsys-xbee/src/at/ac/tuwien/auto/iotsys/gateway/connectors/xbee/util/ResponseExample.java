@@ -14,7 +14,7 @@ public class ResponseExample {
 	private XBee xbee = new XBee();
 	public ResponseExample() throws XBeeException{
 		
-		xbee.open("COM9", 9600);
+		xbee.open("COM3", 9600);
 		
 		try{
 			while(true){
@@ -72,7 +72,7 @@ public class ResponseExample {
 	 * @throws XBeeException 
 	 */
 	public static void main(String[] args) throws XBeeException {
-		PropertyConfigurator.configure("log4j.properties");
+		PropertyConfigurator.configure("res/log4j.properties");
 		new ResponseExample();
 	}
 }
