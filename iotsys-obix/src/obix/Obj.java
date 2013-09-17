@@ -1258,7 +1258,11 @@ public class Obj implements IObj, Subject, AlarmSource, Cloneable
 	{
 		Obj.extObserver = extObserver;
 	}
-
+	
+	/**
+	 * Adds an alarm to this Obj's list of active alarms.
+	 * @param alarm A alarm that entered its alarm condition
+	 */
 	public void setOffNormal(Alarm alarm)
 	{
 		alarms.add(alarm);
@@ -1271,21 +1275,35 @@ public class Obj implements IObj, Subject, AlarmSource, Cloneable
 		}
 	}
 
+	/**
+	 * Removes the specified alarm from this Obj's list of alarms
+	 * @param alarm Alarm whose alarm condition has been exited
+	 */
 	public void setToNormal(Alarm alarm)
 	{
 		alarms.remove(alarm);
 	}
-
+	
+	/**
+	 * Removes the specified alarm from this Obj's list of unacknowledged alarms
+	 * @param alarm Alarm that has been acknowledged
+	 */
 	public void alarmAcknowledged(Alarm alarm)
 	{
 		unackedAlarms.remove(alarm);
 	}
-
+	
+	/**
+	 * @return <code>true</code> if this Obj is currently in an alarm condition, otherwise <code>false</code>
+	 */
 	public boolean inAlarmState()
 	{
 		return !(alarms.isEmpty());
 	}
 
+	/**
+	 * @return a list of alarms currently active for this Obj
+	 */
 	public LinkedList<Alarm> getAlarms()
 	{
 		if (alarms == null)

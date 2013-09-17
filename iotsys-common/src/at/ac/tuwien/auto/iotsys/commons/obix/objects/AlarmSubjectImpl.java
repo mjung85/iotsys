@@ -95,7 +95,6 @@ public class AlarmSubjectImpl extends Obj implements IAlarmSubject {
 		
 		alarmObj.setHref(new Uri(String.valueOf(alarmID++)));
 		alarmdb.add(alarmObj);
-		alarmObj.getNormalizedHref();
 		alarmObj.setHref(new Uri(alarmObj.getFullContextPath()));
 		
 		feed.addEvent((Obj) alarm);
