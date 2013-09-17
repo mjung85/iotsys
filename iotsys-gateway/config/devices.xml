@@ -432,7 +432,7 @@
 				<historyEnabled>true</historyEnabled>
 				<historyCount>200</historyCount>
 				<groupCommEnabled>true</groupCommEnabled>
-      		</device>
+      </device>
 
 			<device>
         <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.knx.TemperatureSensorImplKnx
@@ -695,7 +695,7 @@
 			<!-- SENSOREN -->
 
 			<device>
-				<type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.IndoorBrightnessSensorImpl
+				<type>at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.sensors.impl.IndoorBrightnessSensorImpl
 				</type>
 				<address>5/2/0</address>
 				<href>virtualIndoorBrightnessSensor</href>
@@ -705,13 +705,13 @@
 			</device>
 
 			<device>
-				<type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.OutsideTemperatureSensorImpl
+				<type>at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.sensors.impl.OutsideTemperatureSensorImpl
 				</type>
 				<href>virtualOutsideTemperatureSensor</href>
 			</device>
 
 			<device>
-				<type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.PresenceDetectorSensorImpl
+				<type>at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.sensors.impl.PresenceDetectorSensorImpl
 				</type>
 				<address>5/1/19</address>
 				<href>virtualPresence</href>
@@ -721,43 +721,41 @@
 			</device>
 
 			<device>
-				<type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.PushButtonImpl
+				<type>at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.sensors.impl.PushButtonImpl
 				</type>
 				<href>virtualPushButton</href>
 			</device>
 			<device>
-				<type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.RoomRelativeHumiditySensorImpl
+				<type>at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.sensors.impl.RoomRelativeHumiditySensorImpl
 				</type>
 				<href>virtualRoomRelativeHumiditySensor</href>
 			</device>
 			<device>
-				<type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.RoomTemperatureSensorImpl
+				<type>at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.sensors.impl.RoomTemperatureSensorImpl
 				</type>
 				<href>virtualRoomTemperatureSensor</href>
 			</device>
 			<device>
-				<type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.TemperatureSensorImpl
+				<type>at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.sensors.impl.TemperatureSensorImpl
 				</type>
 				<href>virtualTemperatureSensor</href>
 				<refreshEnabled>false</refreshEnabled>
 			</device>
 
 			<device>
-				<type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.SunIntensitySensorImpl
+				<type>at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.sensors.impl.SunIntensitySensorImpl
 				</type>
 				<href>virtualSunIntensitySensor</href>
 			</device>
 			<device>
-				<type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.SwitchingSensorImpl
+				<type>at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.sensors.impl.SwitchingSensorImpl
 				</type>
 				<href>virtualSwitchingSensor</href>
 			</device>
 			<device>
-				<type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.SmartMeterImpl
+				<type>at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.sensors.impl.SmartMeterImpl
 				</type>
-				<address>15004474, 66 77 66 77 66 77 66 77 66 77 66 77 66 77 66
-					77
-				</address>
+				
 				<href>smartmeter</href>
 				<historyEnabled>false</historyEnabled>
 				<historyCount>1000</historyCount>
@@ -766,7 +764,7 @@
 
 			<!-- ACTUATORS -->
 			<device>
-        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.SimpleHVACvalveActuatorImpl
+        <type>at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators.impl.SimpleHVACvalveActuatorImpl
         </type>
         <href>virtualSimpleHVACvalveActuator</href>
         <historyEnabled>false</historyEnabled>
@@ -775,7 +773,7 @@
       </device>
 			
 			<device>
-        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.ComplexSunblindActuatorImpl
+        <type>at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators.impl.ComplexSunblindActuatorImpl
         </type>
         <href>vComplexSunBlind</href>
         <historyEnabled>false</historyEnabled>
@@ -784,7 +782,7 @@
       </device>
 			
 			<device>
-				<type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.SunblindActuatorImpl
+				<type>at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators.impl.SunblindActuatorImpl
 				</type>
 				<address>null, 5/3/7, 5/3/8</address>
 				<href>sunblindMiddleA</href>
@@ -794,7 +792,7 @@
 				<groupCommEnabled>true</groupCommEnabled>
 			</device>
 			<device>
-				<type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.SunblindActuatorImpl
+				<type>at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators.impl.SunblindActuatorImpl
 				</type>
 				<address>null, 5/3/7, 5/3/8</address>
 				<href>sunblindMiddleB</href>
@@ -804,7 +802,7 @@
 				<groupCommEnabled>true</groupCommEnabled>
 			</device>
 			<device>
-				<type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.FanSpeedActuatorImpl
+				<type>at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators.impl.FanSpeedActuatorImpl
 				</type>
 				<address>null, 5/3/6</address>
 				<href>virtualFanSpeed</href>
@@ -814,7 +812,7 @@
 			</device>
 
 			<device>
-				<type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.BrightnessActuatorImpl
+				<type>at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators.impl.BrightnessActuatorImpl
 				</type>
 				<href>virtualBrightnessActuator</href>
 				<historyEnabled>true</historyEnabled>
@@ -822,19 +820,19 @@
 				<refreshEnabled>false</refreshEnabled>
 			</device>
 			<device>
-				<type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.HVACvalveActuatorImpl
+				<type>at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators.impl.HVACvalveActuatorImpl
 				</type>
 				<href>virtualHVACvalveActuatorImpl</href>
 				<historyEnabled>false</historyEnabled>
 			</device>
 			<device>
-				<type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.AirDamperActuatorImpl
+				<type>at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators.impl.AirDamperActuatorImpl
 				</type>
 				<href>virtualAirDamperActuatorImpl</href>
 				<historyEnabled>false</historyEnabled>
 			</device>
 			<device>
-				<type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.LightSwitchActuatorImpl
+				<type>at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators.impl.LightSwitchActuatorImpl
 				</type>
 				<href>virtualLight</href>
 				<historyEnabled>false</historyEnabled>
@@ -842,25 +840,25 @@
 			</device>
 
 			<device>
-				<type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.PumpActuatorImpl
+				<type>at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators.impl.PumpActuatorImpl
 				</type>
 				<href>virtualPumpActuatorImpl</href>
 				<historyEnabled>false</historyEnabled>
 			</device>
 			<device>
-				<type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.DimmingActuatorImpl
+				<type>at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators.impl.DimmingActuatorImpl
 				</type>
 				<href>virtualDimmingActuatorImpl</href>
 				<historyEnabled>false</historyEnabled>
 			</device>
 			<device>
-				<type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.CoolerActuatorImpl
+				<type>at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators.impl.CoolerActuatorImpl
 				</type>
 				<href>virtualCoolerActuatorImpl</href>
 				<historyEnabled>false</historyEnabled>
 			</device>
 			<device>
-				<type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.BoilerActuatorImpl
+				<type>at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators.impl.BoilerActuatorImpl
 				</type>
 				<href>virtualBoilerActuatorImpl</href>
 				<historyEnabled>false</historyEnabled>
@@ -891,7 +889,7 @@
 			</device>
 
 			<device>
-				<type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.LightSwitchActuatorImpl
+				<type>at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators.impl.LightSwitchActuatorImpl
 				</type>
 				<href>virtualLight1</href>
 				<historyEnabled>true</historyEnabled>
@@ -900,7 +898,7 @@
 			</device>
 
 			<device>
-				<type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.LightSwitchActuatorImpl
+				<type>at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators.impl.LightSwitchActuatorImpl
 				</type>
 				<href>virtualLight2</href>
 				<historyEnabled>true</historyEnabled>
@@ -1008,7 +1006,7 @@
 
 			<!-- Logic components -->
 			<device>
-				<type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.logic.impl.BinaryOperationImpl
+				<type>at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.logic.impl.BinaryOperationImpl
 				</type>
 				<href>binOp1</href>
 				<historyEnabled>false</historyEnabled>
@@ -1023,7 +1021,7 @@
 				<groupCommEnabled>true</groupCommEnabled> </device> -->
 
 			<device>
-				<type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.logic.impl.ComparatorImpl
+				<type>at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.logic.impl.ComparatorImpl
 				</type>
 				<href>comp1</href>
 				<historyEnabled>false</historyEnabled>
@@ -1038,7 +1036,7 @@
 				<groupCommEnabled>true</groupCommEnabled> </device> -->
 
 			<device>
-				<type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.logic.impl.LogicBinaryOperationImpl
+				<type>at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.logic.impl.LogicBinaryOperationImpl
 				</type>
 				<href>logicBinOp1</href>
 				<historyEnabled>false</historyEnabled>
@@ -1051,7 +1049,7 @@
 				</type> <href>logicBinOp3</href> <historyEnabled>false</historyEnabled> <refreshEnabled>false</refreshEnabled> 
 				<groupCommEnabled>true</groupCommEnabled> </device> -->
 			<device>
-				<type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.logic.impl.TemperatureControllerImpl
+				<type>at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.logic.impl.TemperatureControllerImpl
 				</type>
 				<href>tempControl1</href>
 				<historyEnabled>false</historyEnabled>
