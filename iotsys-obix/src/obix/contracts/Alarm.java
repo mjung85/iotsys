@@ -4,18 +4,17 @@ import obix.*;
 
 /**
  * Alarm
- *
- * @author    obix.tools.Obixc
- * @creation  24 May 06
- * @version   $Revision$ $Date$
+ * 
+ * @author obix.tools.Obixc
+ * @creation 24 May 06
+ * @version $Revision$ $Date$
  */
-public interface Alarm
-  extends IObj
+public interface Alarm extends IObj
 {
-  public static final String ALARM_CONTRACT = "obix:Alarm";
-  
-  public Ref source();
+	public static final String CONTRACT = "obix:Alarm";
 
-  public Abstime timestamp();
+	public Ref source();
+
+	public Abstime timestamp();
 
 }

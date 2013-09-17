@@ -42,7 +42,7 @@ public class SummaryField
 
   protected void doLoad(Obj val)
   {                       
-    label.setText(val.toDisplayString());
+    label.setText(val.toDisplay());
   }
   
   protected void doSave(Obj val)

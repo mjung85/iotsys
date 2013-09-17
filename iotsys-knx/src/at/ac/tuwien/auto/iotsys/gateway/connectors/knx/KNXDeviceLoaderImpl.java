@@ -82,15 +82,22 @@ public class KNXDeviceLoaderImpl implements DeviceLoader {
 							routerPort, localIP);
 					knxConnector.connect();
 					connectors.add(knxConnector);
-
+					
+					int numberOfDevices = 0;
+					if (knxConfiguredDevices != null) {
+						numberOfDevices = 1; // there is at least one device.
+					}
 					if (knxConfiguredDevices instanceof Collection<?>) {
-
 						Collection<?> knxDevices = (Collection<?>) knxConfiguredDevices;
-						log.info(knxDevices.size()
+						numberOfDevices = knxDevices.size();
+					}
+					
+					if (numberOfDevices > 0) {
+						log.info(numberOfDevices
 								+ " KNX devices found in configuration for connector "
 								+ connectorName);
 
-						for (int i = 0; i < knxDevices.size(); i++) {
+						for (int i = 0; i < numberOfDevices; i++) {
 							String type = subConfig.getString("device(" + i
 									+ ").type");
 							List<Object> address = subConfig.getList("device("

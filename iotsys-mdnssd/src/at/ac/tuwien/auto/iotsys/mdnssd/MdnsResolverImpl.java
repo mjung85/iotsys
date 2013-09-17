@@ -35,7 +35,6 @@ package at.ac.tuwien.auto.iotsys.mdnssd;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ExecutorService;
@@ -46,8 +45,8 @@ import javax.jmdns.ServiceInfo;
 
 import at.ac.tuwien.auto.iotsys.commons.MdnsResolver;
 import at.ac.tuwien.auto.iotsys.commons.PropertiesLoader;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.Actuator;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.Sensor;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators.Actuator;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.sensors.Sensor;
 
 /**
  * @author Nam Giang - zang at kaist dot ac dot kr
@@ -62,8 +61,8 @@ public class MdnsResolverImpl implements MdnsResolver {
 
 	private MdnsResolverImpl() {
 		try {
-			jmdns = JmDNS.create(InetAddress
-					.getByName(PropertiesLoader.getInstance().getProperties().getProperty("authNsAddr6", "fe80::acbc:b659:71db:5cb7%20")));
+			jmdns = JmDNS.create(InetAddress.getByName(PropertiesLoader.getInstance().getProperties()
+					.getProperty("authNsAddr6", "fe80::acbc:b659:71db:5cb7%20")));
 			executor = Executors.newFixedThreadPool(10);
 		} catch (UnknownHostException e) {
 			// TODO Auto-generated catch block
@@ -78,20 +77,31 @@ public class MdnsResolverImpl implements MdnsResolver {
 		return INSTANCE;
 	}
 
+	public String hrefNorm(String href) {
+		if (href.startsWith("/"))
+			href = href.substring(1);
+
+		String[] ar = href.split("/");
+		String convertedName = "";
+		int i;
+		for (i = ar.length; i > 0; i--) {
+			convertedName += ar[i - 1] + ".";
+		}
+		return convertedName;
+	}
+
 	@Override
 	public void addToRecordDict(String name, String addr) {
-		if (name.startsWith("/"))
-			name = name.substring(1);
+		name = hrefNorm(name);
 		try {
-			recordDict.putIfAbsent(name + "." + Named.AUTHORITATIVE_DOMAIN,
-					addr);
+			recordDict.putIfAbsent(name.toLowerCase() + NamedImpl.AUTHORITATIVE_DOMAIN, addr);
 		} catch (NullPointerException e) {
 		}
 	}
 
 	@Override
 	public String resolve(String name) {
-		return recordDict.get(name);
+		return recordDict.get(name.toLowerCase());
 	}
 
 	@Override
@@ -100,29 +110,33 @@ public class MdnsResolverImpl implements MdnsResolver {
 	}
 
 	@Override
-	public void registerDevice(String name, Class<?> deviceClass, String ipv6) {
-		if (name.startsWith("/"))
-			name = name.substring(1);
+	public void registerDevice(String deviceName, Class<?> deviceClass, String ipv6) {
+		deviceName = hrefNorm(deviceName).toLowerCase();
+		deviceName = deviceName.split("\\.")[0];
 
-		String serviceType = null;
+		String subServiceType = null;
 		Class<?>[] deviceInterfaces = deviceClass.getInterfaces();
 		if (deviceInterfaces.length == 0) {
-			serviceType = "generic-device";
+			subServiceType = "generic-device";
 		} else
 			for (Class<?> c : deviceInterfaces) {
-				if (Sensor.class.isAssignableFrom(c)
-						|| Actuator.class.isAssignableFrom(c)) {
-					serviceType = c.toString().substring(c.toString().lastIndexOf(".") + 1); 
+				if (Sensor.class.isAssignableFrom(c) || Actuator.class.isAssignableFrom(c)) {
+					subServiceType = c.toString().substring(c.toString().lastIndexOf(".") + 1);
 				}
 			}
 
-		serviceType = serviceType.toLowerCase();
-		final HashMap<String, String> values = new HashMap<String, String>();
-		values.put("IPv6", ipv6);
-		ServiceInfo pairservice = ServiceInfo.create("_" + serviceType
-				+ "._tcp.local.", name, 8080, 0, 0, values);
-		executor.execute(new ServiceRegistra(pairservice));
-
+		subServiceType = subServiceType.toLowerCase();
+		ServiceInfo subTypedServiceCoAP = ServiceInfo.create("_obix._coap.local.", deviceName, "_" + subServiceType, 5683, null);
+		ServiceInfo subTypedServiceHTTP = ServiceInfo.create("_obix._http.local.", deviceName, "_" + subServiceType, 8080, null);
+		try {
+			subTypedServiceCoAP.setIpv6Addr(ipv6);
+			subTypedServiceHTTP.setIpv6Addr(ipv6);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		executor.execute(new ServiceRegistra(subTypedServiceCoAP));
+		executor.execute(new ServiceRegistra(subTypedServiceHTTP));
 	}
 
 	private class ServiceRegistra implements Runnable {
@@ -142,5 +156,10 @@ public class MdnsResolverImpl implements MdnsResolver {
 			}
 		}
 
+	}
+
+	@Override
+	public void unregisterAllDevice() {
+		jmdns.unregisterAllServices();
 	}
 }

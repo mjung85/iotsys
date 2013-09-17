@@ -5,17 +5,17 @@ import obix.List;
 
 /**
  * HistoryAppendInIn
- *
- * @author    Robert Horvath
- * @creation  10 July 13
- * @version   $Revision$ $Date$
+ * 
+ * @author Robert Horvath
+ * @creation 10 July 13
+ * @version $Revision$ $Date$
  */
-public interface HistoryAppendIn
-  extends IObj
+public interface HistoryAppendIn extends IObj
 {
-  public static final String HISTORY_APPENDIN_CONTRACT = "obix:HistoryAppendIn";
-  
-  public static final String timestampContract = "<list name='data' of='obix:HistoryRecord'/>";
-  public List data();
+	public static final String CONTRACT = "obix:HistoryAppendIn";
+
+	public static final String timestampContract = "<list name='data' of='" + HistoryRecord.CONTRACT + "'/>";
+
+	public List data();
 
 }

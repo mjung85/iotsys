@@ -1,6 +1,8 @@
 // Variables
 description = 'KNX bundle based on Calimero including IoTSyS specific oBIX object implementations.'
 
+sourceCompatibility = 1.6
+
 eclipse{
 	classpath{
 		file {
@@ -37,9 +39,9 @@ jar {
 				   "Bundle-Classpath": ".",
 				   "Bundle-Activator": "at.ac.tuwien.auto.iotsys.gateway.connectors.knx.KNXBundleActivator",
 				   "Import-Package": "obix, obix.asm, obix.contracts, obix.io, obix.net, obix.test, obix.toos, obix.ui, obix.ui.fields, obix.ui.views, obix.xml,"+ 
-					"org.osgi.framework,at.ac.tuwien.auto.iotsys.commons, at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot, at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators,"+
-					"at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl, at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors,"+ 
-					"at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl,"+ 
+					"org.osgi.framework,at.ac.tuwien.auto.iotsys.commons, at.ac.tuwien.auto.iotsys.commons.obix.objects.iot, at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators,"+
+					"at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators.impl, at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.sensors,"+ 
+					"at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.sensors.impl,"+ 
 					"at.ac.tuwien.auto.calimero, at.ac.tuwien.auto.calimero.buffer, at.ac.tuwien.auto.calimero.buffer.cache, at.ac.tuwien.auto.calimero.cemi,"+
 					 "at.ac.tuwien.auto.calimero.datapoint,  at.ac.tuwien.auto.calimero.dptxlator, at.ac.tuwien.auto.calimero.exception, at.ac.tuwien.auto.calimero.knxnetip, at.ac.tuwien.auto.calimero.knxnetip.servicetype,"+
 					"at.ac.tuwien.auto.calimero.knxnetip.util, at.ac.tuwien.auto.calimero.link, at.ac.tuwien.auto.calimero.link.event, at.ac.tuwien.auto.calimero.link.medium, at.ac.tuwien.auto.calimero.log, at.ac.tuwien.auto.calimero.mgmt, at.ac.tuwien.auto.calimero.process, at.ac.tuwien.auto.calimero.serial,"+ 

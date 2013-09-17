@@ -4,14 +4,13 @@ import obix.*;
 
 /**
  * Point
- *
- * @author    obix.tools.Obixc
- * @creation  24 May 06
- * @version   $Revision$ $Date$
+ * 
+ * @author obix.tools.Obixc
+ * @creation 24 May 06
+ * @version $Revision$ $Date$
  */
-public interface Point
-  extends IObj
+public interface Point extends IObj
 {
-  public static final String POINT_CONTRACT = "obix:Point";
+	public static final String CONTRACT = "obix:Point";
 
 }

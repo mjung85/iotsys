@@ -138,13 +138,15 @@ public class Bool extends Val
 			set(false);
 		}
 	}
-	
+
 	/**
-	 * Set to value of another Bool 
+	 * Set to value of another Bool
 	 */
-	public void set(Obj obj){
-		if (!(obj instanceof Bool)) return;
-		set(((Bool)obj).get());
+	public void set(Obj obj)
+	{
+		if (!(obj instanceof Bool))
+			return;
+		set(((Bool) obj).get());
 	}
 
 	// //////////////////////////////////////////////////////////////
@@ -234,17 +236,23 @@ public class Bool extends Val
 	private boolean val;
 	private Uri range;
 
-	public void writeObject(Obj input) {
-		if (this.getParent() != null) {
+	public void writeObject(Obj input)
+	{
+		if (this.getParent() != null)
+		{
 			this.getParent().writeObject(input);
-		} else {
-			if (input instanceof Bool) {
+		}
+		else
+		{
+			if (input instanceof Bool)
+			{
 				Bool inputBool = (Bool) input;
-				if (this.get() != inputBool.get()) {
+				if (this.get() != inputBool.get())
+				{
 					this.set(((Bool) input).get());
 				}
 			}
 		}
 	}
-	
+
 }

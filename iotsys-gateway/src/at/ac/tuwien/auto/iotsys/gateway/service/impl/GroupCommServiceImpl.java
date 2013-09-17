@@ -184,7 +184,7 @@ public class GroupCommServiceImpl implements GroupCommService {
 				} catch (Exception e) {
 					// fall back to XML encoding
 					e.printStackTrace();
-					String payload = ObixEncoder.toString(b, true);
+					String payload = ObixEncoder.toString(b);
 					putRequest.setPayload(payload);
 				}
 
@@ -201,7 +201,7 @@ public class GroupCommServiceImpl implements GroupCommService {
 				} catch (Exception e) {
 					// fall back to XML encoding
 					e.printStackTrace();
-					String payload = ObixEncoder.toString(r, true);
+					String payload = ObixEncoder.toString(r);
 					putRequest.setPayload(payload);
 				}
 			} else if (state instanceof Int) {
@@ -217,7 +217,7 @@ public class GroupCommServiceImpl implements GroupCommService {
 				} catch (Exception e) {
 					// fall back to XML encoding
 					e.printStackTrace();
-					String payload = ObixEncoder.toString(i, true);
+					String payload = ObixEncoder.toString(i);
 					putRequest.setPayload(payload);
 				}
 			}

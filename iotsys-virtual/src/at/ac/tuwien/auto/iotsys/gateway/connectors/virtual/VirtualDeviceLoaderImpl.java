@@ -40,8 +40,6 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.print.DocFlavor.URL;
-
 import obix.Bool;
 import obix.Int;
 import obix.Obj;
@@ -142,8 +140,6 @@ public class VirtualDeviceLoaderImpl implements DeviceLoader {
 			// enable history yes/no?
 //			objectBroker.addHistoryToDatapoints(virtualLight1, 100);
 			
-			Obj obj = new Obj();
-			
 
 		} catch (Exception e) {
 
@@ -184,13 +180,22 @@ public class VirtualDeviceLoaderImpl implements DeviceLoader {
 			if (enabled) {
 				try {
 					VirtualConnector vConn = new VirtualConnector();
+
+					int numberOfDevices = 0;
+					if (virtualConfiguredDevices != null) {
+						numberOfDevices = 1; // there is at least one device.
+					}
 					if (virtualConfiguredDevices instanceof Collection<?>) {
-						Collection<?> wmbusDevice = (Collection<?>) virtualConfiguredDevices;
-						log.info(wmbusDevice.size()
+						Collection<?> virtualDevices = (Collection<?>) virtualConfiguredDevices;
+						numberOfDevices = virtualDevices.size();
+					}
+					
+					if (numberOfDevices > 0) {
+						log.info(numberOfDevices
 								+ " virtual devices found in configuration for connector "
 								+ connectorName);
 
-						for (int i = 0; i < wmbusDevice.size(); i++) {
+						for (int i = 0; i < numberOfDevices; i++) {
 							String type = subConfig.getString("device(" + i
 									+ ").type");
 							List<Object> address = subConfig.getList("device("

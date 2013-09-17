@@ -20,9 +20,9 @@ public class RemoteAtRequestToSetTheXBeeSensor {
 	
 	public RemoteAtRequestToSetTheXBeeSensor() throws XBeeException{
 		
-		xbee.open("COM9", 9600);
+		xbee.open("COM3", 9600);
 		
-		int[] address = {0x00,0x13,0xa2,0x00,0x40,0x7c,0x17,0x15};
+		int[] address = {0x00,0x13,0xa2,0x00,0x40,0x7c,0x17,0x17};
 		XBeeAddress64 address64 = new XBeeAddress64(address);
 		int[] valueIR = {0x0b,0xb8};
 		int[] valueD0 = {0x02};
@@ -72,7 +72,7 @@ public class RemoteAtRequestToSetTheXBeeSensor {
 	 */
 	public static void main(String[] args) throws XBeeException {
 		// TODO Auto-generated method stub
-		PropertyConfigurator.configure("log4j.properties");
+		PropertyConfigurator.configure("res/log4j.properties");
 		new RemoteAtRequestToSetTheXBeeSensor();
 
 	}
