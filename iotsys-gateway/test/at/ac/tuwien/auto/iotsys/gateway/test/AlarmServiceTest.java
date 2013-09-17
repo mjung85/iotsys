@@ -397,21 +397,23 @@ public class AlarmServiceTest extends AbstractGatewayTest {
 		BrightnessActuatorImpl source = new BrightnessActuatorImpl();
 		source.setHref(new Uri("/some/alarm/source"));
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+		TimeZone tz = TimeZone.getTimeZone("Europe/Vienna");
+		dateFormat.setTimeZone(tz);
 		
 		AlarmImpl alarm10 = new AlarmImpl(source, true, true);
-		alarm10.timestamp().set(dateFormat.parse("2013-09-10 10:00").getTime(), TimeZone.getDefault());
+		alarm10.timestamp().set(dateFormat.parse("2013-09-10 10:00").getTime(), tz);
 		subject.addAlarm(alarm10);
 		
 		AlarmImpl alarm11 = new AlarmImpl(source, true, false);
-		alarm11.timestamp().set(dateFormat.parse("2013-09-10 11:00").getTime(), TimeZone.getDefault());
+		alarm11.timestamp().set(dateFormat.parse("2013-09-10 11:00").getTime(), tz);
 		subject.addAlarm(alarm11);
 		
 		AlarmImpl alarm12 = new AlarmImpl(source, false, true);
-		alarm12.timestamp().set(dateFormat.parse("2013-09-10 12:00").getTime(), TimeZone.getDefault());
+		alarm12.timestamp().set(dateFormat.parse("2013-09-10 12:00").getTime(), tz);
 		subject.addAlarm(alarm12);
 		
 		AlarmImpl alarm13 = new AlarmImpl(source, false, false);
-		alarm13.timestamp().set(dateFormat.parse("2013-09-10 13:00").getTime(), TimeZone.getDefault());
+		alarm13.timestamp().set(dateFormat.parse("2013-09-10 13:00").getTime(), tz);
 		subject.addAlarm(alarm13);
 		
 		
@@ -440,7 +442,7 @@ public class AlarmServiceTest extends AbstractGatewayTest {
 		body(hasXPath("/obj/list/obj[@href='" + alarm12.getFullContextPath() + "']")).
 		when().post(subjectHref + "/query");
 		
-		// starting at 12:00, limit to 2
+		// limit to 2 alarms
 		given().contentType(ContentType.XML).
 		body("<obj is='obix:AlarmFilter'>"
 				+ "  <int name='limit' val='2'/>"
