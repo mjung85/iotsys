@@ -1,7 +1,7 @@
 //= require 'jquery-2.0.3'
 //= require 'angular-1.0.7'
 //= require 'html5slider'
-//= require 'jquery.jsPlumb-1.5.2'
+////= require 'jquery.jsPlumb-1.5.2'
 //= require 'sugar-1.4.0'
 //= require_self
 
@@ -24,6 +24,27 @@ app.service('Lobby', function($http, Device, Directory) {
 
         cb(root);
       });
+    }
+  }
+});
+
+app.service('Storage', function() {
+  return {
+    get: function(key) {
+      var result = localStorage.getItem(key);
+      if (!result) {
+        return null;
+      } else if (result.charAt(0) === "{" || result.charAt(0) === "[") {
+        return angular.fromJson(result);
+      } else {
+        return result;
+      }
+    },
+    set: function(key, value) {
+      if (angular.isObject(value) || angular.isArray(value)) {
+        value = angular.toJson(value);
+      }
+      localStorage.setItem(key, value);
     }
   }
 });
@@ -69,24 +90,32 @@ app.factory('Directory', function() {
   //   }
   // };  
 
+  // Return all devices under this directory and its subdirs (recursively)
+  Directory.prototype.globDevices = function() {
+    var result = [];
+    result = result.concat(this.devices);
+    this.subdirectories.each(function(s) { result = result.concat(s.devices); });
+    return result;
+  }
+
   return Directory;
 });
 
-app.factory('Device', function($http) {
+app.factory('Device', function($http, Storage) {
   var Device = function(href, name) {
     this.href = href;
     this.name = name;
+    this.placement = Storage.get('device_'+this.href+'_placement');
     return this;
   };
 
-  Device.prototype.drop = function(left, top) {
-    this.dropped = true;
-    this.droppedLeft = left;
-    this.droppedTop = top;
+  Device.prototype.place = function(position) {
+    this.placement = {left: position.left, top: position.top};
+    Storage.set('device_'+this.href+'_placement', this.placement);
   };
 
   Device.prototype.fetch = function() {
-
+    // Fetching properties
   };
 
   return Device;
@@ -94,19 +123,18 @@ app.factory('Device', function($http) {
 
 app.controller('MainCtrl', ['$scope','Lobby', function($scope, Lobby) {
   $scope.directory = null;
+  $scope.allDevices = [];
 
   Lobby.getDeviceTree(function(root) {
     $scope.directory = root;
+    $scope.allDevices = root.globDevices();
   });
 
   $scope.sidebarExpanded = true;
-
-  $scope.droppedDevices = [];
-  $scope.deviceDropped = function(dev, position) {
+  
+  $scope.placeDevice = function(device, position) {
     $scope.sidebarExpanded = false;
-    dev.fetch();
-    dev.drop(position.left, position.top);
-    $scope.droppedDevices.push(dev);
+    device.place(position);
   };
 }]);
 
@@ -161,31 +189,31 @@ app.directive('droppable', function($parse) {
           var model = draggable.scope().$eval(draggable.attr('draggable'));
           callback(model, ui.helper.position());
           scope.$apply();
-          jsPlumb.repaintEverything();
+          //jsPlumb.repaintEverything();
         }
       });
     }
   }
 });
 
-app.directive('plumbcontainer', function() {
-  return {
-    restrict: 'A',
-    link: function(scope, el, attrs) {
-      jsPlumb.ready(function() {
-        jsPlumb.Defaults.Container = el;
-      });
-    }
-  }
-});
+// app.directive('plumbcontainer', function() {
+//   return {
+//     restrict: 'A',
+//     link: function(scope, el, attrs) {
+//       jsPlumb.ready(function() {
+//         jsPlumb.Defaults.Container = el;
+//       });
+//     }
+//   }
+// });
 
-app.directive('plumb', function() {
-  return {
-    restrict: 'A',
-    link: function(scope, el, attrs) {
-      jsPlumb.addEndpoint(el, {isSource: true, isTarget:true, connector:[ "Bezier", { curviness:100 }], endpoint: ["Dot", {
-        radius: 6
-      }],paintStyle:{ fillStyle:"black"}, connectorStyle: { lineWidth: 4, strokeStyle: "#5b9ada"}});
-    }
-  }
-});
+// app.directive('plumb', function() {
+//   return {
+//     restrict: 'A',
+//     link: function(scope, el, attrs) {
+//       jsPlumb.addEndpoint(el, {isSource: true, isTarget:true, connector:[ "Bezier", { curviness:100 }], endpoint: ["Dot", {
+//         radius: 6
+//       }],paintStyle:{ fillStyle:"black"}, connectorStyle: { lineWidth: 4, strokeStyle: "#5b9ada"}});
+//     }
+//   }
+// });

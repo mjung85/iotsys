@@ -20,8 +20,8 @@
     #sidebar(ng-class="{expanded: sidebarExpanded}")
       .content(ng-include="'directory_template'" not-droppable)
       .toggle(ng-click="sidebarExpanded = !sidebarExpanded; $event.stopPropagation()")
-    #canvas(ng-click="sidebarExpanded = false" droppable="deviceDropped" plumbcontainer)
-      %div(ng-repeat="device in droppedDevices")
-        .device(ng-style="{left: device.droppedLeft, top: device.droppedTop}" plumb)
+    #canvas(ng-click="sidebarExpanded = false" droppable="placeDevice" plumbcontainer)
+      %div(ng-repeat="device in allDevices | filter:{placement:'!!'}")
+        .device(ng-style="{left: device.placement.left, top: device.placement.top}" plumb)
           %label.name
             {{device.name}}
