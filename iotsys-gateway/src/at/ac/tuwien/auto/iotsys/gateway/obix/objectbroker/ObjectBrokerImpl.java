@@ -40,7 +40,6 @@ import java.util.logging.Logger;
 import obix.Contract;
 import obix.ContractRegistry;
 import obix.Err;
-import obix.List;
 import obix.Obj;
 import obix.Op;
 import obix.Ref;
@@ -49,8 +48,6 @@ import at.ac.tuwien.auto.iotsys.commons.MdnsResolver;
 import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.AlarmSubjectImpl;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.general.impl.LobbyImpl;
-import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.logic.BinaryOperation;
-import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.logic.LogicBinaryOperation;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.AboutImpl;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.HistoryHelper;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.WatchImpl;
@@ -106,8 +103,6 @@ public class ObjectBrokerImpl implements ObjectBroker {
 		addObj(watchServiceImpl);
 		addObj(alarmSubjectImpl);
 		addObj(aboutImpl, false); // About is added directly in lobby as local
-		
-		alarmSubjectImpl.initialize();
 
 //		Obj enums = new Obj();
 //		enums.setName("enums");

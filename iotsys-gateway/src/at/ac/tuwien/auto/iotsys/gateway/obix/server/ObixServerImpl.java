@@ -40,8 +40,9 @@ import obix.Err;
 import obix.Obj;
 import obix.Uri;
 import obix.io.ObixDecoder;
+import obix.xml.XException;
 
-public class ObixServerImpl implements ObixServer{
+public class ObixServerImpl implements ObixServer {
 	private static final Logger log = Logger.getLogger(ObixServerImpl.class
 			.getName());
 	
@@ -72,10 +73,12 @@ public class ObixServerImpl implements ObixServer{
 	public Obj writeObj(URI href, String xmlStream) {
 		log.info("Writing on object " + href);
 		log.finer("Writing on object: " + href + " xmlStream: " + xmlStream);
-		Obj input = ObixDecoder.fromString(xmlStream);
-
+		
 		try {
+			Obj input = ObixDecoder.fromString(xmlStream);
 			objectBroker.pushObj(new Uri(href.toASCIIString()), input, false);
+		} catch (XException ex) {
+			return new Err("Invalid payload");
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			Err e = new Err("Error writing object to network: " + ex.getMessage());
@@ -90,13 +93,15 @@ public class ObixServerImpl implements ObixServer{
 
 	public Obj invokeOp(URI href, String xmlStream) {
 		Obj input = null;
-		if (xmlStream != null && xmlStream.trim().length() > 0) {
-			
-			input = ObixDecoder.fromString(xmlStream);
-		}
 		try {
+			if (xmlStream != null && xmlStream.trim().length() > 0) {
+				input = ObixDecoder.fromString(xmlStream);
+			}
+			
 			Obj o = objectBroker.invokeOp(new Uri(href.toASCIIString()), input);
 			return o;
+		} catch (XException ex) {
+			return new Err("Invalid payload");
 		} catch (Exception ex) {
 			Err e = new Err("Error invoking operation: " + ex.getMessage());
 			ex.printStackTrace();
