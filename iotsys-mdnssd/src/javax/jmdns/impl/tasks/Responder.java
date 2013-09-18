@@ -136,10 +136,10 @@ public class Responder extends DNSTask {
                     }
                     for (DNSRecord answer : answers) {
                         if (answer != null) {
-                        	if (answer.getRecordType().equals(DNSRecordType.TYPE_PTR))
+                        	//if (answer.getRecordType().equals(DNSRecordType.TYPE_PTR))
                         		out = this.addAnswer(out, _in, answer);
-                        	else 
-                        		out = this.addAdditionalAnswer(out, _in, answer);
+                        	//else 
+                        		//out = this.addAdditionalAnswer(out, _in, answer);
 
                         }
                     }

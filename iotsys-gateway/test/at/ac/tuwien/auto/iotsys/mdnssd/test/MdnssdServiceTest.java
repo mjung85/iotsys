@@ -20,6 +20,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import at.ac.tuwien.auto.iotsys.commons.MdnsResolver;
+import at.ac.tuwien.auto.iotsys.commons.PropertiesLoader;
 import at.ac.tuwien.auto.iotsys.gateway.test.AbstractGatewayTest;
 
 /**
@@ -108,8 +109,10 @@ public class MdnssdServiceTest extends AbstractGatewayTest {
 	public void testRegisterDevice() {
 
 		try {
-			JmDNS jmdns = JmDNS.create(InetAddress.getByName("fe80::acbc:b659:71db:5cb7%20"));
-			jmdns.addServiceListener("_obix._coap.local.", new ServiceListener(){
+			JmDNS jmdns = JmDNS.create(InetAddress.getByName(PropertiesLoader.getInstance().getProperties()
+					.getProperty("iotsys.gateway.authNsAddr6", "fe80::acbc:b659:71db:5cb7%20")));
+			jmdns.addServiceListener("_obix._coap." + PropertiesLoader.getInstance().getProperties()
+					.getProperty("iotsys.gateway.authDomain", "local."), new ServiceListener(){
 
 				@Override
 				public void serviceAdded(ServiceEvent event) {
@@ -124,7 +127,7 @@ public class MdnssdServiceTest extends AbstractGatewayTest {
 					resolvedEvents.add(event);
 				}
 			});
-			lock.await(10000, TimeUnit.MILLISECONDS);
+			lock.await(20000, TimeUnit.MILLISECONDS);
 			ArrayList<String> eventNames = new ArrayList<String>();
 			for (ServiceEvent e : resolvedEvents){
 				eventNames.add(e.getName());
