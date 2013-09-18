@@ -38,6 +38,8 @@ public interface ObjectBroker{
 	
 	public void enableObjectRefresh(Obj obj);
 	
+	public void enableObjectRefresh(Obj obj, long interval);
+	
 	public void disableObjectRefresh(Obj obj);
 
 	public void shutdown();

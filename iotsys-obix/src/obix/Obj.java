@@ -59,6 +59,9 @@ public class Obj implements IObj, Subject, AlarmSource, Cloneable
 
 	private LinkedList<Alarm> alarms = new LinkedList<Alarm>();
 	private LinkedList<Alarm> unackedAlarms = new LinkedList<Alarm>();
+	
+	private long lastRefresh;
+	private long refreshInterval;
 
 	// //////////////////////////////////////////////////////////////
 	// Factory
@@ -1336,5 +1339,57 @@ public class Obj implements IObj, Subject, AlarmSource, Cloneable
 			return is.toString();
 		return "obix:" + getElement();
 	}
+	
+	// //////////////////////////////////////////////////////////////
+	// Refreshable
+	// //////////////////////////////////////////////////////////////
+	
+	/**
+	 * Sets the object's refresh interval in milliseconds. Set the refresh
+	 * interval to zero to disable refreshing.
+	 */
+	public void setRefreshInterval(long interval) {
+		if (interval >= Refreshable.MIN_REFRESH_INTERVAL_MS || interval == 0)
+			refreshInterval = interval;
+		else
+			refreshInterval = Refreshable.MIN_REFRESH_INTERVAL_MS;
+	}
+	
+	/**
+	 * Sets the millis of the object's last refresh. 
+	 */
+	public void setLastRefresh(long millis) {
+		lastRefresh = millis;
+	}
+	
+	/**
+	 * Get the millis of the object's last refresh.
+	 */
+	public long getLastRefresh() {
+		return lastRefresh;
+	}
+	
+	/**
+	 * Get the object's refresh interval in milliseconds.
+	 */
+	public long getRefreshInterval() {
+		return refreshInterval;
+	}
+	
+	/**
+	 * Checks whether or not the object needs to be refreshed.
+	 */
+	public boolean needsRefresh() {
+		boolean needs = false;
+		
+		if (refreshInterval > 0)
+			needs = System.currentTimeMillis() >= (lastRefresh + refreshInterval);
+			
+		return needs;
+	}
+
+	
+	
+
 
 }

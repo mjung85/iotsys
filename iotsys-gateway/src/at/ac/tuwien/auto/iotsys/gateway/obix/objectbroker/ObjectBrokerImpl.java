@@ -425,4 +425,11 @@ public class ObjectBrokerImpl implements ObjectBroker {
 	public void setMdnsResolver(MdnsResolver resolver){
 		this.resolver = resolver;
 	}
+	
+	@Override
+	public synchronized void enableObjectRefresh(Obj obj, long interval) {
+		obj.setRefreshInterval(interval);
+		
+		objectRefresher.addObject(obj);
+	}
 }
