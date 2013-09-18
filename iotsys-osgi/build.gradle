@@ -1,0 +1,24 @@
+// Variables
+description = 'Wrapper for OSGI libraries'
+
+sourceCompatibility = 1.6
+
+jar {
+	from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+	
+	manifest {
+		attributes("Manifest-Version": "1.0",
+				   "Bundle-Name": "IoTSyS-Felix",
+				   "Bundle-SymbolicName": "at.ac.tuwien.auto.iotsys.commons",
+				   "Bundle-Description": "Wrapper for OSGI libraries",
+				   "Bundle-Vendor": "Vienna University of Technology, Automation Systems Group, www.auto.tuwien.ac.at",
+				   "Bundle-Version": "0.1",
+				   "Bundle-Classpath": ".",
+				)
+	}	
+}
+
+dependencies {
+	compile group: 'org.apache.felix', name: 'org.osgi.core', version: '1.4.0'	
+}
+
