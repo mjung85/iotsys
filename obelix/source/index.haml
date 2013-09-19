@@ -4,9 +4,7 @@
     %meta(charset="utf-8")
     %title Obelix
     = stylesheet_link_tag "app.css"
-    = stylesheet_link_tag "http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css"
     = javascript_include_tag "app.js"
-    = javascript_include_tag "http://code.jquery.com/ui/1.10.3/jquery-ui.js"
   %body(ng-controller="MainCtrl")
     %script(type="text/ng-template" id="directory_template")
       .icon(ng-click="directory.toggle()")
@@ -20,8 +18,8 @@
     #sidebar(ng-class="{expanded: sidebarExpanded}")
       .content(ng-include="'directory_template'" not-droppable)
       .toggle(ng-click="sidebarExpanded = !sidebarExpanded; $event.stopPropagation()")
-    #canvas(ng-click="sidebarExpanded = false" droppable="deviceDropped" plumbcontainer)
-      %div(ng-repeat="device in droppedDevices")
-        .device(ng-style="{left: device.droppedLeft, top: device.droppedTop}" plumb)
+    #canvas(ng-click="sidebarExpanded = false" droppable="placeDevice" plumbcontainer)
+      %div(ng-repeat="device in allDevices | filter:{placement:'!!'}")
+        .device(ng-style="{left: device.placement.left, top: device.placement.top}" plumb draggable="device" draggable-helper="original")
           %label.name
             {{device.name}}
