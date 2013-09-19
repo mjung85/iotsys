@@ -19,7 +19,7 @@ public class TestDiscoverService {
 	public static void main(String[] args) throws UnknownHostException, IOException {
 		JmDNS jmdns = JmDNS.create(InetAddress.getByName(PropertiesLoader.getInstance().getProperties()
 				.getProperty("iotsys.gateway.authNsAddr6", "fe80::acbc:b659:71db:5cb7%20")));
-		jmdns.addServiceListener("_obix._coap." + PropertiesLoader.getInstance().getProperties()
+		jmdns.addServiceListener("_obix._soap." + PropertiesLoader.getInstance().getProperties()
 				.getProperty("iotsys.gateway.authDomain", "local."), new SampleListener());
 	}
 
