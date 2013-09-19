@@ -24,7 +24,7 @@
 
   <xs:simpleType name="contract">
     <xs:list itemType="xs:anyURI"/>
-  </xs:simpleType>
+  </xs:simpleType>  
 
   <!-- Complex Types
      ===================== -->
@@ -55,6 +55,8 @@
         <xs:attribute name="min" type="xs:dateTime"/>
         <xs:attribute name="max" type="xs:dateTime"/>
         <xs:attribute name="val" type="xs:dateTime"/>
+		<!-- oBIX 1.1 -->
+		<xs:attribute name="tz" type="xs:string"/>
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
@@ -141,6 +143,8 @@
         <xs:attribute name="min" type="xs:duration"/>
         <xs:attribute name="max" type="xs:duration"/>
         <xs:attribute name="val" type="xs:duration" default="PT0S"/>
+		<!-- oBIX 1.1 -->
+		<xs:attribute name="tz" type="xs:string"/>
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
@@ -159,6 +163,18 @@
     <xs:complexContent>
       <xs:extension base="Obj">
         <xs:attribute name="val" type="xs:anyURI"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  
+  <!-- oBIX 1.1 -->
+  <xs:complexType name="Date">
+    <xs:complexContent>
+      <xs:extension base="Obj">
+        <xs:attribute name="min" type="xs:date"/>
+        <xs:attribute name="max" type="xs:date"/>
+        <xs:attribute name="val" type="xs:date"/>		
+		<xs:attribute name="tz"  type="xs:string"/>
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
@@ -181,5 +197,6 @@
   <xs:element name="reltime" type="RelTime" substitutionGroup="obj"/>
   <xs:element name="str"     type="Str"     substitutionGroup="obj"/>
   <xs:element name="uri"     type="Uri"     substitutionGroup="obj"/>
-
+  <!-- oBIX 1.1 -->
+  <xs:element name="date" 	 type="Date" 	substitutionGroup="obj"/>
 </xs:schema>
