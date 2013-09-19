@@ -1,183 +1,185 @@
-<?xml version="1.0" encoding="utf-8" ?>
-<xs:schema id="oBIX" targetNamespace="http://obix.org/ns/schema/1.1"
-	elementFormDefault="qualified" xmlns="http://obix.org/ns/schema/1.1"
-	xmlns:obix="http://obix.org/ns/schema/1.1" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema id="obix" 
+  targetNamespace="http://obix.org/ns/schema/1.1" 
+  xmlns="http://obix.org/ns/schema/1.1" 
+  xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  elementFormDefault="qualified">
+  
+  <!-- Simple Types
+     ===================== -->
 
-	<xs:complexType name="obj">
-		<xs:group ref="objGroup" minOccurs="0" maxOccurs="unbounded" />
-		<xs:attributeGroup ref="objAttr" />
-	</xs:complexType>
+  <xs:simpleType name="status">
+    <xs:restriction base = "xs:string">
+      <!-- ordered by priority -->
+      <xs:enumeration value="disabled"/>
+      <xs:enumeration value="fault"/>
+      <xs:enumeration value="down"/>
+      <xs:enumeration value="unackedAlarm"/>
+      <xs:enumeration value="alarm"/>
+      <xs:enumeration value="unacked"/>
+      <xs:enumeration value="overridden"/>
+      <xs:enumeration value="ok"/>
+    </xs:restriction>
+  </xs:simpleType>
 
-	<xs:attributeGroup name="objAttr">
-		<xs:attribute name="name" type="xs:string" />
-		<xs:attribute name="href" type="xs:string" />
-		<xs:attribute name="is" type="xs:string" />
-		<xs:attribute name="null" type="xs:boolean" />
-	</xs:attributeGroup>
+  <xs:simpleType name="contract">
+    <xs:list itemType="xs:anyURI"/>
+  </xs:simpleType>
 
-	<xs:attributeGroup name="facets">
-		<xs:attribute name="displayName" type="xs:string" />
-		<xs:attribute name="display" type="xs:string" />
-		<xs:attribute name="icon" type="xs:anyURI" />
-		<xs:attribute name="precision" type="xs:int" />
-		<xs:attribute name="status" type="obix:status" />
-		<xs:attribute name="unit" type="xs:string" />
-		<xs:attribute name="writable" type="xs:boolean" />
-	</xs:attributeGroup>
+  <!-- Complex Types
+     ===================== -->
 
-	<xs:group name="objGroup">
-		<xs:choice>
-			<xs:element ref="obj" />
-			<xs:element ref="bool" />
-			<xs:element ref="int" />
-			<xs:element ref="real" />
-			<xs:element ref="str" />
-			<xs:element ref="enum" />
-			<xs:element ref="abstime" />
-			<xs:element ref="reltime" />
-			<xs:element ref="date" />
-			<xs:element ref="time" />
-			<xs:element ref="uri" />
-			<xs:element ref="list" />
-			<xs:element ref="ref" />
-			<xs:element ref="err" />
-			<xs:element ref="op" />
-			<xs:element ref="feed" />
-		</xs:choice>
-	</xs:group>
+  <xs:complexType name="Obj">
+    <xs:sequence>
+      <xs:element ref="obj" maxOccurs="unbounded" minOccurs="0"/>
+      <xs:any 
+          namespace="##other" 
+          processContents="lax" 
+          maxOccurs="unbounded" 
+          minOccurs="0"/>
+    </xs:sequence>
+    <xs:attribute name="display"     type="xs:string"/>
+    <xs:attribute name="displayName" type="xs:string"/>
+    <xs:attribute name="href"        type="xs:anyURI"/>
+    <xs:attribute name="icon"        type="xs:anyURI"/>
+    <xs:attribute name="is"          type="contract"/>
+    <xs:attribute name="name"        type="xs:NMTOKEN"/>
+    <xs:attribute name="null"        type="xs:boolean"/>
+    <xs:attribute name="status"      type="status"     default="ok"/>
+    <xs:attribute name="writable"    type="xs:boolean" default="false"/>
+  </xs:complexType>
 
-	<xs:complexType name="int">
-		<xs:attribute name="val" type="xs:integer" />
-		<xs:attributeGroup ref="objAttr" />
-		<xs:attributeGroup ref="facets" />
-	</xs:complexType>
+  <xs:complexType name="AbsTime">
+    <xs:complexContent>
+      <xs:extension base="Obj">
+        <xs:attribute name="min" type="xs:dateTime"/>
+        <xs:attribute name="max" type="xs:dateTime"/>
+        <xs:attribute name="val" type="xs:dateTime"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
 
-	<xs:complexType name="bool">
-		<xs:attribute name="val" type="xs:boolean" />
-		<xs:attributeGroup ref="objAttr" />
-		<xs:attributeGroup ref="facets" />
-	</xs:complexType>
+  <xs:complexType name="Bool">
+    <xs:complexContent>
+      <xs:extension base="Obj">
+        <xs:attribute name="range" type="xs:anyURI"/>
+        <xs:attribute name="val"   type="xs:boolean" default="false"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
 
-	<xs:complexType name="real">
-		<xs:attribute name="val" type="xs:double" />
-		<xs:attributeGroup ref="objAttr" />
-	</xs:complexType>
+  <xs:complexType name="Err">
+    <xs:complexContent>
+      <xs:extension base="Obj">
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
 
-	<xs:complexType name="str">
-		<xs:attribute name="val" type="xs:string" />
-		<xs:attribute name="min" type="xs:short" />
-		<xs:attribute name="max" type="xs:short" />
-		<xs:attributeGroup ref="objAttr" />
-		<xs:attributeGroup ref="facets" />
-	</xs:complexType>
+  <xs:complexType name="Enum">
+    <xs:complexContent>
+      <xs:extension base="Obj">
+        <xs:attribute name="range" type="xs:anyURI"/>
+        <xs:attribute name="val"   type="xs:NMTOKEN"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
 
-	<xs:complexType name="enum">
-		<xs:attribute name="val" type="xs:string" />
-		<xs:attribute name="range" type="xs:string" />
-		<xs:attributeGroup ref="objAttr" />
-		<xs:attributeGroup ref="facets" />
-	</xs:complexType>
+  <xs:complexType name="Feed">
+    <xs:complexContent>
+      <xs:extension base="Obj">
+        <xs:attribute name="in" type="contract" default="obix:Nil"/>
+        <xs:attribute name="of" type="contract" default="obix:obj"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
 
-	<xs:complexType name="uri">
-		<xs:attribute name="val" type="xs:anyURI" />
-		<xs:attributeGroup ref="objAttr" />
-		<xs:attributeGroup ref="facets" />
-	</xs:complexType>
+  <xs:complexType name="Int">
+    <xs:complexContent>
+      <xs:extension base="Obj">
+        <xs:attribute name="min"  type="xs:int"/>
+        <xs:attribute name="max"  type="xs:int"/>
+        <xs:attribute name="unit" type="xs:anyURI"/>
+        <xs:attribute name="val"  type="xs:int" default="0"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
 
-	<xs:complexType name="abstime">
-		<xs:attributeGroup ref="objAttr" />
-		<xs:attribute name="val" type="xs:anyURI" />
-		<xs:attribute name="min" type="xs:long" />
-		<xs:attribute name="max" type="xs:long" />
-		<xs:attribute name="tz" type="xs:string" />
-		<xs:attributeGroup ref="facets" />
-	</xs:complexType>
+  <xs:complexType name="List">
+    <xs:complexContent>
+      <xs:extension base="Obj">
+        <xs:attribute name="min" type="xs:int"/>
+        <xs:attribute name="max" type="xs:int"/>
+        <xs:attribute name="of"  type="contract" default="obix:obj"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
 
-	<xs:complexType name="reltime">
-		<xs:attribute name="min" type="xs:time" />
-		<xs:attribute name="max" type="xs:time" />
-		<xs:attributeGroup ref="objAttr" />
-		<xs:attributeGroup ref="facets" />
-	</xs:complexType>
+  <xs:complexType name="Op">
+    <xs:complexContent>
+      <xs:extension base="Obj">
+        <xs:attribute name="in"  type="contract" default="obix:Nil"/>
+        <xs:attribute name="out" type="contract" default="obix:Nil"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
 
-	<xs:complexType name="date">
-		<xs:attribute name="min" type="xs:date" />
-		<xs:attribute name="max" type="xs:date" />
-		<xs:attribute name="tz" type="xs:string" />
-		<xs:attributeGroup ref="objAttr" />
-		<xs:attributeGroup ref="facets" />
-	</xs:complexType>
+  <xs:complexType name="Real">
+    <xs:complexContent>
+      <xs:extension base="Obj">
+        <xs:attribute name="min"       type="xs:double"/>
+        <xs:attribute name="max"       type="xs:double"/>
+        <xs:attribute name="precision" type="xs:int"/>
+        <xs:attribute name="unit"      type="xs:anyURI"/>
+        <xs:attribute name="val"       type="xs:double" default="0"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
 
-	<xs:complexType name="time">
-		<xs:attribute name="min" type="xs:time" />
-		<xs:attribute name="max" type="xs:time" />
-		<xs:attribute name="tz" type="xs:string" />
-		<xs:attributeGroup ref="objAttr" />
-		<xs:attributeGroup ref="facets" />
-	</xs:complexType>
+  <xs:complexType name="RelTime">
+    <xs:complexContent>
+      <xs:extension base="Obj">
+        <xs:attribute name="min" type="xs:duration"/>
+        <xs:attribute name="max" type="xs:duration"/>
+        <xs:attribute name="val" type="xs:duration" default="PT0S"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="Str">
+    <xs:complexContent>
+      <xs:extension base="Obj">
+        <xs:attribute name="min" type="xs:int"/>
+        <xs:attribute name="max" type="xs:int"/>
+        <xs:attribute name="val" type="xs:string" default=""/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="Uri">
+    <xs:complexContent>
+      <xs:extension base="Obj">
+        <xs:attribute name="val" type="xs:anyURI"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
 
 
-	<xs:simpleType name="status">
-		<xs:restriction base="xs:string">
-			<xs:enumeration value="disabled" />
-			<xs:enumeration value="fault" />
-			<xs:enumeration value="down" />
-			<xs:enumeration value="unackedAlarm" />
-			<xs:enumeration value="alarm" />
-			<xs:enumeration value="unacked" />
-			<xs:enumeration value="overridden" />
-			<xs:enumeration value="ok" />
-		</xs:restriction>
-	</xs:simpleType>
+  <!-- Global Elements
+     ===================== -->
 
-	<xs:complexType name="list">
-        <xs:group ref="objGroup" minOccurs="0" maxOccurs="unbounded" />
-		<xs:attribute name="of" type="xs:string" />
-		<xs:attribute name="min" type="xs:int" />
-		<xs:attribute name="max" type="xs:int" />
-        
-		<xs:attributeGroup ref="objAttr" />
-		<xs:attributeGroup ref="facets" />
-	</xs:complexType>
+  <xs:element name="obj"     type="Obj"/>
+  <xs:element name="abstime" type="AbsTime" substitutionGroup="obj"/>
+  <xs:element name="bool"    type="Bool"    substitutionGroup="obj"/>
+  <xs:element name="enum"    type="Enum"    substitutionGroup="obj"/>
+  <xs:element name="err"     type="Obj"     substitutionGroup="obj"/>
+  <xs:element name="feed"    type="Feed"    substitutionGroup="obj"/>
+  <xs:element name="int"     type="Int"     substitutionGroup="obj"/>
+  <xs:element name="list"    type="List"    substitutionGroup="obj"/>
+  <xs:element name="op"      type="Op"      substitutionGroup="obj"/>
+  <xs:element name="real"    type="Real"    substitutionGroup="obj"/>
+  <xs:element name="ref"     type="Obj"     substitutionGroup="obj"/>
+  <xs:element name="reltime" type="RelTime" substitutionGroup="obj"/>
+  <xs:element name="str"     type="Str"     substitutionGroup="obj"/>
+  <xs:element name="uri"     type="Uri"     substitutionGroup="obj"/>
 
-	<xs:complexType name="ref">
-		<xs:attributeGroup ref="objAttr" />
-		<xs:attributeGroup ref="facets" />
-		<xs:attribute name="of" type="xs:string" />
-	</xs:complexType>
-
-	<xs:complexType name="err">
-		<xs:attributeGroup ref="objAttr" />
-		<xs:attributeGroup ref="facets" />
-	</xs:complexType>
-
-	<xs:complexType name="op">
-		<xs:attribute name="in" type="xs:string"/>
-		<xs:attribute name="out" type="xs:string"/>
-		<xs:attributeGroup ref="objAttr" />
-		<xs:attributeGroup ref="facets" />
-
-	</xs:complexType>
-
-	<xs:complexType name="feed">
-		<xs:attributeGroup ref="objAttr" />
-		<xs:attributeGroup ref="facets" />
-	</xs:complexType>
-
-	<xs:element name="obj" type="obix:obj" />
-	<xs:element name="bool" type="obix:bool" />
-	<xs:element name="int" type="obix:int" />
-	<xs:element name="real" type="obix:real" />
-	<xs:element name="str" type="obix:str" />
-	<xs:element name="enum" type="obix:enum" />
-	<xs:element name="abstime" type="obix:abstime" />
-	<xs:element name="reltime" type="obix:reltime" />
-	<xs:element name="date" type="obix:date" />
-	<xs:element name="time" type="obix:time" />
-	<xs:element name="uri" type="obix:uri" />
-	<xs:element name="list" type="obix:list" />
-	<xs:element name="ref" type="obix:ref" />
-	<xs:element name="err" type="obix:err" />
-	<xs:element name="op" type="obix:op" />
-	<xs:element name="feed" type="obix:feed" />
 </xs:schema>
