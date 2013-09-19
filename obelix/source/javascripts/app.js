@@ -1,15 +1,16 @@
-//= require 'jquery-2.0.3'
-//= require 'angular-1.0.7'
+//= require 'jquery'
+//= require 'jquery-ui'
+//= require 'angular'
 //= require 'html5slider'
-////= require 'jquery.jsPlumb-1.5.2'
-//= require 'sugar-1.4.0'
+////require 'jquery.jsPlumb-1.5.2'
+//= require 'sugar'
 //= require_self
 
 var app = angular.module('Obelix', []);
 
-app.service('Lobby', function($http, Device, Directory) {
+app.service('Lobby', ['$http', 'Device', 'Directory', function($http, Device, Directory) {
   return {
-    getDeviceTree: function(cb) {
+    getDeviceTree: function(callback) {
       var root = new Directory('');
       root.expanded = true;
       $http.get('/obix').success(function(response) {
@@ -21,12 +22,11 @@ app.service('Lobby', function($http, Device, Directory) {
 
           device_directory.devices.push(new Device(href, device_name));
         });
-
-        cb(root);
+        callback(root);
       });
     }
   }
-});
+}]);
 
 app.service('Storage', function() {
   return {
@@ -58,68 +58,75 @@ app.factory('Directory', function() {
     return this;
   };
 
-  Directory.prototype.make = function(components) {
-    if (components.isEmpty()) return this;
+  Directory.prototype = {
+    make: function(components) {
+      if (components.isEmpty()) return this;
 
-    var name = components.shift();
-    name = name.replace('+',' ');
-    
-    var subdirectory = this.subdirectories.find({name:name});
-    if (!subdirectory) {
-      subdirectory = new Directory(name);
-      this.subdirectories.push(subdirectory);
-    }
+      var name = components.shift();
+      name = name.replace('+',' ');
+      
+      var subdirectory = this.subdirectories.find({name:name});
+      if (!subdirectory) {
+        subdirectory = new Directory(name);
+        this.subdirectories.push(subdirectory);
+      }
 
-    if (components.isEmpty()) {
-      return subdirectory;
-    } else {
-      return subdirectory.make(components);
+      if (components.isEmpty()) {
+        return subdirectory;
+      } else {
+        return subdirectory.make(components);
+      }
+    },
+
+    toggle: function() {
+      this.expanded = !this.expanded;
+      // if (this.expanded) this.expand();
+    },
+
+    //expand: function() {
+    //   this.expanded = true;
+    //   if (this.subdirectories.count() == 1) {
+    //     // only one subdirectory, expand it
+    //     this.subdirectories[0].expand();
+    //   }
+    //},
+
+    // Recursively return all devices under this directory and its subdirectories
+    globDevices: function() {
+      var result = [];
+      result = result.concat(this.devices);
+      this.subdirectories.each(function(s) { result = result.concat(s.devices); });
+      return result;
     }
   };
-
-  Directory.prototype.toggle = function() {
-    this.expanded = !this.expanded;
-    // if (this.expanded) this.expand();
-  };
-
-  // Directory.prototype.expand = function() {
-  //   this.expanded = true;
-  //   if (this.subdirectories.count() == 1) {
-  //     // only one subdirectory, expand it
-  //     this.subdirectories[0].expand();
-  //   }
-  // };  
-
-  // Return all devices under this directory and its subdirs (recursively)
-  Directory.prototype.globDevices = function() {
-    var result = [];
-    result = result.concat(this.devices);
-    this.subdirectories.each(function(s) { result = result.concat(s.devices); });
-    return result;
-  }
 
   return Directory;
 });
 
-app.factory('Device', function($http, Storage) {
+app.factory('Device', ['$http', 'Storage', function($http, Storage) {
   var Device = function(href, name) {
     this.href = href;
     this.name = name;
     this.placement = Storage.get('device_'+this.href+'_placement');
+    if (this.placement) {
+      this.load();
+    }
     return this;
   };
 
-  Device.prototype.place = function(position) {
-    this.placement = {left: position.left, top: position.top};
-    Storage.set('device_'+this.href+'_placement', this.placement);
+  Device.prototype = {
+    place: function(position) {
+      this.placement = {left: position.left, top: position.top};
+      Storage.set('device_'+this.href+'_placement', this.placement);
+      this.load();
+    },
+    load: function() {
+      console.log("Loading",this.href);
+    }
   };
-
-  Device.prototype.fetch = function() {
-    // Fetching properties
-  };
-
+  
   return Device;
-});
+}]);
 
 app.controller('MainCtrl', ['$scope','Lobby', function($scope, Lobby) {
   $scope.directory = null;
@@ -148,9 +155,11 @@ app.directive('draggable', function() {
     restrict: 'A',
     link: function(scope, el, attrs) {
       var device = scope.$eval(attrs['draggable']);
+      var helper = attrs['draggableHelper'];
+      if (!helper) helper = 'clone';
       el.draggable({
         appendTo: 'body',
-        helper: 'clone',
+        helper: helper,
         start: function() {
           console.log("Start",this,arguments);
           $(this).addClass('disabled');
@@ -177,7 +186,7 @@ app.directive('draggable', function() {
 //   }
 // });
 
-app.directive('droppable', function($parse) {
+app.directive('droppable', ['$parse',function($parse) {
   return {
     restrict: 'A',
     link: function(scope, el, attrs) {
@@ -194,7 +203,7 @@ app.directive('droppable', function($parse) {
       });
     }
   }
-});
+}]);
 
 // app.directive('plumbcontainer', function() {
 //   return {
