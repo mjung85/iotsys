@@ -6,11 +6,12 @@ import java.util.Comparator;
 import java.util.List;
 
 import obix.Abstime;
+import obix.Bool;
 import obix.Feed;
 import obix.Int;
 import obix.Obj;
+import obix.Uri;
 import obix.contracts.AlarmFilter;
-import at.ac.tuwien.auto.iotsys.commons.obix.objects.AlarmFilterImpl;
 import at.ac.tuwien.auto.iotsys.obix.FeedFilter;
 
 public class AlarmFilterImpl extends Obj implements AlarmFilter, FeedFilter {
@@ -18,12 +19,18 @@ public class AlarmFilterImpl extends Obj implements AlarmFilter, FeedFilter {
 	private Int limit = new Int();
 	private Abstime start = new Abstime();
 	private Abstime end = new Abstime();
+	private Uri source = new Uri();
+	private Bool unacked = new Bool();
+	private Bool active = new Bool();
 	
 
 	public AlarmFilterImpl() {
 		add(limit);
 		add(start);
 		add(end);
+		add(source);
+		add(unacked);
+		add(active);
 	}
 	
 	public AlarmFilterImpl(Obj filter) {
@@ -34,10 +41,23 @@ public class AlarmFilterImpl extends Obj implements AlarmFilter, FeedFilter {
 			limit.set(alarmFilter.limit());
 			start.set(alarmFilter.start());
 			end.set(alarmFilter.end());
+			source.set(alarmFilter.source());
+			unacked.set(alarmFilter.unacked());
+			active.set(alarmFilter.active());
 			
 			limit.setNull(alarmFilter.limit().isNull());
 			start.setNull(alarmFilter.start().isNull());
 			end.setNull(alarmFilter.end().isNull());
+			source.setNull(alarmFilter.source().isNull());
+			unacked.setNull(alarmFilter.unacked().isNull());
+			active.setNull(alarmFilter.active().isNull());
+		} else {
+			limit.setNull(true);
+			start.setNull(true);
+			end.setNull(true);
+			source.setNull(true);
+			unacked.setNull(true);
+			active.setNull(true);
 		}
 	}
 	
@@ -54,6 +74,19 @@ public class AlarmFilterImpl extends Obj implements AlarmFilter, FeedFilter {
 	}
 
 	
+	public Uri source() {
+		return source;
+	}
+
+	public Bool unacked() {
+		return unacked;
+	}
+	
+
+	public Bool active() {
+		return active;
+	}
+
 	@Override
 	public List<Obj> query(Feed feed) {
 		ArrayList<AlarmImpl> alarms = filterRecords(feed.getEvents());
@@ -94,6 +127,36 @@ public class AlarmFilterImpl extends Obj implements AlarmFilter, FeedFilter {
 			
 			AlarmImpl record = (AlarmImpl) event;
 			
+			if (!unacked.isNull()) {
+				if (!record.isAcked()) continue;
+				
+				boolean unackedFilter = unacked.get();
+				boolean recordIsUnacked = record.ackUser().isNull();
+				
+				if (unackedFilter != recordIsUnacked) {
+					continue;
+				}
+			}
+			
+			if (!source.isNull()) {
+				// get source of this record, compare it to given source uri. ;D
+				Obj alarmSource = record.getRoot().getByHref(record.source().getHref());
+				if (alarmSource == null) continue;
+				
+				Obj sourceFilter = record.getRoot().getByHref(source);
+				if (alarmSource != sourceFilter)
+					continue;
+			}
+			
+			if (!active.isNull()) {
+				if (!record.isStateful()) continue;
+				Obj alarmSource = record.getRoot().getByHref(record.source().getHref());
+				if (alarmSource == null) continue;
+					
+				if (active.get() != alarmSource.getAlarms().contains(record))
+					continue;
+			}
+			
 			if (start.get() != end.get()) {
 				if (!start.isNull() && record.timestamp().get() < start.get()) {
 					continue;
@@ -114,6 +177,5 @@ public class AlarmFilterImpl extends Obj implements AlarmFilter, FeedFilter {
 	public FeedFilter getFilter(Obj filter) {
 		return new AlarmFilterImpl(filter);
 	}
-
-
+	
 }
