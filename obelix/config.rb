@@ -1,9 +1,11 @@
 set :images_dir, 'images'
+set :debug_assets, true
 
 # Build-specific configuration
 configure :build do
   activate :sprockets
   activate :minify_css
+  activate :minify_javascript
   activate :relative_assets
 end
 
