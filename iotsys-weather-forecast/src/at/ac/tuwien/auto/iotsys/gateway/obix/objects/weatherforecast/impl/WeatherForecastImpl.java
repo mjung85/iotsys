@@ -3,7 +3,7 @@ package at.ac.tuwien.auto.iotsys.gateway.obix.objects.weatherforecast.impl;
 import java.util.ArrayList;
 import java.util.TimeZone;
 
-
+import at.ac.tuwien.auto.iotsys.obix.OperationHandler;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.weatherforecast.WeatherForecast;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.weatherforecast.WeatherForecastFilter;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.weatherforecast.WeatherForecastQueryResult;
@@ -20,7 +20,7 @@ public class WeatherForecastImpl extends Obj implements WeatherForecast {
 	private Int count = new Int("count");
 	private Abstime start = new Abstime("start");
 	private Abstime end = new Abstime("end");
-	private Str tz = new Str("tz", TimeZone.getDefault().getID());
+	private Str tz = new Str("tz", "UTC");
 	private Op query = new Op("query", 
 		new Contract(WeatherForecastFilter.CONTRACT),
 		new Contract(WeatherForecastQueryResult.CONTRACT));
@@ -43,14 +43,14 @@ public class WeatherForecastImpl extends Obj implements WeatherForecast {
 		end.set(0, TimeZone.getTimeZone(tz.get()));
 				
 		query.setHref(new Uri("query"));
-		query.setOperationHandler(new at.ac.tuwien.auto.iotsys.obix.OperationHandler() {
+		query.setOperationHandler(new OperationHandler() {
 			public Obj invoke(Obj in) {
 				return query(in);
 			}
 		});
 		
 		update.setHref(new Uri("update"));
-		update.setOperationHandler(new at.ac.tuwien.auto.iotsys.obix.OperationHandler() {
+		update.setOperationHandler(new OperationHandler() {
 			public Obj invoke(Obj in) {
 				return update(in);
 			}
@@ -92,11 +92,11 @@ public class WeatherForecastImpl extends Obj implements WeatherForecast {
 			
 			if (endNull == false && rec.timestamp().get() > filter.end().get())
 				break;
-			
+			/*
 			// update the timestamp's timezone if necessary
 			if (rec.timestamp().getTz() != tz.get())
 				rec.timestamp().set(rec.timestamp().get(), TimeZone.getTimeZone(tz.get()));
-			
+			*/
 			results.add(rec);
 		}
 		

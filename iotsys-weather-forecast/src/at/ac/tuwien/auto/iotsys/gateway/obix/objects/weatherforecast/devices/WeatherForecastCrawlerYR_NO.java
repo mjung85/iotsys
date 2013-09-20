@@ -28,9 +28,6 @@ import at.ac.tuwien.auto.iotsys.gateway.obix.objects.weatherforecast.impl.Weathe
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.weatherforecast.impl.WeatherSymbolImpl;
 import at.ac.tuwien.auto.iotsys.gateway.connectors.weatherforecast.WeatherForecastConnector;
 
-
-// Vienna, lat=48.21, lon=16.37, msl=171
-
 public class WeatherForecastCrawlerYR_NO extends WeatherForecastCrawlerImpl {
 
 	private static final String SERVICE_URL = "http://api.yr.no/weatherapi/locationforecast/1.8/?";
