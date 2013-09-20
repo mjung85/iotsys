@@ -5,6 +5,7 @@ import java.util.logging.Logger;
 import javax.xml.parsers.FactoryConfigurationError;
 import javax.xml.parsers.ParserConfigurationException;
 
+import at.ac.tuwien.auto.iotsys.obix.OperationHandler;
 import at.ac.tuwien.auto.iotsys.gateway.connectors.weatherforecast.WeatherForecastConnector;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.weatherforecast.WeatherForecastCrawler;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.weatherforecast.WeatherForecastFilter;
@@ -23,7 +24,6 @@ public class WeatherForecastCrawlerImpl extends Obj implements WeatherForecastCr
 	
 	protected WeatherForecastLocationImpl location;
 	protected WeatherForecastImpl forecasts;
-	protected Op set;
 
 	public WeatherForecastCrawlerImpl(WeatherForecastLocationImpl location, WeatherForecastConnector connector) 
 				throws FactoryConfigurationError, ParserConfigurationException {
@@ -45,27 +45,15 @@ public class WeatherForecastCrawlerImpl extends Obj implements WeatherForecastCr
 
 		this.location.setName("location");
 		this.location.setHref(new Uri("location"));
+		this.location.setWritable(true);
 		
 		// initialize forecasts array
 		this.forecasts = new WeatherForecastImpl();
 		this.forecasts.setName("forecasts");
 		this.forecasts.setHref(new Uri("forecasts"));
-		
-		this.set = new Op("setLocation", 
-					new Contract(WeatherForecastLocation.CONTRACT),
-					new Contract(Nil.CONTRACT));
-		this.set.setHref(new Uri("setLocation"));
-		this.set.setOperationHandler(new at.ac.tuwien.auto.iotsys.obix.OperationHandler() {
-			public Obj invoke(Obj in) {
-				setLocation(in);
 				
-				return new NilImpl();
-			}
-		});
-		
 		add(this.location);
 		add(this.forecasts);
-		add(this.set);
 	}
 	
 	public Obj location() {
@@ -75,33 +63,26 @@ public class WeatherForecastCrawlerImpl extends Obj implements WeatherForecastCr
 	public Obj forecasts() {
 		return forecasts;
 	}
-
-	public Op setLocation() {
-		return set;
-	}
-	
-	public void setLocation(Obj location) {
-		if (location != null)
-		{
-			WeatherForecastLocation l = (WeatherForecastLocation)location;
-			
-			this.location.description().set(l.description().get());
-			this.location.latitude().set(l.latitude().get());
-			this.location.longitude().set(l.longitude().get());
-			this.location.height().set(l.height().get());
-			
-			// clear forecasts array
-			this.forecasts.clearForecasts();
-		}
-	}
 	
 	public WeatherForecastLocationImpl getLocation() {
 		return location;
 	}
+
+	/*
+	 * Resets the crawler, i.e., clears the forecasts array and triggers a 
+	 * refresh after the crawler's location has been modified.
+	 */
+	public void reset() {	
+		// clear forecasts array
+		this.forecasts.clearForecasts();
+		
+		// trigger object refresh
+		setLastRefresh(0);
+	}
 	
 	/*
 	 * Override this method to return the crawler-specific service URL using 
-	 * the crawler's location
+	 * the crawler's location.
 	 */
 	public String getServiceURL() {
 		return "";
@@ -112,8 +93,11 @@ public class WeatherForecastCrawlerImpl extends Obj implements WeatherForecastCr
 		super.initialize();	
 	}
 	
+	/*
+	 * Override this method to refresh the crawler object using the 
+	 * crawler-specific web service.
+	 */
 	@Override
 	public void refreshObject(){
-		log.finest("Refreshing weather forecast.");
 	}
 }

@@ -11,7 +11,4 @@ public interface WeatherForecastCrawler extends IObj {
 
 	public static final String forecastsContract = "<obj name='forecasts' is='iot:WeatherForecast'/>";
 	public Obj forecasts();
-	
-	public static final String setLocationContract = "<op name='setLocation' href='setLocation' in='iot:WeatherForecastLocation' out='obix:Nil'/>";
-	public Op setLocation();
 }
