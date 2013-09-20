@@ -1,0 +1,109 @@
+<wsdl:definitions targetNamespace="http://obix.org/ns/wsdl/1.1"
+	xmlns="http://obix.org/ns/wsdl/1.1" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+	xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns:obix="http://obix.org/ns/schema/1.1">
+	<wsdl:types>
+		<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+			elementFormDefault="qualified" targetNamespace="http://obix.org/ns/wsdl/1.1"
+			xmlns="http://obix.org/ns/wsdl/1.1">
+			<xsd:import namespace="http://obix.org/ns/schema/1.1"
+				schemaLocation="./obix.xsd" />
+			<xsd:complexType name="ReadReq">
+				<xsd:attribute name="href" type="xsd:anyURI" />
+			</xsd:complexType>
+			<xsd:complexType name="WriteReq">
+				<xsd:complexContent>
+					<xsd:extension base="ReadReq">
+						<xsd:sequence>
+							<xsd:element ref="obix:obj" maxOccurs="1" minOccurs="1" />
+						</xsd:sequence>
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
+			<xsd:complexType name="InvokeReq">
+				<xsd:complexContent>
+					<xsd:extension base="ReadReq">
+						<xsd:sequence>
+							<xsd:element ref="obix:obj" maxOccurs="1" minOccurs="1" />
+						</xsd:sequence>
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
+			<xsd:element name="read" type="ReadReq" />
+			<xsd:element name="write" type="WriteReq" />
+			<xsd:element name="invoke" type="InvokeReq" />
+		</xsd:schema>
+	</wsdl:types>
+	<wsdl:message name="readSoapReq">
+		<wsdl:part name="body" element="read" />
+	</wsdl:message>
+	<wsdl:message name="readSoapRes">
+		<wsdl:part name="body" element="obix:obj" />
+	</wsdl:message>
+	<wsdl:message name="writeSoapReq">
+		<wsdl:part name="body" element="write" />
+	</wsdl:message>
+	<wsdl:message name="writeSoapRes">
+		<wsdl:part name="body" element="obix:obj" />
+	</wsdl:message>
+	<wsdl:message name="invokeSoapReq">
+		<wsdl:part name="body" element="invoke" />
+	</wsdl:message>
+	<wsdl:message name="invokeSoapRes">
+		<wsdl:part name="body" element="obix:obj" />
+	</wsdl:message>
+	<wsdl:portType name="oBIXSoapPort">
+		<wsdl:operation name="read">
+			<wsdl:input message="readSoapReq" />
+			<wsdl:output message="readSoapRes" />
+		</wsdl:operation>
+		<wsdl:operation name="write">
+			<wsdl:input message="writeSoapReq" />
+			<wsdl:output message="writeSoapRes" />
+		</wsdl:operation>
+		<wsdl:operation name="invoke">
+			<wsdl:input message="invokeSoapReq" />
+			<wsdl:output message="invokeSoapRes" />
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:binding name="oBIXSoapBinding" type="oBIXSoapPort">
+		<soap:binding style="document"
+			transport="http://schemas.xmlsoap.org/soap/http" />
+		<wsdl:operation name="read">
+			<soap:operation soapAction="http://obix.org/ns/wsdl/1.1/read"
+				style="document" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="write">
+			<soap:operation soapAction="http://obix.org/ns/wsdl/1.1/write"
+				style="document" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="invoke">
+			<soap:operation soapAction="http://obix.org/ns/wsdl/1.1/invoke"
+				style="document" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:binding>
+
+	<wsdl:service name="obix">
+		<wsdl:port name="obixPort" binding="oBIXSoapBinding">
+			<soap:address location="http://localhost/soap" />
+		</wsdl:port>
+	</wsdl:service>
+</wsdl:definitions>
