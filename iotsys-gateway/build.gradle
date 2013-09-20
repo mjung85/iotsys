@@ -23,6 +23,7 @@ eclipse{
 				node.appendNode('classpathentry', [kind: 'src', path: '/iotsys-xacml', exported:'true'])
 				node.appendNode('classpathentry', [kind: 'lib', path: '/iotsys-xacml/res', exported:'true'])
 				node.appendNode('classpathentry', [kind: 'src', path: '/iotsys-osgi', exported:'true'])
+				node.appendNode('classpathentry', [kind: 'src', path: '/iotsys-weather-forecast', exported:'true'])
 			}
 		}
 	}
@@ -95,6 +96,7 @@ dependencies {
 
 	provided project(':iotsys-xacml')
 	provided project(':iotsys-mdnssd')
+	provided project(':iotsys-weather-forecast')
 	
 	//provided group: 'org.apache.felix', name: 'org.apache.felix.framework', version: '4.2.0'
 	provided group: 'org.apache.felix', name: 'org.osgi.core', version: '1.4.0'
@@ -120,6 +122,7 @@ dependencies {
 	testProvided project(':iotsys-common')
 	testProvided project(':iotsys-virtual')
 	testProvided project(':iotsys-mdnssd')
+	testProvided project(':iotsys-weather-forecast')
 	testCompile group: 'junit',name:'junit',version: '4.8+' 
 	testCompile group: 'com.jayway.restassured', name: 'rest-assured', version: '1.2.1'
 	testCompile "org.hamcrest:hamcrest-library:1.3"
