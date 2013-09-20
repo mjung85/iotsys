@@ -46,12 +46,10 @@ import obix.io.ObixEncoder;
 public class SOAPHandler {
 	private ObixServer obixServer;
 
-	private final String SOAP_RESPONSE_START = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\">" 					
-			+ "<soapenv:Header/>" + "<soapenv:Body>"
-			+ "<obixWS:response xmlns=\"http://obix.org/ns/schema/1.1\" xmlns:obixWS=\"http://obix.org/ns/wsdl/1.1\">";
+	private final String SOAP_RESPONSE_START = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns=\"http://obix.org/ns/schema/1.1\">" 					
+			+ "<soapenv:Header/><soapenv:Body>";
 
-	private final String SOAP_RESPONSE_END = "</obixWS:response></soapenv:Body>"
-			+ "</soapenv:Envelope>";
+	private final String SOAP_RESPONSE_END = "</soapenv:Body></soapenv:Envelope>";
 
 	public SOAPHandler(ObixServer obixServer) {
 		this.obixServer = obixServer;
@@ -79,6 +77,8 @@ public class SOAPHandler {
 		OPERATION op = null;
 
 		// String soapPayload = parms.getProperty("data");
+		
+		System.out.println("\n\n\nSOAP Payload: " + soapPayload + "\n\n");
 
 		String nameSpacePrefix = extractNSPrefix("http://obix.org/ns/wsdl/1.1",
 				soapPayload);
@@ -124,23 +124,25 @@ public class SOAPHandler {
 			return e.getMessage();
 		}
 		
+		String soapResponse = "Not implemented yet.";
 		if (op == OPERATION.READ) {
 			// read on object, find href attribute
 			StringBuffer obixObj = new StringBuffer(ObixEncoder.toString(obixServer.readObj(hrefURI,
 					"guest")));
-			return SOAP_RESPONSE_START + obixObj.toString() + SOAP_RESPONSE_END;
+			soapResponse =  SOAP_RESPONSE_START + obixObj.toString() + SOAP_RESPONSE_END;
 
 		} else if (op == OPERATION.INVOKE) {
 			String obj = extractObject(soapPayload, nameSpacePrefix, false);
-			return SOAP_RESPONSE_START + ObixEncoder.toString(obixServer.invokeOp(hrefURI, obj))
+			soapResponse = SOAP_RESPONSE_START + ObixEncoder.toString(obixServer.invokeOp(hrefURI, obj))
 					+ SOAP_RESPONSE_END;
 		} else if (op == OPERATION.WRITE) {
 			String obj = extractObject(soapPayload, nameSpacePrefix, true);
-			return SOAP_RESPONSE_START + ObixEncoder.toString(obixServer.writeObj(hrefURI, obj))
+			soapResponse =  SOAP_RESPONSE_START + ObixEncoder.toString(obixServer.writeObj(hrefURI, obj))
 					+ SOAP_RESPONSE_END;
 		}
 
-		return "Not implemented yet.";
+		System.out.println("\n\n SOAP Response: " + soapResponse);
+		return soapResponse;
 
 	}
 
