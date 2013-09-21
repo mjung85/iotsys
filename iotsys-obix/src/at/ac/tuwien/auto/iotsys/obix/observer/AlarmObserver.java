@@ -5,8 +5,8 @@ import java.util.TimeZone;
 import obix.Abstime;
 import obix.AlarmCondition;
 import obix.AlarmSource;
-import obix.IAlarmSubject;
 import obix.contracts.Alarm;
+import obix.contracts.AlarmSubject;
 import obix.contracts.StatefulAlarm;
 
 /**
@@ -15,12 +15,12 @@ import obix.contracts.StatefulAlarm;
  */
 public abstract class AlarmObserver implements Observer {
 	private AlarmSource source, target;
-	private IAlarmSubject alarmSubject;
+	private AlarmSubject alarmSubject;
 	private Alarm currentAlarm;
 	private boolean stateful, acked;
 	private AlarmCondition alarmCondition;
 	
-	public AlarmObserver(IAlarmSubject alarmSubject, AlarmCondition alarmCondition, boolean stateful, boolean acked) {
+	public AlarmObserver(AlarmSubject alarmSubject, AlarmCondition alarmCondition, boolean stateful, boolean acked) {
 		this.alarmSubject = alarmSubject;
 		this.alarmCondition = alarmCondition;
 		this.stateful = stateful;
@@ -84,7 +84,7 @@ public abstract class AlarmObserver implements Observer {
 	}
 	
 	private void setNormalTimestamp(StatefulAlarm alarm) {
-		Abstime normalTimestamp = ((StatefulAlarm) currentAlarm).normalTimestamp();
+		Abstime normalTimestamp = alarm.normalTimestamp();
 		if (normalTimestamp != null) {
 			normalTimestamp.set(System.currentTimeMillis(), TimeZone.getDefault());
 			normalTimestamp.setNull(false);
@@ -118,14 +118,14 @@ public abstract class AlarmObserver implements Observer {
 	}
 
 	public Subject getSubject() {
-		return (Subject)source;
+		return source;
 	}
 
-	public IAlarmSubject getAlarmSubject() {
+	public AlarmSubject getAlarmSubject() {
 		return alarmSubject;
 	}
 
-	public AlarmObserver setAlarmSubject(IAlarmSubject alarmSubject) {
+	public AlarmObserver setAlarmSubject(AlarmSubject alarmSubject) {
 		this.alarmSubject = alarmSubject;
 		return this;
 	}
