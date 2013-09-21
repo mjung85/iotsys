@@ -1,0 +1,12 @@
+source 'https://rubygems.org'
+
+gem 'middleman', '~>3.0', git: 'https://github.com/middleman/middleman.git'
+gem 'middleman-sprockets'
+gem 'middleman-minify-html'
+gem 'rack-reverse-proxy'
+gem 'json', '~> 1.7.7'
+
+# See https://github.com/middleman/middleman/issues/276
+gem 'therubyracer', platforms: :ruby 
+
+gem 'compass'

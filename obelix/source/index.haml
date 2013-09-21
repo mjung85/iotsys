@@ -1,0 +1,25 @@
+!!!
+%html(ng-app="Obelix" lang="en")
+  %head
+    %meta(charset="utf-8")
+    %title Obelix
+    = stylesheet_link_tag "app.css"
+    = javascript_include_tag "app.js"
+  %body(ng-controller="MainCtrl")
+    %script(type="text/ng-template" id="directory_template")
+      .icon(ng-click="directory.toggle()")
+      %label(ng-click="directory.toggle()") 
+        {{directory.name}}
+      %ul.devices(ng-show="directory.expanded")
+        %li.device(ng-repeat="device in directory.devices")
+          %label(draggable="device") {{device.name}}
+      %ul.subdirectories(ng-show="directory.expanded")
+        %li.subdirectory(ng-class="{expanded:directory.expanded}" ng-repeat="directory in directory.subdirectories" ng-include="'directory_template'")
+    #sidebar(ng-class="{expanded: sidebarExpanded}")
+      .content(ng-include="'directory_template'" not-droppable)
+      .toggle(ng-click="sidebarExpanded = !sidebarExpanded; $event.stopPropagation()")
+    #canvas(ng-click="sidebarExpanded = false" droppable="placeDevice" plumbcontainer)
+      %div(ng-repeat="device in allDevices | filter:{placement:'!!'}")
+        .device(ng-style="{left: device.placement.left, top: device.placement.top}" plumb draggable="device" draggable-helper="original")
+          %label.name
+            {{device.name}}
