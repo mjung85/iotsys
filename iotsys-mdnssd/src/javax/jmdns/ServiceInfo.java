@@ -680,7 +680,7 @@ public abstract class ServiceInfo implements Cloneable {
      * @throws UnknownHostException 
      */
     public abstract void setIpv6Addr(String ipv6Addr) throws IllegalStateException, UnknownHostException, SecurityException;
-    
+    public abstract void setServer(String server);
     /**
      * Returns <code>true</code> if ServiceListener.resolveService will be called whenever new new information is received.
      * 
