@@ -44,7 +44,7 @@ public class WatchServiceImpl extends Obj implements WatchService {
 	
 	private ObjectBroker broker;
 	
-	public WatchServiceImpl(final ObjectBroker broker){
+	public WatchServiceImpl(final ObjectBroker broker) {
 		this.broker = broker;
 		setHref(new Uri("watchService"));
 		setIs(new Contract(WatchService.CONTRACT));
@@ -55,14 +55,14 @@ public class WatchServiceImpl extends Obj implements WatchService {
 		Op make = new Op("make", new Contract("obix:Nil"), new Contract("obix:Watch"));
 		make.setHref(new Uri("make"));
 		make.setOperationHandler(new OperationHandler() {
-			public Obj invoke(Obj in) {				
+			public Obj invoke(Obj in) {
 				return doMake();
 			}
 		});
 		return make;
-	}		
+	}
 	
-	public Obj doMake(){
+	public Obj doMake() {
 		WatchImpl watchImpl = new WatchImpl(broker);	
 		broker.addObj(watchImpl, true);
 		return watchImpl;

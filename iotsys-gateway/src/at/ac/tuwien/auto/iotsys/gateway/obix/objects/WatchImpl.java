@@ -137,14 +137,14 @@ public class WatchImpl extends Obj implements Watch {
 					}
 					
 					for(Uri uri : uris) {
-						Obj o = broker.pullObj(uri);
+						Obj observedObject= broker.pullObj(uri);
 						EventObserver<Obj> observer = null;
 						
 						if(!observedObjects.containsKey(uri.get())) {
 							observedObjects.put(uri.get(), uri);
 							
-							if (o.isFeed()) {
-								FeedFilter filter = ((Feed)o).getDefaultFilter();
+							if (observedObject.isFeed()) {
+								FeedFilter filter = ((Feed)observedObject).getDefaultFilter();
 								if (uri.size() > 0) filter = filter.getFilter(uri.list()[0]);
 								observer = new FeedObserver(filter);
 							} else {
@@ -152,32 +152,32 @@ public class WatchImpl extends Obj implements Watch {
 							}
 							observers.put(uri.getPath(), observer);
 							
-							o.attach(observer);
+							observedObject.attach(observer);
 						}
 						
-						Obj obj = null;
-						if (o.isErr()) {
-							obj = o;
-						} else if(o.isOp()) {
-							obj = new obix.Err("Watching operations not supported");
+						Obj observation = null;
+						if (observedObject.isErr()) {
+							observation = observedObject;
+						} else if(observedObject.isOp()) {
+							observation = new obix.Err("Watching operations not supported");
 						} else {
 							try {
-								obj = (Obj) o.clone();
-								obj.setName(null, true);
+								observation = (Obj) observedObject.clone();
+								observation.setName(null, true);
 							} catch (CloneNotSupportedException e) {
 								log.info("Obj not clonable" + e.getMessage());
 							}
 						}
 						
-						if (o.isFeed()) {
+						if (observedObject.isFeed()) {
 							List<Obj> events = ((FeedObserver) observer).pollRefresh();
 							for (Obj event : events) {
-								obj.add(event);
+								observation.add(event);
 							}
 						}
 						
-						obj.setHref(uri);
-						ret.values().add(obj, false);
+						observation.setHref(uri);
+						ret.values().add(observation, false);
 					}
 				}
 				
@@ -195,19 +195,17 @@ public class WatchImpl extends Obj implements Watch {
 			public Obj invoke(Obj in) {
 				// Perform remove logic
 				resetExpiration();
-				if(in instanceof WatchIn){
+				if(in instanceof WatchIn) {
 					WatchIn watchIn = (WatchIn) in;
 	
 					for(IObj u : watchIn.get("hrefs").list()) {
 						Uri uri = (Uri) u;
 
-						Observer observer = observers.get(uri.getPath());
-
 						observedObjects.remove(uri.getPath());
-
+						
+						Observer observer = observers.get(uri.getPath());
+						observer.getSubject().detach(observer);
 						observers.remove(uri.getPath());
-						Obj o = broker.pullObj(uri);
-						o.detach(observer);
 					}					
 				}
 
@@ -235,11 +233,11 @@ public class WatchImpl extends Obj implements Watch {
 						List<Obj> events = observer.pollChanges();
 						if(events.size() > 0) {
 							// needs to be an obix object
-							Obj obj = (Obj) observer.getSubject();
+							Obj observedObject = (Obj) observer.getSubject();
 							Obj outItem = null;
 							
 							try {
-								outItem = (Obj) obj.clone();
+								outItem = (Obj) observedObject.clone();
 								outItem.setName(null, true);
 								outItem.setHref(new Uri(uri));
 								out.values().add(outItem, false);
@@ -247,7 +245,7 @@ public class WatchImpl extends Obj implements Watch {
 								log.info("Obj not clonable" + e.getMessage());
 							}
 							
-							if (obj.isFeed()) {
+							if (observedObject.isFeed()) {
 								for (Obj event : events) {
 									outItem.add(event);
 								}
