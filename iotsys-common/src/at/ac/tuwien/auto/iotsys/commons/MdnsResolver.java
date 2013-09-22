@@ -32,6 +32,8 @@
 
 package at.ac.tuwien.auto.iotsys.commons;
 
+import java.util.ArrayList;
+
 /**
  * @author Nam Giang - zang at kaist dot ac dot kr
  * 
@@ -39,8 +41,9 @@ package at.ac.tuwien.auto.iotsys.commons;
 
 public interface MdnsResolver {
 	public void addToRecordDict(String name, String addr);
-	public void registerDevice(String name, Class<?> deviceClass, String ipv6);
-	public String resolve(String name);
 	public int getNumberOfRecord();
+	public void registerDevice(String name, Class<?> deviceClass, String ipv6);
 	public void unregisterAllDevice();
+	public String resolve(String name);
+	public ArrayList<String> reverseResolve(String ipv6);
 }
