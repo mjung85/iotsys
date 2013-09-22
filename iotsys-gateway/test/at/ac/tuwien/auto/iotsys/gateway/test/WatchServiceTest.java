@@ -4,6 +4,7 @@ import static com.jayway.restassured.RestAssured.expect;
 import static com.jayway.restassured.RestAssured.given;
 import static com.jayway.restassured.RestAssured.post;
 import static org.hamcrest.Matchers.hasXPath;
+import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.not;
 
 import java.util.Calendar;
@@ -54,6 +55,18 @@ public class WatchServiceTest extends AbstractGatewayTest {
 		expect().
 		body(hasXPath("/obj[@is='obix:WatchOut']")).
 		body(hasXPath("/obj/list/bool[@val and @href='/testDevicesWatch/switchWatch1/value']")).
+		post(watchHref + "/add");
+	}
+	
+	@Test
+	public void testWatchAddSingleObjJson() {
+		String watchHref = makeWatch();
+		
+		given().contentType("application/json").header("accept", "application/json").
+		body("{\"is\":\"obix:WatchIn\",\"nodes\":[{\"nodes\":[{\"val\":\"/testDevices/switch3/value\",\"tag\":\"uri\"}],\"tag\":\"list\",\"name\":\"hrefs\"}],\"tag\":\"obj\"}").
+		expect().
+		body(containsString("\"is\":\"obix:WatchOut\"")).
+		body(containsString("{\"val\":false,\"tag\":\"bool\",\"writable\":true,\"href\":\"/testDevices/switch3/value\"}")).
 		post(watchHref + "/add");
 	}
 	
