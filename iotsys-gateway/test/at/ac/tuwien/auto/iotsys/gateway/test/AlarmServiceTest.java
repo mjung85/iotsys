@@ -5,6 +5,7 @@ import static com.jayway.restassured.RestAssured.get;
 import static com.jayway.restassured.RestAssured.given;
 import static com.jayway.restassured.RestAssured.post;
 import static org.hamcrest.Matchers.hasXPath;
+import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -133,6 +134,7 @@ public class AlarmServiceTest extends AbstractGatewayTest {
 	
 	@Test
 	public void testAckAlarm() {
+		String ackUser = "Ford";
 		BrightnessActuatorImpl source = new BrightnessActuatorImpl();
 		source.value().attach(new DefaultAlarmObserver(new IntRangeAlarmCondition(10l, 20l))
 										.setAcked(true).setStateful(false));
@@ -149,22 +151,21 @@ public class AlarmServiceTest extends AbstractGatewayTest {
 		body(hasXPath("/obj/abstime[@name='ackTimestamp' and @null='true']")).
 		when().get(alarmHref + "/");
 		
-		
 		given().
 		param("data", "<obj is='obix:AckAlarmIn'>"
-				+ " <str name='ackUser' val='someUser'/>"
+				+ " <str name='ackUser' val='" + ackUser + "'/>"
 				+ "</obj>").
 		expect().
 		body(hasXPath("/obj[@is='obix:AckAlarmOut']")).
 		body(hasXPath("/obj/obj[@href='" + alarmHref + "']")).
-		body(hasXPath("/obj/obj/str[@name='ackUser' and not(@null) and @val='someUser']")).
+		body(hasXPath("/obj/obj/str[@name='ackUser' and not(@null) and @val='" + ackUser + "']")).
 		body(hasXPath("/obj/obj/abstime[@name='ackTimestamp' and not(@null='true')]")).
 		when().post(alarmHref + "/ack");
 		long expectedAckTimestamp = System.currentTimeMillis();
 		
 		String response = expect().
 		body(hasXPath("/obj/op[@name='ack' and @href='ack' and @in='obix:AckAlarmIn' and @out='obix:AckAlarmOut']")).
-		body(hasXPath("/obj/str[@name='ackUser' and @val='someUser']")).
+		body(hasXPath("/obj/str[@name='ackUser' and @val='" + ackUser + "']")).
 		body(hasXPath("/obj/abstime[@name='ackTimestamp' and not(@null='true')]")).
 		when().get(alarmHref + "/").asString();
 		
@@ -261,6 +262,8 @@ public class AlarmServiceTest extends AbstractGatewayTest {
 	public void testAlarmSourceStatus() {
 		
 		BrightnessActuatorImpl source = new BrightnessActuatorImpl();
+		source.setHref(new Uri("/testAlarmSourceStatus"));
+		ObjectBrokerImpl.getInstance().addObj(source);
 		Int val = source.value();
 		
 		val.attach(new DefaultAlarmObserver(new IntRangeAlarmCondition(10l, 20l).setFlipped(true), true, false)
@@ -455,6 +458,186 @@ public class AlarmServiceTest extends AbstractGatewayTest {
 		body(hasXPath("/obj/list[@name='data' and @of='obix:Alarm']")).
 		body(hasXPath("/obj/list/obj[@href='" + alarm10.getFullContextPath() + "']")).
 		body(hasXPath("/obj/list/obj[@href='" + alarm11.getFullContextPath() + "']")).
+		when().post(subjectHref + "/query");
+	}
+	
+	@Test
+	public void testQueryAlarmSource() {
+		// add some alarm data
+		String source1href = "/queryAlarmSource/source1";
+		String source2href = "/queryAlarmSource/source2";
+		
+		BrightnessActuatorImpl source1 = new BrightnessActuatorImpl();
+		source1.setHref(new Uri(source1href));
+		Int val1 = source1.value();
+		val1.attach(new DefaultAlarmObserver(new IntRangeAlarmCondition(10l, 20l).setFlipped(true), false, false).setTarget(source1));
+		
+		BrightnessActuatorImpl source2 = new BrightnessActuatorImpl();
+		source2.setHref(new Uri(source2href));
+		Int val2 = source2.value();
+		val2.attach(new DefaultAlarmObserver(new IntRangeAlarmCondition(10l, 20l).setFlipped(true), false, false).setTarget(source2));
+		
+		ObjectBrokerImpl.getInstance().addObj(source1);
+		ObjectBrokerImpl.getInstance().addObj(source2);
+		
+		// generate alarms
+		val1.set(15l);
+		val2.set(17l);
+		
+		// query the alarm subject by source
+		given().contentType(ContentType.XML).
+		body("<obj is='obix:AlarmFilter'>"
+				+ "  <uri name='source' val='" + source1href + "'/>"
+				+ "</obj>").
+		expect().
+		body(hasXPath("/obj[@is='obix:AlarmQueryOut']")).
+		body(hasXPath("/obj/int[@name='count' and @val='1']")).
+		body(hasXPath("/obj/abstime[@name='start']")).
+		body(hasXPath("/obj/abstime[@name='end']")).
+		body(hasXPath("/obj/list[@name='data' and @of='obix:Alarm']")).
+		body(hasXPath("/obj/list/obj/ref[@name='source' and @href='" + source1.getFullContextPath() + "']")).
+		body(not(hasXPath("/obj/list/obj/ref[@name='source' and @href='" + source2.getFullContextPath() + "']"))).
+		when().post("/alarms/query");
+	}
+	
+	
+	@Test
+	public void testQueryUnackedAlarms() {
+		AlarmSubjectImpl subject = new AlarmSubjectImpl(ObjectBrokerImpl.getInstance());
+		String subjectHref = "/queryUnackedAlarms";
+		subject.setHref(new Uri(subjectHref));
+		ObjectBrokerImpl.getInstance().addObj(subject);
+		
+		// add some alarm data
+		BrightnessActuatorImpl source = new BrightnessActuatorImpl();
+		source.setHref(new Uri("/bright/alarm/source"));
+		
+		AlarmImpl alarmUnacked = new AlarmImpl(source, false, true);
+		subject.addAlarm(alarmUnacked);
+		
+		AlarmImpl alarmStateful = new AlarmImpl(source, true, false);
+		subject.addAlarm(alarmStateful);
+		
+		AlarmImpl alarmAcked = new AlarmImpl(source, false, true);
+		subject.addAlarm(alarmAcked);
+		alarmAcked.ack("Trillian");
+		
+		
+		// unacked = null, return all alarms
+		expect().
+		body(hasXPath("/obj[@is='obix:AlarmQueryOut']")).
+		body(hasXPath("/obj/int[@name='count' and @val='3']")).
+		body(hasXPath("/obj/abstime[@name='start']")).
+		body(hasXPath("/obj/abstime[@name='end']")).
+		body(hasXPath("/obj/list[@name='data' and @of='obix:Alarm']")).
+		body(hasXPath("/obj/list/obj[@href='" + alarmUnacked.getFullContextPath() + "']")).
+		body(hasXPath("/obj/list/obj[@href='" + alarmStateful.getFullContextPath() + "']")).
+		body(hasXPath("/obj/list/obj[@href='" + alarmAcked.getFullContextPath() + "']")).
+		when().post(subjectHref + "/query");
+		
+		// unacked = true, return unacked AckAlarms
+		given().contentType(ContentType.XML).
+		body("<obj is='obix:AlarmFilter'>"
+				+ "  <bool name='unacked' val='true'/>"
+				+ "</obj>").
+		expect().
+		body(hasXPath("/obj[@is='obix:AlarmQueryOut']")).
+		body(hasXPath("/obj/int[@name='count' and @val='1']")).
+		body(hasXPath("/obj/abstime[@name='start']")).
+		body(hasXPath("/obj/abstime[@name='end']")).
+		body(hasXPath("/obj/list[@name='data' and @of='obix:Alarm']")).
+		body(hasXPath("/obj/list/obj[@href='" + alarmUnacked.getFullContextPath() + "']")).
+		body(not(hasXPath("/obj/list/obj[@href='" + alarmStateful.getFullContextPath() + "']"))).
+		body(not(hasXPath("/obj/list/obj[@href='" + alarmAcked.getFullContextPath() + "']"))).
+		when().post(subjectHref + "/query");
+		
+		// unacked = false, return acked AckAlarms
+		given().contentType(ContentType.XML).
+		body("<obj is='obix:AlarmFilter'>"
+				+ "  <bool name='unacked' val='false'/>"
+				+ "</obj>").
+		expect().
+		body(hasXPath("/obj[@is='obix:AlarmQueryOut']")).
+		body(hasXPath("/obj/int[@name='count' and @val='1']")).
+		body(hasXPath("/obj/abstime[@name='start']")).
+		body(hasXPath("/obj/abstime[@name='end']")).
+		body(hasXPath("/obj/list[@name='data' and @of='obix:Alarm']")).
+		body(not(hasXPath("/obj/list/obj[@href='" + alarmUnacked.getFullContextPath() + "']"))).
+		body(not(hasXPath("/obj/list/obj[@href='" + alarmStateful.getFullContextPath() + "']"))).
+		body(    hasXPath("/obj/list/obj[@href='" + alarmAcked.getFullContextPath() + "']")).
+		when().post(subjectHref + "/query");
+	}
+	
+	@Test
+	public void testQueryActiveAlarms() {
+		AlarmSubjectImpl subject = new AlarmSubjectImpl(ObjectBrokerImpl.getInstance());
+		String subjectHref = "/queryActiveAlarmsSubject";
+		subject.setHref(new Uri(subjectHref));
+		ObjectBrokerImpl.getInstance().addObj(subject);
+
+		// add some alarm data
+		String source1href = "/queryActiveAlarms/source1";
+		String source2href = "/queryActiveAlarms/source2";
+		
+		BrightnessActuatorImpl source1 = new BrightnessActuatorImpl();
+		source1.setHref(new Uri(source1href));
+		Int val1 = source1.value();
+		val1.attach(new DefaultAlarmObserver(new IntRangeAlarmCondition(10l, 20l).setFlipped(true), true, false).setTarget(source1).setAlarmSubject(subject));
+		
+		BrightnessActuatorImpl source2 = new BrightnessActuatorImpl();
+		source2.setHref(new Uri(source2href));
+		Int val2 = source2.value();
+		val2.attach(new DefaultAlarmObserver(new IntRangeAlarmCondition(10l, 20l).setFlipped(true), true, false).setTarget(source2).setAlarmSubject(subject));
+		
+		ObjectBrokerImpl.getInstance().addObj(source1);
+		ObjectBrokerImpl.getInstance().addObj(source2);
+		
+		// source 1 into alarm condition
+		long valueAlarming = 15l;
+		long valueNormal = 30l;
+		val1.set(valueAlarming);
+		val2.set(valueAlarming);
+		val2.set(valueNormal); // to normal
+		
+		// query the alarm subject for active alarms (StatefulAlarms that have not returned to normal)
+		given().contentType(ContentType.XML).
+		body("<obj is='obix:AlarmFilter'>"
+				+ "  <bool name='active' val='true'/>"
+				+ "</obj>").
+		expect().
+		body(hasXPath("/obj[@is='obix:AlarmQueryOut']")).
+		body(hasXPath("/obj/int[@name='count' and @val='1']")).
+		body(hasXPath("/obj/list[@name='data' and @of='obix:Alarm']")).
+		body(hasXPath("/obj/list/obj/ref[@name='source' and @href='" + source1.getFullContextPath() + "']")).
+		body(not(hasXPath("/obj/list/obj/ref[@name='source' and @href='" + source2.getFullContextPath() + "']"))).
+		when().post(subjectHref + "/query");
+		
+		// inactive alarms
+		given().contentType(ContentType.XML).
+		body("<obj is='obix:AlarmFilter'>"
+				+ "  <bool name='active' val='false'/>"
+				+ "</obj>").
+		expect().
+		body(hasXPath("/obj[@is='obix:AlarmQueryOut']")).
+		body(hasXPath("/obj/int[@name='count' and @val='1']")).
+		body(hasXPath("/obj/list[@name='data' and @of='obix:Alarm']")).
+		body(not(hasXPath("/obj/list/obj/ref[@name='source' and @href='" + source1.getFullContextPath() + "']"))).
+		body(hasXPath("/obj/list/obj/ref[@name='source' and @href='" + source2.getFullContextPath() + "']")).
+		when().post(subjectHref + "/query");
+		
+		// val1 to normal too
+		val1.set(valueNormal);
+		
+		given().contentType(ContentType.XML).
+		body("<obj is='obix:AlarmFilter'>"
+				+ "  <bool name='active' val='true'/>"
+				+ "</obj>").
+		expect().
+		body(hasXPath("/obj[@is='obix:AlarmQueryOut']")).
+		body(hasXPath("/obj/int[@name='count' and @val='0']")).
+		body(hasXPath("/obj/list[@name='data' and @of='obix:Alarm']")).
+		body(not(hasXPath("/obj/list/obj/ref[@name='source' and @href='" + source1.getFullContextPath() + "']"))).
+		body(not(hasXPath("/obj/list/obj/ref[@name='source' and @href='" + source2.getFullContextPath() + "']"))).
 		when().post(subjectHref + "/query");
 	}
 }

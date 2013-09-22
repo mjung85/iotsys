@@ -22,7 +22,6 @@ import obix.contracts.WritablePoint;
 import at.ac.tuwien.auto.iotsys.obix.OperationHandler;
 
 public class AlarmImpl extends Obj implements Alarm, AckAlarm, StatefulAlarm, PointAlarm {
-	private AlarmSource source;
 	private boolean stateful, acked, pointAlarm;
 	
 	// Alarm
@@ -47,12 +46,12 @@ public class AlarmImpl extends Obj implements Alarm, AckAlarm, StatefulAlarm, Po
 	 * @param acked if true, represents an AckAlarm
 	 */
 	public AlarmImpl(AlarmSource source, boolean stateful, boolean acked) {
-		this.source = source;
 		this.stateful = stateful;
 		this.acked = acked;
 		
 		String contract = Alarm.CONTRACT;
 		
+		sourceRef = new Ref("source", new Uri(((Obj)source).getFullContextPath()));
 		add(source());
 		add(timestamp());
 		
@@ -82,7 +81,7 @@ public class AlarmImpl extends Obj implements Alarm, AckAlarm, StatefulAlarm, Po
 		}
 		
 		if (pointAlarm) {
-			add(alarmValue());
+			add(alarmValue(source));
 			contract += " " + PointAlarm.CONTRACT;
 		}
 		
@@ -91,9 +90,6 @@ public class AlarmImpl extends Obj implements Alarm, AckAlarm, StatefulAlarm, Po
 	
 	
 	public Ref source() {
-		if (sourceRef == null) {
-			sourceRef = new Ref("source", new Uri(((Obj)source).getFullContextPath()));
-		}
 		return sourceRef;
 	}
 	
@@ -145,12 +141,21 @@ public class AlarmImpl extends Obj implements Alarm, AckAlarm, StatefulAlarm, Po
 		if (!(in instanceof AckAlarmIn)) return new Err("AckAlarmIn needed");
 		
 		AckAlarmIn ackIn = (AckAlarmIn) in;
-		ackUser().set(ackIn.ackUser().getStr());
+		ack(ackIn.ackUser().get());
+		
+		return new AckAlarmOutImpl(this);
+	}
+	
+	public Obj ack(String user) {
+		if (!isAcked() || user == null) return null;
+		
+		ackUser().set(user);
 		ackUser().setNull(false);
 		ackTimestamp().set(System.currentTimeMillis(), TimeZone.getDefault());
 		ackTimestamp().setNull(false);
 		
-		source.alarmAcknowledged(this);
+		Obj source = getByHref(sourceRef.getHref());
+		if (source != null) source.alarmAcknowledged(this);
 		
 		return new AckAlarmOutImpl(this);
 	}
@@ -165,6 +170,10 @@ public class AlarmImpl extends Obj implements Alarm, AckAlarm, StatefulAlarm, Po
 	}
 	
 	public Obj alarmValue() {
+		return alarmValue;
+	}
+	
+	private Obj alarmValue(AlarmSource source) {
 		if (!isPointAlarm()) return null;
 		if (alarmValue == null) {
 			alarmValue = Obj.toObj(((Obj)source).getElement());
