@@ -37,6 +37,24 @@ import org.json.JSONML;
 import org.json.JSONObject;
 
 public class JsonUtil {
+	public static void main(String[] args){
+		String xml = "<obj is=\"obix:WatchIn\"><list name=\"hrefs\"><uri val=\"/VirtualDevices/virtualLight/value\" /></list></obj>";
+		//String xml = "<obj is=\"obix:WatchOut\"><list><obj href=\"/testDevices/switch3\" is=\"iot:LightSwitchActuator\"><bool name=\"value\" href=\"/testDevices/switch3/value\" val=\"false\" writable=\"true\"/></obj></list></obj>";
+		String json = "{\"is\":\"obix:WatchIn\",\"nodes\":[{\"nodes\":[{\"val\":\"/testDevices/switch3/value\",\"tag\":\"uri\"}],\"tag\":\"list\",\"name\":\"hrefs\"}],\"tag\":\"obj\"}";
+		try {
+			System.out.println(fromXMLtoJSON(xml));			
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		try {
+			System.out.println(fromJSONtoXML(json));
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 	
 	public static String fromXMLtoJSON(String xml) throws JSONException{
 		JSONObject json = JSONML.toJSONObject(xml);
