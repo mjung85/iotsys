@@ -35,6 +35,11 @@ package at.ac.tuwien.auto.iotsys.mdnssd;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ExecutorService;
@@ -58,12 +63,27 @@ public class MdnsResolverImpl implements MdnsResolver {
 	private ConcurrentMap<String, String> recordDict = new ConcurrentHashMap<String, String>();
 	private ExecutorService executor;
 	private JmDNS jmdns;
+	private String gwIp = PropertiesLoader.getInstance().getProperties().getProperty("iotsys.gateway.authNsAddr6", "fe80::acbc:b659:71db:5cb7%20");
+	private String domain = PropertiesLoader.getInstance().getProperties().getProperty("iotsys.gateway.authDomain", "local.");
 
 	private MdnsResolverImpl() {
 		try {
-			jmdns = JmDNS.create(InetAddress.getByName(PropertiesLoader.getInstance().getProperties()
-					.getProperty("authNsAddr6", "fe80::acbc:b659:71db:5cb7%20")));
+			jmdns = JmDNS.create(InetAddress.getByName(gwIp));
 			executor = Executors.newFixedThreadPool(10);
+
+			// / Making bonjour happy
+			final HashMap<String, String> values = new HashMap<String, String>();
+			values.put("text", "text value");
+			ServiceInfo serviceSOAP = ServiceInfo.create("_obix._soap." + domain, "iotsysgateway", 8080, null);
+			serviceSOAP.setText(values);
+			try {
+				serviceSOAP.setIpv6Addr(gwIp);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+			executor.execute(new ServiceRegistra(serviceSOAP));
+
 		} catch (UnknownHostException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -105,14 +125,24 @@ public class MdnsResolverImpl implements MdnsResolver {
 	}
 
 	@Override
+	public ArrayList<String> reverseResolve(String ipv6) {
+		ArrayList<String> result = new ArrayList<String>();
+		if (recordDict.containsValue(ipv6))
+			for (Map.Entry<String, String> he : recordDict.entrySet())
+				if (he.getValue().equals(ipv6))
+					result.add(he.getKey());
+		return result.isEmpty() ? null : result;
+	}
+
+	@Override
 	public int getNumberOfRecord() {
 		return recordDict.size();
 	}
 
 	@Override
 	public void registerDevice(String deviceName, Class<?> deviceClass, String ipv6) {
-		deviceName = hrefNorm(deviceName).toLowerCase();
-		deviceName = deviceName.split("\\.")[0];
+		String qualifiedDeviceName = hrefNorm(deviceName).toLowerCase();
+		deviceName = qualifiedDeviceName.split("\\.")[0];
 
 		String subServiceType = null;
 		Class<?>[] deviceInterfaces = deviceClass.getInterfaces();
@@ -126,18 +156,36 @@ public class MdnsResolverImpl implements MdnsResolver {
 			}
 
 		subServiceType = subServiceType.toLowerCase();
-		ServiceInfo subTypedServiceCoAP = ServiceInfo.create("_obix._coap.local.", deviceName, "_" + subServiceType, 5683, null);
-		ServiceInfo subTypedServiceHTTP = ServiceInfo.create("_obix._http.local.", deviceName, "_" + subServiceType, 8080, null);
+		ServiceInfo subTypedServiceCoAP = ServiceInfo.create("_obix._coap." + domain, deviceName, "_" + subServiceType, 5683, null);
+		ServiceInfo subTypedServiceHTTP = ServiceInfo.create("_obix._http." + domain, deviceName, "_" + subServiceType, 8080, null);
+
+		// / Making bonjour happy
+		final HashMap<String, String> values = new HashMap<String, String>();
+		values.put("text", "text value");
+		ServiceInfo serviceCoAP = ServiceInfo.create("_obix._udp." + domain, deviceName, 5683, null);
+		ServiceInfo serviceHTTP = ServiceInfo.create("_obix._tcp." + domain, deviceName, 8080, null);
+
 		try {
 			subTypedServiceCoAP.setIpv6Addr(ipv6);
+			subTypedServiceCoAP.setServer(qualifiedDeviceName + domain);
 			subTypedServiceHTTP.setIpv6Addr(ipv6);
+			subTypedServiceHTTP.setServer(qualifiedDeviceName + domain);
+
+			serviceCoAP.setIpv6Addr(ipv6);
+			serviceCoAP.setText(values);
+			serviceCoAP.setServer(qualifiedDeviceName + domain);
+			serviceHTTP.setIpv6Addr(ipv6);
+			serviceHTTP.setText(values);
+			serviceHTTP.setServer(qualifiedDeviceName + domain);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		if (executor != null) {
 			executor.execute(new ServiceRegistra(subTypedServiceCoAP));
 			executor.execute(new ServiceRegistra(subTypedServiceHTTP));
+		executor.execute(new ServiceRegistra(serviceCoAP));		
+		executor.execute(new ServiceRegistra(serviceHTTP));
 		}
 	}
 

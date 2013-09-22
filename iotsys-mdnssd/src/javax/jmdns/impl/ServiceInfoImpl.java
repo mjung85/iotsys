@@ -455,7 +455,8 @@ public class ServiceInfoImpl extends ServiceInfo implements DNSListener, DNSStat
      * @param server
      *            the server to set
      */
-    void setServer(String server) {
+    @Override
+    public void setServer(String server) {
         this._server = server;
     }
 
@@ -1202,7 +1203,7 @@ public class ServiceInfoImpl extends ServiceInfo implements DNSListener, DNSStat
             list.add(new Pointer(this.getTypeWithSubtype(), DNSRecordClass.CLASS_IN, DNSRecordClass.NOT_UNIQUE, ttl, this.getQualifiedName()));
         }
         list.add(new Pointer(this.getType(), DNSRecordClass.CLASS_IN, DNSRecordClass.NOT_UNIQUE, ttl, this.getQualifiedName()));
-        list.add(new Service(this.getQualifiedName(), DNSRecordClass.CLASS_IN, unique, ttl, _priority, _weight, _port, localHost.getName()));
+        list.add(new Service(this.getQualifiedName(), DNSRecordClass.CLASS_IN, unique, ttl, _priority, _weight, _port, this.getServer()));
         if (this.getTextBytes() !=null )
         	list.add(new Text(this.getQualifiedName(), DNSRecordClass.CLASS_IN, unique, ttl, this.getTextBytes()));
         if (this.getInet6Addresses().length > 0)
