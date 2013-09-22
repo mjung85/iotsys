@@ -4,6 +4,7 @@
 //= require 'html5slider'
 ////require 'jquery.jsPlumb-1.5.2'
 //= require 'sugar'
+//= require 'URI'
 //= require_self
 
 var app = angular.module('Obelix', []);
@@ -16,6 +17,7 @@ app.service('Lobby', ['$http', 'Device', 'Directory', function($http, Device, Di
       $http.get('/obix').success(function(response) {
         response['nodes'].each(function(node) {
           var href = node['href'];
+          if (!href.startsWith('/')) href = '/' + href;
           var href_components = href.split('/').compact(true);
           var device_name = href_components.pop();
           var device_directory = root.make(href_components);
@@ -45,6 +47,9 @@ app.service('Storage', function() {
         value = angular.toJson(value);
       }
       localStorage.setItem(key, value);
+    },
+    remove: function(key) {
+      localStorage.removeItem(key);
     }
   }
 });
@@ -103,7 +108,148 @@ app.factory('Directory', function() {
   return Directory;
 });
 
-app.factory('Device', ['$http', 'Storage', function($http, Storage) {
+app.factory('Watch', ['$http', '$timeout', 'Storage',function($http, $timeout, Storage) {
+  var Watch = function(href) {
+    this.href = href;
+  };
+
+  Watch.getInstance = function(callback) {
+    var watchHref = Storage.get('watch');
+    if (!watchHref) {
+      $http.post('/watchService/make').success(function(response) {
+        var watchHref = response['href'];
+        Storage.set('watch', watchHref);
+        console.log("Made new watch", watchHref);
+        callback(new Watch(watchHref));
+      });
+    } else {
+      var ok = false;
+      $http.get(watchHref).success(function(response) {
+        if (response['tag'] != 'err') ok = true;
+      }).then(function() {
+        if (ok) {
+          callback(new Watch(watchHref));
+        } else {
+          console.log("Watch is out of date. Clear localStorage and try again.");
+          // Note: when requesting a new watch because old one is gone, we also need to add all our placed devices
+          // to the new watch, which is bit more complicated due to both requests being asynchronous.
+          // So let's require user intervention in this case for now.
+
+          // Storage.remove('watch');
+          // Watch.getInstance(callback);
+        }
+      });
+    }
+  };
+
+  Watch.prototype = {
+    hrefForOperation: function(opName) {
+      return URI(this.href).segment(opName).toString(); // For now, operation href is same as name
+    },
+    add: function(href) {
+      // var payload = {"is" : "obix:WatchIn", "tag" : "obj", "nodes" : [{"tag" : "list", "name": "hrefs", "nodes":[{"tag": "uri", "val": href}]}]};
+
+      console.log("Adding "+href+" to watch");
+
+      var payload = '<obj is="obix:WatchIn"><list name="hrefs"><uri val="'+href+'" /></list></obj>';
+
+      $http({
+        url: this.hrefForOperation('add'),
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/xml',
+          'Accept': 'application/json'
+        },
+        data: payload
+      }).success(function(response) {
+        if (response['is'] != "obix:WatchOut") {
+          console.log("Error adding",href,"to watch",response);
+        }
+      });
+    },
+    poll: function(callback) {
+      $http.post(this.hrefForOperation('pollChanges')).success(function(response) {
+        var devices = response['nodes'][0]['nodes'];
+        if (devices) {
+          devices.each(callback);
+        }
+      });
+    },
+    tick: function() {
+      if (this.polling) {
+        this.poll(this.polling);
+        $timeout(this.tick.bind(this), 1000);
+      }
+    },
+    startPolling: function(callback) {
+      this.polling = callback;
+      this.tick();
+    }
+  };
+
+  return Watch;
+}]);
+
+app.factory('Property', ['$http', function($http) {
+  var Property = function(node) {
+    if (!['bool', 'int', 'real', 'str', 'enum'].find(node['tag'])) {
+      this.valid = false;
+      return;
+    } else {
+      this.valid = true;
+
+      this.href = node['href'];
+      this.type = node['tag'];
+      this.numeric = (this.type == 'int' || this.type == 'real');
+      this.name = node['name'];
+      this.value = node['val'];
+      this.readonly = !node['writable'];
+
+      if (this.type == 'real') {
+        this.value = Math.round(this.value * 100) / 100.0;
+      }
+
+      if (this.numeric && node['max'] && !this.readonly) {
+        this.range = {min: node['min'], max: node['max'], step: Math.abs(this.rangeMax - this.rangeMin)/100.0};
+      }
+
+      // if (this.type == 'enum') {
+      //   this.range = Property.Enum.range(this.href);
+      // }
+
+      // Display class
+      if (this.numeric) {
+        this.klass = 'numeric';
+      } else {
+        this.klass = this.type;
+      }
+    }
+  };
+
+  // Property.Enum = {
+  //   ranges: {},
+  //   range: function(href) {
+  //     var result = this.ranges[href];
+  //     if (!result) {
+  //       console.log("Get",href);
+  //       $http.get(href).success(function(response) {
+  //         this.ranges[href] = response['nodes'].map('name');
+  //       }.bind(this));
+  //     }
+  //     return result;
+  //   }
+  // };
+
+  Property.prototype = {
+    serialize: function() {
+      return {'tag': this.type, 'val': this.value };
+    }
+  };
+
+  return Property;
+}]);
+
+app.factory('Device', ['$http', 'Storage', 'Property', function($http, Storage, Property) {
   var Device = function(href, name) {
     this.href = href;
     this.name = name;
@@ -118,28 +264,65 @@ app.factory('Device', ['$http', 'Storage', function($http, Storage) {
     place: function(position) {
       this.placement = {left: position.left, top: position.top};
       Storage.set('device_'+this.href+'_placement', this.placement);
-      this.load();
+      if (!this.loaded && !this.loading) this.load();
     },
+
     load: function() {
-      console.log("Loading",this.href);
-    }
+      this.loading = true;
+      $http.get(this.href).success(function(response) {
+        this.parse(response);
+        this.loaded = true;
+        this.loading = false;
+      }.bind(this));
+    },
+
+    parse: function(response) {
+      this.properties = response['nodes'].map(function(node) {
+        return new Property(node);
+      }).filter({valid:true});
+    },
+
+    update: function(property) {
+      var absolutePropertyHref = URI(property.href).absoluteTo(this.href).toString();
+      $http.put(absolutePropertyHref, property.serialize()).success(function(response) {
+        if(response['tag'] && response['tag'] == 'err') {
+          console.log("Error updating " + absolutePropertyHref, response);
+        }
+        // this.parse(response);
+      }.bind(this));
+    },
   };
   
   return Device;
 }]);
 
-app.controller('MainCtrl', ['$scope','Lobby', function($scope, Lobby) {
+app.controller('MainCtrl', ['$scope','Lobby','Watch', function($scope, Lobby, Watch) {
   $scope.directory = null;
   $scope.allDevices = [];
+  $scope.watch = null;
 
   Lobby.getDeviceTree(function(root) {
     $scope.directory = root;
     $scope.allDevices = root.globDevices();
   });
 
-  $scope.sidebarExpanded = true;
+  Watch.getInstance(function(watch) {
+    $scope.watch = watch;
+    watch.startPolling(function(deviceJson) {
+      var device = $scope.allDevices.find({href:deviceJson['href']});
+      if (device) {
+        device.parse(deviceJson);
+      }
+    });
+  });
+
+  $scope.sidebarExpanded = false;
   
   $scope.placeDevice = function(device, position) {
+    if (!device.placement) {
+      // Initial placement, add to watch
+      $scope.watch.add(device.href);
+    }
     $scope.sidebarExpanded = false;
     device.place(position);
   };
@@ -155,19 +338,22 @@ app.directive('draggable', function() {
     restrict: 'A',
     link: function(scope, el, attrs) {
       var device = scope.$eval(attrs['draggable']);
-      var helper = attrs['draggableHelper'];
-      if (!helper) helper = 'clone';
-      el.draggable({
+
+      var options = {
         appendTo: 'body',
-        helper: helper,
+        helper: 'clone',
         start: function() {
-          console.log("Start",this,arguments);
           $(this).addClass('disabled');
         },
         stop: function() {
           $(this).removeClass('disabled');
         }
-      });
+      };
+
+      if (attrs['draggableDistance']) options.distance = attrs['draggableDistance'];
+      if (attrs['draggableHelper']) options.helper = attrs['draggableHelper'];
+
+      el.draggable(options);
     }
   };
 });
