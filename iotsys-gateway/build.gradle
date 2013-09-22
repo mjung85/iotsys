@@ -119,6 +119,7 @@ dependencies {
 	testProvided project(':iotsys-obix')
 	testProvided project(':iotsys-common')
 	testProvided project(':iotsys-virtual')
+	testProvided project(':iotsys-mdnssd')
 	testCompile group: 'junit',name:'junit',version: '4.8+' 
 	testCompile group: 'com.jayway.restassured', name: 'rest-assured', version: '1.2.1'
 	testCompile "org.hamcrest:hamcrest-library:1.3"
