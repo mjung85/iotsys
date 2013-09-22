@@ -40,7 +40,7 @@
                 <input ng-change='device.update(property)' ng-checked='property.value' ng-disabled='property.readonly' ng-model='property.value' type='checkbox'>
               </span>
               <span class='numeric' ng-switch-when='numeric'>
-                <input ng-disabled='property.readonly' ng-model-onblur ng-model='property.value' type='text'>
+                <input ng-change='device.update(property)' ng-disabled='property.readonly' ng-model-onblur ng-model='property.value' type='text'>
               </span>
               <!-- %span.enum(ng-switch-when="enum") -->
               <!-- %select(ng-model="property.value" ng-options="x for x in property.range" ng-change="device.update(property)") -->
