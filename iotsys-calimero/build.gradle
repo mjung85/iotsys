@@ -1,0 +1,25 @@
+// Variables
+description = 'Modified Calimero NG stack for the IoTSyS gateway project'
+
+sourceCompatibility = 1.6
+
+dependencies {
+	testCompile group: "junit", name: "junit", version: "4.10" 
+}
+
+jar {
+	manifest {
+		attributes("Manifest-Version": "1.0",
+				   "Bundle-Name": "IoTSyS-Calimero",
+				   "Bundle-SymbolicName": "at.ac.tuwien.auto.iotsys.calimero",
+				   "Bundle-Description": "Modified Calimero NG stack for the IoTSyS gateway project",
+				   "Bundle-Vendor": "Vienna University of Technology, Automation Systems Group, www.auto.tuwien.ac.at",
+				   "Bundle-Version": "0.1",
+				   "Bundle-Classpath": ".",
+				   "Export-Package": "at.ac.tuwien.auto.calimero, at.ac.tuwien.auto.calimero.buffer, at.ac.tuwien.auto.calimero.buffer.cache, at.ac.tuwien.auto.calimero.cemi,"+
+					 "at.ac.tuwien.auto.calimero.datapoint,  at.ac.tuwien.auto.calimero.dptxlator, at.ac.tuwien.auto.calimero.exception, at.ac.tuwien.auto.calimero.knxnetip, at.ac.tuwien.auto.calimero.knxnetip.servicetype,"+ 
+					"at.ac.tuwien.auto.calimero.knxnetip.util, at.ac.tuwien.auto.calimero.link, at.ac.tuwien.auto.calimero.link.event, at.ac.tuwien.auto.calimero.link.medium, at.ac.tuwien.auto.calimero.log, at.ac.tuwien.auto.calimero.mgmt, at.ac.tuwien.auto.calimero.process, at.ac.tuwien.auto.calimero.serial,"+ 
+					"at.ac.tuwien.auto.calimero.xml, at.ac.tuwien.auto.calimero.xml.def"
+				   )
+	}	
+}
