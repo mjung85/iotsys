@@ -135,8 +135,10 @@ public class MdnsResolverImpl implements MdnsResolver {
 			e.printStackTrace();
 		}
 		
-		executor.execute(new ServiceRegistra(subTypedServiceCoAP));
-		executor.execute(new ServiceRegistra(subTypedServiceHTTP));
+		if (executor != null) {
+			executor.execute(new ServiceRegistra(subTypedServiceCoAP));
+			executor.execute(new ServiceRegistra(subTypedServiceHTTP));
+		}
 	}
 
 	private class ServiceRegistra implements Runnable {
