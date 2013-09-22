@@ -90,10 +90,8 @@ public class GroupCommImpl extends Obj implements GroupComm, Observer{
 		this.add(groups);
 		this.add(joinGroup);
 		this.add(leaveGroup);
-	}
-	
-	@Override
-	public void initialize(){
+		
+		
 		this.setHref(new Uri("groupComm"));
 		datapoint.add(this);
 		
@@ -118,7 +116,6 @@ public class GroupCommImpl extends Obj implements GroupComm, Observer{
 			datapoint.getParent().add(ref);
 		}
 	}
-	
 
 	@Override
 	public Op joinGroup() {
