@@ -23,6 +23,7 @@ eclipse{
 				node.appendNode('classpathentry', [kind: 'src', path: '/iotsys-xacml', exported:'true'])
 				node.appendNode('classpathentry', [kind: 'lib', path: '/iotsys-xacml/res', exported:'true'])
 				node.appendNode('classpathentry', [kind: 'src', path: '/iotsys-osgi', exported:'true'])
+				node.appendNode('classpathentry', [kind: 'src', path: '/iotsys-weather-forecast', exported:'true'])
 			}
 		}
 	}
@@ -62,8 +63,8 @@ jar {
 				   "Bundle-Version": "0.1", 
 				   "Bundle-Classpath": ".",
 				   "Bundle-Activator": "at.ac.tuwien.auto.iotsys.gateway.IoTSySGatewayActivator",
-				   "Import-Package": "org.osgi.framework, at.ac.tuwien.auto.iotsys.commons, at.ac.tuwien.auto.iotsys.commons.interceptor, org.json, obix, obix.asm, obix.contracts, " +
-				   					"obix.io, obix.net, obix.test, obix.toos, obix.ui, obix.ui.fields, obix.ui.views, obix.xml, " +
+				   "Import-Package": "org.osgi.framework, at.ac.tuwien.auto.iotsys.commons, at.ac.tuwien.auto.iotsys.commons.interceptor, org.json, obix, obix.asm, obix.contracts, obix.contracts.impl, " +
+				   					"obix.io, obix.net, obix.test, obix.toos, obix.ui, obix.ui.fields, obix.ui.views, obix.xml, obix.units, " +
 									   "at.ac.tuwien.auto.iotsys.obix.observer, at.ac.tuwien.auto.iotsys.obix, at.ac.tuwien.auto.iotsys.commons.obix.objects.bacnet, at.ac.tuwien.auto.iotsys.commons.obix.objects.iot," +
 									   "at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.general.impl,"+
 									   "at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators, at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators.impl, " +
@@ -95,6 +96,7 @@ dependencies {
 
 	provided project(':iotsys-xacml')
 	provided project(':iotsys-mdnssd')
+	provided project(':iotsys-weather-forecast')
 	
 	//provided group: 'org.apache.felix', name: 'org.apache.felix.framework', version: '4.2.0'
 	provided group: 'org.apache.felix', name: 'org.osgi.core', version: '1.4.0'
@@ -119,6 +121,8 @@ dependencies {
 	testProvided project(':iotsys-obix')
 	testProvided project(':iotsys-common')
 	testProvided project(':iotsys-virtual')
+	testProvided project(':iotsys-mdnssd')
+	testProvided project(':iotsys-weather-forecast')
 	testCompile group: 'junit',name:'junit',version: '4.8+' 
 	testCompile group: 'com.jayway.restassured', name: 'rest-assured', version: '1.2.1'
 	testCompile "org.hamcrest:hamcrest-library:1.3"

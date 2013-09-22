@@ -39,11 +39,9 @@ import obix.*;
 
 /**
  * Refreshes the provided objects within a specified interval.
- * @author Markus Jung
  */
+
 public class ObjectRefresher implements Runnable {
-	public static int REFRESH_INTERVAL_MS = 3000; // refresh objects
-	
 	private static final HashSet<Obj> objects = new HashSet<Obj>();
 	
 	private volatile boolean stop = false;
@@ -53,10 +51,17 @@ public class ObjectRefresher implements Runnable {
 		while(!stop){
 			Iterator<Obj> iterator = objects.iterator();
 			while(iterator.hasNext()){
-				iterator.next().refreshObject();		
+				Obj obj = iterator.next();
+				
+				if (obj.needsRefresh()) {
+					obj.refreshObject();
+					
+					// set refresh timestamp
+					obj.setLastRefresh(System.currentTimeMillis());
+				}
 			}
 			try {
-				Thread.sleep(REFRESH_INTERVAL_MS);
+				Thread.sleep(Refreshable.MIN_REFRESH_INTERVAL_MS);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}

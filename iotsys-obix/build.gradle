@@ -16,7 +16,7 @@ jar {
 				   "Bundle-Vendor": "Vienna University of Technology, Automation Systems Group, www.auto.tuwien.ac.at",
 				   "Bundle-Version": "0.1",
 				   "Bundle-Classpath": ".",
-				   "Export-Package": "obix, obix.asm, obix.contracts, obix.io, obix.net, obix.test, obix.toos, obix.ui, obix.ui.fields, obix.ui.views, obix.xml, at.ac.tuwien.auto.iotsys.obix.observer, at.ac.tuwien.auto.iotsys.obix",
+				   "Export-Package": "obix, obix.asm, obix.contracts, obix.contracts.impl, obix.io, obix.net, obix.test, obix.toos, obix.ui, obix.ui.fields, obix.ui.views, obix.xml, obix.units, at.ac.tuwien.auto.iotsys.obix.observer, at.ac.tuwien.auto.iotsys.obix",
 				   "Import-Package": "at.ac.tuwien.auto.iotsys.commons.obix.objects.iot, at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators, at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators.impl, at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.sensors, at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.sensors.impl"
 				   )
 	}

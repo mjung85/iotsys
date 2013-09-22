@@ -1,291 +1,414 @@
-//= require 'jquery-1.9.1'
+//= require 'jquery'
+//= require 'jquery-ui'
 //= require 'angular'
-//= require 'bootstrap-transition'
-//= require 'bootstrap-modal'
-//= require 'bootstrap-dropdown'
 //= require 'html5slider'
+////require 'jquery.jsPlumb-1.5.2'
+//= require 'sugar'
+//= require 'URI'
 //= require_self
 
 var app = angular.module('Obelix', []);
 
-app.service('Lobby', function($http, Device) {
+app.service('Lobby', ['$http', 'Device', 'Directory', function($http, Device, Directory) {
   return {
-    getDevices: function(cb) {
+    getDeviceTree: function(callback) {
+      var root = new Directory('');
+      root.expanded = true;
       $http.get('/obix').success(function(response) {
-        var devices = [];
-        var nodes = response['childNodes'];
-        angular.forEach(nodes, function(node) {
-          // Skip some obix objects:
-          if (
-            node['name'] == 'about' || 
-            node['is'] == 'obix:obj' || 
-            node['is'] == 'obix:WatchService' ||
-            node['is'] == 'obix:Watch' 
-          ) return;
-          // ...add the rest to list of devices
-          devices.push(new Device(node['href']));
+        response['nodes'].each(function(node) {
+          var href = node['href'];
+          if (!href.startsWith('/')) href = '/' + href;
+          var href_components = href.split('/').compact(true);
+          var device_name = href_components.pop();
+          var device_directory = root.make(href_components);
+
+          device_directory.devices.push(new Device(href, device_name));
         });
-        cb(devices); //..and pass them to callback
+        callback(root);
       });
+    }
+  }
+}]);
+
+app.service('Storage', function() {
+  return {
+    get: function(key) {
+      var result = localStorage.getItem(key);
+      if (!result) {
+        return null;
+      } else if (result.charAt(0) === "{" || result.charAt(0) === "[") {
+        return angular.fromJson(result);
+      } else {
+        return result;
+      }
+    },
+    set: function(key, value) {
+      if (angular.isObject(value) || angular.isArray(value)) {
+        value = angular.toJson(value);
+      }
+      localStorage.setItem(key, value);
+    },
+    remove: function(key) {
+      localStorage.removeItem(key);
     }
   }
 });
 
-app.factory('Device', function($http, $timeout) {
-  var Property = function(href, type, name, value, el) {
-    this.href = href;
-    this.type = type;
-    this.numeric = (this.type == 'int' || this.type == 'real');
+app.factory('Directory', function() {
+  var Directory = function(name) {
     this.name = name;
-    this.value = value;
-    this.readonly = !el['writable'];
-
-    if (this.type == 'real') {
-      this.value = Math.round(this.value * 100) / 100.0;
-    }
-
-    if (this.numeric && el['max'] && !this.readonly) {
-      // setup range
-      this.range = true;
-      this.rangeMin = el['min'];
-      this.rangeMax = el['max'];
-      this.rangeStep = Math.abs(this.rangeMax - this.rangeMin)/100.0;
-    }
+    this.subdirectories = [];
+    this.devices = [];
+    this.expanded = false;
+    return this;
   };
 
-  Property.Enum = {
-    ranges: {},
-    range: function(href) {
-      var result = this.ranges[href];
-      if (!result) {
-        result = [];
-        this.ranges[href] = result;
-        $http.get(href).success(function(response) {
-          angular.forEach(response['childNodes'], function(n) { result.push(n['name']) });
-        });
+  Directory.prototype = {
+    make: function(components) {
+      if (components.isEmpty()) return this;
+
+      var name = components.shift();
+      name = name.replace('+',' ');
+      
+      var subdirectory = this.subdirectories.find({name:name});
+      if (!subdirectory) {
+        subdirectory = new Directory(name);
+        this.subdirectories.push(subdirectory);
       }
+
+      if (components.isEmpty()) {
+        return subdirectory;
+      } else {
+        return subdirectory.make(components);
+      }
+    },
+
+    toggle: function() {
+      this.expanded = !this.expanded;
+      // if (this.expanded) this.expand();
+    },
+
+    //expand: function() {
+    //   this.expanded = true;
+    //   if (this.subdirectories.count() == 1) {
+    //     // only one subdirectory, expand it
+    //     this.subdirectories[0].expand();
+    //   }
+    //},
+
+    // Recursively return all devices under this directory and its subdirectories
+    globDevices: function() {
+      var result = [];
+      result = result.concat(this.devices);
+      this.subdirectories.each(function(s) { result = result.concat(s.devices); });
       return result;
     }
   };
 
-  Property.parse = function(el, device) {
-    if (
-      el['tagName'] == 'bool' || 
-      el['tagName'] == 'int' || 
-      el['tagName'] == 'real' || 
-      el['tagName'] == 'enum' || 
-      el['tagName'] == 'str'
-    ) {
-      var p = new Property(el['href'], el['tagName'], el['name'], el['val'], el);
-      if (p.type == 'enum') {
-        p.range = Property.Enum.range(el['range']);
-      }
-      p.device = device;
-      return p;
+  return Directory;
+});
+
+app.factory('Watch', ['$http', '$timeout', 'Storage',function($http, $timeout, Storage) {
+  var Watch = function(href) {
+    this.href = href;
+  };
+
+  Watch.getInstance = function(callback) {
+    var watchHref = Storage.get('watch');
+    if (!watchHref) {
+      $http.post('/watchService/make').success(function(response) {
+        var watchHref = response['href'];
+        Storage.set('watch', watchHref);
+        console.log("Made new watch", watchHref);
+        callback(new Watch(watchHref));
+      });
+    } else {
+      var ok = false;
+      $http.get(watchHref).success(function(response) {
+        if (response['tag'] != 'err') ok = true;
+      }).then(function() {
+        if (ok) {
+          callback(new Watch(watchHref));
+        } else {
+          console.log("Watch is out of date. Clear localStorage and try again.");
+          // Note: when requesting a new watch because old one is gone, we also need to add all our placed devices
+          // to the new watch, which is bit more complicated due to both requests being asynchronous.
+          // So let's require user intervention in this case for now.
+
+          // Storage.remove('watch');
+          // Watch.getInstance(callback);
+        }
+      });
     }
   };
+
+  Watch.prototype = {
+    hrefForOperation: function(opName) {
+      return URI(this.href).segment(opName).toString(); // For now, operation href is same as name
+    },
+    add: function(href) {
+      // var payload = {"is" : "obix:WatchIn", "tag" : "obj", "nodes" : [{"tag" : "list", "name": "hrefs", "nodes":[{"tag": "uri", "val": href}]}]};
+
+      console.log("Adding "+href+" to watch");
+
+      var payload = '<obj is="obix:WatchIn"><list name="hrefs"><uri val="'+href+'" /></list></obj>';
+
+      $http({
+        url: this.hrefForOperation('add'),
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/xml',
+          'Accept': 'application/json'
+        },
+        data: payload
+      }).success(function(response) {
+        if (response['is'] != "obix:WatchOut") {
+          console.log("Error adding",href,"to watch",response);
+        }
+      });
+    },
+    poll: function(callback) {
+      $http.post(this.hrefForOperation('pollChanges')).success(function(response) {
+        var devices = response['nodes'][0]['nodes'];
+        if (devices) {
+          devices.each(callback);
+        }
+      });
+    },
+    tick: function() {
+      if (this.polling) {
+        this.poll(this.polling);
+        $timeout(this.tick.bind(this), 1000);
+      }
+    },
+    startPolling: function(callback) {
+      this.polling = callback;
+      this.tick();
+    }
+  };
+
+  return Watch;
+}]);
+
+app.factory('Property', ['$http', function($http) {
+  var Property = function(node) {
+    if (!['bool', 'int', 'real', 'str', 'enum'].find(node['tag'])) {
+      this.valid = false;
+      return;
+    } else {
+      this.valid = true;
+
+      this.href = node['href'];
+      this.type = node['tag'];
+      this.numeric = (this.type == 'int' || this.type == 'real');
+      this.name = node['name'];
+      this.value = node['val'];
+      this.readonly = !node['writable'];
+
+      if (this.type == 'real') {
+        this.value = Math.round(this.value * 100) / 100.0;
+      }
+
+      if (this.numeric && node['max'] && !this.readonly) {
+        this.range = {min: node['min'], max: node['max'], step: Math.abs(this.rangeMax - this.rangeMin)/100.0};
+      }
+
+      // if (this.type == 'enum') {
+      //   this.range = Property.Enum.range(this.href);
+      // }
+
+      // Display class
+      if (this.numeric) {
+        this.klass = 'numeric';
+      } else {
+        this.klass = this.type;
+      }
+    }
+  };
+
+  // Property.Enum = {
+  //   ranges: {},
+  //   range: function(href) {
+  //     var result = this.ranges[href];
+  //     if (!result) {
+  //       console.log("Get",href);
+  //       $http.get(href).success(function(response) {
+  //         this.ranges[href] = response['nodes'].map('name');
+  //       }.bind(this));
+  //     }
+  //     return result;
+  //   }
+  // };
 
   Property.prototype = {
     serialize: function() {
-      var result = {'tagName': this.type, 'href': this.href, 'val': this.value };
-      return result;
-    },
-    url: function() {
-      return this.device.url + '/' + this.href;
+      return {'tag': this.type, 'val': this.value };
     }
   };
 
-  var Device = function(url) {
-    this.url = url;
-    this.name = url.replace('/','');
-    this.properties = [];
-    this.fetch();
+  return Property;
+}]);
+
+app.factory('Device', ['$http', 'Storage', 'Property', function($http, Storage, Property) {
+  var Device = function(href, name) {
+    this.href = href;
+    this.name = name;
+    this.placement = Storage.get('device_'+this.href+'_placement');
+    if (this.placement) {
+      this.load();
+    }
     return this;
   };
 
   Device.prototype = {
-    load: function(response) {
-      var propertiesWithGroupcomm = [];
-      this.properties = [];
-      angular.forEach(response['childNodes'], function(c) {
-          if (c['tagName'] == 'ref') {
-            var names = c['name'].split(' ');
-            var gcIndex = names.indexOf('groupComm')
-            if (gcIndex != -1) {
-              names.splice(gcIndex,1);
-              propertiesWithGroupcomm.push(names[0]);
-            }
-          } else {
-              var p = Property.parse(c, this);
-              if (p) {
-                this.properties.push(p);
-              } else {
-                // console.log("Don't know how to parse",c,"yet");
-              }
-          }
-      }.bind(this));
+    place: function(position) {
+      this.placement = {left: position.left, top: position.top};
+      Storage.set('device_'+this.href+'_placement', this.placement);
+      if (!this.loaded && !this.loading) this.load();
+    },
 
-      // Mark groupcomm properties
-      angular.forEach(propertiesWithGroupcomm, function(name) {
-        this.property(name).groupcomm = true;
+    load: function() {
+      this.loading = true;
+      $http.get(this.href).success(function(response) {
+        this.parse(response);
+        this.loaded = true;
+        this.loading = false;
       }.bind(this));
     },
 
-    fetch: function() {
-      this.fetching = true;
-      $http.get(this.url).success(function(response) {
-        this.load(response);
-        this.fetching = false;
-        if (this.autofetching) {
-          $timeout(this.fetch.bind(this), 1000);
-        }
-      }.bind(this));
-    },
-
-    toggleAutofetching: function() {
-      this.autofetching = !this.autofetching;
-      if (this.autofetching) this.fetch();
+    parse: function(response) {
+      this.properties = response['nodes'].map(function(node) {
+        return new Property(node);
+      }).filter({valid:true});
     },
 
     update: function(property) {
-      $http.put(this.url, property.serialize()).success(function(response) {
-        this.load(response);
-      }.bind(this));
-    },
-
-    property: function(name) {
-      for (var i=0;i<this.properties.length;i++) {
-        if(this.properties[i].name == name) return this.properties[i];
-      } 
-    }
-  };
-
-  Device.Group = function(properties) {
-    this.properties = properties;
-    this.id = Device.Group.counter;
-    Device.Group.counter += 1;
-    return this;
-  };
-
-  Device.Group.counter = 1;
-
-  Device.Group.prototype = {
-    ipv6: function() {
-      return "FF02:FFFF::"+this.id;
-    },
-    create: function() {
-      angular.forEach(this.properties, function(p) {
-        this.action(p, 'joinGroup');
-      }.bind(this));
-    },
-    destroy: function() {
-      angular.forEach(this.properties, function(p) {
-        this.action(p, 'leaveGroup');
-      }.bind(this));
-    },
-    action: function(property, action) {
-      var url = [property.device.url,property.href,'groupComm',action].join('/');
-      $http.post(url, '<str val="'+this.ipv6()+'"/>', {headers: {
-        'Content-Type': 'application/xml'
-      }}).success(function() {
-        console.log(property,action, this.ipv6());
-      }.bind(this));
-    }
-  };
-
-  return Device;
-});
-
-app.directive('ngModelOnblur', function() {
-    return {
-        restrict: 'A',
-        require: 'ngModel',
-        link: function(scope, elm, attr, ngModelCtrl) {
-            if (attr.type === 'radio' || attr.type === 'checkbox') return;
-            elm.unbind('input').unbind('keydown').unbind('change');
-            elm.bind('blur', function() {
-                scope.$apply(function() {
-                    ngModelCtrl.$setViewValue(elm.val());
-                });         
-            });
+      var absolutePropertyHref = URI(property.href).absoluteTo(this.href).toString();
+      $http.put(absolutePropertyHref, property.serialize()).success(function(response) {
+        if(response['tag'] && response['tag'] == 'err') {
+          console.log("Error updating " + absolutePropertyHref, response);
         }
-    };
-});
+        // this.parse(response);
+      }.bind(this));
+    },
+  };
+  
+  return Device;
+}]);
 
-// app.directive('uiEvent', ['$parse',
-//   function ($parse) {
-//     return function (scope, elm, attrs) {
-//       var events = scope.$eval(attrs.uiEvent);
-//       angular.forEach(events, function (uiEvent, eventName) {
-//         var fn = $parse(uiEvent);
-//         elm.bind(eventName, function (evt) {
-//           var params = Array.prototype.slice.call(arguments);
-//           //Take out first paramater (event object);
-//           params = params.splice(1);
-//           scope.$apply(function () {
-//             fn(scope, {$event: evt, $params: params});
-//           });
-//         });
-//       });
-//     };
-// }]);
+app.controller('MainCtrl', ['$scope','Lobby','Watch', function($scope, Lobby, Watch) {
+  $scope.directory = null;
+  $scope.allDevices = [];
+  $scope.watch = null;
 
-// app.directive('bootstrapSwitch', function() {
-//     return {
-//         restrict: 'A',
-//         link: function(scope, element, attrs) {
-//           console.log("Linked");
-//           $(element).bootstrapSwitch().on('switch-change', function(el) {
-//             var iel = $(this).find('input');
-//             console.log("Switch changed", iel);
-//             console.log("Checked",iel.prop('checked'), iel[0].checked);
-//             // $(this).find('input').trigger('click'); // so angular can pick this up in the binding
-//             return;
-//             scope.$apply(attrs.bootstrapSwitchChange);
-//           });
-//         }
-//     };
-// });
-
-app.controller('DevicesCtrl', ['$scope','Lobby','Device', function($scope, Lobby, Device) {
-  $scope.creatingGroup = false; // are we in ui mode for creating new group
-
-  $scope.groups = {};
-  $scope.selectedProperties = [];
-
-  Lobby.getDevices(function(devices) {
-    $scope.devices = devices;
+  Lobby.getDeviceTree(function(root) {
+    $scope.directory = root;
+    $scope.allDevices = root.globDevices();
   });
 
-  $scope.groupCount = function() {
-    return Object.keys($scope.groups).length;
-  }
-
-  $scope.selectProperty = function(p) {
-    if (!p.groupcomm) return;
-    var index = $scope.selectedProperties.indexOf(p);
-    if (index != -1) {
-      $scope.selectedProperties.splice(index, 1);
-    } else {
-      $scope.selectedProperties.push(p);
-    }
-    p.selected = !p.selected;
-  }
-
-  $scope.createGroup = function() {
-    var g = new Device.Group($scope.selectedProperties);
-    g.create();
-    this.groups[g.id] = g;
-    angular.forEach($scope.selectedProperties, function(p) {
-      p.selected = false;
+  Watch.getInstance(function(watch) {
+    $scope.watch = watch;
+    watch.startPolling(function(deviceJson) {
+      var device = $scope.allDevices.find({href:deviceJson['href']});
+      if (device) {
+        device.parse(deviceJson);
+      }
     });
-    $scope.creatingGroup = false;
-    $scope.selectedProperties = [];
-  }
+  });
 
-  $scope.destroyGroup = function(id) {
-    var g = $scope.groups[id];
-    g.destroy();
-    delete $scope.groups[id];
+  $scope.sidebarExpanded = false;
+  
+  $scope.placeDevice = function(device, position) {
+    if (!device.placement) {
+      // Initial placement, add to watch
+      $scope.watch.add(device.href);
+    }
+    $scope.sidebarExpanded = false;
+    device.place(position);
+  };
+}]);
+
+// Simple angularJS directives for use of jquery-ui draggable
+//
+// On source, define draggable="model"
+// On drop target define droppable="callback(draggable)"
+// callback(model, position) will be called on drop
+app.directive('draggable', function() {
+  return {
+    restrict: 'A',
+    link: function(scope, el, attrs) {
+      var device = scope.$eval(attrs['draggable']);
+
+      var options = {
+        appendTo: 'body',
+        helper: 'clone',
+        start: function() {
+          $(this).addClass('disabled');
+        },
+        stop: function() {
+          $(this).removeClass('disabled');
+        }
+      };
+
+      if (attrs['draggableDistance']) options.distance = attrs['draggableDistance'];
+      if (attrs['draggableHelper']) options.helper = attrs['draggableHelper'];
+
+      el.draggable(options);
+    }
+  };
+});
+
+// app.directive('notDroppable', function() {
+//   return {
+//     restrict: 'A',
+//     link: function(scope, el, attrs) {
+//       el.droppable({
+//         greedy: true,
+//         drop: function(event,ui) {
+//           console.log('swallow');
+//         }
+//       });
+//     }
+//   }
+// });
+
+app.directive('droppable', ['$parse',function($parse) {
+  return {
+    restrict: 'A',
+    link: function(scope, el, attrs) {
+      var callback = $parse(attrs['droppable'])(scope);
+      el.droppable({
+        drop: function(event, ui) {
+          var currentPos = ui.helper.position();
+          var draggable = angular.element(ui.draggable);
+          var model = draggable.scope().$eval(draggable.attr('draggable'));
+          callback(model, ui.helper.position());
+          scope.$apply();
+          //jsPlumb.repaintEverything();
+        }
+      });
+    }
   }
 }]);
+
+// app.directive('plumbcontainer', function() {
+//   return {
+//     restrict: 'A',
+//     link: function(scope, el, attrs) {
+//       jsPlumb.ready(function() {
+//         jsPlumb.Defaults.Container = el;
+//       });
+//     }
+//   }
+// });
+
+// app.directive('plumb', function() {
+//   return {
+//     restrict: 'A',
+//     link: function(scope, el, attrs) {
+//       jsPlumb.addEndpoint(el, {isSource: true, isTarget:true, connector:[ "Bezier", { curviness:100 }], endpoint: ["Dot", {
+//         radius: 6
+//       }],paintStyle:{ fillStyle:"black"}, connectorStyle: { lineWidth: 4, strokeStyle: "#5b9ada"}});
+//     }
+//   }
+// });

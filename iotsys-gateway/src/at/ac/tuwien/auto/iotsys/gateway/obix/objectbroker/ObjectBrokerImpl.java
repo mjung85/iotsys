@@ -40,11 +40,14 @@ import java.util.logging.Logger;
 import obix.Contract;
 import obix.ContractRegistry;
 import obix.Err;
+import obix.Int;
 import obix.List;
 import obix.Obj;
 import obix.Op;
 import obix.Ref;
 import obix.Uri;
+import obix.contracts.impl.UnitImpl;
+import obix.units.*;
 import at.ac.tuwien.auto.iotsys.commons.MdnsResolver;
 import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.AlarmSubjectImpl;
@@ -55,6 +58,8 @@ import at.ac.tuwien.auto.iotsys.gateway.obix.objects.AboutImpl;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.HistoryHelper;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.WatchImpl;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.WatchServiceImpl;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.weatherforecast.impl.ProbabilityCodeImpl;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.weatherforecast.impl.WeatherSymbolImpl;
 import at.ac.tuwien.auto.iotsys.gateway.service.GroupCommHelper;
 
 public class ObjectBrokerImpl implements ObjectBroker {
@@ -106,105 +111,229 @@ public class ObjectBrokerImpl implements ObjectBroker {
 		addObj(watchServiceImpl);
 		addObj(alarmSubjectImpl);
 		addObj(aboutImpl, false); // About is added directly in lobby as local
+
+		Obj enums = new Obj();
+		enums.setName("enums");
+		enums.setHref(new Uri("enums"));
+
+		// compareType enum
+		List compareTypes = new List();
+
+		compareTypes.setIs(new Contract("obix:Range"));
+		compareTypes.setHref(new Uri("compareTypes"));
+		compareTypes.setName("compareTypes");
+
+		Obj eq = new Obj();
+		eq.setName("eq");
+		Obj gte = new Obj();
+		gte.setName("gte");
+		Obj gt = new Obj();
+		gt.setName("gt");
+
+		Obj lt = new Obj();
+		lt.setName("lt");
+
+		Obj lte = new Obj();
+		lte.setName("lte");
+
+		compareTypes.add(eq);
+		compareTypes.add(lt);
+		compareTypes.add(lte);
+		compareTypes.add(gt);
+		compareTypes.add(gte);
+
+		enums.add(compareTypes);
+
+		// operation type enums
+
+		List operationTypes = new List();
+
+		operationTypes.setIs(new Contract("obix:Range"));
+		operationTypes.setHref(new Uri("operationTypes"));
+		operationTypes.setName("operationTypes");
+
+		Obj opAdd = new Obj();
+		opAdd.setName(BinaryOperation.BIN_OP_ADD);
+
+		Obj opSub = new Obj();
+		opSub.setName(BinaryOperation.BIN_OP_SUB);
+
+		Obj opMul = new Obj();
+		opMul.setName(BinaryOperation.BIN_OP_MUL);
+
+		Obj opMod = new Obj();
+		opMod.setName(BinaryOperation.BIN_OP_MOD);
+
+		Obj opDiv = new Obj();
+		opDiv.setName(BinaryOperation.BIN_OP_DIV);
+
+		operationTypes.add(opAdd);
+		operationTypes.add(opSub);
+		operationTypes.add(opMul);
+		operationTypes.add(opDiv);
+		operationTypes.add(opMod);
+
+		enums.add(operationTypes);
+
+		// binary logic operations
+		// operation type enums
+
+		List logicOperationTypes = new List();
+
+		logicOperationTypes.setIs(new Contract("obix:Range"));
+		logicOperationTypes.setHref(new Uri("logicOperationTypes"));
+		logicOperationTypes.setName("logicOperationTypes");
+
+		Obj opAnd = new Obj();
+		opAnd.setName(LogicBinaryOperation.BIN_OP_AND);
+
+		Obj opOr = new Obj();
+		opOr.setName(LogicBinaryOperation.BIN_OP_OR);
+
+		Obj opXor = new Obj();
+		opXor.setName(LogicBinaryOperation.BIN_OP_XOR);
+
+		Obj opNand = new Obj();
+		opNand.setName(LogicBinaryOperation.BIN_OP_NAND);
+
+		Obj opNor = new Obj();
+		opNor.setName(LogicBinaryOperation.BIN_OP_NOR);
+
+		logicOperationTypes.add(opAnd);
+		logicOperationTypes.add(opOr);
+		logicOperationTypes.add(opXor);
+		logicOperationTypes.add(opNand);
+		logicOperationTypes.add(opNor);
+
+		enums.add(logicOperationTypes);
 		
-		alarmSubjectImpl.initialize();
+		// probability code enum
+		List probabilityCode = new List();
 
-//		Obj enums = new Obj();
-//		enums.setName("enums");
-//		enums.setHref(new Uri("enums"));
-//
-//		// compareType enum
-//		List compareTypes = new List();
-//
-//		compareTypes.setIs(new Contract("obix:Range"));
-//		compareTypes.setHref(new Uri("compareTypes"));
-//		compareTypes.setName("compareTypes");
-//
-//		Obj eq = new Obj();
-//		eq.setName("eq");
-//		Obj gte = new Obj();
-//		gte.setName("gte");
-//		Obj gt = new Obj();
-//		gt.setName("gt");
-//
-//		Obj lt = new Obj();
-//		lt.setName("lt");
-//
-//		Obj lte = new Obj();
-//		lte.setName("lte");
-//
-//		compareTypes.add(eq);
-//		compareTypes.add(lt);
-//		compareTypes.add(lte);
-//		compareTypes.add(gt);
-//		compareTypes.add(gte);
-//
-//		enums.add(compareTypes);
-//
-//		// operation type enums
-//
-//		List operationTypes = new List();
-//
-//		operationTypes.setIs(new Contract("obix:Range"));
-//		operationTypes.setHref(new Uri("operationTypes"));
-//		operationTypes.setName("operationTypes");
-//
-//		Obj opAdd = new Obj();
-//		opAdd.setName(BinaryOperation.BIN_OP_ADD);
-//
-//		Obj opSub = new Obj();
-//		opSub.setName(BinaryOperation.BIN_OP_SUB);
-//
-//		Obj opMul = new Obj();
-//		opMul.setName(BinaryOperation.BIN_OP_MUL);
-//
-//		Obj opMod = new Obj();
-//		opMod.setName(BinaryOperation.BIN_OP_MOD);
-//
-//		Obj opDiv = new Obj();
-//		opDiv.setName(BinaryOperation.BIN_OP_DIV);
-//
-//		operationTypes.add(opAdd);
-//		operationTypes.add(opSub);
-//		operationTypes.add(opMul);
-//		operationTypes.add(opDiv);
-//		operationTypes.add(opMod);
-//
-//		enums.add(operationTypes);
-//
-//		// binary logic operations
-//		// operation type enums
-//
-//		List logicOperationTypes = new List();
-//
-//		logicOperationTypes.setIs(new Contract("obix:Range"));
-//		logicOperationTypes.setHref(new Uri("logicOperationTypes"));
-//		logicOperationTypes.setName("logicOperationTypes");
-//
-//		Obj opAnd = new Obj();
-//		opAnd.setName(LogicBinaryOperation.BIN_OP_AND);
-//
-//		Obj opOr = new Obj();
-//		opOr.setName(LogicBinaryOperation.BIN_OP_OR);
-//
-//		Obj opXor = new Obj();
-//		opXor.setName(LogicBinaryOperation.BIN_OP_XOR);
-//
-//		Obj opNand = new Obj();
-//		opNand.setName(LogicBinaryOperation.BIN_OP_NAND);
-//
-//		Obj opNor = new Obj();
-//		opNor.setName(LogicBinaryOperation.BIN_OP_NOR);
-//
-//		logicOperationTypes.add(opAnd);
-//		logicOperationTypes.add(opOr);
-//		logicOperationTypes.add(opXor);
-//		logicOperationTypes.add(opNand);
-//		logicOperationTypes.add(opNor);
+		probabilityCode.setIs(new Contract("obix:Range"));
+		probabilityCode.setHref(new Uri(ProbabilityCodeImpl.NAME));
+		probabilityCode.setName(ProbabilityCodeImpl.NAME);
 
-//		enums.add(logicOperationTypes);
+		Int uk = new Int(ProbabilityCodeImpl.NAME_UNKNOWN, ProbabilityCodeImpl.ID_UNKNOWN);
+		Int hp = new Int(ProbabilityCodeImpl.NAME_HIGHLY_PROBABLE, ProbabilityCodeImpl.ID_HIGHLY_PROBABLE);
+		Int p = new Int(ProbabilityCodeImpl.NAME_PROBABLE, ProbabilityCodeImpl.ID_PROBABLE);
+		Int uc = new Int(ProbabilityCodeImpl.NAME_UNCERTAIN, ProbabilityCodeImpl.ID_UNCERTAIN);
 
-//		addObj(enums, true);
+		probabilityCode.add(uk);
+		probabilityCode.add(hp);
+		probabilityCode.add(p);
+		probabilityCode.add(uc);
+
+		enums.add(probabilityCode);
+		
+		// weather symbol enum
+		List weatherSymbol = new List();
+
+		weatherSymbol.setIs(new Contract("obix:Range"));
+		weatherSymbol.setHref(new Uri(WeatherSymbolImpl.NAME));
+		weatherSymbol.setName(WeatherSymbolImpl.NAME);
+
+		Int unknown = new Int(WeatherSymbolImpl.NAME_UNKNOWN, WeatherSymbolImpl.ID_UNKNOWN);
+		Int sun = new Int(WeatherSymbolImpl.NAME_SUN, WeatherSymbolImpl.ID_SUN);
+		Int fair = new Int(WeatherSymbolImpl.NAME_FAIR, WeatherSymbolImpl.ID_FAIR);
+		Int partlyCloudy = new Int(WeatherSymbolImpl.NAME_PARTLY_CLOUDY, WeatherSymbolImpl.ID_PARTLY_CLOUDY);
+		Int cloudy = new Int(WeatherSymbolImpl.NAME_CLOUDY, WeatherSymbolImpl.ID_CLOUDY);
+		Int rainShowers = new Int(WeatherSymbolImpl.NAME_RAIN_SHOWERS, WeatherSymbolImpl.ID_RAIN_SHOWERS);
+		Int rainShowersThunder = new Int(WeatherSymbolImpl.NAME_RAIN_SHOWERS_THUNDER, WeatherSymbolImpl.ID_RAIN_SHOWERS_THUNDER);
+		Int sleetShowers = new Int(WeatherSymbolImpl.NAME_SLEET_SHOWERS, WeatherSymbolImpl.ID_SLEET_SHOWERS);
+		Int snowShowers = new Int(WeatherSymbolImpl.NAME_SNOW_SHOWERS, WeatherSymbolImpl.ID_SNOW_SHOWERS);
+		Int rain = new Int(WeatherSymbolImpl.NAME_RAIN, WeatherSymbolImpl.ID_RAIN);
+		Int heavyRain = new Int(WeatherSymbolImpl.NAME_HEAVY_RAIN, WeatherSymbolImpl.ID_HEAVY_RAIN);
+		Int heavyRainThunder = new Int(WeatherSymbolImpl.NAME_HEAVY_RAIN_THUNDER, WeatherSymbolImpl.ID_HEAVY_RAIN_THUNDER);
+		Int sleet = new Int(WeatherSymbolImpl.NAME_SLEET, WeatherSymbolImpl.ID_SLEET);
+		Int snow = new Int(WeatherSymbolImpl.NAME_SNOW, WeatherSymbolImpl.ID_SNOW);
+		Int snowThunder = new Int(WeatherSymbolImpl.NAME_SNOW_THUNDER, WeatherSymbolImpl.ID_SNOW_THUNDER);
+		Int fog = new Int(WeatherSymbolImpl.NAME_FOG, WeatherSymbolImpl.ID_FOG);
+		Int fleetShowersThunder = new Int(WeatherSymbolImpl.NAME_SLEET_SHOWERS_THUNDER, WeatherSymbolImpl.ID_SLEET_SHOWERS_THUNDER);
+		Int snowShowersThunder = new Int(WeatherSymbolImpl.NAME_SNOW_SHOWERS_THUNDER, WeatherSymbolImpl.ID_SNOW_SHOWERS_THUNDER);
+		Int rainThunder = new Int(WeatherSymbolImpl.NAME_RAIN_THUNDER, WeatherSymbolImpl.ID_RAIN_THUNDER);
+		Int sleetThunder = new Int(WeatherSymbolImpl.NAME_SLEET_THUNDER, WeatherSymbolImpl.ID_SLEET_THUNDER);
+
+		weatherSymbol.add(unknown);
+		weatherSymbol.add(sun);
+		weatherSymbol.add(fair);
+		weatherSymbol.add(partlyCloudy);
+		weatherSymbol.add(cloudy);
+		weatherSymbol.add(rainShowers);
+		weatherSymbol.add(rainShowersThunder);
+		weatherSymbol.add(sleetShowers);
+		weatherSymbol.add(snowShowers);
+		weatherSymbol.add(rain);
+		weatherSymbol.add(heavyRain);
+		weatherSymbol.add(heavyRainThunder);
+		weatherSymbol.add(sleet);
+		weatherSymbol.add(snow);
+		weatherSymbol.add(snowThunder);
+		weatherSymbol.add(fog);
+		weatherSymbol.add(fleetShowersThunder);
+		weatherSymbol.add(snowShowersThunder);
+		weatherSymbol.add(rainThunder);
+		weatherSymbol.add(sleetThunder);
+
+		enums.add(weatherSymbol);
+		
+		addObj(enums, true);
+		
+		// create units
+		Obj units = new Obj();
+		units.setName("units");
+		units.setHref(new Uri("units"));
+		
+		// beaufort
+		UnitImpl beaufort = new Beaufort();
+		beaufort.setName("beaufort");
+		beaufort.setHref(new Uri("beaufort"));
+		
+		units.add(beaufort);
+		
+		// celsius
+		UnitImpl celsius = new Celsius();
+		celsius.setName("celsius");
+		celsius.setHref(new Uri("celsius"));
+		
+		units.add(celsius);
+		
+		// degree
+		UnitImpl degree = new Degree();
+		degree.setName("degree");
+		degree.setHref(new Uri("degree"));
+		
+		units.add(degree);
+		
+		// hectopascal
+		UnitImpl hectopascal = new Hectopascal();
+		hectopascal.setName("hectopascal");
+		hectopascal.setHref(new Uri("hectopascal"));
+		
+		units.add(hectopascal);
+		
+		// meter
+		UnitImpl meter = new Meter();
+		meter.setName("meter");
+		meter.setHref(new Uri("meter"));
+		
+		units.add(meter);
+		
+		// millimeter
+		UnitImpl millimeter = new Millimeter();
+		millimeter.setName("millimeter");
+		millimeter.setHref(new Uri("millimeter"));
+		
+		units.add(millimeter);
+		
+		// percent
+		UnitImpl percent = new Percent();
+		percent.setName("percent");
+		percent.setHref(new Uri("percent"));
+		
+		units.add(percent);
+
+		addObj(units, true);
 		
 		// create default watch
 		WatchImpl watchImpl = new WatchImpl(this);	
@@ -429,5 +558,12 @@ public class ObjectBrokerImpl implements ObjectBroker {
 	@Override
 	public void setMdnsResolver(MdnsResolver resolver){
 		this.resolver = resolver;
+	}
+	
+	@Override
+	public synchronized void enableObjectRefresh(Obj obj, long interval) {
+		obj.setRefreshInterval(interval);
+		
+		objectRefresher.addObject(obj);
 	}
 }

@@ -14,7 +14,6 @@ import obix.contracts.AlarmFilter;
 import obix.contracts.AlarmQueryOut;
 import obix.contracts.AlarmSubject;
 import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
-import at.ac.tuwien.auto.iotsys.commons.obix.objects.AlarmFilterImpl;
 import at.ac.tuwien.auto.iotsys.obix.OperationHandler;
 
 public class AlarmSubjectImpl extends Obj implements IAlarmSubject {
@@ -95,7 +94,6 @@ public class AlarmSubjectImpl extends Obj implements IAlarmSubject {
 		
 		alarmObj.setHref(new Uri(String.valueOf(alarmID++)));
 		alarmdb.add(alarmObj);
-		alarmObj.getNormalizedHref();
 		alarmObj.setHref(new Uri(alarmObj.getFullContextPath()));
 		
 		feed.addEvent((Obj) alarm);

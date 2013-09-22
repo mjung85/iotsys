@@ -84,7 +84,7 @@ public abstract class AlarmObserver implements Observer {
 	}
 	
 	private void setNormalTimestamp(StatefulAlarm alarm) {
-		Abstime normalTimestamp = ((StatefulAlarm) currentAlarm).normalTimestamp();
+		Abstime normalTimestamp = alarm.normalTimestamp();
 		if (normalTimestamp != null) {
 			normalTimestamp.set(System.currentTimeMillis(), TimeZone.getDefault());
 			normalTimestamp.setNull(false);
@@ -118,7 +118,7 @@ public abstract class AlarmObserver implements Observer {
 	}
 
 	public Subject getSubject() {
-		return (Subject)source;
+		return source;
 	}
 
 	public IAlarmSubject getAlarmSubject() {

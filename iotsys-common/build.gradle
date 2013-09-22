@@ -1,7 +1,17 @@
 // Variables
 description = 'Common classes for the IoTSyS project'
 
-sourceCompatibility = 1.6
+eclipse{
+	classpath{
+		file {
+			withXml {
+				def node = it.asNode()		
+				node.appendNode('classpathentry', [kind: 'src', path: '/iotsys-obix', exported:'true'])
+			}
+		}
+	}
+}
+
 
 jar {
 	from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
