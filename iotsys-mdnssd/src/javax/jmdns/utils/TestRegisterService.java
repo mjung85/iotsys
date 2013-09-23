@@ -36,9 +36,13 @@ public class TestRegisterService {
             
             try {
             	subTypedService.setIpv6Addr("2001:629:2500:570::11d");
-            	aService.setIpv6Addr("2001:629:2500:570::11f");aService.setText(values);
-            	aService.setServer("asdf.virtualdevice.iotsys.com");
+            	subTypedService.setServer("aFanSpeed.virtualdevice.iotsys.auto.tuwien.ac.at.");
             	subTypedService2.setIpv6Addr("2001:629:2500:570::11a");
+            	subTypedService2.setServer("aFanSpeed2.virtualdevice.iotsys.auto.tuwien.ac.at.");
+
+            	aService.setIpv6Addr("2001:629:2500:570::11f");
+            	aService.setText(values);
+            	aService.setServer("aSimpleService.iotsys.auto.tuwien.ac.at.");
     		} catch (Exception e1){
     			e1.printStackTrace();
     		}
