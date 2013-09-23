@@ -211,8 +211,7 @@ public class ContractInit {
 			ContractRegistry.put(Entities.CONTRACT, Entities.class.getName());
 			ContractRegistry.put(Entity.CONTRACT, Entity.class.getName());
 
-			// FIXME the following contracts have already used hrefs
-			// (obix:Range) -> IllegalStateException
+			// FIXME the following contracts have already used hrefs (obix:Range)
 			ContractRegistry.put(EnumConnector.CONTRACT,
 					EnumConnector.class.getName());
 			ContractRegistry.put(EnumEnabled.CONTRACT,
@@ -240,8 +239,7 @@ public class ContractInit {
 			ContractRegistry.put(ParameterDimming.CONTRACT,
 					ParameterDimming.class.getName());
 
-			// FIXME the following contracts have already used hrefs
-			// (obix:Range) -> IllegalStateException
+			// FIXME the following contracts have already used hrefs (obix:Unit)
 			ContractRegistry.put(UnitCelsius.CONTRACT,
 					UnitCelsius.class.getName());
 			ContractRegistry.put(UnitPercent.CONTRACT,
