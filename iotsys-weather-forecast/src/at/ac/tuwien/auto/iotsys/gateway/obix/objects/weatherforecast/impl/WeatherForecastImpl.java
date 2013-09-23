@@ -111,7 +111,7 @@ public class WeatherForecastImpl extends Obj implements WeatherForecast {
 						
 		for (Obj o : update.data().list())
 		{			
-			WeatherForecastRecordImpl rec = (WeatherForecastRecordImpl) o;
+			WeatherForecastRecord rec = (WeatherForecastRecord) o;
 			
 			// store records with same timezone only
 			rec.timestamp().set(rec.timestamp().get(), TimeZone.getTimeZone(tz.get()));
@@ -123,7 +123,7 @@ public class WeatherForecastImpl extends Obj implements WeatherForecast {
 				if (rec.timestamp().get() < dataRecords.get(i).timestamp().get())
 				{
 					// insert record
-					dataRecords.add(i, rec);
+					dataRecords.add(i, new WeatherForecastRecordImpl(rec));
 					
 					added++;
 					found = true;
@@ -131,16 +131,8 @@ public class WeatherForecastImpl extends Obj implements WeatherForecast {
 				else if (rec.timestamp().get() == dataRecords.get(i).timestamp().get())
 				{
 					// update record
-					dataRecords.get(i).probabilityCode().set(rec.probabilityCode().get());
-					dataRecords.get(i).temperature().set(rec.temperature().get());
-					dataRecords.get(i).humidity().set(rec.humidity().get());
-					dataRecords.get(i).pressure().set(rec.pressure().get());
-					dataRecords.get(i).precipitation().set(rec.precipitation().get());
-					dataRecords.get(i).cloudiness().set(rec.cloudiness().get());
-					dataRecords.get(i).fog().set(rec.fog().get());
-					dataRecords.get(i).windSpeed().set(rec.windSpeed().get());
-					dataRecords.get(i).symbol().set(rec.symbol().get());
-					
+					dataRecords.get(i).setAll(rec);
+										
 					updated++;
 					found = true;
 				}
@@ -149,7 +141,7 @@ public class WeatherForecastImpl extends Obj implements WeatherForecast {
 			if (found == false)
 			{
 				// append record
-				dataRecords.add(rec);
+				dataRecords.add(new WeatherForecastRecordImpl(rec));
 				
 				added++;
 			}

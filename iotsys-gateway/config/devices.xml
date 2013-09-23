@@ -712,7 +712,7 @@
 	<virtual>
 		<connector>
 			<name>VirtualDevices</name>
-			<enabled>true</enabled>
+			<enabled>false</enabled>
 
 			<!-- SENSOREN -->
 
@@ -930,7 +930,7 @@
 		</connector>
 		<connector>
 			<name>HVAC Simulation</name>
-			<enabled>true</enabled>
+			<enabled>false</enabled>
 
 			<!-- SENSOREN -->
 			<device>
@@ -1024,7 +1024,7 @@
 
 		<connector>
 			<name>IoTSyS Logic</name>
-			<enabled>true</enabled>
+			<enabled>false</enabled>
 
 			<!-- Logic components -->
 			<device>

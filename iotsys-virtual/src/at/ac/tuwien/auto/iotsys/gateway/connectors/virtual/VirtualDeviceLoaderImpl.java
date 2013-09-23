@@ -52,6 +52,8 @@ import org.apache.commons.configuration.XMLConfiguration;
 import at.ac.tuwien.auto.iotsys.commons.Connector;
 import at.ac.tuwien.auto.iotsys.commons.DeviceLoader;
 import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.weatherforecast.WeatherForecastCrawler;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.weatherforecast.impl.WeatherForecastLocationImpl;
 
 public class VirtualDeviceLoaderImpl implements DeviceLoader {
 	private final ArrayList<Obj> myObjects = new ArrayList<Obj>();
@@ -218,6 +220,12 @@ public class VirtualDeviceLoaderImpl implements DeviceLoader {
 
 							Integer historyCount = subConfig.getInt("device("
 									+ i + ").historyCount", 0);
+							
+							// for weather forcast services only
+							String description = subConfig.getString("device(" + i + ").location.description", "");
+							Double latitude = subConfig.getDouble("device(" + i + ").location.latitude", 0);
+							Double longitude = subConfig.getDouble("device(" + i + ").location.longitude", 0);
+							Long height = subConfig.getLong("device(" + i + ").location.height", 0);
 
 							if (type != null && address != null) {
 								try {
@@ -238,11 +246,23 @@ public class VirtualDeviceLoaderImpl implements DeviceLoader {
 										else if(declaredConstructors[k].getParameterTypes().length == 1){
 											virtualObj = (Obj) declaredConstructors[k].newInstance(args);
 										}
+										// for weather forcast services only
+										else if (WeatherForecastCrawler.class.isAssignableFrom(Class.forName(type)) &&
+													declaredConstructors[k].getParameterTypes().length == 3) {
+											// constructor that takes name, location, and connector as argument
+											args = new Object[3];
+
+											args[0] = name;
+											args[1] = new WeatherForecastLocationImpl(description, latitude, longitude, height);
+											args[2] = null;
+											
+											virtualObj = (Obj) declaredConstructors[k].newInstance(args);
+										}
 									}
 									
 									virtualObj.setHref(new Uri(URLEncoder.encode(connectorName, "UTF-8") + "/" + href));
 									
-									if(name != null && name.length() > 0){
+									if(name != null && name.length() > 0 && virtualObj.getName() == null){
 										virtualObj.setName(name);
 									}
 									

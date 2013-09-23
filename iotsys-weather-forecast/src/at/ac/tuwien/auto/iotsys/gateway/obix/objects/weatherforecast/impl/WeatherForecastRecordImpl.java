@@ -8,15 +8,15 @@ public class WeatherForecastRecordImpl extends Obj implements
 		WeatherForecastRecord {
 	
 	private Abstime timestamp = new Abstime("timestamp");
-	private Enum probabilityCode = new Enum("probability-code");
+	private Enum probabilityCode = new Enum("probabilityCode", "");
 	private Real temperature = new Real("temperature");
 	private Real humidity = new Real("humidity");
 	private Real pressure = new Real("pressure");
 	private Real precipitation = new Real("precipitation");
 	private Real cloudiness = new Real("cloudiness");
 	private Real fog = new Real("fog");
-	private Int windSpeed = new Int("wind-speed");
-	private Enum symbol = new Enum("symbol");
+	private Int windSpeed = new Int("windSpeed");
+	private Enum symbol = new Enum("symbol", "");
 	
 	public WeatherForecastRecordImpl() {
 		setIs(new Contract(WeatherForecastRecord.CONTRACT));
@@ -42,6 +42,38 @@ public class WeatherForecastRecordImpl extends Obj implements
 		add(fog);
 		add(windSpeed);
 		add(symbol);
+	}
+
+	public WeatherForecastRecordImpl(WeatherForecastRecord rec) {
+		this();
+		
+		setAll(rec);
+	}
+	
+	public void setAll(WeatherForecastRecord rec) {
+		timestamp.set(rec.timestamp().getMillis(), rec.timestamp().getTimeZone());
+		
+		if (ProbabilityCodeImpl.GetByName(rec.probabilityCode().get()) != ProbabilityCodeImpl.ID_UNKNOWN) {
+			probabilityCode.set(rec.probabilityCode().get());
+		}
+		else {
+			probabilityCode.set(ProbabilityCodeImpl.NAME_UNKNOWN);
+		}
+		
+		temperature.set(rec.temperature().get());
+		humidity.set(rec.humidity().get());
+		pressure.set(rec.pressure().get());
+		precipitation.set(rec.precipitation().get());
+		cloudiness.set(rec.cloudiness().get());
+		fog.set(rec.fog().get());
+		windSpeed.set(rec.windSpeed().get());
+		
+		if (WeatherSymbolImpl.GetByName(rec.symbol().get()) != WeatherSymbolImpl.ID_UNKNOWN) {
+			symbol.set(rec.symbol().get());
+		}
+		else {
+			symbol.set(WeatherSymbolImpl.NAME_UNKNOWN);
+		}
 	}
 
 	@Override
