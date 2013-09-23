@@ -51,6 +51,7 @@ import at.ac.tuwien.auto.iotsys.commons.interceptor.Interceptor;
 import at.ac.tuwien.auto.iotsys.commons.interceptor.InterceptorBroker;
 import at.ac.tuwien.auto.iotsys.gateway.interceptor.InterceptorBrokerImpl;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objectbroker.ObjectBrokerImpl;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.ContractInit;
 import at.ac.tuwien.auto.iotsys.gateway.obix.server.CoAPServer;
 import at.ac.tuwien.auto.iotsys.gateway.obix.server.NanoHTTPD;
 import at.ac.tuwien.auto.iotsys.gateway.obix.server.ObixObservingManager;
@@ -99,14 +100,8 @@ public class IoTSySGateway
 		// init exi util
 		ExiUtil.getInstance();
 		
-		// init contracts, this try is to catch re-initiation exception when restart the bundle
-		try
-		{
-			at.ac.tuwien.auto.iotsys.gateway.obix.objects.ContractInit.init();
-		} catch (IllegalStateException e)
-		{
-			log.warning("Problem initializing contracts: " + e.getMessage());
-		}
+		// init contracts
+		ContractInit.init();
 		
 		String httpPort = PropertiesLoader.getInstance().getProperties().getProperty("iotsys.gateway.http.port", "8080");
 

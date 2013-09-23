@@ -5,6 +5,7 @@ package obix;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.logging.Logger;
 
 import obix.asm.ObixAssembler;
 
@@ -18,6 +19,8 @@ import obix.asm.ObixAssembler;
  */
 public class ContractRegistry
 {
+	private static final Logger log = Logger.getLogger(ContractRegistry.class.getName());
+	
 	// //////////////////////////////////////////////////////////////
 	// Access
 	// //////////////////////////////////////////////////////////////
@@ -139,8 +142,13 @@ public class ContractRegistry
 	 */
 	public static void put(Uri href, String className)
 	{
-		if (map.get(href.get()) != null)
-			throw new IllegalStateException("The specified href is already mapped: " + href);
+		String mappedClassName = map.get(href.get());
+		if (mappedClassName != null) { // already defined
+			if (!mappedClassName.equals(className))
+				log.warning("Tried to redefine contract " + href + " (" + mappedClassName + ") to " + className);
+			return;
+		}
+		
 		map.put(href.get(), className);
 		cache.clear(); // clear cache
 	}
