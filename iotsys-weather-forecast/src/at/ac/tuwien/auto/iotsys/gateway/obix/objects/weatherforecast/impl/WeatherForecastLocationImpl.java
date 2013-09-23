@@ -122,7 +122,7 @@ public class WeatherForecastLocationImpl extends Obj implements
 			
 			Obj parent = this.getParent();
 			if (parent instanceof WeatherForecastCrawler) {
-				((WeatherForecastCrawlerImpl) parent).reset();
+				((WeatherForecastCrawler) parent).reset();
 			}
 		}
 	}
