@@ -1180,6 +1180,8 @@ public class ServiceInfoImpl extends ServiceInfo implements DNSListener, DNSStat
         buf.append(" has ");
         buf.append(this.hasData() ? "" : "NO ");
         buf.append("data");
+        buf.append(", target: ");
+        buf.append(this.getServer().length() > 0 ? this.getServer() : " No Target, ");
         if ((this.getTextBytes() != null) && (this.getTextBytes().length > 0)) {
             // buf.append("\n");
             // buf.append(this.getNiceTextString());
