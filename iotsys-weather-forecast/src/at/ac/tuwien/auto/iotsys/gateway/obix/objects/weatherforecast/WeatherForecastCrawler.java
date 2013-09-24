@@ -11,4 +11,7 @@ public interface WeatherForecastCrawler extends IObj {
 
 	public static final String forecastsContract = "<obj name='forecasts' is='iot:WeatherForecast'/>";
 	public Obj forecasts();
+	
+	public void reset();
+	public String getServiceURL();
 }

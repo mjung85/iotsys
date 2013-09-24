@@ -760,7 +760,8 @@ public class NanoHTTPD {
 
 						decodeMultipartData(boundary, fbuf, in, parms, files);
 					} else if (contentType.equalsIgnoreCase("text/xml")
-							|| contentType.equalsIgnoreCase("application/xml")) {
+							|| contentType.equalsIgnoreCase("application/xml")
+							|| contentType.equalsIgnoreCase("application/json")) {
 
 						String postLine = "";
 						char pbuf[] = new char[512];

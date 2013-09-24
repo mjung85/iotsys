@@ -65,6 +65,13 @@
         <href>switch2</href>
         <refreshEnabled>false</refreshEnabled>
       </device>
+      
+      <device>
+        <type>at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators.impl.LightSwitchActuatorImpl
+        </type>
+        <href>switch3</href>
+        <refreshEnabled>false</refreshEnabled>
+      </device>
     </connector>
     <connector>
       <name>testDevicesWatch</name>
@@ -386,6 +393,26 @@
         <groupCommEnabled>true</groupCommEnabled>
       </device>
     </connector>
+    
+		<connector>
+			<name>testDevicesWeatherForecast</name>
+			<enabled>true</enabled>
+			
+			<device>
+				<type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.weatherforecast.devices.WeatherForecastCrawlerYR_NO
+				</type>
+				<name>testServiceYrNo</name>
+				<location>
+					<description>Vienna</description>
+					<latitude>48.21</latitude>
+					<longitude>16.37</longitude>
+					<height>171</height>
+				</location>
+				<href>testServiceYrNo</href>
+				<refreshEnabled>false</refreshEnabled>
+			</device>
+			
+		</connector>
 
   </virtual>
 </devices>

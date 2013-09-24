@@ -27,10 +27,28 @@
     </div>
     <div droppable='placeDevice' id='canvas' ng-click='sidebarExpanded = false' plumbcontainer>
       <div ng-repeat="device in allDevices | filter:{placement:'!!'}">
-        <div class='device' draggable-helper='original' draggable='device' ng-style='{left: device.placement.left, top: device.placement.top}' plumb>
-          <label class='name'>
-            {{device.name}}
-          </label>
+        <div class='device' draggable-distance='5' draggable-helper='original' draggable='device' ng-style='{left: device.placement.left, top: device.placement.top}' plumb>
+          <header>
+            <label class='name'>
+              {{device.name}}
+            </label>
+          </header>
+          <div class='properties'>
+            <div class='property' ng-class='klass' ng-repeat='property in device.properties' ng-switch on='property.klass'>
+              <label>{{property.name}}</label>
+              <span class='bool' ng-switch-when='bool'>
+                <input ng-change='device.update(property)' ng-checked='property.value' ng-disabled='property.readonly' ng-model='property.value' type='checkbox'>
+              </span>
+              <span class='numeric' ng-switch-when='numeric'>
+                <input ng-change='device.update(property)' ng-disabled='property.readonly' ng-model-onblur ng-model='property.value' type='text'>
+              </span>
+              <!-- %span.enum(ng-switch-when="enum") -->
+              <!-- %select(ng-model="property.value" ng-options="x for x in property.range" ng-change="device.update(property)") -->
+              <span class='other' ng-switch-default>
+                <input ng-disabled='property.readonly' ng-model='property.value' type='text'>
+              </span>
+            </div>
+          </div>
         </div>
       </div>
     </div>

@@ -4,7 +4,6 @@ import java.util.List;
 
 import obix.Contract;
 import obix.Feed;
-import obix.IAlarmSubject;
 import obix.Int;
 import obix.Obj;
 import obix.Op;
@@ -14,11 +13,10 @@ import obix.contracts.AlarmFilter;
 import obix.contracts.AlarmQueryOut;
 import obix.contracts.AlarmSubject;
 import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
-import at.ac.tuwien.auto.iotsys.commons.obix.objects.AlarmFilterImpl;
 import at.ac.tuwien.auto.iotsys.obix.OperationHandler;
 
-public class AlarmSubjectImpl extends Obj implements IAlarmSubject {
-	private static IAlarmSubject defaultSubject;
+public class AlarmSubjectImpl extends Obj implements AlarmSubject {
+	private static AlarmSubject defaultSubject;
 	private static int alarmID = 0;
 	
 	private ObjectBroker broker;
@@ -30,11 +28,11 @@ public class AlarmSubjectImpl extends Obj implements IAlarmSubject {
 	/**
 	 * @return the default instance of an AlarmSubject
 	 */
-	public static IAlarmSubject defaultAlarmSubject() {
+	public static AlarmSubject defaultAlarmSubject() {
 		return defaultSubject;
 	}
 	
-	public static void setDefaultAlarmSubject(IAlarmSubject subject) {
+	public static void setDefaultAlarmSubject(AlarmSubject subject) {
 		defaultSubject = subject;
 	}
 	

@@ -7,5 +7,4 @@ public class Test {
 		GETRequest getRequest = new GETRequest();
 		getRequest.send();
 	}
-
 }

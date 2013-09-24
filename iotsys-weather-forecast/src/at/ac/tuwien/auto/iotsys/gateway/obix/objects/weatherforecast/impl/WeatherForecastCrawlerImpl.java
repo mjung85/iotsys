@@ -5,16 +5,10 @@ import java.util.logging.Logger;
 import javax.xml.parsers.FactoryConfigurationError;
 import javax.xml.parsers.ParserConfigurationException;
 
-import at.ac.tuwien.auto.iotsys.obix.OperationHandler;
 import at.ac.tuwien.auto.iotsys.gateway.connectors.weatherforecast.WeatherForecastConnector;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.weatherforecast.WeatherForecastCrawler;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.weatherforecast.WeatherForecastFilter;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.weatherforecast.WeatherForecastLocation;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.weatherforecast.WeatherForecastQueryResult;
 
 import obix.*;
-import obix.contracts.Nil;
-import obix.contracts.impl.NilImpl;
 
 public class WeatherForecastCrawlerImpl extends Obj implements WeatherForecastCrawler {
 
@@ -63,15 +57,12 @@ public class WeatherForecastCrawlerImpl extends Obj implements WeatherForecastCr
 	public Obj forecasts() {
 		return forecasts;
 	}
-	
-	public WeatherForecastLocationImpl getLocation() {
-		return location;
-	}
 
 	/*
 	 * Resets the crawler, i.e., clears the forecasts array and triggers a 
 	 * refresh after the crawler's location has been modified.
 	 */
+	@Override
 	public void reset() {	
 		// clear forecasts array
 		this.forecasts.clearForecasts();
@@ -84,6 +75,7 @@ public class WeatherForecastCrawlerImpl extends Obj implements WeatherForecastCr
 	 * Override this method to return the crawler-specific service URL using 
 	 * the crawler's location.
 	 */
+	@Override
 	public String getServiceURL() {
 		return "";
 	}

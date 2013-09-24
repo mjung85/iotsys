@@ -25,4 +25,9 @@ public interface AlarmSubject extends IObj
 
 	public Feed feed();
 
+	/**
+	 * Add an alarm to this AlarmSubject
+	 * @param alarm Alarm to add
+	 */
+	public void addAlarm(Alarm alarm);
 }

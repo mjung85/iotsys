@@ -3,6 +3,7 @@
 @import "compass/css3/box-shadow";
 @import "compass/css3/box-sizing";
 @import "compass/css3/images";
+@import "compass/css3/user-interface";
 
 body {
   font-family: Helvetica, Arial;
@@ -10,6 +11,7 @@ body {
   background: #282828;
   width: 100%;
   height: 100%;
+  @include user-select(none);
 }
 
 $sidebarWidth: 300px;
@@ -52,6 +54,7 @@ $sidebarColor: #ddd;
     position: absolute;
     top: 0;
     bottom: 0;
+    overflow-x: hidden;
     overflow-y: auto;  
     background: $sidebarColor;
     width: $sidebarWidth;
@@ -107,6 +110,7 @@ $sidebarColor: #ddd;
   }
 
   .subdirectory > label {
+    font-weight: bold;
     cursor: pointer;
     display: block;
     width: 100%;
@@ -135,11 +139,31 @@ body > label {
 #canvas .device {
   @include box-sizing(border-box);
 
-  width: 6 * 25px;
-  height: 4 * 25px;
+  width: 7 * 25px;
   background: $sidebarColor;
   padding: 4px;
   position: absolute;
 
   @include border-radius(4px);
+
+  header {
+    font-weight: bold;
+    margin-left: -4px;
+    margin-right: -4px;
+    padding-bottom: 2px;
+    text-align: center;
+  }
+
+  .property {
+    font-size: 12px;
+    color: #333;
+    label {
+      display: inline-block;
+      width: 4 * 25px;
+      overflow: hidden;
+    }
+    input {
+      width: 2 * 25px;
+    }
+  }
 }
