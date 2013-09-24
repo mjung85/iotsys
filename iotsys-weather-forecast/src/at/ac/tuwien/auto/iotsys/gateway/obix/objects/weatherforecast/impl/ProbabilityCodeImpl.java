@@ -19,6 +19,9 @@ public class ProbabilityCodeImpl {
 	public static int GetByName(String name) {
 		int id;
 		
+		if (name == null)
+			name = NAME_UNKNOWN;
+		
 		name = name.toLowerCase();
 		
 		if (name.equals(NAME_HIGHLY_PROBABLE))

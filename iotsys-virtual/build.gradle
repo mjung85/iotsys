@@ -12,6 +12,7 @@ eclipse{
 				node.appendNode('classpathentry', [kind: 'src', path: '/iotsys-obix', exported:'true'])
 				node.appendNode('classpathentry', [kind: 'src', path: '/iotsys-osgi', exported:'true'])
 				node.appendNode('classpathentry', [kind: 'src', path: '/iotsys-mdnssd', exported:'true'])
+				node.appendNode('classpathentry', [kind: 'src', path: '/iotsys-weather-forecast', exported:'true'])
 			}
 		}
 	}
@@ -64,6 +65,7 @@ dependencies {
 	provided project(':iotsys-common')
 	provided project(':iotsys-osgi')
 	provided project(':iotsys-mdnssd')
+	provided project(':iotsys-weather-forecast')
 	
 	//provided group: 'org.apache.felix', name: 'org.apache.felix.framework', version: '4.2.0'
 	provided group: 'org.apache.felix', name: 'org.osgi.core', version: '1.4.0'

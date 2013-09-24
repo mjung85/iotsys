@@ -455,7 +455,8 @@ public class ServiceInfoImpl extends ServiceInfo implements DNSListener, DNSStat
      * @param server
      *            the server to set
      */
-    void setServer(String server) {
+    @Override
+    public void setServer(String server) {
         this._server = server;
     }
 
@@ -1179,6 +1180,8 @@ public class ServiceInfoImpl extends ServiceInfo implements DNSListener, DNSStat
         buf.append(" has ");
         buf.append(this.hasData() ? "" : "NO ");
         buf.append("data");
+        buf.append(", target: ");
+        buf.append(this.getServer().length() > 0 ? this.getServer() : " No Target, ");
         if ((this.getTextBytes() != null) && (this.getTextBytes().length > 0)) {
             // buf.append("\n");
             // buf.append(this.getNiceTextString());
@@ -1202,7 +1205,7 @@ public class ServiceInfoImpl extends ServiceInfo implements DNSListener, DNSStat
             list.add(new Pointer(this.getTypeWithSubtype(), DNSRecordClass.CLASS_IN, DNSRecordClass.NOT_UNIQUE, ttl, this.getQualifiedName()));
         }
         list.add(new Pointer(this.getType(), DNSRecordClass.CLASS_IN, DNSRecordClass.NOT_UNIQUE, ttl, this.getQualifiedName()));
-        list.add(new Service(this.getQualifiedName(), DNSRecordClass.CLASS_IN, unique, ttl, _priority, _weight, _port, localHost.getName()));
+        list.add(new Service(this.getQualifiedName(), DNSRecordClass.CLASS_IN, unique, ttl, _priority, _weight, _port, this.getServer()));
         if (this.getTextBytes() !=null )
         	list.add(new Text(this.getQualifiedName(), DNSRecordClass.CLASS_IN, unique, ttl, this.getTextBytes()));
         if (this.getInet6Addresses().length > 0)

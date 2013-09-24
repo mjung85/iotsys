@@ -212,7 +212,7 @@ public class ContractInit {
 			ContractRegistry.put(Entity.CONTRACT, Entity.class.getName());
 
 			// FIXME the following contracts have already used hrefs
-			// (obix:Range) -> IllegalStateException
+			// (obix:Range)
 			ContractRegistry.put(EnumConnector.CONTRACT,
 					EnumConnector.class.getName());
 			ContractRegistry.put(EnumEnabled.CONTRACT,
@@ -240,8 +240,25 @@ public class ContractInit {
 			ContractRegistry.put(ParameterDimming.CONTRACT,
 					ParameterDimming.class.getName());
 
-			// FIXME the following contracts have already used hrefs
-			// (obix:Range) -> IllegalStateException
+			// Weather forecast
+			ContractRegistry.put(WeatherForecastCrawler.CONTRACT,
+					WeatherForecastCrawler.class.getName());
+			ContractRegistry.put(WeatherForecastFilter.CONTRACT,
+					WeatherForecastFilter.class.getName());
+			ContractRegistry.put(WeatherForecast.CONTRACT,
+					WeatherForecast.class.getName());
+			ContractRegistry.put(WeatherForecastLocation.CONTRACT,
+					WeatherForecastLocation.class.getName());
+			ContractRegistry.put(WeatherForecastQueryResult.CONTRACT,
+					WeatherForecastQueryResult.class.getName());
+			ContractRegistry.put(WeatherForecastRecord.CONTRACT,
+					WeatherForecastRecord.class.getName());
+			ContractRegistry.put(WeatherForecastUpdateIn.CONTRACT,
+					WeatherForecastUpdateIn.class.getName());
+			ContractRegistry.put(WeatherForecastUpdateOut.CONTRACT,
+					WeatherForecastUpdateOut.class.getName());
+
+			// FIXME the following contracts have already used hrefs (obix:Unit)
 			ContractRegistry.put(UnitCelsius.CONTRACT,
 					UnitCelsius.class.getName());
 			ContractRegistry.put(UnitPercent.CONTRACT,
@@ -262,23 +279,6 @@ public class ContractInit {
 			ContractRegistry.put(ViewTopology.CONTRACT,
 					ViewTopology.class.getName());
 
-			// Weather forecast
-			ContractRegistry.put(WeatherForecastCrawler.CONTRACT,
-					WeatherForecastCrawler.class.getName());
-			ContractRegistry.put(WeatherForecastFilter.CONTRACT,
-					WeatherForecastFilter.class.getName());
-			ContractRegistry.put(WeatherForecast.CONTRACT,
-					WeatherForecast.class.getName());
-			ContractRegistry.put(WeatherForecastLocation.CONTRACT,
-					WeatherForecastLocation.class.getName());
-			ContractRegistry.put(WeatherForecastQueryResult.CONTRACT,
-					WeatherForecastQueryResult.class.getName());
-			ContractRegistry.put(WeatherForecastRecord.CONTRACT,
-					WeatherForecastRecord.class.getName());
-			ContractRegistry.put(WeatherForecastUpdateIn.CONTRACT,
-					WeatherForecastUpdateIn.class.getName());
-			ContractRegistry.put(WeatherForecastUpdateOut.CONTRACT,
-					WeatherForecastUpdateOut.class.getName());
 		} finally {
 			ContractRegistry.buildReverseMap();
 		}

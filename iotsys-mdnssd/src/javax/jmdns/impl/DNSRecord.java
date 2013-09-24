@@ -769,9 +769,9 @@ public abstract class DNSRecord extends DNSEntry {
         @Override
         boolean handleQuery(JmDNSImpl dns, long expirationTime) {
             ServiceInfoImpl info = (ServiceInfoImpl) dns.getServices().get(this.getKey());
-            if (info != null && (info.isAnnouncing() || info.isAnnounced()) && (_port != info.getPort() || !_server.equalsIgnoreCase(dns.getLocalHost().getName()))) {
+            if (info != null && (info.isAnnouncing() || info.isAnnounced()) && (_port != info.getPort() || !_server.equalsIgnoreCase(info.getServer()))) {
                 logger1.finer("handleQuery() Conflicting probe detected from: " + getRecordSource());
-                DNSRecord.Service localService = new DNSRecord.Service(info.getQualifiedName(), DNSRecordClass.CLASS_IN, DNSRecordClass.UNIQUE, DNSConstants.DNS_TTL, info.getPriority(), info.getWeight(), info.getPort(), dns.getLocalHost().getName());
+                DNSRecord.Service localService = new DNSRecord.Service(info.getQualifiedName(), DNSRecordClass.CLASS_IN, DNSRecordClass.UNIQUE, DNSConstants.DNS_TTL, info.getPriority(), info.getWeight(), info.getPort(), info.getServer());
 
                 // This block is useful for debugging race conditions when jmdns is responding to itself.
                 try {
@@ -819,7 +819,7 @@ public abstract class DNSRecord extends DNSEntry {
         @Override
         boolean handleResponse(JmDNSImpl dns) {
             ServiceInfoImpl info = (ServiceInfoImpl) dns.getServices().get(this.getKey());
-            if (info != null && (_port != info.getPort() || !_server.equalsIgnoreCase(dns.getLocalHost().getName()))) {
+            if (info != null && (_port != info.getPort() || !_server.equalsIgnoreCase(info.getServer()))) {
                 logger1.finer("handleResponse() Denial detected");
 
                 if (info.isProbing()) {
@@ -841,8 +841,7 @@ public abstract class DNSRecord extends DNSEntry {
             ServiceInfoImpl info = (ServiceInfoImpl) dns.getServices().get(this.getKey());
             if (info != null) {
                 if (this._port == info.getPort() != _server.equals(dns.getLocalHost().getName())) {
-                    return dns.addAnswer(in, addr, port, out, new DNSRecord.Service(info.getQualifiedName(), DNSRecordClass.CLASS_IN, DNSRecordClass.UNIQUE, DNSConstants.DNS_TTL, info.getPriority(), info.getWeight(), info.getPort(), dns
-                            .getLocalHost().getName()));
+                    return dns.addAnswer(in, addr, port, out, new DNSRecord.Service(info.getQualifiedName(), DNSRecordClass.CLASS_IN, DNSRecordClass.UNIQUE, DNSConstants.DNS_TTL, info.getPriority(), info.getWeight(), info.getPort(), info.getServer()));
                 }
             }
             return out;

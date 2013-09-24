@@ -8,7 +8,18 @@ import obix.Obj;
 public interface FeedFilter {
 	public FeedFilter getFilter(Obj filter);
 	
+	/**
+	 * Queries the given feed with this filter
+	 * @param feed the feed to be queried
+	 * @return events of the feed that meet the filter criteria
+	 */
 	public List<Obj> query(Feed feed);
-	public List<Obj> poll(List<Obj> events);
+	
+	/**
+	 * Filters the given list of unpolled events
+	 * @param unpolledEvents a list of yet unpolled events to be filtered
+	 * @return unpolled events that meet the filter criteria
+	 */
+	public List<Obj> poll(List<Obj> unpolledEvents);
 }
 	
