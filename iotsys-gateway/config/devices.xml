@@ -721,7 +721,7 @@
 				</type>
 				<address>5/2/0</address>
 				<href>virtualIndoorBrightnessSensor</href>
-				<ipv6>2001:629:2500:570::10d</ipv6>
+				<ipv6>2001:DB8::1</ipv6>
 				<historyEnabled>false</historyEnabled>
 				<historyCount>200</historyCount>
 			</device>
@@ -737,7 +737,7 @@
 				</type>
 				<address>5/1/19</address>
 				<href>virtualPresence</href>
-				<ipv6>2001:629:2500:570::10f</ipv6>
+				<ipv6>2001:DB8::2</ipv6>
 				<historyEnabled>false</historyEnabled>
 				<historyCount>200</historyCount>
 			</device>
@@ -808,7 +808,7 @@
 				</type>
 				<address>null, 5/3/7, 5/3/8</address>
 				<href>sunblindMiddleA</href>
-				<ipv6>2001:629:2500:570::11b</ipv6>
+				<ipv6>2001:DB8::10</ipv6>
 				<historyEnabled>false</historyEnabled>
 				<historyCount>200</historyCount>
 				<groupCommEnabled>true</groupCommEnabled>
@@ -818,7 +818,7 @@
 				</type>
 				<address>null, 5/3/7, 5/3/8</address>
 				<href>sunblindMiddleB</href>
-				<ipv6>2001:629:2500:570::12b</ipv6>
+				<ipv6>2001:DB8::11</ipv6>
 				<historyEnabled>false</historyEnabled>
 				<historyCount>200</historyCount>
 				<groupCommEnabled>true</groupCommEnabled>
@@ -828,7 +828,7 @@
 				</type>
 				<address>null, 5/3/6</address>
 				<href>virtualFanSpeed</href>
-				<ipv6>2001:629:2500:570::11d</ipv6>
+				<ipv6>2001:DB8::12</ipv6>
 				<historyEnabled>false</historyEnabled>
 				<historyCount>200</historyCount>
 			</device>

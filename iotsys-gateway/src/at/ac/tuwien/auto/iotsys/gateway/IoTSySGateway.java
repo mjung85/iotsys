@@ -49,6 +49,7 @@ import at.ac.tuwien.auto.iotsys.commons.PropertiesLoader;
 import at.ac.tuwien.auto.iotsys.commons.interceptor.ClassAlreadyRegisteredException;
 import at.ac.tuwien.auto.iotsys.commons.interceptor.Interceptor;
 import at.ac.tuwien.auto.iotsys.commons.interceptor.InterceptorBroker;
+import at.ac.tuwien.auto.iotsys.digcoveryclient.DigcoveryClient;
 import at.ac.tuwien.auto.iotsys.gateway.interceptor.InterceptorBrokerImpl;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objectbroker.ObjectBrokerImpl;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.ContractInit;
@@ -80,6 +81,8 @@ public class IoTSySGateway
 	private ObixServer obixServer = null;
 
 	private MdnsResolver mdnsResolver;
+	
+	private DigcoveryClient digcoveryClient;
 
 	public IoTSySGateway()
 	{
@@ -340,5 +343,17 @@ public class IoTSySGateway
 		this.mdnsResolver = mdnsResolver;
 		if (objectBroker != null)
 			objectBroker.setMdnsResolver(mdnsResolver);
+	}
+	
+	public void setDigcoveryClient(DigcoveryClient digcoveryClient){
+		this.digcoveryClient = digcoveryClient;
+		if (objectBroker != null){
+			objectBroker.setDigcoveryClient(digcoveryClient);
+			
+			// register gateway as endpoint
+			if(digcoveryClient != null){
+				digcoveryClient.registerDevice("gateway", "iotsys.auto.tuwien.ac.at", null, "_coap._udp", "5683", "48.2083", "16.3731", "Vienna");
+			}
+		}
 	}
 }
