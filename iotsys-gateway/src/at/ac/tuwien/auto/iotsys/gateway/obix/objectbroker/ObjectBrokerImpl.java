@@ -54,6 +54,7 @@ import at.ac.tuwien.auto.iotsys.commons.obix.objects.AlarmSubjectImpl;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.general.impl.LobbyImpl;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.logic.BinaryOperation;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.logic.LogicBinaryOperation;
+import at.ac.tuwien.auto.iotsys.digcoveryclient.DigcoveryClient;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.AboutImpl;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.HistoryHelper;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.WatchImpl;
@@ -80,6 +81,8 @@ public class ObjectBrokerImpl implements ObjectBroker {
 	private final HashMap<String, String> ipv6Mapping = new HashMap<String, String>();
 
 	private static final ObjectBroker instance = new ObjectBrokerImpl();
+	
+	private DigcoveryClient digcoveryClient;
 
 	static {
 		((ObjectBrokerImpl) instance).initInternals();
@@ -436,6 +439,10 @@ public class ObjectBrokerImpl implements ObjectBroker {
                 resolver.addToRecordDict(href, ipv6Address);
                 resolver.registerDevice(href, o.getClass(), ipv6Address);
 			}
+			
+			if(digcoveryClient != null){
+				digcoveryClient.registerDevice(href, "iotsys.auto.tuwien.ac.at", ipv6Address, "_coap._udp", "5683", "48.2083", "16.3731", "Vienna");
+			}
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		}
@@ -565,5 +572,10 @@ public class ObjectBrokerImpl implements ObjectBroker {
 		obj.setRefreshInterval(interval);
 		
 		objectRefresher.addObject(obj);
+	}
+
+	@Override
+	public void setDigcoveryClient(DigcoveryClient digcoveryClient) {
+		this.digcoveryClient = digcoveryClient;
 	}
 }

@@ -8,7 +8,8 @@ eclipse{
 		file {
 			withXml {
 				def node = it.asNode()				
-				//node.appendNode('classpathentry', [kind: 'src', path: '/iotsys-common', exported:'true'])
+				node.appendNode('classpathentry', [kind: 'src', path: '/iotsys-common', exported:'true'])
+				node.appendNode('classpathentry', [kind: 'src', path: '/iotsys-osgi', exported:'true'])				
 				//node.appendNode('classpathentry', [kind: 'src', path: '/iotsys-obix', exported:'true'])
 				//node.appendNode('classpathentry', [kind: 'src', path: '/iotsys-xacml', exported:'true'])					
 			}
@@ -39,12 +40,15 @@ jar {
 				   "Bundle-Vendor": "Vienna University of Technology, Automation Systems Group, www.auto.tuwien.ac.at",
 				   "Bundle-Version": "0.1", 
 				   "Bundle-Classpath": ".",
-				   "Bundle-Activator":  "at.ac.tuwien.auto.iotsys.digcoveryclient",
-				   "Import-Package": "",
+				   "Bundle-Activator":  "at.ac.tuwien.auto.iotsys.digcoveryclient.impl.DigcoveryClientActivator",
+				   "Import-Package": "at.ac.tuwien.auto.iotsys.commons, org.osgi.framework, at.ac.tuwien.auto.iotsys.digcoveryclient, org.xml.sax, org.xml.sax.helpers, org.xml.sax.ext,  com.sun.org.apache.xalan.internal, com.sun.org.apache.xalan.internal.res, org.w3c.dom, org.w3c.dom.traversal, org.w3c.dom.ls, javax.xml.parsers,  javax.xml.xpath, javax.xml.transform.sax, javax.xml.transform.dom, javax.xml.namespace, javax.xml.transform, javax.xml.transform.stream, javax.xml.validation, javax.xml.datatype",
 				   )
 	}
 }
 
 dependencies {
+	provided project(':iotsys-common')
+	provided project(':iotsys-osgi')
+	 
 	compile ':cf-client-0.13.3-SNAPSHOT:'
 }

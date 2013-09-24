@@ -2,6 +2,7 @@ package at.ac.tuwien.auto.iotsys.commons;
 
 import java.util.HashMap;
 
+import at.ac.tuwien.auto.iotsys.digcoveryclient.DigcoveryClient;
 import obix.Obj;
 import obix.Uri;
 
@@ -47,4 +48,6 @@ public interface ObjectBroker{
 	public MdnsResolver getMDnsResolver();
 
 	public void setMdnsResolver(MdnsResolver resolver);
+
+	public void setDigcoveryClient(DigcoveryClient digcoveryClient);
 }

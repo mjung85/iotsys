@@ -43,6 +43,7 @@ import org.osgi.framework.ServiceReference;
 import at.ac.tuwien.auto.iotsys.commons.MdnsResolver;
 import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
 import at.ac.tuwien.auto.iotsys.commons.interceptor.InterceptorBroker;
+import at.ac.tuwien.auto.iotsys.digcoveryclient.DigcoveryClient;
 import at.ac.tuwien.auto.iotsys.gateway.interceptor.InterceptorBrokerImpl;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objectbroker.ObjectBrokerImpl;
 
@@ -60,6 +61,8 @@ public class IoTSySGatewayActivator implements BundleActivator, ServiceListener{
 	
 	private MdnsResolver resolver;
 	
+	private DigcoveryClient digcoveryClient;
+		
 	private BundleContext context = null;
 	
 	@Override
@@ -89,6 +92,17 @@ public class IoTSySGatewayActivator implements BundleActivator, ServiceListener{
 			iotsysGateway.setMdnsResolver(resolver);
 		}
 		
+
+		ServiceReference serviceReferenceDigcovery = bundleContext
+				.getServiceReference(DigcoveryClient.class.getName());
+		if (serviceReference == null) {
+			log.severe("Could not find mDNS-SD Service!");
+		} else {
+			digcoveryClient = (DigcoveryClient) bundleContext
+					.getService(serviceReference);
+			iotsysGateway.setMdnsResolver(resolver);
+		}
+		
 		context.addServiceListener(this);	
 	}
 
@@ -111,6 +125,16 @@ public class IoTSySGatewayActivator implements BundleActivator, ServiceListener{
 					resolver = (MdnsResolver) context
 							.getService(event.getServiceReference());
 					iotsysGateway.setMdnsResolver(resolver);
+				}
+			}
+			
+			if (objectClass[0].equals(DigcoveryClient.class.getName())) {
+
+				synchronized (this) {
+					log.info(">>>>>>>>>> DigcoveryClient detected.");
+					digcoveryClient = (DigcoveryClient) context
+							.getService(event.getServiceReference());
+					iotsysGateway.setDigcoveryClient(digcoveryClient);
 				}
 			}
 		}
