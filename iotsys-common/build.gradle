@@ -24,7 +24,7 @@ jar {
 				   "Bundle-Vendor": "Vienna University of Technology, Automation Systems Group, www.auto.tuwien.ac.at",
 				   "Bundle-Version": "0.1",
 				   "Bundle-Classpath": ".",
-				   "Export-Package": "at.ac.tuwien.auto.iotsys.commons, at.ac.tuwien.auto.iotsys.commons.interceptor, at.ac.tuwien.auto.iotsys.commons.obix.objects, at.ac.tuwien.auto.iotsys.commons.obix.objects.bacnet, at.ac.tuwien.auto.iotsys.commons.obix.objects.iot, at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators," +
+				   "Export-Package": "at.ac.tuwien.auto.iotsys.commons.obix.objects.weatherforecast, at.ac.tuwien.auto.iotsys.commons, at.ac.tuwien.auto.iotsys.commons.interceptor, at.ac.tuwien.auto.iotsys.commons.obix.objects, at.ac.tuwien.auto.iotsys.commons.obix.objects.bacnet, at.ac.tuwien.auto.iotsys.commons.obix.objects.iot, at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators," +
 									 "at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators.impl, at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.sensors, at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.logic,at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.logic.impl," +
 									 "at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.sensors.impl,at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.sim,at.ac.tuwien.auto.iotsys.commons.obix.objects.knx.datapoint," +
 									 "org.apache.commons.beanutils, org.apache.commons.beanutils.converters,org.apache.commons.beanutils.expression, org.apache.commons.beanutils.locale,org.apache.commons.beanutils.locale.converters,org.apache.commons.collections," +
