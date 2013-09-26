@@ -42,8 +42,9 @@
               <span class='numeric' ng-switch-when='numeric'>
                 <input ng-change='device.update(property)' ng-disabled='property.readonly' ng-model-onblur ng-model='property.value' type='text'>
               </span>
-              <!-- %span.enum(ng-switch-when="enum") -->
-              <!-- %select(ng-model="property.value" ng-options="x for x in property.range" ng-change="device.update(property)") -->
+              <span class='enum' ng-switch-when='enum'>
+                <select ng-change='device.update(property)' ng-model='property.value' ng-options='x for x in property.range'></select>
+              </span>
               <span class='other' ng-switch-default>
                 <input ng-disabled='property.readonly' ng-model='property.value' type='text'>
               </span>
