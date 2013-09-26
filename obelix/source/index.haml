@@ -1,0 +1,37 @@
+!!!
+%html(ng-app="Obelix" lang="en")
+  %head
+    %meta(charset="utf-8")
+    %title Obelix
+    = stylesheet_link_tag "app.css"
+    = javascript_include_tag "app.js"
+  %body(ng-controller="MainCtrl")
+    %script(type="text/ng-template" id="directory_template")
+      .icon(ng-click="directory.toggle()")
+      %label(ng-click="directory.toggle()") 
+        {{directory.name}}
+      %ul.devices(ng-show="directory.expanded")
+        %li.device(ng-repeat="device in directory.devices")
+          %label(draggable="device") {{device.name}}
+      %ul.subdirectories(ng-show="directory.expanded")
+        %li.subdirectory(ng-class="{expanded:directory.expanded}" ng-repeat="directory in directory.subdirectories" ng-include="'directory_template'")
+    #sidebar(ng-class="{expanded: sidebarExpanded}")
+      .content(ng-include="'directory_template'" not-droppable)
+      .toggle(ng-click="sidebarExpanded = !sidebarExpanded; $event.stopPropagation()")
+    #canvas(ng-click="sidebarExpanded = false" droppable="placeDevice" plumbcontainer)
+      %div(ng-repeat="device in allDevices | filter:{placement:'!!'}")
+        .device(ng-style="{left: device.placement.left, top: device.placement.top}" plumb draggable="device" draggable-distance="5" draggable-helper="original")
+          %header
+            %label.name
+              {{device.name}}
+          .properties
+            .property(ng-repeat="property in device.properties" ng-class="klass" ng-switch on="property.klass")
+              %label {{property.name}}
+              %span.bool(ng-switch-when="bool")
+                %input(type="checkbox" ng-checked="property.value" ng-disabled="property.readonly" ng-model="property.value" ng-change="device.update(property)")
+              %span.numeric(ng-switch-when="numeric")
+                %input(type="text" ng-model="property.value" ng-model-onblur ng-disabled="property.readonly" ng-change="device.update(property)")
+              / %span.enum(ng-switch-when="enum")
+              /   %select(ng-model="property.value" ng-options="x for x in property.range" ng-change="device.update(property)")
+              %span.other(ng-switch-default)
+                %input(type="text" ng-model="property.value" ng-disabled="property.readonly")

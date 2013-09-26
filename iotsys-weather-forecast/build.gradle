@@ -1,0 +1,79 @@
+// Variables
+description = 'Weather forecast bundle including IoTSyS specific oBIX object implementations.'
+
+eclipse{
+	classpath{
+		file {
+			withXml {
+				def node = it.asNode()
+				node.appendNode('classpathentry', [kind: 'src', path: '/iotsys-common', exported:'true'])
+				node.appendNode('classpathentry', [kind: 'src', path: '/iotsys-obix', exported:'true'])
+				node.appendNode('classpathentry', [kind: 'src', path: '/iotsys-osgi', exported:'true'])
+			}
+		}
+	}
+}
+
+
+configurations {
+	provided
+}
+
+sourceSets{
+	main { compileClasspath += configurations.provided }
+}
+
+jar {
+	from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+	
+	manifest {
+		attributes("Manifest-Version": "1.0",
+				   "Bundle-Name": "IoTSyS-WeatherForecast",
+				   "Bundle-SymbolicName": "at.ac.tuwien.auto.iotsys.weatherforecast",
+				   "Bundle-Description": "Weather forecast bundle including IoTSyS specific oBIX object implementations.",
+				   "Bundle-Vendor": "Vienna University of Technology, Automation Systems Group, www.auto.tuwien.ac.at",
+				   "Bundle-Version": "0.1",
+				   "Bundle-Classpath": ".",
+				   "Bundle-Activator": "at.ac.tuwien.auto.iotsys.gateway.connectors.weatherforecast.WeatherForecastBundleActivator",
+				   "Import-Package": "at.ac.tuwien.auto.iotsys.commons.obix.objects.weatherforecast, obix, obix.asm, obix.contracts, obix.io, obix.net, obix.test, obix.toos, obix.ui, obix.ui.fields, obix.ui.views, obix.xml,"+ 
+					"org.osgi.framework,at.ac.tuwien.auto.iotsys.commons, at.ac.tuwien.auto.iotsys.commons.obix.objects.iot, at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators,"+
+					"at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators.impl, at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.sensors,"+ 
+					"at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.sensors.impl,"+ 
+					"org.xml.sax, org.xml.sax.helpers, org.xml.sax.ext,  com.sun.org.apache.xalan.internal, com.sun.org.apache.xalan.internal.res," +
+					"org.w3c.dom, org.w3c.dom.traversal, org.w3c.dom.ls, javax.xml.parsers,  javax.xml.xpath, javax.xml.transform.sax, javax.xml.transform.dom," +
+					"javax.xml.namespace, javax.xml.transform, javax.xml.transform.stream, javax.xml.validation, javax.xml.datatype," +
+					"org.apache.commons.beanutils, org.apache.commons.beanutils.converters,org.apache.commons.beanutils.expression, org.apache.commons.beanutils.locale,org.apache.commons.beanutils.locale.converters,org.apache.commons.collections, " +
+					"org.apache.commons.codec, org.apache.commons.codec.binary, org.apache.commons.codec.digest, org.apache.commons.codec.language, org.apache.commons.codec.language.bm, org.apache.commons.codec.net, " +
+					"org.apache.commons.collections.bag, org.apache.commons.collections.bidimap, org.apache.commons.collections.buffer, org.apache.commons.collections.collection, org.apache.commons.collections.comparators, org.apache.commons.collections.functors, org.apache.commons.collections.iterators, org.apache.commons.collections.keyvalue, org.apache.commons.collections.list, org.apache.commons.collections.map, org.apache.commons.collections.set, " +
+					"org.apache.commons.configuration, org.apache.commons.configuration.beanutils, org.apache.commons.configuration.event, org.apache.commons.configuration.interpol, org.apache.commons.configuration.plist, org.apache.commons.configuration.reloading, org.apache.commons.configuration.resolver, org.apache.commons.configuration.tree, org.apache.commons.configuration.tree.xpath, org.apache.commons.configuration.web, " +
+					"org.apache.commons.digester, org.apache.commons.digester.parser, org.apache.commons.digester.plugins, org.apache.commons.digester.plugins.strategies, org.apache.commons.digester.substitution, org.apache.commons.digester.xmlrules, " +
+					"org.apache.commons.jexl2, org.apache.commons.jexl2.internal, org.apache.commons.jexl2.internal.introspection, org.apache.commons.jexl2.introspection, org.apache.commons.jexl2.parser, org.apache.commons.jexl2.scripting, " +
+					"org.apache.commons.jxpath, org.apache.commons.jxpath.functions, org.apache.commons.jxpath.ri, org.apache.commons.jxpath.ri.axes, org.apache.commons.jxpath.ri.compiler, org.apache.commons.jxpath.ri.model, org.apache.commons.jxpath.ri.model.beans, org.apache.commons.jxpath.ri.model.container, org.apache.commons.jxpath.ri.model.dom, org.apache.commons.jxpath.ri.model.dynabeans, org.apache.commons.jxpath.ri.model.dynamic, org.apache.commons.jxpath.ri.model.jdom, org.apache.commons.jxpath.ri.parser,org.apache.commons.jxpath.servlet, org.apache.commons.jxpath.util, org.apache.commons.jxpath.xml, " +
+					"org.apache.commons.lang, org.apache.commons.lang.builder, org.apache.commons.lang.enums, org.apache.commons.lang.exception, org.apache.commons.lang.math, org.apache.commons.lang.mutable, org.apache.commons.lang.text, org.apache.commons.lang.time, " +
+					"org.apache.commons.logging, org.apache.commons.logging.impl"
+				)
+	}
+}
+
+dependencies {
+	provided project(':iotsys-obix')
+	provided project(':iotsys-common')
+	provided project(':iotsys-osgi')
+	
+	//provided group: 'org.apache.felix', name: 'org.apache.felix.framework', version: '4.2.0'
+	provided group: 'org.apache.felix', name: 'org.osgi.core', version: '1.4.0'
+	
+	provided group: 'commons-beanutils', name: 'commons-beanutils', version: '1.8.3'
+	provided group: 'commons-codec', name: 'commons-codec', version: '1.6'
+	provided group: 'commons-collections', name: 'commons-collections', version: '3.2.1'
+	provided group: 'commons-configuration', name: 'commons-configuration', version: '1.9'
+	provided group: 'commons-digester', name: 'commons-digester', version: '1.8.1'
+	
+	
+	provided group: 'org.apache.commons', name: 'commons-jexl', version: '2.1.1'
+	provided group: 'commons-jxpath', name: 'commons-jxpath', version: '1.3'
+	provided group: 'commons-lang', name: 'commons-lang', version: '2.3'
+	provided group: 'commons-logging', name: 'commons-logging', version: '1.1.1'
+}
+
+

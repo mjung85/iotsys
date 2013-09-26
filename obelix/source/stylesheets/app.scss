@@ -1,0 +1,169 @@
+@import "compass/css3/transition";
+@import "compass/css3/border-radius";
+@import "compass/css3/box-shadow";
+@import "compass/css3/box-sizing";
+@import "compass/css3/images";
+@import "compass/css3/user-interface";
+
+body {
+  font-family: Helvetica, Arial;
+  font-size: 14px;
+  background: #282828;
+  width: 100%;
+  height: 100%;
+  @include user-select(none);
+}
+
+$sidebarWidth: 300px;
+$sidebarColor: #ddd;
+
+@mixin sidebar-shadow {
+  @include box-shadow(rgba(0,0,0,0.5) 2px 2px 2px);
+}
+
+#sidebar {
+  z-index: 101;
+
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -$sidebarWidth;
+
+  &.expanded {
+    left: 0px;
+  }
+
+  @include transition(left 0.35s);
+
+  .toggle {
+    display: block;
+    width: 32px;
+    height: 32px;
+    background-color: $sidebarColor;
+    background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAQCAYAAAAMJL+VAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAALEgAACxIB0t1+/AAAABx0RVh0U29mdHdhcmUAQWRvYmUgRmlyZXdvcmtzIENTNXG14zYAAAAYdEVYdENyZWF0aW9uIFRpbWUAMDMuMDkuMjAxMyaG+lIAAAA4SURBVDiNY2RgYDjDQEPAREvDh4cFjP///6epBTT3AQsyh5GRkeopauhH8mgqIggYGUbLooG2AADEkwiAZzXf8gAAAABJRU5ErkJggg==") center no-repeat, $sidebarColor;
+    position: absolute;
+    top: 10px;
+    left: $sidebarWidth;
+    cursor: pointer;
+
+    @include border-right-radius(4px);
+    @include sidebar-shadow;
+  }
+
+  .content {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    overflow-x: hidden;
+    overflow-y: auto;  
+    background: $sidebarColor;
+    width: $sidebarWidth;
+
+    @include sidebar-shadow;
+  }
+}
+
+@mixin bordered-device-label {
+  border: 1px solid black;
+  padding: 0 8px 0 8px;
+  &.disabled {
+    opacity: 0.1;
+  }
+}
+
+#sidebar .content {
+  padding-top: 12px;
+
+  ul {
+    width: 100%;
+    list-style: none;
+    margin: 0;
+    padding: 0 0 0 12px;
+  }
+
+  .device > label {
+    @include bordered-device-label;
+    cursor: move;
+    &:hover {
+      border-color: white;
+      color: white;
+    }
+  }
+
+  .device {
+    margin-left: 16px;
+    margin-top: 6px;
+    margin-bottom: 6px;
+  }
+
+  .subdirectory > .icon {
+    cursor: pointer;
+    background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAgCAYAAAAbifjMAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAALEgAACxIB0t1+/AAAABx0RVh0U29mdHdhcmUAQWRvYmUgRmlyZXdvcmtzIENTNXG14zYAAAAYdEVYdENyZWF0aW9uIFRpbWUAMDMuMDkuMjAxMyaG+lIAAAC9SURBVEiJ7ZRNDcJAEIW/RziCAQQgoCAAA3DHQA0gAAUYqIAiAAMIaBCAAQQgYDi0h27SaXcpJ9JJJtmfN1/e7G5WZsaYmI2qngD9AEm5pKrJ3NV51yipas/NbJvkIDb6AIUzDsJt4RcOJsAEiA8zCxLYUD/ddYzec5ABJXACln0Ghlo4Ajdg/y0AYAGccdpKOcQMKCUFkBTAAziY2bO9OI8ofAEX4N61OQQogCvwdhUd72DXFK5i9H/wpX0AKvpT5PegeQYAAAAASUVORK5CYII=");
+    background-position: 0 16px;
+    width: 16px;
+    height: 16px;
+    float: left;
+  }
+
+  .subdirectory.expanded > .icon {
+    -webkit-transform: rotate(90deg);
+  }
+
+  .subdirectory > label {
+    font-weight: bold;
+    cursor: pointer;
+    display: block;
+    width: 100%;
+  }
+}
+
+#canvas {
+  z-index: 100;
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  background-position: 12px 12px;
+  background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABkAAAAZCAYAAADE6YVjAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAALEgAACxIB0t1+/AAAABh0RVh0Q3JlYXRpb24gVGltZQAwMi4wOS4yMDEzMf3uEQAAABx0RVh0U29mdHdhcmUAQWRvYmUgRmlyZXdvcmtzIENTNXG14zYAAAA1SURBVEiJY2AgEfz//5+XRPUMTKRaQg4YtWTUklFLRpIljKSWRXQBowXkqCWjloxaMggsAQAAYg9G881fEwAAAABJRU5ErkJggg==");
+}
+
+body > label {
+  @include bordered-device-label;
+  // Drag clone
+  z-index: 200;
+  color: white;
+  border-color: white;
+}
+
+#canvas .device {
+  @include box-sizing(border-box);
+
+  width: 7 * 25px;
+  background: $sidebarColor;
+  padding: 4px;
+  position: absolute;
+
+  @include border-radius(4px);
+
+  header {
+    font-weight: bold;
+    margin-left: -4px;
+    margin-right: -4px;
+    padding-bottom: 2px;
+    text-align: center;
+  }
+
+  .property {
+    font-size: 12px;
+    color: #333;
+    label {
+      display: inline-block;
+      width: 4 * 25px;
+      overflow: hidden;
+    }
+    input {
+      width: 2 * 25px;
+    }
+  }
+}
