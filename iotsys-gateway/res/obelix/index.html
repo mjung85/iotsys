@@ -41,6 +41,12 @@
               </span>
               <span class='numeric' ng-switch-when='numeric'>
                 <input ng-change='device.update(property)' ng-disabled='property.readonly' ng-model-onblur ng-model='property.value' type='text'>
+                <div class='slider' ng-switch='property.range'>
+                  <div ng-switch-when='false'></div>
+                  <div ng-switch-default>
+                    <input max='{{property.range.max}}' min='{{property.range.min}}' ng-model='property.value' ng-mouseup='device.update(property)' step='{{property.range.step}}' type='range'>
+                  </div>
+                </div>
               </span>
               <span class='enum' ng-switch-when='enum'>
                 <select ng-change='device.update(property)' ng-model='property.value' ng-options='x for x in property.range'></select>
