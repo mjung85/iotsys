@@ -9,6 +9,8 @@
 
 var app = angular.module('Obelix', []);
 
+app.constant('WATCH_POLL_INTERVAL', 1000);
+
 app.service('Lobby', ['$http', 'Device', 'Directory', function($http, Device, Directory) {
   return {
     getDeviceTree: function(callback) {
@@ -108,10 +110,13 @@ app.factory('Directory', function() {
   return Directory;
 });
 
-app.factory('Watch', ['$http', '$timeout', 'Storage',function($http, $timeout, Storage) {
+app.factory('Watch', ['$http', '$timeout', '$q', 'Storage', 'WATCH_POLL_INTERVAL', function($http, $timeout, $q, Storage, WATCH_POLL_INTERVAL) {
   var Watch = function(href) {
     this.href = href;
   };
+
+  // A promise that will get resolved only when an old watch that we have in localStorage is dead and we creat a new one
+  Watch.watchRecreatedDefer = $q.defer();
 
   Watch.getInstance = function(callback) {
     var watchHref = Storage.get('watch');
@@ -119,7 +124,7 @@ app.factory('Watch', ['$http', '$timeout', 'Storage',function($http, $timeout, S
       $http.post('/watchService/make').success(function(response) {
         var watchHref = response['href'];
         Storage.set('watch', watchHref);
-        console.log("Made new watch", watchHref);
+        console.log("Made new watch ", watchHref);
         callback(new Watch(watchHref));
       });
     } else {
@@ -130,13 +135,12 @@ app.factory('Watch', ['$http', '$timeout', 'Storage',function($http, $timeout, S
         if (ok) {
           callback(new Watch(watchHref));
         } else {
-          console.log("Watch is out of date. Clear localStorage and try again.");
-          // Note: when requesting a new watch because old one is gone, we also need to add all our placed devices
-          // to the new watch, which is bit more complicated due to both requests being asynchronous.
-          // So let's require user intervention in this case for now.
-
-          // Storage.remove('watch');
-          // Watch.getInstance(callback);
+          console.log("Old watch "+watchHref+" seems gone. Recreating...");
+          Storage.remove('watch');
+          Watch.getInstance(function(newWatch) {
+            Watch.watchRecreatedDefer.resolve(newWatch);
+            callback(newWatch);
+          });
         }
       });
     }
@@ -148,8 +152,6 @@ app.factory('Watch', ['$http', '$timeout', 'Storage',function($http, $timeout, S
     },
     add: function(href) {
       // var payload = {"is" : "obix:WatchIn", "tag" : "obj", "nodes" : [{"tag" : "list", "name": "hrefs", "nodes":[{"tag": "uri", "val": href}]}]};
-
-      console.log("Adding "+href+" to watch");
 
       var payload = '<obj is="obix:WatchIn"><list name="hrefs"><uri val="'+href+'" /></list></obj>';
 
@@ -163,7 +165,9 @@ app.factory('Watch', ['$http', '$timeout', 'Storage',function($http, $timeout, S
         data: payload
       }).success(function(response) {
         if (response['is'] != "obix:WatchOut") {
-          console.log("Error adding",href,"to watch",response);
+          console.log("Error adding device "+href+" to watch",response);
+        } else {
+          console.log("Added device "+href+" to watch");
         }
       });
     },
@@ -178,7 +182,7 @@ app.factory('Watch', ['$http', '$timeout', 'Storage',function($http, $timeout, S
     tick: function() {
       if (this.polling) {
         this.poll(this.polling);
-        $timeout(this.tick.bind(this), 1000);
+        $timeout(this.tick.bind(this), WATCH_POLL_INTERVAL);
       }
     },
     startPolling: function(callback) {
@@ -213,9 +217,9 @@ app.factory('Property', ['$http', function($http) {
         this.range = {min: node['min'], max: node['max'], step: Math.abs(this.rangeMax - this.rangeMin)/100.0};
       }
 
-      // if (this.type == 'enum') {
-      //   this.range = Property.Enum.range(this.href);
-      // }
+      if (this.type == 'enum') {
+        this.range = Property.Enum.range(node['range']);
+      }
 
       // Display class
       if (this.numeric) {
@@ -226,19 +230,20 @@ app.factory('Property', ['$http', function($http) {
     }
   };
 
-  // Property.Enum = {
-  //   ranges: {},
-  //   range: function(href) {
-  //     var result = this.ranges[href];
-  //     if (!result) {
-  //       console.log("Get",href);
-  //       $http.get(href).success(function(response) {
-  //         this.ranges[href] = response['nodes'].map('name');
-  //       }.bind(this));
-  //     }
-  //     return result;
-  //   }
-  // };
+  Property.Enum = {
+    ranges: {},
+    range: function(href) {
+      var result = this.ranges[href];
+      if (!result) {
+        result = [];
+        this.ranges[href] = result;
+        $http.get(href).success(function(response) {
+          result.add(response['nodes'].map('name'));
+        }.bind(this));
+      }
+      return result;
+    }
+  };
 
   Property.prototype = {
     serialize: function() {
@@ -296,14 +301,32 @@ app.factory('Device', ['$http', 'Storage', 'Property', function($http, Storage, 
   return Device;
 }]);
 
-app.controller('MainCtrl', ['$scope','Lobby','Watch', function($scope, Lobby, Watch) {
+app.controller('MainCtrl', ['$scope','$q','Lobby','Watch', function($scope, $q, Lobby, Watch) {
   $scope.directory = null;
   $scope.allDevices = [];
   $scope.watch = null;
 
+  var devicesInstantiatedDefer = $q.defer();
+
+  $q.all([
+    Watch.watchRecreatedDefer.promise, 
+    devicesInstantiatedDefer.promise
+  ]).then(function(values) {
+    // Promises resolved. We now have both watch and devices and can re-add them to the new watch
+    console.log("Re-adding placed devices to new watch");
+    var watch = values[0];
+    var placedDevices = values[1];
+    placedDevices.each(function(device) { watch.add(device.href); });
+  });
+
   Lobby.getDeviceTree(function(root) {
     $scope.directory = root;
     $scope.allDevices = root.globDevices();
+
+    var placedDevices = $scope.allDevices.filter(function(device) {
+      return !!device.placement;
+    });
+    devicesInstantiatedDefer.resolve(placedDevices);
   });
 
   Watch.getInstance(function(watch) {
@@ -390,6 +413,22 @@ app.directive('droppable', ['$parse',function($parse) {
     }
   }
 }]);
+
+app.directive('ngModelOnblur', function() {
+    return {
+        restrict: 'A',
+        require: 'ngModel',
+        link: function(scope, elm, attr, ngModelCtrl) {
+            if (attr.type === 'radio' || attr.type === 'checkbox') return;
+            elm.unbind('input').unbind('keydown').unbind('change');
+            elm.bind('blur', function() {
+                scope.$apply(function() {
+                    ngModelCtrl.$setViewValue(elm.val());
+                });
+            });
+        }
+    };
+});
 
 // app.directive('plumbcontainer', function() {
 //   return {
