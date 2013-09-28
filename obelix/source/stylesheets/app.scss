@@ -167,3 +167,11 @@ body > label {
     }
   }
 }
+
+.slider {
+  width: 100%;
+  input {
+    width: 100% !important;
+    margin: 0 !important;
+  }
+}

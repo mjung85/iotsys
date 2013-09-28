@@ -202,6 +202,7 @@ app.factory('Property', ['$http', function($http) {
     } else {
       this.valid = true;
 
+      this.range = false;
       this.href = node['href'];
       this.type = node['tag'];
       this.numeric = (this.type == 'int' || this.type == 'real');
