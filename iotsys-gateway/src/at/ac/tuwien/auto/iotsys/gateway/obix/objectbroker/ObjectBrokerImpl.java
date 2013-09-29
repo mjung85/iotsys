@@ -113,8 +113,8 @@ public class ObjectBrokerImpl implements ObjectBroker {
 		addObj(aboutImpl, false); // About is added directly in lobby as local
 
 		Obj enums = new Obj();
-		enums.setName("enums");
-		enums.setHref(new Uri("enums"));
+		enums.setName("enums2");
+		enums.setHref(new Uri("enums2"));
 
 		// compareType enum
 		List compareTypes = new List();
@@ -281,8 +281,8 @@ public class ObjectBrokerImpl implements ObjectBroker {
 		
 		// create units
 		Obj units = new Obj();
-		units.setName("units");
-		units.setHref(new Uri("units"));
+		units.setName("units2");
+		units.setHref(new Uri("units2"));
 		
 		// beaufort
 		UnitImpl beaufort = new Beaufort();
