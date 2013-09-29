@@ -202,6 +202,7 @@ app.factory('Property', ['$http', function($http) {
     } else {
       this.valid = true;
 
+      this.groupCommEnabled = false;
       this.range = false;
       this.href = node['href'];
       this.type = node['tag'];
@@ -283,9 +284,26 @@ app.factory('Device', ['$http', 'Storage', 'Property', function($http, Storage, 
     },
 
     parse: function(response) {
+      var propertiesWithGroupCommEnabled = [];
       this.properties = response['nodes'].map(function(node) {
-        return new Property(node);
+        if (node['tag'] == 'ref') {
+          var names = node['name'].split(' ');
+          var gcIndex = names.indexOf('groupComm');
+          if (gcIndex != -1) {
+            names.splice(gcIndex,1);
+            propertiesWithGroupCommEnabled.push(names[0]);
+          }
+          return false;
+        } else {
+          return new Property(node);
+        }
       }).filter({valid:true});
+
+      // Set .groupcommEnabled=true for properties specified in the <ref>s
+      propertiesWithGroupCommEnabled.each(function(name) {
+        var p = this.properties.find({name:name});
+        if (p) { p.groupCommEnabled = true; }
+      }.bind(this));
     },
 
     update: function(property) {
@@ -446,10 +464,13 @@ app.directive('jsplumbContainer', function() {
   }
 });
 
-app.directive('jsplumbEndpoint', ['$timeout', function($timeout) {
+app.directive('jsplumbEndpointIf', ['$timeout', function($timeout) {
   return {
     restrict: 'A',
     link: function(scope, el, attrs) {
+      var value = scope.$eval(attrs['jsplumbEndpointIf']);
+      if (!value) return;
+
       $timeout(function() {
         jsPlumb.addEndpoint(el, {
           isSource: true, 
@@ -457,7 +478,7 @@ app.directive('jsplumbEndpoint', ['$timeout', function($timeout) {
           connector:[ "Bezier", { stub: 30, curviness:50 }], 
           endpoint: ["Rectangle", { width: 8, height: 8}],
           anchors: [[1, 0.5, 1, 0, 8,0], [0, 0.5, -1, 0, -8, 0]],
-          paintStyle:{ fillStyle:"#444"}, 
+          paintStyle:{ fillStyle:"#666"}, 
           connectorStyle: { lineWidth: 4, strokeStyle: "#5b9ada"},
           connectorClass: 'conn'
         });

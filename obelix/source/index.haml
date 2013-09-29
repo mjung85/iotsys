@@ -25,7 +25,7 @@
             %label.name
               {{device.name}}
           .properties
-            .property(ng-repeat="property in device.properties" ng-class="klass" ng-switch on="property.klass" jsplumb-endpoint)
+            .property(ng-repeat="property in device.properties" ng-class="klass" ng-switch on="property.klass" jsplumb-endpoint-if="property.groupCommEnabled")
               %label {{property.name}}
               %span.bool(ng-switch-when="bool")
                 %input(type="checkbox" ng-checked="property.value" ng-disabled="property.readonly" ng-model="property.value" ng-change="device.update(property)")
