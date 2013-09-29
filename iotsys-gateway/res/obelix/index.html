@@ -23,18 +23,18 @@
     </script>
     <div id='sidebar' ng-class='{expanded: sidebarExpanded}'>
       <div class='content' ng-include="'directory_template'" not-droppable></div>
-      <div class='toggle' ng-click='sidebarExpanded = !sidebarExpanded; $event.stopPropagation()'></div>
+      <div class='btn' id='toggle' ng-click='sidebarExpanded = !sidebarExpanded; $event.stopPropagation()'></div>
     </div>
-    <div droppable='placeDevice' id='canvas' ng-click='sidebarExpanded = false' plumbcontainer>
+    <div droppable='placeDevice' id='canvas' jsplumb-container ng-click='sidebarExpanded = false'>
       <div ng-repeat="device in allDevices | filter:{placement:'!!'}">
-        <div class='device' draggable-distance='5' draggable-helper='original' draggable='device' ng-style='{left: device.placement.left, top: device.placement.top}' plumb>
+        <div class='device' draggable-distance='5' draggable-helper='original' draggable-via-jsplumb='true' draggable='device' ng-style='{left: device.placement.left, top: device.placement.top}'>
           <header>
             <label class='name'>
               {{device.name}}
             </label>
           </header>
           <div class='properties'>
-            <div class='property' ng-class='klass' ng-repeat='property in device.properties' ng-switch on='property.klass'>
+            <div class='property' jsplumb-endpoint ng-class='klass' ng-repeat='property in device.properties' ng-switch on='property.klass'>
               <label>{{property.name}}</label>
               <span class='bool' ng-switch-when='bool'>
                 <input ng-change='device.update(property)' ng-checked='property.value' ng-disabled='property.readonly' ng-model='property.value' type='checkbox'>
