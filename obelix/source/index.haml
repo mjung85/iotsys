@@ -17,15 +17,15 @@
         %li.subdirectory(ng-class="{expanded:directory.expanded}" ng-repeat="directory in directory.subdirectories" ng-include="'directory_template'")
     #sidebar(ng-class="{expanded: sidebarExpanded}")
       .content(ng-include="'directory_template'" not-droppable)
-      .toggle(ng-click="sidebarExpanded = !sidebarExpanded; $event.stopPropagation()")
-    #canvas(ng-click="sidebarExpanded = false" droppable="placeDevice" plumbcontainer)
+      .btn#toggle(ng-click="sidebarExpanded = !sidebarExpanded; $event.stopPropagation()")
+    #canvas(ng-click="sidebarExpanded = false" droppable="placeDevice" jsplumb-container)
       %div(ng-repeat="device in allDevices | filter:{placement:'!!'}")
-        .device(ng-style="{left: device.placement.left, top: device.placement.top}" plumb draggable="device" draggable-distance="5" draggable-helper="original")
+        .device(ng-style="{left: device.placement.left, top: device.placement.top}" draggable="device" draggable-distance="5" draggable-helper="original" draggable-via-jsplumb="true")
           %header
             %label.name
               {{device.name}}
           .properties
-            .property(ng-repeat="property in device.properties" ng-class="klass" ng-switch on="property.klass")
+            .property(ng-repeat="property in device.properties" ng-class="klass" ng-switch on="property.klass" jsplumb-endpoint)
               %label {{property.name}}
               %span.bool(ng-switch-when="bool")
                 %input(type="checkbox" ng-checked="property.value" ng-disabled="property.readonly" ng-model="property.value" ng-change="device.update(property)")

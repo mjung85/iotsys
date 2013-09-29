@@ -2,7 +2,7 @@
 //= require 'jquery-ui'
 //= require 'angular'
 //= require 'html5slider'
-////require 'jquery.jsPlumb-1.5.2'
+//= require 'jquery.jsPlumb-1.5.2'
 //= require 'sugar'
 //= require 'URI'
 //= require_self
@@ -377,7 +377,11 @@ app.directive('draggable', function() {
       if (attrs['draggableDistance']) options.distance = attrs['draggableDistance'];
       if (attrs['draggableHelper']) options.helper = attrs['draggableHelper'];
 
-      el.draggable(options);
+      if (attrs['draggableViaJsplumb']) {
+        jsPlumb.draggable(el, options);  
+      } else {
+        el.draggable(options);        
+      }
     }
   };
 });
@@ -408,7 +412,7 @@ app.directive('droppable', ['$parse',function($parse) {
           var model = draggable.scope().$eval(draggable.attr('draggable'));
           callback(model, ui.helper.position());
           scope.$apply();
-          //jsPlumb.repaintEverything();
+          jsPlumb.repaintEverything();
         }
       });
     }
@@ -431,24 +435,33 @@ app.directive('ngModelOnblur', function() {
     };
 });
 
-// app.directive('plumbcontainer', function() {
-//   return {
-//     restrict: 'A',
-//     link: function(scope, el, attrs) {
-//       jsPlumb.ready(function() {
-//         jsPlumb.Defaults.Container = el;
-//       });
-//     }
-//   }
-// });
+app.directive('jsplumbContainer', function() {
+  return {
+    restrict: 'A',
+    link: function(scope, el, attrs) {
+      jsPlumb.ready(function() {
+        jsPlumb.Defaults.Container = el;
+      });
+    }
+  }
+});
 
-// app.directive('plumb', function() {
-//   return {
-//     restrict: 'A',
-//     link: function(scope, el, attrs) {
-//       jsPlumb.addEndpoint(el, {isSource: true, isTarget:true, connector:[ "Bezier", { curviness:100 }], endpoint: ["Dot", {
-//         radius: 6
-//       }],paintStyle:{ fillStyle:"black"}, connectorStyle: { lineWidth: 4, strokeStyle: "#5b9ada"}});
-//     }
-//   }
-// });
+app.directive('jsplumbEndpoint', ['$timeout', function($timeout) {
+  return {
+    restrict: 'A',
+    link: function(scope, el, attrs) {
+      $timeout(function() {
+        jsPlumb.addEndpoint(el, {
+          isSource: true, 
+          isTarget: true, 
+          connector:[ "Bezier", { stub: 30, curviness:50 }], 
+          endpoint: ["Rectangle", { width: 8, height: 8}],
+          anchors: [[1, 0.5, 1, 0, 8,0], [0, 0.5, -1, 0, -8, 0]],
+          paintStyle:{ fillStyle:"#444"}, 
+          connectorStyle: { lineWidth: 4, strokeStyle: "#5b9ada"},
+          connectorClass: 'conn'
+        });
+      },0);  
+    }
+  }
+}]);
