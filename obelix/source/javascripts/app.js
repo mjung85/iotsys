@@ -248,13 +248,44 @@ app.factory('Property', ['$http', function($http) {
   };
 
   Property.prototype = {
-    serialize: function() {
-      return {'tag': this.type, 'val': this.value };
+    write: function(property) {
+      $http.put(this.href, {'tag': this.type, 'val': this.value }).success(function(response) {
+        if(response['tag'] && response['tag'] == 'err') {
+          console.log("Error updating " + this.href, response);
+        }
+      }.bind(this));
+    },
+    joinGroupComm: function(ipv6) {
+      var url = URI(this.href).segment('groupComm').segment('joinGroup').toString();
+      $http.post(url, '<str val="'+ipv6+'"/>', {headers: {
+        'Content-Type': 'application/xml'
+      }}).success(function() {
+        console.log("Joined ",this.href," into groupComm ",ipv6);
+      }.bind(this));
     }
   };
 
   return Property;
 }]);
+
+app.factory('Connection', function() {
+  var Connection = function(fromProperty, toProperty) {
+    this.id = Connection.counter;
+    this.ipv6 = "FF02:FFFF::"+this.id;
+    Connection.counter += 1;
+    return this;
+  };
+
+  Connection.counter = 1; // TODO: storage
+
+  Connection.create = function(fromProperty, toProperty) {
+    var c = new Connection(fromProperty, toProperty); 
+    fromProperty.joinGroupComm(c.ipv6);
+    toProperty.joinGroupComm(c.ipv6);
+  };
+
+  return Connection;
+});
 
 app.factory('Device', ['$http', 'Storage', 'Property', function($http, Storage, Property) {
   var Device = function(href, name) {
@@ -295,32 +326,37 @@ app.factory('Device', ['$http', 'Storage', 'Property', function($http, Storage, 
           }
           return false;
         } else {
+          // Make href absolute (concatenate with device href)
+          node['href'] = URI(node['href']).absoluteTo(this.href).toString();
           return new Property(node);
         }
-      }).filter({valid:true});
+      }.bind(this)).filter({valid:true});
 
-      // Set .groupcommEnabled=true for properties specified in the <ref>s
+      // Set .groupCommEnabled=true for properties specified in the <ref>s
       propertiesWithGroupCommEnabled.each(function(name) {
         var p = this.properties.find({name:name});
         if (p) { p.groupCommEnabled = true; }
       }.bind(this));
     },
 
-    update: function(property) {
-      var absolutePropertyHref = URI(property.href).absoluteTo(this.href).toString();
-      $http.put(absolutePropertyHref, property.serialize()).success(function(response) {
-        if(response['tag'] && response['tag'] == 'err') {
-          console.log("Error updating " + absolutePropertyHref, response);
+    // Updates property values from a watch response
+    refresh: function(response) {
+      // console.log("Updating",this.href);
+      response['nodes'].each(function(node) {
+        // console.log("Searching",node['href']);
+        var property = this.properties.find({href:node['href']});
+        if (property) {
+          // console.log("Update",property.name, property.value);
+          property.value = node['val'];
         }
-        // this.parse(response);
       }.bind(this));
-    },
+    }
   };
   
   return Device;
 }]);
 
-app.controller('MainCtrl', ['$scope','$q','Lobby','Watch', function($scope, $q, Lobby, Watch) {
+app.controller('MainCtrl', ['$scope','$q','Lobby','Watch','Connection',function($scope, $q, Lobby, Watch, Connection) {
   $scope.directory = null;
   $scope.allDevices = [];
   $scope.watch = null;
@@ -353,7 +389,8 @@ app.controller('MainCtrl', ['$scope','$q','Lobby','Watch', function($scope, $q, 
     watch.startPolling(function(deviceJson) {
       var device = $scope.allDevices.find({href:deviceJson['href']});
       if (device) {
-        device.parse(deviceJson);
+        console.log("Watch reports", deviceJson);
+        device.refresh(deviceJson);
       }
     });
   });
@@ -368,6 +405,12 @@ app.controller('MainCtrl', ['$scope','$q','Lobby','Watch', function($scope, $q, 
     $scope.sidebarExpanded = false;
     device.place(position);
   };
+
+  jsPlumb.bind("connection", function(info) {
+    var sourceProperty = info.sourceEndpoint.getParameters().property;
+    var targetProperty = info.targetEndpoint.getParameters().property;
+    Connection.create(sourceProperty, targetProperty);
+  });
 }]);
 
 // Simple angularJS directives for use of jquery-ui draggable
@@ -464,12 +507,12 @@ app.directive('jsplumbContainer', function() {
   }
 });
 
-app.directive('jsplumbEndpointIf', ['$timeout', function($timeout) {
+app.directive('jsplumbEndpoint', ['$timeout', function($timeout) {
   return {
     restrict: 'A',
     link: function(scope, el, attrs) {
-      var value = scope.$eval(attrs['jsplumbEndpointIf']);
-      if (!value) return;
+      var property = scope.$eval(attrs['jsplumbEndpoint']);
+      if (!property.groupCommEnabled) return;
 
       $timeout(function() {
         jsPlumb.addEndpoint(el, {
@@ -480,7 +523,8 @@ app.directive('jsplumbEndpointIf', ['$timeout', function($timeout) {
           anchors: [[1, 0.5, 1, 0, 8,0], [0, 0.5, -1, 0, -8, 0]],
           paintStyle:{ fillStyle:"#666"}, 
           connectorStyle: { lineWidth: 4, strokeStyle: "#5b9ada"},
-          connectorClass: 'conn'
+          connectorClass: 'conn',
+          parameters: {property: property}
         });
       },0);  
     }

@@ -25,17 +25,17 @@
             %label.name
               {{device.name}}
           .properties
-            .property(ng-repeat="property in device.properties" ng-class="klass" ng-switch on="property.klass" jsplumb-endpoint-if="property.groupCommEnabled")
+            .property(ng-repeat="property in device.properties" ng-class="klass" ng-switch on="property.klass" jsplumb-endpoint="property")
               %label {{property.name}}
               %span.bool(ng-switch-when="bool")
-                %input(type="checkbox" ng-checked="property.value" ng-disabled="property.readonly" ng-model="property.value" ng-change="device.update(property)")
+                %input(type="checkbox" ng-checked="property.value" ng-disabled="property.readonly" ng-model="property.value" ng-change="property.write()")
               %span.numeric(ng-switch-when="numeric")
-                %input(type="text" ng-model="property.value" ng-model-onblur ng-disabled="property.readonly" ng-change="device.update(property)")
+                %input(type="text" ng-model="property.value" ng-model-onblur ng-disabled="property.readonly" ng-change="property.write()")
                 .slider(ng-switch="property.range")
                   %div(ng-switch-when="false")
                   %div(ng-switch-default)
-                    %input(type="range" min="{{property.range.min}}" max="{{property.range.max}}" step="{{property.range.step}}" ng-model="property.value" ng-mouseup="device.update(property)")
+                    %input(type="range" min="{{property.range.min}}" max="{{property.range.max}}" step="{{property.range.step}}" ng-model="property.value" ng-mouseup="property.write()")
               %span.enum(ng-switch-when="enum")
-                %select(ng-model="property.value" ng-options="x for x in property.range" ng-change="device.update(property)")
+                %select(ng-model="property.value" ng-options="x for x in property.range" ng-change="property.write()")
               %span.other(ng-switch-default)
                 %input(type="text" ng-model="property.value" ng-disabled="property.readonly")
