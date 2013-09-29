@@ -34,22 +34,22 @@
             </label>
           </header>
           <div class='properties'>
-            <div class='property' jsplumb-endpoint-if='property.groupCommEnabled' ng-class='klass' ng-repeat='property in device.properties' ng-switch on='property.klass'>
+            <div class='property' jsplumb-endpoint='property' ng-class='klass' ng-repeat='property in device.properties' ng-switch on='property.klass'>
               <label>{{property.name}}</label>
               <span class='bool' ng-switch-when='bool'>
-                <input ng-change='device.update(property)' ng-checked='property.value' ng-disabled='property.readonly' ng-model='property.value' type='checkbox'>
+                <input ng-change='property.write()' ng-checked='property.value' ng-disabled='property.readonly' ng-model='property.value' type='checkbox'>
               </span>
               <span class='numeric' ng-switch-when='numeric'>
-                <input ng-change='device.update(property)' ng-disabled='property.readonly' ng-model-onblur ng-model='property.value' type='text'>
+                <input ng-change='property.write()' ng-disabled='property.readonly' ng-model-onblur ng-model='property.value' type='text'>
                 <div class='slider' ng-switch='property.range'>
                   <div ng-switch-when='false'></div>
                   <div ng-switch-default>
-                    <input max='{{property.range.max}}' min='{{property.range.min}}' ng-model='property.value' ng-mouseup='device.update(property)' step='{{property.range.step}}' type='range'>
+                    <input max='{{property.range.max}}' min='{{property.range.min}}' ng-model='property.value' ng-mouseup='property.write()' step='{{property.range.step}}' type='range'>
                   </div>
                 </div>
               </span>
               <span class='enum' ng-switch-when='enum'>
-                <select ng-change='device.update(property)' ng-model='property.value' ng-options='x for x in property.range'></select>
+                <select ng-change='property.write()' ng-model='property.value' ng-options='x for x in property.range'></select>
               </span>
               <span class='other' ng-switch-default>
                 <input ng-disabled='property.readonly' ng-model='property.value' type='text'>
