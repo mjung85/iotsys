@@ -102,7 +102,7 @@ app.factory('Directory', function() {
     globDevices: function() {
       var result = [];
       result = result.concat(this.devices);
-      this.subdirectories.each(function(s) { result = result.concat(s.devices); });
+      this.subdirectories.each(function(s) { result = result.concat(s.globDevices()); });
       return result;
     }
   };
@@ -346,7 +346,7 @@ app.factory('Device', ['$http', 'Storage', 'Property', function($http, Storage, 
         // console.log("Searching",node['href']);
         var property = this.properties.find({href:node['href']});
         if (property) {
-          // console.log("Update",property.name, property.value);
+          // console.log("Update",property.name, node['val']);
           property.value = node['val'];
         }
       }.bind(this));
@@ -517,7 +517,8 @@ app.directive('jsplumbEndpoint', ['$timeout', function($timeout) {
       $timeout(function() {
         jsPlumb.addEndpoint(el, {
           isSource: true, 
-          isTarget: true, 
+          isTarget: true,
+          maxConnections: -1,
           connector:[ "Bezier", { stub: 30, curviness:50 }], 
           endpoint: ["Rectangle", { width: 8, height: 8}],
           anchors: [[1, 0.5, 1, 0, 8,0], [0, 0.5, -1, 0, -8, 0]],
