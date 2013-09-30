@@ -66,25 +66,25 @@ public class InternalsImpl implements Internals
 	}
 
 	@Override
-	public EnumsImpl getEnums()
+	public EnumsImpl enums()
 	{
 		return enums;
 	}
 
 	@Override
-	public UnitsImpl getUnits()
+	public UnitsImpl units()
 	{
 		return units;
 	}
 
 	@Override
-	public EncodingsImpl getEncodings()
+	public EncodingsImpl encodings()
 	{
 		return encodings;
 	}
 
 	@Override
-	public ParametersImpl getParameters()
+	public ParametersImpl parameters()
 	{
 		return parameters;
 	}

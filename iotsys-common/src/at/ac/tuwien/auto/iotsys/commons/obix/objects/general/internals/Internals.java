@@ -35,11 +35,11 @@ import obix.List;
 
 public interface Internals
 {
-	public List getEnums();
+	public List enums();
 
-	public List getUnits();
+	public List units();
 
-	public List getEncodings();
+	public List encodings();
 
-	public List getParameters();
+	public List parameters();
 }
