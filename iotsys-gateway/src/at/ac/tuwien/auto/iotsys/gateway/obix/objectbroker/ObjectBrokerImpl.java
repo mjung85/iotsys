@@ -331,6 +331,6 @@ public class ObjectBrokerImpl implements ObjectBroker
 	@Override
 	public String getEnumKey(String href, String name)
 	{
-		return internals.getEnums().getEnum(href).getKey(name);
+		return internals.enums().getEnum(href).getKey(name);
 	}
 }
