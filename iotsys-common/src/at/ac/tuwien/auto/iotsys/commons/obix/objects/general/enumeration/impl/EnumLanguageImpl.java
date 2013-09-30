@@ -44,18 +44,18 @@ public class EnumLanguageImpl extends RangeImpl implements EnumLanguage
 
 	protected void initValues()
 	{
-		getElements().add(new EnumElement(EnumLanguage.KEY_DE_DE, "German"));
-		getElements().add(new EnumElement(EnumLanguage.KEY_EN_EN, "English"));
-		getElements().add(new EnumElement(EnumLanguage.KEY_EN_US, "English (United States)"));
-		getElements().add(new EnumElement(EnumLanguage.KEY_ES_ES, "Spanish"));
-		getElements().add(new EnumElement(EnumLanguage.KEY_IT_IT, "Italian"));
-		getElements().add(new EnumElement(EnumLanguage.KEY_FR_FR, "French"));
-		getElements().add(new EnumElement(EnumLanguage.KEY_ID_ID, "Indonesian"));
-		getElements().add(new EnumElement(EnumLanguage.KEY_NB_NO, "Norwegian"));
-		getElements().add(new EnumElement(EnumLanguage.KEY_SV_SE, "Swedish"));
-		getElements().add(new EnumElement(EnumLanguage.KEY_DA_DK, "Danish"));
-		getElements().add(new EnumElement(EnumLanguage.KEY_NL_NL, "Dutch"));
-		getElements().add(new EnumElement(EnumLanguage.KEY_EL_GR, "Greek"));
-		getElements().add(new EnumElement(EnumLanguage.KEY_RU_RU, "Russian"));
+		getElements().add(new ObjElement(EnumLanguage.KEY_DE_DE, "German"));
+		getElements().add(new ObjElement(EnumLanguage.KEY_EN_EN, "English"));
+		getElements().add(new ObjElement(EnumLanguage.KEY_EN_US, "English (United States)"));
+		getElements().add(new ObjElement(EnumLanguage.KEY_ES_ES, "Spanish"));
+		getElements().add(new ObjElement(EnumLanguage.KEY_IT_IT, "Italian"));
+		getElements().add(new ObjElement(EnumLanguage.KEY_FR_FR, "French"));
+		getElements().add(new ObjElement(EnumLanguage.KEY_ID_ID, "Indonesian"));
+		getElements().add(new ObjElement(EnumLanguage.KEY_NB_NO, "Norwegian"));
+		getElements().add(new ObjElement(EnumLanguage.KEY_SV_SE, "Swedish"));
+		getElements().add(new ObjElement(EnumLanguage.KEY_DA_DK, "Danish"));
+		getElements().add(new ObjElement(EnumLanguage.KEY_NL_NL, "Dutch"));
+		getElements().add(new ObjElement(EnumLanguage.KEY_EL_GR, "Greek"));
+		getElements().add(new ObjElement(EnumLanguage.KEY_RU_RU, "Russian"));
 	}
 }

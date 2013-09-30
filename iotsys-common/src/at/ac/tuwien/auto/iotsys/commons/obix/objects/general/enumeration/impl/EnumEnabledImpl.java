@@ -44,7 +44,7 @@ public class EnumEnabledImpl extends RangeImpl implements EnumEnabled
 
 	protected void initValues()
 	{
-		getElements().add(new EnumElement(EnumEnabled.KEY_DISABLED, "Disabled"));
-		getElements().add(new EnumElement(EnumEnabled.KEY_ENABLED, "Enabled"));
+		getElements().add(new ObjElement(EnumEnabled.KEY_DISABLED, "Disabled"));
+		getElements().add(new ObjElement(EnumEnabled.KEY_ENABLED, "Enabled"));
 	}
 }

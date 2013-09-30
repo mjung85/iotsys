@@ -29,22 +29,17 @@
  * This file is part of the IoTSyS project.
  ******************************************************************************/
 
-package at.ac.tuwien.auto.iotsys.commons.obix.objects.general.enumeration.impl;
+package at.ac.tuwien.auto.iotsys.commons.obix.objects.general.internals;
 
-import obix.Uri;
-import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.contracts.impl.RangeImpl;
-import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.enumeration.EnumTranslation;
+import obix.List;
 
-public class EnumTranslationImpl extends RangeImpl implements EnumTranslation
+public interface Internals
 {
-	public EnumTranslationImpl()
-	{
-		super(new Uri(EnumTranslation.HREF));
-	}
+	public List getEnums();
 
-	protected void initValues()
-	{
-		getElements().add(new ObjElement(EnumTranslation.KEY_DISPLAY, "Display"));
-		getElements().add(new ObjElement(EnumTranslation.KEY_DISPLAYNAME, "DisplayName"));
-	}
+	public List getUnits();
+
+	public List getEncodings();
+
+	public List getParameters();
 }

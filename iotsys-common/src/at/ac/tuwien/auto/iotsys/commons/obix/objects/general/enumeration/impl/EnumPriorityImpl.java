@@ -44,8 +44,8 @@ public class EnumPriorityImpl extends RangeImpl implements EnumPriority
 
 	protected void initValues()
 	{
-		getElements().add(new EnumElement(EnumPriority.KEY_LOW, "Low"));
-		getElements().add(new EnumElement(EnumPriority.KEY_HIGH, "High"));
-		getElements().add(new EnumElement(EnumPriority.KEY_ALERT, "Alert"));
+		getElements().add(new ObjElement(EnumPriority.KEY_LOW, "Low"));
+		getElements().add(new ObjElement(EnumPriority.KEY_HIGH, "High"));
+		getElements().add(new ObjElement(EnumPriority.KEY_ALERT, "Alert"));
 	}
 }

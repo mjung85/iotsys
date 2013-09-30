@@ -32,6 +32,8 @@
 
 package at.ac.tuwien.auto.iotsys.commons.util;
 
+import org.apache.commons.lang.StringEscapeUtils;
+
 public abstract class UriEncoder
 {
 	public static String getEscapedUri(String decodedStr)
@@ -52,8 +54,11 @@ public abstract class UriEncoder
 		tmp = tmp.replace("ß", "ss");
 		tmp = tmp.replace("ä", "ae");
 		tmp = tmp.replace("ö", "oe");
-		tmp = tmp.replace("ü", "ue");		
+		tmp = tmp.replace("ü", "ue");
+		tmp = tmp.replace("%", "%25");	
 		
+		tmp = StringEscapeUtils.escapeHtml(tmp);
+				
 		return tmp;
 	}
 }

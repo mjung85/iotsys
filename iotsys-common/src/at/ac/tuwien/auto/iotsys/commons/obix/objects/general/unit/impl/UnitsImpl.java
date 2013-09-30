@@ -46,7 +46,7 @@ public class UnitsImpl extends List implements IObj
 		this.setOf(new Contract(Unit.CONTRACT));
 		this.setHref(new Uri("/units"));
 
-		UnitImpl[] units = new UnitImpl[] { new UnitCelsiusImpl(), new UnitPercentImpl(), new UnitPpmImpl() };
+		UnitImpl[] units = new UnitImpl[] { new UnitCelsiusImpl(), new UnitPercentImpl(), new UnitPpmImpl(), new UnitBeaufortImpl(), new UnitDegreeImpl(), new UnitHectopascalImpl(), new UnitMeterImpl(), new UnitMillimeterImpl() };
 
 		for (UnitImpl unit : units)
 		{
