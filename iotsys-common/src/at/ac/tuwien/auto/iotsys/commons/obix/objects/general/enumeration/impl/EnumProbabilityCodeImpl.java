@@ -33,18 +33,21 @@ package at.ac.tuwien.auto.iotsys.commons.obix.objects.general.enumeration.impl;
 
 import obix.Uri;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.contracts.impl.RangeImpl;
-import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.enumeration.EnumTranslation;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.enumeration.EnumProbabilityCode;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.weatherforecast.ProbabilityCode;
 
-public class EnumTranslationImpl extends RangeImpl implements EnumTranslation
+public class EnumProbabilityCodeImpl extends RangeImpl implements EnumProbabilityCode
 {
-	public EnumTranslationImpl()
+	public EnumProbabilityCodeImpl()
 	{
-		super(new Uri(EnumTranslation.HREF));
+		super(new Uri(EnumProbabilityCode.HREF));
 	}
 
 	protected void initValues()
 	{
-		getElements().add(new ObjElement(EnumTranslation.KEY_DISPLAY, "Display"));
-		getElements().add(new ObjElement(EnumTranslation.KEY_DISPLAYNAME, "DisplayName"));
+		getElements().add(new IntElement(ProbabilityCode.NAME_UNKNOWN, ProbabilityCode.ID_UNKNOWN));
+		getElements().add(new IntElement(ProbabilityCode.NAME_HIGHLY_PROBABLE, ProbabilityCode.ID_HIGHLY_PROBABLE));
+		getElements().add(new IntElement(ProbabilityCode.NAME_PROBABLE, ProbabilityCode.ID_PROBABLE));
+		getElements().add(new IntElement(ProbabilityCode.NAME_UNCERTAIN, ProbabilityCode.ID_UNCERTAIN));
 	}
 }

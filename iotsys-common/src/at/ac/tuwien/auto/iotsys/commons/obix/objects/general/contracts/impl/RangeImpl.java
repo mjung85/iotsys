@@ -33,27 +33,37 @@ package at.ac.tuwien.auto.iotsys.commons.obix.objects.general.contracts.impl;
 
 import java.util.ArrayList;
 
+import obix.Bool;
 import obix.Contract;
+import obix.Int;
 import obix.List;
 import obix.Uri;
 import obix.contracts.Range;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.language.impl.MultilingualImpl;
+import at.ac.tuwien.auto.iotsys.commons.util.UriEncoder;
 
 public abstract class RangeImpl extends List implements Range
 {
-	protected class EnumElement extends MultilingualImpl
+	protected class ObjElement extends MultilingualImpl
 	{
 		private String key;
 
-		public EnumElement(String key, String displayName)
+		public ObjElement(String key)
+		{
+			this(key, null);
+		}
+
+		public ObjElement(String key, String displayName)
 		{
 			super();
-			
+
 			this.key = key;
 
 			this.setName(key);
-			this.setHref(new Uri(key));
-			this.setDisplayName(displayName);
+			this.setHref(new Uri(UriEncoder.getEscapedUri(key)));
+
+			if (displayName != null)
+				this.setDisplayName(displayName);
 		}
 
 		public String getKey()
@@ -62,7 +72,58 @@ public abstract class RangeImpl extends List implements Range
 		}
 	}
 
-	private ArrayList<EnumElement> elements;
+	protected class BoolElement extends ObjElement
+	{
+		private Bool value;
+
+		public BoolElement(String key, String displayName, boolean value)
+		{
+			super(key, displayName);
+
+			// Value
+			this.value = new Bool();
+			this.value.setName("value");
+			this.value.setHref(new Uri("value"));
+			this.value.set(value);
+			this.add(this.value);
+		}
+
+		public boolean getBool()
+		{
+			return this.value.get();
+		}
+
+	}
+
+	protected class IntElement extends ObjElement
+	{
+		private Int value;
+
+		public IntElement(String key, long value)
+		{
+			this(key, null, value);
+		}
+
+		public IntElement(String key, String displayName, long value)
+		{
+			super(key, displayName);
+
+			// Value
+			this.value = new Int();
+			this.value.setName("value");
+			this.value.setHref(new Uri("value"));
+			this.value.set(value);
+			this.add(this.value);
+		}
+
+		public long getInt()
+		{
+			return this.value.get();
+		}
+
+	}
+
+	private ArrayList<ObjElement> elements;
 
 	public RangeImpl(Uri href)
 	{
@@ -70,11 +131,11 @@ public abstract class RangeImpl extends List implements Range
 		this.setIs(new Contract(Range.CONTRACT));
 		this.setHidden(true);
 
-		this.elements = new ArrayList<EnumElement>();
+		this.elements = new ArrayList<ObjElement>();
 
 		this.initValues();
 
-		for (EnumElement e : elements)
+		for (ObjElement e : elements)
 		{
 			this.add(e);
 		}
@@ -82,14 +143,14 @@ public abstract class RangeImpl extends List implements Range
 
 	protected abstract void initValues();
 
-	protected ArrayList<EnumElement> getElements()
+	protected ArrayList<ObjElement> getElements()
 	{
 		return elements;
 	}
 
 	public String getKey(String name)
 	{
-		for (EnumElement e : elements)
+		for (ObjElement e : elements)
 		{
 			if (e.getName().toLowerCase().equals(name.toLowerCase()))
 			{
@@ -101,7 +162,7 @@ public abstract class RangeImpl extends List implements Range
 
 	public String getName(String key)
 	{
-		for (EnumElement e : elements)
+		for (ObjElement e : elements)
 		{
 			if (e.getKey().toLowerCase().equals(key.toLowerCase()))
 			{

@@ -29,22 +29,24 @@
  * This file is part of the IoTSyS project.
  ******************************************************************************/
 
-package at.ac.tuwien.auto.iotsys.commons.obix.objects.general.enumeration.impl;
+package at.ac.tuwien.auto.iotsys.commons.obix.objects.general.unit.impl;
 
 import obix.Uri;
-import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.contracts.impl.RangeImpl;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.contracts.impl.DimensionImpl;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.contracts.impl.UnitImpl;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.enumeration.EnumLanguage;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.enumeration.EnumTranslation;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.language.Multilingual;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.language.impl.TranslationImpl;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.unit.UnitBeaufort;
 
-public class EnumTranslationImpl extends RangeImpl implements EnumTranslation
+public class UnitBeaufortImpl extends UnitImpl implements UnitBeaufort, Multilingual
 {
-	public EnumTranslationImpl()
+	public UnitBeaufortImpl()
 	{
-		super(new Uri(EnumTranslation.HREF));
-	}
+		super("beaufort", "wind speed (Bft)", new Uri(UnitBeaufort.HREF), "Bft", 1, 0, new DimensionImpl(0, 0, 0, 0, 0, 0, 0));
 
-	protected void initValues()
-	{
-		getElements().add(new ObjElement(EnumTranslation.KEY_DISPLAY, "Display"));
-		getElements().add(new ObjElement(EnumTranslation.KEY_DISPLAYNAME, "DisplayName"));
+		// Translations
+		this.addTranslation(new TranslationImpl(EnumLanguage.KEY_DE_DE, EnumTranslation.KEY_DISPLAY, "Windgeschwindigkeit (Bft)"));
 	}
 }

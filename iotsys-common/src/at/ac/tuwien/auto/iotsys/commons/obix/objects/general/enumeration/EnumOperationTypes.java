@@ -29,22 +29,18 @@
  * This file is part of the IoTSyS project.
  ******************************************************************************/
 
-package at.ac.tuwien.auto.iotsys.commons.obix.objects.general.enumeration.impl;
+package at.ac.tuwien.auto.iotsys.commons.obix.objects.general.enumeration;
 
-import obix.Uri;
-import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.contracts.impl.RangeImpl;
-import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.enumeration.EnumTranslation;
+import obix.contracts.Range;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.logic.BinaryOperation;
 
-public class EnumTranslationImpl extends RangeImpl implements EnumTranslation
+public interface EnumOperationTypes extends Range
 {
-	public EnumTranslationImpl()
-	{
-		super(new Uri(EnumTranslation.HREF));
-	}
+	public static final String HREF = "/enums/operationTypes";
 
-	protected void initValues()
-	{
-		getElements().add(new ObjElement(EnumTranslation.KEY_DISPLAY, "Display"));
-		getElements().add(new ObjElement(EnumTranslation.KEY_DISPLAYNAME, "DisplayName"));
-	}
+	public static final String KEY_ADD = BinaryOperation.BIN_OP_ADD;
+	public static final String KEY_SUB = BinaryOperation.BIN_OP_SUB;
+	public static final String KEY_MUL = BinaryOperation.BIN_OP_MUL;
+	public static final String KEY_MOD = BinaryOperation.BIN_OP_MOD;
+	public static final String KEY_DIV = BinaryOperation.BIN_OP_DIV;
 }

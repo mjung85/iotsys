@@ -29,22 +29,63 @@
  * This file is part of the IoTSyS project.
  ******************************************************************************/
 
-package at.ac.tuwien.auto.iotsys.commons.obix.objects.general.enumeration.impl;
+package at.ac.tuwien.auto.iotsys.commons.obix.objects.general.internals.impl;
 
-import obix.Uri;
-import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.contracts.impl.RangeImpl;
-import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.enumeration.EnumTranslation;
+import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.encoding.impl.EncodingsImpl;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.enumeration.impl.EnumsImpl;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.internals.Internals;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.parameter.impl.ParametersImpl;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.unit.impl.UnitsImpl;
 
-public class EnumTranslationImpl extends RangeImpl implements EnumTranslation
+public class InternalsImpl implements Internals
 {
-	public EnumTranslationImpl()
+	private EnumsImpl enums = null;
+	private UnitsImpl units = null;
+	private ParametersImpl parameters = null;
+	private EncodingsImpl encodings = null;
+
+	public InternalsImpl(ObjectBroker objectBroker)
 	{
-		super(new Uri(EnumTranslation.HREF));
+		// Enumerations
+		enums = new EnumsImpl();
+
+		objectBroker.addObj(enums, true);
+
+		// Units
+		units = new UnitsImpl();
+		objectBroker.addObj(units, true);
+
+		// Parameters
+		parameters = new ParametersImpl();
+		objectBroker.addObj(parameters, true);
+
+		// Encodings
+		encodings = new EncodingsImpl();
+		objectBroker.addObj(encodings, true);
 	}
 
-	protected void initValues()
+	@Override
+	public EnumsImpl getEnums()
 	{
-		getElements().add(new ObjElement(EnumTranslation.KEY_DISPLAY, "Display"));
-		getElements().add(new ObjElement(EnumTranslation.KEY_DISPLAYNAME, "DisplayName"));
+		return enums;
+	}
+
+	@Override
+	public UnitsImpl getUnits()
+	{
+		return units;
+	}
+
+	@Override
+	public EncodingsImpl getEncodings()
+	{
+		return encodings;
+	}
+
+	@Override
+	public ParametersImpl getParameters()
+	{
+		return parameters;
 	}
 }
