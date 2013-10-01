@@ -44,12 +44,12 @@ public class EnumPartImpl extends RangeImpl implements EnumPart
 
 	protected void initValues()
 	{
-		getElements().add(new EnumElement(EnumPart.KEY_BUILDING, "Building"));
-		getElements().add(new EnumElement(EnumPart.KEY_BUILDINGPART, "Building Part"));
-		getElements().add(new EnumElement(EnumPart.KEY_FLOOR, "Floor"));
-		getElements().add(new EnumElement(EnumPart.KEY_ROOM, "Room"));
-		getElements().add(new EnumElement(EnumPart.KEY_CORRIDOR, "Corridor"));
-		getElements().add(new EnumElement(EnumPart.KEY_STAIRWAY, "Stairway"));
-		getElements().add(new EnumElement(EnumPart.KEY_DISTRIBUTIONBOARD, "Distribution Board"));
+		getElements().add(new ObjElement(EnumPart.KEY_BUILDING, "Building"));
+		getElements().add(new ObjElement(EnumPart.KEY_BUILDINGPART, "Building Part"));
+		getElements().add(new ObjElement(EnumPart.KEY_FLOOR, "Floor"));
+		getElements().add(new ObjElement(EnumPart.KEY_ROOM, "Room"));
+		getElements().add(new ObjElement(EnumPart.KEY_CORRIDOR, "Corridor"));
+		getElements().add(new ObjElement(EnumPart.KEY_STAIRWAY, "Stairway"));
+		getElements().add(new ObjElement(EnumPart.KEY_DISTRIBUTIONBOARD, "Distribution Board"));
 	}
 }

@@ -33,18 +33,21 @@ package at.ac.tuwien.auto.iotsys.commons.obix.objects.general.enumeration.impl;
 
 import obix.Uri;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.contracts.impl.RangeImpl;
-import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.enumeration.EnumTranslation;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.enumeration.EnumCompareTypes;
 
-public class EnumTranslationImpl extends RangeImpl implements EnumTranslation
+public class EnumCompareTypesImpl extends RangeImpl implements EnumCompareTypes
 {
-	public EnumTranslationImpl()
+	public EnumCompareTypesImpl()
 	{
-		super(new Uri(EnumTranslation.HREF));
+		super(new Uri(EnumCompareTypes.HREF));
 	}
 
 	protected void initValues()
 	{
-		getElements().add(new ObjElement(EnumTranslation.KEY_DISPLAY, "Display"));
-		getElements().add(new ObjElement(EnumTranslation.KEY_DISPLAYNAME, "DisplayName"));
+		getElements().add(new ObjElement(EnumCompareTypes.KEY_EQ));
+		getElements().add(new ObjElement(EnumCompareTypes.KEY_LT));
+		getElements().add(new ObjElement(EnumCompareTypes.KEY_LTE));
+		getElements().add(new ObjElement(EnumCompareTypes.KEY_GT));
+		getElements().add(new ObjElement(EnumCompareTypes.KEY_GTE));
 	}
 }

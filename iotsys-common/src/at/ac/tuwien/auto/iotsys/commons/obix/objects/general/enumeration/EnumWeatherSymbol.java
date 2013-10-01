@@ -29,22 +29,12 @@
  * This file is part of the IoTSyS project.
  ******************************************************************************/
 
-package at.ac.tuwien.auto.iotsys.commons.obix.objects.general.enumeration.impl;
+package at.ac.tuwien.auto.iotsys.commons.obix.objects.general.enumeration;
 
-import obix.Uri;
-import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.contracts.impl.RangeImpl;
-import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.enumeration.EnumTranslation;
+import obix.contracts.Range;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.weatherforecast.WeatherSymbol;
 
-public class EnumTranslationImpl extends RangeImpl implements EnumTranslation
+public interface EnumWeatherSymbol extends Range
 {
-	public EnumTranslationImpl()
-	{
-		super(new Uri(EnumTranslation.HREF));
-	}
-
-	protected void initValues()
-	{
-		getElements().add(new ObjElement(EnumTranslation.KEY_DISPLAY, "Display"));
-		getElements().add(new ObjElement(EnumTranslation.KEY_DISPLAYNAME, "DisplayName"));
-	}
+	public static final String HREF = "/enums/" + WeatherSymbol.NAME;
 }

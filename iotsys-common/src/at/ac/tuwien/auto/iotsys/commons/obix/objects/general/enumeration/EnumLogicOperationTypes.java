@@ -29,22 +29,18 @@
  * This file is part of the IoTSyS project.
  ******************************************************************************/
 
-package at.ac.tuwien.auto.iotsys.commons.obix.objects.general.enumeration.impl;
+package at.ac.tuwien.auto.iotsys.commons.obix.objects.general.enumeration;
 
-import obix.Uri;
-import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.contracts.impl.RangeImpl;
-import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.enumeration.EnumTranslation;
+import obix.contracts.Range;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.logic.LogicBinaryOperation;
 
-public class EnumTranslationImpl extends RangeImpl implements EnumTranslation
+public interface EnumLogicOperationTypes extends Range
 {
-	public EnumTranslationImpl()
-	{
-		super(new Uri(EnumTranslation.HREF));
-	}
+	public static final String HREF = "/enums/logicOperationTypes";
 
-	protected void initValues()
-	{
-		getElements().add(new ObjElement(EnumTranslation.KEY_DISPLAY, "Display"));
-		getElements().add(new ObjElement(EnumTranslation.KEY_DISPLAYNAME, "DisplayName"));
-	}
+	public static final String KEY_AND = LogicBinaryOperation.BIN_OP_AND;
+	public static final String KEY_OR = LogicBinaryOperation.BIN_OP_OR;
+	public static final String KEY_XOR = LogicBinaryOperation.BIN_OP_XOR;
+	public static final String KEY_NAND = LogicBinaryOperation.BIN_OP_NAND;
+	public static final String KEY_NOR = LogicBinaryOperation.BIN_OP_NOR;
 }
