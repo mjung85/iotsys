@@ -22,8 +22,6 @@ package at.ac.tuwien.auto.iotsys.gateway.connectors.knx;
 
 import java.net.UnknownHostException;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Hashtable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -31,39 +29,45 @@ import obix.Contract;
 import obix.List;
 import obix.Uri;
 
-import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.commons.configuration.XMLConfiguration;
 
+import at.ac.tuwien.auto.calimero.GroupAddress;
 import at.ac.tuwien.auto.calimero.exception.KNXException;
 import at.ac.tuwien.auto.iotsys.commons.Connector;
 import at.ac.tuwien.auto.iotsys.commons.DeviceLoader;
 import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.entity.impl.EntityImpl;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.enumeration.EnumConnector;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.enumeration.EnumPart;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.enumeration.EnumStandard;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.language.impl.TranslationImpl;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.network.Network;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.network.impl.NetworkImpl;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.view.impl.AreaImpl;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.view.impl.DomainImpl;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.view.impl.GroupImpl;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.view.impl.PartImpl;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.knx.datapoint.impl.DPST_1_1_ImplKnx;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.knx.datapoint.impl.DPST_3_7_ImplKnx;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.knx.datapoint.impl.DPST_5_1_ImplKnx;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.knx.datapoint.impl.DPST_9_1_ImplKnx;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.knx.datapoint.impl.DPST_9_8_ImplKnx;
 
-public class KNXDeviceLoaderETSImpl implements DeviceLoader {
-	private static Logger log = Logger.getLogger(KNXDeviceLoaderImpl.class
-			.getName());
+public class KNXDeviceLoaderETSImplManual implements DeviceLoader
+{
+	private static Logger log = Logger.getLogger(KNXDeviceLoaderImpl.class.getName());
 
 	private XMLConfiguration devicesConfig;
 
 	private ArrayList<String> myObjects = new ArrayList<String>();
 
-	public ArrayList<Connector> initDevices(ObjectBroker objectBroker) {
-		try {
-			devicesConfig = new XMLConfiguration(
-					"knx-config/Suitcase_2013-09-05.xml");
-		} catch (Exception e) {
-			log.log(Level.SEVERE, e.getMessage(), e);
-		}
+	public ArrayList<Connector> initDevices(ObjectBroker objectBroker)
+	{
+		setConfiguration(devicesConfig);
 
 		ArrayList<Connector> connectors = new ArrayList<Connector>();
 
-		KNXConnector knxConnector = new KNXConnector("192.168.161.59", 3671,
-				"auto");
+		KNXConnector knxConnector = new KNXConnector("192.168.161.59", 3671, "auto");
 
 		// connect(knxConnector);
 
@@ -74,20 +78,26 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader {
 		return connectors;
 	}
 
-	private void connect(KNXConnector knxConnector) {
-		try {
+	private void connect(KNXConnector knxConnector)
+	{
+		try
+		{
 			knxConnector.connect();
-		} catch (UnknownHostException e) {
+		}
+		catch (UnknownHostException e)
+		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} catch (KNXException e) {
+		}
+		catch (KNXException e)
+		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 
-	private void initNetworks(KNXConnector knxConnector,
-			ObjectBroker objectBroker) {
+	private void initNetworks(KNXConnector knxConnector, ObjectBroker objectBroker)
+	{
 		// Networks
 		List networks = new List();
 		networks.setName("networks");
@@ -96,226 +106,138 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader {
 
 		// ================================================================================
 
-		// Phase I - Parse general information
+		// Phase I
 
-		// parse manufacturer information
-
-		Hashtable<String, String> manufacturerById = new Hashtable<String, String>();
-
-		Object manufacturers = devicesConfig
-				.getProperty("configurations.manufacturers.manufacturer");
-
-		int manufacturersSize = 0;
-
-		if (manufacturers != null) {
-			manufacturersSize = 1;
-		}
-
-		if (manufacturers instanceof Collection<?>) {
-			manufacturersSize = ((Collection<?>) manufacturers).size();
-		}
-
-		for (int manufacturerIdx = 0; manufacturerIdx < manufacturersSize; manufacturerIdx++) {
-			String manufacturerId = devicesConfig
-					.getString("configurations.manufacturers.manufacturer("
-							+ manufacturerIdx + ").[@id]");
-			String manufacturerName = devicesConfig
-					.getString("configurations.manufacturers.manufacturer("
-							+ manufacturerIdx + ").[@name]");
-			manufacturerById.put(manufacturerId, manufacturerName);
-		}
+		// // Network
+		// Obj network = new Obj();
+		// network.setName("P-0341/M");
+		// network.setHref(new Uri(networks.getHref().getPath() + "/" +
+		// "suitcase_manual"));
+		// network.setDisplayName("Suitcase (manual)");
+		// network.setDisplay("...");
+		// network.setIs(new Contract("knx:Network"));
+		//
+		// obix.Enum standard = new obix.Enum();
+		// standard.setName("standard");
+		// standard.setHref(new Uri("standard"));
+		// standard.setRange(new Uri("/enums/enumStandard"));
+		// standard.set("knx");
+		// network.add(standard);
+		// objectBroker.addObj(standard, false);
+		//
+		// // Network Reference
+		// // Note: build references after building the real objects, so that
+		// href
+		// // is registered for real object
+		// Ref networkRef = new Ref();
+		// networkRef.setName("P-0341/M");
+		// networkRef.setHref(new Uri("suitcase_manual"));
+		// networkRef.setDisplayName("Suitcase (manual)");
+		// networkRef.setIs(new Contract("knx:Network"));
+		// networks.add(networkRef);
+		// objectBroker.addObj(networkRef, false);
+		//
+		// // Entities
+		// initEntities(knxConnector, objectBroker, network);
+		//
+		// // Views
+		// initViews(knxConnector, objectBroker, network);
 
 		// ================================================================================
 
 		// Phase II
 
-		ArrayList<Connector> connectors = new ArrayList<Connector>();
-
-		System.out.println("network name: "
-				+ devicesConfig.getRootElementName());
-
-		String networkName = (String) devicesConfig.getProperty("[@name]");
-		String networkStandard = devicesConfig.getString("[@standard]");
-		String networkId = devicesConfig.getString("[@id]");
-
-		NetworkImpl n = new NetworkImpl(networkId, networkName, null,
-				objectBroker.getEnumKey(EnumStandard.HREF, networkStandard));
+		// Network
+		NetworkImpl n = new NetworkImpl("P-0341", "Suitcase", null, objectBroker.getEnumKey(EnumStandard.HREF, "KNX"));
 		networks.add(n);
 		networks.add(n.getReference(false));
 
-		// Network
 		objectBroker.addObj(n, true);
 
-		Object entities = devicesConfig.getProperty("entities.entity[@id]");
+		// Entities and Datapoints
+		EntityImpl entity = new EntityImpl("P-0341-0_DI-3", "Switching actuator N 567/01, (8 Amp)", null, "Siemens", "5WG1 567-1AB01");
+		entity.addTranslation(new TranslationImpl("de-DE", "displayName", "Schaltaktor N 567/01, (8 Amp)"));
+		n.getEntities().addEntity(entity);
 
-		int entitiesSize = 0;
+		objectBroker.addObj(entity, true);
 
-		if (entities != null) {
-			entitiesSize = 1;
-		}
+		DPST_1_1_ImplKnx datapoint_lightonoff = new DPST_1_1_ImplKnx(knxConnector, new GroupAddress(1, 0, 0), "P-0341-0_DI-3_M-0001_A-9803-03-3F77_O-3_R-4", "Switch, Channel A", "On / Off", true);
+		datapoint_lightonoff.addTranslation(new TranslationImpl("de-DE", "displayName", "Schalten, Kanal A"));
+		entity.addDatapoint(datapoint_lightonoff);
 
-		if (entities instanceof Collection<?>) {
-			entitiesSize = ((Collection<?>) entities).size();
-		}
+		objectBroker.addObj(datapoint_lightonoff, true);
 
-		for (int entityIdx = 0; entityIdx < entitiesSize; entityIdx++) {
-			HierarchicalConfiguration entityConfig = devicesConfig
-					.configurationAt("entities.entity(" + entityIdx + ")");
+		entity = new EntityImpl("P-0341-0_DI-2", "Universal dimmer N 527", null, "Siemens", "5WG1 527-1AB01");
+		entity.addTranslation(new TranslationImpl("de-DE", "displayName", "Universal-Dimmer N 527"));
+		n.getEntities().addEntity(entity);
 
-			String entityId = entityConfig.getString("[@id]");
-			String entityName = entityConfig.getString("[@name]");
-			String entityDescription = entityConfig.getString("[@description]");
-			String entityOrderNumber = entityConfig.getString("[@orderNumber]");
-			String entityManufacturerId = entityConfig
-					.getString("[@manufacturerId]");
+		objectBroker.addObj(entity, true);
 
-			// Entities and Datapoints
-			EntityImpl entity = new EntityImpl(entityId, entityName, null,
-					manufacturerById.get(entityManufacturerId),
-					entityOrderNumber);
+		DPST_3_7_ImplKnx datapoint_dimming = new DPST_3_7_ImplKnx(knxConnector, new GroupAddress(1, 0, 1), "P-0341-0_DI-2_M-0001_A-6102-01-A218_O-1_R-1", "Dimming", "Brighter / Darker");
+		entity.addDatapoint(datapoint_dimming);
 
-			Object translations = entityConfig
-					.getProperty("translations.translation[@language]");
+		objectBroker.addObj(datapoint_dimming, true);
 
-			int translationsSize = 0;
+		DPST_5_1_ImplKnx datapoint_dimming_status = new DPST_5_1_ImplKnx(knxConnector, new GroupAddress(1, 0, 3), "P-0341-0_DI-2_M-0001_A-6102-01-A218_O-3_R-3", "Status", "8-bit Value", false);
+		entity.addDatapoint(datapoint_dimming_status);
 
-			if (translations != null) {
-				translationsSize = 1;
-			}
+		objectBroker.addObj(datapoint_dimming_status, true);
 
-			if (translations instanceof Collection<?>) {
-				translationsSize = ((Collection<?>) translations).size();
-			}
+		entity = new EntityImpl("P-0341-0_DI-11", "Temperature Sensor N 258/02", null, "Siemens", "5WG1 258-1AB02");
+		entity.addTranslation(new TranslationImpl("de-DE", "displayName", "Temperatursensor N 258/02"));
+		n.getEntities().addEntity(entity);
 
-			for (int transIdx = 0; transIdx < translationsSize; transIdx++) {
+		objectBroker.addObj(entity, true);
 
-				HierarchicalConfiguration transConfig = entityConfig
-						.configurationAt("translations.translation(" + transIdx
-								+ ")");
+		DPST_9_1_ImplKnx datapoint_temperature = new DPST_9_1_ImplKnx(knxConnector, new GroupAddress(1, 1, 0), "P-0341-0_DI-11_M-0001_A-9814-01-5F7E_O-0_R-2", "Temperature, Channel A", "°C-value (EIS5)");
+		entity.addDatapoint(datapoint_temperature);
 
-				String language = transConfig.getString("[@language]");
-				String attribute = transConfig.getString("[@attribute]");
-				String value = transConfig.getString("[@value]");
-				entity.addTranslation(new TranslationImpl(language, attribute,
-						value));
-				
-			}
-			
-			n.getEntities().addEntity(entity);
+		objectBroker.addObj(datapoint_temperature, true);
 
-			objectBroker.addObj(entity, true);
-		}
+		entity = new EntityImpl("P-0341-0_DI-7", "KNX CO², Humidity and Temperature Sensor", null, "Schneider Electric Industries SAS", "MTN6005-0001");
+		entity.addTranslation(new TranslationImpl("de-DE", "displayName", "KNX CO2-, Feuchte- und Temperatursensor"));
+		n.getEntities().addEntity(entity);
 
-		// DPST_1_1_ImplKnx datapoint_lightonoff = new
-		// DPST_1_1_ImplKnx(knxConnector, new GroupAddress(1, 0, 0),
-		// "P-0341-0_DI-3_M-0001_A-9803-03-3F77_O-3_R-4", "Switch, Channel A",
-		// "On / Off", true);
-		// datapoint_lightonoff.addTranslation(new TranslationImpl("de-DE",
-		// "displayName", "Schalten, Kanal A"));
-		// entity.addDatapoint(datapoint_lightonoff);
-		//
-		// objectBroker.addObj(datapoint_lightonoff, true);
-		//
-		// entity = new EntityImpl("P-0341-0_DI-2", "Universal dimmer N 527",
-		// null, "Siemens", "5WG1 527-1AB01");
-		// entity.addTranslation(new TranslationImpl("de-DE", "displayName",
-		// "Universal-Dimmer N 527"));
-		// n.getEntities().addEntity(entity);
-		//
-		// objectBroker.addObj(entity, true);
-		//
-		// DPST_3_7_ImplKnx datapoint_dimming = new
-		// DPST_3_7_ImplKnx(knxConnector, new GroupAddress(1, 0, 1),
-		// "P-0341-0_DI-2_M-0001_A-6102-01-A218_O-1_R-1", "Dimming",
-		// "Brighter / Darker");
-		// entity.addDatapoint(datapoint_dimming);
-		//
-		// objectBroker.addObj(datapoint_dimming, true);
-		//
-		// DPST_5_1_ImplKnx datapoint_dimming_status = new
-		// DPST_5_1_ImplKnx(knxConnector, new GroupAddress(1, 0, 3),
-		// "P-0341-0_DI-2_M-0001_A-6102-01-A218_O-3_R-3", "Status",
-		// "8-bit Value", false);
-		// entity.addDatapoint(datapoint_dimming_status);
-		//
-		// objectBroker.addObj(datapoint_dimming_status, true);
-		//
-		// entity = new EntityImpl("P-0341-0_DI-11",
-		// "Temperature Sensor N 258/02", null, "Siemens", "5WG1 258-1AB02");
-		// entity.addTranslation(new TranslationImpl("de-DE", "displayName",
-		// "Temperatursensor N 258/02"));
-		// n.getEntities().addEntity(entity);
-		//
-		// objectBroker.addObj(entity, true);
-		//
-		// DPST_9_1_ImplKnx datapoint_temperature = new
-		// DPST_9_1_ImplKnx(knxConnector, new GroupAddress(1, 1, 0),
-		// "P-0341-0_DI-11_M-0001_A-9814-01-5F7E_O-0_R-2",
-		// "Temperature, Channel A", "°C-value (EIS5)");
-		// entity.addDatapoint(datapoint_temperature);
-		//
-		// objectBroker.addObj(datapoint_temperature, true);
-		//
-		// entity = new EntityImpl("P-0341-0_DI-7",
-		// "KNX CO², Humidity and Temperature Sensor", null,
-		// "Schneider Electric Industries SAS", "MTN6005-0001");
-		// entity.addTranslation(new TranslationImpl("de-DE", "displayName",
-		// "KNX CO2-, Feuchte- und Temperatursensor"));
-		// n.getEntities().addEntity(entity);
-		//
-		// objectBroker.addObj(entity, true);
-		//
-		// DPST_9_8_ImplKnx datapoint_co2 = new DPST_9_8_ImplKnx(knxConnector,
-		// new GroupAddress(1, 3, 0),
-		// "P-0341-0_DI-7_M-0064_A-FF21-11-DDFC-O0048_O-0_R-1", "CO2 Value",
-		// "Physical Value");
-		// entity.addDatapoint(datapoint_co2);
-		//
-		// objectBroker.addObj(datapoint_co2, true);
-		//
-		// // Views
-		// PartImpl building = new PartImpl("P-0341-0_BP-1", "Treitlstraße 1-3",
-		// null, EnumPart.KEY_BUILDING);
-		// PartImpl floor = new PartImpl("P-0341-0_BP-2", "4. Stock", null,
-		// EnumPart.KEY_FLOOR);
-		// PartImpl board = new PartImpl("P-0341-0_BP-4", "Suitcase", null,
-		// EnumPart.KEY_DISTRIBUTIONBOARD);
-		//
-		// building.addPart(floor);
-		// floor.addPart(board);
-		// board.addInstance(entity);
-		// n.getBuilding().addPart(building);
-		//
-		// GroupImpl all = new GroupImpl("P-0341-0_GR-1", "All component", null,
-		// 2048);
-		// GroupImpl light = new GroupImpl("P-0341-0_GR-2", "Light",
-		// "Contains groups for lighting", 2048);
-		// GroupImpl lightonoff = new GroupImpl("P-0341-0_GA-1", "Light on/off",
-		// null, 2048);
-		//
-		// all.addGroup(light);
-		// light.addGroup(lightonoff);
-		// lightonoff.addFunction(new DPST_1_1_ImplKnx(knxConnector, new
-		// GroupAddress(1, 0, 0), "function", null, null, true));
-		// lightonoff.addInstance(datapoint_lightonoff, EnumConnector.KEY_SEND);
-		// n.getFunctional().addGroup(all);
-		//
-		// AreaImpl area = new AreaImpl("P-0341-0_A-2", "All component",
-		// "Zone 8", 8, null);
-		// AreaImpl subarea = new AreaImpl("P-0341-0_L-2", "Main Line",
-		// "Line 0", 0, "Twisted Pair");
-		//
-		// area.addArea(subarea);
-		// subarea.addInstance(entity, 3);
-		// n.getTopology().addArea(area);
-		//
-		// DomainImpl domain = new DomainImpl("P-0341-0_T-1", "Suitcase", null);
-		// DomainImpl subdomain = new DomainImpl("P-0341-0_T-0", "Beleuchtung",
-		// null);
-		//
-		// domain.addDomain(subdomain);
-		// subdomain.addInstance(entity);
-		// n.getDomains().addDomain(domain);
+		objectBroker.addObj(entity, true);
+
+		DPST_9_8_ImplKnx datapoint_co2 = new DPST_9_8_ImplKnx(knxConnector, new GroupAddress(1, 3, 0), "P-0341-0_DI-7_M-0064_A-FF21-11-DDFC-O0048_O-0_R-1", "CO2 Value", "Physical Value");
+		entity.addDatapoint(datapoint_co2);
+
+		objectBroker.addObj(datapoint_co2, true);
+
+		// Views
+		PartImpl building = new PartImpl("P-0341-0_BP-1", "Treitlstraße 1-3", null, EnumPart.KEY_BUILDING);
+		PartImpl floor = new PartImpl("P-0341-0_BP-2", "4. Stock", null, EnumPart.KEY_FLOOR);
+		PartImpl board = new PartImpl("P-0341-0_BP-4", "Suitcase", null, EnumPart.KEY_DISTRIBUTIONBOARD);
+
+		building.addPart(floor);
+		floor.addPart(board);
+		board.addInstance(entity);
+		n.getBuilding().addPart(building);
+
+		GroupImpl all = new GroupImpl("P-0341-0_GR-1", "All component", null, 2048);
+		GroupImpl light = new GroupImpl("P-0341-0_GR-2", "Light", "Contains groups for lighting", 2048);
+		GroupImpl lightonoff = new GroupImpl("P-0341-0_GA-1", "Light on/off", null, 2048);
+
+		all.addGroup(light);
+		light.addGroup(lightonoff);
+		lightonoff.addFunction(new DPST_1_1_ImplKnx(knxConnector, new GroupAddress(1, 0, 0), "function", null, null, true));
+		lightonoff.addInstance(datapoint_lightonoff, EnumConnector.KEY_SEND);
+		n.getFunctional().addGroup(all);
+
+		AreaImpl area = new AreaImpl("P-0341-0_A-2", "All component", "Zone 8", 8, null);
+		AreaImpl subarea = new AreaImpl("P-0341-0_L-2", "Main Line", "Line 0", 0, "Twisted Pair");
+
+		area.addArea(subarea);
+		subarea.addInstance(entity, 3);
+		n.getTopology().addArea(area);
+
+		DomainImpl domain = new DomainImpl("P-0341-0_T-1", "Suitcase", null);
+		DomainImpl subdomain = new DomainImpl("P-0341-0_T-0", "Beleuchtung", null);
+
+		domain.addDomain(subdomain);
+		subdomain.addInstance(entity);
+		n.getDomains().addDomain(domain);
 
 		objectBroker.addObj(networks, true);
 	}
@@ -1680,19 +1602,31 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader {
 	// }
 
 	@Override
-	public void removeDevices(ObjectBroker objectBroker) {
-		synchronized (myObjects) {
-			for (String href : myObjects) {
+	public void removeDevices(ObjectBroker objectBroker)
+	{
+		synchronized (myObjects)
+		{
+			for (String href : myObjects)
+			{
 				objectBroker.removeObj(href);
 			}
 		}
 	}
 
 	@Override
-	public void setConfiguration(XMLConfiguration devicesConfiguration) {
+	public void setConfiguration(XMLConfiguration devicesConfiguration)
+	{
 		this.devicesConfig = devicesConfiguration;
-		if (devicesConfiguration == null) {
-
+		if (devicesConfiguration == null)
+		{
+			try
+			{
+				devicesConfig = new XMLConfiguration(DEVICE_CONFIGURATION_LOCATION);
+			}
+			catch (Exception e)
+			{
+				log.log(Level.SEVERE, e.getMessage(), e);
+			}
 		}
 	}
 }
