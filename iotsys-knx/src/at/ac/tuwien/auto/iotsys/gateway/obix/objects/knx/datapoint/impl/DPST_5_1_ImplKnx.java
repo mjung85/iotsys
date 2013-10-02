@@ -33,6 +33,11 @@ public class DPST_5_1_ImplKnx extends DPST_5_1_Impl
 		if (!this.readable)
 			this.createWatchDog();
 	}
+	
+	public DPST_5_1_ImplKnx(KNXConnector connector, DataPointInit dataPointInit)
+	{
+		this(connector, dataPointInit.getGroupAddress(), dataPointInit.getName(), dataPointInit.getDisplayName(), dataPointInit.getDisplay(), dataPointInit.isWritable(), dataPointInit.isReadable());
+	}
 
 	public void createWatchDog()
 	{
@@ -47,7 +52,7 @@ public class DPST_5_1_ImplKnx extends DPST_5_1_Impl
 
 					x.setData(apdu, 0);
 
-					log.fine("Temperature for " + DPST_5_1_ImplKnx.this.getHref() + " now " + x.getValueUnsigned(1));
+					log.fine("Status for " + DPST_5_1_ImplKnx.this.getHref() + " now " + x.getValueUnsigned(1));
 
 					value.set(x.getValueUnsigned(1));
 				}

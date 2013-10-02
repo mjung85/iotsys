@@ -27,6 +27,11 @@ public class DPST_3_7_ImplKnx extends DPST_3_7_Impl
 		this.groupAddress = groupAddress;
 		this.connector = connector;
 	}
+	
+	public DPST_3_7_ImplKnx(KNXConnector connector, DataPointInit dataPointInit)
+	{
+		this(connector, dataPointInit.getGroupAddress(), dataPointInit.getName(), dataPointInit.getDisplayName(), dataPointInit.getDisplay());
+	}
 
 	@Override
 	protected Obj doIncrease(Obj in)

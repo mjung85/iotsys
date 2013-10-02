@@ -42,6 +42,7 @@ import at.ac.tuwien.auto.iotsys.commons.DeviceLoader;
 import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.entity.impl.EntityImpl;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.enumeration.EnumStandard;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.enumeration.impl.EnumsImpl;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.language.impl.TranslationImpl;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.network.Network;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.network.impl.NetworkImpl;
@@ -65,7 +66,7 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader {
 
 		ArrayList<Connector> connectors = new ArrayList<Connector>();
 
-		KNXConnector knxConnector = new KNXConnector("192.168.161.59", 3671,
+		KNXConnector knxConnector = new KNXConnector("192.168.1.100", 3671,
 				"auto");
 
 		// connect(knxConnector);
@@ -142,7 +143,7 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader {
 		String networkId = devicesConfig.getString("[@id]");
 
 		NetworkImpl n = new NetworkImpl(networkId, networkName, null,
-				objectBroker.getEnumKey(EnumStandard.HREF, networkStandard));
+				EnumsImpl.getInstance().getEnum(EnumStandard.HREF).getKey(networkStandard));
 		networks.add(n);
 		networks.add(n.getReference(false));
 
@@ -241,7 +242,7 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader {
 					object[0] = knxConnector;
 					DataPointInit dptInit = new DataPointInit();
 					dptInit.setDisplay(dataPointDescription);
-					dptInit.setReadFlag(Boolean.parseBoolean(dataPointReadFlag));
+					dptInit.setReadable(Boolean.parseBoolean(dataPointReadFlag));
 					dptInit.setName(dataPointName);					
 					
 					object[1] = dptInit;

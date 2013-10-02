@@ -40,7 +40,9 @@ import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.contracts.impl.Unit
 
 public class UnitsImpl extends List implements IObj
 {
-	public UnitsImpl()
+	private static final UnitsImpl instance = new UnitsImpl();
+	
+	private UnitsImpl()
 	{
 		this.setName("units");
 		this.setOf(new Contract(Unit.CONTRACT));
@@ -55,5 +57,10 @@ public class UnitsImpl extends List implements IObj
 			this.add(unit);
 			this.add(unit.getReference(false));
 		}
+	}
+	
+	public static UnitsImpl getInstance()
+	{
+		return instance;
 	}
 }

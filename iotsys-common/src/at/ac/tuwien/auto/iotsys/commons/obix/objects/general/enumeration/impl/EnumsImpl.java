@@ -56,7 +56,9 @@ public class EnumsImpl extends List implements IObj
 {
 	private HashMap<String, RangeImpl> enums;
 
-	public EnumsImpl()
+	private static final EnumsImpl instance = new EnumsImpl();
+	
+	private EnumsImpl()
 	{
 		this.setName("enums");
 		this.setOf(new Contract(Range.CONTRACT));
@@ -88,6 +90,11 @@ public class EnumsImpl extends List implements IObj
 		}
 	}
 
+	public static EnumsImpl getInstance()
+	{
+		return instance;
+	}
+	
 	public RangeImpl getEnum(String href)
 	{
 		return enums.get(href);

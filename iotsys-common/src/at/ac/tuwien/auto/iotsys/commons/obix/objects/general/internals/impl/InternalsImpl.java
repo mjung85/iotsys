@@ -48,20 +48,20 @@ public class InternalsImpl implements Internals
 	public InternalsImpl(ObjectBroker objectBroker)
 	{
 		// Enumerations
-		enums = new EnumsImpl();
+		enums = EnumsImpl.getInstance();
 
 		objectBroker.addObj(enums, true);
 
 		// Units
-		units = new UnitsImpl();
+		units = UnitsImpl.getInstance();
 		objectBroker.addObj(units, true);
 
 		// Parameters
-		parameters = new ParametersImpl();
+		parameters = ParametersImpl.getInstance();
 		objectBroker.addObj(parameters, true);
 
 		// Encodings
-		encodings = new EncodingsImpl();
+		encodings = EncodingsImpl.getInstance();
 		objectBroker.addObj(encodings, true);
 	}
 

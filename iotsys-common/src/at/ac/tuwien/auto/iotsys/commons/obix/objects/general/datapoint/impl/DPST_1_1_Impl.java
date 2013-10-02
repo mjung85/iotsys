@@ -38,6 +38,7 @@ import obix.Obj;
 import obix.Uri;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.datapoint.DPST_1_1;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.encoding.EncodingOnOff;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.encoding.impl.EncodingsImpl;
 
 public abstract class DPST_1_1_Impl extends DPT_1_Impl implements DPST_1_1
 {
@@ -55,13 +56,21 @@ public abstract class DPST_1_1_Impl extends DPT_1_Impl implements DPST_1_1
 		this.encoding.setName("encoding");
 		this.encoding.setHref(new Uri("encoding"));
 		this.encoding.setRange(new Uri(EncodingOnOff.HREF));
+		this.encoding.setWritable(true);
 		this.add(encoding);
 	}
 
 	@Override
 	public void writeObject(Obj input)
 	{
-		super.writeObject(input);
+		super.writeObject(input);		
+		this.refreshObject();
+	}
+	
+	@Override
+	public void refreshObject()
+	{
+		this.encoding.set(EncodingsImpl.getInstance().getEncoding(EncodingOnOff.HREF).getName(this.value()));
 	}
 
 	@Override

@@ -6,13 +6,13 @@ import obix.Obj;
 import at.ac.tuwien.auto.calimero.GroupAddress;
 import at.ac.tuwien.auto.calimero.dptxlator.DPTXlator2ByteFloat;
 import at.ac.tuwien.auto.calimero.exception.KNXException;
-import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.datapoint.impl.DPST_9_1_Impl;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.datapoint.impl.DPT_9_Impl;
 import at.ac.tuwien.auto.iotsys.gateway.connectors.knx.KNXConnector;
 import at.ac.tuwien.auto.iotsys.gateway.connectors.knx.KNXWatchDog;
 
-public class DPST_9_1_ImplKnx extends DPST_9_1_Impl
+public class DPT_9_ImplKnx extends DPT_9_Impl
 {
-	private static final Logger log = Logger.getLogger(DPST_9_1_ImplKnx.class.getName());
+	private static final Logger log = Logger.getLogger(DPT_9_ImplKnx.class.getName());
 
 	private GroupAddress groupAddress;
 	private KNXConnector connector;
@@ -20,7 +20,7 @@ public class DPST_9_1_ImplKnx extends DPST_9_1_Impl
 	private boolean writable;
 
 	// if more group addresses are needed just add more constructor parameters.
-	public DPST_9_1_ImplKnx(KNXConnector connector, GroupAddress groupAddress, String name, String displayName, String display, boolean writable, boolean readable)
+	public DPT_9_ImplKnx(KNXConnector connector, GroupAddress groupAddress, String name, String displayName, String display, boolean writable, boolean readable)
 	{
 		super(name, displayName, display, writable);
 
@@ -34,7 +34,7 @@ public class DPST_9_1_ImplKnx extends DPST_9_1_Impl
 			this.createWatchDog();
 	}
 	
-	public DPST_9_1_ImplKnx(KNXConnector connector, DataPointInit dataPointInit)
+	public DPT_9_ImplKnx(KNXConnector connector, DataPointInit dataPointInit)
 	{
 		this(connector, dataPointInit.getGroupAddress(), dataPointInit.getName(), dataPointInit.getDisplayName(), dataPointInit.getDisplay(), dataPointInit.isWritable(), dataPointInit.isReadable());
 	}
@@ -48,11 +48,11 @@ public class DPST_9_1_ImplKnx extends DPST_9_1_Impl
 			{
 				try
 				{
-					DPTXlator2ByteFloat x = new DPTXlator2ByteFloat(DPTXlator2ByteFloat.DPT_TEMPERATURE);
+					DPTXlator2ByteFloat x = new DPTXlator2ByteFloat(DPTXlator2ByteFloat.DPT_ELECTRICAL_CURRENT);
 
 					x.setData(apdu, 0);
 
-					log.fine("Temperature for " + DPST_9_1_ImplKnx.this.getHref() + " now " + x.getValueFloat(1));
+					log.fine("2Byte Float for " + DPT_9_ImplKnx.this.getHref() + " now " + x.getValueFloat(1));
 
 					value.set(x.getValueFloat(1));
 				}

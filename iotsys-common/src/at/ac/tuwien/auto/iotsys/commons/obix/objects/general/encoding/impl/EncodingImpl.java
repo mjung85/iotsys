@@ -31,6 +31,9 @@
 
 package at.ac.tuwien.auto.iotsys.commons.obix.objects.general.encoding.impl;
 
+import obix.Bool;
+import obix.Int;
+import obix.Obj;
 import obix.Uri;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.contracts.impl.RangeImpl;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.encoding.EncodingOnOff;
@@ -40,5 +43,48 @@ public abstract class EncodingImpl extends RangeImpl implements EncodingOnOff
 	public EncodingImpl(Uri href)
 	{
 		super(href);
+	}
+
+	public Obj getValue(obix.Enum in)
+	{
+		if (in != null)
+		{
+			Obj obj = this.getByHref(this.getChildHref(in.get()));
+
+			if (obj != null)
+			{
+				Obj value = obj.getByHref(obj.getChildHref("value"));
+
+				if (value != null)
+				{
+					return value;
+				}
+			}
+		}
+		return null;
+	}
+
+	public String getName(Obj value)
+	{
+		for(Obj child : this.list())
+		{
+			Obj val = child.getByHref(child.getChildHref("value"));
+			
+			if (value instanceof Bool)
+			{
+				if (val.getBool() == value.getBool())
+				{
+					return child.getName();
+				}
+			}
+			else if (value instanceof Int)
+			{
+				if (val.getInt() == value.getInt())
+				{
+					return child.getName();
+				}				
+			}
+		}
+		return null;
 	}
 }
