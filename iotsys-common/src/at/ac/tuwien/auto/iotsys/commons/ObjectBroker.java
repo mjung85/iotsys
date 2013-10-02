@@ -29,8 +29,6 @@ public interface ObjectBroker
 
 	public abstract String getCoRELinks();
 
-	public abstract String getEnumKey(String href, String name);
-
 	public void addHistoryToDatapoints(Obj obj);
 
 	public void enableGroupComm(Obj obj);

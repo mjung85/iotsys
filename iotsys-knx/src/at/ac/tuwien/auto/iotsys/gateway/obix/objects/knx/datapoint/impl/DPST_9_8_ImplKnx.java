@@ -33,6 +33,11 @@ public class DPST_9_8_ImplKnx extends DPST_9_8_Impl
 		if (!this.readable)
 			this.createWatchDog();
 	}
+	
+	public DPST_9_8_ImplKnx(KNXConnector connector, DataPointInit dataPointInit)
+	{
+		this(connector, dataPointInit.getGroupAddress(), dataPointInit.getName(), dataPointInit.getDisplayName(), dataPointInit.getDisplay(), dataPointInit.isWritable(), dataPointInit.isReadable());
+	}
 
 	public void createWatchDog()
 	{

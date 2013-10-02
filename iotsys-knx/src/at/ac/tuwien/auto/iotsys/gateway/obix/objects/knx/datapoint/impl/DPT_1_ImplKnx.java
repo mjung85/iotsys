@@ -4,23 +4,22 @@ import java.util.logging.Logger;
 
 import obix.Obj;
 import at.ac.tuwien.auto.calimero.GroupAddress;
-import at.ac.tuwien.auto.calimero.dptxlator.DPTXlator2ByteFloat;
+import at.ac.tuwien.auto.calimero.dptxlator.DPTXlatorBoolean;
 import at.ac.tuwien.auto.calimero.exception.KNXException;
-import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.datapoint.impl.DPST_9_1_Impl;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.datapoint.impl.DPT_1_Impl;
 import at.ac.tuwien.auto.iotsys.gateway.connectors.knx.KNXConnector;
 import at.ac.tuwien.auto.iotsys.gateway.connectors.knx.KNXWatchDog;
 
-public class DPST_9_1_ImplKnx extends DPST_9_1_Impl
+public class DPT_1_ImplKnx extends DPT_1_Impl
 {
-	private static final Logger log = Logger.getLogger(DPST_9_1_ImplKnx.class.getName());
+	private static final Logger log = Logger.getLogger(DPT_1_ImplKnx.class.getName());
 
 	private GroupAddress groupAddress;
 	private KNXConnector connector;
 	private boolean readable;
 	private boolean writable;
 
-	// if more group addresses are needed just add more constructor parameters.
-	public DPST_9_1_ImplKnx(KNXConnector connector, GroupAddress groupAddress, String name, String displayName, String display, boolean writable, boolean readable)
+	public DPT_1_ImplKnx(KNXConnector connector, GroupAddress groupAddress, String name, String displayName, String display, boolean writable, boolean readable)
 	{
 		super(name, displayName, display, writable);
 
@@ -33,8 +32,8 @@ public class DPST_9_1_ImplKnx extends DPST_9_1_Impl
 		if (!this.readable)
 			this.createWatchDog();
 	}
-	
-	public DPST_9_1_ImplKnx(KNXConnector connector, DataPointInit dataPointInit)
+
+	public DPT_1_ImplKnx(KNXConnector connector, DataPointInit dataPointInit)
 	{
 		this(connector, dataPointInit.getGroupAddress(), dataPointInit.getName(), dataPointInit.getDisplayName(), dataPointInit.getDisplay(), dataPointInit.isWritable(), dataPointInit.isReadable());
 	}
@@ -48,13 +47,13 @@ public class DPST_9_1_ImplKnx extends DPST_9_1_Impl
 			{
 				try
 				{
-					DPTXlator2ByteFloat x = new DPTXlator2ByteFloat(DPTXlator2ByteFloat.DPT_TEMPERATURE);
+					DPTXlatorBoolean x = new DPTXlatorBoolean(DPTXlatorBoolean.DPT_BOOL);
 
 					x.setData(apdu, 0);
 
-					log.fine("Temperature for " + DPST_9_1_ImplKnx.this.getHref() + " now " + x.getValueFloat(1));
+					log.fine("Switch for " + DPT_1_ImplKnx.this.getHref() + " now " + x.getValueBoolean());
 
-					value.set(x.getValueFloat(1));
+					value.set(x.getValueBoolean());
 				}
 				catch (KNXException e)
 				{
@@ -70,7 +69,7 @@ public class DPST_9_1_ImplKnx extends DPST_9_1_Impl
 		// here we need to read from the bus, only if the read flag is set at the data point
 		if (this.readable)
 		{
-			float value = connector.readFloat(groupAddress);
+			boolean value = connector.readBool(groupAddress);
 			this.value().set(value);
 		}
 	}

@@ -41,6 +41,8 @@ import obix.Obj;
 import obix.Real;
 import obix.Uri;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.datapoint.DPT_1;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.encoding.impl.EncodingImpl;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.encoding.impl.EncodingsImpl;
 
 public abstract class DPT_1_Impl extends DatapointImpl implements DPT_1
 {
@@ -88,6 +90,29 @@ public abstract class DPT_1_Impl extends DatapointImpl implements DPT_1
 			else if (input instanceof Int)
 			{
 				this.value.set(((Int) input).get());
+			}
+			else if (input instanceof obix.Enum)
+			{
+				// set value from encoding
+				if (input.isWritable())
+				{
+					obix.Enum in = (obix.Enum) input;
+
+					if (in.getRange() != null)
+					{
+						EncodingImpl encoding = EncodingsImpl.getInstance().getEncoding(in.getRange().getPath());
+
+						if (encoding != null)
+						{
+							Obj value = encoding.getValue(in);
+
+							if (value != null)
+							{
+								this.value.set(((Bool) value).get());
+							}
+						}
+					}
+				}
 			}
 		}
 	}

@@ -63,8 +63,6 @@ public class ObjectBrokerImpl implements ObjectBroker
 
 	private LobbyImpl iotLobby = null;
 
-	private InternalsImpl internals = null;
-
 	private WatchServiceImpl watchServiceImpl = null;
 
 	private AlarmSubjectImpl alarmSubjectImpl = null;
@@ -92,9 +90,10 @@ public class ObjectBrokerImpl implements ObjectBroker
 		iotLobby = new LobbyImpl();
 		aboutImpl = new AboutImpl();
 
-		internals = new InternalsImpl(this);
 		watchServiceImpl = new WatchServiceImpl(this);
 		alarmSubjectImpl = new AlarmSubjectImpl(this);
+		
+		new InternalsImpl(this);
 	}
 
 	@Override
@@ -326,11 +325,5 @@ public class ObjectBrokerImpl implements ObjectBroker
 		obj.setRefreshInterval(interval);
 
 		objectRefresher.addObject(obj);
-	}
-
-	@Override
-	public String getEnumKey(String href, String name)
-	{
-		return internals.enums().getEnum(href).getKey(name);
 	}
 }

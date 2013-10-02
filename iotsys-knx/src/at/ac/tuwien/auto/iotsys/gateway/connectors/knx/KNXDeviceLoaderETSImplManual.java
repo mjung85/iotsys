@@ -40,6 +40,7 @@ import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.entity.impl.EntityI
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.enumeration.EnumConnector;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.enumeration.EnumPart;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.enumeration.EnumStandard;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.enumeration.impl.EnumsImpl;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.language.impl.TranslationImpl;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.network.Network;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.network.impl.NetworkImpl;
@@ -67,7 +68,7 @@ public class KNXDeviceLoaderETSImplManual implements DeviceLoader
 
 		ArrayList<Connector> connectors = new ArrayList<Connector>();
 
-		KNXConnector knxConnector = new KNXConnector("192.168.161.59", 3671, "auto");
+		KNXConnector knxConnector = new KNXConnector("192.168.1.101", 3671, "auto");
 
 		// connect(knxConnector);
 
@@ -148,7 +149,7 @@ public class KNXDeviceLoaderETSImplManual implements DeviceLoader
 		// Phase II
 
 		// Network
-		NetworkImpl n = new NetworkImpl("P-0341", "Suitcase", null, objectBroker.getEnumKey(EnumStandard.HREF, "KNX"));
+		NetworkImpl n = new NetworkImpl("P-0341", "Suitcase", null, EnumsImpl.getInstance().getEnum(EnumStandard.HREF).getKey("KNX"));
 		networks.add(n);
 		networks.add(n.getReference(false));
 
@@ -161,7 +162,7 @@ public class KNXDeviceLoaderETSImplManual implements DeviceLoader
 
 		objectBroker.addObj(entity, true);
 
-		DPST_1_1_ImplKnx datapoint_lightonoff = new DPST_1_1_ImplKnx(knxConnector, new GroupAddress(1, 0, 0), "P-0341-0_DI-3_M-0001_A-9803-03-3F77_O-3_R-4", "Switch, Channel A", "On / Off", true);
+		DPST_1_1_ImplKnx datapoint_lightonoff = new DPST_1_1_ImplKnx(knxConnector, new GroupAddress(1, 0, 0), "P-0341-0_DI-3_M-0001_A-9803-03-3F77_O-3_R-4", "Switch, Channel A", "On / Off", true, false);
 		datapoint_lightonoff.addTranslation(new TranslationImpl("de-DE", "displayName", "Schalten, Kanal A"));
 		entity.addDatapoint(datapoint_lightonoff);
 
@@ -178,7 +179,7 @@ public class KNXDeviceLoaderETSImplManual implements DeviceLoader
 
 		objectBroker.addObj(datapoint_dimming, true);
 
-		DPST_5_1_ImplKnx datapoint_dimming_status = new DPST_5_1_ImplKnx(knxConnector, new GroupAddress(1, 0, 3), "P-0341-0_DI-2_M-0001_A-6102-01-A218_O-3_R-3", "Status", "8-bit Value", false);
+		DPST_5_1_ImplKnx datapoint_dimming_status = new DPST_5_1_ImplKnx(knxConnector, new GroupAddress(1, 0, 3), "P-0341-0_DI-2_M-0001_A-6102-01-A218_O-3_R-3", "Status", "8-bit Value", false, true);
 		entity.addDatapoint(datapoint_dimming_status);
 
 		objectBroker.addObj(datapoint_dimming_status, true);
@@ -189,7 +190,7 @@ public class KNXDeviceLoaderETSImplManual implements DeviceLoader
 
 		objectBroker.addObj(entity, true);
 
-		DPST_9_1_ImplKnx datapoint_temperature = new DPST_9_1_ImplKnx(knxConnector, new GroupAddress(1, 1, 0), "P-0341-0_DI-11_M-0001_A-9814-01-5F7E_O-0_R-2", "Temperature, Channel A", "°C-value (EIS5)");
+		DPST_9_1_ImplKnx datapoint_temperature = new DPST_9_1_ImplKnx(knxConnector, new GroupAddress(1, 1, 0), "P-0341-0_DI-11_M-0001_A-9814-01-5F7E_O-0_R-2", "Temperature, Channel A", "°C-value (EIS5)", false, true);
 		entity.addDatapoint(datapoint_temperature);
 
 		objectBroker.addObj(datapoint_temperature, true);
@@ -200,7 +201,7 @@ public class KNXDeviceLoaderETSImplManual implements DeviceLoader
 
 		objectBroker.addObj(entity, true);
 
-		DPST_9_8_ImplKnx datapoint_co2 = new DPST_9_8_ImplKnx(knxConnector, new GroupAddress(1, 3, 0), "P-0341-0_DI-7_M-0064_A-FF21-11-DDFC-O0048_O-0_R-1", "CO2 Value", "Physical Value");
+		DPST_9_8_ImplKnx datapoint_co2 = new DPST_9_8_ImplKnx(knxConnector, new GroupAddress(1, 3, 0), "P-0341-0_DI-7_M-0064_A-FF21-11-DDFC-O0048_O-0_R-1", "CO2 Value", "Physical Value", false, true);
 		entity.addDatapoint(datapoint_co2);
 
 		objectBroker.addObj(datapoint_co2, true);
@@ -221,7 +222,7 @@ public class KNXDeviceLoaderETSImplManual implements DeviceLoader
 
 		all.addGroup(light);
 		light.addGroup(lightonoff);
-		lightonoff.addFunction(new DPST_1_1_ImplKnx(knxConnector, new GroupAddress(1, 0, 0), "function", null, null, true));
+		lightonoff.addFunction(new DPST_1_1_ImplKnx(knxConnector, new GroupAddress(1, 0, 0), "function", null, null, true, false));
 		lightonoff.addInstance(datapoint_lightonoff, EnumConnector.KEY_SEND);
 		n.getFunctional().addGroup(all);
 
