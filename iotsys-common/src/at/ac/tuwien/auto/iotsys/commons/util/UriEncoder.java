@@ -55,7 +55,16 @@ public abstract class UriEncoder
 		tmp = tmp.replace("ä", "ae");
 		tmp = tmp.replace("ö", "oe");
 		tmp = tmp.replace("ü", "ue");
-		tmp = tmp.replace("%", "%25");	
+		tmp = tmp.replace("%", "percent");
+		tmp = tmp.replace("²", "2");
+		tmp = tmp.replace("³", "3");
+		tmp = tmp.replace("!", "");
+		tmp = tmp.replace("?", "");
+		tmp = tmp.replace("=", "");
+		tmp = tmp.replace("&", "and");
+		tmp = tmp.replace("$", "");
+		
+		// ...
 		
 		tmp = StringEscapeUtils.escapeHtml(tmp);
 				
