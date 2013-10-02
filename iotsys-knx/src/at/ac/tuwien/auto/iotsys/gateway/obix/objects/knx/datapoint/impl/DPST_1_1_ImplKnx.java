@@ -34,6 +34,20 @@ public class DPST_1_1_ImplKnx extends DPST_1_1_Impl
 		if (!readFlag)
 			this.createWatchDog();
 	}
+	
+	public DPST_1_1_ImplKnx(KNXConnector connector, DataPointInit dataPointInit)
+	{
+		super(dataPointInit.getName(), dataPointInit.getDisplayName(), dataPointInit.getDisplay(), dataPointInit.isWritable());
+
+		this.groupAddress = dataPointInit.getGroupAddress();
+		this.connector = connector;
+
+		// if it is not possible to read from the group address --> create a
+		// watchdog that monitors the communication
+
+		if (!readFlag)
+			this.createWatchDog();
+	}
 
 	public void createWatchDog()
 	{
