@@ -20,6 +20,8 @@
 
 package at.ac.tuwien.auto.iotsys.gateway.connectors.knx;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -43,6 +45,7 @@ import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.enumeration.EnumSta
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.language.impl.TranslationImpl;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.network.Network;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.network.impl.NetworkImpl;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.knx.datapoint.impl.DataPointInit;
 
 public class KNXDeviceLoaderETSImpl implements DeviceLoader {
 	private static Logger log = Logger.getLogger(KNXDeviceLoaderImpl.class
@@ -200,7 +203,72 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader {
 						value));
 				
 			}
-			
+						
+			Object datapoints = entityConfig
+					.getProperty("datapoints.datapoint[@id]");
+
+			int datapointsSize = 0;
+
+			if (datapoints != null) {
+				datapointsSize = 1;
+			}
+
+			if (datapoints instanceof Collection<?>) {
+				datapointsSize = ((Collection<?>) datapoints).size();
+			}
+
+			for (int datapointIdx = 0; datapointIdx < datapointsSize; datapointIdx++) {
+
+				HierarchicalConfiguration datapointConfig = entityConfig
+						.configurationAt("datapoints.datapoint(" + datapointIdx	+ ")");
+				String dataPointId = datapointConfig.getString("[@id]");
+				String dataPointName = datapointConfig.getString("[@name]");
+				String dataPointDescription = datapointConfig.getString("[@description]");
+				String dataPointTypeIds = datapointConfig.getString("[@datapointTypeIds]");
+				String dataPointPriority = datapointConfig.getString("[@priority]");
+				String dataPointWriteFlag = datapointConfig.getString("[@writeFlag]");
+				String dataPointCommunicationFlag = datapointConfig.getString("[@communicationFlag]");
+				String dataPointReadFlag = datapointConfig.getString("[@readFlag]");
+				String dataPointReadOnInitFlag = datapointConfig.getString("[@readOnInitFlag]");
+				String dataPointTransmitFlag = datapointConfig.getString("[@transmitFlag]");
+				String updateFlag = datapointConfig.getString("[@updateFlag]");
+				String clazzName = "";
+				try {
+					clazzName = dataPointTypeIds.replace('-', '_') + "_ImplKnx";
+					Class clazz = Class.forName(clazzName);
+					Constructor constructor = clazz.getConstructor(KNXConnector.class, DataPointInit.class);
+					Object[] object = new Object[2];
+					object[0] = knxConnector;
+					DataPointInit dptInit = new DataPointInit();
+					dptInit.setDisplay(dataPointDescription);
+					dptInit.setReadFlag(Boolean.parseBoolean(dataPointReadFlag));
+					dptInit.setName(dataPointName);					
+					
+					object[1] = dptInit;
+					
+					Object newInstance = constructor.newInstance(object);
+					
+					
+				} catch (ClassNotFoundException e) {
+					
+					log.warning(clazzName + " not found. Cannot instantiate according datapoint.");
+					
+				} catch (NoSuchMethodException e) {
+					log.warning(clazzName + " no such method. Cannot instantiate according datapoint.");
+				} catch (SecurityException e) {
+					log.warning(clazzName + " security exception. Cannot instantiate according datapoint.");
+				} catch (InstantiationException e) {
+					log.warning(clazzName + " instantiation exception. Cannot instantiate according datapoint.");
+				} catch (IllegalAccessException e) {
+					log.warning(clazzName + " illegal access exception. Cannot instantiate according datapoint.");
+				} catch (IllegalArgumentException e) {
+					log.warning(clazzName + " illegal argument exception. Cannot instantiate according datapoint.");
+				} catch (InvocationTargetException e) {
+					log.warning(clazzName + " invocation target exception. Cannot instantiate according datapoint.");
+				}
+		
+			}
+
 			n.getEntities().addEntity(entity);
 
 			objectBroker.addObj(entity, true);
