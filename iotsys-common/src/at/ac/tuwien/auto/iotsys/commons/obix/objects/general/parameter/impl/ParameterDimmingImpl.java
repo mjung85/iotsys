@@ -33,20 +33,33 @@ package at.ac.tuwien.auto.iotsys.commons.obix.objects.general.parameter.impl;
 
 import obix.Contract;
 import obix.Int;
+import obix.Obj;
 import obix.Uri;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.parameter.ParameterDimming;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.unit.UnitPercent;
 
-public class ParameterDimmingImpl extends Int implements ParameterDimming
+public class ParameterDimmingImpl extends Obj implements ParameterDimming
 {
+	private Int value;
+
 	public ParameterDimmingImpl()
 	{
 		setHref(new Uri("/parameters/dimming"));
 		setIs(new Contract(ParameterDimming.CONTRACT));
-		setUnit(new Uri(UnitPercent.HREF));
 		setHidden(true);
-		setMin(0);
-		setMax(100);
+
+		value = new Int();
+		value.setName("value");
+		value.setHref(new Uri("value"));
+		value.setUnit(new Uri(UnitPercent.HREF));
+		value.setMin(0);
+		value.setMax(100);
+		this.add(value);
 	}
 
+	@Override
+	public Int value()
+	{
+		return value;
+	}
 }

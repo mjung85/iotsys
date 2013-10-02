@@ -210,6 +210,8 @@ public class ContractInit {
 
 			ContractRegistry.put(Entities.CONTRACT, Entities.class.getName());
 			ContractRegistry.put(Entity.CONTRACT, Entity.class.getName());
+			
+			ContractRegistry.put(ParameterDimming.CONTRACT, ParameterDimming.class.getName());
 
 			// FIXME the following contracts have already used hrefs
 			// (obix:Range)

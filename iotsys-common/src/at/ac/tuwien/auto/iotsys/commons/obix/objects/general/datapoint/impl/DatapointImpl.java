@@ -36,6 +36,7 @@ import obix.Contract;
 import obix.Str;
 import obix.Uri;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.datapoint.DataPoint;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.language.Multilingual;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.language.impl.MultilingualImpl;
 import at.ac.tuwien.auto.iotsys.commons.util.UriEncoder;
 
@@ -44,17 +45,45 @@ public abstract class DatapointImpl extends MultilingualImpl implements DataPoin
 	protected Str function = new Str();
 	protected Str unit = new Str();
 
-	public DatapointImpl(String name, String displayName, String display, Contract is)
+	public DatapointImpl(String name, String displayName, String display)
 	{
+		// attributes
 		this.setName(name);
 		this.setDisplay(display);
 		this.setDisplayName(displayName);
 		
+		// contracts
+		this.addIs(new Contract(new String[] { DataPoint.CONTRACT, Multilingual.CONTRACT }));
+
+		// href
 		if (displayName != null)
 			this.setHref(new Uri(UriEncoder.getEscapedUri(displayName)));
 		else
 			this.setHref(new Uri(UriEncoder.getEscapedUri(name)));
-		
-		this.setIs(is);
+	}
+
+	public void addIs(Contract is)
+	{
+		if (this.getIs() != null)
+		{
+			Uri[] uris = new Uri[is.size() + this.getIs().size()];
+			int i = 0;
+
+			for (Uri uri : is.list())
+			{
+				uris[i++] = uri;
+			}
+
+			for (Uri uri : this.getIs().list())
+			{
+				uris[i++] = uri;
+			}
+
+			this.setIs(new Contract(uris));
+		}
+		else
+		{
+			this.setIs(is);
+		}
 	}
 }

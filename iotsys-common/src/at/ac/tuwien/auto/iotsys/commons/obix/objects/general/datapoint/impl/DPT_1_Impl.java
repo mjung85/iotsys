@@ -32,21 +32,31 @@
 
 package at.ac.tuwien.auto.iotsys.commons.obix.objects.general.datapoint.impl;
 
+import java.util.logging.Logger;
+
 import obix.Bool;
 import obix.Contract;
+import obix.Int;
+import obix.Obj;
+import obix.Real;
 import obix.Uri;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.datapoint.DPT_1;
 
 public abstract class DPT_1_Impl extends DatapointImpl implements DPT_1
 {
+	private static final Logger log = Logger.getLogger(DPT_1_Impl.class.getName());
+
 	protected Bool value = new Bool();
 
-	public DPT_1_Impl(String name, String displayName, String display, Contract is)
+	public DPT_1_Impl(String name, String displayName, String display, boolean writable)
 	{
-		super(name, displayName, display, is);
+		super(name, displayName, display);
+
+		this.addIs(new Contract(DPT_1.CONTRACT));
 
 		this.value.setName("value");
 		this.value.setHref(new Uri("value"));
+		this.value.setWritable(writable);
 		this.add(value);
 	}
 
@@ -54,5 +64,31 @@ public abstract class DPT_1_Impl extends DatapointImpl implements DPT_1
 	public Bool value()
 	{
 		return value;
+	}
+
+	@Override
+	public void writeObject(Obj input)
+	{
+		if (this.value.isWritable())
+		{
+			if (input instanceof DPT_1)
+			{
+				DPT_1 in = (DPT_1) input;
+				log.info("Writing on data point.");
+				this.value.set(in.value().get());
+			}
+			else if (input instanceof Bool)
+			{
+				this.value.set(((Bool) input).get());
+			}
+			else if (input instanceof Real)
+			{
+				this.value.set(((Real) input).get());
+			}
+			else if (input instanceof Int)
+			{
+				this.value.set(((Int) input).get());
+			}
+		}
 	}
 }
