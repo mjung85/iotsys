@@ -24,7 +24,7 @@
 	<weather-forecast>
 		<connector>
 			<name>weather-forecast</name>
-			<enabled>true</enabled>
+			<enabled>false</enabled>
 			<device>
 				<type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.weatherforecast.devices.WeatherForecastCrawlerYR_NO
 				</type>
@@ -102,7 +102,7 @@
 
 		<connector>
 			<name>KNX TP1 Suitcase</name>
-			<enabled>false</enabled>
+			<enabled>true</enabled>
 			<router>
 				<ip>192.168.161.59</ip>
 				<port>3671</port>
@@ -712,7 +712,7 @@
 	<virtual>
 		<connector>
 			<name>VirtualDevices</name>
-			<enabled>true</enabled>
+			<enabled>false</enabled>
 
 			<!-- SENSOREN -->
 
@@ -888,7 +888,7 @@
 		</connector>
 		<connector>
 			<name>Virtual Devices 2</name>
-			<enabled>true</enabled>
+			<enabled>false</enabled>
 
 			<!-- SENSOREN -->
 			<device>
@@ -930,7 +930,7 @@
 		</connector>
 		<connector>
 			<name>HVAC Simulation</name>
-			<enabled>true</enabled>
+			<enabled>false</enabled>
 
 			<!-- SENSOREN -->
 			<device>
@@ -1024,7 +1024,7 @@
 
 		<connector>
 			<name>IoTSyS Logic</name>
-			<enabled>true</enabled>
+			<enabled>false</enabled>
 
 			<!-- Logic components -->
 			<device>
