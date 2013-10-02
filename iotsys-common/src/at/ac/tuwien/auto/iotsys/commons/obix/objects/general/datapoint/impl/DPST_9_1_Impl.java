@@ -36,25 +36,27 @@ import obix.Contract;
 import obix.Obj;
 import obix.Uri;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.datapoint.DPST_9_1;
-import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.datapoint.DPT_9;
-import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.datapoint.DataPoint;
-import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.language.Multilingual;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.unit.UnitCelsius;
 
-public class DPST_9_1_Impl extends DPT_9_Impl implements DPST_9_1
+public abstract class DPST_9_1_Impl extends DPT_9_Impl implements DPST_9_1
 {
-	public DPST_9_1_Impl(String name, String displayName, String display)
+	public DPST_9_1_Impl(String name, String displayName, String display, boolean writable)
 	{
-		super(name, displayName, display, new Contract(new String[] { DPST_9_1.CONTRACT, DPT_9.CONTRACT, DataPoint.CONTRACT, Multilingual.CONTRACT }));
+		// constructor)
+		super(name, displayName, display, writable);
 
+		// contract
+		this.addIs(new Contract(DPST_9_1.CONTRACT));
+		
+		// value
 		this.value.setUnit(new Uri(UnitCelsius.HREF));
 		this.value.setMin(-273);
 		this.value.setMax(670760);
 	}
 
+	@Override
 	public void writeObject(Obj input)
 	{
-		// not writable
+		super.writeObject(input);
 	}
-
 }

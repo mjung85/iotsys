@@ -15,44 +15,39 @@ public class DPST_1_1_ImplKnx extends DPST_1_1_Impl
 	private static final Logger log = Logger.getLogger(DPST_1_1_ImplKnx.class.getName());
 
 	private GroupAddress groupAddress;
-
 	private KNXConnector connector;
+	private boolean readable;
+	private boolean writable;
 
-	private boolean readFlag = false;
-
-	// if more group addresses are needed just add more constructor parameters.
-	public DPST_1_1_ImplKnx(KNXConnector connector, GroupAddress groupAddress, String name, String displayName, String display, boolean writable)
+	public DPST_1_1_ImplKnx(KNXConnector connector, GroupAddress groupAddress, String name, String displayName, String display, boolean writable, boolean readable)
 	{
 		super(name, displayName, display, writable);
 
 		this.groupAddress = groupAddress;
 		this.connector = connector;
+		this.writable = writable;
+		this.readable = readable;
 
-		// if it is not possible to read from the group address --> create a
-		// watchdog that monitors the communication
-
-		if (!readFlag)
+		// if it is not possible to read from the group address --> create a watchdog that monitors the communication
+		if (!this.readable)
 			this.createWatchDog();
 	}
 
 	public void createWatchDog()
 	{
-		System.out.println("Creating watch dog for " + groupAddress);
 		connector.addWatchDog(groupAddress, new KNXWatchDog()
 		{
 			@Override
 			public void notifyWatchDog(byte[] apdu)
 			{
-				System.out.println("Notifywatchdog!" + groupAddress);
 				try
 				{
 					DPTXlatorBoolean x = new DPTXlatorBoolean(DPTXlatorBoolean.DPT_SWITCH);
 
 					x.setData(apdu, 0);
 
-					// String[] a = x.getAllValues();
-
 					log.fine("Switch for " + DPST_1_1_ImplKnx.this.getHref() + " now " + x.getValueBoolean());
+
 					value.set(x.getValueBoolean());
 				}
 				catch (KNXException e)
@@ -66,9 +61,8 @@ public class DPST_1_1_ImplKnx extends DPST_1_1_Impl
 	@Override
 	public void refreshObject()
 	{
-		// here we need to read from the bus, only if the read flag is set at
-		// the data point
-		if (readFlag)
+		// here we need to read from the bus, only if the read flag is set at the data point
+		if (this.readable)
 		{
 			boolean value = connector.readBool(groupAddress);
 			this.value().set(value);
@@ -78,12 +72,14 @@ public class DPST_1_1_ImplKnx extends DPST_1_1_Impl
 	@Override
 	public void writeObject(Obj obj)
 	{
-		// always pass the writeObject call to the super method (triggers oBIX
-		// related internal services like watches, alarms, ...)
-		// also the internal instance variables get updated
-		super.writeObject(obj);
+		if (this.writable)
+		{
+			// always pass the writeObject call to the super method (triggers, oBIX related internal services like watches, alarms, ...)
+			// also the internal instance variables get updated
+			super.writeObject(obj);
 
-		// now write this.value to the KNX bus
-		connector.write(groupAddress, this.value().get());
+			// now write this.value to the KNX bus
+			connector.write(groupAddress, this.value().get());
+		}
 	}
 }

@@ -37,8 +37,10 @@ import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.datapoint.DPT_3;
 
 public abstract class DPT_3_Impl extends DatapointImpl implements DPT_3
 {
-	public DPT_3_Impl(String name, String displayName, String display, Contract is)
+	public DPT_3_Impl(String name, String displayName, String display)
 	{
-		super(name, displayName, display, is);
+		super(name, displayName, display);
+
+		this.addIs(new Contract(DPT_3.CONTRACT));
 	}
 }

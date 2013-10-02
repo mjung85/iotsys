@@ -35,45 +35,69 @@ package at.ac.tuwien.auto.iotsys.commons.obix.objects.general.datapoint.impl;
 import obix.Contract;
 import obix.Obj;
 import obix.Op;
+import obix.Uri;
+import obix.contracts.Nil;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.datapoint.DPST_3_7;
-import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.datapoint.DPT_3;
-import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.datapoint.DataPoint;
-import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.language.Multilingual;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.parameter.ParameterDimming;
+import at.ac.tuwien.auto.iotsys.obix.OperationHandler;
 
-public class DPST_3_7_Impl extends DPT_3_Impl implements DPST_3_7
+public abstract class DPST_3_7_Impl extends DPT_3_Impl implements DPST_3_7
 {
 	private Op increase;
 	private Op decrease;
 
 	public DPST_3_7_Impl(String name, String displayName, String display)
 	{
-		super(name, displayName, display, new Contract(new String[] { DPST_3_7.CONTRACT, DPT_3.CONTRACT, DataPoint.CONTRACT, Multilingual.CONTRACT }));
+		// constructor
+		super(name, displayName, display);
 
-		// Operation increase
+		// contract
+		this.addIs(new Contract(DPST_3_7.CONTRACT));
+
+		// operation increase
 		this.increase = new Op();
 		this.increase.setName("increase");
+		this.increase.setHref(new Uri("increase"));
 		this.increase.setIn(new Contract(ParameterDimming.CONTRACT));
+		this.increase.setOut(new Contract(Nil.CONTRACT));
+		this.increase.setOperationHandler(new OperationHandler()
+		{				
+			@Override
+			public Obj invoke(Obj in)
+			{
+				return doIncrease(in);
+			}
+		});
 		this.add(increase);
 
-		// Operation decrease
+		// operation decrease
 		this.decrease = new Op();
 		this.decrease.setName("decrease");
+		this.decrease.setHref(new Uri("decrease"));
 		this.decrease.setIn(new Contract(ParameterDimming.CONTRACT));
+		this.decrease.setOut(new Contract(Nil.CONTRACT));
+		this.decrease.setOperationHandler(new OperationHandler()
+		{				
+			@Override
+			public Obj invoke(Obj in)
+			{
+				return doDecrease(in);
+			}
+		});
 		this.add(decrease);
 	}
 
+	protected abstract Obj doIncrease(Obj in);
+
+	protected abstract Obj doDecrease(Obj in);
+
 	@Override
-	public void writeObject(Obj input)
-	{
-		// TODO
-	}
-	
 	public Op increase()
 	{
 		return increase;
 	}
 
+	@Override
 	public Op decrease()
 	{
 		return decrease;
