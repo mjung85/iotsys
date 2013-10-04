@@ -15,8 +15,8 @@
 		</device-loader>
 		<device-loader>at.ac.tuwien.auto.iotsys.demoapp.DemoAppLoaderImpl
 		</device-loader>
-		<device-loader>at.ac.tuwien.auto.iotsys.gateway.connectors.knx.KNXDeviceLoaderETSImpl
-		</device-loader>
+		<!-- <device-loader>at.ac.tuwien.auto.iotsys.gateway.connectors.knx.KNXDeviceLoaderETSImplManual
+		</device-loader>-->
 		<device-loader>at.ac.tuwien.auto.iotsys.gateway.connectors.weatherforecast.WeatherForecastDeviceLoaderImpl
 		</device-loader>
 	</deviceloaders>
@@ -104,7 +104,7 @@
 			<name>KNX TP1 Suitcase</name>
 			<enabled>true</enabled>
 			<router>
-				<ip>192.168.161.59</ip>
+				<ip>192.168.1.101</ip>
 				<port>3671</port>
 			</router>
 			<localIP>auto</localIP>
@@ -712,7 +712,7 @@
 	<virtual>
 		<connector>
 			<name>VirtualDevices</name>
-			<enabled>false</enabled>
+			<enabled>true</enabled>
 
 			<!-- SENSOREN -->
 
@@ -930,7 +930,7 @@
 		</connector>
 		<connector>
 			<name>HVAC Simulation</name>
-			<enabled>false</enabled>
+			<enabled>true</enabled>
 
 			<!-- SENSOREN -->
 			<device>
@@ -1024,7 +1024,7 @@
 
 		<connector>
 			<name>IoTSyS Logic</name>
-			<enabled>false</enabled>
+			<enabled>true</enabled>
 
 			<!-- Logic components -->
 			<device>
