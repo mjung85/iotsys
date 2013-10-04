@@ -41,27 +41,29 @@ public class DPST_5_1_ImplKnx extends DPST_5_1_Impl
 
 	public void createWatchDog()
 	{
-		connector.addWatchDog(groupAddress, new KNXWatchDog()
-		{
-			@Override
-			public void notifyWatchDog(byte[] apdu)
+		if(connector != null && groupAddress != null){
+			connector.addWatchDog(groupAddress, new KNXWatchDog()
 			{
-				try
+				@Override
+				public void notifyWatchDog(byte[] apdu)
 				{
-					DPTXlator8BitUnsigned x = new DPTXlator8BitUnsigned(DPTXlator8BitUnsigned.DPT_SCALING);
-
-					x.setData(apdu, 0);
-
-					log.fine("Status for " + DPST_5_1_ImplKnx.this.getHref() + " now " + x.getValueUnsigned(1));
-
-					value.set(x.getValueUnsigned(1));
+					try
+					{
+						DPTXlator8BitUnsigned x = new DPTXlator8BitUnsigned(DPTXlator8BitUnsigned.DPT_SCALING);
+	
+						x.setData(apdu, 0);
+	
+						log.fine("Status for " + DPST_5_1_ImplKnx.this.getHref() + " now " + x.getValueUnsigned(1));
+	
+						value.set(x.getValueUnsigned(1));
+					}
+					catch (KNXException e)
+					{
+						e.printStackTrace();
+					}
 				}
-				catch (KNXException e)
-				{
-					e.printStackTrace();
-				}
-			}
-		});
+			});
+		}
 	}
 
 	@Override
