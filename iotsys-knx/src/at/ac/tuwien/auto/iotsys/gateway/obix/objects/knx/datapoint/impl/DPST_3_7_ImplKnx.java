@@ -66,7 +66,12 @@ public class DPST_3_7_ImplKnx extends DPST_3_7_Impl
 	
 				log.fine("dimming with step code" + stepCode);
 					
-				connector.getProcessCommunicator().write(groupAddress, control, (byte) stepCode);
+				if(connector.getProcessCommunicator() != null){
+					connector.getProcessCommunicator().write(groupAddress, control, (byte) stepCode);
+				}
+				else{
+					log.severe("Process communicator is not available!");
+				}
 			}
 		}
 		catch (KNXFormatException e)
