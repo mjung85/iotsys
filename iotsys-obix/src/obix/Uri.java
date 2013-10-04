@@ -64,7 +64,7 @@ public class Uri extends Val
 
 	    try
 	    {                         
-	      if (val.startsWith("obix:"))
+	      if (val.startsWith("obix:") || val.startsWith("knx:"))
 	        return this;
 	       
 	      base.checkAbsolute();  
