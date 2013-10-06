@@ -255,12 +255,13 @@ app.factory('Property', ['$http', function($http) {
         }
       }.bind(this));
     },
-    joinGroupComm: function(ipv6) {
-      var url = URI(this.href).segment('groupComm').segment('joinGroup').toString();
+    becomeMemberOfGroupComm: function(ipv6, join) {
+      var action = join ? 'joinGroup' : 'leaveGroup';
+      var url = URI(this.href).segment('groupComm').segment(action).toString();
       $http.post(url, '<str val="'+ipv6+'"/>', {headers: {
         'Content-Type': 'application/xml'
       }}).success(function() {
-        console.log("Joined ",this.href," into groupComm ",ipv6);
+        console.log(action,this.href,ipv6);
       }.bind(this));
     }
   };
@@ -272,17 +273,20 @@ app.factory('Connection', function() {
   var Connection = function(fromProperty, toProperty) {
     this.id = Connection.counter;
     this.ipv6 = "FF02:FFFF::"+this.id;
+    this.fromProperty = fromProperty;
+    this.toProperty = toProperty;
+    this.fromProperty.becomeMemberOfGroupComm(this.ipv6, true);
+    this.toProperty.becomeMemberOfGroupComm(this.ipv6, true);
     Connection.counter += 1;
     return this;
   };
 
-  Connection.counter = 1; // TODO: storage
-
-  Connection.create = function(fromProperty, toProperty) {
-    var c = new Connection(fromProperty, toProperty); 
-    fromProperty.joinGroupComm(c.ipv6);
-    toProperty.joinGroupComm(c.ipv6);
+  Connection.prototype.destroy = function() {
+    this.fromProperty.becomeMemberOfGroupComm(this.ipv6, false);
+    this.toProperty.becomeMemberOfGroupComm(this.ipv6, false);
   };
+
+  Connection.counter = 1; // TODO: storage
 
   return Connection;
 });
@@ -409,7 +413,13 @@ app.controller('MainCtrl', ['$scope','$q','Lobby','Watch','Connection',function(
   jsPlumb.bind("connection", function(info) {
     var sourceProperty = info.sourceEndpoint.getParameters().property;
     var targetProperty = info.targetEndpoint.getParameters().property;
-    Connection.create(sourceProperty, targetProperty);
+    info.connection.obelixConnection = new Connection(sourceProperty, targetProperty);
+  });
+
+  jsPlumb.bind("click", function(connection, e) {
+    connection.obelixConnection.destroy();
+    connection.obelixConnection = null;
+    jsPlumb.detach(connection);
   });
 }]);
 
