@@ -32,9 +32,13 @@ app.service('Lobby', ['$http', 'Device', 'Directory', function($http, Device, Di
   }
 }]);
 
-app.service('Storage', function() {
-  return {
-    get: function(key) {
+app.factory('Storage', function() {
+  var Storage = function(key) {
+    this.key = key;
+    return this;
+  };
+
+  Storage.get = function(key) {
       var result = localStorage.getItem(key);
       if (!result) {
         return null;
@@ -43,17 +47,26 @@ app.service('Storage', function() {
       } else {
         return result;
       }
-    },
-    set: function(key, value) {
+  };
+  
+  Storage.set = function(key, value) {
       if (angular.isObject(value) || angular.isArray(value)) {
         value = angular.toJson(value);
       }
       localStorage.setItem(key, value);
-    },
-    remove: function(key) {
-      localStorage.removeItem(key);
-    }
-  }
+  };
+
+  Storage.remove = function(key) {
+    localStorage.removeItem(key);
+  };
+  
+  Storage.prototype = {
+    get: function() { return Storage.get(this.key); },
+    set: function(value) { Storage.set(this.key, value); },
+    remove: function() { Storage.remove(this.key); }
+  };
+
+  return Storage;
 });
 
 app.factory('Directory', function() {
@@ -115,15 +128,16 @@ app.factory('Watch', ['$http', '$timeout', '$q', 'Storage', 'WATCH_POLL_INTERVAL
     this.href = href;
   };
 
-  // A promise that will get resolved only when an old watch that we have in localStorage is dead and we creat a new one
+  // A promise that will get resolved only when an old watch that we have in localStorage is dead and we've created a new one
   Watch.watchRecreatedDefer = $q.defer();
 
   Watch.getInstance = function(callback) {
-    var watchHref = Storage.get('watch');
+    var storage = new Storage('watch');
+    var watchHref = storage.get();
     if (!watchHref) {
       $http.post('/watchService/make').success(function(response) {
         var watchHref = response['href'];
-        Storage.set('watch', watchHref);
+        storage.set(watchHref);
         console.log("Made new watch ", watchHref);
         callback(new Watch(watchHref));
       });
@@ -136,7 +150,7 @@ app.factory('Watch', ['$http', '$timeout', '$q', 'Storage', 'WATCH_POLL_INTERVAL
           callback(new Watch(watchHref));
         } else {
           console.log("Old watch "+watchHref+" seems gone. Recreating...");
-          Storage.remove('watch');
+          storage.remove();
           Watch.getInstance(function(newWatch) {
             Watch.watchRecreatedDefer.resolve(newWatch);
             callback(newWatch);
@@ -282,16 +296,22 @@ app.factory('Property', ['$http', function($http) {
   return Property;
 }]);
 
-app.factory('Connection', function() {
-  var Connection = function(fromProperty, toProperty) {
+app.factory('Connection', ['Storage', function(Storage) {
+  // If ipv6 is provided, this is a restored connection
+  var Connection = function(fromProperty, toProperty, ipv6) {
     this.jsPlumbConnection = null;
-    this.id = Connection.counter;
-    this.ipv6 = "FF02:FFFF::"+this.id;
     this.fromProperty = fromProperty;
     this.toProperty = toProperty;
+
+    if (ipv6) {
+      console.log("Restored connection",ipv6,"with",fromProperty,toProperty);
+      this.ipv6 = ipv6;
+    } else {
+      this.ipv6 = "FF02:FFFF::"+Connection.incrementCounter();
+    }
     this.fromProperty.connect(this, true);
     this.toProperty.connect(this, true);
-    Connection.counter += 1;
+
     return this;
   };
 
@@ -301,17 +321,52 @@ app.factory('Connection', function() {
     jsPlumb.detach(this.jsPlumbConnection);
   };
 
-  Connection.counter = 1; // TODO: storage
+  Connection.counter = null;
+  // Returns current counter value, then increases and saves it to storage
+  Connection.incrementCounter = function() {
+    var storage = new Storage('connections_counter');
+    if (!Connection.counter) {
+      Connection.counter = storage.get() || 1;
+    }
+    var result = Connection.counter++;
+    storage.set(Connection.counter);
+    return result;
+  };
+
+  // Small utility "module" to de/serialize connections to localstorage, as they aren't enumerable in the lobby
+  Connection.Freezer = (function(){
+    var storage = new Storage('connections');
+    var list = storage.get() || [];
+
+    return {
+      add: function(connection) {
+        list.push({from:connection.fromProperty.href, to: connection.toProperty.href, ipv6: connection.ipv6});
+        storage.set(list);
+      },
+      remove: function(connection) {
+        // list...
+        storage.set(list);
+      },
+      restore: function(propertyLookupCallback, connectionRestoredCallback) {
+        list.each(function(c) {
+          var fromProperty = propertyLookupCallback(c.from);
+          var toProperty = propertyLookupCallback(c.to);
+          connectionRestoredCallback(new Connection(fromProperty, toProperty, c.ipv6));
+        });
+      }
+    }
+  })();
 
   return Connection;
-});
+}]);
 
-app.factory('Device', ['$http', 'Storage', 'Property', 'Watch', function($http, Storage, Property, Watch) {
+app.factory('Device', ['$http', '$q', 'Storage', 'Property', 'Watch', function($http, $q, Storage, Property, Watch) {
   var Device = function(href, name) {
+    this.loadedDefer = $q.defer();
     this.href = href;
     this.name = name;
-    this.placementKey = 'device_'+this.href+'_placement';
-    this.placement = Storage.get(this.placementKey);
+    this.placementStorage = new Storage('device_'+this.href+'_placement');
+    this.placement = this.placementStorage.get();
     if (this.placement) {
       this.load();
     }
@@ -321,7 +376,7 @@ app.factory('Device', ['$http', 'Storage', 'Property', 'Watch', function($http, 
   Device.prototype = {
     place: function(position) {
       this.placement = {left: position.left, top: position.top};
-      Storage.set(this.placementKey, this.placement);
+      this.placementStorage.set(this.placement);
       if (!this.loaded && !this.loading) this.load();
     },
 
@@ -331,6 +386,7 @@ app.factory('Device', ['$http', 'Storage', 'Property', 'Watch', function($http, 
         this.parse(response);
         this.loaded = true;
         this.loading = false;
+        this.loadedDefer.resolve();
       }.bind(this));
     },
 
@@ -386,22 +442,23 @@ app.factory('Device', ['$http', 'Storage', 'Property', 'Watch', function($http, 
 
       // Unplace
       this.placement = null;
-      Storage.remove(this.placementKey);
+      this.placementStorage.remove();
     }
   };
   
   return Device;
 }]);
 
-app.controller('MainCtrl', ['$scope','$q','Lobby','Watch','Connection',function($scope, $q, Lobby, Watch, Connection) {
+app.controller('MainCtrl', ['$scope','$q','$timeout','Lobby','Watch','Connection',function($scope, $q, $timeout, Lobby, Watch, Connection) {
   $scope.directory = null;
   $scope.allDevices = [];
   $scope.watch = null;
 
   var devicesInstantiatedDefer = $q.defer();
+  var devicesInstantiatedWithPropertiesDefer = $q.defer();
 
   $q.all([
-    Watch.watchRecreatedDefer.promise, 
+    Watch.watchRecreatedDefer.promise,
     devicesInstantiatedDefer.promise
   ]).then(function(values) {
     // Promises resolved. We now have both watch and devices and can re-add them to the new watch
@@ -409,6 +466,23 @@ app.controller('MainCtrl', ['$scope','$q','Lobby','Watch','Connection',function(
     var watch = values[0];
     var placedDevices = values[1];
     placedDevices.each(function(device) { watch.add(device.href); });
+  });
+
+  // When devices are known, we want to restore connections
+  devicesInstantiatedWithPropertiesDefer.promise.then(function(placedDevices) {
+    Connection.Freezer.restore(function(propertyHref) {
+      return placedDevices.map('properties').flatten().find({href:propertyHref});
+    }, function(connection) {
+      console.log("Plumbing", connection);
+      return;
+      $timeout(function(){
+        console.log(connection);
+        connection.jsPlumbConnection = jsPlumb.connect({
+          source:connection.fromProperty.jsPlumbEndpoints[0],
+          target:connection.toProperty.jsPlumbEndpoints[0]
+        }, {parameters: {restored: true}});
+      },2000);
+    });
   });
 
   Lobby.getDeviceTree(function(root) {
@@ -419,6 +493,12 @@ app.controller('MainCtrl', ['$scope','$q','Lobby','Watch','Connection',function(
       return !!device.placement;
     });
     devicesInstantiatedDefer.resolve(placedDevices);
+
+    $q.all(placedDevices.map(function(d) {
+      return d.loadedDefer.promise;
+    })).then(function(values) {
+      devicesInstantiatedWithPropertiesDefer.resolve(placedDevices);
+    });
   });
 
   Watch.getInstance(function(watch) {
@@ -444,14 +524,18 @@ app.controller('MainCtrl', ['$scope','$q','Lobby','Watch','Connection',function(
   };
 
   jsPlumb.bind("connection", function(info) {
+    if (info.connection.getParameter('restored')) return; // Ignore connect events for restored connections
     var sourceProperty = info.sourceEndpoint.getParameters().property;
+    console.log("Connection event", sourceProperty.connection);
     var targetProperty = info.targetEndpoint.getParameters().property;
     info.connection.obelixConnection = new Connection(sourceProperty, targetProperty);
     info.connection.obelixConnection.jsPlumbConnection = info.connection;
+    Connection.Freezer.add(info.connection.obelixConnection);
   });
 
   jsPlumb.bind("dblclick", function(connection, e) {
     connection.obelixConnection.destroy();
+    Connection.Freezer.remove(info.connection.obelixConnection);
     connection.obelixConnection = null;
   });
 }]);
