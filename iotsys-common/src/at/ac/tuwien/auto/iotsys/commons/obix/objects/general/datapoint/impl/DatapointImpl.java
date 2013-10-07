@@ -55,11 +55,11 @@ public abstract class DatapointImpl extends MultilingualImpl implements DataPoin
 		// contracts
 		this.addIs(new Contract(new String[] { DataPoint.CONTRACT, Multilingual.CONTRACT }));
 
-		// href
-		if (displayName != null)
-			this.setHref(new Uri(UriEncoder.getEscapedUri(displayName)));
-		else
-			this.setHref(new Uri(UriEncoder.getEscapedUri(name)));
+		// href -> always use name
+//		if (displayName != null)
+//			this.setHref(new Uri(UriEncoder.getEscapedUri(displayName)));
+//		else
+		this.setHref(new Uri(UriEncoder.getEscapedUri(name)));
 	}
 
 	public void addIs(Contract is)

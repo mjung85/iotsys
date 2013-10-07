@@ -391,7 +391,11 @@ public class Obj implements IObj, Subject, AlarmSource, Cloneable
 
 	public Object clone() throws CloneNotSupportedException
 	{
-		return super.clone();
+		
+		Obj obj  =  (Obj) super.clone();
+		obj.name = null;
+		obj.parent = null;
+		return obj;
 	}
 
 	// //////////////////////////////////////////////////////////////
