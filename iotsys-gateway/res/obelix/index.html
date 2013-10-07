@@ -27,7 +27,7 @@
     </div>
     <div droppable='placeDevice' id='canvas' jsplumb-container ng-click='sidebarExpanded = false'>
       <div ng-repeat="device in allDevices | filter:{placement:'!!'}">
-        <div class='device' draggable-distance='5' draggable-helper='original' draggable-via-jsplumb='true' draggable='device' ng-style='{left: device.placement.left, top: device.placement.top}'>
+        <div class='device' draggable-distance='5' draggable-helper='original' draggable-via-jsplumb='true' draggable='device' ng-dblclick='device.destroy()' ng-style='{left: device.placement.left, top: device.placement.top}'>
           <header>
             <label class='name'>
               {{device.name}}
