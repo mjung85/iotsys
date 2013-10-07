@@ -473,15 +473,13 @@ app.controller('MainCtrl', ['$scope','$q','$timeout','Lobby','Watch','Connection
     Connection.Freezer.restore(function(propertyHref) {
       return placedDevices.map('properties').flatten().find({href:propertyHref});
     }, function(connection) {
-      console.log("Plumbing", connection);
-      return;
       $timeout(function(){
         console.log(connection);
         connection.jsPlumbConnection = jsPlumb.connect({
           source:connection.fromProperty.jsPlumbEndpoints[0],
           target:connection.toProperty.jsPlumbEndpoints[0]
         }, {parameters: {restored: true}});
-      },2000);
+      },100); // TODO: fix timeout and connect when endpoints get available
     });
   });
 
