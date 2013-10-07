@@ -213,4 +213,24 @@ public class GatewayTest extends AbstractGatewayTest {
 		get("/examples/referringObj");
 	}
 	
+	
+	@Test
+	public void testGroupComm() {
+		Obj referringObj= new Obj();
+		referringObj.setHref(new Uri("examples/referringObj"));
+		
+		Ref ref = new Ref();
+		ref.setHref(new Uri("/testDevices/fanSpeed1"));
+		referringObj.add(ref);
+		
+		ObjectBrokerImpl.getInstance().addObj(referringObj);
+		
+		expect().
+		body(hasXPath("/obj/ref[@href='/testDevices/fanSpeed1']")).
+		get("/examples/referringObj/");
+		
+		expect().
+		body(hasXPath("/obj/ref[@href='/testDevices/fanSpeed1']")).
+		get("/examples/referringObj");
+	}
 }
