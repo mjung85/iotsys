@@ -150,7 +150,7 @@ public class NanoHTTPD {
 		String subject = mySocket.getInetAddress().getHostAddress();
 		String ipv6Address = "/" + getIPv6Address(mySocket);
 
-		log.info("Serving: " + uri + " for " + subject);
+//		log.info("Serving: " + uri + " for " + subject);
 		
 		// serve static files
 		Response response = serveStatic(uri, header, parms, ipv6Address);

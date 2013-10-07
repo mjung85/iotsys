@@ -407,10 +407,10 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader {
 						object[0] = knxConnector;
 						DataPointInit dptInit = new DataPointInit();
 						dptInit.setDisplay(dataPointDescription);
-						dptInit.setReadable(Boolean
-								.parseBoolean(dataPointReadFlag));
+						dptInit.setReadable("Enabled".equals(dataPointReadFlag));
 						dptInit.setName(dataPointName);
 						dptInit.setGroupAddress(new GroupAddress(Integer.parseInt(groupAddressByDatapointID.get(dataPointId))));
+						dptInit.setWritable("Enabled".equals(dataPointWriteFlag));
 
 						object[1] = dptInit;
 						DatapointImpl dataPoint = (DatapointImpl) constructor

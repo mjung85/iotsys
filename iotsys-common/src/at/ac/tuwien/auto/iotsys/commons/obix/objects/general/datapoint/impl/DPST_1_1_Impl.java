@@ -59,6 +59,7 @@ public abstract class DPST_1_1_Impl extends DPT_1_Impl implements DPST_1_1
 		this.encoding.setWritable(true);
 		this.add(encoding);
 	}
+	
 
 	@Override
 	public void writeObject(Obj input)

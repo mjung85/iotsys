@@ -15,8 +15,8 @@
 		</device-loader>
 		<device-loader>at.ac.tuwien.auto.iotsys.demoapp.DemoAppLoaderImpl
 		</device-loader>
-		<device-loader>at.ac.tuwien.auto.iotsys.gateway.connectors.knx.KNXDeviceLoaderETSImpl
-		</device-loader>
+		<!-- <device-loader>at.ac.tuwien.auto.iotsys.gateway.connectors.knx.KNXDeviceLoaderETSImpl
+		</device-loader>-->
 		<device-loader>at.ac.tuwien.auto.iotsys.gateway.connectors.weatherforecast.WeatherForecastDeviceLoaderImpl
 		</device-loader>
 	</deviceloaders>

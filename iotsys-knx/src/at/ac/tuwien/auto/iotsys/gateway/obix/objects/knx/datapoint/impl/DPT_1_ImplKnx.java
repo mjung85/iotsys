@@ -67,11 +67,11 @@ public class DPT_1_ImplKnx extends DPT_1_Impl
 	public void refreshObject()
 	{
 		// here we need to read from the bus, only if the read flag is set at the data point
-		if (this.readable)
-		{
-			boolean value = connector.readBool(groupAddress);
-			this.value().set(value);
-		}
+//		if (this.readable)
+//		{
+//			boolean value = connector.readBool(groupAddress);
+//			this.value().set(value);
+//		}
 	}
 
 	@Override

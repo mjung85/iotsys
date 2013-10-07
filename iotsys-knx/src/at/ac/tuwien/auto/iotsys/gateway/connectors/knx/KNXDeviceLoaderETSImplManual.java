@@ -68,7 +68,7 @@ public class KNXDeviceLoaderETSImplManual implements DeviceLoader
 
 		ArrayList<Connector> connectors = new ArrayList<Connector>();
 
-		KNXConnector knxConnector = new KNXConnector("192.168.1.101", 3671, "auto");
+		KNXConnector knxConnector = new KNXConnector("192.168.161.59", 3671, "auto");
 
 		connect(knxConnector);
 

@@ -29,8 +29,9 @@ public class DPST_1_1_ImplKnx extends DPST_1_1_Impl
 		this.readable = readable;
 
 		// if it is not possible to read from the group address --> create a watchdog that monitors the communication
-		if (!this.readable)
-			this.createWatchDog();
+		//if (!this.readable)
+		// --> always create a watch dog
+		this.createWatchDog();
 	}
 
 	public DPST_1_1_ImplKnx(KNXConnector connector, DataPointInit dataPointInit)
@@ -68,12 +69,12 @@ public class DPST_1_1_ImplKnx extends DPST_1_1_Impl
 	@Override
 	public void refreshObject()
 	{
-		// here we need to read from the bus, only if the read flag is set at the data point
-		if (this.readable)
-		{
-			boolean value = connector.readBool(groupAddress);
-			this.value().set(value);
-		}
+//		// here we need to read from the bus, only if the read flag is set at the data point
+//		if (this.readable)
+//		{
+//			boolean value = connector.readBool(groupAddress);
+//			this.value().set(value);
+//		}
 
 		// run refresh-method from super class
 		super.refreshObject();
