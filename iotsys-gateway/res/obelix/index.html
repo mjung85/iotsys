@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang='en' ng-app='Obelix'>
+  <head>
+    <meta charset='utf-8'>
+    <title>Obelix</title>
+    <link href="stylesheets/app.css" media="screen" rel="stylesheet" type="text/css" />
+    <script src="javascripts/app.js" type="text/javascript"></script>
+  </head>
+  <body ng-controller='MainCtrl'>
+    <script id='directory_template' type='text/ng-template'>
+      <div class='icon' ng-click='directory.toggle()'></div>
+      <label ng-click='directory.toggle()'>
+        {{directory.name}}
+      </label>
+      <ul class='devices' ng-show='directory.expanded'>
+        <li class='device' ng-repeat='device in directory.devices'>
+          <label draggable='device'>{{device.name}}</label>
+        </li>
+      </ul>
+      <ul class='subdirectories' ng-show='directory.expanded'>
+        <li class='subdirectory' ng-class='{expanded:directory.expanded}' ng-include="'directory_template'" ng-repeat='directory in directory.subdirectories'></li>
+      </ul>
+    </script>
+    <div id='sidebar' ng-class='{expanded: sidebarExpanded}'>
+      <div class='content' ng-include="'directory_template'" not-droppable></div>
+      <div class='btn' id='toggle' ng-click='sidebarExpanded = !sidebarExpanded; $event.stopPropagation()'></div>
+    </div>
+    <div droppable='placeDevice' id='canvas' jsplumb-container ng-click='sidebarExpanded = false'>
+      <div ng-repeat="device in allDevices | filter:{placement:'!!'}">
+        <div class='device' draggable-distance='5' draggable-helper='original' draggable-via-jsplumb='true' draggable='device' ng-style='{left: device.placement.left, top: device.placement.top}'>
+          <header>
+            <label class='name'>
+              {{device.name}}
+            </label>
+          </header>
+          <div class='properties'>
+            <div class='property' jsplumb-endpoint='property' ng-class='klass' ng-repeat='property in device.properties' ng-switch on='property.klass'>
+              <label>{{property.name}}</label>
+              <span class='bool' ng-switch-when='bool'>
+                <input ng-change='property.write()' ng-checked='property.value' ng-disabled='property.readonly' ng-model='property.value' type='checkbox'>
+              </span>
+              <span class='numeric' ng-switch-when='numeric'>
+                <input ng-change='property.write()' ng-disabled='property.readonly' ng-model-onblur ng-model='property.value' type='text'>
+                <div class='slider' ng-switch='property.range'>
+                  <div ng-switch-when='false'></div>
+                  <div ng-switch-default>
+                    <input max='{{property.range.max}}' min='{{property.range.min}}' ng-model='property.value' ng-mouseup='property.write()' step='{{property.range.step}}' type='range'>
+                  </div>
+                </div>
+              </span>
+              <span class='enum' ng-switch-when='enum'>
+                <select ng-change='property.write()' ng-model='property.value' ng-options='x for x in property.range'></select>
+              </span>
+              <span class='other' ng-switch-default>
+                <input ng-disabled='property.readonly' ng-model='property.value' type='text'>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,52 @@
+// Variables
+description = 'mDNS-SD module for IoTSyS gateway'
+
+sourceCompatibility = 1.6
+
+eclipse{
+	classpath{
+		file {
+			withXml {
+				def node = it.asNode()				
+				node.appendNode('classpathentry', [kind: 'src', path: '/iotsys-common', exported:'true'])
+				node.appendNode('classpathentry', [kind: 'src', path: '/iotsys-osgi', exported:'true'])				
+			}
+		}
+	}
+}
+
+repositories {	
+	
+}
+
+configurations {
+	provided
+}
+
+sourceSets{
+	main { compileClasspath += configurations.provided }
+}
+
+jar {
+	manifest {
+		attributes("Manifest-Version": "1.0",
+				   "Bundle-Name": "IoTSyS-mDNS-SD",
+				   "Bundle-SymbolicName": "at.ac.tuwien.auto.iotsys.mdnssd",
+				   "Bundle-Description": "mDNS-SD module for IoTSyS gateway",
+				   "Bundle-Vendor": "Vienna University of Technology, Automation Systems Group, www.auto.tuwien.ac.at",
+				   "Bundle-Version": "0.1",
+				   "Bundle-Classpath": ".",
+				   "Bundle-Activator": "at.ac.tuwien.auto.iotsys.mdnssd.MdnssdActivator",
+				   "Export-Package": "at.ac.tuwien.auto.iotsys.mdnssd",
+				   "Import-Package": "org.osgi.framework,at.ac.tuwien.auto.iotsys.commons, at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.sensors, at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators"
+				   )
+	}
+}
+
+dependencies {
+	provided project(':iotsys-common')
+	provided project(':iotsys-osgi')
+	provided group: 'org.apache.felix', name: 'org.osgi.core', version: '1.4.0'
+}
+
+
