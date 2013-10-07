@@ -71,7 +71,7 @@ public class LobbyImpl extends Obj implements Lobby {
 			references.put(href, ref);
 			
 		}
-		this.add(ref);
+		this.add(ref, false);
 	}
 	
 	public void removeReference(String href){

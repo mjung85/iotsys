@@ -1027,7 +1027,7 @@ public class Obj implements IObj, Subject, AlarmSource, Cloneable
 	 */
 	public Obj add(Obj kid)
 	{
-		return add(kid, true);
+		return add(kid, false);
 	}
 
 	/**

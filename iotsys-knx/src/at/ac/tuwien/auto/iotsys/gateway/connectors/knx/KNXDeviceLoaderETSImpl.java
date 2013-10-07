@@ -20,11 +20,14 @@
 
 package at.ac.tuwien.auto.iotsys.gateway.connectors.knx;
 
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.net.URLEncoder;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -36,6 +39,7 @@ import obix.Uri;
 import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.commons.configuration.XMLConfiguration;
 
+import at.ac.tuwien.auto.calimero.GroupAddress;
 import at.ac.tuwien.auto.calimero.exception.KNXException;
 import at.ac.tuwien.auto.iotsys.commons.Connector;
 import at.ac.tuwien.auto.iotsys.commons.DeviceLoader;
@@ -67,10 +71,10 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader {
 
 		ArrayList<Connector> connectors = new ArrayList<Connector>();
 
-		KNXConnector knxConnector = new KNXConnector("192.168.1.100", 3671,
+		KNXConnector knxConnector = new KNXConnector("192.168.161.59", 3671,
 				"auto");
 
-		// connect(knxConnector);
+		 connect(knxConnector);
 
 		initNetworks(knxConnector, objectBroker);
 
@@ -129,6 +133,118 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader {
 							+ manufacturerIdx + ").[@name]");
 			manufacturerById.put(manufacturerId, manufacturerName);
 		}
+
+		// parse group communication addresses for endpoints
+		
+		HierarchicalConfiguration functionalConfig = devicesConfig.configurationAt("views.functional");
+
+		Hashtable<String, String> groupAddressByDatapointID = new Hashtable<String, String>();
+		
+		parseGroupAddressConfig(functionalConfig, groupAddressByDatapointID);
+
+//		Object groups = devicesConfig
+//				.getProperty("views.functional.group.[@id]");
+//
+//		int groupsSize = 0;
+//
+//		if (groups != null) {
+//			groupsSize = 1;
+//		}
+//
+//		if (groups instanceof Collection<?>) {
+//			groupsSize = ((Collection<?>) groups).size();
+//		}
+//
+//		// recursively parse for instance elements within groups
+//		for (int groupsIdx = 0; groupsIdx < groupsSize; groupsIdx++) {
+//			String groupId = devicesConfig.getString("views.functional.group("
+//					+ groupsIdx + ").[@id]");
+//			String groupAddress = devicesConfig
+//					.getString("views.functional.group(" + groupsIdx
+//							+ ").[@address]");
+//
+//			// find instance elements for this group
+//
+//			HierarchicalConfiguration groupConfig = devicesConfig
+//					.configurationAt("views.functional.group(" + groupsIdx
+//							+ ")");
+//
+//			Object instanceElements = groupConfig.getProperty("instance.[@id]");
+//
+//			int instanceSize = 0;
+//
+//			if (instanceElements != null) {
+//				instanceSize = 1;
+//			}
+//
+//			for (int instanceIdx = 0; instanceIdx < instanceSize; instanceIdx++) {
+//				String instanceId = devicesConfig.getString("instance("
+//						+ instanceIdx + ").[@id]");
+//				log.info("Mapping instanceID: " + instanceId + " to "
+//						+ groupAddress);
+//				manufacturerById.put(instanceId, groupAddress);
+//			}
+//
+//			// now recursively search for nested group elements
+//
+//			Object groups2 = groupConfig.getProperty("group.[@id]");
+//
+//			int groupsSize2 = 0;
+//
+//			if (groups2 != null) {
+//				groupsSize2 = 1;
+//			}
+//
+//			if (groups2 instanceof Collection<?>) {
+//				groupsSize2 = ((Collection<?>) groups2).size();
+//			}
+//			
+//			HierarchicalConfiguration innerGroupConfig = groupConfig;
+//
+//			while (groupsSize2 > 0) {
+//
+//				for (int groupsIdx2 = 0; groupsIdx2 < groupsSize2; groupsIdx2++) {
+//					groupId = groupConfig.getString("group(" + groupsIdx2
+//							+ ").[@id]");
+//					groupAddress = groupConfig.getString("group("
+//							+ groupsIdx2 + ").[@address]");
+//
+//					// find instance elements for this group
+//
+//					innerGroupConfig = innerGroupConfig.configurationAt("group("
+//							+ groupsIdx2 + ")");
+//
+//					instanceElements = groupConfig
+//							.getProperty("instance.[@id]");
+//
+//					instanceSize = 0;
+//
+//					if (instanceElements != null) {
+//						instanceSize = 1;
+//					}
+//
+//					for (int instanceIdx = 0; instanceIdx < instanceSize; instanceIdx++) {
+//						String instanceId = devicesConfig.getString("instance("
+//								+ instanceIdx + ").[@id]");
+//						log.info("Mapping instanceID: " + instanceId + " to "
+//								+ groupAddress);
+//						manufacturerById.put(instanceId, groupAddress);
+//					}
+//
+//					groups2 = innerGroupConfig.getProperty("group.[@id]");
+//
+//					groupsSize2 = 0;
+//
+//					if (groups2 != null) {
+//						groupsSize2 = 1;
+//					}
+//
+//					if (groups2 instanceof Collection<?>) {
+//						groupsSize2 = ((Collection<?>) groups2).size();
+//					}
+//				}
+//			}
+//		}
 
 		// ================================================================================
 
@@ -203,17 +319,16 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader {
 						value));
 
 			}
-			
-			
+
 			n.getEntities().addEntity(entity);
 
 			objectBroker.addObj(entity, true);
-			
+
 			// now add datapoints
 
 			Object datapoints = entityConfig
 					.getProperty("datapoints.datapoint[@id]");
-			
+
 			int datapointsSize = 0;
 
 			if (datapoints != null) {
@@ -230,7 +345,21 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader {
 						.configurationAt("datapoints.datapoint(" + datapointIdx
 								+ ")");
 				String dataPointId = datapointConfig.getString("[@id]");
-				String dataPointName = datapointConfig.getString("[@name]");
+				String[] dataPointNameArray = datapointConfig.getStringArray("[@name]");
+				StringBuilder dataPointNameBuilder = new StringBuilder();
+				String dataPointName = "";
+				for(int i= 0; i< dataPointNameArray.length; i++){
+					dataPointNameBuilder.append(dataPointNameArray[i]);
+					if(i < dataPointNameArray.length - 1){
+						dataPointNameBuilder.append('_');
+					}
+				}
+				try {
+					dataPointName = URLEncoder.encode(dataPointNameBuilder.toString(), "UTF-8");
+				} catch (UnsupportedEncodingException e2) {
+					
+					e2.printStackTrace();
+				}
 				String dataPointDescription = datapointConfig
 						.getString("[@description]");
 				String dataPointTypeIds = datapointConfig
@@ -248,8 +377,8 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader {
 				String dataPointTransmitFlag = datapointConfig
 						.getString("[@transmitFlag]");
 				String updateFlag = datapointConfig.getString("[@updateFlag]");
-				String clazzName = "at.ac.tuwien.auto.iotsys.gateway.obix.objects.knx.datapoint.impl." + dataPointTypeIds.replace('-', '_')
-						+ "_ImplKnx";
+				String clazzName = "at.ac.tuwien.auto.iotsys.gateway.obix.objects.knx.datapoint.impl."
+						+ dataPointTypeIds.replace('-', '_') + "_ImplKnx";
 				Class clazz = null;
 
 				try {
@@ -258,7 +387,8 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader {
 				} catch (ClassNotFoundException e) {
 					log.warning(clazzName
 							+ " not found. Cannot instantiate according sub data point type. Trying fallback to generic main type.");
-					clazzName = "at.ac.tuwien.auto.iotsys.gateway.obix.objects.knx.datapoint.impl." +  "DPT_" + clazzName.charAt(5) + "_ImplKnx"; //
+					clazzName = "at.ac.tuwien.auto.iotsys.gateway.obix.objects.knx.datapoint.impl."
+							+ "DPT_" + clazzName.charAt(5) + "_ImplKnx"; //
 
 					try {
 						log.info("Loading: " + clazzName);
@@ -280,6 +410,7 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader {
 						dptInit.setReadable(Boolean
 								.parseBoolean(dataPointReadFlag));
 						dptInit.setName(dataPointName);
+						dptInit.setGroupAddress(new GroupAddress(Integer.parseInt(groupAddressByDatapointID.get(dataPointId))));
 
 						object[1] = dptInit;
 						DatapointImpl dataPoint = (DatapointImpl) constructor
@@ -312,7 +443,6 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader {
 
 			}
 
-			
 		}
 
 		// DPST_1_1_ImplKnx datapoint_lightonoff = new
@@ -1803,5 +1933,53 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader {
 		if (devicesConfiguration == null) {
 
 		}
+	}
+	
+	private void parseGroupAddressConfig(HierarchicalConfiguration groupConfig, Hashtable<String, String> groupAddressByDatapointId){
+		Object groups = groupConfig.getProperty("group.[@id]"); 
+		
+		// identify number of group elements
+		int groupsSize = 0;
+
+		if (groups != null) {
+			groupsSize = 1;
+		}
+
+		if (groups instanceof Collection<?>) {
+			groupsSize = ((Collection<?>) groups).size();
+		}
+		
+		// if there are no group elements return
+		for (int groupsIdx = 0; groupsIdx < groupsSize; groupsIdx++) {			
+			String groupAddress = groupConfig
+					.getString("group(" + groupsIdx
+							+ ").[@address]");
+
+			// find instance elements for this group
+
+			HierarchicalConfiguration concreteGroup = groupConfig
+					.configurationAt("group(" + groupsIdx
+							+ ")");
+
+			Object instanceElements = concreteGroup.getProperty("instance.[@id]");
+
+			int instanceSize = 0;
+
+			if (instanceElements != null) {
+				instanceSize = 1;
+			}
+
+			for (int instanceIdx = 0; instanceIdx < instanceSize; instanceIdx++) {
+				String instanceId = concreteGroup.getString("instance("
+						+ instanceIdx + ").[@id]");
+				log.info("Mapping instanceID: " + instanceId + " to "
+						+ groupAddress);
+				groupAddressByDatapointId.put(instanceId, groupAddress);
+			}
+			
+			// recursively perform this method for nested groups			
+			parseGroupAddressConfig(concreteGroup, groupAddressByDatapointId);
+		}
+
 	}
 }
