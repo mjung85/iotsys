@@ -47,6 +47,7 @@ import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.datapoint.impl.DatapointImpl;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.entity.Entity;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.entity.impl.EntityImpl;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.enumeration.EnumConnector;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.enumeration.EnumPart;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.enumeration.EnumStandard;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.enumeration.impl.EnumsImpl;
@@ -54,7 +55,9 @@ import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.language.impl.Trans
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.network.Network;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.network.impl.NetworkImpl;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.view.Part;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.view.impl.GroupImpl;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.view.impl.PartImpl;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.knx.datapoint.impl.DPST_1_1_ImplKnx;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.knx.datapoint.impl.DataPointInit;
 
 public class KNXDeviceLoaderETSImpl implements DeviceLoader {
@@ -155,6 +158,10 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader {
 		
 		// Hashtable to lookup entities by ID
 		Hashtable<String, EntityImpl> entityById = new Hashtable<String, EntityImpl>();
+		
+		// Hashtable to lookup  datapoints by ID
+		Hashtable<String, DatapointImpl> datapointById = new Hashtable<String, DatapointImpl>();
+		
 		ArrayList<Connector> connectors = new ArrayList<Connector>();
 
 		String networkName = (String) devicesConfig.getProperty("[@name]");
@@ -269,6 +276,7 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader {
 
 					e2.printStackTrace();
 				}
+								
 				String dataPointDescription = datapointConfig
 						.getString("[@description]");
 				String dataPointTypeIds = datapointConfig
@@ -328,6 +336,8 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader {
 						object[1] = dptInit;
 						DatapointImpl dataPoint = (DatapointImpl) constructor
 								.newInstance(object);
+						
+						datapointById.put(dataPointId, dataPoint);
 						entity.addDatapoint(dataPoint);
 
 						objectBroker.addObj(dataPoint, true);
@@ -361,6 +371,11 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader {
 				.configurationAt("views.building");
 			
 		parseBuildingView(buildingConfig, (Obj) n.getBuilding(), n, objectBroker, entityById);
+		
+		HierarchicalConfiguration funcionalView = devicesConfig
+				.configurationAt("views.functional");
+		
+		parseFunctionalView(funcionalView, (Obj) n.getFunctional(), n, objectBroker, entityById, datapointById);			
 	}
 
 	@Override
@@ -412,6 +427,10 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader {
 
 			if (instanceElements != null) {
 				instanceSize = 1;
+			}
+			
+			if (instanceElements instanceof Collection<?>) {
+				instanceSize = ((Collection<?>) instanceElements).size();
 			}
 
 			for (int instanceIdx = 0; instanceIdx < instanceSize; instanceIdx++) {
@@ -470,6 +489,10 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader {
 			if (instanceElements != null) {
 				instanceSize = 1;
 			}
+			
+			if (instanceElements instanceof Collection<?>) {
+				instanceSize = ((Collection<?>) instanceElements).size();
+			}
 
 			// if this part has some instances set, add references to entities
 			for (int instanceIdx = 0; instanceIdx < instanceSize; instanceIdx++) {
@@ -484,38 +507,87 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader {
 			
 			// add part to parent part
 			parent.add(part);
-		}
-			
+		}					
+	}
+
+	private void parseFunctionalView(HierarchicalConfiguration groupConfig, Obj parent,
+			Network n, ObjectBroker objectBroker, Hashtable<String, EntityImpl> entityById, Hashtable<String, DatapointImpl> datapointById) {
 		
-		// Views
-		PartImpl building = new PartImpl("P-0341-0_BP-1", "Treitlstraﬂe 1-3",
-				null, EnumPart.KEY_BUILDING);
-		PartImpl floor = new PartImpl("P-0341-0_BP-2", "4. Stock", null,
-				EnumPart.KEY_FLOOR);
-		PartImpl board = new PartImpl("P-0341-0_BP-4", "Suitcase", null,
-				EnumPart.KEY_DISTRIBUTIONBOARD);
+		Object groups = groupConfig.getProperty("group.[@id]");
+		
+		// identify number of group elements
+		int groupsSize = 0;
 
-//		building.addPart(floor);
-//		floor.addPart(board);
-//		board.addInstance(entity);
-//		n.getBuilding().addPart(building);
-//		
-//		<building>
-//		<part id="P-0341-0_BP-1" name="Treitlstraﬂe 1-3" type="Building">
-//			<part id="P-0341-0_BP-2" name="4. Stock" type="Floor">
-//				<part id="P-0341-0_BP-4" name="Suitcase" type="DistributionBoard">
-//					<instance id="P-0341-0_DI-2" />
-//					<instance id="P-0341-0_DI-3" />
-//					<instance id="P-0341-0_DI-1" />
-//					<instance id="P-0341-0_DI-11" />
-//					<instance id="P-0341-0_DI-9" />
-//					<instance id="P-0341-0_DI-12" />
-//					<instance id="P-0341-0_DI-7" />
-//					<instance id="P-0341-0_DI-10" />
-//				</part>
-//			</part>
-//		</part>
-//	</building>
+		if (groups != null) {
+			groupsSize = 1;
+		}
 
+		if (groups instanceof Collection<?>) {
+			groupsSize = ((Collection<?>) groups).size();
+		}
+		
+		// if there are no group elements return
+		for (int groupsIdx = 0; groupsIdx < groupsSize; groupsIdx++) {
+			
+			String groupId = groupConfig.getString("group(" + groupsIdx
+				+ ").[@id]");
+			
+			String groupName = groupConfig.getString("group(" + groupsIdx
+					+ ").[@name]");
+			
+			String groupAddress = groupConfig.getString("group(" + groupsIdx
+					+ ").[@type]");
+
+			String groupDescription = groupConfig.getString("group(" + groupsIdx
+					+ ").[@type]");
+			
+			int address = 0;
+					
+			if(groupAddress != null){
+				address = Integer.parseInt(groupAddress);
+			}
+			
+			GroupImpl group = new GroupImpl(groupId, groupName, groupDescription, address ); 
+			
+			// add instances to part
+			HierarchicalConfiguration concreteGroup = groupConfig
+					.configurationAt("group(" + groupsIdx + ")");
+			Object instanceElements = concreteGroup
+					.getProperty("instance.[@id]");
+
+			int instanceSize = 0;
+
+			if (instanceElements != null) {
+				instanceSize = 1;
+			}
+			
+			if (instanceElements instanceof Collection<?>) {
+				instanceSize = ((Collection<?>) instanceElements).size();
+			}
+
+			// if this part has some instances set, add references to entities
+			for (int instanceIdx = 0; instanceIdx < instanceSize; instanceIdx++) {
+				String instanceId = concreteGroup.getString("instance("
+						+ instanceIdx + ").[@id]");
+				group.addInstance(datapointById.get(instanceId), EnumConnector.KEY_SEND);
+				
+				try {
+					DatapointImpl datapointImpl = (DatapointImpl)datapointById.get(instanceId).clone();
+					datapointImpl.setName("function");					
+					group.addFunction(datapointImpl);
+					
+				} catch (CloneNotSupportedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			
+			// recursively add more parts			
+			parseFunctionalView(concreteGroup, group, n, objectBroker, entityById, datapointById);
+			
+			// add part to parent part
+			parent.add(group);							
+					
+		}
 	}
 }
