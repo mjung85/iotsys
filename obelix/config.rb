@@ -1,3 +1,5 @@
+require 'closure-compiler'
+
 set :images_dir, 'images'
 set :debug_assets, true
 
@@ -5,7 +7,10 @@ set :debug_assets, true
 configure :build do
   activate :sprockets
   activate :minify_css
+  
   activate :minify_javascript
+  set :js_compressor, ::Closure::Compiler.new
+
   activate :relative_assets
 end
 

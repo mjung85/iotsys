@@ -151,12 +151,17 @@ app.factory('Watch', ['$http', '$timeout', '$q', 'Storage', 'WATCH_POLL_INTERVAL
       return URI(this.href).segment(opName).toString(); // For now, operation href is same as name
     },
     add: function(href) {
+      return this.op('add', href);
+    },
+    remove: function(href) {
+      return this.op('remove', href);
+    },
+    op: function(op, href) {
       // var payload = {"is" : "obix:WatchIn", "tag" : "obj", "nodes" : [{"tag" : "list", "name": "hrefs", "nodes":[{"tag": "uri", "val": href}]}]};
-
       var payload = '<obj is="obix:WatchIn"><list name="hrefs"><uri val="'+href+'" /></list></obj>';
 
       $http({
-        url: this.hrefForOperation('add'),
+        url: this.hrefForOperation(op),
         method: 'POST',
         headers: {
           'Content-Type': 'application/xml',
@@ -164,10 +169,10 @@ app.factory('Watch', ['$http', '$timeout', '$q', 'Storage', 'WATCH_POLL_INTERVAL
         },
         data: payload
       }).success(function(response) {
-        if (response['is'] != "obix:WatchOut") {
-          console.log("Error adding device "+href+" to watch",response);
+        if (response['is'] != "obix:WatchOut" && response['is'] != "obix:Nil") {
+          console.log("Error "+op+" device "+href+" to watch",response);
         } else {
-          console.log("Added device "+href+" to watch");
+          console.log(op+" device "+href+" to watch");
         }
       });
     },
@@ -202,7 +207,10 @@ app.factory('Property', ['$http', function($http) {
     } else {
       this.valid = true;
 
+      this.jsPlumbEndpoints = [];
+      this.connections = [];
       this.groupCommEnabled = false;
+
       this.range = false;
       this.href = node['href'];
       this.type = node['tag'];
@@ -255,12 +263,18 @@ app.factory('Property', ['$http', function($http) {
         }
       }.bind(this));
     },
-    joinGroupComm: function(ipv6) {
-      var url = URI(this.href).segment('groupComm').segment('joinGroup').toString();
-      $http.post(url, '<str val="'+ipv6+'"/>', {headers: {
+    connect: function(connection, join) {
+      var action = join ? 'joinGroup' : 'leaveGroup';
+      var url = URI(this.href).segment('groupComm').segment(action).toString();
+      $http.post(url, '<str val="'+connection.ipv6+'"/>', {headers: {
         'Content-Type': 'application/xml'
       }}).success(function() {
-        console.log("Joined ",this.href," into groupComm ",ipv6);
+        if (join) {
+          this.connections.push(connection);
+        } else {
+          this.connections.remove(connection);
+        }
+        console.log(action,this.href,connection.ipv6);
       }.bind(this));
     }
   };
@@ -270,28 +284,34 @@ app.factory('Property', ['$http', function($http) {
 
 app.factory('Connection', function() {
   var Connection = function(fromProperty, toProperty) {
+    this.jsPlumbConnection = null;
     this.id = Connection.counter;
     this.ipv6 = "FF02:FFFF::"+this.id;
+    this.fromProperty = fromProperty;
+    this.toProperty = toProperty;
+    this.fromProperty.connect(this, true);
+    this.toProperty.connect(this, true);
     Connection.counter += 1;
     return this;
   };
 
-  Connection.counter = 1; // TODO: storage
-
-  Connection.create = function(fromProperty, toProperty) {
-    var c = new Connection(fromProperty, toProperty); 
-    fromProperty.joinGroupComm(c.ipv6);
-    toProperty.joinGroupComm(c.ipv6);
+  Connection.prototype.destroy = function() {
+    this.fromProperty.connect(this, false);
+    this.toProperty.connect(this, false);
+    jsPlumb.detach(this.jsPlumbConnection);
   };
+
+  Connection.counter = 1; // TODO: storage
 
   return Connection;
 });
 
-app.factory('Device', ['$http', 'Storage', 'Property', function($http, Storage, Property) {
+app.factory('Device', ['$http', 'Storage', 'Property', 'Watch', function($http, Storage, Property, Watch) {
   var Device = function(href, name) {
     this.href = href;
     this.name = name;
-    this.placement = Storage.get('device_'+this.href+'_placement');
+    this.placementKey = 'device_'+this.href+'_placement';
+    this.placement = Storage.get(this.placementKey);
     if (this.placement) {
       this.load();
     }
@@ -301,7 +321,7 @@ app.factory('Device', ['$http', 'Storage', 'Property', function($http, Storage, 
   Device.prototype = {
     place: function(position) {
       this.placement = {left: position.left, top: position.top};
-      Storage.set('device_'+this.href+'_placement', this.placement);
+      Storage.set(this.placementKey, this.placement);
       if (!this.loaded && !this.loading) this.load();
     },
 
@@ -350,6 +370,23 @@ app.factory('Device', ['$http', 'Storage', 'Property', function($http, Storage, 
           property.value = node['val'];
         }
       }.bind(this));
+    },
+
+    destroy: function() {
+      // Remove from watch
+      var href = this.href;
+      Watch.getInstance(function(w) { w.remove(href); });
+
+      // Disconnect connected properties
+      this.properties.each(function(p) {
+        p.connections.each(function(c) { c.destroy(); });
+        // Remove endpoints
+        p.jsPlumbEndpoints.each(function(e) { jsPlumb.deleteEndpoint(e); });
+      });
+
+      // Unplace
+      this.placement = null;
+      Storage.remove(this.placementKey);
     }
   };
   
@@ -409,7 +446,13 @@ app.controller('MainCtrl', ['$scope','$q','Lobby','Watch','Connection',function(
   jsPlumb.bind("connection", function(info) {
     var sourceProperty = info.sourceEndpoint.getParameters().property;
     var targetProperty = info.targetEndpoint.getParameters().property;
-    Connection.create(sourceProperty, targetProperty);
+    info.connection.obelixConnection = new Connection(sourceProperty, targetProperty);
+    info.connection.obelixConnection.jsPlumbConnection = info.connection;
+  });
+
+  jsPlumb.bind("dblclick", function(connection, e) {
+    connection.obelixConnection.destroy();
+    connection.obelixConnection = null;
   });
 }]);
 
@@ -515,7 +558,7 @@ app.directive('jsplumbEndpoint', ['$timeout', function($timeout) {
       if (!property.groupCommEnabled) return;
 
       $timeout(function() {
-        jsPlumb.addEndpoint(el, {
+        var ep = jsPlumb.addEndpoint(el, {
           isSource: true, 
           isTarget: true,
           maxConnections: -1,
@@ -527,6 +570,7 @@ app.directive('jsplumbEndpoint', ['$timeout', function($timeout) {
           connectorClass: 'conn',
           parameters: {property: property}
         });
+        property.jsPlumbEndpoints.push(ep);
       },0);  
     }
   }

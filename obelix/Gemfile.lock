@@ -31,6 +31,7 @@ GEM
       i18n (~> 0.6, >= 0.6.4)
       multi_json (~> 1.0)
     chunky_png (1.2.8)
+    closure-compiler (1.1.10)
     coffee-script (2.2.0)
       coffee-script-source
       execjs
@@ -49,7 +50,6 @@ GEM
     i18n (0.6.5)
     json (1.7.7)
     kramdown (1.2.0)
-    libv8 (3.11.8.17)
     listen (1.2.3)
       rb-fsevent (>= 0.9.3)
       rb-inotify (>= 0.9)
@@ -73,7 +73,6 @@ GEM
       ffi (>= 0.5.0)
     rb-kqueue (0.2.0)
       ffi (>= 0.5.0)
-    ref (1.0.5)
     sass (3.2.9)
     sprockets (2.10.0)
       hike (~> 1.2)
@@ -85,9 +84,6 @@ GEM
     sprockets-sass (1.0.1)
       sprockets (~> 2.0)
       tilt (~> 1.1)
-    therubyracer (0.11.4)
-      libv8 (~> 3.11.8.12)
-      ref
     thor (0.18.1)
     tilt (1.3.7)
     uglifier (2.1.2)
@@ -98,10 +94,10 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  closure-compiler
   compass
   json (~> 1.7.7)
   middleman (= 3.1.5)!
   middleman-minify-html
   middleman-sprockets
   rack-reverse-proxy
-  therubyracer
