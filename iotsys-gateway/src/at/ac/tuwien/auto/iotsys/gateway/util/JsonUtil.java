@@ -38,7 +38,11 @@ import org.json.JSONObject;
 
 public class JsonUtil {
 	public static void main(String[] args){
-		String xml = "<str val=\"DB08::2\"/>";
+//		String xml = "<str val=\"DB08::2\"/>";
+//		String xml = "<obj href=\"/humidity\" is=\"iot:HumiditySensor\"><real name=\"value\" href=\"value\" val=\"50.0\" unit=\"obix:units/percent\"/></obj>";
+		String xml = "<obj href=\"/lightIntensity1\" is=\"iot:LightIntensitySensor\"><real name=\"value\" href=\"value\" val=\"1000.0\" unit=\"obix:units/lumen\"/></obj>";
+
+		
 //		String xml = "<obj is=\"obix:WatchIn\"><list name=\"hrefs\"><uri val=\"/VirtualDevices/virtualLight/value\" /></list></obj>";
 		//String xml = "<obj is=\"obix:WatchOut\"><list><obj href=\"/testDevices/switch3\" is=\"iot:LightSwitchActuator\"><bool name=\"value\" href=\"/testDevices/switch3/value\" val=\"false\" writable=\"true\"/></obj></list></obj>";
 		String json = "{\"is\":\"obix:WatchIn\",\"nodes\":[{\"nodes\":[{\"val\":\"/testDevices/switch3/value\",\"tag\":\"uri\"}],\"tag\":\"list\",\"name\":\"hrefs\"}],\"tag\":\"obj\"}";
