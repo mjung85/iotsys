@@ -78,7 +78,7 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader {
 		KNXConnector knxConnector = new KNXConnector("192.168.161.59", 3671,
 				"auto");
 
-//		connect(knxConnector);
+		// connect(knxConnector);
 
 		initNetworks(knxConnector, objectBroker);
 
@@ -226,8 +226,8 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader {
 				String language = transConfig.getString("[@language]");
 				String attribute = transConfig.getString("[@attribute]");
 				String value = transConfig.getString("[@value]");
-				entity.addTranslation(new TranslationImpl(language, attribute,
-						value));
+//				entity.addTranslation(new TranslationImpl(language, attribute,
+//						value));
 
 			}
 
@@ -263,7 +263,7 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader {
 				for (int i = 0; i < dataPointNameArray.length; i++) {
 					dataPointNameBuilder.append(dataPointNameArray[i]);
 					if (i < dataPointNameArray.length - 1) {
-						dataPointNameBuilder.append('_');
+						dataPointNameBuilder.append(" ");
 					}
 				}
 				try {
@@ -333,6 +333,46 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader {
 						object[1] = dptInit;
 						DatapointImpl dataPoint = (DatapointImpl) constructor
 								.newInstance(object);
+						
+						if(dataPoint.get("value") != null){
+							dataPoint.get("value").setDisplayName(dataPointDescription);
+						}
+
+						translations = entityConfig
+								.getProperty("translations.translation[@language]");
+
+						translationsSize = 0;
+
+						if (translations != null) {
+							translationsSize = 1;
+						}
+
+						if (translations instanceof Collection<?>) {
+							translationsSize = ((Collection<?>) translations)
+									.size();
+						}
+
+						for (int transIdx = 0; transIdx < translationsSize; transIdx++) {
+
+							HierarchicalConfiguration transConfig = entityConfig
+									.configurationAt("translations.translation("
+											+ transIdx + ")");
+
+							String language = transConfig
+									.getString("[@language]");
+							String attribute = transConfig
+									.getString("[@attribute]");
+							
+							String value = arrayToString(transConfig.getStringArray("[@value]"));
+							
+							if(language.equals("en-US") && attribute.equals("name")){
+								dataPoint.setDisplayName(value);
+							}
+														
+//							dataPoint.addTranslation(new TranslationImpl(
+//									language, attribute, value));
+
+						}
 
 						datapointById.put(dataPointId, dataPoint);
 						entity.addDatapoint(dataPoint);
@@ -379,24 +419,23 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader {
 
 		parseFunctionalView(funcionalView, (Obj) n.getFunctional(), n,
 				objectBroker, entityById, datapointById);
-		
+
 		HierarchicalConfiguration domainView = devicesConfig
 				.configurationAt("views.domains");
 
 		objectBroker.addObj(n.getDomains(), true);
 
-		parseDomainView(domainView, (Obj) n.getDomains(), n,
-				objectBroker, entityById, datapointById);
-		
+		parseDomainView(domainView, (Obj) n.getDomains(), n, objectBroker,
+				entityById, datapointById);
+
 		HierarchicalConfiguration topologyView = devicesConfig
 				.configurationAt("views.topology");
 
 		objectBroker.addObj(n.getTopology(), true);
 
-		parseDomainView(domainView, (Obj) n.getTopology(), n,
-				objectBroker, entityById, datapointById);
-		
-		
+		parseDomainView(domainView, (Obj) n.getTopology(), n, objectBroker,
+				entityById, datapointById);
+
 	}
 
 	@Override
@@ -514,10 +553,10 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader {
 			if (instanceElements instanceof Collection<?>) {
 				instanceSize = ((Collection<?>) instanceElements).size();
 			}
-			
+
 			// add part to parent part
 			parent.add(part);
-			
+
 			objectBroker.addObj(part, true);
 
 			// if this part has some instances set, add references to entities
@@ -525,7 +564,7 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader {
 				String instanceId = concretePart.getString("instance("
 						+ instanceIdx + ").[@id]");
 				Obj instance = part.addInstance(entityById.get(instanceId));
-				objectBroker.addObj(instance);	
+				objectBroker.addObj(instance);
 			}
 
 			// recursively add more parts
@@ -624,7 +663,7 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader {
 
 		}
 	}
-	
+
 	private void parseDomainView(HierarchicalConfiguration domainConfig,
 			Obj parent, Network n, ObjectBroker objectBroker,
 			Hashtable<String, EntityImpl> entityById,
@@ -678,8 +717,9 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader {
 			for (int instanceIdx = 0; instanceIdx < instanceSize; instanceIdx++) {
 				String instanceId = concreteDomain.getString("instance("
 						+ instanceIdx + ").[@id]");
-				Obj addInstance = domain.addInstance(entityById.get(instanceId));
-				objectBroker.addObj(addInstance,true);
+				Obj addInstance = domain
+						.addInstance(entityById.get(instanceId));
+				objectBroker.addObj(addInstance, true);
 
 			}
 
@@ -689,7 +729,7 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader {
 
 		}
 	}
-	
+
 	private void parseTopologyView(HierarchicalConfiguration areaConfig,
 			Obj parent, Network n, ObjectBroker objectBroker,
 			Hashtable<String, EntityImpl> entityById,
@@ -711,16 +751,16 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader {
 		// if there are no group elements return
 		for (int areaIdx = 0; areaIdx < areaSize; areaIdx++) {
 
-			String areaId = areaConfig.getString("area(" + areaIdx
-					+ ").[@id]");
+			String areaId = areaConfig.getString("area(" + areaIdx + ").[@id]");
 
-			String  areaName = areaConfig.getString("area(" + areaIdx
+			String areaName = areaConfig.getString("area(" + areaIdx
 					+ ").[@name]");
 
 			DomainImpl area = new DomainImpl(areaId, areaName, null);
 
 			// add instances to part
-			HierarchicalConfiguration concreteArea = areaConfig.configurationAt("area(" + areaIdx + ")");
+			HierarchicalConfiguration concreteArea = areaConfig
+					.configurationAt("area(" + areaIdx + ")");
 			Object instanceElements = concreteArea
 					.getProperty("instance.[@id]");
 
@@ -743,14 +783,27 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader {
 				String instanceId = concreteArea.getString("instance("
 						+ instanceIdx + ").[@id]");
 				Obj addInstance = area.addInstance(entityById.get(instanceId));
-				objectBroker.addObj(addInstance,true);
+				objectBroker.addObj(addInstance, true);
 
 			}
 
 			// recursively add more domains
-			parseTopologyView(concreteArea, area, n, objectBroker,
-					entityById, datapointById);
+			parseTopologyView(concreteArea, area, n, objectBroker, entityById,
+					datapointById);
 
 		}
+	}
+
+	private String arrayToString(String[] array) {
+		StringBuilder dataPointNameBuilder = new StringBuilder();
+		String dataPointName = "";
+		for (int i = 0; i < array.length; i++) {
+			dataPointNameBuilder.append(array[i]);
+			if (i < array.length - 1) {
+				dataPointNameBuilder.append(", ");
+			}
+		}
+
+		return dataPointNameBuilder.toString();
 	}
 }
