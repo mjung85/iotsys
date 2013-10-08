@@ -338,7 +338,7 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader {
 							dataPoint.get("value").setDisplayName(dataPointDescription);
 						}
 
-						translations = entityConfig
+						translations = datapointConfig
 								.getProperty("translations.translation[@language]");
 
 						translationsSize = 0;
@@ -354,7 +354,7 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader {
 
 						for (int transIdx = 0; transIdx < translationsSize; transIdx++) {
 
-							HierarchicalConfiguration transConfig = entityConfig
+							HierarchicalConfiguration transConfig = datapointConfig
 									.configurationAt("translations.translation("
 											+ transIdx + ")");
 
@@ -395,6 +395,7 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader {
 				} catch (IllegalArgumentException e) {
 					log.warning(clazzName
 							+ " illegal argument exception. Cannot instantiate according datapoint.");
+					e.printStackTrace();
 				} catch (InvocationTargetException e) {
 					log.warning(clazzName
 							+ " invocation target exception. Cannot instantiate according datapoint.");
