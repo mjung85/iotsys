@@ -210,6 +210,7 @@ public class ObjectBrokerImpl implements ObjectBroker
 			Ref ref = new Ref(null, new Uri(o.getFullContextPath()));
 			ref.setIs(o.getIs());
 			ref.setName(o.getName());
+			ref.setDisplayName(o.getDisplayName());
 			iotLobby.addReference(o.getFullContextPath(), ref);
 		}
 	}
