@@ -22,8 +22,8 @@ app.service('Lobby', ['$http', 'Device', 'Directory', function($http, Device, Di
           if (!href.startsWith('/')) href = '/' + href;
           var href_components = href.split('/').compact(true);
           var device_name = href_components.pop();
+          if (node['displayName']) device_name = node['displayName'];
           var device_directory = root.make(href_components);
-
           device_directory.devices.push(new Device(href, device_name));
         });
         callback(root);
@@ -364,7 +364,7 @@ app.factory('Device', ['$http', '$q', 'Storage', 'Property', 'Watch', function($
   var Device = function(href, name) {
     this.loadedDefer = $q.defer();
     this.href = href;
-    this.name = name;
+    this.setName(name);
     this.placementStorage = new Storage('device_'+this.href+'_placement');
     this.placement = this.placementStorage.get();
     if (this.placement) {
@@ -374,6 +374,13 @@ app.factory('Device', ['$http', '$q', 'Storage', 'Property', 'Watch', function($
   };
 
   Device.prototype = {
+    setName: function(name) {
+      this.name = name.replace(/&#x([0-9a-f]{1,4});/gi, function(match, numStr) {
+          var num = parseInt(numStr, 16);
+          return String.fromCharCode(num);
+      });
+    },
+
     place: function(position) {
       this.placement = {left: position.left, top: position.top};
       this.placementStorage.set(this.placement);
@@ -391,6 +398,12 @@ app.factory('Device', ['$http', '$q', 'Storage', 'Property', 'Watch', function($
     },
 
     parse: function(response) {
+      // Parse displayName
+      if (response['displayName']) {
+        this.setName(response['displayName']);
+      }
+
+      // Parse properties
       var propertiesWithGroupCommEnabled = [];
       this.properties = response['nodes'].map(function(node) {
         if (node['tag'] == 'ref') {
