@@ -9,8 +9,6 @@
 
 var app = angular.module('Obelix', []);
 
-app.constant('WATCH_POLL_INTERVAL', 1000);
-
 app.service('Lobby', ['$http', 'Device', 'Directory', function($http, Device, Directory) {
   return {
     getDeviceTree: function(callback) {
@@ -123,8 +121,11 @@ app.factory('Directory', function() {
   return Directory;
 });
 
-app.factory('Watch', ['$http', '$timeout', '$q', 'Storage', 'WATCH_POLL_INTERVAL', function($http, $timeout, $q, Storage, WATCH_POLL_INTERVAL) {
+app.factory('Watch', ['$http', '$timeout', '$q', 'Storage', function($http, $timeout, $q, Storage) {
   var Watch = function(href) {
+    this.intervalStorage = new Storage('watch_interval');
+    this.interval = this.intervalStorage.get();
+    this.updateInterval();
     this.href = href;
   };
 
@@ -147,6 +148,7 @@ app.factory('Watch', ['$http', '$timeout', '$q', 'Storage', 'WATCH_POLL_INTERVAL
         if (response['tag'] != 'err') ok = true;
       }).then(function() {
         if (ok) {
+          console.log("Reusing watch"+watchHref);
           callback(new Watch(watchHref));
         } else {
           console.log("Old watch "+watchHref+" seems gone. Recreating...");
@@ -161,6 +163,13 @@ app.factory('Watch', ['$http', '$timeout', '$q', 'Storage', 'WATCH_POLL_INTERVAL
   };
 
   Watch.prototype = {
+    updateInterval: function() {
+      this.interval = parseInt(this.interval) || 0; 
+      if (this.interval < 1000) this.interval = 1000;
+      if (this.interval > 10000) this.interval = 10000;
+      console.log("Watch interval is", this.interval);
+      this.intervalStorage.set(this.interval);
+    },
     hrefForOperation: function(opName) {
       return URI(this.href).segment(opName).toString(); // For now, operation href is same as name
     },
@@ -201,7 +210,7 @@ app.factory('Watch', ['$http', '$timeout', '$q', 'Storage', 'WATCH_POLL_INTERVAL
     tick: function() {
       if (this.polling) {
         this.poll(this.polling);
-        $timeout(this.tick.bind(this), WATCH_POLL_INTERVAL);
+        $timeout(this.tick.bind(this), this.interval);
       }
     },
     startPolling: function(callback) {
@@ -229,7 +238,7 @@ app.factory('Property', ['$http', function($http) {
       this.href = node['href'];
       this.type = node['tag'];
       this.numeric = (this.type == 'int' || this.type == 'real');
-      this.name = node['name'];
+      this.name = node['displayName'] || node['name'];
       this.value = node['val'];
       this.readonly = !node['writable'];
 
@@ -541,6 +550,10 @@ app.controller('MainCtrl', ['$scope','$q','$timeout','Lobby','Watch','Connection
     $scope.sidebarExpanded = false;
     device.place(position);
   };
+
+  $scope.clear = function() {
+    // TODO: clear all connections, then devices!
+  }
 
   jsPlumb.bind("connection", function(info) {
     console.log("Connection event", info);

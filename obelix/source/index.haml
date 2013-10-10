@@ -16,7 +16,18 @@
       %ul.subdirectories(ng-show="directory.expanded")
         %li.subdirectory(ng-class="{expanded:directory.expanded}" ng-repeat="directory in directory.subdirectories" ng-include="'directory_template'")
     #sidebar(ng-class="{expanded: sidebarExpanded}")
-      .content(ng-include="'directory_template'" not-droppable)
+      .content(not-droppable)
+        .header
+          .segmented_control
+            .segment(ng-class="{active: !segment}" ng-click="segment=0") Devices
+            .segment(ng-class="{active: segment==1}" ng-click="segment=1") Settings
+        %div#settings(ng-show="segment==1")
+          .section
+            %label Poll interval (ms)
+            %input(type="text" ng-model="watch.interval" inline-editor="watch.updateInterval()")
+          .section
+            %a(href="#" ng-click="clear()") Clear
+        %div(ng-show="segment!=1" ng-include="'directory_template'")
       .btn#toggle(ng-click="sidebarExpanded = !sidebarExpanded; $event.stopPropagation()")
     #canvas(ng-click="sidebarExpanded = false" droppable="placeDevice" jsplumb-container)
       %div(ng-repeat="device in allDevices | filter:{placement:'!!'}")
