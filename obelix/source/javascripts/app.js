@@ -344,7 +344,7 @@ app.factory('Connection', ['Storage', function(Storage) {
         storage.set(list);
       },
       remove: function(connection) {
-        // list...
+        list.remove({ipv6: connection.ipv6});
         storage.set(list);
       },
       restore: function(propertyLookupCallback, connectionRestoredCallback) {
@@ -492,6 +492,7 @@ app.controller('MainCtrl', ['$scope','$q','$timeout','Lobby','Watch','Connection
           source:connection.fromProperty.jsPlumbEndpoints[0],
           target:connection.toProperty.jsPlumbEndpoints[0]
         }, {parameters: {restored: true}});
+        connection.jsPlumbConnection.obelixConnection = connection;
       },100); // TODO: fix timeout and connect when endpoints get available
     });
   });
@@ -546,7 +547,7 @@ app.controller('MainCtrl', ['$scope','$q','$timeout','Lobby','Watch','Connection
 
   jsPlumb.bind("dblclick", function(connection, e) {
     connection.obelixConnection.destroy();
-    Connection.Freezer.remove(info.connection.obelixConnection);
+    Connection.Freezer.remove(connection.obelixConnection);
     connection.obelixConnection = null;
   });
 }]);
