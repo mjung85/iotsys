@@ -159,6 +159,15 @@ body > label {
     margin-right: -4px;
     padding-bottom: 2px;
     text-align: center;
+
+    input {
+      font-weight: bold;
+      font-family: Helvetica, Arial;
+      font-size: 14px;
+      margin: 0;
+      text-align: center;
+      outline: none;
+    }
   }
 
   .property {
