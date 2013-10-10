@@ -309,7 +309,7 @@
 		</connector>
 		<connector>
 			<name>KNX E-Lab</name>
-			<enabled>false</enabled>
+			<enabled>true</enabled>
 			<router>
 				<ip>192.168.161.53</ip>
 				<port>3671</port>
@@ -557,7 +557,7 @@
 	<bacnet>
 		<connector>
 			<name>BACnet E-Lab</name>
-			<enabled>false</enabled>
+			<enabled>true</enabled>
 			<localDeviceID>23345</localDeviceID>
 			<broadcastAddress>192.168.161.255</broadcastAddress>
 			<localPort>47808</localPort>
@@ -568,6 +568,7 @@
 				<address>2098178, 0, 1, 85</address>
 				<href>temperature2</href>
 				<ipv6>2001:629:2500:570::10c</ipv6>
+				<groupCommEnabled>true</groupCommEnabled>
 				<historyEnabled>false</historyEnabled>
 			</device>
 
@@ -577,6 +578,7 @@
 				<address>2098178, 1, 1, 85</address>
 				<href>brightness3</href>
 				<ipv6>2001:629:2500:570::10d</ipv6>
+				<groupCommEnabled>true</groupCommEnabled>
 				<historyEnabled>false</historyEnabled>
 			</device>
 		</connector>
