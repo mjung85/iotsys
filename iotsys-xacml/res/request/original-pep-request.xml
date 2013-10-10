@@ -1,0 +1,43 @@
+<samlp:RequestAbstract xmlns:samlp="urn:oasis:names:tc:SAML:2.0:protocol"
+	xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion" xmlns:xacml-samlp="urn:oasis:xacml:2.0:saml:protocol:schema:os"
+	xmlns="urn:oasis:names:tc:xacml:2.0:context:schema:os" ID="ID_e38740ee-086f-4419-ac08-d516d4e78201"
+	Version="2.0" IssueInstant="2013-06-10T11:56:53.928Z"
+	xacml-samlp:InputContextOnly="true" xacml-samlp:ReturnContext="true"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xsi:type="xacml-samlp:XACMLAuthzDecisionQueryType">
+	<saml:Issuer xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion">SwgCore</saml:Issuer>
+	<Request xmlns="urn:oasis:names:tc:xacml:2.0:context:schema:os"
+		xmlns:ns2="urn:oasis:names:tc:xacml:2.0:policy:schema:os">
+		<Subject xmlns="urn:oasis:names:tc:xacml:2.0:context:schema:os"
+			SubjectCategory="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject">
+			<Attribute xmlns="urn:oasis:names:tc:xacml:2.0:context:schema:os"
+				AttributeId="urn:oasis:names:tc:xacml:1.0:subject:subject-id"
+				DataType="http://www.w3.org/2001/XMLSchema#string" Issuer="SwgCore">
+				<AttributeValue xmlns="urn:oasis:names:tc:xacml:2.0:context:schema:os">ODg5YTY1NGVkZDU1ZDg1NWI2OWZiM2E1NDJmZjhjMDM0ODEwMWMxODBjYTZjYTJkZGEwZWJiYzJkMzM0M2FiMQ==
+				</AttributeValue>
+			</Attribute>
+		</Subject>
+		<Resource xmlns="urn:oasis:names:tc:xacml:2.0:context:schema:os">
+			<Attribute xmlns="urn:oasis:names:tc:xacml:2.0:context:schema:os"
+				AttributeId="urn:oasis:names:tc:xacml:1.0:resource:resource-id"
+				DataType="http://www.w3.org/2001/XMLSchema#string" Issuer="SwgCore">
+				<AttributeValue xmlns="urn:oasis:names:tc:xacml:2.0:context:schema:os">45a8f48f70-9d9b-d233-6776-06333cd3c5
+				</AttributeValue>
+			</Attribute>
+			<Attribute xmlns="urn:oasis:names:tc:xacml:2.0:context:schema:os"
+				AttributeId="urn:tuwien:auto:smartwebgrid:resource:servicename"
+				DataType="http://www.w3.org/2001/XMLSchema#string" Issuer="SwgCore">
+				<AttributeValue xmlns="urn:oasis:names:tc:xacml:2.0:context:schema:os">EnergiedatenService
+				</AttributeValue>
+			</Attribute>
+		</Resource>
+		<Action xmlns="urn:oasis:names:tc:xacml:2.0:context:schema:os">
+			<Attribute xmlns="urn:oasis:names:tc:xacml:2.0:context:schema:os"
+				AttributeId="urn:oasis:names:tc:xacml:1.0:action:action-id"
+				DataType="http://www.w3.org/2001/XMLSchema#string" Issuer="SwgCore">
+				<AttributeValue xmlns="urn:oasis:names:tc:xacml:2.0:context:schema:os">getMeterReadings
+				</AttributeValue>
+			</Attribute>
+		</Action>
+	</Request>
+</samlp:RequestAbstract>
