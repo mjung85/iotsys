@@ -28,8 +28,9 @@
     <div droppable='placeDevice' id='canvas' jsplumb-container ng-click='sidebarExpanded = false'>
       <div ng-repeat="device in allDevices | filter:{placement:'!!'}">
         <div class='device' draggable-distance='5' draggable-helper='original' draggable-via-jsplumb='true' draggable='device' ng-dblclick='device.destroy()' ng-style='{left: device.placement.left, top: device.placement.top}'>
-          <header>
-            <label class='name'>
+          <header ng-switch='device.editing'>
+            <input inline-editor='device.rename(); device.editing = false' ng-model='device.name' ng-switch-when='true' type='text'>
+            <label class='name' ng-click='device.editing = true' ng-switch-default>
               {{device.name}}
             </label>
           </header>
