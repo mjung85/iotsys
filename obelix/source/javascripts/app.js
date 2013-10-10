@@ -369,7 +369,7 @@ app.factory('Device', ['$http', '$q', 'Storage', 'Property', 'Watch', function($
     if (this.placement) {
       this.load();
     }
-    
+
     this.nameStorage = new Storage('device_'+this.href+'_name');
     this.name = this.nameStorage.get() || name.replace(/&#x([0-9a-f]{1,4});/gi, function(match, numStr) {
           var num = parseInt(numStr, 16);
@@ -674,7 +674,7 @@ app.directive('inlineEditor', ['$parse', function($parse) {
               fn(scope);
               ngModelCtrl.$setViewValue(el.val());
             });
-          });            
+          });
 
           el.focus();
         }
