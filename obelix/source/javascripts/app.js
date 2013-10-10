@@ -364,21 +364,30 @@ app.factory('Device', ['$http', '$q', 'Storage', 'Property', 'Watch', function($
   var Device = function(href, name) {
     this.loadedDefer = $q.defer();
     this.href = href;
-    this.setName(name);
     this.placementStorage = new Storage('device_'+this.href+'_placement');
     this.placement = this.placementStorage.get();
     if (this.placement) {
       this.load();
     }
+    
+    this.nameStorage = new Storage('device_'+this.href+'_name');
+    this.name = this.nameStorage.get() || name.replace(/&#x([0-9a-f]{1,4});/gi, function(match, numStr) {
+          var num = parseInt(numStr, 16);
+          return String.fromCharCode(num);
+    });
+    this.originalName = name;
+
     return this;
   };
 
   Device.prototype = {
-    setName: function(name) {
-      this.name = name.replace(/&#x([0-9a-f]{1,4});/gi, function(match, numStr) {
-          var num = parseInt(numStr, 16);
-          return String.fromCharCode(num);
-      });
+    rename: function() {
+      if (this.name.isBlank()) {
+        this.nameStorage.remove();
+        this.name = this.originalName;
+      } else {
+        this.nameStorage.set(this.name);
+      }
     },
 
     place: function(position) {
@@ -398,11 +407,6 @@ app.factory('Device', ['$http', '$q', 'Storage', 'Property', 'Watch', function($
     },
 
     parse: function(response) {
-      // Parse displayName
-      if (response['displayName']) {
-        this.setName(response['displayName']);
-      }
-
       // Parse properties
       var propertiesWithGroupCommEnabled = [];
       this.properties = response['nodes'].map(function(node) {
@@ -456,6 +460,9 @@ app.factory('Device', ['$http', '$q', 'Storage', 'Property', 'Watch', function($
       // Unplace
       this.placement = null;
       this.placementStorage.remove();
+
+      // Remove alias
+      this.nameStorage.remove();
     }
   };
   
@@ -647,6 +654,32 @@ app.directive('ngModelOnblur', function() {
         }
     };
 });
+
+app.directive('inlineEditor', ['$parse', function($parse) {
+    return {
+        restrict: 'A',
+        require: 'ngModel',
+        link: function(scope, el, attrs, ngModelCtrl) {
+          var fn = $parse(attrs['inlineEditor']);
+
+          el.bind("keydown keypress", function(event) {
+            if (event.which === 13 || event.which === 27) {
+              el.blur();
+              event.preventDefault();
+            }
+          });
+
+          el.bind('blur', function() {
+            scope.$apply(function() {
+              fn(scope);
+              ngModelCtrl.$setViewValue(el.val());
+            });
+          });            
+
+          el.focus();
+        }
+    };
+}]);
 
 app.directive('jsplumbContainer', function() {
   return {
