@@ -536,13 +536,25 @@ app.controller('MainCtrl', ['$scope','$q','$timeout','Lobby','Watch','Connection
   };
 
   jsPlumb.bind("connection", function(info) {
+    console.log("Connection event", info);
+
+    info.sourceEndpoint.addClass('connected');
+    info.targetEndpoint.addClass('connected');
+
     if (info.connection.getParameter('restored')) return; // Ignore connect events for restored connections
+
     var sourceProperty = info.sourceEndpoint.getParameters().property;
-    console.log("Connection event", sourceProperty.connection);
     var targetProperty = info.targetEndpoint.getParameters().property;
+    
     info.connection.obelixConnection = new Connection(sourceProperty, targetProperty);
     info.connection.obelixConnection.jsPlumbConnection = info.connection;
     Connection.Freezer.add(info.connection.obelixConnection);
+  });
+
+  jsPlumb.bind("connectionDetached", function(info) {
+    [info.sourceEndpoint, info.targetEndpoint].each(function(ep) {
+      if (ep.connections.length == 0) ep.removeClass('connected');
+    });
   });
 
   jsPlumb.bind("dblclick", function(connection, e) {
@@ -550,6 +562,7 @@ app.controller('MainCtrl', ['$scope','$q','$timeout','Lobby','Watch','Connection
     Connection.Freezer.remove(connection.obelixConnection);
     connection.obelixConnection = null;
   });
+
 }]);
 
 // Simple angularJS directives for use of jquery-ui draggable
@@ -663,7 +676,6 @@ app.directive('jsplumbEndpoint', ['$timeout', function($timeout) {
           anchors: [[1, 0.5, 1, 0, 8,0], [0, 0.5, -1, 0, -8, 0]],
           paintStyle:{ fillStyle:"#666"}, 
           connectorStyle: { lineWidth: 4, strokeStyle: "#5b9ada"},
-          connectorClass: 'conn',
           parameters: {property: property}
         });
         property.jsPlumbEndpoints.push(ep);
