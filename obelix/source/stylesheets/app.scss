@@ -182,6 +182,18 @@ body > label {
   }
 }
 
+
+.connected svg rect {
+  fill: #5b9ada !important;
+}
+
+._jsPlumb_dragging svg rect {
+  display: none;
+}
+._jsPlumb_endpoint_drop_allowed svg rect {
+  fill: #5b9ada !important;
+}
+
 // Z-Indices
 #sidebar { z-index: 110; }
 #canvas .device { z-index: 103; }
