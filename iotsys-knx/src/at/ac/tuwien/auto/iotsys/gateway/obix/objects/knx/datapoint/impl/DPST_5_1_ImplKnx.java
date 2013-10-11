@@ -30,8 +30,8 @@ public class DPST_5_1_ImplKnx extends DPST_5_1_Impl
 		this.readable = readable;
 
 		// if it is not possible to read from the group address --> create a watchdog that monitors the communication
-		if (!this.readable)
-			this.createWatchDog();
+//		if (!this.readable)
+		this.createWatchDog();
 	}
 	
 	public DPST_5_1_ImplKnx(KNXConnector connector, DataPointInit dataPointInit)

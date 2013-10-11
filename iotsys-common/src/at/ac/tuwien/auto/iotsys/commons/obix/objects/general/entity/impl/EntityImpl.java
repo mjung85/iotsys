@@ -71,8 +71,8 @@ public class EntityImpl extends MultilingualImpl implements Entity
 		if (ordernumber != null)
 		{
 			Str order = new Str();
-			order.setName("mediaType");
-			order.setHref(new Uri("mediaType"));
+			order.setName("orderNumber");
+			order.setHref(new Uri("orderNumber"));
 			order.set(ordernumber);
 			this.add(order);
 		}
