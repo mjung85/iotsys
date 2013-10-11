@@ -30,8 +30,8 @@ public class DPST_9_1_ImplKnx extends DPST_9_1_Impl
 		this.readable = readable;
 
 		// if it is not possible to read from the group address --> create a watchdog that monitors the communication
-		if (!this.readable)
-			this.createWatchDog();
+//		if (!this.readable)
+		this.createWatchDog();
 	}
 	
 	public DPST_9_1_ImplKnx(KNXConnector connector, DataPointInit dataPointInit)
@@ -52,7 +52,7 @@ public class DPST_9_1_ImplKnx extends DPST_9_1_Impl
 
 					x.setData(apdu, 0);
 
-					log.fine("Temperature for " + DPST_9_1_ImplKnx.this.getHref() + " now " + x.getValueFloat(1));
+					log.info("Temperature for " + DPST_9_1_ImplKnx.this.getHref() + " now " + x.getValueFloat(1));
 
 					value.set(x.getValueFloat(1));
 				}
