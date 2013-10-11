@@ -145,6 +145,9 @@ public class BacnetDeviceLoaderImpl implements DeviceLoader {
 							
 							String name = subConfig.getString("device(" + i
 									+ ").name");
+							
+							String displayName = subConfig.getString("device(" + i
+									+ ").displayName");
 
 							
 							Boolean refreshEnabled = subConfig.getBoolean("device(" + i + ").refreshEnabled", false);
@@ -219,8 +222,13 @@ public class BacnetDeviceLoaderImpl implements DeviceLoader {
 																		// KNX
 																		// device
 											bacnetDevice.setHref(new Uri(URLEncoder.encode(connectorName, "UTF-8") + "/" + href));
+											
 											if(name != null && name.length() > 0){
 												bacnetDevice.setName(name);
+											}
+											
+											if(displayName != null && displayName.length() > 0){
+												bacnetDevice.setDisplayName(displayName);
 											}
 											
 

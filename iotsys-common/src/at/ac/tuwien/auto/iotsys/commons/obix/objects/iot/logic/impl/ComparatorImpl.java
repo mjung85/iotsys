@@ -51,12 +51,15 @@ public class ComparatorImpl extends Obj implements Comparator {
 		setIs(new Contract(Comparator.CONTRACT));
 
 		input1.setName("input1");
+		input1.setDisplayName("Input 1");
 		input1.setHref(new Uri("input1"));
 
 		input2.setName("input2");
+		input2.setDisplayName("Input 2");
 		input2.setHref(new Uri("input2"));
 
 		enabled.setName("enabled");
+		enabled.setDisplayName("Enabled");
 		enabled.setHref(new Uri("enabled"));
 
 		input1.setWritable(true);
@@ -64,9 +67,11 @@ public class ComparatorImpl extends Obj implements Comparator {
 		enabled.setWritable(true);
 
 		result.setName("result");
+		result.setDisplayName("Result");
 		result.setHref(new Uri("result"));
 
 		compareType.setName("compareType");
+		compareType.setDisplayName("Compare Type");
 		compareType.setRange(new Uri("/enums/compareTypes"));
 		compareType.set("eq");
 		
