@@ -19,12 +19,15 @@ public class BinaryOperationImpl extends Obj implements BinaryOperation {
 		setIs(new Contract(BinaryOperation.CONTRACT));
 
 		input1.setName("input1");
+		input1.setDisplayName("Input 1");
 		input1.setHref(new Uri("input1"));
 
 		input2.setName("input2");
+		input2.setDisplayName("Input 2");
 		input2.setHref(new Uri("input2"));
 
 		enabled.setName("enabled");
+		enabled.setDisplayName("Enabled");
 		enabled.setHref(new Uri("enabled"));
 
 		input1.setWritable(true);
@@ -32,9 +35,11 @@ public class BinaryOperationImpl extends Obj implements BinaryOperation {
 		enabled.setWritable(true);
 
 		result.setName("result");
+		result.setDisplayName("Result");
 		result.setHref(new Uri("result"));
 
 		operationType.setName("operationType");
+		operationType.setDisplayName("Operation Type");
 		operationType.setRange(new Uri("/enums/operationTypes"));
 		operationType.set(BinaryOperation.BIN_OP_ADD);
 		operationType.setHref(new Uri("operationType"));

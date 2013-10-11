@@ -51,12 +51,15 @@ public class LogicBinaryOperationImpl extends Obj implements LogicBinaryOperatio
 		setIs(new Contract(LogicBinaryOperation.CONTRACT));
 
 		input1.setName("input1");
+		input1.setDisplayName("Input 1");
 		input1.setHref(new Uri("input1"));
 
 		input2.setName("input2");
+		input2.setDisplayName("Input 2");
 		input2.setHref(new Uri("input2"));
 
 		enabled.setName("enabled");
+		enabled.setDisplayName("Enabled");
 		enabled.setHref(new Uri("enabled"));
 
 		input1.setWritable(true);
@@ -64,9 +67,11 @@ public class LogicBinaryOperationImpl extends Obj implements LogicBinaryOperatio
 		enabled.setWritable(true);
 
 		result.setName("result");
+		result.setDisplayName("Result");
 		result.setHref(new Uri("result"));
 
 		logicOperationType.setName("logicOperationType");
+		logicOperationType.setDisplayName("Logic Operation Type");
 		logicOperationType.setRange(new Uri("/enums/logicOperationTypes"));
 		logicOperationType.set(LogicBinaryOperation.BIN_OP_AND);
 		logicOperationType.setHref(new Uri("logicOperationType"));

@@ -53,6 +53,7 @@ public class BrightnessActuatorImpl extends ActuatorImpl implements BrightnessAc
 	public BrightnessActuatorImpl(){
 		setIs(new Contract(BrightnessActuator.CONTRACT));
 		value.setWritable(true);
+		value.setDisplayName("Brightness");
 		Uri valueUri = new Uri("value");
 	
 		value.setHref(valueUri);

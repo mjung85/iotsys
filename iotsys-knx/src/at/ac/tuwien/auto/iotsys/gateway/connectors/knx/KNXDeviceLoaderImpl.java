@@ -176,7 +176,7 @@ public class KNXDeviceLoaderImpl implements DeviceLoader {
 												}
 												
 												if(displayName != null && displayName.length() > 0){
-													knxDevice.setName(displayName);
+													knxDevice.setDisplayName(displayName);
 												}
 
 												if (ipv6 != null) {

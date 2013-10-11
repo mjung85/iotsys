@@ -213,6 +213,8 @@ public class VirtualDeviceLoaderImpl implements DeviceLoader {
 							
 							String name = subConfig.getString("device(" + i
 									+ ").name");
+							
+							String displayName = subConfig.getString("device(" + i + ").displayName");
 
 							Boolean historyEnabled = subConfig.getBoolean(
 									"device(" + i + ").historyEnabled", false);
@@ -224,6 +226,8 @@ public class VirtualDeviceLoaderImpl implements DeviceLoader {
 
 							Integer historyCount = subConfig.getInt("device("
 									+ i + ").historyCount", 0);
+							
+							
 							
 							// for weather forcast services only
 							String description = subConfig.getString("device(" + i + ").location.description", "");
@@ -268,6 +272,10 @@ public class VirtualDeviceLoaderImpl implements DeviceLoader {
 									
 									if(name != null && name.length() > 0 && virtualObj.getName() == null){
 										virtualObj.setName(name);
+									}
+									
+									if(displayName != null && displayName.length() > 0){
+										virtualObj.setDisplayName(displayName);
 									}
 									
 									if (ipv6 != null) {
