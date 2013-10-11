@@ -53,7 +53,7 @@
           </header>
           <div class='properties'>
             <div class='property' jsplumb-endpoint='property' ng-class='klass' ng-repeat='property in device.properties' ng-switch on='property.klass'>
-              <label>{{property.name}}</label>
+              <label>{{property.displayName}}</label>
               <span class='bool' ng-switch-when='bool'>
                 <input ng-change='property.write()' ng-checked='property.value' ng-disabled='property.readonly' ng-model='property.value' type='checkbox'>
               </span>
