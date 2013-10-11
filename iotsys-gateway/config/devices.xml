@@ -15,8 +15,8 @@
     </device-loader>
     <device-loader>at.ac.tuwien.auto.iotsys.demoapp.DemoAppLoaderImpl
     </device-loader>
-   <device-loader>at.ac.tuwien.auto.iotsys.gateway.connectors.knx.KNXDeviceLoaderETSImpl 
-      </device-loader> 
+    <device-loader>at.ac.tuwien.auto.iotsys.gateway.connectors.knx.KNXDeviceLoaderETSImpl 
+    </device-loader> 
     <device-loader>at.ac.tuwien.auto.iotsys.gateway.connectors.weatherforecast.WeatherForecastDeviceLoaderImpl
     </device-loader>
   </deviceloaders>
@@ -321,6 +321,7 @@
         </type>
         <address>null, 0/0/8</address>
         <href>light0</href>
+        <displayName>Light 0</displayName>
         <ipv6>2001:629:2500:570::101</ipv6>
         <historyEnabled>false</historyEnabled>
       </device>
@@ -330,6 +331,7 @@
         </type>
         <address>null, 2/0/0</address>
         <href>light1</href>
+        <displayName>Light 1</displayName>
         <ipv6>2001:629:2500:570::102</ipv6>
         <historyEnabled>false</historyEnabled>
         <groupCommEnabled>true</groupCommEnabled>
@@ -340,6 +342,7 @@
         </type>
         <address>null, 2/0/1</address>
         <href>light2</href>
+        <displayName>Light 2</displayName>
         <ipv6>2001:629:2500:570::103</ipv6>
         <historyEnabled>false</historyEnabled>
         <groupCommEnabled>true</groupCommEnabled>
@@ -350,6 +353,7 @@
         </type>
         <address>null, 2/0/2</address>
         <href>light3</href>
+        <displayName>Light 3</displayName>
         <ipv6>2001:629:2500:570::104</ipv6>
         <historyEnabled>false</historyEnabled>
         <groupCommEnabled>true</groupCommEnabled>
@@ -360,6 +364,7 @@
         </type>
         <address>null, 2/0/3</address>
         <href>light4</href>
+        <displayName>Light 4</displayName>
         <ipv6>2001:629:2500:570::105</ipv6>
         <historyEnabled>false</historyEnabled>
         <groupCommEnabled>true</groupCommEnabled>
@@ -370,6 +375,7 @@
         </type>
         <address>null, 2/1/0</address>
         <href>brightness1</href>
+        <displayName>Brightness 1</displayName>
         <ipv6>2001:629:2500:570::106</ipv6>
         <groupCommEnabled>true</groupCommEnabled>
       </device>
@@ -379,6 +385,7 @@
         </type>
         <address>null, 2/1/1</address>
         <href>brightness2</href>
+        <displayName>Brightness 2</displayName>
         <ipv6>2001:629:2500:570::107</ipv6>
         <historyEnabled>false</historyEnabled>
         <groupCommEnabled>true</groupCommEnabled>
@@ -389,6 +396,7 @@
         </type>
         <address>0/0/4</address>
         <href>temperature1</href>
+        <displayName>Temperature 1</displayName>
         <ipv6>2001:629:2500:570::108</ipv6>
         <historyEnabled>true</historyEnabled>
         <historyCount>200</historyCount>
@@ -400,6 +408,7 @@
         </type>
         <address>1/0/0</address>
         <href>button1</href>
+        <displayName>Button 1</displayName>
         <ipv6>2001:629:2500:570::109</ipv6>
         <historyEnabled>false</historyEnabled>
         <groupCommEnabled>true</groupCommEnabled>
@@ -410,6 +419,7 @@
         </type>
         <address>1/0/4</address>
         <href>button2</href>
+        <displayName>Button 2</displayName>
         <ipv6>2001:629:2500:570::109</ipv6>
         <historyEnabled>false</historyEnabled>
         <groupCommEnabled>true</groupCommEnabled>
@@ -420,6 +430,7 @@
         </type>
         <address>1/0/5</address>
         <href>button3</href>
+        <displayName>Button 3</displayName>
         <ipv6>2001:629:2500:570::10a</ipv6>
         <historyEnabled>false</historyEnabled>
         <groupCommEnabled>true</groupCommEnabled>
@@ -430,6 +441,7 @@
         </type>
         <address>1/0/6</address>
         <href>button4</href>
+        <displayName>Button 4</displayName>
         <ipv6>2001:629:2500:570::10b</ipv6>
         <historyEnabled>false</historyEnabled>
         <groupCommEnabled>true</groupCommEnabled>
@@ -568,8 +580,9 @@
         </type>
         <address>2098178, 0, 1, 85</address>
         <href>temperature2</href>
+        <displayName>Temperature</displayName>
         <ipv6>2001:629:2500:570::10c</ipv6>
-				<groupCommEnabled>true</groupCommEnabled>
+	    <groupCommEnabled>true</groupCommEnabled>
         <historyEnabled>false</historyEnabled>
         <groupCommEnabled>true</groupCommEnabled>
       </device>
@@ -579,6 +592,7 @@
         </type>
         <address>2098178, 1, 1, 85</address>
         <href>brightness3</href>
+        <displayName>Brightness</displayName>
         <ipv6>2001:629:2500:570::10d</ipv6>
 				<groupCommEnabled>true</groupCommEnabled>
         <historyEnabled>false</historyEnabled>
@@ -1037,6 +1051,7 @@
         <type>at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.logic.impl.BinaryOperationImpl
         </type>
         <href>binOp1</href>
+        <displayName>Binary Operation 1</displayName>
         <historyEnabled>false</historyEnabled>
         <refreshEnabled>false</refreshEnabled>
         <groupCommEnabled>true</groupCommEnabled>
@@ -1052,6 +1067,7 @@
         <type>at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.logic.impl.ComparatorImpl
         </type>
         <href>comp1</href>
+        <displayName>Numerical Comparator 1</displayName>
         <historyEnabled>false</historyEnabled>
         <refreshEnabled>false</refreshEnabled>
         <groupCommEnabled>true</groupCommEnabled>
@@ -1067,6 +1083,7 @@
         <type>at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.logic.impl.LogicBinaryOperationImpl
         </type>
         <href>logicBinOp1</href>
+        <displayName>Logical Binary Operation 1</displayName>
         <historyEnabled>false</historyEnabled>
         <refreshEnabled>false</refreshEnabled>
         <groupCommEnabled>true</groupCommEnabled>
@@ -1080,6 +1097,7 @@
         <type>at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.logic.impl.TemperatureControllerImpl
         </type>
         <href>tempControl1</href>
+        <displayName>Temperature Controller 1</displayName>
         <historyEnabled>false</historyEnabled>
         <refreshEnabled>false</refreshEnabled>
         <groupCommEnabled>true</groupCommEnabled>
