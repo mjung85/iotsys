@@ -238,7 +238,8 @@ app.factory('Property', ['$http', function($http) {
       this.href = node['href'];
       this.type = node['tag'];
       this.numeric = (this.type == 'int' || this.type == 'real');
-      this.name = node['displayName'] || node['name'];
+      this.name = node['name'];
+      this.displayName = node['displayName'] || this.name;
       this.value = node['val'];
       this.readonly = !node['writable'];
 
