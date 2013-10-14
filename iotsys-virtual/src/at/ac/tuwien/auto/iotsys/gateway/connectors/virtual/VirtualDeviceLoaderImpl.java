@@ -83,18 +83,22 @@ public class VirtualDeviceLoaderImpl implements DeviceLoader {
 			Bool b1 = new Bool();
 			
 			b1.setHref(new Uri("b1"));
+			b1.setName("b1");
 			
 			Int i1 = new Int();
 			i1.setHref(new Uri("i1"));
+			i1.setName("i1");
 			
 			Int i2 = new Int();
 			i2.setHref(new Uri("i2"));
+			i2.setName("i2");
 			
 			Obj childObj = new Obj();
 			childObj.setHref(new Uri("childObj"));
 			
 			Real r1 = new Real();
 			r1.setHref(new Uri("r"));
+			r1.setName("r");
 			
 			childObj.add(r1);
 			
@@ -103,7 +107,7 @@ public class VirtualDeviceLoaderImpl implements DeviceLoader {
 			complexObj.add(i2);
 			complexObj.add(childObj);
 					 					
-			objectBroker.addObj(complexObj);
+			objectBroker.addObj(complexObj, "2001:629:2500:60::1:71");
 
 			// add virtual devices
 
@@ -209,6 +213,8 @@ public class VirtualDeviceLoaderImpl implements DeviceLoader {
 							
 							String name = subConfig.getString("device(" + i
 									+ ").name");
+							
+							String displayName = subConfig.getString("device(" + i + ").displayName");
 
 							Boolean historyEnabled = subConfig.getBoolean(
 									"device(" + i + ").historyEnabled", false);
@@ -220,6 +226,8 @@ public class VirtualDeviceLoaderImpl implements DeviceLoader {
 
 							Integer historyCount = subConfig.getInt("device("
 									+ i + ").historyCount", 0);
+							
+							
 							
 							// for weather forcast services only
 							String description = subConfig.getString("device(" + i + ").location.description", "");
@@ -264,6 +272,10 @@ public class VirtualDeviceLoaderImpl implements DeviceLoader {
 									
 									if(name != null && name.length() > 0 && virtualObj.getName() == null){
 										virtualObj.setName(name);
+									}
+									
+									if(displayName != null && displayName.length() > 0){
+										virtualObj.setDisplayName(displayName);
 									}
 									
 									if (ipv6 != null) {

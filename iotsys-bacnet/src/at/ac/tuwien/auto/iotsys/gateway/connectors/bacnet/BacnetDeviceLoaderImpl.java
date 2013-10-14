@@ -145,6 +145,9 @@ public class BacnetDeviceLoaderImpl implements DeviceLoader {
 							
 							String name = subConfig.getString("device(" + i
 									+ ").name");
+							
+							String displayName = subConfig.getString("device(" + i
+									+ ").displayName");
 
 							
 							Boolean refreshEnabled = subConfig.getBoolean("device(" + i + ").refreshEnabled", false);
@@ -219,8 +222,13 @@ public class BacnetDeviceLoaderImpl implements DeviceLoader {
 																		// KNX
 																		// device
 											bacnetDevice.setHref(new Uri(URLEncoder.encode(connectorName, "UTF-8") + "/" + href));
+											
 											if(name != null && name.length() > 0){
 												bacnetDevice.setName(name);
+											}
+											
+											if(displayName != null && displayName.length() > 0){
+												bacnetDevice.setDisplayName(displayName);
 											}
 											
 
@@ -301,7 +309,15 @@ public class BacnetDeviceLoaderImpl implements DeviceLoader {
 		@Override
 		public void deviceDiscovered(Obj device) {
 			
-			objectBroker.addObj(device, false);
+			
+			
+			// add all children objects also in the object broker
+			
+			Obj[] list = device.list();
+			
+//			for(Obj obj : list){
+//				objectBroker.addObj(obj, true);
+//			}
 			
 			if(groupCommEnabled != null && groupCommEnabled){
 				objectBroker.enableGroupComm(device);
@@ -314,6 +330,7 @@ public class BacnetDeviceLoaderImpl implements DeviceLoader {
 			myObjects.add(device);
 			
 			device.initialize();
+			objectBroker.addObj(device, true);
 		}
 		
 	}

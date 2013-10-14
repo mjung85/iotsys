@@ -109,6 +109,8 @@ public class KNXDeviceLoaderImpl implements DeviceLoader {
 							
 							String name = subConfig.getString("device(" + i
 									+ ").name");
+							
+							String displayName = subConfig.getString("device(" + i + ").displayName");
 
 							Boolean historyEnabled = subConfig.getBoolean(
 									"device(" + i + ").historyEnabled", false);
@@ -171,6 +173,10 @@ public class KNXDeviceLoaderImpl implements DeviceLoader {
 												
 												if(name != null && name.length() > 0){
 													knxDevice.setName(name);
+												}
+												
+												if(displayName != null && displayName.length() > 0){
+													knxDevice.setDisplayName(displayName);
 												}
 
 												if (ipv6 != null) {
