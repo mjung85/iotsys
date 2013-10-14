@@ -62,6 +62,8 @@ public abstract class BacnetObj extends Obj {
 		description.setName("description");
 		description.setWritable(false);
 		add(description);
+		
+//		refreshObject();
 	}
 	
 	/**
@@ -91,6 +93,7 @@ public abstract class BacnetObj extends Obj {
 				if(property instanceof CharacterString){
 					String newDesc = ((CharacterString) property).getValue();
 					description.set(newDesc);
+					this.setDisplayName(description.toString());
 				}
 			}
 		} catch (BACnetException e) {
@@ -99,6 +102,7 @@ public abstract class BacnetObj extends Obj {
 			e.printStackTrace();
 		}
 	}
+	
 	
 	
 	public boolean isOutOfService() {
@@ -134,5 +138,9 @@ public abstract class BacnetObj extends Obj {
 		}
 		
 		return true;
+	}
+	
+	public void initialize(){
+		refreshObject();
 	}
 }

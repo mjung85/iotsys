@@ -78,7 +78,7 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader {
 		KNXConnector knxConnector = new KNXConnector("192.168.161.59", 3671,
 				"auto");
 
-		// connect(knxConnector);
+		connect(knxConnector);
 
 		initNetworks(knxConnector, objectBroker);
 
@@ -116,7 +116,7 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader {
 		Hashtable<String, String> manufacturerById = new Hashtable<String, String>();
 
 		Object manufacturers = devicesConfig
-				.getProperty("configurations.manufacturers.manufacturer");
+				.getProperty("configurations.manufacturers.manufacturer.[@id]");
 
 		int manufacturersSize = 0;
 
@@ -320,7 +320,7 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader {
 						Object[] object = new Object[2];
 						object[0] = knxConnector;
 						DataPointInit dptInit = new DataPointInit();
-						dptInit.setDisplay(dataPointDescription);
+//						dptInit.setDisplay(dataPointDescription);
 						dptInit.setDisplayName(dataPointDescription);
 						dptInit.setReadable("Enabled".equals(dataPointReadFlag));
 						dptInit.setName(dataPointName);
@@ -336,6 +336,7 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader {
 						
 						if(dataPoint.get("value") != null){
 							dataPoint.get("value").setDisplayName(dataPointDescription);
+//							dataPoint.get("value").setDisplay(dataPointDescription);
 						}
 
 						translations = datapointConfig
@@ -434,7 +435,7 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader {
 
 		objectBroker.addObj(n.getTopology(), true);
 
-		parseDomainView(domainView, (Obj) n.getTopology(), n, objectBroker,
+		parseTopologyView(topologyView, (Obj) n.getTopology(), n, objectBroker,
 				entityById, datapointById);
 
 	}

@@ -204,8 +204,10 @@ public class WatchImpl extends Obj implements Watch {
 						observedObjects.remove(uri.getPath());
 						
 						Observer observer = observers.get(uri.getPath());
-						observer.getSubject().detach(observer);
-						observers.remove(uri.getPath());
+						if(observer != null && observer.getSubject() != null){
+							observer.getSubject().detach(observer);
+							observers.remove(uri.getPath());
+						}
 					}					
 				}
 
