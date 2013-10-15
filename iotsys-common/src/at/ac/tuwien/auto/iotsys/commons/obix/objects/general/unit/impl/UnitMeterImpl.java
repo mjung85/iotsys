@@ -34,19 +34,15 @@ package at.ac.tuwien.auto.iotsys.commons.obix.objects.general.unit.impl;
 import obix.Uri;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.contracts.impl.DimensionImpl;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.contracts.impl.UnitImpl;
-import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.enumeration.EnumLanguage;
-import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.enumeration.EnumTranslation;
-import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.language.Multilingual;
-import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.language.impl.TranslationImpl;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.unit.UnitMeter;
 
-public class UnitMeterImpl extends UnitImpl implements UnitMeter, Multilingual
+public class UnitMeterImpl extends UnitImpl implements UnitMeter
 {
 	public UnitMeterImpl()
 	{
 		super("meter", "meter (m)", new Uri(UnitMeter.HREF), "m", 1, 0, new DimensionImpl(0, 1, 0, 0, 0, 0, 0));
 
 		// Translations
-		this.addTranslation(new TranslationImpl(EnumLanguage.KEY_DE_DE, EnumTranslation.KEY_DISPLAY, "Meter (m)"));
+		//this.addTranslation(new TranslationImpl(EnumLanguage.KEY_DE_DE, EnumTranslation.KEY_DISPLAY, "Meter (m)"));
 	}
 }

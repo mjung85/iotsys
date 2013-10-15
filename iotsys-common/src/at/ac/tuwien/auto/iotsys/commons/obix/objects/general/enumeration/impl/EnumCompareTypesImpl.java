@@ -44,10 +44,10 @@ public class EnumCompareTypesImpl extends RangeImpl implements EnumCompareTypes
 
 	protected void initValues()
 	{
-		getElements().add(new ObjElement(EnumCompareTypes.KEY_EQ));
-		getElements().add(new ObjElement(EnumCompareTypes.KEY_LT));
-		getElements().add(new ObjElement(EnumCompareTypes.KEY_LTE));
-		getElements().add(new ObjElement(EnumCompareTypes.KEY_GT));
-		getElements().add(new ObjElement(EnumCompareTypes.KEY_GTE));
+		addElement(new ObjElement(EnumCompareTypes.KEY_EQ));
+		addElement(new ObjElement(EnumCompareTypes.KEY_LT));
+		addElement(new ObjElement(EnumCompareTypes.KEY_LTE));
+		addElement(new ObjElement(EnumCompareTypes.KEY_GT));
+		addElement(new ObjElement(EnumCompareTypes.KEY_GTE));
 	}
 }

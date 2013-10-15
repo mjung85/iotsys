@@ -35,7 +35,7 @@ import obix.contracts.Range;
 
 public interface EnumStandard extends Range
 {
-	public static final String HREF = "/enums/enumStandard";
+	public static final String HREF = "/enums/standard";
 
 	public static final String KEY_KNX = "knx";
 	public static final String KEY_LONWORKS = "lon";

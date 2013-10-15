@@ -35,7 +35,7 @@ import obix.contracts.Range;
 
 public interface EnumPriority extends Range
 {
-	public static final String HREF = "/enums/enumPriority";
+	public static final String HREF = "/enums/priority";
 
 	public static final String KEY_LOW = "low";
 	public static final String KEY_HIGH = "high";
