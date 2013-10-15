@@ -98,8 +98,21 @@
     </connector>
   </enocean>
 
+  <knx-ets>
+    <connector>
+        <knx-export>knx-config/suitcase.xml</knx-export>
+        <config>knx-config/suitcase_2013-09-05.xml</config>
+        <forceRefresh>false</forceRefresh>
+        <name>KNX TP1 Suitcase</name>
+        <enabled>false</enabled>
+        <router>
+            <ip>192.168.161.59</ip>
+            <port>3671</port>
+        </router>
+        <localIP>auto</localIP>
+    </connector>
+  </knx-ets>
   <knx>
-
     <connector>
       <name>KNX TP1 Suitcase</name>
       <enabled>false</enabled>

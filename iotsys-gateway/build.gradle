@@ -113,7 +113,9 @@ dependencies {
 	provided group: 'commons-lang', name: 'commons-lang', version: '2.3'
 	provided group: 'commons-logging', name: 'commons-logging', version: '1.1.1'
 	
-	compile group: 'net.sourceforge.javacsv', name: 'javacsv', version: '2.0'
+	provided group: 'net.sourceforge.javacsv', name: 'javacsv', version: '2.0'
+	
+	provided group: 'net.sf.saxon', name:'Saxon-HE', version:'9.4'
 	
 	compile ":nagasena:"
 	compile ":californium-0.12.0-mif_mc:"
@@ -126,5 +128,4 @@ dependencies {
 	testCompile group: 'junit',name:'junit',version: '4.8+' 
 	testCompile group: 'com.jayway.restassured', name: 'rest-assured', version: '1.2.1'
 	testCompile "org.hamcrest:hamcrest-library:1.3"
-
 }
