@@ -309,7 +309,15 @@ public class BacnetDeviceLoaderImpl implements DeviceLoader {
 		@Override
 		public void deviceDiscovered(Obj device) {
 			
-			objectBroker.addObj(device, false);
+			
+			
+			// add all children objects also in the object broker
+			
+			Obj[] list = device.list();
+			
+//			for(Obj obj : list){
+//				objectBroker.addObj(obj, true);
+//			}
 			
 			if(groupCommEnabled != null && groupCommEnabled){
 				objectBroker.enableGroupComm(device);
@@ -322,6 +330,7 @@ public class BacnetDeviceLoaderImpl implements DeviceLoader {
 			myObjects.add(device);
 			
 			device.initialize();
+			objectBroker.addObj(device, true);
 		}
 		
 	}

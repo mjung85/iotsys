@@ -15,8 +15,8 @@
     </device-loader>
     <device-loader>at.ac.tuwien.auto.iotsys.demoapp.DemoAppLoaderImpl
     </device-loader>
-    <device-loader>at.ac.tuwien.auto.iotsys.gateway.connectors.knx.KNXDeviceLoaderETSImpl 
-    </device-loader> 
+    <!-- <device-loader>at.ac.tuwien.auto.iotsys.gateway.connectors.knx.KNXDeviceLoaderETSImpl 
+    </device-loader> -->
     <device-loader>at.ac.tuwien.auto.iotsys.gateway.connectors.weatherforecast.WeatherForecastDeviceLoaderImpl
     </device-loader>
   </deviceloaders>
@@ -98,8 +98,21 @@
     </connector>
   </enocean>
 
+  <knx-ets>
+    <connector>
+        <knx-export>knx-config/suitcase.xml</knx-export>
+        <config>knx-config/suitcase_2013-09-05.xml</config>
+        <forceRefresh>false</forceRefresh>
+        <name>KNX TP1 Suitcase</name>
+        <enabled>false</enabled>
+        <router>
+            <ip>192.168.161.59</ip>
+            <port>3671</port>
+        </router>
+        <localIP>auto</localIP>
+    </connector>
+  </knx-ets>
   <knx>
-
     <connector>
       <name>KNX TP1 Suitcase</name>
       <enabled>false</enabled>
@@ -309,7 +322,7 @@
     </connector>
     <connector>
       <name>KNX E-Lab</name>
-      <enabled>true</enabled>
+      <enabled>false</enabled>
       <router>
         <ip>192.168.161.53</ip>
         <port>3671</port>
@@ -569,7 +582,7 @@
   <bacnet>
     <connector>
       <name>BACnet E-Lab</name>
-      <enabled>true</enabled>
+      <enabled>false</enabled>
       <discovery-enabled>true</discovery-enabled>
       <localDeviceID>23345</localDeviceID>
       <broadcastAddress>192.168.161.255</broadcastAddress>
@@ -1056,6 +1069,26 @@
         <refreshEnabled>false</refreshEnabled>
         <groupCommEnabled>true</groupCommEnabled>
       </device>
+      
+      <device>
+        <type>at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.logic.impl.BinaryOperationImpl
+        </type>
+        <href>binOp2</href>
+        <displayName>Binary Operation 2</displayName>
+        <historyEnabled>false</historyEnabled>
+        <refreshEnabled>false</refreshEnabled>
+        <groupCommEnabled>true</groupCommEnabled>
+      </device>
+      
+      <device>
+        <type>at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.logic.impl.BinaryOperationImpl
+        </type>
+        <href>binOp3</href>
+        <displayName>Binary Operation 3</displayName>
+        <historyEnabled>false</historyEnabled>
+        <refreshEnabled>false</refreshEnabled>
+        <groupCommEnabled>true</groupCommEnabled>
+      </device>
 
       <!-- <device> <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.logic.impl.BinaryOperationImpl 
         </type> <href>binOp2</href> <historyEnabled>false</historyEnabled> <refreshEnabled>false</refreshEnabled> 
@@ -1072,6 +1105,26 @@
         <refreshEnabled>false</refreshEnabled>
         <groupCommEnabled>true</groupCommEnabled>
       </device>
+      
+       <device>
+        <type>at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.logic.impl.ComparatorImpl
+        </type>
+        <href>comp2</href>
+        <displayName>Numerical Comparator 2</displayName>
+        <historyEnabled>false</historyEnabled>
+        <refreshEnabled>false</refreshEnabled>
+        <groupCommEnabled>true</groupCommEnabled>
+      </device>
+      
+      <device>
+        <type>at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.logic.impl.ComparatorImpl
+        </type>
+        <href>comp3</href>
+        <displayName>Numerical Comparator 3</displayName>
+        <historyEnabled>false</historyEnabled>
+        <refreshEnabled>false</refreshEnabled>
+        <groupCommEnabled>true</groupCommEnabled>
+      </device>
 
       <!-- <device> <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.logic.impl.ComparatorImpl 
         </type> <href>comp2</href> <historyEnabled>false</historyEnabled> <refreshEnabled>false</refreshEnabled> 
@@ -1084,6 +1137,26 @@
         </type>
         <href>logicBinOp1</href>
         <displayName>Logical Binary Operation 1</displayName>
+        <historyEnabled>false</historyEnabled>
+        <refreshEnabled>false</refreshEnabled>
+        <groupCommEnabled>true</groupCommEnabled>
+      </device>
+      
+      <device>
+        <type>at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.logic.impl.LogicBinaryOperationImpl
+        </type>
+        <href>logicBinOp2</href>
+        <displayName>Logical Binary Operation 2</displayName>
+        <historyEnabled>false</historyEnabled>
+        <refreshEnabled>false</refreshEnabled>
+        <groupCommEnabled>true</groupCommEnabled>
+      </device>
+      
+      <device>
+        <type>at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.logic.impl.LogicBinaryOperationImpl
+        </type>
+        <href>logicBinOp3</href>
+        <displayName>Logical Binary Operation 3</displayName>
         <historyEnabled>false</historyEnabled>
         <refreshEnabled>false</refreshEnabled>
         <groupCommEnabled>true</groupCommEnabled>

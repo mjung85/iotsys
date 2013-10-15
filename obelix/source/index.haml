@@ -38,7 +38,7 @@
               {{device.name}}
           .properties
             .property(ng-repeat="property in device.properties" ng-class="klass" ng-switch on="property.klass" jsplumb-endpoint="property")
-              %label {{property.name}}
+              %label {{property.displayName}}
               %span.bool(ng-switch-when="bool")
                 %input(type="checkbox" ng-checked="property.value" ng-disabled="property.readonly" ng-model="property.value" ng-change="property.write()")
               %span.numeric(ng-switch-when="numeric")
