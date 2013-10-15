@@ -44,6 +44,8 @@ jar {
 				)
 	}
 	
+	exclude 'META-INF/*.RSA', 'META-INF/*.SF','META-INF/*.DSA'
+	
 }
 
 configurations {
@@ -79,5 +81,9 @@ dependencies {
 	compile group: 'commons-logging', name: 'commons-logging', version: '1.1.1'
 	
 	compile group: 'org.bidib.jbidib.org.qbang.rxtx', name: 'rxtxcomm', version: '2.2'	
+	
+	compile group: 'net.sourceforge.javacsv', name: 'javacsv', version: '2.0'
+	
+	compile group: 'net.sf.saxon', name:'Saxon-HE', version:'9.4'
 }
 
