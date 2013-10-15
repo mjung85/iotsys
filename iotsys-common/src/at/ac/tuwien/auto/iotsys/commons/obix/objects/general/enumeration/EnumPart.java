@@ -35,7 +35,7 @@ import obix.contracts.Range;
 
 public interface EnumPart extends Range
 {
-	public static final String HREF = "/enums/enumPart";
+	public static final String HREF = "/enums/part";
 
 	public static final String KEY_BUILDING = "building";
 	public static final String KEY_BUILDINGPART = "buildingpart";

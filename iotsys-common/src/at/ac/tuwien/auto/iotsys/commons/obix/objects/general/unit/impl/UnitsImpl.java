@@ -55,7 +55,7 @@ public class UnitsImpl extends List implements IObj
 			unit.setHref(unit.getRelativePath());
 
 			this.add(unit);
-			this.add(unit.getReference(false));
+			this.add(unit.getReference());
 		}
 	}
 	

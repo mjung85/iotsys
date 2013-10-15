@@ -32,15 +32,14 @@
 package at.ac.tuwien.auto.iotsys.commons.obix.objects.general.contracts.impl;
 
 import obix.Contract;
+import obix.Obj;
 import obix.Real;
 import obix.Str;
 import obix.Uri;
 import obix.contracts.Dimension;
 import obix.contracts.Unit;
-import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.language.Multilingual;
-import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.language.impl.MultilingualImpl;
 
-public class UnitImpl extends MultilingualImpl implements Unit, Multilingual
+public class UnitImpl extends Obj implements Unit
 {
 	private Str symbol;
 	private DimensionImpl dimension;
@@ -51,7 +50,7 @@ public class UnitImpl extends MultilingualImpl implements Unit, Multilingual
 	{
 		this.setName(name);
 		this.setDisplay(display);
-		this.setIs(new Contract(new String[] { Multilingual.CONTRACT, Unit.CONTRACT }));
+		this.setIs(new Contract(Unit.CONTRACT));
 		this.setHref(href);
 		this.setHidden(true);
 

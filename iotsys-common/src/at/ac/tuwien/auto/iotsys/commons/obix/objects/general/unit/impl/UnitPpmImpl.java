@@ -34,19 +34,15 @@ package at.ac.tuwien.auto.iotsys.commons.obix.objects.general.unit.impl;
 import obix.Uri;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.contracts.impl.DimensionImpl;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.contracts.impl.UnitImpl;
-import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.enumeration.EnumLanguage;
-import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.enumeration.EnumTranslation;
-import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.language.Multilingual;
-import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.language.impl.TranslationImpl;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.unit.UnitPpm;
 
-public class UnitPpmImpl extends UnitImpl implements UnitPpm, Multilingual
+public class UnitPpmImpl extends UnitImpl implements UnitPpm
 {
 	public UnitPpmImpl()
 	{
 		super("ppm", "parts/million (ppm)", new Uri(UnitPpm.HREF), "ppm", 1, 0, new DimensionImpl(0, 0, 0, 0, 0, 0, 0));
 
 		// Translations
-		this.addTranslation(new TranslationImpl(EnumLanguage.KEY_DE_DE, EnumTranslation.KEY_DISPLAY, "Teile/Million (ppm)"));
+		//this.addTranslation(new TranslationImpl(EnumLanguage.KEY_DE_DE, EnumTranslation.KEY_DISPLAY, "Teile/Million (ppm)"));
 	}
 }

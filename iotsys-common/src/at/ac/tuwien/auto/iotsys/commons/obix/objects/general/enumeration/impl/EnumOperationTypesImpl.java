@@ -44,10 +44,10 @@ public class EnumOperationTypesImpl extends RangeImpl implements EnumOperationTy
 
 	protected void initValues()
 	{
-		getElements().add(new ObjElement(EnumOperationTypes.KEY_ADD));
-		getElements().add(new ObjElement(EnumOperationTypes.KEY_SUB));
-		getElements().add(new ObjElement(EnumOperationTypes.KEY_MOD));
-		getElements().add(new ObjElement(EnumOperationTypes.KEY_MUL));
-		getElements().add(new ObjElement(EnumOperationTypes.KEY_DIV));
+		addElement(new ObjElement(EnumOperationTypes.KEY_ADD));
+		addElement(new ObjElement(EnumOperationTypes.KEY_SUB));
+		addElement(new ObjElement(EnumOperationTypes.KEY_MOD));
+		addElement(new ObjElement(EnumOperationTypes.KEY_MUL));
+		addElement(new ObjElement(EnumOperationTypes.KEY_DIV));
 	}
 }

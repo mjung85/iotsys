@@ -20,7 +20,6 @@
 
 package at.ac.tuwien.auto.iotsys.gateway.connectors.knx;
 
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -32,16 +31,12 @@ import obix.Uri;
 import org.apache.commons.configuration.XMLConfiguration;
 
 import at.ac.tuwien.auto.calimero.GroupAddress;
-import at.ac.tuwien.auto.calimero.exception.KNXException;
 import at.ac.tuwien.auto.iotsys.commons.Connector;
 import at.ac.tuwien.auto.iotsys.commons.DeviceLoader;
 import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.entity.impl.EntityImpl;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.enumeration.EnumConnector;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.enumeration.EnumPart;
-import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.enumeration.EnumStandard;
-import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.enumeration.impl.EnumsImpl;
-import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.language.impl.TranslationImpl;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.network.Network;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.network.impl.NetworkImpl;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.view.impl.AreaImpl;
@@ -70,7 +65,7 @@ public class KNXDeviceLoaderETSImplManual implements DeviceLoader
 
 		KNXConnector knxConnector = new KNXConnector("192.168.161.59", 3671, "auto");
 
-//		connect(knxConnector);
+		connect(knxConnector);
 
 		initNetworks(knxConnector, objectBroker);
 
@@ -81,20 +76,20 @@ public class KNXDeviceLoaderETSImplManual implements DeviceLoader
 
 	private void connect(KNXConnector knxConnector)
 	{
-		try
-		{
-			knxConnector.connect();
-		}
-		catch (UnknownHostException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		catch (KNXException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+//		try
+//		{
+//			knxConnector.connect();
+//		}
+//		catch (UnknownHostException e)
+//		{
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		catch (KNXException e)
+//		{
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 	}
 
 	private void initNetworks(KNXConnector knxConnector, ObjectBroker objectBroker)
@@ -149,27 +144,27 @@ public class KNXDeviceLoaderETSImplManual implements DeviceLoader
 		// Phase II
 
 		// Network
-		NetworkImpl n = new NetworkImpl("P-0341", "Suitcase", null, EnumsImpl.getInstance().getEnum(EnumStandard.HREF).getKey("KNX"));
+		NetworkImpl n = new NetworkImpl("P-0341", "Suitcase", null, "KNX");
 		networks.add(n);
-		networks.add(n.getReference(false));
+		networks.add(n.getReference());
 
 		objectBroker.addObj(n, true);
 
 		// Entities and Datapoints
 		EntityImpl entity = new EntityImpl("P-0341-0_DI-3", "Switching actuator N 567/01, (8 Amp)", null, "Siemens", "5WG1 567-1AB01");
-		entity.addTranslation(new TranslationImpl("de-DE", "displayName", "Schaltaktor N 567/01, (8 Amp)"));
+		// entity.addTranslation(new TranslationImpl("de-DE", "displayName", "Schaltaktor N 567/01, (8 Amp)"));
 		n.getEntities().addEntity(entity);
 
 		objectBroker.addObj(entity, true);
 
 		DPST_1_1_ImplKnx datapoint_lightonoff = new DPST_1_1_ImplKnx(knxConnector, new GroupAddress(1, 0, 0), "P-0341-0_DI-3_M-0001_A-9803-03-3F77_O-3_R-4", "Switch, Channel A", "On / Off", true, false);
-		datapoint_lightonoff.addTranslation(new TranslationImpl("de-DE", "displayName", "Schalten, Kanal A"));
+		// datapoint_lightonoff.addTranslation(new TranslationImpl("de-DE", "displayName", "Schalten, Kanal A"));
 		entity.addDatapoint(datapoint_lightonoff);
 
 		objectBroker.addObj(datapoint_lightonoff, true);
 
 		entity = new EntityImpl("P-0341-0_DI-2", "Universal dimmer N 527", null, "Siemens", "5WG1 527-1AB01");
-		entity.addTranslation(new TranslationImpl("de-DE", "displayName", "Universal-Dimmer N 527"));
+		// entity.addTranslation(new TranslationImpl("de-DE", "displayName", "Universal-Dimmer N 527"));
 		n.getEntities().addEntity(entity);
 
 		objectBroker.addObj(entity, true);
@@ -185,7 +180,7 @@ public class KNXDeviceLoaderETSImplManual implements DeviceLoader
 		objectBroker.addObj(datapoint_dimming_status, true);
 
 		entity = new EntityImpl("P-0341-0_DI-11", "Temperature Sensor N 258/02", null, "Siemens", "5WG1 258-1AB02");
-		entity.addTranslation(new TranslationImpl("de-DE", "displayName", "Temperatursensor N 258/02"));
+		// entity.addTranslation(new TranslationImpl("de-DE", "displayName", "Temperatursensor N 258/02"));
 		n.getEntities().addEntity(entity);
 
 		objectBroker.addObj(entity, true);
@@ -196,7 +191,7 @@ public class KNXDeviceLoaderETSImplManual implements DeviceLoader
 		objectBroker.addObj(datapoint_temperature, true);
 
 		entity = new EntityImpl("P-0341-0_DI-7", "KNX CO², Humidity and Temperature Sensor", null, "Schneider Electric Industries SAS", "MTN6005-0001");
-		entity.addTranslation(new TranslationImpl("de-DE", "displayName", "KNX CO2-, Feuchte- und Temperatursensor"));
+		// entity.addTranslation(new TranslationImpl("de-DE", "displayName", "KNX CO2-, Feuchte- und Temperatursensor"));
 		n.getEntities().addEntity(entity);
 
 		objectBroker.addObj(entity, true);

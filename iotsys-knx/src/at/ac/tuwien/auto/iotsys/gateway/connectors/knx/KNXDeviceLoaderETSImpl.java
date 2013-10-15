@@ -49,7 +49,6 @@ import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.entity.impl.EntityI
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.enumeration.EnumConnector;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.enumeration.EnumStandard;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.enumeration.impl.EnumsImpl;
-import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.language.impl.TranslationImpl;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.network.Network;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.network.impl.NetworkImpl;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.view.impl.DomainImpl;
@@ -165,11 +164,9 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader {
 		String networkStandard = devicesConfig.getString("[@standard]");
 		String networkId = devicesConfig.getString("[@id]");
 
-		NetworkImpl n = new NetworkImpl(networkId, networkName, null, EnumsImpl
-				.getInstance().getEnum(EnumStandard.HREF)
-				.getKey(networkStandard));
+		NetworkImpl n = new NetworkImpl(networkId, networkName, null, networkStandard);
 		networks.add(n);
-		networks.add(n.getReference(false));
+		networks.add(n.getReference());
 
 		// Network
 		objectBroker.addObj(n, true);
@@ -419,7 +416,7 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader {
 
 		objectBroker.addObj(n.getFunctional(), true);
 
-		parseFunctionalView(funcionalView, (Obj) n.getFunctional(), n,
+		parseFunctionalView(funcionalView, n.getFunctional(), n,
 				objectBroker, entityById, datapointById);
 
 		HierarchicalConfiguration domainView = devicesConfig

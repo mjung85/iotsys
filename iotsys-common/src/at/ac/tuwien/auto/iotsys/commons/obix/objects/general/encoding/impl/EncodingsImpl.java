@@ -31,7 +31,7 @@
 
 package at.ac.tuwien.auto.iotsys.commons.obix.objects.general.encoding.impl;
 
-import java.util.HashMap;
+import java.util.TreeMap;
 
 import obix.Contract;
 import obix.IObj;
@@ -42,7 +42,7 @@ import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.contracts.impl.Rang
 
 public class EncodingsImpl extends List implements IObj
 {
-	private HashMap<String, EncodingImpl> encodings;
+	private TreeMap<String, EncodingImpl> encodings;
 
 	private static final EncodingsImpl instance = new EncodingsImpl();
 
@@ -53,7 +53,7 @@ public class EncodingsImpl extends List implements IObj
 		this.setHref(new Uri("/encodings"));
 
 		// Create enumerations
-		encodings = new HashMap<String, EncodingImpl>();
+		encodings = new TreeMap<String, EncodingImpl>();
 
 		encodings.put(EncodingOnOffImpl.HREF, new EncodingOnOffImpl());
 
@@ -63,7 +63,7 @@ public class EncodingsImpl extends List implements IObj
 			e.setHref(e.getRelativePath());
 
 			this.add(e);
-			this.add(e.getReference(false));
+			this.add(e.getReference());
 		}
 	}
 

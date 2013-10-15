@@ -35,7 +35,7 @@ import obix.contracts.Range;
 
 public interface EnumEnabled extends Range
 {
-	public static final String HREF = "/enums/enumEnabled";
+	public static final String HREF = "/enums/enabled";
 
 	public static final String KEY_ENABLED = "enabled";
 	public static final String KEY_DISABLED = "disabled";

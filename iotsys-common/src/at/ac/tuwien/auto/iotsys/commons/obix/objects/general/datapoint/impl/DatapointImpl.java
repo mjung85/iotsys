@@ -33,14 +33,13 @@
 package at.ac.tuwien.auto.iotsys.commons.obix.objects.general.datapoint.impl;
 
 import obix.Contract;
+import obix.Obj;
 import obix.Str;
 import obix.Uri;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.datapoint.DataPoint;
-import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.language.Multilingual;
-import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.language.impl.MultilingualImpl;
 import at.ac.tuwien.auto.iotsys.commons.util.UriEncoder;
 
-public abstract class DatapointImpl extends MultilingualImpl implements DataPoint
+public abstract class DatapointImpl extends Obj implements DataPoint
 {
 	protected Str function = new Str();
 	protected Str unit = new Str();
@@ -51,15 +50,11 @@ public abstract class DatapointImpl extends MultilingualImpl implements DataPoin
 		this.setName(name);
 		this.setDisplay(display);
 		this.setDisplayName(displayName);
-		
-		// contracts
-		this.addIs(new Contract(new String[] { DataPoint.CONTRACT, Multilingual.CONTRACT }));
-
-		// href -> always use name
-//		if (displayName != null)
-//			this.setHref(new Uri(UriEncoder.getEscapedUri(displayName)));
-//		else
+		this.setHidden(true);
 		this.setHref(new Uri(UriEncoder.getEscapedUri(name)));
+
+		// contracts
+		this.addIs(new Contract(DataPoint.CONTRACT));
 	}
 
 	public void addIs(Contract is)
