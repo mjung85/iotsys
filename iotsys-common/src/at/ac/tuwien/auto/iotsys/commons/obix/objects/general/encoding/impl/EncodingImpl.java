@@ -53,12 +53,7 @@ public abstract class EncodingImpl extends RangeImpl implements EncodingOnOff
 
 			if (obj != null)
 			{
-				Obj value = obj.getByHref(obj.getChildHref("value"));
-
-				if (value != null)
-				{
-					return value;
-				}
+				return obj;
 			}
 		}
 		return null;
@@ -66,23 +61,21 @@ public abstract class EncodingImpl extends RangeImpl implements EncodingOnOff
 
 	public String getName(Obj value)
 	{
-		for(Obj child : this.list())
+		for (Obj child : this.list())
 		{
-			Obj val = child.getByHref(child.getChildHref("value"));
-			
-			if (value instanceof Bool)
+			if (child instanceof Bool)
 			{
-				if (val.getBool() == value.getBool())
+				if (child.getBool() == value.getBool())
 				{
 					return child.getName();
 				}
 			}
-			else if (value instanceof Int)
+			else if (child instanceof Int)
 			{
-				if (val.getInt() == value.getInt())
+				if (child.getInt() == value.getInt())
 				{
 					return child.getName();
-				}				
+				}
 			}
 		}
 		return null;

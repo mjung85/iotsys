@@ -102,23 +102,11 @@
     <connector>
     	<name>KNX TP1 Suitcase</name>
     	<enabled>true</enabled>
-        <knx-proj>knx-config/projects/Suitcase_2013_10_16.knxproj</knx-proj>
+        <knx-proj>knx-config/projects/Suitcase_2013-09-05.knxproj</knx-proj>
         <!-- forces unpacking of zip and transformation -->
-        <forceRefresh>true</forceRefresh>               
+        <forceRefresh>false</forceRefresh>               
         <router>
             <ip>192.168.161.59</ip>
-            <port>3671</port>
-        </router>
-        <localIP>auto</localIP>
-    </connector>
-    <connector>
-        <name>E183-1</name>
-        <enabled>true</enabled>
-        <knx-proj>knx-config/projects/E183-1.knxproj</knx-proj>
-        <!-- forces unpacking of zip and transformation -->
-        <forceRefresh>true</forceRefresh>               
-        <router>
-            <ip>128.130.56.140</ip>
             <port>3671</port>
         </router>
         <localIP>auto</localIP>
@@ -335,7 +323,7 @@
     </connector>
     <connector>
       <name>KNX E-Lab</name>
-      <enabled>true</enabled>
+      <enabled>false</enabled>
       <router>
         <ip>192.168.161.53</ip>
         <port>3671</port>
@@ -704,7 +692,7 @@
 
     <connector>
       <name>BACnet A-Lab (Auto)</name>
-      <enabled>true</enabled>
+      <enabled>false</enabled>
       <discovery-enabled>true</discovery-enabled>
       <localDeviceID>54321</localDeviceID>
       <broadcastAddress>128.130.56.255</broadcastAddress>

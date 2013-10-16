@@ -21,7 +21,7 @@ public class InterceptorBrokerImpl implements InterceptorBroker, Interceptor {
 
 	private static InterceptorBroker instance = new InterceptorBrokerImpl(); 
 	
-	private Map<Class, Interceptor> interceptors = new HashMap<Class, Interceptor>();
+	private Map<Class<?>, Interceptor> interceptors = new HashMap<Class<?>, Interceptor>();
 		
 	private InterceptorBrokerImpl() {
 		log.info("Create InterceptorBroker");
@@ -33,7 +33,7 @@ public class InterceptorBrokerImpl implements InterceptorBroker, Interceptor {
 	}
 
 	@Override
-	public Map<Class, Interceptor> getInterceptors() {
+	public Map<Class<?>, Interceptor> getInterceptors() {
 		return interceptors;
 	}
 

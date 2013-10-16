@@ -61,22 +61,24 @@ public class EntitiesImpl extends List implements Entities
 	{
 		if (entity instanceof Obj)
 		{
-			entity.setHref(getHref(entity.getDisplayName()));
-			this.add((Obj)entity);
-			this.add(entity.getReference(false));
+			entity.setHref(getHref(entity));
+			this.add((Obj) entity);
+			this.add(entity.getReference());
 		}
 	}
 
-	private Uri getHref(String displayName)
+	private Uri getHref(Obj entity)
 	{
 		int count = 1;
+		String uri = UriEncoder.getEscapedUri(entity.getDisplayName());
+
 		for (Entity e : entities)
 		{
-			if (UriEncoder.getEscapedUri(e.getDisplayName()).equals(UriEncoder.getEscapedUri(displayName)))
+			if (UriEncoder.getEscapedUri(e.getDisplayName()).equals(uri))
 			{
 				count++;
 			}
 		}
-		return new Uri(UriEncoder.getEscapedUri(displayName) + "/" + count);
+		return new Uri(uri + "/" + count);
 	}
 }

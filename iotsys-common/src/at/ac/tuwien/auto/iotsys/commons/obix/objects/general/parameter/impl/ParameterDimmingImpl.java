@@ -44,7 +44,7 @@ public class ParameterDimmingImpl extends Obj implements ParameterDimming
 
 	public ParameterDimmingImpl()
 	{
-		setHref(new Uri("/parameters/dimming"));
+		setHref(new Uri(ParameterDimming.HREF));
 		setIs(new Contract(ParameterDimming.CONTRACT));
 		setHidden(true);
 

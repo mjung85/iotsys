@@ -32,14 +32,12 @@
 
 package at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators.impl;
 
-import java.net.URLEncoder;
-
-import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators.HVACvalveActuator;
 import obix.Contract;
 import obix.Int;
 import obix.Obj;
 import obix.Uri;
 //import tuwien.auto.obix.objects.iot.actuators.AirDamperActuator;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators.HVACvalveActuator;
 
 
 public class HVACvalveActuatorImpl extends ActuatorImpl implements HVACvalveActuator {

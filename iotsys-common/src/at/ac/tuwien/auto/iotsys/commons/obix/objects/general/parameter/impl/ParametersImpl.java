@@ -54,7 +54,7 @@ public class ParametersImpl extends List implements IObj
 			obj.setHref(obj.getRelativePath());
 
 			this.add(obj);
-			this.add(obj.getReference(false));
+			this.add(obj.getReference());
 		}
 	}
 
