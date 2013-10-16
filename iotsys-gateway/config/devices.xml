@@ -101,7 +101,7 @@
   <knx-ets>
     <connector>
     	<name>KNX TP1 Suitcase</name>
-    	<enabled>false</enabled>
+    	<enabled>true</enabled>
         <knx-proj>knx-config/projects/Suitcase_2013_10_16.knxproj</knx-proj>
         <!-- forces unpacking of zip and transformation -->
         <forceRefresh>true</forceRefresh>               
@@ -335,7 +335,7 @@
     </connector>
     <connector>
       <name>KNX E-Lab</name>
-      <enabled>false</enabled>
+      <enabled>true</enabled>
       <router>
         <ip>192.168.161.53</ip>
         <port>3671</port>
