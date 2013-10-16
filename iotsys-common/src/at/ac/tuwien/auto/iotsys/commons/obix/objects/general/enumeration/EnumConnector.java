@@ -35,7 +35,7 @@ import obix.contracts.Range;
 
 public interface EnumConnector extends Range
 {
-	public static final String HREF = "/enums/enumConnector";
+	public static final String HREF = "/enums/connector";
 
 	public static final String KEY_SEND = "send";
 	public static final String KEY_RECEIVE = "receive";

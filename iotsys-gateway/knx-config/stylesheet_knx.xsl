@@ -14,8 +14,6 @@
 
   <xsl:output method="xml" indent="yes" encoding="utf-8" />
 
-
-
   <!-- **************************************************************************** -->
   <!-- GLOBAL PARAMETERS / VARIABLES                                                -->
   <!-- **************************************************************************** -->
@@ -23,9 +21,8 @@
   <xsl:param name="directory"/>
 
   <xsl:variable name="masterFile" >
-    <xsl:value-of select="$directory" />/knx_master.xml</xsl:variable>
-
-
+    <xsl:value-of select="$directory" />/knx_master.xml
+  </xsl:variable>
 
   <!-- **************************************************************************** -->
   <!-- NETWORK                                                                      -->
@@ -33,15 +30,17 @@
 
   <xsl:template match="/knx:KNX/knx:Project">
     <xsl:element name="network">
-	  <xsl:message>project dir is  <xsl:value-of select="$directory"/></xsl:message>
+
       <!-- variables -->
       <xsl:variable name="projectId" select="@Id"/>
 
       <xsl:variable name="standard" select='"KNX"'/>
 
-      <xsl:variable name="projectFile"><xsl:value-of select="$directory"/>/<xsl:value-of select="$projectId"/>/Project.xml</xsl:variable>
+      <xsl:variable name="projectFile">
+        <xsl:value-of select="$directory"/>/<xsl:value-of select="$projectId"/>/Project.xml
+      </xsl:variable>
 
-      <xsl:variable name="projectInformation" select="document($projectFile)/knx:KNX/knx:Project[@Id=$projectId]/knx:ProjectInformation"/>
+      <xsl:variable name="projectInformation" select="document(normalize-space($projectFile))/knx:KNX/knx:Project[@Id=$projectId]/knx:ProjectInformation"/>
 
       <!-- attributes -->
       <xsl:copy-of select="document('')/*/@xsi:schemaLocation"/>
@@ -67,12 +66,10 @@
       <!-- elements -->
       <xsl:call-template name="entities"/>
       <xsl:call-template name="views"/>
-      <xsl:call-template name="configurations"/>
+      <xsl:call-template name="references"/>
 
     </xsl:element>
   </xsl:template>
-
-
 
   <!-- **************************************************************************** -->
   <!-- ENTITIES                                                                     -->
@@ -108,11 +105,12 @@
       </xsl:variable>
 
       <xsl:variable name="hardwareFile">
-        <xsl:value-of select="$directory"/>/<xsl:value-of select="$manufacturerId"/>/Hardware.xml</xsl:variable>
+        <xsl:value-of select="$directory"/>/<xsl:value-of select="$manufacturerId"/>/Hardware.xml
+      </xsl:variable>
 
-      <xsl:variable name="hardware" select="document($hardwareFile)/knx:KNX/knx:ManufacturerData/knx:Manufacturer[@RefId=$manufacturerId]/knx:Hardware/knx:Hardware[@Id=$hardwareId]/knx:Products/knx:Product[@Id=$productId]" />
+      <xsl:variable name="hardware" select="document(normalize-space($hardwareFile))/knx:KNX/knx:ManufacturerData/knx:Manufacturer[@RefId=$manufacturerId]/knx:Hardware/knx:Hardware[@Id=$hardwareId]/knx:Products/knx:Product[@Id=$productId]" />
 
-      <xsl:variable name="translations" select="document($hardwareFile)/knx:KNX/knx:ManufacturerData/knx:Manufacturer[@RefId=$manufacturerId]/knx:Languages/knx:Language/knx:TranslationUnit/knx:TranslationElement[@RefId=$productId]/knx:Translation" />
+      <xsl:variable name="translations" select="document(normalize-space($hardwareFile))/knx:KNX/knx:ManufacturerData/knx:Manufacturer[@RefId=$manufacturerId]/knx:Languages/knx:Language/knx:TranslationUnit/knx:TranslationElement[@RefId=$productId]/knx:Translation" />
 
       <!-- attributes -->
       <xsl:attribute name="id">
@@ -182,13 +180,14 @@
         </xsl:variable>
 
         <xsl:variable name="comObjectFile">
-          <xsl:value-of select="$directory"/>/<xsl:value-of select="$manufacturerId"/>/<xsl:value-of select="$applicationProgramId"/>.xml</xsl:variable>
+          <xsl:value-of select="$directory"/>/<xsl:value-of select="$manufacturerId"/>/<xsl:value-of select="$applicationProgramId"/>.xml
+        </xsl:variable>
 
-        <xsl:variable name="comObjectRef" select="document($comObjectFile)/knx:KNX/knx:ManufacturerData/knx:Manufacturer[@RefId=$manufacturerId]/knx:ApplicationPrograms/knx:ApplicationProgram[@Id=$applicationProgramId]/knx:Static/knx:ComObjectRefs/knx:ComObjectRef[@Id=$comObjectId]" />
+        <xsl:variable name="comObjectRef" select="document(normalize-space($comObjectFile))/knx:KNX/knx:ManufacturerData/knx:Manufacturer[@RefId=$manufacturerId]/knx:ApplicationPrograms/knx:ApplicationProgram[@Id=$applicationProgramId]/knx:Static/knx:ComObjectRefs/knx:ComObjectRef[@Id=$comObjectId]" />
 
-        <xsl:variable name="comObject" select="document($comObjectFile)/knx:KNX/knx:ManufacturerData/knx:Manufacturer[@RefId=$manufacturerId]/knx:ApplicationPrograms/knx:ApplicationProgram[@Id=$applicationProgramId]/knx:Static/knx:ComObjectTable/knx:ComObject[@Id=$comObjectRef/@RefId]" />
+        <xsl:variable name="comObject" select="document(normalize-space($comObjectFile))/knx:KNX/knx:ManufacturerData/knx:Manufacturer[@RefId=$manufacturerId]/knx:ApplicationPrograms/knx:ApplicationProgram[@Id=$applicationProgramId]/knx:Static/knx:ComObjectTable/knx:ComObject[@Id=$comObjectRef/@RefId]" />
 
-        <xsl:variable name="translations" select="document($comObjectFile)/knx:KNX/knx:ManufacturerData/knx:Manufacturer[@RefId=$manufacturerId]/knx:Languages/knx:Language/knx:TranslationUnit/knx:TranslationElement[@RefId=$comObjectRef/@RefId]/knx:Translation" />
+        <xsl:variable name="translations" select="document(normalize-space($comObjectFile))/knx:KNX/knx:ManufacturerData/knx:Manufacturer[@RefId=$manufacturerId]/knx:Languages/knx:Language/knx:TranslationUnit/knx:TranslationElement[@RefId=$comObjectRef/@RefId]/knx:Translation" />
 
         <!-- attributes -->
         <xsl:attribute name="id">
@@ -373,8 +372,6 @@
     </xsl:if>
   </xsl:template>
 
-
-
   <!-- **************************************************************************** -->
   <!-- VIEWS                                                                        -->
   <!-- **************************************************************************** -->
@@ -390,8 +387,6 @@
 
     </xsl:element>
   </xsl:template>
-
-
 
   <!-- **************************************************************************** -->
   <!-- FUNCTIONAL VIEW                                                              -->
@@ -492,8 +487,6 @@
     </xsl:element>
   </xsl:template>
 
-
-
   <!-- **************************************************************************** -->
   <!-- TOPOLOGY VIEW                                                                -->
   <!-- **************************************************************************** -->
@@ -568,8 +561,6 @@
     </xsl:element>
   </xsl:template>
 
-
-
   <!-- **************************************************************************** -->
   <!-- BUILDING VIEW                                                                -->
   <!-- **************************************************************************** -->
@@ -634,8 +625,6 @@
     </xsl:element>
   </xsl:template>
 
-
-
   <!-- **************************************************************************** -->
   <!-- DOMAIN VIEW                                                                  -->
   <!-- **************************************************************************** -->
@@ -696,17 +685,15 @@
     </xsl:element>
   </xsl:template>
 
-
-
   <!-- **************************************************************************** -->
   <!-- CONFIGURATIONS                                                               -->
   <!-- **************************************************************************** -->
 
-  <xsl:template name="configurations">
-    <xsl:element name="configurations">
+  <xsl:template name="references">
+    <xsl:element name="references">
 
       <!-- elements -->
-      <xsl:call-template name="datapointTypes" />
+      <xsl:call-template name="datapointTypes"/>
       <xsl:call-template name="mediaTypes"/>
       <xsl:call-template name="manufacturers"/>
 
@@ -719,18 +706,14 @@
     <xsl:param name="comObjectInstanceRefs" select="knx:Installations/knx:Installation/knx:Topology/knx:Area/knx:Line/knx:DeviceInstance/knx:ComObjectInstanceRefs/knx:ComObjectInstanceRef"/>
     <xsl:param name="position" select="0"/>
 
-    <!-- top element -->
-    <xsl:element name="datapointTypes">
+    <!-- elements -->
+    <xsl:for-each select="document(normalize-space($masterFile))/knx:KNX/knx:MasterData/knx:DatapointTypes/knx:DatapointType">
+      <xsl:call-template name="datapointType">
+        <xsl:with-param name="comObjectInstanceRefs" select="$comObjectInstanceRefs"/>
+        <xsl:with-param name="position" select="1" />
+      </xsl:call-template>
+    </xsl:for-each>
 
-      <!-- elements -->
-      <xsl:for-each select="document($masterFile)/knx:KNX/knx:MasterData/knx:DatapointTypes/knx:DatapointType">
-        <xsl:call-template name="datapointType">
-          <xsl:with-param name="comObjectInstanceRefs" select="$comObjectInstanceRefs"/>
-          <xsl:with-param name="position" select="1" />
-        </xsl:call-template>
-      </xsl:for-each>
-
-    </xsl:element>
   </xsl:template>
 
   <xsl:template name="datapointType">
@@ -768,11 +751,12 @@
           </xsl:variable>
 
           <xsl:variable name="comObjectFile">
-            <xsl:value-of select="$directory"/>/<xsl:value-of select="$manufacturerId"/>/<xsl:value-of select="$applicationProgramId"/>.xml</xsl:variable>
+            <xsl:value-of select="$directory"/>/<xsl:value-of select="$manufacturerId"/>/<xsl:value-of select="$applicationProgramId"/>.xml
+          </xsl:variable>
 
-          <xsl:variable name="comObjectRef" select="document($comObjectFile)/knx:KNX/knx:ManufacturerData/knx:Manufacturer[@RefId=$manufacturerId]/knx:ApplicationPrograms/knx:ApplicationProgram[@Id=$applicationProgramId]/knx:Static/knx:ComObjectRefs/knx:ComObjectRef[@Id=$comObjectId]" />
+          <xsl:variable name="comObjectRef" select="document(normalize-space($comObjectFile))/knx:KNX/knx:ManufacturerData/knx:Manufacturer[@RefId=$manufacturerId]/knx:ApplicationPrograms/knx:ApplicationProgram[@Id=$applicationProgramId]/knx:Static/knx:ComObjectRefs/knx:ComObjectRef[@Id=$comObjectId]" />
 
-          <xsl:variable name="comObject" select="document($comObjectFile)/knx:KNX/knx:ManufacturerData/knx:Manufacturer[@RefId=$manufacturerId]/knx:ApplicationPrograms/knx:ApplicationProgram[@Id=$applicationProgramId]/knx:Static/knx:ComObjectTable/knx:ComObject[@Id=$comObjectRef/@RefId]" />
+          <xsl:variable name="comObject" select="document(normalize-space($comObjectFile))/knx:KNX/knx:ManufacturerData/knx:Manufacturer[@RefId=$manufacturerId]/knx:ApplicationPrograms/knx:ApplicationProgram[@Id=$applicationProgramId]/knx:Static/knx:ComObjectTable/knx:ComObject[@Id=$comObjectRef/@RefId]" />
 
           <xsl:variable name="datapointTypeIds">
             <xsl:choose>
@@ -794,61 +778,42 @@
           <!-- elements and attributes -->
           <xsl:choose>
 
-            <!-- create datapoint type, if the datapoint is used by the current communication object reference -->
-            <xsl:when test="contains(concat($datapointTypeIds,' '),concat(@Id,' ')) or contains(translate(concat($datapointTypeIds,' '),'DPST','DPT'), concat(@Id,'-'))">
-              <xsl:element name="datapointType">
+            <!-- create reference, if datapoint subtype is used by the current communication object reference -->
+            <xsl:when test="contains(concat($datapointTypeIds,' '),concat(@Id,' '))">
+              <xsl:call-template name="reference">
+                <xsl:with-param name="id" select="@Id"/>
+                <xsl:with-param name="name" select="@Name"/>
+                <xsl:with-param name="description" select="@Text"/>
+              </xsl:call-template>
+            </xsl:when>
 
-                <!-- variables -->
-                <xsl:variable name="translations" select="document($masterFile)/knx:KNX/knx:MasterData/knx:Languages/knx:Language/knx:TranslationUnit/knx:TranslationElement[@RefId=$datapointTypeId]/knx:Translation" />
+            <!-- jump to datapoint subtypes, if the datapoint is used by the current communication object reference -->
+            <xsl:when test="contains(translate(concat($datapointTypeIds,' '),'DPST','DPT'), concat(@Id,'-')) or contains(concat($datapointTypeIds,' '), concat(@Id,' '))">
 
-                <!-- attributes -->
-                <xsl:attribute name="id">
-                  <xsl:value-of select="@Id"/>
-                </xsl:attribute>
-
-                <xsl:attribute name="name">
-                  <xsl:value-of select="@Name"/>
-                </xsl:attribute>
-
-                <xsl:attribute name="description">
-                  <xsl:value-of select="@Text"/>
-                </xsl:attribute>
-
-                <xsl:if test="@SizeInBit">
-                  <xsl:attribute name="sizeInBit">
-                    <xsl:value-of select="@SizeInBit"/>
-                  </xsl:attribute>
-                </xsl:if>
-
-                <!-- translations-->
-                <xsl:call-template name="translation">
-                  <xsl:with-param name="translations" select="$translations"/>
-                  <xsl:with-param name="text" select='"description"'/>
+              <xsl:if test="contains(concat($datapointTypeIds,' '), concat(@Id,' '))">
+                <xsl:call-template name="reference">
+                  <xsl:with-param name="id" select="@Id"/>
+                  <xsl:with-param name="name" select="@Name"/>
+                  <xsl:with-param name="description" select="@Text"/>
                 </xsl:call-template>
+              </xsl:if>
 
-                <!-- datapoint subtypes -->
-                <xsl:if test="knx:DatapointSubtypes/knx:DatapointSubtype">
-                  <xsl:element name="datapointTypes">
-                    <xsl:for-each select="knx:DatapointSubtypes/knx:DatapointSubtype">
-                      <xsl:call-template name="datapointType">
-                        <xsl:with-param name="comObjectInstanceRefs" select="$comObjectInstanceRefs"/>
-                        <xsl:with-param name="position" select="1"/>
-                      </xsl:call-template>
-                    </xsl:for-each>
-                  </xsl:element>
-                </xsl:if>
-
-              </xsl:element>
+              <xsl:if test="knx:DatapointSubtypes/knx:DatapointSubtype">
+                <xsl:for-each select="knx:DatapointSubtypes/knx:DatapointSubtype">
+                  <xsl:call-template name="datapointType">
+                    <xsl:with-param name="comObjectInstanceRefs" select="$comObjectInstanceRefs"/>
+                    <xsl:with-param name="position" select="1"/>
+                  </xsl:call-template>
+                </xsl:for-each>
+              </xsl:if>
             </xsl:when>
 
             <!-- otherwise, compare the datapoint type with the next communication object reference -->
             <xsl:otherwise>
-
               <xsl:call-template name="datapointType">
                 <xsl:with-param name="comObjectInstanceRefs" select="$comObjectInstanceRefs"/>
                 <xsl:with-param name="position" select="$position + 1"/>
               </xsl:call-template>
-
             </xsl:otherwise>
           </xsl:choose>
 
@@ -874,15 +839,11 @@
     <!-- parameters -->
     <xsl:param name="lines" select="knx:Installations/knx:Installation/knx:Topology/knx:Area/knx:Line"/>
 
-    <!-- top element -->
-    <xsl:element name="mediaTypes">
+    <!-- elements -->
+    <xsl:apply-templates select="document(normalize-space($masterFile))/knx:KNX/knx:MasterData/knx:MediumTypes/knx:MediumType">
+      <xsl:with-param name="lines" select="$lines"/>
+    </xsl:apply-templates>
 
-      <!-- elements -->
-      <xsl:apply-templates select="document($masterFile)/knx:KNX/knx:MasterData/knx:MediumTypes/knx:MediumType">
-        <xsl:with-param name="lines" select="$lines"/>
-      </xsl:apply-templates>
-
-    </xsl:element>
   </xsl:template>
 
   <xsl:template match="knx:MediumType">
@@ -897,24 +858,13 @@
 
     <!-- create element, if medium type is used in at least one topology line -->
     <xsl:if test="$lines[@MediumTypeRefId=$mediumTypeId]">
-
-      <xsl:element name="mediaType">
-
-        <!-- attributes -->
-        <xsl:attribute name="id">
-          <xsl:value-of select="@Id"/>
-        </xsl:attribute>
-
-        <xsl:attribute name="name">
-          <xsl:value-of select="@Name"/>
-        </xsl:attribute>
-
-        <xsl:attribute name="description">
-          <xsl:value-of select="@Text"/>
-        </xsl:attribute>
-
-      </xsl:element>
+      <xsl:call-template name="reference">
+        <xsl:with-param name="id" select="@Id"/>
+        <xsl:with-param name="name" select="@Name"/>
+        <xsl:with-param name="description" select="@Text"/>
+      </xsl:call-template>
     </xsl:if>
+
   </xsl:template>
 
   <xsl:template name="manufacturers">
@@ -922,15 +872,11 @@
     <!-- parameters -->
     <xsl:param name="deviceInstances" select="knx:Installations/knx:Installation/knx:Topology/knx:Area/knx:Line/knx:DeviceInstance"/>
 
-    <!-- top element -->
-    <xsl:element name="manufacturers">
+    <!-- elements -->
+    <xsl:apply-templates select="document(normalize-space($masterFile))/knx:KNX/knx:MasterData/knx:Manufacturers/knx:Manufacturer">
+      <xsl:with-param name="deviceInstances" select="$deviceInstances"/>
+    </xsl:apply-templates>
 
-      <!-- elements -->
-      <xsl:apply-templates select="document($masterFile)/knx:KNX/knx:MasterData/knx:Manufacturers/knx:Manufacturer">
-        <xsl:with-param name="deviceInstances" select="$deviceInstances"/>
-      </xsl:apply-templates>
-
-    </xsl:element>
   </xsl:template>
 
   <xsl:template match="knx:Manufacturer">
@@ -943,25 +889,45 @@
       <xsl:value-of select="@Id"/>
     </xsl:variable>
 
-    <!-- create element, if manufacturer is used in at least one device -->
+    <!-- create reference, if manufacturer is used in at least one device -->
     <xsl:if test="$deviceInstances[substring(@ProductRefId, 1, 6)=$manufacturerId]">
-      <xsl:element name="manufacturer">
-
-        <!-- attributes -->
-        <xsl:attribute name="id">
-          <xsl:value-of select="@Id"/>
-        </xsl:attribute>
-
-        <xsl:attribute name="name">
-          <xsl:value-of select="@Name"/>
-        </xsl:attribute>
-
-      </xsl:element>
+      <xsl:call-template name="reference">
+        <xsl:with-param name="id" select="@Id"/>
+        <xsl:with-param name="name" select="@Name"/>
+      </xsl:call-template>
     </xsl:if>
 
   </xsl:template>
 
+  <xsl:template name="reference">
 
+    <!-- parameters -->
+    <xsl:param name="name"/>
+    <xsl:param name="description"/>
+    <xsl:param name="id"/>
+
+    <xsl:element name="reference">
+
+      <!-- attributes -->
+      <xsl:attribute name="id">
+        <xsl:value-of select="$id"/>
+      </xsl:attribute>
+
+      <xsl:if test="$name">
+        <xsl:attribute name="name">
+          <xsl:value-of select="$name"/>
+        </xsl:attribute>
+      </xsl:if>
+
+      <xsl:if test="$description">
+        <xsl:attribute name="description">
+          <xsl:value-of select="$description"/>
+        </xsl:attribute>
+      </xsl:if>
+
+    </xsl:element>
+
+  </xsl:template>
 
   <!-- **************************************************************************** -->
   <!-- LANGUAGES                                                                    -->

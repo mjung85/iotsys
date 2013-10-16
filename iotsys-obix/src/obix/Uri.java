@@ -68,7 +68,7 @@ public class Uri extends Val
 	        return this;
 	       
 	      base.checkAbsolute();  
-	      URL url = url = new URL(new URL(base.val), val);  
+	      URL url = new URL(new URL(base.val), val);  
 	      if(!base.val.endsWith("/")){
 	    	 url = new URL(new URL(base.val + "/"), val);
 	      }
