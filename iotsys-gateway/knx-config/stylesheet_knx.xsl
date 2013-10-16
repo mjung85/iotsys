@@ -768,8 +768,7 @@
           </xsl:variable>
 
           <xsl:variable name="comObjectFile">
-            <xsl:value-of select="$directory"/>/<xsl:value-of select="$manufacturerId"/>/<xsl:value-of select="$applicationProgramId"/>.xml
-          </xsl:variable>
+            <xsl:value-of select="$directory"/>/<xsl:value-of select="$manufacturerId"/>/<xsl:value-of select="$applicationProgramId"/>.xml</xsl:variable>
 
           <xsl:variable name="comObjectRef" select="document($comObjectFile)/knx:KNX/knx:ManufacturerData/knx:Manufacturer[@RefId=$manufacturerId]/knx:ApplicationPrograms/knx:ApplicationProgram[@Id=$applicationProgramId]/knx:Static/knx:ComObjectRefs/knx:ComObjectRef[@Id=$comObjectId]" />
 

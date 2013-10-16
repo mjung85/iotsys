@@ -85,11 +85,11 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader {
 
 	public ArrayList<Connector> initDevices(ObjectBroker objectBroker) {
 
-		setConfiguration(devicesConfig);
+		setConfiguration(connectorsConfig);
 
 		ArrayList<Connector> connectors = new ArrayList<Connector>();
 
-		Object knxConnectors = devicesConfig
+		Object knxConnectors = connectorsConfig
 				.getProperty("knx-ets.connector.name");
 
 		int connectorsSize = 0;
@@ -103,7 +103,7 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader {
 		}
 
 		for (int connector = 0; connector < connectorsSize; connector++) {
-			HierarchicalConfiguration subConfig = devicesConfig
+			HierarchicalConfiguration subConfig = connectorsConfig
 					.configurationAt("knx-ets.connector(" + connector + ")");
 
 			String connectorName = subConfig.getString("name");
@@ -438,7 +438,7 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader {
 					log.warning(clazzName
 							+ " not found. Cannot instantiate according sub data point type. Trying fallback to generic main type.");
 					clazzName = "at.ac.tuwien.auto.iotsys.gateway.obix.objects.knx.datapoint.impl."
-							+ "DPT_" + clazzName.charAt(5) + "_ImplKnx"; //
+							+ "DPT_" + dataPointTypeIds.charAt(5) + "_ImplKnx"; //
 
 					try {
 						log.info("Loading: " + clazzName);
@@ -545,37 +545,51 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader {
 		}
 
 		// Phase III create views
-		HierarchicalConfiguration buildingConfig = devicesConfig
-				.configurationAt("views.building");
+		Object buildings = devicesConfig.getProperty("views.building");
+		if(buildings != null){
+			HierarchicalConfiguration buildingConfig = devicesConfig
+					.configurationAt("views.building");
+	
+			objectBroker.addObj(n.getBuilding(), true);
+	
+			parseBuildingView(buildingConfig, (Obj) n.getBuilding(), n,
+					objectBroker, entityById);
+		}
+		
+		Object functional = devicesConfig.getProperty("views.functional");
+		if(functional != null){
+			HierarchicalConfiguration funcionalView = devicesConfig
+					.configurationAt("views.functional");
+	
+			objectBroker.addObj(n.getFunctional(), true);
+	
+			parseFunctionalView(funcionalView, (Obj) n.getFunctional(), n,
+					objectBroker, entityById, datapointById);
+		}
 
-		objectBroker.addObj(n.getBuilding(), true);
+		Object domains = devicesConfig.getProperty("views.domains");
+		if(domains != null){
+			HierarchicalConfiguration domainView = devicesConfig
+					.configurationAt("views.domains");
+	
+			objectBroker.addObj(n.getDomains(), true);
+			parseDomainView(domainView, (Obj) n.getDomains(), n, objectBroker,
+					entityById, datapointById);
+		}
+		
+		Object topologies = devicesConfig.getProperty("views.topology");
+		if(topologies != null){
+			HierarchicalConfiguration topologyView = devicesConfig
+					.configurationAt("views.topology");
 
-		parseBuildingView(buildingConfig, (Obj) n.getBuilding(), n,
-				objectBroker, entityById);
+			objectBroker.addObj(n.getTopology(), true);
 
-		HierarchicalConfiguration funcionalView = devicesConfig
-				.configurationAt("views.functional");
+			parseTopologyView(topologyView, (Obj) n.getTopology(), n, objectBroker,
+					entityById, datapointById);
+		}
+		
 
-		objectBroker.addObj(n.getFunctional(), true);
-
-		parseFunctionalView(funcionalView, (Obj) n.getFunctional(), n,
-				objectBroker, entityById, datapointById);
-
-		HierarchicalConfiguration domainView = devicesConfig
-				.configurationAt("views.domains");
-
-		objectBroker.addObj(n.getDomains(), true);
-
-		parseDomainView(domainView, (Obj) n.getDomains(), n, objectBroker,
-				entityById, datapointById);
-
-		HierarchicalConfiguration topologyView = devicesConfig
-				.configurationAt("views.topology");
-
-		objectBroker.addObj(n.getTopology(), true);
-
-		parseTopologyView(topologyView, (Obj) n.getTopology(), n, objectBroker,
-				entityById, datapointById);
+	
 
 	}
 
@@ -589,11 +603,11 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader {
 	}
 
 	@Override
-	public void setConfiguration(XMLConfiguration devicesConfiguration) {
-		this.devicesConfig = devicesConfiguration;
-		if (devicesConfiguration == null) {
+	public void setConfiguration(XMLConfiguration connectorsConfig) {
+		this.connectorsConfig = connectorsConfig;
+		if (connectorsConfig == null) {
 			try {
-				devicesConfig = new XMLConfiguration(
+				connectorsConfig = new XMLConfiguration(
 						DEVICE_CONFIGURATION_LOCATION);
 			} catch (Exception e) {
 				log.log(Level.SEVERE, e.getMessage(), e);
