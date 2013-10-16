@@ -303,7 +303,7 @@ public class NanoHTTPD {
 	
 				try {
 					Obj obj = BinObixDecoder.fromBytes(unbox(payload));
-					return ObixEncoder.toString(obj);
+					return ObixEncoder.toString(obj, parms.getProperty("accept-language"));
 				} catch (Exception e1) {
 					e1.printStackTrace();
 				}
@@ -386,7 +386,7 @@ public class NanoHTTPD {
 				rootUri = new URI(getResourcePath("", ipv6Address));
 			
 			baseUri = new URI(resourcePath.substring(0, resourcePath.lastIndexOf('/')+1));
-			obixResponse = new StringBuffer(RelativeObixEncoder.toString(responseObj, rootUri, baseUri));
+			obixResponse = new StringBuffer(RelativeObixEncoder.toString(responseObj, rootUri, baseUri, header.getProperty("accept-language")));
 		}
 		
 		return obixResponse;
@@ -416,7 +416,7 @@ public class NanoHTTPD {
 			}
 		} else if (obixBinaryRequested) {
 			byte[] obixBinaryData = BinObixEncoder.toBytes(ObixDecoder
-					.fromString(obixResponse.toString()));
+					.fromString(obixResponse.toString()), header.getProperty("accept-language"));
 			response = new Response(HTTP_OK, MIME_X_OBIX_BINARY,
 					new ByteArrayInputStream(obixBinaryData),
 					obixBinaryData.length);

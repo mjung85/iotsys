@@ -43,6 +43,6 @@ public class UnitDegreeImpl extends UnitImpl implements UnitDegree
 		super("degree", "degree (°)", new Uri(UnitDegree.HREF), "°", 1, 0, new DimensionImpl(0, 0, 0, 0, 0, 0, 0));
 
 		// Translations
-		//this.addTranslation(new TranslationImpl(EnumLanguage.KEY_DE_DE, EnumTranslation.KEY_DISPLAY, "Grad (°)"));
+		addTranslation("de",TranslationAttribute.displayName,"Grad (°)");
 	}
 }

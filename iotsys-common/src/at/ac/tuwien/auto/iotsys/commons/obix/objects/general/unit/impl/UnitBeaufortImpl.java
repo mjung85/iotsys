@@ -43,6 +43,6 @@ public class UnitBeaufortImpl extends UnitImpl implements UnitBeaufort
 		super("beaufort", "wind speed (Bft)", new Uri(UnitBeaufort.HREF), "Bft", 1, 0, new DimensionImpl(0, 0, 0, 0, 0, 0, 0));
 
 		// Translations
-		// this.addTranslation(new TranslationImpl(EnumLanguage.KEY_DE_DE, EnumTranslation.KEY_DISPLAY, "Windgeschwindigkeit (Bft)"));
+		addTranslation("de",TranslationAttribute.displayName,"Windgeschwindigkeit (Bft)");
 	}
 }

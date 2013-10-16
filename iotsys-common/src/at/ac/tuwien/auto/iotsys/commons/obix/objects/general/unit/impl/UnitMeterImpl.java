@@ -43,6 +43,6 @@ public class UnitMeterImpl extends UnitImpl implements UnitMeter
 		super("meter", "meter (m)", new Uri(UnitMeter.HREF), "m", 1, 0, new DimensionImpl(0, 1, 0, 0, 0, 0, 0));
 
 		// Translations
-		//this.addTranslation(new TranslationImpl(EnumLanguage.KEY_DE_DE, EnumTranslation.KEY_DISPLAY, "Meter (m)"));
+		addTranslation("de",TranslationAttribute.displayName,"Meter (m)");
 	}
 }

@@ -27,125 +27,92 @@ import at.ac.tuwien.auto.iotsys.obix.observer.Subject;
  * @version $Revision$ $Date$
  */
 
-// public static final String HREF = "/enums/enumTranslation";
-//
-// public static final String KEY_DISPLAY = "display";
-// public static final String KEY_DISPLAYNAME = "displayname";
-//
-// public static final String HREF = "/enums/enumLanguage";
-//
-// public static final String KEY_EN_EN = "en-EN";
-// public static final String KEY_DE_DE = "de-DE";
-// public static final String KEY_IT_IT = "it-IT";
-// public static final String KEY_ES_ES = "es-ES";
-// public static final String KEY_EN_US = "en-US";
-// public static final String KEY_FR_FR = "fr-FR";
-// public static final String KEY_ID_ID = "id-ID";
-// public static final String KEY_NB_NO = "nb-NO";
-// public static final String KEY_SV_SE = "sv-SE";
-// public static final String KEY_DA_DK = "da-DK";
-// public static final String KEY_NL_NL = "nl-NL";
-// public static final String KEY_EL_GR = "el-GR";
-// public static final String KEY_RU_RU = "ru-RU";
-
-// public class TranslationImpl extends Obj implements Translation
-// {
-// private Enum language;
-// private Enum attribute;
-// private Str value;
-//
-// public TranslationImpl(String language, String attribute, String value)
-// {
-// this.setIs(new Contract(Translation.CONTRACT));
-//
-// // Language
-// this.language = new Enum();
-// this.language.setName("language");
-// this.language.setHref(new Uri("language"));
-// this.language.setRange(new Uri(EnumLanguage.HREF));
-// this.language.set(language);
-// this.add(this.language);
-//
-// // Attribute
-// this.attribute = new Enum();
-// this.attribute.setName("attribute");
-// this.attribute.setHref(new Uri("attribute"));
-// this.attribute.setRange(new Uri(EnumTranslation.HREF));
-// this.attribute.set(attribute);
-// this.add(this.attribute);
-//
-// // Attribute
-// this.value = new Str();
-// this.value.setName("value");
-// this.value.setHref(new Uri("value"));
-// this.value.set(value);
-// this.add(this.value);
-// }
-//
-// public String getLanguage()
-// {
-// return language.get();
-// }
-//
-// public String getAttribute()
-// {
-// return attribute.get();
-// }
-//
-// public String getValue()
-// {
-// return value.get();
-// }
-// }
-
-// public abstract class MultilingualImpl extends Obj implements Multilingual
-// {
-// private List list = null;
-// protected ArrayList<TranslationImpl> translations;
-// private int translationCount = 0;
-//
-// public MultilingualImpl()
-// {
-// setHref(new Uri(Multilingual.CONTRACT));
-// }
-//
-// public void addTranslation(TranslationImpl translation)
-// {
-// if (translations == null)
-// {
-// this.list = new List("translations", new Contract(Translation.CONTRACT));
-// this.list.setHref(new Uri("translations"));
-// // this.list.setHidden(true);
-// this.add(this.list);
-// // this.add(this.list.getReference(false));
-//
-// this.translations = new ArrayList<TranslationImpl>();
-// }
-//
-// translation.setHref(new Uri(String.valueOf(++translationCount)));
-//
-// this.list.add(translation);
-// this.translations.add(translation);
-// }
-//
-// public String getTranslation(String language, String attribute)
-// {
-// if (translations != null)
-// {
-// for (TranslationImpl t : this.translations)
-// {
-// if (t.getLanguage().equals(language) && t.getAttribute().equals(attribute))
-// {
-// return t.getValue();
-// }
-// }
-// }
-// return null;
-// }
-// }
-
 public class Obj implements IObj, Subject, AlarmSource, Cloneable
 {
+	// //////////////////////////////////////////////////////////////
+	// Translations
+	// //////////////////////////////////////////////////////////////
+
+	public enum TranslationAttribute {
+		display, displayName,
+	}
+
+	public static final String DEFAULT_LANGUAGE = "en";
+
+	private HashMap<TranslationAttribute, HashMap<String, String>> translations = new HashMap<TranslationAttribute, HashMap<String, String>>();
+
+	public void addTranslation(String language, String attribute, String value) throws Exception
+	{
+		attribute = attribute.toLowerCase().trim();
+
+		if (attribute.equals("name"))
+		{
+			addTranslation(language, TranslationAttribute.displayName, value);
+		}
+		else if (attribute.equals("description"))
+		{
+			addTranslation(language, TranslationAttribute.display, value);
+		}
+		throw new Exception("translation attribute '" + attribute + "' is not supported");
+	}
+	
+	public void addTranslations(Obj obj)
+	{
+		this.translations = obj.translations;
+	}
+
+	public void addTranslation(String language, TranslationAttribute attribute, String value)
+	{
+		if (value != null)
+		{
+			// alter language
+			language = language.toLowerCase().trim();
+
+			if (language.indexOf("-") > 0)
+			{
+				language = language.substring(0, language.indexOf("-"));
+			}
+
+			// get map
+			if (!translations.containsKey(attribute))
+				translations.put(attribute, new HashMap<String, String>());
+
+			HashMap<String, String> attributeTranslations = translations.get(attribute);
+
+			// add to map
+			if (!attributeTranslations.containsKey(language))
+			{
+				attributeTranslations.put(language, value);
+			}
+		}
+	}
+
+	public String getTranslation(String language, TranslationAttribute attribute)
+	{
+		// check availability of translation
+		if (language == null || !translations.containsKey(attribute) || (!translations.get(attribute).containsKey(language) && !translations.get(attribute).containsKey(DEFAULT_LANGUAGE)))
+		{
+			switch (attribute)
+			{
+				case display:
+					return this.getDisplay();
+				case displayName:
+					return this.getDisplayName();
+			}
+		}
+
+		// get map of translations
+		HashMap<String, String> attributeTranslations = translations.get(attribute);
+
+		// return translation in default language
+		if (!attributeTranslations.containsKey(language))
+		{
+			return attributeTranslations.get(DEFAULT_LANGUAGE);
+		}
+
+		// return language specific translation
+		return attributeTranslations.get(language);
+	}
 
 	// //////////////////////////////////////////////////////////////
 	// Fields
@@ -302,6 +269,7 @@ public class Obj implements IObj, Subject, AlarmSource, Cloneable
 		ref.setName(this.getName());
 		ref.setIs(this.getIs());
 		ref.setDisplayName(this.getDisplayName());
+		ref.addTranslations(this);
 
 		if (absolute)
 		{
