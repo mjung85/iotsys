@@ -54,7 +54,6 @@ import org.apache.commons.configuration.XMLConfiguration;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.FileFilterUtils;
 import org.apache.commons.io.filefilter.IOFileFilter;
-import org.apache.commons.io.filefilter.RegexFileFilter;
 
 import at.ac.tuwien.auto.calimero.GroupAddress;
 import at.ac.tuwien.auto.calimero.exception.KNXException;
@@ -102,6 +101,13 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader {
 			connectorsSize = ((Collection<?>) knxConnectors).size();
 		}
 
+		// Networks
+		
+		List networks = new List();
+		networks.setName("networks");
+		networks.setOf(new Contract(Network.CONTRACT));
+		networks.setHref(new Uri("/networks"));
+		
 		for (int connector = 0; connector < connectorsSize; connector++) {
 			HierarchicalConfiguration subConfig = connectorsConfig
 					.configurationAt("knx-ets.connector(" + connector + ")");
@@ -113,6 +119,10 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader {
 			Boolean enabled = subConfig.getBoolean("enabled", false);
 			Boolean forceRefresh = subConfig.getBoolean("forceRefresh", false);
 			String knxProj = subConfig.getString("knx-proj");
+			
+			Boolean enableGroupComm =  subConfig.getBoolean("enableGroupComm", false);
+			
+			Boolean enableHistories =  subConfig.getBoolean("enableHistories", false);
 
 			if (enabled) {
 				File file = new File(knxProj);
@@ -212,7 +222,7 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader {
 
 					connect(knxConnector);
 
-					initNetworks(knxConnector, objectBroker);
+					initNetworks(knxConnector, objectBroker, networks, enableGroupComm, enableHistories);
 
 					connectors.add(knxConnector);
 				}
@@ -235,12 +245,8 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader {
 	}
 
 	private void initNetworks(KNXConnector knxConnector,
-			ObjectBroker objectBroker) {
-		// Networks
-		List networks = new List();
-		networks.setName("networks");
-		networks.setOf(new Contract(Network.CONTRACT));
-		networks.setHref(new Uri("/networks"));
+			ObjectBroker objectBroker, Obj networks,  boolean enableGroupComm, boolean enableHistories) {
+		
 
 		// ================================================================================
 
@@ -303,6 +309,7 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader {
 		NetworkImpl n = new NetworkImpl(networkId, networkName, null, EnumsImpl
 				.getInstance().getEnum(EnumStandard.HREF)
 				.getKey(networkStandard));
+		
 		networks.add(n);
 		networks.add(n.getReference(false));
 
@@ -516,6 +523,8 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader {
 
 						datapointById.put(dataPointId, dataPoint);
 						entity.addDatapoint(dataPoint);
+						
+						objectBroker.enableGroupComm(dataPoint);
 
 						objectBroker.addObj(dataPoint, true);
 					}
@@ -588,9 +597,6 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader {
 					entityById, datapointById);
 		}
 		
-
-	
-
 	}
 
 	@Override
