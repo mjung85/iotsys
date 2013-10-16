@@ -1,0 +1,111 @@
+/*******************************************************************************
+ * Copyright (c) 2013
+ * Institute of Computer Aided Automation, Automation Systems Group, TU Wien.
+ * All rights reserved.
+ * 
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the distribution.
+ * 3. Neither the name of the Institute nor the names of its contributors
+ *    may be used to endorse or promote products derived from this software
+ *    without specific prior written permission.
+ * 
+ * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS "AS IS" AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+ * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+ * SUCH DAMAGE.
+ * 
+ * This file is part of the IoTSyS project.
+ ******************************************************************************/
+
+package at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators.impl;
+
+import java.util.logging.Logger;
+
+import obix.Bool;
+import obix.Contract;
+import obix.Obj;
+import obix.Real;
+import obix.Uri;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators.TemperatureControlActuator;
+
+public class TemperatureControlActuatorImpl extends ActuatorImpl implements TemperatureControlActuator{
+	protected Real actualValue = new Real(0);
+	protected Real targetValue = new Real(0);
+	protected Real actualTargetValue = new Real(0);
+	protected Bool active = new Bool(false);
+	
+	private static final Logger log = Logger.getLogger(TemperatureControlActuatorImpl.class.getName());
+	
+	public TemperatureControlActuatorImpl(){
+		this.setIs(new Contract(TemperatureControlActuatorImpl.CONTRACT));
+		
+		actualValue.setName(TemperatureControlActuator.ACTUAL_VALUE_NAME);
+		actualValue.setHref(new Uri(TemperatureControlActuator.ACTUAL_VALUE_HREF));
+		actualValue.setUnit(new Uri(TemperatureControlActuator.ACTUAL_VALUE_UNIT));
+		
+		targetValue.setName(TemperatureControlActuator.TARGET_VALUE_NAME);
+		targetValue.setHref(new Uri(TemperatureControlActuator.TARGET_VALUE_HREF));
+		targetValue.setUnit(new Uri(TemperatureControlActuator.TARGET_VALUE_UNIT));
+		targetValue.setWritable(true);
+		
+		actualTargetValue.setName(TemperatureControlActuator.ACTUAL_TARGET_VALUE_NAME);
+		actualTargetValue.setHref(new Uri(TemperatureControlActuator.ACTUAL_TARGET_VALUE_HREF));
+		actualTargetValue.setUnit(new Uri(TemperatureControlActuator.ACTUAL_TARGET_VALUE_UNIT));
+		
+		active.setName(TemperatureControlActuator.ACTIVE_NAME);
+		active.setHref(new Uri(TemperatureControlActuator.ACTIVE_HREF));
+			
+		this.add(actualValue);
+		this.add(targetValue);
+		this.add(actualTargetValue);
+		this.add(active);
+	}
+
+	@Override
+	public Real actualValue() {	
+		return actualValue;
+	}
+
+	@Override
+	public Real targetValue() {		
+		return targetValue;
+	}
+
+	@Override
+	public Real actualTargetValue() {		
+		return actualTargetValue;
+	}
+
+	@Override
+	public Bool active() {
+		return active;
+	}
+	
+	@Override
+	public void writeObject(Obj input){
+		if(input instanceof TemperatureControlActuator){
+			TemperatureControlActuator in = (TemperatureControlActuator) input;
+			log.finer("Writing on TemperatureControl: " + in);
+			targetValue.set(in.targetValue().get());
+		}	
+		else if(input instanceof Real){
+			// can only write on target value
+			Real in =  (Real) input;
+			targetValue.set(in.get());
+		}
+	}
+
+}

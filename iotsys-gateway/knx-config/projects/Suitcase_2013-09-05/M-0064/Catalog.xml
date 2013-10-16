@@ -1,0 +1,251 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<KNX xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" CreatedBy="ETS4" ToolVersion="ETS 4.1.4 (Build 3109)" xmlns="http://knx.org/xml/project/11">
+  <ManufacturerData>
+    <Manufacturer RefId="M-0064">
+      <Catalog>
+        <CatalogSection Id="M-0064_CS-2.2E9" Name="2.9 Physical Sensors" Number="2.9" VisibleDescription="" NonRegRelevantDataVersion="0">
+          <CatalogSection Id="M-0064_CS-2.2E9-2.2E9.2E04" Name="2.9.04 Humidity" Number="2.9.04" VisibleDescription="" NonRegRelevantDataVersion="0">
+            <CatalogItem Id="M-0064_H-MTN6005.2D0001-1-O0048_HP-FF21-11-DDFC-O0048_CI-MTN6005.2D0001-14" Name="KNX CO², Humidity and Temperature Sensor" Number="14" VisibleDescription="MTN6005-0001" ProductRefId="M-0064_H-MTN6005.2D0001-1-O0048_P-MTN6005.2D0001" Hardware2ProgramRefId="M-0064_H-MTN6005.2D0001-1-O0048_HP-FF21-11-DDFC-O0048" NonRegRelevantDataVersion="0" />
+          </CatalogSection>
+          <CatalogSection Id="M-0064_CS-2.2E9-2.2E9.2E05" Name="2.9.05 Carbon Dioxide" Number="2.9.05" VisibleDescription="" NonRegRelevantDataVersion="0">
+            <CatalogItem Id="M-0064_H-MTN6005.2D0001-1-O0048_HP-FF21-11-DDFC-O0048_CI-MTN6005.2D0001-15" Name="KNX CO², Humidity and Temperature Sensor" Number="15" VisibleDescription="MTN6005-0001" ProductRefId="M-0064_H-MTN6005.2D0001-1-O0048_P-MTN6005.2D0001" Hardware2ProgramRefId="M-0064_H-MTN6005.2D0001-1-O0048_HP-FF21-11-DDFC-O0048" NonRegRelevantDataVersion="0" />
+          </CatalogSection>
+        </CatalogSection>
+      </Catalog>
+      <Languages>
+        <Language Identifier="da-DK">
+          <TranslationUnit RefId="M-0064_CS-2.2E9" Version="0">
+            <TranslationElement RefId="M-0064_CS-2.2E9">
+              <Translation AttributeName="Name" Text="2.9 Følere" />
+            </TranslationElement>
+          </TranslationUnit>
+          <TranslationUnit RefId="M-0064_CS-2.2E9-2.2E9.2E04" Version="0">
+            <TranslationElement RefId="M-0064_CS-2.2E9-2.2E9.2E04">
+              <Translation AttributeName="Name" Text="2.9.04 fugt" />
+            </TranslationElement>
+          </TranslationUnit>
+          <TranslationUnit RefId="M-0064_CS-2.2E9-2.2E9.2E05" Version="0">
+            <TranslationElement RefId="M-0064_CS-2.2E9-2.2E9.2E05">
+              <Translation AttributeName="Name" Text="2.9.05 kuldioxid" />
+            </TranslationElement>
+          </TranslationUnit>
+          <TranslationUnit RefId="M-0064_H-MTN6005.2D0001-1-O0048_HP-FF21-11-DDFC-O0048_CI-MTN6005.2D0001-14" Version="0">
+            <TranslationElement RefId="M-0064_H-MTN6005.2D0001-1-O0048_HP-FF21-11-DDFC-O0048_CI-MTN6005.2D0001-14">
+              <Translation AttributeName="Name" Text="KNX CO2-, fugtigheds- og  temperatursensor " />
+              <Translation AttributeName="VisibleDescription" Text="MTN6005-0001" />
+            </TranslationElement>
+          </TranslationUnit>
+          <TranslationUnit RefId="M-0064_H-MTN6005.2D0001-1-O0048_HP-FF21-11-DDFC-O0048_CI-MTN6005.2D0001-15" Version="0">
+            <TranslationElement RefId="M-0064_H-MTN6005.2D0001-1-O0048_HP-FF21-11-DDFC-O0048_CI-MTN6005.2D0001-15">
+              <Translation AttributeName="Name" Text="KNX CO2-, fugtigheds- og  temperatursensor " />
+              <Translation AttributeName="VisibleDescription" Text="MTN6005-0001" />
+            </TranslationElement>
+          </TranslationUnit>
+        </Language>
+        <Language Identifier="de-DE">
+          <TranslationUnit RefId="M-0064_CS-2.2E9" Version="0">
+            <TranslationElement RefId="M-0064_CS-2.2E9">
+              <Translation AttributeName="Name" Text="2.9 Physikalische Sensoren" />
+            </TranslationElement>
+          </TranslationUnit>
+          <TranslationUnit RefId="M-0064_CS-2.2E9-2.2E9.2E04" Version="0">
+            <TranslationElement RefId="M-0064_CS-2.2E9-2.2E9.2E04">
+              <Translation AttributeName="Name" Text="2.9.04 Feuchtigkeit" />
+            </TranslationElement>
+          </TranslationUnit>
+          <TranslationUnit RefId="M-0064_CS-2.2E9-2.2E9.2E05" Version="0">
+            <TranslationElement RefId="M-0064_CS-2.2E9-2.2E9.2E05">
+              <Translation AttributeName="Name" Text="2.9.05 Kohlendioxid" />
+            </TranslationElement>
+          </TranslationUnit>
+          <TranslationUnit RefId="M-0064_H-MTN6005.2D0001-1-O0048_HP-FF21-11-DDFC-O0048_CI-MTN6005.2D0001-14" Version="0">
+            <TranslationElement RefId="M-0064_H-MTN6005.2D0001-1-O0048_HP-FF21-11-DDFC-O0048_CI-MTN6005.2D0001-14">
+              <Translation AttributeName="Name" Text="KNX CO2-, Feuchte- und Temperatursensor" />
+              <Translation AttributeName="VisibleDescription" Text="MTN6005-0001" />
+            </TranslationElement>
+          </TranslationUnit>
+          <TranslationUnit RefId="M-0064_H-MTN6005.2D0001-1-O0048_HP-FF21-11-DDFC-O0048_CI-MTN6005.2D0001-15" Version="0">
+            <TranslationElement RefId="M-0064_H-MTN6005.2D0001-1-O0048_HP-FF21-11-DDFC-O0048_CI-MTN6005.2D0001-15">
+              <Translation AttributeName="Name" Text="KNX CO2-, Feuchte- und Temperatursensor" />
+              <Translation AttributeName="VisibleDescription" Text="MTN6005-0001" />
+            </TranslationElement>
+          </TranslationUnit>
+        </Language>
+        <Language Identifier="en-US">
+          <TranslationUnit RefId="M-0064_CS-2.2E9" Version="0">
+            <TranslationElement RefId="M-0064_CS-2.2E9">
+              <Translation AttributeName="Name" Text="2.9 Physical Sensors" />
+            </TranslationElement>
+          </TranslationUnit>
+          <TranslationUnit RefId="M-0064_CS-2.2E9-2.2E9.2E04" Version="0">
+            <TranslationElement RefId="M-0064_CS-2.2E9-2.2E9.2E04">
+              <Translation AttributeName="Name" Text="2.9.04 Humidity" />
+            </TranslationElement>
+          </TranslationUnit>
+          <TranslationUnit RefId="M-0064_CS-2.2E9-2.2E9.2E05" Version="0">
+            <TranslationElement RefId="M-0064_CS-2.2E9-2.2E9.2E05">
+              <Translation AttributeName="Name" Text="2.9.05 Carbon Dioxide" />
+            </TranslationElement>
+          </TranslationUnit>
+          <TranslationUnit RefId="M-0064_H-MTN6005.2D0001-1-O0048_HP-FF21-11-DDFC-O0048_CI-MTN6005.2D0001-14" Version="0">
+            <TranslationElement RefId="M-0064_H-MTN6005.2D0001-1-O0048_HP-FF21-11-DDFC-O0048_CI-MTN6005.2D0001-14">
+              <Translation AttributeName="Name" Text="KNX CO², Humidity and Temperature Sensor" />
+              <Translation AttributeName="VisibleDescription" Text="MTN6005-0001" />
+            </TranslationElement>
+          </TranslationUnit>
+          <TranslationUnit RefId="M-0064_H-MTN6005.2D0001-1-O0048_HP-FF21-11-DDFC-O0048_CI-MTN6005.2D0001-15" Version="0">
+            <TranslationElement RefId="M-0064_H-MTN6005.2D0001-1-O0048_HP-FF21-11-DDFC-O0048_CI-MTN6005.2D0001-15">
+              <Translation AttributeName="Name" Text="KNX CO², Humidity and Temperature Sensor" />
+              <Translation AttributeName="VisibleDescription" Text="MTN6005-0001" />
+            </TranslationElement>
+          </TranslationUnit>
+        </Language>
+        <Language Identifier="es-ES">
+          <TranslationUnit RefId="M-0064_CS-2.2E9" Version="0">
+            <TranslationElement RefId="M-0064_CS-2.2E9">
+              <Translation AttributeName="Name" Text="2.9 Sensores físicos" />
+            </TranslationElement>
+          </TranslationUnit>
+          <TranslationUnit RefId="M-0064_CS-2.2E9-2.2E9.2E04" Version="0">
+            <TranslationElement RefId="M-0064_CS-2.2E9-2.2E9.2E04">
+              <Translation AttributeName="Name" Text="2.9 .04 Humedad" />
+            </TranslationElement>
+          </TranslationUnit>
+          <TranslationUnit RefId="M-0064_CS-2.2E9-2.2E9.2E05" Version="0">
+            <TranslationElement RefId="M-0064_CS-2.2E9-2.2E9.2E05">
+              <Translation AttributeName="Name" Text="2.9.05 Dióxido de carbono " />
+            </TranslationElement>
+          </TranslationUnit>
+          <TranslationUnit RefId="M-0064_H-MTN6005.2D0001-1-O0048_HP-FF21-11-DDFC-O0048_CI-MTN6005.2D0001-14" Version="0">
+            <TranslationElement RefId="M-0064_H-MTN6005.2D0001-1-O0048_HP-FF21-11-DDFC-O0048_CI-MTN6005.2D0001-14">
+              <Translation AttributeName="Name" Text="Sensor de temperatura, humedad y CO2 KNX" />
+              <Translation AttributeName="VisibleDescription" Text="MTN6005-0001" />
+            </TranslationElement>
+          </TranslationUnit>
+          <TranslationUnit RefId="M-0064_H-MTN6005.2D0001-1-O0048_HP-FF21-11-DDFC-O0048_CI-MTN6005.2D0001-15" Version="0">
+            <TranslationElement RefId="M-0064_H-MTN6005.2D0001-1-O0048_HP-FF21-11-DDFC-O0048_CI-MTN6005.2D0001-15">
+              <Translation AttributeName="Name" Text="Sensor de temperatura, humedad y CO2 KNX" />
+              <Translation AttributeName="VisibleDescription" Text="MTN6005-0001" />
+            </TranslationElement>
+          </TranslationUnit>
+        </Language>
+        <Language Identifier="fr-FR">
+          <TranslationUnit RefId="M-0064_CS-2.2E9" Version="0">
+            <TranslationElement RefId="M-0064_CS-2.2E9">
+              <Translation AttributeName="Name" Text="2.9 Capteurs physiques" />
+            </TranslationElement>
+          </TranslationUnit>
+          <TranslationUnit RefId="M-0064_CS-2.2E9-2.2E9.2E04" Version="0">
+            <TranslationElement RefId="M-0064_CS-2.2E9-2.2E9.2E04">
+              <Translation AttributeName="Name" Text="2.9.04 Humidité" />
+            </TranslationElement>
+          </TranslationUnit>
+          <TranslationUnit RefId="M-0064_CS-2.2E9-2.2E9.2E05" Version="0">
+            <TranslationElement RefId="M-0064_CS-2.2E9-2.2E9.2E05">
+              <Translation AttributeName="Name" Text="2.9.05 Dioxyde de carbone" />
+            </TranslationElement>
+          </TranslationUnit>
+          <TranslationUnit RefId="M-0064_H-MTN6005.2D0001-1-O0048_HP-FF21-11-DDFC-O0048_CI-MTN6005.2D0001-14" Version="0">
+            <TranslationElement RefId="M-0064_H-MTN6005.2D0001-1-O0048_HP-FF21-11-DDFC-O0048_CI-MTN6005.2D0001-14">
+              <Translation AttributeName="Name" Text="Capteur de CO2, d´humidité et de temperature KNX" />
+              <Translation AttributeName="VisibleDescription" Text="MTN6005-0001" />
+            </TranslationElement>
+          </TranslationUnit>
+          <TranslationUnit RefId="M-0064_H-MTN6005.2D0001-1-O0048_HP-FF21-11-DDFC-O0048_CI-MTN6005.2D0001-15" Version="0">
+            <TranslationElement RefId="M-0064_H-MTN6005.2D0001-1-O0048_HP-FF21-11-DDFC-O0048_CI-MTN6005.2D0001-15">
+              <Translation AttributeName="Name" Text="Capteur de CO2, d´humidité et de temperature KNX" />
+              <Translation AttributeName="VisibleDescription" Text="MTN6005-0001" />
+            </TranslationElement>
+          </TranslationUnit>
+        </Language>
+        <Language Identifier="it-IT">
+          <TranslationUnit RefId="M-0064_CS-2.2E9" Version="0">
+            <TranslationElement RefId="M-0064_CS-2.2E9">
+              <Translation AttributeName="Name" Text="2.9 Sensori fisici" />
+            </TranslationElement>
+          </TranslationUnit>
+          <TranslationUnit RefId="M-0064_CS-2.2E9-2.2E9.2E04" Version="0">
+            <TranslationElement RefId="M-0064_CS-2.2E9-2.2E9.2E04">
+              <Translation AttributeName="Name" Text="2.9.04 Umidità" />
+            </TranslationElement>
+          </TranslationUnit>
+          <TranslationUnit RefId="M-0064_CS-2.2E9-2.2E9.2E05" Version="0">
+            <TranslationElement RefId="M-0064_CS-2.2E9-2.2E9.2E05">
+              <Translation AttributeName="Name" Text="2.9.05 Diossido di carbonio " />
+            </TranslationElement>
+          </TranslationUnit>
+          <TranslationUnit RefId="M-0064_H-MTN6005.2D0001-1-O0048_HP-FF21-11-DDFC-O0048_CI-MTN6005.2D0001-14" Version="0">
+            <TranslationElement RefId="M-0064_H-MTN6005.2D0001-1-O0048_HP-FF21-11-DDFC-O0048_CI-MTN6005.2D0001-14">
+              <Translation AttributeName="Name" Text="Sensore KNX per CO2 umidità e temperatura" />
+              <Translation AttributeName="VisibleDescription" Text="MTN6005-0001" />
+            </TranslationElement>
+          </TranslationUnit>
+          <TranslationUnit RefId="M-0064_H-MTN6005.2D0001-1-O0048_HP-FF21-11-DDFC-O0048_CI-MTN6005.2D0001-15" Version="0">
+            <TranslationElement RefId="M-0064_H-MTN6005.2D0001-1-O0048_HP-FF21-11-DDFC-O0048_CI-MTN6005.2D0001-15">
+              <Translation AttributeName="Name" Text="Sensore KNX per CO2 umidità e temperatura" />
+              <Translation AttributeName="VisibleDescription" Text="MTN6005-0001" />
+            </TranslationElement>
+          </TranslationUnit>
+        </Language>
+        <Language Identifier="nl-NL">
+          <TranslationUnit RefId="M-0064_CS-2.2E9" Version="0">
+            <TranslationElement RefId="M-0064_CS-2.2E9">
+              <Translation AttributeName="Name" Text="2.9 Natuurkundige sensoren" />
+            </TranslationElement>
+          </TranslationUnit>
+          <TranslationUnit RefId="M-0064_CS-2.2E9-2.2E9.2E04" Version="0">
+            <TranslationElement RefId="M-0064_CS-2.2E9-2.2E9.2E04">
+              <Translation AttributeName="Name" Text="2.9.04 Vochtigheid" />
+            </TranslationElement>
+          </TranslationUnit>
+          <TranslationUnit RefId="M-0064_CS-2.2E9-2.2E9.2E05" Version="0">
+            <TranslationElement RefId="M-0064_CS-2.2E9-2.2E9.2E05">
+              <Translation AttributeName="Name" Text="2.9.05 Kooldioxide" />
+            </TranslationElement>
+          </TranslationUnit>
+          <TranslationUnit RefId="M-0064_H-MTN6005.2D0001-1-O0048_HP-FF21-11-DDFC-O0048_CI-MTN6005.2D0001-14" Version="0">
+            <TranslationElement RefId="M-0064_H-MTN6005.2D0001-1-O0048_HP-FF21-11-DDFC-O0048_CI-MTN6005.2D0001-14">
+              <Translation AttributeName="Name" Text="KNX CO2-, vochtigheids- en temperatuursensor " />
+              <Translation AttributeName="VisibleDescription" Text="MTN6005-0001" />
+            </TranslationElement>
+          </TranslationUnit>
+          <TranslationUnit RefId="M-0064_H-MTN6005.2D0001-1-O0048_HP-FF21-11-DDFC-O0048_CI-MTN6005.2D0001-15" Version="0">
+            <TranslationElement RefId="M-0064_H-MTN6005.2D0001-1-O0048_HP-FF21-11-DDFC-O0048_CI-MTN6005.2D0001-15">
+              <Translation AttributeName="Name" Text="KNX CO2-, vochtigheids- en temperatuursensor " />
+              <Translation AttributeName="VisibleDescription" Text="MTN6005-0001" />
+            </TranslationElement>
+          </TranslationUnit>
+        </Language>
+        <Language Identifier="sv-SE">
+          <TranslationUnit RefId="M-0064_CS-2.2E9" Version="0">
+            <TranslationElement RefId="M-0064_CS-2.2E9">
+              <Translation AttributeName="Name" Text="2.9 Fysiska Sensorer" />
+            </TranslationElement>
+          </TranslationUnit>
+          <TranslationUnit RefId="M-0064_CS-2.2E9-2.2E9.2E04" Version="0">
+            <TranslationElement RefId="M-0064_CS-2.2E9-2.2E9.2E04">
+              <Translation AttributeName="Name" Text="2.9.04 Fukt" />
+            </TranslationElement>
+          </TranslationUnit>
+          <TranslationUnit RefId="M-0064_CS-2.2E9-2.2E9.2E05" Version="0">
+            <TranslationElement RefId="M-0064_CS-2.2E9-2.2E9.2E05">
+              <Translation AttributeName="Name" Text="2.9.05 Koldioxid" />
+            </TranslationElement>
+          </TranslationUnit>
+          <TranslationUnit RefId="M-0064_H-MTN6005.2D0001-1-O0048_HP-FF21-11-DDFC-O0048_CI-MTN6005.2D0001-14" Version="0">
+            <TranslationElement RefId="M-0064_H-MTN6005.2D0001-1-O0048_HP-FF21-11-DDFC-O0048_CI-MTN6005.2D0001-14">
+              <Translation AttributeName="Name" Text="KNX CO2-, fukt- och temperatursensor " />
+              <Translation AttributeName="VisibleDescription" Text="MTN6005-0001" />
+            </TranslationElement>
+          </TranslationUnit>
+          <TranslationUnit RefId="M-0064_H-MTN6005.2D0001-1-O0048_HP-FF21-11-DDFC-O0048_CI-MTN6005.2D0001-15" Version="0">
+            <TranslationElement RefId="M-0064_H-MTN6005.2D0001-1-O0048_HP-FF21-11-DDFC-O0048_CI-MTN6005.2D0001-15">
+              <Translation AttributeName="Name" Text="KNX CO2-, fukt- och temperatursensor " />
+              <Translation AttributeName="VisibleDescription" Text="MTN6005-0001" />
+            </TranslationElement>
+          </TranslationUnit>
+        </Language>
+      </Languages>
+    </Manufacturer>
+  </ManufacturerData>
+</KNX>

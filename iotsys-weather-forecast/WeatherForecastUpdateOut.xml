@@ -1,0 +1,7 @@
+<obj href="iot:WeatherForecastUpdateOut">
+	<int name="num-added"/>
+	<int name="num-updated"/>
+	<int name="new-count"/>
+	<abstime name="new-start" null="true"/>
+	<abstime name="new-end" null="true/>
+</obj>
