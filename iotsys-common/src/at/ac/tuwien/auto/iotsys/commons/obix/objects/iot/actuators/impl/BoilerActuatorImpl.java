@@ -53,8 +53,7 @@ public class BoilerActuatorImpl extends ActuatorImpl implements BoilerActuator {
 	
 	public void writeObject(Obj input){
 		// A write on this object was received, update the according data point.		
-		boolean newVal = false;
-		
+
 		if(input instanceof BoilerActuator){
 			BoilerActuator in = (BoilerActuator) input;		
 			this.enabled.set(in.enabled().get());

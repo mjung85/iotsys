@@ -31,9 +31,7 @@
 
 package at.ac.tuwien.auto.iotsys.commons.obix.objects.general.datapoint;
 
-import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.language.Multilingual;
-
-public interface DataPoint extends Multilingual
+public interface DataPoint
 {
 	public static final String CONTRACT = "knx:Datapoint";
 }

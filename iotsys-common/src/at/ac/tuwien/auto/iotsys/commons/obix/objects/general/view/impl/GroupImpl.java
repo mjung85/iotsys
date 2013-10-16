@@ -93,6 +93,7 @@ public class GroupImpl extends ElementImpl implements Group
 			this.function.setDisplayName(null);
 
 			this.add(function);
+			this.add(function.getReference());
 		}
 	}
 

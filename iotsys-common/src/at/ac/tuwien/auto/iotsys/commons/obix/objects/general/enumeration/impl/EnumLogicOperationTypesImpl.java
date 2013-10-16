@@ -44,10 +44,10 @@ public class EnumLogicOperationTypesImpl extends RangeImpl implements EnumLogicO
 
 	protected void initValues()
 	{
-		getElements().add(new ObjElement(EnumLogicOperationTypes.KEY_AND));
-		getElements().add(new ObjElement(EnumLogicOperationTypes.KEY_NAND));
-		getElements().add(new ObjElement(EnumLogicOperationTypes.KEY_NOR));
-		getElements().add(new ObjElement(EnumLogicOperationTypes.KEY_OR));
-		getElements().add(new ObjElement(EnumLogicOperationTypes.KEY_XOR));
+		addElement(new ObjElement(EnumLogicOperationTypes.KEY_AND));
+		addElement(new ObjElement(EnumLogicOperationTypes.KEY_NAND));
+		addElement(new ObjElement(EnumLogicOperationTypes.KEY_NOR));
+		addElement(new ObjElement(EnumLogicOperationTypes.KEY_OR));
+		addElement(new ObjElement(EnumLogicOperationTypes.KEY_XOR));
 	}
 }

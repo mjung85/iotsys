@@ -91,15 +91,11 @@ public interface IObj
 
 	public boolean is(String is);
 
-	public String getElement();
-
 	public int getBinCode();
 
 	public IObj getParent();
 
 	public IObj getRoot();
-
-	public Ref getReference(boolean absolute);
 
 	public IObj get(String name);
 

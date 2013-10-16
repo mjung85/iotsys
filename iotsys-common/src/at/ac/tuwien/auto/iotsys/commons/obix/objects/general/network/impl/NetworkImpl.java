@@ -38,6 +38,7 @@ import obix.Obj;
 import obix.Uri;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.entity.impl.EntitiesImpl;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.enumeration.EnumStandard;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.enumeration.impl.EnumsImpl;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.network.Network;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.view.impl.ViewBuildingImpl;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.view.impl.ViewDomainsImpl;
@@ -69,31 +70,30 @@ public class NetworkImpl extends Obj implements Network
 		this.standard.setName("standard");
 		this.standard.setHref(new Uri("standard"));
 		this.standard.setRange(new Uri(EnumStandard.HREF));
-		this.standard.set(standard);
+		this.standard.set(EnumsImpl.getInstance().getEnum(EnumStandard.HREF).getKey(standard));
 		this.add(this.standard);
 
 		// Views
 		this.functional = new ViewFunctionalImpl();
-		this.functional.setHidden(true);
 		this.add(functional);
-		this.add(functional.getReference(false));
+		this.add(functional.getReference());
 
 		this.topology = new ViewTopologyImpl();
 		this.add(topology);
-		this.add(topology.getReference(false));
+		this.add(topology.getReference());
 
 		this.building = new ViewBuildingImpl();
 		this.add(building);
-		this.add(building.getReference(false));
+		this.add(building.getReference());
 		
 		this.domains = new ViewDomainsImpl();
 		this.add(domains);
-		this.add(domains.getReference(false));
+		this.add(domains.getReference());
 
 		// Entities
 		this.entities = new EntitiesImpl();
 		this.add(entities);
-		this.add(entities.getReference(false));
+		this.add(entities.getReference());
 	}
 
 	public ViewFunctionalImpl getFunctional()

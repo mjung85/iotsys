@@ -45,9 +45,9 @@ public class EnumProbabilityCodeImpl extends RangeImpl implements EnumProbabilit
 
 	protected void initValues()
 	{
-		getElements().add(new IntElement(ProbabilityCode.NAME_UNKNOWN, ProbabilityCode.ID_UNKNOWN));
-		getElements().add(new IntElement(ProbabilityCode.NAME_HIGHLY_PROBABLE, ProbabilityCode.ID_HIGHLY_PROBABLE));
-		getElements().add(new IntElement(ProbabilityCode.NAME_PROBABLE, ProbabilityCode.ID_PROBABLE));
-		getElements().add(new IntElement(ProbabilityCode.NAME_UNCERTAIN, ProbabilityCode.ID_UNCERTAIN));
+		addElement(new IntElement(ProbabilityCode.NAME_UNKNOWN, ProbabilityCode.ID_UNKNOWN));
+		addElement(new IntElement(ProbabilityCode.NAME_HIGHLY_PROBABLE, ProbabilityCode.ID_HIGHLY_PROBABLE));
+		addElement(new IntElement(ProbabilityCode.NAME_PROBABLE, ProbabilityCode.ID_PROBABLE));
+		addElement(new IntElement(ProbabilityCode.NAME_UNCERTAIN, ProbabilityCode.ID_UNCERTAIN));
 	}
 }

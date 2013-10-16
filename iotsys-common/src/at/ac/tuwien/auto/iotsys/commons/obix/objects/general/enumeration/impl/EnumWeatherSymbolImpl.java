@@ -45,25 +45,25 @@ public class EnumWeatherSymbolImpl extends RangeImpl implements EnumWeatherSymbo
 
 	protected void initValues()
 	{
-		getElements().add(new IntElement(WeatherSymbol.NAME_UNKNOWN, WeatherSymbol.ID_UNKNOWN));
-		getElements().add(new IntElement(WeatherSymbol.NAME_SUN, WeatherSymbol.ID_SUN));
-		getElements().add(new IntElement(WeatherSymbol.NAME_FAIR, WeatherSymbol.ID_FAIR));
-		getElements().add(new IntElement(WeatherSymbol.NAME_PARTLY_CLOUDY, WeatherSymbol.ID_PARTLY_CLOUDY));
-		getElements().add(new IntElement(WeatherSymbol.NAME_CLOUDY, WeatherSymbol.ID_CLOUDY));
-		getElements().add(new IntElement(WeatherSymbol.NAME_RAIN_SHOWERS, WeatherSymbol.ID_RAIN_SHOWERS));
-		getElements().add(new IntElement(WeatherSymbol.NAME_RAIN_SHOWERS_THUNDER, WeatherSymbol.ID_RAIN_SHOWERS_THUNDER));
-		getElements().add(new IntElement(WeatherSymbol.NAME_SLEET_SHOWERS, WeatherSymbol.ID_SLEET_SHOWERS));
-		getElements().add(new IntElement(WeatherSymbol.NAME_SNOW_SHOWERS, WeatherSymbol.ID_SNOW_SHOWERS));
-		getElements().add(new IntElement(WeatherSymbol.NAME_RAIN, WeatherSymbol.ID_RAIN));
-		getElements().add(new IntElement(WeatherSymbol.NAME_HEAVY_RAIN, WeatherSymbol.ID_HEAVY_RAIN));
-		getElements().add(new IntElement(WeatherSymbol.NAME_HEAVY_RAIN_THUNDER, WeatherSymbol.ID_HEAVY_RAIN_THUNDER));
-		getElements().add(new IntElement(WeatherSymbol.NAME_SLEET, WeatherSymbol.ID_SLEET));
-		getElements().add(new IntElement(WeatherSymbol.NAME_SNOW, WeatherSymbol.ID_SNOW));
-		getElements().add(new IntElement(WeatherSymbol.NAME_SNOW_THUNDER, WeatherSymbol.ID_SNOW_THUNDER));
-		getElements().add(new IntElement(WeatherSymbol.NAME_FOG, WeatherSymbol.ID_FOG));
-		getElements().add(new IntElement(WeatherSymbol.NAME_SLEET_SHOWERS_THUNDER, WeatherSymbol.ID_SLEET_SHOWERS_THUNDER));
-		getElements().add(new IntElement(WeatherSymbol.NAME_SNOW_SHOWERS_THUNDER, WeatherSymbol.ID_SNOW_SHOWERS_THUNDER));
-		getElements().add(new IntElement(WeatherSymbol.NAME_RAIN_THUNDER, WeatherSymbol.ID_RAIN_THUNDER));
-		getElements().add(new IntElement(WeatherSymbol.NAME_SLEET_THUNDER, WeatherSymbol.ID_SLEET_THUNDER));
+		addElement(new IntElement(WeatherSymbol.NAME_UNKNOWN, WeatherSymbol.ID_UNKNOWN));
+		addElement(new IntElement(WeatherSymbol.NAME_SUN, WeatherSymbol.ID_SUN));
+		addElement(new IntElement(WeatherSymbol.NAME_FAIR, WeatherSymbol.ID_FAIR));
+		addElement(new IntElement(WeatherSymbol.NAME_PARTLY_CLOUDY, WeatherSymbol.ID_PARTLY_CLOUDY));
+		addElement(new IntElement(WeatherSymbol.NAME_CLOUDY, WeatherSymbol.ID_CLOUDY));
+		addElement(new IntElement(WeatherSymbol.NAME_RAIN_SHOWERS, WeatherSymbol.ID_RAIN_SHOWERS));
+		addElement(new IntElement(WeatherSymbol.NAME_RAIN_SHOWERS_THUNDER, WeatherSymbol.ID_RAIN_SHOWERS_THUNDER));
+		addElement(new IntElement(WeatherSymbol.NAME_SLEET_SHOWERS, WeatherSymbol.ID_SLEET_SHOWERS));
+		addElement(new IntElement(WeatherSymbol.NAME_SNOW_SHOWERS, WeatherSymbol.ID_SNOW_SHOWERS));
+		addElement(new IntElement(WeatherSymbol.NAME_RAIN, WeatherSymbol.ID_RAIN));
+		addElement(new IntElement(WeatherSymbol.NAME_HEAVY_RAIN, WeatherSymbol.ID_HEAVY_RAIN));
+		addElement(new IntElement(WeatherSymbol.NAME_HEAVY_RAIN_THUNDER, WeatherSymbol.ID_HEAVY_RAIN_THUNDER));
+		addElement(new IntElement(WeatherSymbol.NAME_SLEET, WeatherSymbol.ID_SLEET));
+		addElement(new IntElement(WeatherSymbol.NAME_SNOW, WeatherSymbol.ID_SNOW));
+		addElement(new IntElement(WeatherSymbol.NAME_SNOW_THUNDER, WeatherSymbol.ID_SNOW_THUNDER));
+		addElement(new IntElement(WeatherSymbol.NAME_FOG, WeatherSymbol.ID_FOG));
+		addElement(new IntElement(WeatherSymbol.NAME_SLEET_SHOWERS_THUNDER, WeatherSymbol.ID_SLEET_SHOWERS_THUNDER));
+		addElement(new IntElement(WeatherSymbol.NAME_SNOW_SHOWERS_THUNDER, WeatherSymbol.ID_SNOW_SHOWERS_THUNDER));
+		addElement(new IntElement(WeatherSymbol.NAME_RAIN_THUNDER, WeatherSymbol.ID_RAIN_THUNDER));
+		addElement(new IntElement(WeatherSymbol.NAME_SLEET_THUNDER, WeatherSymbol.ID_SLEET_THUNDER));
 	}
 }

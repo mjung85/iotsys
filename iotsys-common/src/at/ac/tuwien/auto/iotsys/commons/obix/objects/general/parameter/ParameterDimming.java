@@ -35,8 +35,10 @@ import obix.IObj;
 import obix.Int;
 
 public interface ParameterDimming extends IObj
-{	
+{
 	public static final String CONTRACT = "knx:ParameterDimming";
-	
+
+	public static final String HREF = "/parameters/dimming";
+
 	public Int value();
 }
