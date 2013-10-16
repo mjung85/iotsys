@@ -62,9 +62,7 @@ public class TemperatureSensorImplKnx extends TemperatureSensorImpl{
 					DPTXlator2ByteFloat x = new DPTXlator2ByteFloat(DPTXlator2ByteFloat.DPT_TEMPERATURE);					
 					
 					x.setData(apdu, 0);
-														
-					String[] a = x.getAllValues();										
-								
+															
 					log.fine("Temperature for " + TemperatureSensorImplKnx.this.getHref() + " now " + x.getValueFloat(1));
 					value.set(x.getValueFloat(1));									
 				} 

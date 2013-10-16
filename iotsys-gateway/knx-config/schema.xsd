@@ -11,8 +11,6 @@
     <xsd:documentation xml:lang="EN">XML schema for platform independent transformation</xsd:documentation>
   </xsd:annotation>
 
-
-
   <!-- **************************************************************************** -->
   <!-- NETWORK (ROOT ELEMENT)                                                       -->
   <!-- **************************************************************************** -->
@@ -22,7 +20,7 @@
       <xsd:sequence>
         <xsd:element name="entities" type="typeEntities" minOccurs="1" maxOccurs="1"/>
         <xsd:element name="views" type="typeViews" minOccurs="1" maxOccurs="1"/>
-        <xsd:element name="configurations" type="typeConfigurations" minOccurs="1" maxOccurs="1"/>
+        <xsd:element name="references" type="typeReferences" minOccurs="1" maxOccurs="1"/>
       </xsd:sequence>
       <xsd:attribute name="id" type="xsd:ID" use="required"/>
       <xsd:attribute name="name" type="xsd:string" use="required"/>
@@ -30,8 +28,6 @@
       <xsd:attribute name="standard" type="enumStandard" use="required"/>
     </xsd:complexType>
   </xsd:element>
-
-
 
   <!-- **************************************************************************** -->
   <!-- ENTITIES                                                                     -->
@@ -81,8 +77,6 @@
       </xsd:extension>
     </xsd:complexContent>
   </xsd:complexType>
-
-
 
   <!-- **************************************************************************** -->
   <!-- VIEWS                                                                        -->
@@ -197,64 +191,21 @@
     </xsd:complexContent>
   </xsd:complexType>
 
-
-
   <!-- **************************************************************************** -->
-  <!-- CONFIGURATIONS                                                               -->
+  <!-- REFERENCES                                                                   -->
   <!-- **************************************************************************** -->
 
-  <xsd:complexType name="typeConfigurations">
+  <xsd:complexType name="typeReferences">
     <xsd:sequence>
-      <xsd:element name="datapointTypes" type="typeDatapointTypes" minOccurs="0" maxOccurs="1"/>
-      <xsd:element name="mediaTypes" type="typeMediaTypes" minOccurs="0" maxOccurs="1"/>
-      <xsd:element name="manufacturers" type="typeManufacturers" minOccurs="0" maxOccurs="1"/>
+      <xsd:element name="reference" type="typeReference" minOccurs="0" maxOccurs="unbounded"/>
     </xsd:sequence>
   </xsd:complexType>
 
-  <xsd:complexType name="typeDatapointTypes">
-    <xsd:sequence>
-      <xsd:element name="datapointType" type="typeDatapointType" minOccurs="0" maxOccurs="unbounded"/>
-    </xsd:sequence>
-  </xsd:complexType>
-
-  <xsd:complexType name="typeDatapointType">
-    <xsd:complexContent>
-      <xsd:extension base="typeMultilingual">
-        <xsd:sequence>
-          <xsd:element name="datapointTypes" type="typeDatapointTypes" minOccurs="0" maxOccurs="1"/>
-        </xsd:sequence>
-        <xsd:attribute name="id" type="xsd:ID" use="required"/>
-        <xsd:attribute name="name" type="xsd:string" use="required"/>
-        <xsd:attribute name="description" type="xsd:string" use="required"/>
-        <xsd:attribute name="sizeInBit" type="xsd:unsignedInt"/>
-      </xsd:extension>
-    </xsd:complexContent>
-  </xsd:complexType>
-
-  <xsd:complexType name="typeMediaTypes">
-    <xsd:sequence>
-      <xsd:element name="mediaType" type="typeMediaType" minOccurs="0" maxOccurs="unbounded"/>
-    </xsd:sequence>
-  </xsd:complexType>
-
-  <xsd:complexType name="typeMediaType">
+  <xsd:complexType name="typeReference">
     <xsd:attribute name="id" type="xsd:ID" use="required"/>
     <xsd:attribute name="name" type="xsd:string" use="required"/>
-    <xsd:attribute name="description" type="xsd:string" use="required"/>
+    <xsd:attribute name="description" type="xsd:string" use="optional"/>
   </xsd:complexType>
-
-  <xsd:complexType name="typeManufacturers">
-    <xsd:sequence>
-      <xsd:element name="manufacturer" type="typeManufacturer" minOccurs="0" maxOccurs="unbounded"/>
-    </xsd:sequence>
-  </xsd:complexType>
-
-  <xsd:complexType name="typeManufacturer">
-    <xsd:attribute name="id" type="xsd:ID" use="required"/>
-    <xsd:attribute name="name" type="xsd:string" use="required"/>
-  </xsd:complexType>
-
-
 
   <!-- **************************************************************************** -->
   <!-- LANGUAGES                                                                    -->
@@ -277,8 +228,6 @@
     <xsd:attribute name="attribute" type="enumTranslation" use="required"/>
     <xsd:attribute name="value" type="xsd:string" use="required"/>
   </xsd:complexType>
-
-
 
   <!-- **************************************************************************** -->
   <!-- ENUMERATIONS                                                                 -->
