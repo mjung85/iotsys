@@ -1,0 +1,1104 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<KNX xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" CreatedBy="ETS4" ToolVersion="ETS 4.1.4 (Build 3109)" xmlns="http://knx.org/xml/project/11">
+  <ManufacturerData>
+    <Manufacturer RefId="M-0001">
+      <ApplicationPrograms>
+        <ApplicationProgram Id="M-0001_A-6102-01-A218" Name="11 A1 Dimmer  610201" ApplicationNumber="24834" ApplicationVersion="1" ProgramType="ApplicationProgram" MaskVersion="MV-0011" VisibleDescription="Description - see file:   610201_apb_e.pdf" LoadProcedureStyle="DefaultProcedure" PeiType="19" HelpFile="" DefaultLanguage="en-US" DynamicTableManagement="1" Linkable="1" PreEts4Style="1" NonRegRelevantDataVersion="0" Hash="orMJ8BKnkZmAdyEQjDV7GA==" ConvertedFromPreEts4Data="1" Broken="0" IPConfig="Tool" AdditionalAddressesCount="0" DownloadInfoIncomplete="0" CreatedFromLegacySchemaVersion="0">
+          <Static>
+            <Code>
+              <AbsoluteSegment Id="M-0001_A-6102-01-A218_AS-0100" Address="256" Size="256" UserMemory="0">
+                <Data>/wAAAAFhAgH/EwAAAP/gY+AtQpVZkQH//xAAEAEQAhADEBP/////////////BQQAAgEDAgUDAQAGAAcACAAJAAoABM7QlwDR1wPS1wfTzwfOGf+AQCAQCAQGzj8OzgwHz0y20gHQABfPID0fzrbRpAcnN5e21AbRCycz0AFRIiymASAoJwAXz9sBUSQfpv8gG6bxIFk61TzQP9AXzhLQTwHQBQbPvKb/t9O207fUpgLNDkkkFLbTsdQnDiQCTExKt9OuHqYhzQ4rttMnCrfVzgFQQp/LAVG3C6YPC9YZttNAT0mx0CcXt9A/1kiq8c0Nz0/NDbmmHs0N+hkCPNaBAA==</Data>
+                <Mask>/wAAAP////////////////////////8AAP///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////w==</Mask>
+              </AbsoluteSegment>
+            </Code>
+            <ParameterTypes>
+              <ParameterType Id="M-0001_A-6102-01-A218_PT-t.5FCfgInit" Name="t_CfgInit" Plugin="">
+                <TypeRestriction Base="Value" SizeInBit="16">
+                  <Enumeration Id="M-0001_A-6102-01-A218_PT-t.5FCfgInit_EN-16336" DisplayOrder="1" Text="switch off" Value="16336" />
+                  <Enumeration Id="M-0001_A-6102-01-A218_PT-t.5FCfgInit_EN-40349" DisplayOrder="2" Text="switch on" Value="40349" />
+                </TypeRestriction>
+              </ParameterType>
+              <ParameterType Id="M-0001_A-6102-01-A218_PT-t.5FDownDim" Name="t_DownDim" Plugin="">
+                <TypeRestriction Base="Value" SizeInBit="8">
+                  <Enumeration Id="M-0001_A-6102-01-A218_PT-t.5FDownDim_EN-0" DisplayOrder="1" Text="Yes" Value="0" />
+                  <Enumeration Id="M-0001_A-6102-01-A218_PT-t.5FDownDim_EN-1" DisplayOrder="2" Text="No" Value="1" />
+                </TypeRestriction>
+              </ParameterType>
+              <ParameterType Id="M-0001_A-6102-01-A218_PT-t.5FEin.5FAus" Name="t_Ein_Aus" Plugin="">
+                <TypeRestriction Base="Value" SizeInBit="16">
+                  <Enumeration Id="M-0001_A-6102-01-A218_PT-t.5FEin.5FAus_EN-46805" DisplayOrder="1" Text="last value" Value="46805" />
+                  <Enumeration Id="M-0001_A-6102-01-A218_PT-t.5FEin.5FAus_EN-42497" DisplayOrder="2" Text="Background brightness" Value="42497" />
+                  <Enumeration Id="M-0001_A-6102-01-A218_PT-t.5FEin.5FAus_EN-42521" DisplayOrder="3" Text="10%" Value="42521" />
+                  <Enumeration Id="M-0001_A-6102-01-A218_PT-t.5FEin.5FAus_EN-42547" DisplayOrder="4" Text="20%" Value="42547" />
+                  <Enumeration Id="M-0001_A-6102-01-A218_PT-t.5FEin.5FAus_EN-42572" DisplayOrder="5" Text="30%" Value="42572" />
+                  <Enumeration Id="M-0001_A-6102-01-A218_PT-t.5FEin.5FAus_EN-42598" DisplayOrder="6" Text="40%" Value="42598" />
+                  <Enumeration Id="M-0001_A-6102-01-A218_PT-t.5FEin.5FAus_EN-42623" DisplayOrder="7" Text="50%" Value="42623" />
+                  <Enumeration Id="M-0001_A-6102-01-A218_PT-t.5FEin.5FAus_EN-42649" DisplayOrder="8" Text="60%" Value="42649" />
+                  <Enumeration Id="M-0001_A-6102-01-A218_PT-t.5FEin.5FAus_EN-42674" DisplayOrder="9" Text="70%" Value="42674" />
+                  <Enumeration Id="M-0001_A-6102-01-A218_PT-t.5FEin.5FAus_EN-42700" DisplayOrder="10" Text="80%" Value="42700" />
+                  <Enumeration Id="M-0001_A-6102-01-A218_PT-t.5FEin.5FAus_EN-42725" DisplayOrder="11" Text="90%" Value="42725" />
+                  <Enumeration Id="M-0001_A-6102-01-A218_PT-t.5FEin.5FAus_EN-42751" DisplayOrder="12" Text="100%" Value="42751" />
+                </TypeRestriction>
+              </ParameterType>
+              <ParameterType Id="M-0001_A-6102-01-A218_PT-t.5FOffset" Name="t_Offset" Plugin="">
+                <TypeRestriction Base="Value" SizeInBit="16">
+                  <Enumeration Id="M-0001_A-6102-01-A218_PT-t.5FOffset_EN-52761" DisplayOrder="1" Text="0% ... 100%" Value="52761" />
+                  <Enumeration Id="M-0001_A-6102-01-A218_PT-t.5FOffset_EN-47641" DisplayOrder="2" Text="0% ... 90%" Value="47641" />
+                  <Enumeration Id="M-0001_A-6102-01-A218_PT-t.5FOffset_EN-42265" DisplayOrder="3" Text="0% ... 80%" Value="42265" />
+                  <Enumeration Id="M-0001_A-6102-01-A218_PT-t.5FOffset_EN-37145" DisplayOrder="4" Text="0% ... 70%" Value="37145" />
+                  <Enumeration Id="M-0001_A-6102-01-A218_PT-t.5FOffset_EN-31769" DisplayOrder="5" Text="0% ... 60%" Value="31769" />
+                  <Enumeration Id="M-0001_A-6102-01-A218_PT-t.5FOffset_EN-26649" DisplayOrder="6" Text="0% ... 50%" Value="26649" />
+                  <Enumeration Id="M-0001_A-6102-01-A218_PT-t.5FOffset_EN-47406" DisplayOrder="7" Text="10% ... 100%" Value="47406" />
+                  <Enumeration Id="M-0001_A-6102-01-A218_PT-t.5FOffset_EN-42286" DisplayOrder="8" Text="10% ... 90%" Value="42286" />
+                  <Enumeration Id="M-0001_A-6102-01-A218_PT-t.5FOffset_EN-36910" DisplayOrder="9" Text="10% ... 80%" Value="36910" />
+                  <Enumeration Id="M-0001_A-6102-01-A218_PT-t.5FOffset_EN-31790" DisplayOrder="10" Text="10% ... 70%" Value="31790" />
+                  <Enumeration Id="M-0001_A-6102-01-A218_PT-t.5FOffset_EN-26414" DisplayOrder="11" Text="10% ... 60%" Value="26414" />
+                  <Enumeration Id="M-0001_A-6102-01-A218_PT-t.5FOffset_EN-21294" DisplayOrder="12" Text="10% ... 50%" Value="21294" />
+                  <Enumeration Id="M-0001_A-6102-01-A218_PT-t.5FOffset_EN-42306" DisplayOrder="13" Text="20% ... 100%" Value="42306" />
+                  <Enumeration Id="M-0001_A-6102-01-A218_PT-t.5FOffset_EN-37186" DisplayOrder="14" Text="20% ... 90%" Value="37186" />
+                  <Enumeration Id="M-0001_A-6102-01-A218_PT-t.5FOffset_EN-26690" DisplayOrder="15" Text="20% ... 70%" Value="26690" />
+                  <Enumeration Id="M-0001_A-6102-01-A218_PT-t.5FOffset_EN-21314" DisplayOrder="16" Text="20% ... 60%" Value="21314" />
+                  <Enumeration Id="M-0001_A-6102-01-A218_PT-t.5FOffset_EN-36951" DisplayOrder="17" Text="30% ... 100%" Value="36951" />
+                  <Enumeration Id="M-0001_A-6102-01-A218_PT-t.5FOffset_EN-31831" DisplayOrder="18" Text="30% ... 90%" Value="31831" />
+                  <Enumeration Id="M-0001_A-6102-01-A218_PT-t.5FOffset_EN-21335" DisplayOrder="19" Text="30% ... 70%" Value="21335" />
+                  <Enumeration Id="M-0001_A-6102-01-A218_PT-t.5FOffset_EN-31851" DisplayOrder="20" Text="40% ... 100%" Value="31851" />
+                  <Enumeration Id="M-0001_A-6102-01-A218_PT-t.5FOffset_EN-26731" DisplayOrder="21" Text="40% ... 90%" Value="26731" />
+                  <Enumeration Id="M-0001_A-6102-01-A218_PT-t.5FOffset_EN-21355" DisplayOrder="22" Text="40% ... 80%" Value="21355" />
+                  <Enumeration Id="M-0001_A-6102-01-A218_PT-t.5FOffset_EN-26496" DisplayOrder="23" Text="50% ... 100%" Value="26496" />
+                  <Enumeration Id="M-0001_A-6102-01-A218_PT-t.5FOffset_EN-21376" DisplayOrder="24" Text="50% ... 90%" Value="21376" />
+                </TypeRestriction>
+              </ParameterType>
+              <ParameterType Id="M-0001_A-6102-01-A218_PT-t.5FsysTm2.5FBase" Name="t_sysTm2_Base" Plugin="">
+                <TypeRestriction Base="Value" SizeInBit="8">
+                  <Enumeration Id="M-0001_A-6102-01-A218_PT-t.5FsysTm2.5FBase_EN-33" DisplayOrder="1" Text="Time base 0.5 ms" Value="33" />
+                  <Enumeration Id="M-0001_A-6102-01-A218_PT-t.5FsysTm2.5FBase_EN-34" DisplayOrder="2" Text="Time base 8.0 ms" Value="34" />
+                  <Enumeration Id="M-0001_A-6102-01-A218_PT-t.5FsysTm2.5FBase_EN-35" DisplayOrder="3" Text="Time base 130 ms" Value="35" />
+                  <Enumeration Id="M-0001_A-6102-01-A218_PT-t.5FsysTm2.5FBase_EN-36" DisplayOrder="4" Text="Time base 2.1 sec" Value="36" />
+                  <Enumeration Id="M-0001_A-6102-01-A218_PT-t.5FsysTm2.5FBase_EN-37" DisplayOrder="5" Text="Time base 33 sec" Value="37" />
+                </TypeRestriction>
+              </ParameterType>
+              <ParameterType Id="M-0001_A-6102-01-A218_PT-t.5FUpDim" Name="t_UpDim" Plugin="">
+                <TypeRestriction Base="Value" SizeInBit="8">
+                  <Enumeration Id="M-0001_A-6102-01-A218_PT-t.5FUpDim_EN-0" DisplayOrder="1" Text="Yes" Value="0" />
+                  <Enumeration Id="M-0001_A-6102-01-A218_PT-t.5FUpDim_EN-40" DisplayOrder="2" Text="No" Value="40" />
+                </TypeRestriction>
+              </ParameterType>
+              <ParameterType Id="M-0001_A-6102-01-A218_PT-t.5FWert" Name="t_Wert" Plugin="">
+                <TypeRestriction Base="Value" SizeInBit="8">
+                  <Enumeration Id="M-0001_A-6102-01-A218_PT-t.5FWert_EN-0" DisplayOrder="1" Text="accept immediately" Value="0" />
+                  <Enumeration Id="M-0001_A-6102-01-A218_PT-t.5FWert_EN-71" DisplayOrder="2" Text="only accept on On" Value="71" />
+                </TypeRestriction>
+              </ParameterType>
+              <ParameterType Id="M-0001_A-6102-01-A218_PT-t.5FWertDim" Name="t_WertDim" Plugin="">
+                <TypeRestriction Base="Value" SizeInBit="8">
+                  <Enumeration Id="M-0001_A-6102-01-A218_PT-t.5FWertDim_EN-61" DisplayOrder="1" Text="jump" Value="61" />
+                  <Enumeration Id="M-0001_A-6102-01-A218_PT-t.5FWertDim_EN-65" DisplayOrder="2" Text="dimming" Value="65" />
+                </TypeRestriction>
+              </ParameterType>
+              <ParameterType Id="M-0001_A-6102-01-A218_PT-t.5FSteigFak" Name="t_SteigFak" Plugin="">
+                <TypeNumber maxInclusive="255" minInclusive="5" SizeInBit="8" Type="unsignedInt" />
+              </ParameterType>
+            </ParameterTypes>
+            <Parameters>
+              <Parameter Id="M-0001_A-6102-01-A218_P-10" Name="SteigBas" Text="Base for dimming time &#xD;&#xA;(for 1/256 of maximum brightness)" ParameterType="M-0001_A-6102-01-A218_PT-t.5FsysTm2.5FBase" Access="ReadWrite" Value="33">
+                <Memory CodeSegment="M-0001_A-6102-01-A218_AS-0100" BitOffset="0" Offset="197" />
+              </Parameter>
+              <Parameter Id="M-0001_A-6102-01-A218_P-12" Name="Wert" Text="Dimming value" ParameterType="M-0001_A-6102-01-A218_PT-t.5FWert" Access="ReadWrite" Value="0">
+                <Memory CodeSegment="M-0001_A-6102-01-A218_AS-0100" BitOffset="0" Offset="102" />
+              </Parameter>
+              <Parameter Id="M-0001_A-6102-01-A218_P-13" Name="WertDim" Text="Dimming value" ParameterType="M-0001_A-6102-01-A218_PT-t.5FWertDim" Access="ReadWrite" Value="61">
+                <Memory CodeSegment="M-0001_A-6102-01-A218_AS-0100" BitOffset="0" Offset="106" />
+              </Parameter>
+              <Parameter Id="M-0001_A-6102-01-A218_P-2" Name="CfgInit" Text="On bus voltage recovery" ParameterType="M-0001_A-6102-01-A218_PT-t.5FCfgInit" Access="ReadWrite" Value="16336">
+                <Memory CodeSegment="M-0001_A-6102-01-A218_AS-0100" BitOffset="0" Offset="153" />
+              </Parameter>
+              <Parameter Id="M-0001_A-6102-01-A218_P-3" Name="Offset" Text="Dimming range from ... to" ParameterType="M-0001_A-6102-01-A218_PT-t.5FOffset" Access="ReadWrite" Value="52761">
+                <Memory CodeSegment="M-0001_A-6102-01-A218_AS-0100" BitOffset="0" Offset="80" />
+              </Parameter>
+              <Parameter Id="M-0001_A-6102-01-A218_P-5" Name="Ein_Aus" Text="Starting value" ParameterType="M-0001_A-6102-01-A218_PT-t.5FEin.5FAus" Access="ReadWrite" Value="42751">
+                <Memory CodeSegment="M-0001_A-6102-01-A218_AS-0100" BitOffset="0" Offset="166" />
+              </Parameter>
+              <Parameter Id="M-0001_A-6102-01-A218_P-7" Name="UpDim" Text="Switching on possible via dimming" ParameterType="M-0001_A-6102-01-A218_PT-t.5FUpDim" Access="ReadWrite" Value="0">
+                <Memory CodeSegment="M-0001_A-6102-01-A218_AS-0100" BitOffset="0" Offset="133" />
+              </Parameter>
+              <Parameter Id="M-0001_A-6102-01-A218_P-8" Name="DownDim" Text="Switching off possible via dimming" ParameterType="M-0001_A-6102-01-A218_PT-t.5FDownDim" Access="ReadWrite" Value="1">
+                <Memory CodeSegment="M-0001_A-6102-01-A218_AS-0100" BitOffset="0" Offset="129" />
+              </Parameter>
+              <Parameter Id="M-0001_A-6102-01-A218_P-9" Name="SteigFak" Text="Factor for dimming time (5-255) &#xD;&#xA;(for 1/256 of maximum brightness)" ParameterType="M-0001_A-6102-01-A218_PT-t.5FSteigFak" Access="ReadWrite" Value="30">
+                <Memory CodeSegment="M-0001_A-6102-01-A218_AS-0100" BitOffset="0" Offset="195" />
+              </Parameter>
+              <Parameter Id="M-0001_A-6102-01-A218_P-1" Name="Allgemein" Text="General" ParameterType="M-0001_A-6102-01-A218_PT-t.5FCfgInit" Access="Read" Value="16336" />
+              <Parameter Id="M-0001_A-6102-01-A218_P-4" Name="EIN/AUS" Text="On / Off" ParameterType="M-0001_A-6102-01-A218_PT-t.5FEin.5FAus" Access="Read" Value="46805" />
+              <Parameter Id="M-0001_A-6102-01-A218_P-6" Name="Dimmen" Text="Dimming" ParameterType="M-0001_A-6102-01-A218_PT-t.5FUpDim" Access="Read" Value="0" />
+              <Parameter Id="M-0001_A-6102-01-A218_P-11" Name="Wert" Text="Value" ParameterType="M-0001_A-6102-01-A218_PT-t.5FWert" Access="Read" Value="0" />
+            </Parameters>
+            <ParameterRefs>
+              <ParameterRef Id="M-0001_A-6102-01-A218_P-1_R-1" DisplayOrder="100" RefId="M-0001_A-6102-01-A218_P-1" Tag="1" />
+              <ParameterRef Id="M-0001_A-6102-01-A218_P-2_R-2" DisplayOrder="200" RefId="M-0001_A-6102-01-A218_P-2" Tag="2" />
+              <ParameterRef Id="M-0001_A-6102-01-A218_P-3_R-3" DisplayOrder="300" RefId="M-0001_A-6102-01-A218_P-3" Tag="3" />
+              <ParameterRef Id="M-0001_A-6102-01-A218_P-4_R-4" DisplayOrder="400" RefId="M-0001_A-6102-01-A218_P-4" Tag="4" />
+              <ParameterRef Id="M-0001_A-6102-01-A218_P-5_R-5" DisplayOrder="500" RefId="M-0001_A-6102-01-A218_P-5" Tag="5" />
+              <ParameterRef Id="M-0001_A-6102-01-A218_P-6_R-6" DisplayOrder="600" RefId="M-0001_A-6102-01-A218_P-6" Tag="6" />
+              <ParameterRef Id="M-0001_A-6102-01-A218_P-7_R-7" DisplayOrder="700" RefId="M-0001_A-6102-01-A218_P-7" Tag="7" />
+              <ParameterRef Id="M-0001_A-6102-01-A218_P-8_R-8" DisplayOrder="800" RefId="M-0001_A-6102-01-A218_P-8" Tag="8" />
+              <ParameterRef Id="M-0001_A-6102-01-A218_P-9_R-9" DisplayOrder="900" RefId="M-0001_A-6102-01-A218_P-9" Tag="9" />
+              <ParameterRef Id="M-0001_A-6102-01-A218_P-10_R-10" DisplayOrder="1000" RefId="M-0001_A-6102-01-A218_P-10" Tag="10" />
+              <ParameterRef Id="M-0001_A-6102-01-A218_P-11_R-11" DisplayOrder="1100" RefId="M-0001_A-6102-01-A218_P-11" Tag="11" />
+              <ParameterRef Id="M-0001_A-6102-01-A218_P-12_R-12" DisplayOrder="1200" RefId="M-0001_A-6102-01-A218_P-12" Tag="12" />
+              <ParameterRef Id="M-0001_A-6102-01-A218_P-13_R-13" DisplayOrder="1300" RefId="M-0001_A-6102-01-A218_P-13" Tag="13" />
+            </ParameterRefs>
+            <ComObjectTable CodeSegment="M-0001_A-6102-01-A218_AS-0100" Offset="66">
+              <ComObject Id="M-0001_A-6102-01-A218_O-0" FunctionText="On / Off" Name="Commuta stato" Number="0" ObjectSize="1 Bit" Priority="Low" CommunicationFlag="Enabled" ReadFlag="Disabled" ReadOnInitFlag="Disabled" TransmitFlag="Disabled" UpdateFlag="Enabled" WriteFlag="Enabled" Text="Switch, Status" VisibleDescription="EIN/AUS" />
+              <ComObject Id="M-0001_A-6102-01-A218_O-1" FunctionText="Brighter / Darker" Name="Dimmerizzazione" Number="1" ObjectSize="4 Bit" Priority="Low" CommunicationFlag="Enabled" ReadFlag="Disabled" ReadOnInitFlag="Disabled" TransmitFlag="Enabled" UpdateFlag="Enabled" WriteFlag="Enabled" Text="Dimming" VisibleDescription="" />
+              <ComObject Id="M-0001_A-6102-01-A218_O-2" FunctionText="8-bit Value" Name="Imposta x %" Number="2" ObjectSize="1 Byte" Priority="Low" CommunicationFlag="Enabled" ReadFlag="Disabled" ReadOnInitFlag="Disabled" TransmitFlag="Enabled" UpdateFlag="Enabled" WriteFlag="Enabled" Text="Set x %" VisibleDescription="Wert" />
+              <ComObject Id="M-0001_A-6102-01-A218_O-3" FunctionText="8-bit Value" Name="Stato" Number="3" ObjectSize="1 Byte" Priority="Low" CommunicationFlag="Enabled" ReadFlag="Enabled" ReadOnInitFlag="Disabled" TransmitFlag="Enabled" UpdateFlag="Enabled" WriteFlag="Disabled" Text="Status" VisibleDescription="Wert" />
+            </ComObjectTable>
+            <ComObjectRefs>
+              <ComObjectRef Id="M-0001_A-6102-01-A218_O-0_R-0" RefId="M-0001_A-6102-01-A218_O-0" Tag="0" />
+              <ComObjectRef Id="M-0001_A-6102-01-A218_O-1_R-1" RefId="M-0001_A-6102-01-A218_O-1" Tag="1" />
+              <ComObjectRef Id="M-0001_A-6102-01-A218_O-2_R-2" RefId="M-0001_A-6102-01-A218_O-2" Tag="2" />
+              <ComObjectRef Id="M-0001_A-6102-01-A218_O-3_R-3" RefId="M-0001_A-6102-01-A218_O-3" Tag="3" />
+            </ComObjectRefs>
+            <AddressTable CodeSegment="M-0001_A-6102-01-A218_AS-0100" Offset="22" MaxEntries="10" />
+            <AssociationTable CodeSegment="M-0001_A-6102-01-A218_AS-0100" Offset="45" MaxEntries="10" />
+            <FixupList>
+              <Fixup FunctionRef="MV-0011_ME-TM.5FGetFlg" CodeSegment="M-0001_A-6102-01-A218_AS-0100">
+                <Offset>177</Offset>
+              </Fixup>
+              <Fixup FunctionRef="MV-0011_ME-TM.5FLoad" CodeSegment="M-0001_A-6102-01-A218_AS-0100">
+                <Offset>199</Offset>
+              </Fixup>
+              <Fixup FunctionRef="MV-0011_ME-U.5FDelay" CodeSegment="M-0001_A-6102-01-A218_AS-0100">
+                <Offset>248</Offset>
+              </Fixup>
+              <Fixup FunctionRef="MV-0011_ME-U.5FioAST" CodeSegment="M-0001_A-6102-01-A218_AS-0100">
+                <Offset>239</Offset>
+              </Fixup>
+              <Fixup FunctionRef="MV-0011_ME-U.5FtransRequest" CodeSegment="M-0001_A-6102-01-A218_AS-0100">
+                <Offset>243</Offset>
+              </Fixup>
+            </FixupList>
+            <Extension RequiresExternalSoftware="0" />
+            <Options PreferPartialDownloadIfApplicationLoaded="0" EasyCtrlModeModeStyleEmptyGroupComTables="0" SetObjectTableLengthAlwaysToOne="0" TextParameterEncoding="iso-8859-1" TextParameterZeroTerminate="0" ParameterByteOrder="BigEndian" LegacyNoPartialDownload="1" LegacyNoMemoryVerifyMode="0" LegacyNoOptimisticWrite="0" LegacyDoNotReportPropertyWriteErrors="0" LegacyNoBackgroundDownload="0" LegacyDoNotCheckManufacturerId="0" LegacyAlwaysReloadAppIfCoVisibilityChanged="0" LegacyNeverReloadAppIfCoVisibilityChanged="0" LegacyDoNotSupportUndoDelete="0" LegacyAllowPartialDownloadIfAp2Mismatch="0" LegacyKeepObjectTableGaps="0" PartialDownloadOnlyVisibleParameters="0" LegacyProxyCommunicationObjects="0" DeviceInfoIgnoreRunState="0" DeviceInfoIgnoreLoadedState="0" DeviceCompareAllowCompatibleManufacturerId="0" LineCoupler0912NewProgrammingStyle="0" Comparable="0" Reconstructable="0" />
+          </Static>
+          <Dynamic>
+            <Channel Name="Generic" Text="" Number="0" Id="M-0001_A-6102-01-A218_CH-0">
+              <ComObjectRefRef RefId="M-0001_A-6102-01-A218_O-0_R-0" />
+              <ComObjectRefRef RefId="M-0001_A-6102-01-A218_O-1_R-1" />
+              <ComObjectRefRef RefId="M-0001_A-6102-01-A218_O-2_R-2" />
+              <ComObjectRefRef RefId="M-0001_A-6102-01-A218_O-3_R-3" />
+              <ParameterBlock Id="M-0001_A-6102-01-A218_PB-1" Name="Allgemein" Access="Read" ParamRefId="M-0001_A-6102-01-A218_P-1_R-1">
+                <ParameterRefRef RefId="M-0001_A-6102-01-A218_P-2_R-2" />
+                <ParameterRefRef RefId="M-0001_A-6102-01-A218_P-3_R-3" />
+              </ParameterBlock>
+              <ParameterBlock Id="M-0001_A-6102-01-A218_PB-4" Name="EIN/AUS" Access="Read" ParamRefId="M-0001_A-6102-01-A218_P-4_R-4">
+                <ParameterRefRef RefId="M-0001_A-6102-01-A218_P-5_R-5" />
+              </ParameterBlock>
+              <ParameterBlock Id="M-0001_A-6102-01-A218_PB-6" Name="Dimmen" Access="Read" ParamRefId="M-0001_A-6102-01-A218_P-6_R-6">
+                <ParameterRefRef RefId="M-0001_A-6102-01-A218_P-7_R-7" />
+                <ParameterRefRef RefId="M-0001_A-6102-01-A218_P-8_R-8" />
+                <ParameterRefRef RefId="M-0001_A-6102-01-A218_P-9_R-9" />
+                <ParameterRefRef RefId="M-0001_A-6102-01-A218_P-10_R-10" />
+              </ParameterBlock>
+              <ParameterBlock Id="M-0001_A-6102-01-A218_PB-11" Name="Wert" Access="Read" ParamRefId="M-0001_A-6102-01-A218_P-11_R-11">
+                <ParameterRefRef RefId="M-0001_A-6102-01-A218_P-12_R-12" />
+                <ParameterRefRef RefId="M-0001_A-6102-01-A218_P-13_R-13" />
+              </ParameterBlock>
+            </Channel>
+          </Dynamic>
+        </ApplicationProgram>
+      </ApplicationPrograms>
+      <Languages>
+        <Language Identifier="de-DE">
+          <TranslationUnit RefId="M-0001_A-6102-01-A218">
+            <TranslationElement RefId="M-0001_A-6102-01-A218">
+              <Translation AttributeName="Name" Text="11 A1 Dimmer   610201" />
+              <Translation AttributeName="VisibleDescription" Text="Beschreibung  - siehe Datei:  610201_apb.pdf" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_O-0">
+              <Translation AttributeName="Text" Text="Schalten, Status" />
+              <Translation AttributeName="FunctionText" Text="Ein / Aus" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_O-1">
+              <Translation AttributeName="Text" Text="Dimmen" />
+              <Translation AttributeName="FunctionText" Text="Heller / Dunkler" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_O-2">
+              <Translation AttributeName="Text" Text="Setzen x %" />
+              <Translation AttributeName="FunctionText" Text="8-bit Wert" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_O-3">
+              <Translation AttributeName="Text" Text="Status" />
+              <Translation AttributeName="FunctionText" Text="8-bit Wert" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FCfgInit_EN-16336">
+              <Translation AttributeName="Text" Text="ausschalten" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FCfgInit_EN-40349">
+              <Translation AttributeName="Text" Text="einschalten" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FDownDim_EN-0">
+              <Translation AttributeName="Text" Text="Ja" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FDownDim_EN-1">
+              <Translation AttributeName="Text" Text="Nein" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FEin.5FAus_EN-46805">
+              <Translation AttributeName="Text" Text="letzter Wert" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FEin.5FAus_EN-42497">
+              <Translation AttributeName="Text" Text="Grundhelligkeit" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FEin.5FAus_EN-42521">
+              <Translation AttributeName="Text" Text="10%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FEin.5FAus_EN-42547">
+              <Translation AttributeName="Text" Text="20%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FEin.5FAus_EN-42572">
+              <Translation AttributeName="Text" Text="30%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FEin.5FAus_EN-42598">
+              <Translation AttributeName="Text" Text="40%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FEin.5FAus_EN-42623">
+              <Translation AttributeName="Text" Text="50%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FEin.5FAus_EN-42649">
+              <Translation AttributeName="Text" Text="60%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FEin.5FAus_EN-42674">
+              <Translation AttributeName="Text" Text="70%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FEin.5FAus_EN-42700">
+              <Translation AttributeName="Text" Text="80%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FEin.5FAus_EN-42725">
+              <Translation AttributeName="Text" Text="90%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FEin.5FAus_EN-42751">
+              <Translation AttributeName="Text" Text="100%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FOffset_EN-52761">
+              <Translation AttributeName="Text" Text="0% ... 100%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FOffset_EN-47641">
+              <Translation AttributeName="Text" Text="0% ... 90%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FOffset_EN-42265">
+              <Translation AttributeName="Text" Text="0% ... 80%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FOffset_EN-37145">
+              <Translation AttributeName="Text" Text="0% ... 70%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FOffset_EN-31769">
+              <Translation AttributeName="Text" Text="0% ... 60%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FOffset_EN-26649">
+              <Translation AttributeName="Text" Text="0% ... 50%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FOffset_EN-47406">
+              <Translation AttributeName="Text" Text="10% ... 100%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FOffset_EN-42286">
+              <Translation AttributeName="Text" Text="10% ... 90%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FOffset_EN-36910">
+              <Translation AttributeName="Text" Text="10% ... 80%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FOffset_EN-31790">
+              <Translation AttributeName="Text" Text="10% ... 70%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FOffset_EN-26414">
+              <Translation AttributeName="Text" Text="10% ... 60%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FOffset_EN-21294">
+              <Translation AttributeName="Text" Text="10% ... 50%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FOffset_EN-42306">
+              <Translation AttributeName="Text" Text="20% ... 100%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FOffset_EN-37186">
+              <Translation AttributeName="Text" Text="20% ... 90%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FOffset_EN-26690">
+              <Translation AttributeName="Text" Text="20% ... 70%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FOffset_EN-21314">
+              <Translation AttributeName="Text" Text="20% ... 60%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FOffset_EN-36951">
+              <Translation AttributeName="Text" Text="30% ... 100%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FOffset_EN-31831">
+              <Translation AttributeName="Text" Text="30% ... 90%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FOffset_EN-21335">
+              <Translation AttributeName="Text" Text="30% ... 70%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FOffset_EN-31851">
+              <Translation AttributeName="Text" Text="40% ... 100%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FOffset_EN-26731">
+              <Translation AttributeName="Text" Text="40% ... 90%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FOffset_EN-21355">
+              <Translation AttributeName="Text" Text="40% ... 80%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FOffset_EN-26496">
+              <Translation AttributeName="Text" Text="50% ... 100%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FOffset_EN-21376">
+              <Translation AttributeName="Text" Text="50% ... 90%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FsysTm2.5FBase_EN-33">
+              <Translation AttributeName="Text" Text="Zeitbasis 0,5 ms" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FsysTm2.5FBase_EN-34">
+              <Translation AttributeName="Text" Text="Zeitbasis 8,0 ms" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FsysTm2.5FBase_EN-35">
+              <Translation AttributeName="Text" Text="Zeitbasis 130 ms" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FsysTm2.5FBase_EN-36">
+              <Translation AttributeName="Text" Text="Zeitbasis 2,1 sek" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FsysTm2.5FBase_EN-37">
+              <Translation AttributeName="Text" Text="Zeitbasis 33 sek" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FUpDim_EN-0">
+              <Translation AttributeName="Text" Text="Ja" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FUpDim_EN-40">
+              <Translation AttributeName="Text" Text="Nein" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FWert_EN-0">
+              <Translation AttributeName="Text" Text="sofort übernehmen" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FWert_EN-71">
+              <Translation AttributeName="Text" Text="nur bei Ein übernehmen" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FWertDim_EN-61">
+              <Translation AttributeName="Text" Text="anspringen" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FWertDim_EN-65">
+              <Translation AttributeName="Text" Text="andimmen" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_P-10">
+              <Translation AttributeName="Text" Text="Dimmzeit Basis &#xD;&#xA;(für 1/256 der maximalen Helligkeit)" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_P-12">
+              <Translation AttributeName="Text" Text="Dimmwert" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_P-13">
+              <Translation AttributeName="Text" Text="Dimmwert" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_P-11">
+              <Translation AttributeName="Text" Text="Wert" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_P-6">
+              <Translation AttributeName="Text" Text="Dimmen" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_P-4">
+              <Translation AttributeName="Text" Text="Ein / Aus" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_P-1">
+              <Translation AttributeName="Text" Text="Allgemein" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_P-9">
+              <Translation AttributeName="Text" Text="Dimmzeit Faktor (5-255) &#xD;&#xA;(für 1/256 der maximalen Helligkeit)" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_P-8">
+              <Translation AttributeName="Text" Text="Über Dimmen Ausschalten möglich" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_P-7">
+              <Translation AttributeName="Text" Text="Über Dimmen Einschalten möglich" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_P-5">
+              <Translation AttributeName="Text" Text="Einschaltwert" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_P-3">
+              <Translation AttributeName="Text" Text="Dimmbereich von ... bis" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_P-2">
+              <Translation AttributeName="Text" Text="Bei Busspannungswiederkehr" />
+            </TranslationElement>
+          </TranslationUnit>
+        </Language>
+        <Language Identifier="en-US">
+          <TranslationUnit RefId="M-0001_A-6102-01-A218">
+            <TranslationElement RefId="M-0001_A-6102-01-A218">
+              <Translation AttributeName="Name" Text="11 A1 Dimmer  610201" />
+              <Translation AttributeName="VisibleDescription" Text="Description - see file:   610201_apb_e.pdf" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_O-0">
+              <Translation AttributeName="Text" Text="Switch, Status" />
+              <Translation AttributeName="FunctionText" Text="On / Off" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_O-1">
+              <Translation AttributeName="Text" Text="Dimming" />
+              <Translation AttributeName="FunctionText" Text="Brighter / Darker" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_O-2">
+              <Translation AttributeName="Text" Text="Set x %" />
+              <Translation AttributeName="FunctionText" Text="8-bit Value" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_O-3">
+              <Translation AttributeName="Text" Text="Status" />
+              <Translation AttributeName="FunctionText" Text="8-bit Value" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FCfgInit_EN-16336">
+              <Translation AttributeName="Text" Text="switch off" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FCfgInit_EN-40349">
+              <Translation AttributeName="Text" Text="switch on" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FDownDim_EN-0">
+              <Translation AttributeName="Text" Text="Yes" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FDownDim_EN-1">
+              <Translation AttributeName="Text" Text="No" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FEin.5FAus_EN-46805">
+              <Translation AttributeName="Text" Text="last value" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FEin.5FAus_EN-42497">
+              <Translation AttributeName="Text" Text="Background brightness" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FEin.5FAus_EN-42521">
+              <Translation AttributeName="Text" Text="10%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FEin.5FAus_EN-42547">
+              <Translation AttributeName="Text" Text="20%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FEin.5FAus_EN-42572">
+              <Translation AttributeName="Text" Text="30%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FEin.5FAus_EN-42598">
+              <Translation AttributeName="Text" Text="40%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FEin.5FAus_EN-42623">
+              <Translation AttributeName="Text" Text="50%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FEin.5FAus_EN-42649">
+              <Translation AttributeName="Text" Text="60%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FEin.5FAus_EN-42674">
+              <Translation AttributeName="Text" Text="70%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FEin.5FAus_EN-42700">
+              <Translation AttributeName="Text" Text="80%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FEin.5FAus_EN-42725">
+              <Translation AttributeName="Text" Text="90%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FEin.5FAus_EN-42751">
+              <Translation AttributeName="Text" Text="100%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FOffset_EN-52761">
+              <Translation AttributeName="Text" Text="0% ... 100%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FOffset_EN-47641">
+              <Translation AttributeName="Text" Text="0% ... 90%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FOffset_EN-42265">
+              <Translation AttributeName="Text" Text="0% ... 80%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FOffset_EN-37145">
+              <Translation AttributeName="Text" Text="0% ... 70%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FOffset_EN-31769">
+              <Translation AttributeName="Text" Text="0% ... 60%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FOffset_EN-26649">
+              <Translation AttributeName="Text" Text="0% ... 50%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FOffset_EN-47406">
+              <Translation AttributeName="Text" Text="10% ... 100%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FOffset_EN-42286">
+              <Translation AttributeName="Text" Text="10% ... 90%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FOffset_EN-36910">
+              <Translation AttributeName="Text" Text="10% ... 80%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FOffset_EN-31790">
+              <Translation AttributeName="Text" Text="10% ... 70%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FOffset_EN-26414">
+              <Translation AttributeName="Text" Text="10% ... 60%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FOffset_EN-21294">
+              <Translation AttributeName="Text" Text="10% ... 50%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FOffset_EN-42306">
+              <Translation AttributeName="Text" Text="20% ... 100%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FOffset_EN-37186">
+              <Translation AttributeName="Text" Text="20% ... 90%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FOffset_EN-26690">
+              <Translation AttributeName="Text" Text="20% ... 70%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FOffset_EN-21314">
+              <Translation AttributeName="Text" Text="20% ... 60%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FOffset_EN-36951">
+              <Translation AttributeName="Text" Text="30% ... 100%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FOffset_EN-31831">
+              <Translation AttributeName="Text" Text="30% ... 90%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FOffset_EN-21335">
+              <Translation AttributeName="Text" Text="30% ... 70%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FOffset_EN-31851">
+              <Translation AttributeName="Text" Text="40% ... 100%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FOffset_EN-26731">
+              <Translation AttributeName="Text" Text="40% ... 90%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FOffset_EN-21355">
+              <Translation AttributeName="Text" Text="40% ... 80%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FOffset_EN-26496">
+              <Translation AttributeName="Text" Text="50% ... 100%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FOffset_EN-21376">
+              <Translation AttributeName="Text" Text="50% ... 90%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FsysTm2.5FBase_EN-33">
+              <Translation AttributeName="Text" Text="Time base 0.5 ms" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FsysTm2.5FBase_EN-34">
+              <Translation AttributeName="Text" Text="Time base 8.0 ms" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FsysTm2.5FBase_EN-35">
+              <Translation AttributeName="Text" Text="Time base 130 ms" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FsysTm2.5FBase_EN-36">
+              <Translation AttributeName="Text" Text="Time base 2.1 sec" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FsysTm2.5FBase_EN-37">
+              <Translation AttributeName="Text" Text="Time base 33 sec" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FUpDim_EN-0">
+              <Translation AttributeName="Text" Text="Yes" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FUpDim_EN-40">
+              <Translation AttributeName="Text" Text="No" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FWert_EN-0">
+              <Translation AttributeName="Text" Text="accept immediately" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FWert_EN-71">
+              <Translation AttributeName="Text" Text="only accept on On" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FWertDim_EN-61">
+              <Translation AttributeName="Text" Text="jump" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FWertDim_EN-65">
+              <Translation AttributeName="Text" Text="dimming" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_P-10">
+              <Translation AttributeName="Text" Text="Base for dimming time &#xD;&#xA;(for 1/256 of maximum brightness)" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_P-12">
+              <Translation AttributeName="Text" Text="Dimming value" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_P-13">
+              <Translation AttributeName="Text" Text="Dimming value" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_P-11">
+              <Translation AttributeName="Text" Text="Value" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_P-6">
+              <Translation AttributeName="Text" Text="Dimming" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_P-4">
+              <Translation AttributeName="Text" Text="On / Off" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_P-1">
+              <Translation AttributeName="Text" Text="General" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_P-9">
+              <Translation AttributeName="Text" Text="Factor for dimming time (5-255) &#xD;&#xA;(for 1/256 of maximum brightness)" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_P-8">
+              <Translation AttributeName="Text" Text="Switching off possible via dimming" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_P-7">
+              <Translation AttributeName="Text" Text="Switching on possible via dimming" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_P-5">
+              <Translation AttributeName="Text" Text="Starting value" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_P-3">
+              <Translation AttributeName="Text" Text="Dimming range from ... to" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_P-2">
+              <Translation AttributeName="Text" Text="On bus voltage recovery" />
+            </TranslationElement>
+          </TranslationUnit>
+        </Language>
+        <Language Identifier="it-IT">
+          <TranslationUnit RefId="M-0001_A-6102-01-A218">
+            <TranslationElement RefId="M-0001_A-6102-01-A218">
+              <Translation AttributeName="Name" Text="11 A1 Dimmer  610201" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_O-0">
+              <Translation AttributeName="Text" Text="Commuta stato" />
+              <Translation AttributeName="FunctionText" Text="On / Off" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_O-1">
+              <Translation AttributeName="Text" Text="Dimmerizzazione" />
+              <Translation AttributeName="FunctionText" Text="Chiaro / Scuro" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_O-2">
+              <Translation AttributeName="Text" Text="Imposta x %" />
+              <Translation AttributeName="FunctionText" Text="Valore 8-bit" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_O-3">
+              <Translation AttributeName="Text" Text="Stato" />
+              <Translation AttributeName="FunctionText" Text="Valore 8-bit" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FCfgInit_EN-16336">
+              <Translation AttributeName="Text" Text="commuta Off" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FCfgInit_EN-40349">
+              <Translation AttributeName="Text" Text="accendere" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FDownDim_EN-0">
+              <Translation AttributeName="Text" Text="si" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FDownDim_EN-1">
+              <Translation AttributeName="Text" Text="no" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FEin.5FAus_EN-46805">
+              <Translation AttributeName="Text" Text="ultimo valore" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FEin.5FAus_EN-42497">
+              <Translation AttributeName="Text" Text="luminosità di sfondo" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FEin.5FAus_EN-42521">
+              <Translation AttributeName="Text" Text="10%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FEin.5FAus_EN-42547">
+              <Translation AttributeName="Text" Text="20%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FEin.5FAus_EN-42572">
+              <Translation AttributeName="Text" Text="30%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FEin.5FAus_EN-42598">
+              <Translation AttributeName="Text" Text="40%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FEin.5FAus_EN-42623">
+              <Translation AttributeName="Text" Text="50%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FEin.5FAus_EN-42649">
+              <Translation AttributeName="Text" Text="60%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FEin.5FAus_EN-42674">
+              <Translation AttributeName="Text" Text="70%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FEin.5FAus_EN-42700">
+              <Translation AttributeName="Text" Text="80%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FEin.5FAus_EN-42725">
+              <Translation AttributeName="Text" Text="90%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FEin.5FAus_EN-42751">
+              <Translation AttributeName="Text" Text="100%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FOffset_EN-52761">
+              <Translation AttributeName="Text" Text="0% ... 100%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FOffset_EN-47641">
+              <Translation AttributeName="Text" Text="0% ... 90%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FOffset_EN-42265">
+              <Translation AttributeName="Text" Text="0% ... 80%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FOffset_EN-37145">
+              <Translation AttributeName="Text" Text="0% ... 70%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FOffset_EN-31769">
+              <Translation AttributeName="Text" Text="0% ... 60%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FOffset_EN-26649">
+              <Translation AttributeName="Text" Text="0% ... 50%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FOffset_EN-47406">
+              <Translation AttributeName="Text" Text="10% ... 100%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FOffset_EN-42286">
+              <Translation AttributeName="Text" Text="10% ... 90%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FOffset_EN-36910">
+              <Translation AttributeName="Text" Text="10% ... 80%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FOffset_EN-31790">
+              <Translation AttributeName="Text" Text="10% ... 70%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FOffset_EN-26414">
+              <Translation AttributeName="Text" Text="10% ... 60%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FOffset_EN-21294">
+              <Translation AttributeName="Text" Text="10% ... 50%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FOffset_EN-42306">
+              <Translation AttributeName="Text" Text="20% ... 100%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FOffset_EN-37186">
+              <Translation AttributeName="Text" Text="20% ... 90%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FOffset_EN-26690">
+              <Translation AttributeName="Text" Text="20% ... 70%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FOffset_EN-21314">
+              <Translation AttributeName="Text" Text="20% ... 60%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FOffset_EN-36951">
+              <Translation AttributeName="Text" Text="30% ... 100%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FOffset_EN-31831">
+              <Translation AttributeName="Text" Text="30% ... 90%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FOffset_EN-21335">
+              <Translation AttributeName="Text" Text="30% ... 70%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FOffset_EN-31851">
+              <Translation AttributeName="Text" Text="40% ... 100%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FOffset_EN-26731">
+              <Translation AttributeName="Text" Text="40% ... 90%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FOffset_EN-21355">
+              <Translation AttributeName="Text" Text="40% ... 80%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FOffset_EN-26496">
+              <Translation AttributeName="Text" Text="50% ... 100%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FOffset_EN-21376">
+              <Translation AttributeName="Text" Text="50% ... 90%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FsysTm2.5FBase_EN-33">
+              <Translation AttributeName="Text" Text="tempo base 0.5 ms" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FsysTm2.5FBase_EN-34">
+              <Translation AttributeName="Text" Text="base tempi 8.0 ms" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FsysTm2.5FBase_EN-35">
+              <Translation AttributeName="Text" Text="base tempi 130 ms" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FsysTm2.5FBase_EN-36">
+              <Translation AttributeName="Text" Text="base tempi 2.1 sec" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FsysTm2.5FBase_EN-37">
+              <Translation AttributeName="Text" Text="base tempi 33 sec" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FUpDim_EN-0">
+              <Translation AttributeName="Text" Text="si" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FUpDim_EN-40">
+              <Translation AttributeName="Text" Text="no" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FWert_EN-0">
+              <Translation AttributeName="Text" Text="accetta immediatamente" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FWert_EN-71">
+              <Translation AttributeName="Text" Text="accetta solamente su On" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FWertDim_EN-61">
+              <Translation AttributeName="Text" Text="salta" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FWertDim_EN-65">
+              <Translation AttributeName="Text" Text="dimmerizzazione" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_P-10">
+              <Translation AttributeName="Text" Text="Base per tempo di dimmerizzazione &#xD;&#xA;(per 1/256 di massima luminosità)" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_P-12">
+              <Translation AttributeName="Text" Text="Valore dimming" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_P-13">
+              <Translation AttributeName="Text" Text="Valore dimming" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_P-11">
+              <Translation AttributeName="Text" Text="valore" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_P-6">
+              <Translation AttributeName="Text" Text="Dimmerizzazione" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_P-4">
+              <Translation AttributeName="Text" Text="On / Off" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_P-1">
+              <Translation AttributeName="Text" Text="Generale" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_P-9">
+              <Translation AttributeName="Text" Text="Fatt. tempo per dimmerizzazione (5-255) &#xD;&#xA;(per 1/256 della max luminosità" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_P-8">
+              <Translation AttributeName="Text" Text="Spegnimento via dimming" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_P-7">
+              <Translation AttributeName="Text" Text="Accensione via dimming" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_P-5">
+              <Translation AttributeName="Text" Text="Valore di accensione" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_P-3">
+              <Translation AttributeName="Text" Text="Intervallo di dimmerizzazione da ... a" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_P-2">
+              <Translation AttributeName="Text" Text="Al ripristino tensione bus" />
+            </TranslationElement>
+          </TranslationUnit>
+        </Language>
+        <Language Identifier="es-ES">
+          <TranslationUnit RefId="M-0001_A-6102-01-A218">
+            <TranslationElement RefId="M-0001_A-6102-01-A218">
+              <Translation AttributeName="VisibleDescription" Text="Descripción - ver fichero:   610201_apb_es.pdf" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_O-0">
+              <Translation AttributeName="Text" Text="Conectar, Status" />
+              <Translation AttributeName="FunctionText" Text="Encender / Apagar" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_O-1">
+              <Translation AttributeName="Text" Text="Regulación" />
+              <Translation AttributeName="FunctionText" Text="Aclarar/ oscurecer" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_O-2">
+              <Translation AttributeName="Text" Text="Ajustar x %" />
+              <Translation AttributeName="FunctionText" Text="Valor 8 bits" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_O-3">
+              <Translation AttributeName="Text" Text="Estado" />
+              <Translation AttributeName="FunctionText" Text="Valor 8 bits" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FCfgInit_EN-16336">
+              <Translation AttributeName="Text" Text="desconectar" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FCfgInit_EN-40349">
+              <Translation AttributeName="Text" Text="Conectar" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FDownDim_EN-0">
+              <Translation AttributeName="Text" Text="sí" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FDownDim_EN-1">
+              <Translation AttributeName="Text" Text="no" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FEin.5FAus_EN-46805">
+              <Translation AttributeName="Text" Text="último Valor" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FEin.5FAus_EN-42497">
+              <Translation AttributeName="Text" Text="Luminosidad de base" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FEin.5FAus_EN-42521">
+              <Translation AttributeName="Text" Text="10%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FEin.5FAus_EN-42547">
+              <Translation AttributeName="Text" Text="20%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FEin.5FAus_EN-42572">
+              <Translation AttributeName="Text" Text="30%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FEin.5FAus_EN-42598">
+              <Translation AttributeName="Text" Text="40%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FEin.5FAus_EN-42623">
+              <Translation AttributeName="Text" Text="50%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FEin.5FAus_EN-42649">
+              <Translation AttributeName="Text" Text="60%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FEin.5FAus_EN-42674">
+              <Translation AttributeName="Text" Text="70%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FEin.5FAus_EN-42700">
+              <Translation AttributeName="Text" Text="80%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FEin.5FAus_EN-42725">
+              <Translation AttributeName="Text" Text="90%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FEin.5FAus_EN-42751">
+              <Translation AttributeName="Text" Text="100%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FOffset_EN-52761">
+              <Translation AttributeName="Text" Text="0% ... 100%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FOffset_EN-47641">
+              <Translation AttributeName="Text" Text="0% ... 90%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FOffset_EN-42265">
+              <Translation AttributeName="Text" Text="0% ... 80%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FOffset_EN-37145">
+              <Translation AttributeName="Text" Text="0% ... 70%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FOffset_EN-31769">
+              <Translation AttributeName="Text" Text="0% ... 60%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FOffset_EN-26649">
+              <Translation AttributeName="Text" Text="0% ... 50%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FOffset_EN-47406">
+              <Translation AttributeName="Text" Text="10% ... 100%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FOffset_EN-42286">
+              <Translation AttributeName="Text" Text="10% ... 90%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FOffset_EN-36910">
+              <Translation AttributeName="Text" Text="10% ... 80%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FOffset_EN-31790">
+              <Translation AttributeName="Text" Text="10% ... 70%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FOffset_EN-26414">
+              <Translation AttributeName="Text" Text="10% ... 60%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FOffset_EN-21294">
+              <Translation AttributeName="Text" Text="10% ... 50%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FOffset_EN-42306">
+              <Translation AttributeName="Text" Text="20% ... 100%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FOffset_EN-37186">
+              <Translation AttributeName="Text" Text="20% ... 90%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FOffset_EN-26690">
+              <Translation AttributeName="Text" Text="20% ... 70%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FOffset_EN-21314">
+              <Translation AttributeName="Text" Text="20% ... 60%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FOffset_EN-36951">
+              <Translation AttributeName="Text" Text="30% ... 100%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FOffset_EN-31831">
+              <Translation AttributeName="Text" Text="30% ... 90%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FOffset_EN-21335">
+              <Translation AttributeName="Text" Text="30% ... 70%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FOffset_EN-31851">
+              <Translation AttributeName="Text" Text="40% ... 100%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FOffset_EN-26731">
+              <Translation AttributeName="Text" Text="40% ... 90%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FOffset_EN-21355">
+              <Translation AttributeName="Text" Text="40% ... 80%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FOffset_EN-26496">
+              <Translation AttributeName="Text" Text="50% ... 100%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FOffset_EN-21376">
+              <Translation AttributeName="Text" Text="50% ... 90%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FsysTm2.5FBase_EN-33">
+              <Translation AttributeName="Text" Text="Base de tiempos 0,5 ms" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FsysTm2.5FBase_EN-34">
+              <Translation AttributeName="Text" Text="Base de tiempos 8,0 ms" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FsysTm2.5FBase_EN-35">
+              <Translation AttributeName="Text" Text="Base de tiempos 130 ms" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FsysTm2.5FBase_EN-36">
+              <Translation AttributeName="Text" Text="Base de tiempos 2,1 seg" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FsysTm2.5FBase_EN-37">
+              <Translation AttributeName="Text" Text="Base de tiempo 33 seg" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FUpDim_EN-0">
+              <Translation AttributeName="Text" Text="sí" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FUpDim_EN-40">
+              <Translation AttributeName="Text" Text="no" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FWert_EN-0">
+              <Translation AttributeName="Text" Text="aceptar inmediatamente" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FWert_EN-71">
+              <Translation AttributeName="Text" Text="aceptar sólo si On" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FWertDim_EN-61">
+              <Translation AttributeName="Text" Text="Salto" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_PT-t.5FWertDim_EN-65">
+              <Translation AttributeName="Text" Text="regul. a valor" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_P-10">
+              <Translation AttributeName="Text" Text="Tiempo de regulación, Base&#xD;&#xA;(para 1/256 de la máxima luminosidad)" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_P-12">
+              <Translation AttributeName="Text" Text="Valor de regulación" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_P-13">
+              <Translation AttributeName="Text" Text="Valor de regulación" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_P-11">
+              <Translation AttributeName="Text" Text="Valor" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_P-6">
+              <Translation AttributeName="Text" Text="Regulación" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_P-4">
+              <Translation AttributeName="Text" Text="Encender / Apagar" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_P-1">
+              <Translation AttributeName="Text" Text="General" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_P-9">
+              <Translation AttributeName="Text" Text="Tiempo de regulación, Factor (5-255) &#xD;&#xA;(para 1/256 de máx. luminosidad)" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_P-8">
+              <Translation AttributeName="Text" Text="Desconexión posible mediante regulación" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_P-7">
+              <Translation AttributeName="Text" Text="Conexión posible con la regulación" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_P-5">
+              <Translation AttributeName="Text" Text="Valor inicial" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_P-3">
+              <Translation AttributeName="Text" Text="Rango de regulación desde ... A" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-6102-01-A218_P-2">
+              <Translation AttributeName="Text" Text="Ante vuelta de tensión en el bus" />
+            </TranslationElement>
+          </TranslationUnit>
+        </Language>
+        <Language Identifier="fr-FR">
+          <TranslationUnit RefId="M-0001_A-6102-01-A218">
+            <TranslationElement RefId="M-0001_A-6102-01-A218">
+              <Translation AttributeName="VisibleDescription" Text="&#xD;&#xA;&#xD;&#xA;" />
+            </TranslationElement>
+          </TranslationUnit>
+        </Language>
+        <Language Identifier="id-ID">
+          <TranslationUnit RefId="M-0001_A-6102-01-A218">
+            <TranslationElement RefId="M-0001_A-6102-01-A218">
+              <Translation AttributeName="VisibleDescription" Text="&#xD;&#xA;&#xD;&#xA;" />
+            </TranslationElement>
+          </TranslationUnit>
+        </Language>
+        <Language Identifier="nb-NO">
+          <TranslationUnit RefId="M-0001_A-6102-01-A218">
+            <TranslationElement RefId="M-0001_A-6102-01-A218">
+              <Translation AttributeName="VisibleDescription" Text="&#xD;&#xA;&#xD;&#xA;" />
+            </TranslationElement>
+          </TranslationUnit>
+        </Language>
+        <Language Identifier="sv-SE">
+          <TranslationUnit RefId="M-0001_A-6102-01-A218">
+            <TranslationElement RefId="M-0001_A-6102-01-A218">
+              <Translation AttributeName="VisibleDescription" Text="&#xD;&#xA;&#xD;&#xA;" />
+            </TranslationElement>
+          </TranslationUnit>
+        </Language>
+      </Languages></Manufacturer>
+  </ManufacturerData>
+</KNX>
