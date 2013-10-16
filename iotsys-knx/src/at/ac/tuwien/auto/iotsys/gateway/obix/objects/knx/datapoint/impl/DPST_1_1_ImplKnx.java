@@ -16,7 +16,6 @@ public class DPST_1_1_ImplKnx extends DPST_1_1_Impl
 
 	private GroupAddress groupAddress;
 	private KNXConnector connector;
-	private boolean readable;
 	private boolean writable;
 
 	public DPST_1_1_ImplKnx(KNXConnector connector, GroupAddress groupAddress, String name, String displayName, String display, boolean writable, boolean readable)
@@ -26,11 +25,7 @@ public class DPST_1_1_ImplKnx extends DPST_1_1_Impl
 		this.groupAddress = groupAddress;
 		this.connector = connector;
 		this.writable = writable;
-		this.readable = readable;
 
-		// if it is not possible to read from the group address --> create a watchdog that monitors the communication
-		//if (!this.readable)
-		// --> always create a watch dog
 		this.createWatchDog();
 	}
 

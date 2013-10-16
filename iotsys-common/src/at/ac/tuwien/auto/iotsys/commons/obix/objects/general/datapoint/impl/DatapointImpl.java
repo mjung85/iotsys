@@ -51,7 +51,7 @@ public abstract class DatapointImpl extends Obj implements DataPoint
 		this.setDisplay(display);
 		this.setDisplayName(displayName);
 		this.setHidden(true);
-		this.setHref(new Uri(UriEncoder.getEscapedUri(name)));
+		this.setHref(new Uri(UriEncoder.getEscapedUri(displayName)));
 
 		// contracts
 		this.addIs(new Contract(DataPoint.CONTRACT));

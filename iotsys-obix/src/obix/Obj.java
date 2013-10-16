@@ -53,9 +53,12 @@ public class Obj implements IObj, Subject, AlarmSource, Cloneable
 		{
 			addTranslation(language, TranslationAttribute.display, value);
 		}
-		throw new Exception("translation attribute '" + attribute + "' is not supported");
+		else
+		{
+			throw new Exception("translation attribute '" + attribute + "' is not supported");
+		}
 	}
-	
+
 	public void addTranslations(Obj obj)
 	{
 		this.translations = obj.translations;

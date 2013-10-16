@@ -1,11 +1,9 @@
 package at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.knx;
 
-import java.io.UnsupportedEncodingException;
 import java.util.logging.Logger;
 
 import obix.Obj;
 import at.ac.tuwien.auto.calimero.GroupAddress;
-import at.ac.tuwien.auto.calimero.dptxlator.DPTXlator;
 import at.ac.tuwien.auto.calimero.dptxlator.DPTXlator8BitUnsigned;
 import at.ac.tuwien.auto.calimero.exception.KNXException;
 import at.ac.tuwien.auto.calimero.process.ProcessCommunicator;

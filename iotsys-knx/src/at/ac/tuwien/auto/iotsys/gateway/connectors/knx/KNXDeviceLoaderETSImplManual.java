@@ -83,12 +83,10 @@ public class KNXDeviceLoaderETSImplManual implements DeviceLoader
 		// }
 		// catch (UnknownHostException e)
 		// {
-		// // TODO Auto-generated catch block
 		// e.printStackTrace();
 		// }
 		// catch (KNXException e)
 		// {
-		// // TODO Auto-generated catch block
 		// e.printStackTrace();
 		// }
 	}
