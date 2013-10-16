@@ -46,10 +46,10 @@ public class UnitImpl extends Obj implements Unit
 	private Real scale;
 	private Real offset;
 
-	public UnitImpl(String name, String display, Uri href, String symbol, double scale, double offset, DimensionImpl dimension)
+	public UnitImpl(String name, String displayName, Uri href, String symbol, double scale, double offset, DimensionImpl dimension)
 	{
 		this.setName(name);
-		this.setDisplay(display);
+		this.setDisplayName(displayName);
 		this.setIs(new Contract(Unit.CONTRACT));
 		this.setHref(href);
 		this.setHidden(true);

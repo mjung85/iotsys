@@ -46,8 +46,8 @@ public class EncodingOnOffImpl extends EncodingImpl implements EncodingOnOff
 		BoolElement on = new BoolElement(EncodingOnOff.KEY_ON, "On", true);
 		BoolElement off = new BoolElement(EncodingOnOff.KEY_OFF, "Off", false);
 
-		// on.addTranslation(new TranslationImpl(EnumLanguage.KEY_DE_DE,EnumTranslation.KEY_DISPLAYNAME,"Ein"));
-		// off.addTranslation(new TranslationImpl(EnumLanguage.KEY_DE_DE,EnumTranslation.KEY_DISPLAYNAME,"Aus"));
+		on.addTranslation("de",TranslationAttribute.displayName,"Ein");
+		off.addTranslation("de",TranslationAttribute.displayName,"Aus");
 
 		addElement(on);
 		addElement(off);

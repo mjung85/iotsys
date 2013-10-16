@@ -43,6 +43,6 @@ public class UnitPercentImpl extends UnitImpl implements UnitPercent
 		super("percent", "percentage (0..100%)", new Uri(UnitPercent.HREF), "%", 1, 0, new DimensionImpl(0, 0, 0, 0, 0, 0, 0));
 
 		// Translations
-		//this.addTranslation(new TranslationImpl(EnumLanguage.KEY_DE_DE, EnumTranslation.KEY_DISPLAY, "Prozent (0..100%)"));
+		addTranslation("de",TranslationAttribute.displayName,"Prozent (0..100%)");
 	}
 }

@@ -43,6 +43,6 @@ public class UnitHectopascalImpl extends UnitImpl implements UnitHectopascal
 		super("hectopascal", "atmospheric pressure (hPa)", new Uri(UnitHectopascal.HREF), "hPa", 100, 0, new DimensionImpl(1, -1, -2, 0, 0, 0, 0));
 
 		// Translations
-		//this.addTranslation(new TranslationImpl(EnumLanguage.KEY_DE_DE, EnumTranslation.KEY_DISPLAY, "Luftdruck (hPa)"));
+		addTranslation("de",TranslationAttribute.displayName,"Luftdruck (hPa)");
 	}
 }

@@ -43,6 +43,6 @@ public class UnitMillimeterImpl extends UnitImpl implements UnitMillimeter
 		super("millimeter", "millimeter (mm)", new Uri(UnitMillimeter.HREF), "mm", 0.001, 0, new DimensionImpl(0, 1, 0, 0, 0, 0, 0));
 
 		// Translations
-		//this.addTranslation(new TranslationImpl(EnumLanguage.KEY_DE_DE, EnumTranslation.KEY_DISPLAY, "Millimeter (mm)"));
+		addTranslation("de",TranslationAttribute.displayName,"Millimeter (mm)");
 	}
 }
