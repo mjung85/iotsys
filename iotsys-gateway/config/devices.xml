@@ -15,8 +15,8 @@
     </device-loader>
     <device-loader>at.ac.tuwien.auto.iotsys.demoapp.DemoAppLoaderImpl
     </device-loader>
-    <!-- <device-loader>at.ac.tuwien.auto.iotsys.gateway.connectors.knx.KNXDeviceLoaderETSImpl 
-    </device-loader> -->
+    <device-loader>at.ac.tuwien.auto.iotsys.gateway.connectors.knx.KNXDeviceLoaderETSImpl 
+    </device-loader>
     <device-loader>at.ac.tuwien.auto.iotsys.gateway.connectors.weatherforecast.WeatherForecastDeviceLoaderImpl
     </device-loader>
   </deviceloaders>
@@ -100,11 +100,11 @@
 
   <knx-ets>
     <connector>
-        <knx-export>knx-config/suitcase.xml</knx-export>
-        <config>knx-config/suitcase_2013-09-05.xml</config>
-        <forceRefresh>false</forceRefresh>
-        <name>KNX TP1 Suitcase</name>
-        <enabled>false</enabled>
+    	<name>KNX TP1 Suitcase</name>
+    	<enabled>true</enabled>
+        <knx-proj>knx-config/projects/Suitcase_2013-09-05.knxproj</knx-proj>
+        <!-- forces unpacking of zip and transformation -->
+        <forceRefresh>false</forceRefresh>               
         <router>
             <ip>192.168.161.59</ip>
             <port>3671</port>
@@ -112,6 +112,7 @@
         <localIP>auto</localIP>
     </connector>
   </knx-ets>
+  
   <knx>
     <connector>
       <name>KNX TP1 Suitcase</name>
