@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<KNX xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" CreatedBy="ETS4" ToolVersion="ETS 4.1.4 (Build 3109)" xmlns="http://knx.org/xml/project/11">
+  <Project Id="P-0341">
+    <ProjectInformation Name="Suitcase" LastModified="2013-09-05T11:05:14" ProjectStart="2013-06-12T13:52:50" ProjectId="0" ProjectTracingLevel="None" Hide16BitGroupsFromLegacyPlugins="1" GroupAddressStyle="ThreeLevel" CompletionStatus="Undefined" />
+  </Project>
+</KNX>

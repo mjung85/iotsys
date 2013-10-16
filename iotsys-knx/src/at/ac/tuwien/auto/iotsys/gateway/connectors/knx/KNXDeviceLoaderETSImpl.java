@@ -20,6 +20,10 @@
 
 package at.ac.tuwien.auto.iotsys.gateway.connectors.knx;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -30,6 +34,15 @@ import java.util.Collection;
 import java.util.Hashtable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
+
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.stream.StreamSource;
 
 import obix.Contract;
 import obix.List;
@@ -38,6 +51,10 @@ import obix.Uri;
 
 import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.commons.configuration.XMLConfiguration;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.filefilter.FileFilterUtils;
+import org.apache.commons.io.filefilter.IOFileFilter;
+import org.apache.commons.io.filefilter.RegexFileFilter;
 
 import at.ac.tuwien.auto.calimero.GroupAddress;
 import at.ac.tuwien.auto.calimero.exception.KNXException;
@@ -57,31 +74,150 @@ import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.view.impl.PartImpl;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.knx.datapoint.impl.DataPointInit;
 
 public class KNXDeviceLoaderETSImpl implements DeviceLoader {
-	private static Logger log = Logger.getLogger(KNXDeviceLoaderImpl.class
+	private static Logger log = Logger.getLogger(KNXDeviceLoaderETSImpl.class
 			.getName());
 
 	private XMLConfiguration devicesConfig;
 
+	private XMLConfiguration connectorsConfig;
+
 	private ArrayList<String> myObjects = new ArrayList<String>();
 
 	public ArrayList<Connector> initDevices(ObjectBroker objectBroker) {
-		try {
-			devicesConfig = new XMLConfiguration(
-					"knx-config/Suitcase_2013-09-05.xml");
-		} catch (Exception e) {
-			log.log(Level.SEVERE, e.getMessage(), e);
-		}
+
+		setConfiguration(devicesConfig);
 
 		ArrayList<Connector> connectors = new ArrayList<Connector>();
 
-		KNXConnector knxConnector = new KNXConnector("192.168.161.59", 3671,
-				"auto");
+		Object knxConnectors = devicesConfig
+				.getProperty("knx-ets.connector.name");
 
-		connect(knxConnector);
+		int connectorsSize = 0;
 
-		initNetworks(knxConnector, objectBroker);
+		if (knxConnectors != null) {
+			connectorsSize = 1;
+		}
 
-		connectors.add(knxConnector);
+		if (knxConnectors instanceof Collection<?>) {
+			connectorsSize = ((Collection<?>) knxConnectors).size();
+		}
+
+		for (int connector = 0; connector < connectorsSize; connector++) {
+			HierarchicalConfiguration subConfig = devicesConfig
+					.configurationAt("knx-ets.connector(" + connector + ")");
+
+			String connectorName = subConfig.getString("name");
+			String routerIP = subConfig.getString("router.ip");
+			int routerPort = subConfig.getInteger("router.port", 3671);
+			String localIP = subConfig.getString("localIP");
+			Boolean enabled = subConfig.getBoolean("enabled", false);
+			Boolean forceRefresh = subConfig.getBoolean("forceRefresh", false);
+			String knxProj = subConfig.getString("knx-proj");
+
+			if (enabled) {
+				File file = new File(knxProj);
+
+				if (!file.exists() || file.isDirectory()
+						|| !file.getName().endsWith(".knxproj")
+						|| file.getName().length() < 8) {
+					log.warning("KNX project file " + knxProj
+							+ " is not a valid KNX project file.");
+					continue;
+				}
+
+				String projDirName = knxProj.substring(0, knxProj.length() - 8);
+
+				File projDir = new File(projDirName);
+
+				if (!projDir.exists() || forceRefresh) {
+					log.info("Expanding " + knxProj + " into directory "
+							+ projDirName);
+					unZip(knxProj, projDirName);
+				}
+
+				String directory = "file:///"
+						+ projDir.getAbsolutePath().replace('\\', '/');
+
+				// now the unpacked ETS project should be available in the
+				// directory
+				String transformFileName = directory + "/"
+						+ file.getName().replaceFirst(".knxproj", "") + ".xml";
+
+				File transformFile = new File(transformFileName);
+
+				if (!transformFile.exists() || forceRefresh) {
+					log.info("Transforming ETS configuration.");
+					System.setProperty(
+							"javax.xml.transform.TransformerFactory",
+							"net.sf.saxon.TransformerFactoryImpl");
+					// Create a transform factory instance.
+					TransformerFactory tfactory = TransformerFactory
+							.newInstance();
+
+					// Create a transformer for the stylesheet.
+					Transformer transformer;
+
+					try {
+						transformer = tfactory.newTransformer(new StreamSource(
+								"knx-config/stylesheet_knx.xsl"));
+						Collection<File> listFiles = FileUtils.listFiles(
+								projDir,
+								FileFilterUtils.nameFileFilter("0.xml"),
+								new IOFileFilter() {
+
+									@Override
+									public boolean accept(File file) {
+										return true;
+									}
+
+									@Override
+									public boolean accept(File dir, String name) {
+										return true;
+									}
+
+								});
+						if (listFiles.size() != 1) {
+							log.severe("Found no or more than one 0.xml file in "
+									+ projDirName);
+							continue;
+						}
+
+						// String directory = "projects/Suitcase_2013-09-05";
+						log.info("Transforming with directory parameter set to "
+								+ directory);
+
+						transformer.setParameter("directory", directory);
+						transformer.transform(new StreamSource(listFiles
+								.iterator().next().getAbsoluteFile()),
+								new StreamResult(transformFileName));
+
+						log.info("Transformation completed and result written to: "
+								+ transformFileName);
+					} catch (TransformerConfigurationException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (TransformerException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+
+					try {
+						devicesConfig = new XMLConfiguration(transformFileName);
+					} catch (Exception e) {
+						log.log(Level.SEVERE, e.getMessage(), e);
+					}
+
+					KNXConnector knxConnector = new KNXConnector(routerIP,
+							routerPort, localIP);
+
+					connect(knxConnector);
+
+					initNetworks(knxConnector, objectBroker);
+
+					connectors.add(knxConnector);
+				}
+			}
+		}
 
 		return connectors;
 	}
@@ -223,8 +359,9 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader {
 				String language = transConfig.getString("[@language]");
 				String attribute = transConfig.getString("[@attribute]");
 				String value = transConfig.getString("[@value]");
-//				entity.addTranslation(new TranslationImpl(language, attribute,
-//						value));
+				// entity.addTranslation(new TranslationImpl(language,
+				// attribute,
+				// value));
 
 			}
 
@@ -317,7 +454,7 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader {
 						Object[] object = new Object[2];
 						object[0] = knxConnector;
 						DataPointInit dptInit = new DataPointInit();
-//						dptInit.setDisplay(dataPointDescription);
+						// dptInit.setDisplay(dataPointDescription);
 						dptInit.setDisplayName(dataPointDescription);
 						dptInit.setReadable("Enabled".equals(dataPointReadFlag));
 						dptInit.setName(dataPointName);
@@ -330,10 +467,11 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader {
 						object[1] = dptInit;
 						DatapointImpl dataPoint = (DatapointImpl) constructor
 								.newInstance(object);
-						
-						if(dataPoint.get("value") != null){
-							dataPoint.get("value").setDisplayName(dataPointDescription);
-//							dataPoint.get("value").setDisplay(dataPointDescription);
+
+						if (dataPoint.get("value") != null) {
+							dataPoint.get("value").setDisplayName(
+									dataPointDescription);
+							// dataPoint.get("value").setDisplay(dataPointDescription);
 						}
 
 						translations = datapointConfig
@@ -360,15 +498,17 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader {
 									.getString("[@language]");
 							String attribute = transConfig
 									.getString("[@attribute]");
-							
-							String value = arrayToString(transConfig.getStringArray("[@value]"));
-							
-							if(language.equals("en-US") && attribute.equals("name")){
+
+							String value = arrayToString(transConfig
+									.getStringArray("[@value]"));
+
+							if (language.equals("en-US")
+									&& attribute.equals("name")) {
 								dataPoint.setDisplayName(value);
 							}
-														
-//							dataPoint.addTranslation(new TranslationImpl(
-//									language, attribute, value));
+
+							// dataPoint.addTranslation(new TranslationImpl(
+							// language, attribute, value));
 
 						}
 
@@ -450,7 +590,12 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader {
 	public void setConfiguration(XMLConfiguration devicesConfiguration) {
 		this.devicesConfig = devicesConfiguration;
 		if (devicesConfiguration == null) {
-
+			try {
+				devicesConfig = new XMLConfiguration(
+						DEVICE_CONFIGURATION_LOCATION);
+			} catch (Exception e) {
+				log.log(Level.SEVERE, e.getMessage(), e);
+			}
 		}
 	}
 
@@ -805,4 +950,50 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader {
 
 		return dataPointNameBuilder.toString();
 	}
+
+	public void unZip(String zipFile, String outputFolder) {
+
+		byte[] buffer = new byte[1024];
+
+		try {
+
+			File folder = new File(outputFolder);
+			if (!folder.exists()) {
+				folder.mkdir();
+			}
+
+			ZipInputStream zis = new ZipInputStream(
+					new FileInputStream(zipFile));
+
+			ZipEntry ze = zis.getNextEntry();
+
+			while (ze != null) {
+
+				String fileName = ze.getName();
+				File newFile = new File(outputFolder + File.separator
+						+ fileName);
+
+				log.info("file unzip : " + newFile.getAbsoluteFile());
+
+				new File(newFile.getParent()).mkdirs();
+
+				FileOutputStream fos = new FileOutputStream(newFile);
+
+				int len;
+				while ((len = zis.read(buffer)) > 0) {
+					fos.write(buffer, 0, len);
+				}
+
+				fos.close();
+				ze = zis.getNextEntry();
+			}
+
+			zis.closeEntry();
+			zis.close();
+
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		}
+	}
+
 }

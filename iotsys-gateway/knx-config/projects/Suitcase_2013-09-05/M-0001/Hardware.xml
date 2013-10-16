@@ -1,0 +1,282 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<KNX xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" CreatedBy="ETS4" ToolVersion="ETS 4.1.4 (Build 3109)" xmlns="http://knx.org/xml/project/11">
+  <ManufacturerData>
+    <Manufacturer RefId="M-0001">
+      <Hardware>
+        <Hardware Id="M-0001_H-1.20.2F.2F.205WG1.20527.2D1AB01-1" Name="#Universal-Dimmer N 527" SerialNumber="1 // 5WG1 527-1AB01" VersionNumber="1" BusCurrent="5.0000000e+000" IsAccessory="0" HasIndividualAddress="1" HasApplicationProgram="1" HasApplicationProgram2="0" IsPowerSupply="0" IsChoke="0" IsCoupler="0" IsPowerLineRepeater="0" IsPowerLineSignalFilter="0" IsCable="0" NonRegRelevantDataVersion="0" IsIPEnabled="0">
+          <Products>
+            <Product Id="M-0001_H-1.20.2F.2F.205WG1.20527.2D1AB01-1_P-5WG1.20527.2D1AB01" Text="Universal dimmer N 527" OrderNumber="5WG1 527-1AB01" IsRailMounted="1" VisibleDescription="Productinfo - see file:   5271ab01_tpi_e.pdf" DefaultLanguage="en-US" Hash="o7E0ti7THQkpZlzgva+bmaL5H2Q=" NonRegRelevantDataVersion="0">
+              <RegistrationInfo RegistrationStatus="Registered" RegistrationSignature="farFYk5939DeosJVq9DdJe5ciOm3I+knWPbKOFvgpRR4ftVuHzuRMspxXhGQDqrdO8ycupw+sbw6q5XDCVJlxE0g581N+/fZB4EkBZCluycL5mp5ckOeKlKumiFd1OjdAHAIrUTM4/zktIZQ11yWpud84MYz1JqCtiVOiIqI+bw=" />
+            </Product>
+          </Products>
+          <Hardware2Programs>
+            <Hardware2Program Id="M-0001_H-1.20.2F.2F.205WG1.20527.2D1AB01-1_HP-6102-01-A218" MediumTypes="MT-0" Hash="b+4x2UrKoqQop9Q5N+Y8CkiEAP8=">
+              <ApplicationProgramRef RefId="M-0001_A-6102-01-A218" />
+              <RegistrationInfo RegistrationSignature="Wcfw+cBR9jJJ5K2EbeWfqTl3ehUnsXx6EWSjZWF9fDBL79Zg8c0brvKkLSXa9eTLugEM9XDMVOVbbfqkBH8mtiOd5ivmz7qxSW0gQorAqjciikKd92ijY1sZnwsbygGT2C0S42K4GARKHZFbHmweOvZJATJ8khtptqVviQrz/Vg=" RegistrationStatus="Registered" />
+            </Hardware2Program>
+          </Hardware2Programs>
+        </Hardware>
+        <Hardware Id="M-0001_H-hp.5F00002-1" Name="#Taster 4-fach UP 245,246,287 DELTA profil/style" SerialNumber="hp_00002" VersionNumber="1" IsAccessory="0" HasIndividualAddress="1" HasApplicationProgram="1" HasApplicationProgram2="0" IsPowerSupply="0" IsChoke="0" IsCoupler="0" IsPowerLineRepeater="0" IsPowerLineSignalFilter="0" IsCable="0" NonRegRelevantDataVersion="0" IsIPEnabled="0">
+          <Products>
+            <Product Id="M-0001_H-hp.5F00002-1_P-5WG1.20245.2D2AB.5F1" Text="Push button 4-f UP 245 DELTA profil (without sym)" OrderNumber="5WG1 245-2AB_1" IsRailMounted="0" VisibleDescription="Productinfo - see file:   24_2ab_1_tpi_e.pdf" DefaultLanguage="en-US" Hash="cxja0Un+h5tFVQYkThEcw1t9V1k=" NonRegRelevantDataVersion="0">
+              <RegistrationInfo RegistrationStatus="Registered" RegistrationSignature="bC9VPQZI+rbXitem9BPkyDHnGVRAcRTs6emlbxY3zisFc0foQsYskyy7hEXAYFWsYzHzLDdi3mLReU4FtzRDMQYwshGrj449J4+GBlPVSGtFGcEqeQlvjuWK2VM2ZLMb1bfFfkQ6ZOQfj2FX8JAL2fkM149gQKjx4ZMHzH/YASA=" />
+            </Product>
+          </Products>
+          <Hardware2Programs>
+            <Hardware2Program Id="M-0001_H-hp.5F00002-1_HP-2413-01-B14F" MediumTypes="MT-0 MT-1" Hash="+cIOunj67gL4v1MDooXjBUTM0Yg=">
+              <ApplicationProgramRef RefId="M-0001_A-2413-01-B14F" />
+              <RegistrationInfo RegistrationSignature="YOnGW9adTGQPECTpszBuRCXc6ffqB5+cg95vU81XfysvSOMlDh5w3eDcEbP+z33O0m2r+WEIRflerFTq1H6plia6X7Y6hYIBaKCRmLmZyF8gWjJhsJ5/3+v0cRyvWnZq2ECFAN1nx4cKy5dmsErOH2f6pGn1bWTlOnq09L2lD4k=" RegistrationKey="knxconv" OriginalRegistrationNumber="1900/0" RegistrationNumber="1997/2349" RegistrationStatus="Registered" />
+            </Hardware2Program>
+          </Hardware2Programs>
+        </Hardware>
+        <Hardware Id="M-0001_H-hp.5F00018-1" Name="#Taster 2-fach UP 211 DELTA studio" SerialNumber="hp_00018" VersionNumber="1" BusCurrent="4.0000000e+000" IsAccessory="0" HasIndividualAddress="1" HasApplicationProgram="1" HasApplicationProgram2="0" IsPowerSupply="0" IsChoke="0" IsCoupler="0" IsPowerLineRepeater="0" IsPowerLineSignalFilter="0" IsCable="0" NonRegRelevantDataVersion="0" IsIPEnabled="0">
+          <Products>
+            <Product Id="M-0001_H-hp.5F00018-1_P-5WG1.20211.2D2AB.5F1" Text="Push button 2-fold UP 211 DELTA studio (red lens)" OrderNumber="5WG1 211-2AB_1" IsRailMounted="0" VisibleDescription="Productinfo - see file:   2112_b___tpi_e.pdf" DefaultLanguage="en-US" Hash="g+wm9fELlWjkC3baKvmiSzOhxP8=" NonRegRelevantDataVersion="0">
+              <RegistrationInfo RegistrationStatus="Registered" RegistrationSignature="oFuniXOmLfCgqwYd0AkApMb2Mephl02dkJ1TilmmP31UVLHzeXjbjZLYp1vDPCISjqECXJg5XkAMnaW9VNB79/TbWcRKl9AkFDZhokDbptWawfXWEgvTtAE/vh9CNQOPLER2mTt6MgxdqRYDhBPdTWT4AzUio7jNH1W/fCo95ao=" />
+            </Product>
+          </Products>
+          <Hardware2Programs>
+            <Hardware2Program Id="M-0001_H-hp.5F00018-1_HP-2214-01-737F" MediumTypes="MT-0 MT-1" Hash="4pmaLhmarWdTB9xUWnmKkUo4Aiw=">
+              <ApplicationProgramRef RefId="M-0001_A-2214-01-737F" />
+              <RegistrationInfo RegistrationSignature="g8/pJO+SIZyVvxZsDux+x1vaP2j34WqHiLpLnkxmw0LDpAJsJlnB2Tckjqxf1O5z0nhjQa4gmYYNkOAaNhPvYiLY2aBRjIj/FLriac1lsjOr7xlvHnEavHHHSqJoYlBQYco2lBox4DY3t85KQAKuIUQu34kBiztuUSuzxkZP4H8=" OriginalRegistrationNumber="1900/0" RegistrationNumber="1997/2347" RegistrationStatus="Registered" />
+            </Hardware2Program>
+          </Hardware2Programs>
+        </Hardware>
+        <Hardware Id="M-0001_H-hp.5F00101-2-O00FE" Name="#Jalousieschalter N 522/02" SerialNumber="hp_00101" VersionNumber="2" BusCurrent="5.0000000e+000" IsAccessory="0" HasIndividualAddress="1" HasApplicationProgram="1" HasApplicationProgram2="0" IsPowerSupply="0" IsChoke="0" IsCoupler="0" IsPowerLineRepeater="0" IsPowerLineSignalFilter="0" IsCable="0" OriginalManufacturer="M-00FE" NonRegRelevantDataVersion="0" IsIPEnabled="0">
+          <Products>
+            <Product Id="M-0001_H-hp.5F00101-2-O00FE_P-5WG1.20522.2D1AB02" Text="Shutter switch N 522/02" OrderNumber="5WG1 522-1AB02" IsRailMounted="0" VisibleDescription="Productinfo - see file:   5221ab02_tpi_e.pdf" DefaultLanguage="en-US" Hash="j76IKaZUxdyIWOSNFU77lf+QyL0=" NonRegRelevantDataVersion="0">
+              <RegistrationInfo RegistrationStatus="Registered" RegistrationSignature="AoFGrQPge1rjNfmClJlm8j8mxXQDGvflkqemYs3/dAnORdUP0tgdzseUN00YajWcSUkRKsSzFwzA/m3NRyK8dDWy/9EidjyvKs0uoc4prsANagd0FFXAst+4bC4JuSaeEE36RUhJTtcZqSlvngDBpSZj7lJ5s7GjJy7vQoMFMmM=" />
+            </Product>
+          </Products>
+          <Hardware2Programs>
+            <Hardware2Program Id="M-0001_H-hp.5F00101-2-O00FE_HP-540E-03-EE38" MediumTypes="MT-0" Hash="OYoj3tlGQP+N0uYEmm+HY0AodYY=">
+              <ApplicationProgramRef RefId="M-0001_A-540E-03-EE38" />
+              <RegistrationInfo RegistrationSignature="Lt+UXfauM5rTQ+ZWmVWbI9S2hzJbPUj0pFuX9KL6Y8RCJ6S9AG5DIpQciSX8wv8C8bG4m/3yWfkKznvJeGtIQTxPQ+XkkEX7t4KORVUwb/MYPChAeED7yWk+iwvbd3gZRkbcN848psuvG7axyBTwHvhgTxGbp0onjhKL12ZWu9E=" RegistrationKey="knxconv" OriginalRegistrationNumber="1900/0" RegistrationNumber="2001/4934" RegistrationStatus="Registered" />
+            </Hardware2Program>
+          </Hardware2Programs>
+        </Hardware>
+        <Hardware Id="M-0001_H-hp.5F00189-1" Name="#Schaltaktor N 567/01" SerialNumber="hp_00189" VersionNumber="1" BusCurrent="1.0000000e+001" IsAccessory="0" HasIndividualAddress="1" HasApplicationProgram="1" HasApplicationProgram2="0" IsPowerSupply="0" IsChoke="0" IsCoupler="0" IsPowerLineRepeater="0" IsPowerLineSignalFilter="0" IsCable="0" NonRegRelevantDataVersion="0" IsIPEnabled="0">
+          <Products>
+            <Product Id="M-0001_H-hp.5F00189-1_P-5WG1.20567.2D1AB01" Text="Switching actuator N 567/01, (8 Amp)" OrderNumber="5WG1 567-1AB01" IsRailMounted="1" VisibleDescription="Productinfo - see file:   5671ab01_tpi_e.pdf" DefaultLanguage="en-US" Hash="SIutPi4nxPX0zmacf2pu0rX9m2M=" NonRegRelevantDataVersion="0">
+              <RegistrationInfo RegistrationStatus="Registered" RegistrationSignature="IfyJNf0l2s0KZV8EVamL1S+jCy4LH/eUopqnidJ86gd4yzDazIej+cyci0Z6SjZuGs/sBZBsWC1lPpXvP6xzvOJhvlGEnDQR6jl0rjSwMe5JB+XR6bnNipczuXZTRtmZRpKVxVDNDRNoWN8G4CT6l8ampdj5GfpPvi2DMXQltb4=" />
+            </Product>
+          </Products>
+          <Hardware2Programs>
+            <Hardware2Program Id="M-0001_H-hp.5F00189-1_HP-9803-03-3F77" MediumTypes="MT-0" Hash="qut+ZWa2tRpmoTv0/AuOPh4nkk8=">
+              <ApplicationProgramRef RefId="M-0001_A-9803-03-3F77" />
+              <RegistrationInfo RegistrationSignature="gA2RxOgGSKlHDCXlnUYFEgCbdNYXao84rW1DYCGz4nncQ5uEJDXRav2ggz4Qc9QNbMrX6x7r9aR9fZ5bfHl1VQDbFySw3X87OzgUT6Ur9aU5AuLaUP3bWQoEu/u1otEHGUXvChZlUxwUD+iur8++Zj+VXEi4nriU33irYukyZHQ=" RegistrationKey="knxconv" OriginalRegistrationNumber="1900/0" RegistrationNumber="2005/7040" RegistrationStatus="Registered" />
+            </Hardware2Program>
+          </Hardware2Programs>
+        </Hardware>
+        <Hardware Id="M-0001_H-hp.5F00202-1" Name="#Pt1000 Sensor N 258/02" SerialNumber="hp_00202" VersionNumber="1" BusCurrent="8.0000000e+000" IsAccessory="0" HasIndividualAddress="1" HasApplicationProgram="1" HasApplicationProgram2="0" IsPowerSupply="0" IsChoke="0" IsCoupler="0" IsPowerLineRepeater="0" IsPowerLineSignalFilter="0" IsCable="0" NonRegRelevantDataVersion="0" IsIPEnabled="0">
+          <Products>
+            <Product Id="M-0001_H-hp.5F00202-1_P-5WG1.20258.2D1AB02" Text="Temperature Sensor N 258/02" OrderNumber="5WG1 258-1AB02" IsRailMounted="1" VisibleDescription="Productinfo - see file:   2581ab02_tpi_e.pdf" DefaultLanguage="en-US" Hash="4N3aqxfYmt/aPTfuqCOMfaKxCkk=" NonRegRelevantDataVersion="0">
+              <RegistrationInfo RegistrationStatus="Registered" RegistrationSignature="Db8qA6wF/YVbyPsFoYSERCiLAEpI1cHMAmB5wRNZg1SXKvM2dY+ooWPMmSbdrO1T9S5O6O+ecKz2dfgG/3jJPlcST6UKHLvRAE2euvzl1X4xbVz4EcFCZUk/Q/hvOT2ttt7esQQuwKpG1dCfgcwvWY6HyniIK0GvOFzoHDWCYe0=" />
+            </Product>
+          </Products>
+          <Hardware2Programs>
+            <Hardware2Program Id="M-0001_H-hp.5F00202-1_HP-9814-01-5F7E" MediumTypes="MT-0" Hash="asgL7dPf2g7gHkG9YkNTiVwoRXM=">
+              <ApplicationProgramRef RefId="M-0001_A-9814-01-5F7E" />
+              <RegistrationInfo RegistrationSignature="V9aySdK1K9/Hi24Vsdy9LAKxPvQ5KmS7nUt4YD1NI0pRBj3Et0NYk60/0ki6SNGqg/0gpY472KXy9+4aLdiX7qqT8IP9Ku6lRYBEvFWHEFxJS/1gcH41T2bJxgOt5cyVYlkaUF4hQ+MBxr2heUdQjMqZtg0RWxJY9IODP2gsYMs=" RegistrationKey="knxconv" OriginalRegistrationNumber="1900/0" RegistrationNumber="2006/7638" RegistrationStatus="Registered" />
+            </Hardware2Program>
+          </Hardware2Programs>
+        </Hardware>
+      </Hardware>
+      <Languages>
+        <Language Identifier="de-DE">
+          <TranslationUnit RefId="M-0001_H-1.20.2F.2F.205WG1.20527.2D1AB01-1_P-5WG1.20527.2D1AB01" Version="0">
+            <TranslationElement RefId="M-0001_H-1.20.2F.2F.205WG1.20527.2D1AB01-1_P-5WG1.20527.2D1AB01">
+              <Translation AttributeName="Text" Text="Universal-Dimmer N 527" />
+              <Translation AttributeName="VisibleDescription" Text="Produktinfo - siehe Datei:   5271ab01_tpi.pdf" />
+            </TranslationElement>
+          </TranslationUnit>
+          <TranslationUnit RefId="M-0001_H-hp.5F00002-1_P-5WG1.20245.2D2AB.5F1" Version="0">
+            <TranslationElement RefId="M-0001_H-hp.5F00002-1_P-5WG1.20245.2D2AB.5F1">
+              <Translation AttributeName="Text" Text="Taster 4-fach UP 245 DELTA profil (ohne Symbol)" />
+              <Translation AttributeName="VisibleDescription" Text="Produktinfo - siehe Datei:   24_2ab_1_tpi.pdf" />
+            </TranslationElement>
+          </TranslationUnit>
+          <TranslationUnit RefId="M-0001_H-hp.5F00018-1_P-5WG1.20211.2D2AB.5F1" Version="0">
+            <TranslationElement RefId="M-0001_H-hp.5F00018-1_P-5WG1.20211.2D2AB.5F1">
+              <Translation AttributeName="Text" Text="Taster 2-fach UP 211 DELTA studio (rote Linse)" />
+              <Translation AttributeName="VisibleDescription" Text="Produktinfo - siehe Datei:   2112_b___tpi.pdf" />
+            </TranslationElement>
+          </TranslationUnit>
+          <TranslationUnit RefId="M-0001_H-hp.5F00101-2-O00FE_P-5WG1.20522.2D1AB02" Version="0">
+            <TranslationElement RefId="M-0001_H-hp.5F00101-2-O00FE_P-5WG1.20522.2D1AB02">
+              <Translation AttributeName="Text" Text="Jalousieschalter N 522/02" />
+              <Translation AttributeName="VisibleDescription" Text="Produktinfo - siehe Datei:   5221ab02_tpi.pdf" />
+            </TranslationElement>
+          </TranslationUnit>
+          <TranslationUnit RefId="M-0001_H-hp.5F00189-1_P-5WG1.20567.2D1AB01" Version="0">
+            <TranslationElement RefId="M-0001_H-hp.5F00189-1_P-5WG1.20567.2D1AB01">
+              <Translation AttributeName="Text" Text="Schaltaktor N 567/01, (8 Amp)" />
+              <Translation AttributeName="VisibleDescription" Text="Produktinfo - siehe Datei:   5671ab01_tpi.pdf" />
+            </TranslationElement>
+          </TranslationUnit>
+          <TranslationUnit RefId="M-0001_H-hp.5F00202-1_P-5WG1.20258.2D1AB02" Version="0">
+            <TranslationElement RefId="M-0001_H-hp.5F00202-1_P-5WG1.20258.2D1AB02">
+              <Translation AttributeName="Text" Text="Temperatursensor N 258/02" />
+              <Translation AttributeName="VisibleDescription" Text="Produktinfo - siehe Datei:   1258ab02_tpi.pdf" />
+            </TranslationElement>
+          </TranslationUnit>
+        </Language>
+        <Language Identifier="en-US">
+          <TranslationUnit RefId="M-0001_H-1.20.2F.2F.205WG1.20527.2D1AB01-1_P-5WG1.20527.2D1AB01" Version="0">
+            <TranslationElement RefId="M-0001_H-1.20.2F.2F.205WG1.20527.2D1AB01-1_P-5WG1.20527.2D1AB01">
+              <Translation AttributeName="Text" Text="Universal dimmer N 527" />
+              <Translation AttributeName="VisibleDescription" Text="Productinfo - see file:   5271ab01_tpi_e.pdf" />
+            </TranslationElement>
+          </TranslationUnit>
+          <TranslationUnit RefId="M-0001_H-hp.5F00002-1_P-5WG1.20245.2D2AB.5F1" Version="0">
+            <TranslationElement RefId="M-0001_H-hp.5F00002-1_P-5WG1.20245.2D2AB.5F1">
+              <Translation AttributeName="Text" Text="Push button 4-f UP 245 DELTA profil (without sym)" />
+              <Translation AttributeName="VisibleDescription" Text="Productinfo - see file:   24_2ab_1_tpi_e.pdf" />
+            </TranslationElement>
+          </TranslationUnit>
+          <TranslationUnit RefId="M-0001_H-hp.5F00018-1_P-5WG1.20211.2D2AB.5F1" Version="0">
+            <TranslationElement RefId="M-0001_H-hp.5F00018-1_P-5WG1.20211.2D2AB.5F1">
+              <Translation AttributeName="Text" Text="Push button 2-fold UP 211 DELTA studio (red lens)" />
+              <Translation AttributeName="VisibleDescription" Text="Productinfo - see file:   2112_b___tpi_e.pdf" />
+            </TranslationElement>
+          </TranslationUnit>
+          <TranslationUnit RefId="M-0001_H-hp.5F00101-2-O00FE_P-5WG1.20522.2D1AB02" Version="0">
+            <TranslationElement RefId="M-0001_H-hp.5F00101-2-O00FE_P-5WG1.20522.2D1AB02">
+              <Translation AttributeName="Text" Text="Shutter switch N 522/02" />
+              <Translation AttributeName="VisibleDescription" Text="Productinfo - see file:   5221ab02_tpi_e.pdf" />
+            </TranslationElement>
+          </TranslationUnit>
+          <TranslationUnit RefId="M-0001_H-hp.5F00189-1_P-5WG1.20567.2D1AB01" Version="0">
+            <TranslationElement RefId="M-0001_H-hp.5F00189-1_P-5WG1.20567.2D1AB01">
+              <Translation AttributeName="Text" Text="Switching actuator N 567/01, (8 Amp)" />
+              <Translation AttributeName="VisibleDescription" Text="Productinfo - see file:   5671ab01_tpi_e.pdf" />
+            </TranslationElement>
+          </TranslationUnit>
+          <TranslationUnit RefId="M-0001_H-hp.5F00202-1_P-5WG1.20258.2D1AB02" Version="0">
+            <TranslationElement RefId="M-0001_H-hp.5F00202-1_P-5WG1.20258.2D1AB02">
+              <Translation AttributeName="Text" Text="Temperature Sensor N 258/02" />
+              <Translation AttributeName="VisibleDescription" Text="Productinfo - see file:   2581ab02_tpi_e.pdf" />
+            </TranslationElement>
+          </TranslationUnit>
+        </Language>
+        <Language Identifier="es-ES">
+          <TranslationUnit RefId="M-0001_H-1.20.2F.2F.205WG1.20527.2D1AB01-1_P-5WG1.20527.2D1AB01" Version="0">
+            <TranslationElement RefId="M-0001_H-1.20.2F.2F.205WG1.20527.2D1AB01-1_P-5WG1.20527.2D1AB01">
+              <Translation AttributeName="VisibleDescription" Text="Info Producto - ver fichero:   5271ab01_tpi_es.pdf" />
+            </TranslationElement>
+          </TranslationUnit>
+          <TranslationUnit RefId="M-0001_H-hp.5F00002-1_P-5WG1.20245.2D2AB.5F1" Version="0">
+            <TranslationElement RefId="M-0001_H-hp.5F00002-1_P-5WG1.20245.2D2AB.5F1">
+              <Translation AttributeName="VisibleDescription" Text="Info Producto - ver fichero:   2452ab_1_tpi_es.pdf" />
+            </TranslationElement>
+          </TranslationUnit>
+          <TranslationUnit RefId="M-0001_H-hp.5F00018-1_P-5WG1.20211.2D2AB.5F1" Version="0">
+            <TranslationElement RefId="M-0001_H-hp.5F00018-1_P-5WG1.20211.2D2AB.5F1">
+              <Translation AttributeName="VisibleDescription" Text="Info Producto - ver fichero:   2112_b___tpi_es.pdf" />
+            </TranslationElement>
+          </TranslationUnit>
+          <TranslationUnit RefId="M-0001_H-hp.5F00101-2-O00FE_P-5WG1.20522.2D1AB02" Version="0">
+            <TranslationElement RefId="M-0001_H-hp.5F00101-2-O00FE_P-5WG1.20522.2D1AB02">
+              <Translation AttributeName="VisibleDescription" Text="Info Producto - ver fichero:   5221ab02_tpi_es.pdf" />
+            </TranslationElement>
+          </TranslationUnit>
+        </Language>
+        <Language Identifier="fr-FR">
+          <TranslationUnit RefId="M-0001_H-1.20.2F.2F.205WG1.20527.2D1AB01-1_P-5WG1.20527.2D1AB01" Version="0">
+            <TranslationElement RefId="M-0001_H-1.20.2F.2F.205WG1.20527.2D1AB01-1_P-5WG1.20527.2D1AB01">
+              <Translation AttributeName="VisibleDescription" Text="&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;" />
+            </TranslationElement>
+          </TranslationUnit>
+          <TranslationUnit RefId="M-0001_H-hp.5F00002-1_P-5WG1.20245.2D2AB.5F1" Version="0">
+            <TranslationElement RefId="M-0001_H-hp.5F00002-1_P-5WG1.20245.2D2AB.5F1">
+              <Translation AttributeName="VisibleDescription" Text="&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;" />
+            </TranslationElement>
+          </TranslationUnit>
+          <TranslationUnit RefId="M-0001_H-hp.5F00018-1_P-5WG1.20211.2D2AB.5F1" Version="0">
+            <TranslationElement RefId="M-0001_H-hp.5F00018-1_P-5WG1.20211.2D2AB.5F1">
+              <Translation AttributeName="VisibleDescription" Text="&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;" />
+            </TranslationElement>
+          </TranslationUnit>
+        </Language>
+        <Language Identifier="id-ID">
+          <TranslationUnit RefId="M-0001_H-1.20.2F.2F.205WG1.20527.2D1AB01-1_P-5WG1.20527.2D1AB01" Version="0">
+            <TranslationElement RefId="M-0001_H-1.20.2F.2F.205WG1.20527.2D1AB01-1_P-5WG1.20527.2D1AB01">
+              <Translation AttributeName="VisibleDescription" Text="&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;" />
+            </TranslationElement>
+          </TranslationUnit>
+          <TranslationUnit RefId="M-0001_H-hp.5F00002-1_P-5WG1.20245.2D2AB.5F1" Version="0">
+            <TranslationElement RefId="M-0001_H-hp.5F00002-1_P-5WG1.20245.2D2AB.5F1">
+              <Translation AttributeName="VisibleDescription" Text="&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;" />
+            </TranslationElement>
+          </TranslationUnit>
+          <TranslationUnit RefId="M-0001_H-hp.5F00018-1_P-5WG1.20211.2D2AB.5F1" Version="0">
+            <TranslationElement RefId="M-0001_H-hp.5F00018-1_P-5WG1.20211.2D2AB.5F1">
+              <Translation AttributeName="VisibleDescription" Text="&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;" />
+            </TranslationElement>
+          </TranslationUnit>
+        </Language>
+        <Language Identifier="it-IT">
+          <TranslationUnit RefId="M-0001_H-1.20.2F.2F.205WG1.20527.2D1AB01-1_P-5WG1.20527.2D1AB01" Version="0">
+            <TranslationElement RefId="M-0001_H-1.20.2F.2F.205WG1.20527.2D1AB01-1_P-5WG1.20527.2D1AB01">
+              <Translation AttributeName="Text" Text="Dimmer universale N 527" />
+            </TranslationElement>
+          </TranslationUnit>
+          <TranslationUnit RefId="M-0001_H-hp.5F00002-1_P-5WG1.20245.2D2AB.5F1" Version="0">
+            <TranslationElement RefId="M-0001_H-hp.5F00002-1_P-5WG1.20245.2D2AB.5F1">
+              <Translation AttributeName="Text" Text="Pulsante 4-c UP 245 DELTA profil (senza simboli)" />
+            </TranslationElement>
+          </TranslationUnit>
+          <TranslationUnit RefId="M-0001_H-hp.5F00018-1_P-5WG1.20211.2D2AB.5F1" Version="0">
+            <TranslationElement RefId="M-0001_H-hp.5F00018-1_P-5WG1.20211.2D2AB.5F1">
+              <Translation AttributeName="Text" Text="Pulsante 2-c UP 211 DELTA studio (lente rossa)" />
+            </TranslationElement>
+          </TranslationUnit>
+          <TranslationUnit RefId="M-0001_H-hp.5F00101-2-O00FE_P-5WG1.20522.2D1AB02" Version="0">
+            <TranslationElement RefId="M-0001_H-hp.5F00101-2-O00FE_P-5WG1.20522.2D1AB02">
+              <Translation AttributeName="Text" Text="Attuatore tapparelle N 522/02" />
+            </TranslationElement>
+          </TranslationUnit>
+          <TranslationUnit RefId="M-0001_H-hp.5F00189-1_P-5WG1.20567.2D1AB01" Version="0">
+            <TranslationElement RefId="M-0001_H-hp.5F00189-1_P-5WG1.20567.2D1AB01">
+              <Translation AttributeName="Text" Text="Uscita binaria N 567/01, (8Amp)" />
+            </TranslationElement>
+          </TranslationUnit>
+        </Language>
+        <Language Identifier="nb-NO">
+          <TranslationUnit RefId="M-0001_H-1.20.2F.2F.205WG1.20527.2D1AB01-1_P-5WG1.20527.2D1AB01" Version="0">
+            <TranslationElement RefId="M-0001_H-1.20.2F.2F.205WG1.20527.2D1AB01-1_P-5WG1.20527.2D1AB01">
+              <Translation AttributeName="VisibleDescription" Text="&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;" />
+            </TranslationElement>
+          </TranslationUnit>
+          <TranslationUnit RefId="M-0001_H-hp.5F00002-1_P-5WG1.20245.2D2AB.5F1" Version="0">
+            <TranslationElement RefId="M-0001_H-hp.5F00002-1_P-5WG1.20245.2D2AB.5F1">
+              <Translation AttributeName="VisibleDescription" Text="&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;" />
+            </TranslationElement>
+          </TranslationUnit>
+          <TranslationUnit RefId="M-0001_H-hp.5F00018-1_P-5WG1.20211.2D2AB.5F1" Version="0">
+            <TranslationElement RefId="M-0001_H-hp.5F00018-1_P-5WG1.20211.2D2AB.5F1">
+              <Translation AttributeName="VisibleDescription" Text="&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;" />
+            </TranslationElement>
+          </TranslationUnit>
+        </Language>
+        <Language Identifier="sv-SE">
+          <TranslationUnit RefId="M-0001_H-1.20.2F.2F.205WG1.20527.2D1AB01-1_P-5WG1.20527.2D1AB01" Version="0">
+            <TranslationElement RefId="M-0001_H-1.20.2F.2F.205WG1.20527.2D1AB01-1_P-5WG1.20527.2D1AB01">
+              <Translation AttributeName="VisibleDescription" Text="&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;" />
+            </TranslationElement>
+          </TranslationUnit>
+          <TranslationUnit RefId="M-0001_H-hp.5F00002-1_P-5WG1.20245.2D2AB.5F1" Version="0">
+            <TranslationElement RefId="M-0001_H-hp.5F00002-1_P-5WG1.20245.2D2AB.5F1">
+              <Translation AttributeName="VisibleDescription" Text="&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;" />
+            </TranslationElement>
+          </TranslationUnit>
+          <TranslationUnit RefId="M-0001_H-hp.5F00018-1_P-5WG1.20211.2D2AB.5F1" Version="0">
+            <TranslationElement RefId="M-0001_H-hp.5F00018-1_P-5WG1.20211.2D2AB.5F1">
+              <Translation AttributeName="VisibleDescription" Text="&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;" />
+            </TranslationElement>
+          </TranslationUnit>
+        </Language>
+      </Languages>
+    </Manufacturer>
+  </ManufacturerData>
+</KNX>
