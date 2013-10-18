@@ -31,7 +31,9 @@
 
 package at.ac.tuwien.auto.iotsys.commons.obix.objects.general.datapoint;
 
-public interface DataPoint
+import obix.IObj;
+
+public interface DataPoint extends IObj
 {
 	public static final String CONTRACT = "knx:Datapoint";
 }

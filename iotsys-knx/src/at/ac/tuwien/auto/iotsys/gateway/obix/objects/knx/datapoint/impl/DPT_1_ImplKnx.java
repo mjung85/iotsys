@@ -6,6 +6,7 @@ import obix.Obj;
 import at.ac.tuwien.auto.calimero.GroupAddress;
 import at.ac.tuwien.auto.calimero.dptxlator.DPTXlatorBoolean;
 import at.ac.tuwien.auto.calimero.exception.KNXException;
+import at.ac.tuwien.auto.calimero.process.ProcessCommunicatorImpl;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.datapoint.impl.DPT_1_Impl;
 import at.ac.tuwien.auto.iotsys.gateway.connectors.knx.KNXConnector;
 import at.ac.tuwien.auto.iotsys.gateway.connectors.knx.KNXWatchDog;
@@ -44,8 +45,8 @@ public class DPT_1_ImplKnx extends DPT_1_Impl
 				try
 				{
 					DPTXlatorBoolean x = new DPTXlatorBoolean(DPTXlatorBoolean.DPT_BOOL);
-
-					x.setData(apdu, 0);
+					
+					ProcessCommunicatorImpl.extractGroupASDU(apdu, x);
 
 					log.fine("Switch for " + DPT_1_ImplKnx.this.getHref() + " now " + x.getValueBoolean());
 
@@ -63,11 +64,14 @@ public class DPT_1_ImplKnx extends DPT_1_Impl
 	public void refreshObject()
 	{
 		// here we need to read from the bus, only if the read flag is set at the data point
-		// if (this.readable)
-		// {
-		// boolean value = connector.readBool(groupAddress);
-		// this.value().set(value);
-		// }
+		if (this.value().isReadable())
+		{
+			boolean value = connector.readBool(groupAddress);
+			this.value().set(value);
+		}
+
+		// run refresh from super class
+		super.refreshObject();
 	}
 
 	@Override

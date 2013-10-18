@@ -70,6 +70,9 @@ public class DPST_1_1_ImplKnx extends DPST_1_1_Impl
 			boolean value = connector.readBool(groupAddress);
 			this.value().set(value);
 		}
+
+		// run refresh from super class
+		super.refreshObject();
 	}
 
 	@Override

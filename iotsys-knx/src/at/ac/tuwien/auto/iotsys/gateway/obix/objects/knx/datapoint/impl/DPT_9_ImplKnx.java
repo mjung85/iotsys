@@ -6,6 +6,7 @@ import obix.Obj;
 import at.ac.tuwien.auto.calimero.GroupAddress;
 import at.ac.tuwien.auto.calimero.dptxlator.DPTXlator2ByteFloat;
 import at.ac.tuwien.auto.calimero.exception.KNXException;
+import at.ac.tuwien.auto.calimero.process.ProcessCommunicatorImpl;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.datapoint.impl.DPT_9_Impl;
 import at.ac.tuwien.auto.iotsys.gateway.connectors.knx.KNXConnector;
 import at.ac.tuwien.auto.iotsys.gateway.connectors.knx.KNXWatchDog;
@@ -46,7 +47,7 @@ public class DPT_9_ImplKnx extends DPT_9_Impl
 				{
 					DPTXlator2ByteFloat x = new DPTXlator2ByteFloat(DPTXlator2ByteFloat.DPT_ELECTRICAL_CURRENT);
 
-					x.setData(apdu, 0);
+					ProcessCommunicatorImpl.extractGroupASDU(apdu, x);
 
 					log.fine("2Byte Float for " + DPT_9_ImplKnx.this.getHref() + " now " + x.getValueFloat(1));
 
@@ -69,6 +70,9 @@ public class DPT_9_ImplKnx extends DPT_9_Impl
 			float value = connector.readFloat(groupAddress);
 			this.value().set(value);
 		}
+
+		// run refresh from super class
+		super.refreshObject();
 	}
 
 	@Override

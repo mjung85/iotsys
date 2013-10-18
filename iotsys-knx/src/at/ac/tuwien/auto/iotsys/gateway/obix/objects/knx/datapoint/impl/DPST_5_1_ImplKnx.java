@@ -26,7 +26,6 @@ public class DPST_5_1_ImplKnx extends DPST_5_1_Impl
 		this.groupAddress = groupAddress;
 		this.connector = connector;
 
-		// if it is not possible to read from the group address --> create a watchdog that monitors the communication
 		this.createWatchDog();
 	}
 
@@ -72,6 +71,9 @@ public class DPST_5_1_ImplKnx extends DPST_5_1_Impl
 			int value = connector.readInt(groupAddress, DPTXlator8BitUnsigned.DPT_SCALING.getID());
 			this.value().set(value);
 		}
+
+		// run refresh from super class
+		super.refreshObject();
 	}
 
 	@Override

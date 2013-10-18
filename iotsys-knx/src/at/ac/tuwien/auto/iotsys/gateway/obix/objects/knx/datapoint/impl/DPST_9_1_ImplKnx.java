@@ -68,6 +68,9 @@ public class DPST_9_1_ImplKnx extends DPST_9_1_Impl
 			float value = connector.readFloat(groupAddress);
 			this.value().set(value);
 		}
+
+		// run refresh from super class
+		super.refreshObject();
 	}
 
 	@Override
