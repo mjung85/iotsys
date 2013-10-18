@@ -31,6 +31,7 @@
 
 package at.ac.tuwien.auto.iotsys.commons.obix.objects.general.enumeration.impl;
 
+import obix.Contract;
 import obix.Uri;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.contracts.impl.RangeImpl;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.enumeration.EnumEnabled;
@@ -40,6 +41,8 @@ public class EnumEnabledImpl extends RangeImpl implements EnumEnabled
 	public EnumEnabledImpl()
 	{
 		super(new Uri(EnumEnabled.HREF));
+
+		this.setOf(new Contract("obix:bool"));
 	}
 
 	protected void initValues()

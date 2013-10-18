@@ -44,10 +44,10 @@ public abstract class DPST_1_1_Impl extends DPT_1_Impl implements DPST_1_1
 {
 	private Enum encoding = new Enum();
 
-	public DPST_1_1_Impl(String name, String displayName, String display, boolean writable)
+	public DPST_1_1_Impl(String name, String displayName, String display, boolean writable, boolean readable)
 	{
 		// constructor
-		super(name, displayName, display, writable);
+		super(name, displayName, display, writable, readable);
 
 		// contract
 		this.addIs(new Contract(DPST_1_1.CONTRACT));
@@ -56,18 +56,18 @@ public abstract class DPST_1_1_Impl extends DPT_1_Impl implements DPST_1_1
 		this.encoding.setName("encoding");
 		this.encoding.setHref(new Uri("encoding"));
 		this.encoding.setRange(new Uri(EncodingOnOff.HREF));
-		this.encoding.setWritable(true);
+		this.encoding.setWritable(writable);
+		this.encoding.setReadable(readable);
 		this.add(encoding);
 	}
-	
 
 	@Override
 	public void writeObject(Obj input)
 	{
-		super.writeObject(input);		
+		super.writeObject(input);
 		this.refreshObject();
 	}
-	
+
 	@Override
 	public void refreshObject()
 	{

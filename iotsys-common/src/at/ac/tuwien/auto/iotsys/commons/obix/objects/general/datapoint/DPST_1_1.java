@@ -36,6 +36,6 @@ import obix.Enum;
 public interface DPST_1_1 extends DPT_1
 {
 	public static final String CONTRACT = "knx:DPST-1-1";
-	
+
 	public Enum encoding();
 }

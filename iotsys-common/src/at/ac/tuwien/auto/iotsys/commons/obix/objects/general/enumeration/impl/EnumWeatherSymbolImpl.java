@@ -31,6 +31,7 @@
 
 package at.ac.tuwien.auto.iotsys.commons.obix.objects.general.enumeration.impl;
 
+import obix.Contract;
 import obix.Uri;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.contracts.impl.RangeImpl;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.enumeration.EnumWeatherSymbol;
@@ -41,6 +42,8 @@ public class EnumWeatherSymbolImpl extends RangeImpl implements EnumWeatherSymbo
 	public EnumWeatherSymbolImpl()
 	{
 		super(new Uri(EnumWeatherSymbol.HREF));
+
+		this.setOf(new Contract("obix:int"));
 	}
 
 	protected void initValues()

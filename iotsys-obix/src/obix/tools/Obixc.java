@@ -3,13 +3,21 @@
  */
 package obix.tools;
 
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.PrintWriter;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-import obix.*;
+import obix.Contract;
+import obix.Obj;
+import obix.Ref;
+import obix.Uri;
 import obix.io.ObixDecoder;
 import obix.io.ObixEncoder;
 
@@ -68,7 +76,7 @@ public class Obixc
     throws Exception
   {                                                           
     // first recursively map the protos into Type instances
-    ArrayList acc = new ArrayList();                  
+    ArrayList<Type> acc = new ArrayList<Type>();                  
     map(proto, acc);
     types = (Type[])acc.toArray(new Type[acc.size()]);     
     
@@ -85,7 +93,7 @@ public class Obixc
       mapChildren(types[i]);   
   }
   
-  private void map(Obj proto, ArrayList acc)
+  private void map(Obj proto, ArrayList<Type> acc)
   {
     // if well known map to Java type    
     Uri href = proto.getHref();              
@@ -119,7 +127,7 @@ public class Obixc
   
   private void mapContracts(Type type)
   {
-    ArrayList acc = new ArrayList();
+    ArrayList<Type> acc = new ArrayList<Type>();
     
     // always implement yourself
     acc.add(type);
@@ -139,7 +147,7 @@ public class Obixc
 
   private void mapChildren(Type type)
   {  
-    ArrayList acc = new ArrayList();
+    ArrayList<Child> acc = new ArrayList<Child>();
     
     Obj[] kids = type.proto.list(); 
     for (int i=0; i<kids.length; ++i)
@@ -435,8 +443,5 @@ public class Obixc
   String packageName;
   String href;
   PrintWriter out;                  
-  Type[] types;
-  ArrayList contractHrefs   = new ArrayList();
-  ArrayList contractClasses = new ArrayList();
-  
+  Type[] types;  
 }

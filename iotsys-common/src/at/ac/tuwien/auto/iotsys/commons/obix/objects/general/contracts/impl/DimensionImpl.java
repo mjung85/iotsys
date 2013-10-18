@@ -44,27 +44,27 @@ public class DimensionImpl extends Obj implements Dimension
 	{
 		this.setName("dimension");
 		this.setIs(new Contract(Dimension.CONTRACT));
-		
+
 		if (kg != 0)
-			this.add(this.kg = new Int("kg",kg));
+			this.add(this.kg = new Int("kg", kg));
 
 		if (m != 0)
-			this.add(this.m = new Int("m",m));
+			this.add(this.m = new Int("m", m));
 
 		if (sec != 0)
-			this.add(this.sec = new Int("sec",sec));
+			this.add(this.sec = new Int("sec", sec));
 
 		if (K != 0)
-			this.add(this.K = new Int("K",K));
+			this.add(this.K = new Int("K", K));
 
 		if (A != 0)
-			this.add(this.A = new Int("A",A));
+			this.add(this.A = new Int("A", A));
 
 		if (mol != 0)
-			this.add(this.mol = new Int("mol",mol));
+			this.add(this.mol = new Int("mol", mol));
 
 		if (cd != 0)
-			this.add(this.cd = new Int("cd",cd));
+			this.add(this.cd = new Int("cd", cd));
 	}
 
 	@Override

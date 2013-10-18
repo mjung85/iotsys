@@ -57,14 +57,14 @@ public class NetworkImpl extends Obj implements Network
 	protected ViewDomainsImpl domains;
 
 	public NetworkImpl(String name, String displayName, String display, String standard)
-	{		
+	{
 		this.setName(name);
 		this.setDisplay(display);
 		this.setDisplayName(displayName);
 		this.setIs(new Contract(Network.CONTRACT));
 		this.setHref(new Uri(UriEncoder.getEscapedUri(displayName)));
 		this.setHidden(true);
-				
+
 		// Standard
 		this.standard = new Enum();
 		this.standard.setName("standard");
@@ -85,7 +85,7 @@ public class NetworkImpl extends Obj implements Network
 		this.building = new ViewBuildingImpl();
 		this.add(building);
 		this.add(building.getReference());
-		
+
 		this.domains = new ViewDomainsImpl();
 		this.add(domains);
 		this.add(domains.getReference());

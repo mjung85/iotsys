@@ -43,6 +43,6 @@ public class UnitPpmImpl extends UnitImpl implements UnitPpm
 		super("ppm", "parts/million (ppm)", new Uri(UnitPpm.HREF), "ppm", 1, 0, new DimensionImpl(0, 0, 0, 0, 0, 0, 0));
 
 		// Translations
-		addTranslation("de",TranslationAttribute.displayName,"Teile/Million (ppm)");
+		addTranslation("de", TranslationAttribute.displayName, "Teile/Million (ppm)");
 	}
 }

@@ -40,14 +40,14 @@ import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.unit.UnitCelsius;
 
 public abstract class DPST_9_1_Impl extends DPT_9_Impl implements DPST_9_1
 {
-	public DPST_9_1_Impl(String name, String displayName, String display, boolean writable)
+	public DPST_9_1_Impl(String name, String displayName, String display, boolean writable, boolean readable)
 	{
 		// constructor)
-		super(name, displayName, display, writable);
+		super(name, displayName, display, writable, readable);
 
 		// contract
 		this.addIs(new Contract(DPST_9_1.CONTRACT));
-		
+
 		// value
 		this.value.setUnit(new Uri(UnitCelsius.HREF));
 		this.value.setMin(-273);

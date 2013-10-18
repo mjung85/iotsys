@@ -16,15 +16,13 @@ public class DPST_1_1_ImplKnx extends DPST_1_1_Impl
 
 	private GroupAddress groupAddress;
 	private KNXConnector connector;
-	private boolean writable;
 
 	public DPST_1_1_ImplKnx(KNXConnector connector, GroupAddress groupAddress, String name, String displayName, String display, boolean writable, boolean readable)
 	{
-		super(name, displayName, display, writable);
+		super(name, displayName, display, writable, readable);
 
 		this.groupAddress = groupAddress;
 		this.connector = connector;
-		this.writable = writable;
 
 		this.createWatchDog();
 	}
@@ -36,7 +34,8 @@ public class DPST_1_1_ImplKnx extends DPST_1_1_Impl
 
 	public void createWatchDog()
 	{
-		if(connector != null && groupAddress != null){
+		if (connector != null && groupAddress != null)
+		{
 			connector.addWatchDog(groupAddress, new KNXWatchDog()
 			{
 				@Override
@@ -45,11 +44,11 @@ public class DPST_1_1_ImplKnx extends DPST_1_1_Impl
 					try
 					{
 						DPTXlatorBoolean x = new DPTXlatorBoolean(DPTXlatorBoolean.DPT_SWITCH);
-	
+
 						x.setData(apdu, 0);
-	
+
 						log.fine("Switch for " + DPST_1_1_ImplKnx.this.getHref() + " now " + x.getValueBoolean());
-	
+
 						value.set(x.getValueBoolean());
 					}
 					catch (KNXException e)
@@ -64,12 +63,12 @@ public class DPST_1_1_ImplKnx extends DPST_1_1_Impl
 	@Override
 	public void refreshObject()
 	{
-//		// here we need to read from the bus, only if the read flag is set at the data point
-//		if (this.readable)
-//		{
-//			boolean value = connector.readBool(groupAddress);
-//			this.value().set(value);
-//		}
+		// // here we need to read from the bus, only if the read flag is set at the data point
+		// if (this.readable)
+		// {
+		// boolean value = connector.readBool(groupAddress);
+		// this.value().set(value);
+		// }
 
 		// run refresh-method from super class
 		super.refreshObject();
@@ -78,7 +77,7 @@ public class DPST_1_1_ImplKnx extends DPST_1_1_Impl
 	@Override
 	public void writeObject(Obj obj)
 	{
-		if (this.writable)
+		if (this.value().isWritable())
 		{
 			// always pass the writeObject call to the super method (triggers, oBIX related internal services like watches, alarms, ...)
 			// also the internal instance variables get updated

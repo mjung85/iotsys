@@ -61,7 +61,7 @@ public abstract class DPST_3_7_Impl extends DPT_3_Impl implements DPST_3_7
 		this.increase.setIn(new Contract(ParameterDimming.CONTRACT));
 		this.increase.setOut(new Contract(Nil.CONTRACT));
 		this.increase.setOperationHandler(new OperationHandler()
-		{				
+		{
 			@Override
 			public Obj invoke(Obj in)
 			{
@@ -77,7 +77,7 @@ public abstract class DPST_3_7_Impl extends DPT_3_Impl implements DPST_3_7
 		this.decrease.setIn(new Contract(ParameterDimming.CONTRACT));
 		this.decrease.setOut(new Contract(Nil.CONTRACT));
 		this.decrease.setOperationHandler(new OperationHandler()
-		{				
+		{
 			@Override
 			public Obj invoke(Obj in)
 			{

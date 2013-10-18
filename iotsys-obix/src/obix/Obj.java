@@ -134,6 +134,7 @@ public class Obj implements IObj, Subject, AlarmSource, Cloneable
 	private String displayName;
 	private Uri icon;
 	private boolean writable;
+	private boolean readable;
 	private boolean isNull;
 	private boolean isHidden;
 
@@ -688,6 +689,9 @@ public class Obj implements IObj, Subject, AlarmSource, Cloneable
 	 */
 	public void setDisplay(String display)
 	{
+		if (display!=null && display.isEmpty())
+			display = null;
+		
 		this.display = display;
 	}
 
@@ -716,6 +720,9 @@ public class Obj implements IObj, Subject, AlarmSource, Cloneable
 	 */
 	public void setDisplayName(String displayName)
 	{
+		if (displayName!=null && displayName.isEmpty())
+			displayName = null;
+		
 		this.displayName = displayName;
 	}
 
@@ -883,6 +890,22 @@ public class Obj implements IObj, Subject, AlarmSource, Cloneable
 			for (int i = 0; i < kids.length; ++i)
 				kids[i].setWritable(writable, recursive);
 		}
+	}
+	
+	/**
+	 * Get readable flag or default to false.
+	 */
+	public boolean isReadable()
+	{
+		return readable;
+	}
+
+	/**
+	 * Set readable flag.
+	 */
+	public void setReadable(boolean readable)
+	{
+		this.readable = readable;
 	}
 
 	// //////////////////////////////////////////////////////////////

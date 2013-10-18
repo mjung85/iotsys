@@ -121,7 +121,7 @@ public abstract class RangeImpl extends List implements Range
 	}
 
 	protected abstract void initValues();
-	
+
 	protected void addElement(RangeElement element)
 	{
 		elements.add(element);
@@ -129,6 +129,7 @@ public abstract class RangeImpl extends List implements Range
 
 	public String getKey(String name)
 	{
+		// search key by name
 		for (RangeElement e : elements)
 		{
 			if ((e.getDisplayName() != null && e.getDisplayName().toLowerCase().equals(name.toLowerCase())) || (e.getDisplayName() == null && e.getName().toLowerCase().equals(name.toLowerCase())))
@@ -136,6 +137,16 @@ public abstract class RangeImpl extends List implements Range
 				return e.getName();
 			}
 		}
+
+		// search key in list of keys
+		for (RangeElement e : elements)
+		{
+			if (e.getName().toLowerCase().equals(name.toLowerCase()))
+			{
+				return e.getName();
+			}
+		}
+
 		return null;
 	}
 
@@ -152,15 +163,15 @@ public abstract class RangeImpl extends List implements Range
 		}
 		return null;
 	}
-	
+
 	public boolean getBool(String key)
 	{
 		for (RangeElement e : elements)
 		{
 			if (e instanceof BoolElement)
 			{
-				BoolElement b = (BoolElement)e;
-				
+				BoolElement b = (BoolElement) e;
+
 				if (e.getName().toLowerCase().equals(key.toLowerCase()))
 				{
 					return b.get();
@@ -169,15 +180,15 @@ public abstract class RangeImpl extends List implements Range
 		}
 		return false;
 	}
-	
+
 	public long getInt(String key)
 	{
 		for (RangeElement e : elements)
 		{
 			if (e instanceof IntElement)
 			{
-				IntElement i = (IntElement)e;
-				
+				IntElement i = (IntElement) e;
+
 				if (e.getName().toLowerCase().equals(key.toLowerCase()))
 				{
 					return i.get();

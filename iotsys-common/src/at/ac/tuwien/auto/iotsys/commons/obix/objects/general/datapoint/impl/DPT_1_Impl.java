@@ -50,7 +50,7 @@ public abstract class DPT_1_Impl extends DatapointImpl implements DPT_1
 
 	protected Bool value = new Bool();
 
-	public DPT_1_Impl(String name, String displayName, String display, boolean writable)
+	public DPT_1_Impl(String name, String displayName, String display, boolean writable, boolean readable)
 	{
 		super(name, displayName, display);
 
@@ -59,7 +59,20 @@ public abstract class DPT_1_Impl extends DatapointImpl implements DPT_1
 		this.value.setName("value");
 		this.value.setHref(new Uri("value"));
 		this.value.setWritable(writable);
+		this.value.setReadable(readable);
 		this.add(value);
+	}
+
+	@Override
+	public boolean isValueWritable()
+	{
+		return value.isWritable();
+	}
+
+	@Override
+	public boolean isValueReadable()
+	{
+		return value.isReadable();
 	}
 
 	@Override

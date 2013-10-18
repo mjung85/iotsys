@@ -45,6 +45,7 @@ import javax.xml.transform.stream.StreamSource;
 import obix.Contract;
 import obix.List;
 import obix.Obj;
+import obix.Obj.TranslationAttribute;
 import obix.Uri;
 
 import org.apache.commons.configuration.HierarchicalConfiguration;
@@ -60,14 +61,18 @@ import at.ac.tuwien.auto.iotsys.commons.DeviceLoader;
 import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.datapoint.impl.DatapointImpl;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.entity.impl.EntityImpl;
-import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.enumeration.EnumConnector;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.enumeration.EnumEnabled;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.enumeration.impl.EnumsImpl;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.network.Network;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.network.impl.NetworkImpl;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.view.impl.AreaImpl;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.view.impl.DomainImpl;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.view.impl.GroupImpl;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.view.impl.PartImpl;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.view.impl.ViewBuildingImpl;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.view.impl.ViewDomainsImpl;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.view.impl.ViewFunctionalImpl;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.view.impl.ViewTopologyImpl;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.knx.datapoint.impl.DataPointInit;
 
 public class KNXDeviceLoaderETSImpl implements DeviceLoader
@@ -298,97 +303,69 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader
 		// Resources
 		parseReferences(referenceById);
 
-		// Group communication addresses for endpoints
+		// Group communication addresses
 		parseGroupAddressConfig(devicesConfig.configurationAt("views.functional"), groupAddressByDatapointID);
 
 		// Network
-		NetworkImpl n = new NetworkImpl(devicesConfig.getString("[@id]"), devicesConfig.getString("[@name]"), devicesConfig.getString("[@description]"), devicesConfig.getString("[@standard]"));
+		NetworkImpl n = new NetworkImpl(devicesConfig.getString("[@id]"), arrayToString(devicesConfig.getStringArray("[@name]")), arrayToString(devicesConfig.getStringArray("[@description]")), devicesConfig.getString("[@standard]"));
 		networks.add(n);
 		networks.add(n.getReference());
 		objectBroker.addObj(n, true);
 
-		// Entities and datapoints
+		// Entities
 		parseEntites(knxConnector, objectBroker, entityById, datapointById, n, referenceById, groupAddressByDatapointID);
 
 		// Views
-		objectBroker.addObj(n.getBuilding(), true);
-		parseBuildingView(devicesConfig.configurationAt("views.building"), (Obj) n.getBuilding(), n, objectBroker, entityById);
+		Object building = devicesConfig.getProperty("views.building.part[@id]");
+		if (building != null)
+		{
+			objectBroker.addObj(n.getBuilding(), true);
+			parseBuildingView(devicesConfig.configurationAt("views.building"), n.getBuilding(), n, objectBroker, entityById);
+		}
 
-		objectBroker.addObj(n.getFunctional(), true);
-		parseFunctionalView(devicesConfig.configurationAt("views.functional"), n.getFunctional(), n, objectBroker, entityById, datapointById);
+		Object functional = devicesConfig.getProperty("views.functional.group[@id]");
+		if (functional != null)
+		{
+			objectBroker.addObj(n.getFunctional(), true);
+			parseFunctionalView(devicesConfig.configurationAt("views.functional"), n.getFunctional(), n, objectBroker, entityById, datapointById, knxConnector, groupAddressByDatapointID);
+		}
 
-		objectBroker.addObj(n.getDomains(), true);
-		parseDomainView(devicesConfig.configurationAt("views.domains"), (Obj) n.getDomains(), n, objectBroker, entityById, datapointById);
+		Object domains = devicesConfig.getProperty("views.domains.domain[@id]");
+		if (domains != null)
+		{
+			objectBroker.addObj(n.getDomains(), true);
+			parseDomainView(devicesConfig.configurationAt("views.domains"), n.getDomains(), n, objectBroker, entityById, datapointById);
+		}
 
-		objectBroker.addObj(n.getTopology(), true);
-		parseTopologyView(devicesConfig.configurationAt("views.topology"), (Obj) n.getTopology(), n, objectBroker, entityById, datapointById);
+		Object topologies = devicesConfig.getProperty("views.topology.area[@id]");
+		if (topologies != null)
+		{
+			objectBroker.addObj(n.getTopology(), true);
+			parseTopologyView(devicesConfig.configurationAt("views.topology"), n.getTopology(), n, objectBroker, entityById, datapointById, referenceById);
+		}
 	}
 
 	private void parseReferences(Hashtable<String, String> referenceById)
 	{
-		Object references = devicesConfig.getProperty("references.reference.[@id]");
-
-		int referencesSize = 0;
-
-		if (references != null)
-		{
-			referencesSize = 1;
-		}
-
-		if (references instanceof Collection<?>)
-		{
-			referencesSize = ((Collection<?>) references).size();
-		}
-
-		for (int i = 0; i < referencesSize; i++)
+		for (int i = 0; i < sizeOfConfiguration(devicesConfig.getProperty("references.reference.[@id]")); i++)
 		{
 			String id = devicesConfig.getString("references.reference(" + i + ").[@id]");
-			String name = devicesConfig.getString("references.reference(" + i + ").[@name]");
+			String name = arrayToString(devicesConfig.getStringArray("references.reference(" + i + ").[@name]"));
 			referenceById.put(id, name);
 		}
 	}
 
 	private void parseGroupAddressConfig(HierarchicalConfiguration groupConfig, Hashtable<String, String> groupAddressByDatapointId)
 	{
-		Object groups = groupConfig.getProperty("group.[@id]");
-
-		// identify number of group elements
-		int groupsSize = 0;
-
-		if (groups != null)
-		{
-			groupsSize = 1;
-		}
-
-		if (groups instanceof Collection<?>)
-		{
-			groupsSize = ((Collection<?>) groups).size();
-		}
-
 		// if there are no group elements return
-		for (int groupsIdx = 0; groupsIdx < groupsSize; groupsIdx++)
+		for (int groupsIdx = 0; groupsIdx < sizeOfConfiguration(groupConfig.getProperty("group.[@id]")); groupsIdx++)
 		{
 			String groupAddress = groupConfig.getString("group(" + groupsIdx + ").[@address]");
 
 			// find instance elements for this group
-
 			HierarchicalConfiguration concreteGroup = groupConfig.configurationAt("group(" + groupsIdx + ")");
 
-			Object instanceElements = concreteGroup.getProperty("instance.[@id]");
-
-			int instanceSize = 0;
-
-			if (instanceElements != null)
-			{
-				instanceSize = 1;
-			}
-
-			if (instanceElements instanceof Collection<?>)
-			{
-				instanceSize = ((Collection<?>) instanceElements).size();
-			}
-
-			for (int instanceIdx = 0; instanceIdx < instanceSize; instanceIdx++)
+			for (int instanceIdx = 0; instanceIdx < sizeOfConfiguration(concreteGroup.getProperty("instance.[@id]")); instanceIdx++)
 			{
 				String instanceId = concreteGroup.getString("instance(" + instanceIdx + ").[@id]");
 				log.info("Mapping instanceID: " + instanceId + " to " + groupAddress);
@@ -399,29 +376,12 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader
 
 			// recursively perform this method for nested groups
 			parseGroupAddressConfig(concreteGroup, groupAddressByDatapointId);
-
 		}
-
 	}
 
-	private void parseEntites(KNXConnector knxConnector, ObjectBroker objectBroker, Hashtable<String, EntityImpl> entityById, Hashtable<String, DatapointImpl> datapointById, NetworkImpl n, Hashtable<String, String> resourceById,
-			Hashtable<String, String> groupAddressByDatapointID)
+	private void parseEntites(KNXConnector knxConnector, ObjectBroker objectBroker, Hashtable<String, EntityImpl> entityById, Hashtable<String, DatapointImpl> datapointById, NetworkImpl n, Hashtable<String, String> resourceById, Hashtable<String, String> groupAddressByDatapointID)
 	{
-		Object entities = devicesConfig.getProperty("entities.entity[@id]");
-
-		int entitiesSize = 0;
-
-		if (entities != null)
-		{
-			entitiesSize = 1;
-		}
-
-		if (entities instanceof Collection<?>)
-		{
-			entitiesSize = ((Collection<?>) entities).size();
-		}
-
-		for (int entityIdx = 0; entityIdx < entitiesSize; entityIdx++)
+		for (int entityIdx = 0; entityIdx < sizeOfConfiguration(devicesConfig.getProperty("entities.entity[@id]")); entityIdx++)
 		{
 			// Entity
 			HierarchicalConfiguration entityConfig = devicesConfig.configurationAt("entities.entity(" + entityIdx + ")");
@@ -433,25 +393,12 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader
 			String entityManufacturerId = entityConfig.getString("[@manufacturerId]");
 
 			EntityImpl entity = new EntityImpl(entityId, entityName, entityDescription, resourceById.get(entityManufacturerId), entityOrderNumber);
-
 			entityById.put(entityId, entity);
+			n.getEntities().addEntity(entity);
+			objectBroker.addObj(entity, true);
 
 			// Translations
-			Object translations = entityConfig.getProperty("translations.translation[@language]");
-
-			int translationsSize = 0;
-
-			if (translations != null)
-			{
-				translationsSize = 1;
-			}
-
-			if (translations instanceof Collection<?>)
-			{
-				translationsSize = ((Collection<?>) translations).size();
-			}
-
-			for (int transIdx = 0; transIdx < translationsSize; transIdx++)
+			for (int transIdx = 0; transIdx < sizeOfConfiguration(entityConfig.getProperty("translations.translation[@language]")); transIdx++)
 			{
 				HierarchicalConfiguration transConfig = entityConfig.configurationAt("translations.translation(" + transIdx + ")");
 
@@ -469,25 +416,8 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader
 				}
 			}
 
-			n.getEntities().addEntity(entity);
-			objectBroker.addObj(entity, true);
-
-			// Datapoints
-			Object datapoints = entityConfig.getProperty("datapoints.datapoint[@id]");
-
-			int datapointsSize = 0;
-
-			if (datapoints != null)
-			{
-				datapointsSize = 1;
-			}
-
-			if (datapoints instanceof Collection<?>)
-			{
-				datapointsSize = ((Collection<?>) datapoints).size();
-			}
-
-			for (int datapointIdx = 0; datapointIdx < datapointsSize; datapointIdx++)
+			// DPs
+			for (int datapointIdx = 0; datapointIdx < sizeOfConfiguration(entityConfig.getProperty("datapoints.datapoint[@id]")); datapointIdx++)
 			{
 				HierarchicalConfiguration datapointConfig = entityConfig.configurationAt("datapoints.datapoint(" + datapointIdx + ")");
 
@@ -502,7 +432,7 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader
 				// String dataPointReadOnInitFlag = datapointConfig.getString("[@readOnInitFlag]");
 				// String dataPointTransmitFlag = datapointConfig.getString("[@transmitFlag]");
 				// String updateFlag = datapointConfig.getString("[@updateFlag]");
-				
+
 				// use only the first DPTS
 				if (dataPointTypeIds.indexOf(" ") >= 0)
 				{
@@ -552,31 +482,22 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader
 						object[1] = dptInit;
 						DatapointImpl dataPoint = (DatapointImpl) constructor.newInstance(object);
 
-						Obj dpValue = dataPoint.get("value");
+						datapointById.put(dataPointId, dataPoint);
+						entity.addDatapoint(dataPoint);
 
+						objectBroker.enableGroupComm(dataPoint);
+						objectBroker.addObj(dataPoint, true);
+
+						// Search for child "value"
+						Obj dpValue = dataPoint.get("value");
 						if (dpValue != null)
 						{
 							dpValue.setDisplayName(dataPointDescription);
 						}
 
-						// Translations (Datapoint)
-						translations = datapointConfig.getProperty("translations.translation[@language]");
-
-						translationsSize = 0;
-
-						if (translations != null)
+						// Translations (DP)
+						for (int transIdx = 0; transIdx < sizeOfConfiguration(datapointConfig.getProperty("translations.translation[@language]")); transIdx++)
 						{
-							translationsSize = 1;
-						}
-
-						if (translations instanceof Collection<?>)
-						{
-							translationsSize = ((Collection<?>) translations).size();
-						}
-
-						for (int transIdx = 0; transIdx < translationsSize; transIdx++)
-						{
-
 							HierarchicalConfiguration transConfig = datapointConfig.configurationAt("translations.translation(" + transIdx + ")");
 
 							String language = transConfig.getString("[@language]");
@@ -585,26 +506,20 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader
 
 							try
 							{
+								dataPoint.addTranslation(language, attribute, value);
+
+								// translation for DisplayName of value
 								if (attribute.toLowerCase().trim().equals("description") && dpValue != null)
 								{
-									dpValue.addTranslation(language, attribute, value);
+									dpValue.addTranslation(language, TranslationAttribute.displayName, value);
 								}
-								dataPoint.addTranslation(language, attribute, value);
 							}
 							catch (Exception e)
 							{
 								log.warning(e.getMessage());
 							}
 						}
-
-						datapointById.put(dataPointId, dataPoint);
-						entity.addDatapoint(dataPoint);
-
-						objectBroker.enableGroupComm(dataPoint);
-
-						objectBroker.addObj(dataPoint, true);
 					}
-
 				}
 				catch (NoSuchMethodException e)
 				{
@@ -634,101 +549,33 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader
 				}
 			}
 		}
-
-		// Phase III create views
-		Object buildings = devicesConfig.getProperty("views.building");
-		if (buildings != null)
-		{
-			HierarchicalConfiguration buildingConfig = devicesConfig.configurationAt("views.building");
-
-			objectBroker.addObj(n.getBuilding(), true);
-
-			parseBuildingView(buildingConfig, (Obj) n.getBuilding(), n, objectBroker, entityById);
-		}
-
-		Object functional = devicesConfig.getProperty("views.functional");
-		if (functional != null)
-		{
-			HierarchicalConfiguration funcionalView = devicesConfig.configurationAt("views.functional");
-
-			objectBroker.addObj(n.getFunctional(), true);
-
-			parseFunctionalView(funcionalView, (Obj) n.getFunctional(), n, objectBroker, entityById, datapointById);
-		}
-
-		Object domains = devicesConfig.getProperty("views.domains");
-		if (domains != null)
-		{
-			HierarchicalConfiguration domainView = devicesConfig.configurationAt("views.domains");
-
-			objectBroker.addObj(n.getDomains(), true);
-			parseDomainView(domainView, (Obj) n.getDomains(), n, objectBroker, entityById, datapointById);
-		}
-
-		Object topologies = devicesConfig.getProperty("views.topology");
-		if (topologies != null)
-		{
-			HierarchicalConfiguration topologyView = devicesConfig.configurationAt("views.topology");
-
-			objectBroker.addObj(n.getTopology(), true);
-
-			parseTopologyView(topologyView, (Obj) n.getTopology(), n, objectBroker, entityById, datapointById);
-		}
-
 	}
 
 	private void parseBuildingView(HierarchicalConfiguration partConfig, Obj parent, Network n, ObjectBroker objectBroker, Hashtable<String, EntityImpl> entityById)
 	{
-
-		Object parts = partConfig.getProperty("part.[@id]");
-
-		// identify number of group elements
-		int partsSize = 0;
-
-		if (parts != null)
-		{
-			partsSize = 1;
-		}
-
-		if (parts instanceof Collection<?>)
-		{
-			partsSize = ((Collection<?>) parts).size();
-		}
-
-		// if there are no group elements return
-		for (int partsIdx = 0; partsIdx < partsSize; partsIdx++)
+		for (int partsIdx = 0; partsIdx < sizeOfConfiguration(partConfig.getProperty("part.[@id]")); partsIdx++)
 		{
 			String partId = partConfig.getString("part(" + partsIdx + ").[@id]");
-
-			String partName = partConfig.getString("part(" + partsIdx + ").[@name]");
-
+			String partName = arrayToString(partConfig.getStringArray("part(" + partsIdx + ").[@name]"));
+			String partDescription = arrayToString(partConfig.getStringArray("part(" + partsIdx + ").[@description]"));
 			String partType = partConfig.getString("part(" + partsIdx + ").[@type]");
 
-			PartImpl part = new PartImpl(partId, partName, null, partType);
-
-			// add instances to part
-			HierarchicalConfiguration concretePart = partConfig.configurationAt("part(" + partsIdx + ")");
-			Object instanceElements = concretePart.getProperty("instance.[@id]");
-
-			int instanceSize = 0;
-
-			if (instanceElements != null)
-			{
-				instanceSize = 1;
-			}
-
-			if (instanceElements instanceof Collection<?>)
-			{
-				instanceSize = ((Collection<?>) instanceElements).size();
-			}
+			PartImpl part = new PartImpl(partId, partName, partDescription, partType);
 
 			// add part to parent part
-			parent.add(part);
+			if (parent instanceof ViewBuildingImpl)
+				((ViewBuildingImpl) parent).addPart(part);
+			else if (parent instanceof PartImpl)
+				((PartImpl) parent).addPart(part);
+			else
+				parent.add(part);
 
 			objectBroker.addObj(part, true);
 
-			// if this part has some instances set, add references to entities
-			for (int instanceIdx = 0; instanceIdx < instanceSize; instanceIdx++)
+			// add instances to part
+			HierarchicalConfiguration concretePart = partConfig.configurationAt("part(" + partsIdx + ")");
+
+			for (int instanceIdx = 0; instanceIdx < sizeOfConfiguration(concretePart.getProperty("instance.[@id]")); instanceIdx++)
 			{
 				String instanceId = concretePart.getString("instance(" + instanceIdx + ").[@id]");
 				Obj instance = part.addInstance(entityById.get(instanceId));
@@ -736,222 +583,155 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader
 			}
 
 			// recursively add more parts
-
 			parseBuildingView(concretePart, part, n, objectBroker, entityById);
 
 		}
 	}
 
-	private void parseFunctionalView(HierarchicalConfiguration groupConfig, Obj parent, Network n, ObjectBroker objectBroker, Hashtable<String, EntityImpl> entityById, Hashtable<String, DatapointImpl> datapointById)
+	private void parseFunctionalView(HierarchicalConfiguration groupConfig, Obj parent, Network n, ObjectBroker objectBroker, Hashtable<String, EntityImpl> entityById, Hashtable<String, DatapointImpl> datapointById, KNXConnector knxConnector, Hashtable<String, String> groupAddressByDatapointId)
 	{
-
-		Object groups = groupConfig.getProperty("group.[@id]");
-
-		// identify number of group elements
-		int groupsSize = 0;
-
-		if (groups != null)
+		for (int groupsIdx = 0; groupsIdx < sizeOfConfiguration(groupConfig.getProperty("group.[@id]")); groupsIdx++)
 		{
-			groupsSize = 1;
-		}
-
-		if (groups instanceof Collection<?>)
-		{
-			groupsSize = ((Collection<?>) groups).size();
-		}
-
-		// if there are no group elements return
-		for (int groupsIdx = 0; groupsIdx < groupsSize; groupsIdx++)
-		{
-
 			String groupId = groupConfig.getString("group(" + groupsIdx + ").[@id]");
+			String groupName = arrayToString(groupConfig.getStringArray("group(" + groupsIdx + ").[@name]"));
+			String groupDescription = arrayToString(groupConfig.getStringArray("group(" + groupsIdx + ").[@description]"));
+			long groupAddress = groupConfig.getLong("group(" + groupsIdx + ").[@address]");
 
-			String groupName = groupConfig.getString("group(" + groupsIdx + ").[@name]");
+			GroupImpl group = new GroupImpl(groupId, groupName, groupDescription, groupAddress);
 
-			String groupAddress = groupConfig.getString("group(" + groupsIdx + ").[@type]");
-
-			String groupDescription = groupConfig.getString("group(" + groupsIdx + ").[@type]");
-
-			int address = 0;
-
-			if (groupAddress != null)
-			{
-				address = Integer.parseInt(groupAddress);
-			}
-
-			GroupImpl group = new GroupImpl(groupId, groupName, groupDescription, address);
-
-			// add instances to part
-			HierarchicalConfiguration concreteGroup = groupConfig.configurationAt("group(" + groupsIdx + ")");
-			Object instanceElements = concreteGroup.getProperty("instance.[@id]");
-
-			int instanceSize = 0;
-
-			if (instanceElements != null)
-			{
-				instanceSize = 1;
-			}
-
-			if (instanceElements instanceof Collection<?>)
-			{
-				instanceSize = ((Collection<?>) instanceElements).size();
-			}
 			// add part to parent part
-			parent.add(group);
+			if (parent instanceof ViewFunctionalImpl)
+				((ViewFunctionalImpl) parent).addGroup(group);
+			else if (parent instanceof GroupImpl)
+				((GroupImpl) parent).addGroup(group);
+			else
+				parent.add(group);
 
 			objectBroker.addObj(group, true);
 
-			// if this part has some instances set, add references to entities
-			for (int instanceIdx = 0; instanceIdx < instanceSize; instanceIdx++)
+			// add instances to part
+			HierarchicalConfiguration concreteGroup = groupConfig.configurationAt("group(" + groupsIdx + ")");
+
+			for (int instanceIdx = 0; instanceIdx < sizeOfConfiguration(concreteGroup.getProperty("instance.[@id]")); instanceIdx++)
 			{
 				String instanceId = concreteGroup.getString("instance(" + instanceIdx + ").[@id]");
-				group.addInstance(datapointById.get(instanceId), EnumConnector.KEY_SEND);
+				String connector = concreteGroup.getString("instance(" + instanceIdx + ").[@connector]");
 
 				try
 				{
-					DatapointImpl datapointImpl = (DatapointImpl) datapointById.get(instanceId).clone();
-					datapointImpl.setName("function");
-					group.addFunction(datapointImpl);
+					DatapointImpl dp = datapointById.get(instanceId);
+					Class<?> clazz = dp.getClass();
 
-					objectBroker.addObj(datapointImpl, true);
+					if (clazz != null)
+					{
+						Constructor<?> constructor = clazz.getConstructor(KNXConnector.class, DataPointInit.class);
+						Object[] object = new Object[2];
+						object[0] = knxConnector;
 
+						DataPointInit dptInit = new DataPointInit();
+						dptInit.setName("function");
+						dptInit.setReadable(dp.isValueReadable());
+						dptInit.setWritable(dp.isValueWritable());
+						dptInit.setGroupAddress(new GroupAddress(Integer.parseInt(groupAddressByDatapointId.get(instanceId))));
+
+						object[1] = dptInit;
+						DatapointImpl dataPoint = (DatapointImpl) constructor.newInstance(object);
+
+						group.addFunction(dataPoint);
+						objectBroker.addObj(dataPoint, true);
+					}
 				}
-				catch (CloneNotSupportedException e)
+				catch (Exception e)
 				{
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
+
+				group.addInstance(datapointById.get(instanceId), connector);
 			}
 
 			// recursively add more parts
-			parseFunctionalView(concreteGroup, group, n, objectBroker, entityById, datapointById);
-
+			parseFunctionalView(concreteGroup, group, n, objectBroker, entityById, datapointById, knxConnector, groupAddressByDatapointId);
 		}
 	}
 
 	private void parseDomainView(HierarchicalConfiguration domainConfig, Obj parent, Network n, ObjectBroker objectBroker, Hashtable<String, EntityImpl> entityById, Hashtable<String, DatapointImpl> datapointById)
 	{
-
-		Object domains = domainConfig.getProperty("domain.[@id]");
-
-		// identify number of group elements
-		int domainSize = 0;
-
-		if (domains != null)
+		for (int domainIdx = 0; domainIdx < sizeOfConfiguration(domainConfig.getProperty("domain.[@id]")); domainIdx++)
 		{
-			domainSize = 1;
-		}
-
-		if (domains instanceof Collection<?>)
-		{
-			domainSize = ((Collection<?>) domains).size();
-		}
-
-		// if there are no group elements return
-		for (int domainIdx = 0; domainIdx < domainSize; domainIdx++)
-		{
-
 			String domainId = domainConfig.getString("domain(" + domainIdx + ").[@id]");
+			String domainName = arrayToString(domainConfig.getStringArray("domain(" + domainIdx + ").[@name]"));
+			String domainDescription = arrayToString(domainConfig.getStringArray("domain(" + domainIdx + ").[@description]"));
 
-			String domainName = domainConfig.getString("domain(" + domainIdx + ").[@name]");
+			DomainImpl domain = new DomainImpl(domainId, domainName, domainDescription);
 
-			DomainImpl domain = new DomainImpl(domainId, domainName, null);
-
-			// add instances to part
-			HierarchicalConfiguration concreteDomain = domainConfig.configurationAt("domain(" + domainIdx + ")");
-			Object instanceElements = concreteDomain.getProperty("instance.[@id]");
-
-			int instanceSize = 0;
-
-			if (instanceElements != null)
-			{
-				instanceSize = 1;
-			}
-
-			if (instanceElements instanceof Collection<?>)
-			{
-				instanceSize = ((Collection<?>) instanceElements).size();
-			}
 			// add part to parent part
-			parent.add(domain);
+			if (parent instanceof ViewDomainsImpl)
+				((ViewDomainsImpl) parent).addDomain(domain);
+			else if (parent instanceof DomainImpl)
+				((DomainImpl) parent).addDomain(domain);
+			else
+				parent.add(domain);
 
 			objectBroker.addObj(domain, true);
 
-			// if this part has some instances set, add references to entities
-			for (int instanceIdx = 0; instanceIdx < instanceSize; instanceIdx++)
+			// add instances to part
+			HierarchicalConfiguration concreteDomain = domainConfig.configurationAt("domain(" + domainIdx + ")");
+
+			for (int instanceIdx = 0; instanceIdx < sizeOfConfiguration(concreteDomain.getProperty("instance.[@id]")); instanceIdx++)
 			{
 				String instanceId = concreteDomain.getString("instance(" + instanceIdx + ").[@id]");
 				Obj addInstance = domain.addInstance(entityById.get(instanceId));
 				objectBroker.addObj(addInstance, true);
-
 			}
 
 			// recursively add more domains
 			parseDomainView(concreteDomain, domain, n, objectBroker, entityById, datapointById);
-
 		}
 	}
 
-	private void parseTopologyView(HierarchicalConfiguration areaConfig, Obj parent, Network n, ObjectBroker objectBroker, Hashtable<String, EntityImpl> entityById, Hashtable<String, DatapointImpl> datapointById)
+	private void parseTopologyView(HierarchicalConfiguration areaConfig, Obj parent, Network n, ObjectBroker objectBroker, Hashtable<String, EntityImpl> entityById, Hashtable<String, DatapointImpl> datapointById, Hashtable<String, String> resourceById)
 	{
-
-		Object areas = areaConfig.getProperty("area.[@id]");
-
-		// identify number of group elements
-		int areaSize = 0;
-
-		if (areas != null)
+		for (int areaIdx = 0; areaIdx < sizeOfConfiguration(areaConfig.getProperty("area.[@id]")); areaIdx++)
 		{
-			areaSize = 1;
-		}
-
-		if (areas instanceof Collection<?>)
-		{
-			areaSize = ((Collection<?>) areas).size();
-		}
-
-		// if there are no group elements return
-		for (int areaIdx = 0; areaIdx < areaSize; areaIdx++)
-		{
-
 			String areaId = areaConfig.getString("area(" + areaIdx + ").[@id]");
+			String areaName = arrayToString(areaConfig.getStringArray("area(" + areaIdx + ").[@name]"));
+			String areaDescription = arrayToString(areaConfig.getStringArray("area(" + areaIdx + ").[@description]"));
+			String areaMediaTypeId = areaConfig.getString("area(" + areaIdx + ").[@mediaTypeId]");
+			long areaAddress = areaConfig.getLong("area(" + areaIdx + ").[@address]");
 
-			String areaName = areaConfig.getString("area(" + areaIdx + ").[@name]");
-
-			DomainImpl area = new DomainImpl(areaId, areaName, null);
-
-			// add instances to part
-			HierarchicalConfiguration concreteArea = areaConfig.configurationAt("area(" + areaIdx + ")");
-			Object instanceElements = concreteArea.getProperty("instance.[@id]");
-
-			int instanceSize = 0;
-
-			if (instanceElements != null)
+			String areaMediaType = null;
+			if (areaMediaTypeId != null)
 			{
-				instanceSize = 1;
+				areaMediaType = resourceById.get(areaMediaTypeId);
 			}
 
-			if (instanceElements instanceof Collection<?>)
-			{
-				instanceSize = ((Collection<?>) instanceElements).size();
-			}
+			AreaImpl area = new AreaImpl(areaId, areaName, areaDescription, areaAddress, areaMediaType);
+
 			// add part to parent part
-			parent.add(area);
+			if (parent instanceof ViewTopologyImpl)
+				((ViewTopologyImpl) parent).addArea(area);
+			else if (parent instanceof DomainImpl)
+				((AreaImpl) parent).addArea(area);
+			else
+				parent.add(area);
 
 			objectBroker.addObj(area, true);
 
-			// if this part has some instances set, add references to entities
-			for (int instanceIdx = 0; instanceIdx < instanceSize; instanceIdx++)
+			// add instances to part
+			HierarchicalConfiguration concreteArea = areaConfig.configurationAt("area(" + areaIdx + ")");
+
+			for (int instanceIdx = 0; instanceIdx < sizeOfConfiguration(concreteArea.getProperty("instance.[@id]")); instanceIdx++)
 			{
 				String instanceId = concreteArea.getString("instance(" + instanceIdx + ").[@id]");
-				Obj addInstance = area.addInstance(entityById.get(instanceId));
+				long address = concreteArea.getLong("instance(" + instanceIdx + ").[@address]");
+
+				Obj addInstance = area.addInstance(entityById.get(instanceId), address);
 				objectBroker.addObj(addInstance, true);
 
 			}
 
 			// recursively add more domains
-			parseTopologyView(concreteArea, area, n, objectBroker, entityById, datapointById);
-
+			parseTopologyView(concreteArea, area, n, objectBroker, entityById, datapointById, resourceById);
 		}
 	}
 
@@ -968,6 +748,22 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader
 		}
 
 		return dataPointNameBuilder.toString();
+	}
+
+	private int sizeOfConfiguration(Object configuration)
+	{
+		int size = 0;
+
+		if (configuration != null)
+		{
+			size = 1;
+		}
+
+		if (configuration instanceof Collection<?>)
+		{
+			size = ((Collection<?>) configuration).size();
+		}
+		return size;
 	}
 
 	@Override
