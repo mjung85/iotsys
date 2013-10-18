@@ -102,7 +102,7 @@
     <connector>
         <name>KNX TP1 Suitcase</name>
         <enabled>true</enabled>
-        <knx-proj>knx-config/projects/Suitcase_2013_10_16.knxproj</knx-proj>
+        <knx-proj>knx-config/projects/Suitcase_2013_10_18.knxproj</knx-proj>
         <!-- forces unpacking of zip and transformation -->
         <forceRefresh>true</forceRefresh>              
         <router>
