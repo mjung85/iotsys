@@ -79,5 +79,17 @@ public abstract class Val extends Obj implements Comparable<Object>
 	{
 		return encodeVal();
 	}
+	
+
+	/**
+	 * Refreshes the value.
+	 */
+	public void refreshObject()
+	{
+		if (this.getParent() != null)
+		{
+			this.getParent().refreshObject();
+		}
+	}
 
 }
