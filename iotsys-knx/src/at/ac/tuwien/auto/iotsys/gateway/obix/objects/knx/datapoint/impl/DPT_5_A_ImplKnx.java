@@ -6,6 +6,7 @@ import obix.Obj;
 import at.ac.tuwien.auto.calimero.GroupAddress;
 import at.ac.tuwien.auto.calimero.dptxlator.DPTXlator8BitUnsigned;
 import at.ac.tuwien.auto.calimero.exception.KNXException;
+import at.ac.tuwien.auto.calimero.process.ProcessCommunicatorImpl;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.datapoint.impl.DPT_5_A_Impl;
 import at.ac.tuwien.auto.iotsys.gateway.connectors.knx.KNXConnector;
 import at.ac.tuwien.auto.iotsys.gateway.connectors.knx.KNXWatchDog;
@@ -46,7 +47,7 @@ public class DPT_5_A_ImplKnx extends DPT_5_A_Impl
 				{
 					DPTXlator8BitUnsigned x = new DPTXlator8BitUnsigned(DPTXlator8BitUnsigned.DPT_VALUE_1_UCOUNT);
 
-					x.setData(apdu, 0);
+					ProcessCommunicatorImpl.extractGroupASDU(apdu, x);
 
 					log.fine("8Bit Unsigned for " + DPT_5_A_ImplKnx.this.getHref() + " now " + x.getValueUnsigned(1));
 
@@ -69,6 +70,9 @@ public class DPT_5_A_ImplKnx extends DPT_5_A_Impl
 			int value = connector.readInt(groupAddress, DPTXlator8BitUnsigned.DPT_VALUE_1_UCOUNT.getID());
 			this.value().set(value);
 		}
+
+		// run refresh from super class
+		super.refreshObject();
 	}
 
 	@Override
