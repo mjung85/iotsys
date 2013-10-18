@@ -40,5 +40,9 @@ public interface ParameterDimming extends IObj
 
 	public static final String HREF = "/parameters/dimming";
 
+	public static final int MAX_VALUE = 100;
+
+	public static final int MIN_VALUE = 0;
+
 	public Int value();
 }
