@@ -45,11 +45,11 @@ public class EnumPartImpl extends RangeImpl implements EnumPart
 	protected void initValues()
 	{
 		addElement(new ObjElement(EnumPart.KEY_BUILDING, "Building"));
-		addElement(new ObjElement(EnumPart.KEY_BUILDINGPART, "Building Part"));
+		addElement(new ObjElement(EnumPart.KEY_BUILDINGPART, "BuildingPart"));
 		addElement(new ObjElement(EnumPart.KEY_FLOOR, "Floor"));
 		addElement(new ObjElement(EnumPart.KEY_ROOM, "Room"));
 		addElement(new ObjElement(EnumPart.KEY_CORRIDOR, "Corridor"));
 		addElement(new ObjElement(EnumPart.KEY_STAIRWAY, "Stairway"));
-		addElement(new ObjElement(EnumPart.KEY_DISTRIBUTIONBOARD, "Distribution Board"));
+		addElement(new ObjElement(EnumPart.KEY_DISTRIBUTIONBOARD, "DistributionBoard"));
 	}
 }

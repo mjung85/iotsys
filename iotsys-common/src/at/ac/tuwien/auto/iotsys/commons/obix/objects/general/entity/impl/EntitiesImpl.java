@@ -50,7 +50,7 @@ public class EntitiesImpl extends List implements Entities
 	{
 		this.setName("entities");
 		this.setIs(new Contract(Entities.CONTRACT));
-		this.setOf(new Contract(Entity.CONTRACT));
+		this.setOf(new Contract(new String[] { "obix:ref", Entity.CONTRACT }));
 		this.setHref(new Uri("entities"));
 		this.setHidden(true);
 

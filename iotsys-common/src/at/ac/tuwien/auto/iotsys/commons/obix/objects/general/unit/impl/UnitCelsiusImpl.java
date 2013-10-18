@@ -43,6 +43,6 @@ public class UnitCelsiusImpl extends UnitImpl implements UnitCelsius
 		super("celsius", "temperature (°C)", new Uri(UnitCelsius.HREF), "°C", 1, -273.15, new DimensionImpl(0, 0, 0, 1, 0, 0, 0));
 
 		// Translations
-		addTranslation("de",TranslationAttribute.displayName,"Temperatur (°C)");
+		addTranslation("de", TranslationAttribute.displayName, "Temperatur (°C)");
 	}
 }

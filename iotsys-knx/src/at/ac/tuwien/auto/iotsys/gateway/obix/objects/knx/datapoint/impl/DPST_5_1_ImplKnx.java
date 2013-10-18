@@ -16,24 +16,19 @@ public class DPST_5_1_ImplKnx extends DPST_5_1_Impl
 
 	private GroupAddress groupAddress;
 	private KNXConnector connector;
-	private boolean readable;
-	private boolean writable;
 
 	// if more group addresses are needed just add more constructor parameters.
 	public DPST_5_1_ImplKnx(KNXConnector connector, GroupAddress groupAddress, String name, String displayName, String display, boolean writable, boolean readable)
 	{
-		super(name, displayName, display, writable);
+		super(name, displayName, display, writable, readable);
 
 		this.groupAddress = groupAddress;
 		this.connector = connector;
-		this.writable = writable;
-		this.readable = readable;
 
 		// if it is not possible to read from the group address --> create a watchdog that monitors the communication
-//		if (!this.readable)
 		this.createWatchDog();
 	}
-	
+
 	public DPST_5_1_ImplKnx(KNXConnector connector, DataPointInit dataPointInit)
 	{
 		this(connector, dataPointInit.getGroupAddress(), dataPointInit.getName(), dataPointInit.getDisplayName(), dataPointInit.getDisplay(), dataPointInit.isWritable(), dataPointInit.isReadable());
@@ -41,7 +36,8 @@ public class DPST_5_1_ImplKnx extends DPST_5_1_Impl
 
 	public void createWatchDog()
 	{
-		if(connector != null && groupAddress != null){
+		if (connector != null && groupAddress != null)
+		{
 			connector.addWatchDog(groupAddress, new KNXWatchDog()
 			{
 				@Override
@@ -50,11 +46,11 @@ public class DPST_5_1_ImplKnx extends DPST_5_1_Impl
 					try
 					{
 						DPTXlator8BitUnsigned x = new DPTXlator8BitUnsigned(DPTXlator8BitUnsigned.DPT_SCALING);
-	
+
 						x.setData(apdu, 0);
-	
+
 						log.fine("Status for " + DPST_5_1_ImplKnx.this.getHref() + " now " + x.getValueUnsigned(1));
-	
+
 						value.set(x.getValueUnsigned(1));
 					}
 					catch (KNXException e)
@@ -70,7 +66,7 @@ public class DPST_5_1_ImplKnx extends DPST_5_1_Impl
 	public void refreshObject()
 	{
 		// here we need to read from the bus, only if the read flag is set at the data point
-		if (this.readable)
+		if (this.value().isReadable())
 		{
 			int value = connector.readInt(groupAddress, DPTXlator8BitUnsigned.DPT_SCALING.getID());
 			this.value().set(value);
@@ -80,7 +76,7 @@ public class DPST_5_1_ImplKnx extends DPST_5_1_Impl
 	@Override
 	public void writeObject(Obj obj)
 	{
-		if (this.writable)
+		if (this.value().isWritable())
 		{
 			// always pass the writeObject call to the super method (triggers, oBIX related internal services like watches, alarms, ...)
 			// also the internal instance variables get updated

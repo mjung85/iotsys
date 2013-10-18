@@ -55,7 +55,7 @@ public class EnumsImpl extends List implements IObj
 	private TreeMap<String, RangeImpl> enums;
 
 	private static final EnumsImpl instance = new EnumsImpl();
-	
+
 	private EnumsImpl()
 	{
 		this.setName("enums");
@@ -90,7 +90,7 @@ public class EnumsImpl extends List implements IObj
 	{
 		return instance;
 	}
-	
+
 	public RangeImpl getEnum(String href)
 	{
 		return enums.get(href);

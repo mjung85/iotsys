@@ -31,6 +31,7 @@
 
 package at.ac.tuwien.auto.iotsys.commons.obix.objects.general.encoding.impl;
 
+import obix.Contract;
 import obix.Uri;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.encoding.EncodingOnOff;
 
@@ -39,6 +40,8 @@ public class EncodingOnOffImpl extends EncodingImpl implements EncodingOnOff
 	public EncodingOnOffImpl()
 	{
 		super(new Uri(EncodingOnOff.HREF));
+
+		this.setOf(new Contract("obix:bool"));
 	}
 
 	protected void initValues()
@@ -46,8 +49,8 @@ public class EncodingOnOffImpl extends EncodingImpl implements EncodingOnOff
 		BoolElement on = new BoolElement(EncodingOnOff.KEY_ON, "On", true);
 		BoolElement off = new BoolElement(EncodingOnOff.KEY_OFF, "Off", false);
 
-		on.addTranslation("de",TranslationAttribute.displayName,"Ein");
-		off.addTranslation("de",TranslationAttribute.displayName,"Aus");
+		on.addTranslation("de", TranslationAttribute.displayName, "Ein");
+		off.addTranslation("de", TranslationAttribute.displayName, "Aus");
 
 		addElement(on);
 		addElement(off);

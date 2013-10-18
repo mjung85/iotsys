@@ -27,7 +27,7 @@ public class DPST_3_7_ImplKnx extends DPST_3_7_Impl
 		this.groupAddress = groupAddress;
 		this.connector = connector;
 	}
-	
+
 	public DPST_3_7_ImplKnx(KNXConnector connector, DataPointInit dataPointInit)
 	{
 		this(connector, dataPointInit.getGroupAddress(), dataPointInit.getName(), dataPointInit.getDisplayName(), dataPointInit.getDisplay());
@@ -44,7 +44,7 @@ public class DPST_3_7_ImplKnx extends DPST_3_7_Impl
 	{
 		return doRun(in, ProcessCommunicator.BOOL_DECREASE);
 	}
-	
+
 	private Obj doRun(Obj in, boolean control)
 	{
 		try
@@ -53,23 +53,25 @@ public class DPST_3_7_ImplKnx extends DPST_3_7_Impl
 			{
 				ParameterDimming p = (ParameterDimming) in;
 				Int value = p.value();
-				
+
 				if (value.get() > value.getMax())
 					value.setSilent(value.getMax());
 				else if (value.get() < value.getMin())
 					value.setSilent(value.getMin());
-				
+
 				int stepCode = 0;
-				
+
 				if (value.get() > 0)
-					stepCode = (int)Math.round(((Math.log((float)value.getMax()/value.get())/Math.log(2)) + 1));
-	
+					stepCode = (int) Math.round(((Math.log((float) value.getMax() / value.get()) / Math.log(2)) + 1));
+
 				log.fine("dimming with step code" + stepCode);
-					
-				if(connector.getProcessCommunicator() != null){
+
+				if (connector.getProcessCommunicator() != null)
+				{
 					connector.getProcessCommunicator().write(groupAddress, control, (byte) stepCode);
 				}
-				else{
+				else
+				{
 					log.severe("Process communicator is not available!");
 				}
 			}

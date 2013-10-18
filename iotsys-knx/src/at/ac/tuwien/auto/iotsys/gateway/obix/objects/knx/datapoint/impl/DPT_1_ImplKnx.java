@@ -16,20 +16,16 @@ public class DPT_1_ImplKnx extends DPT_1_Impl
 
 	private GroupAddress groupAddress;
 	private KNXConnector connector;
-	private boolean readable;
-	private boolean writable;
 
 	public DPT_1_ImplKnx(KNXConnector connector, GroupAddress groupAddress, String name, String displayName, String display, boolean writable, boolean readable)
 	{
-		super(name, displayName, display, writable);
+		super(name, displayName, display, writable, readable);
 
 		this.groupAddress = groupAddress;
 		this.connector = connector;
-		this.writable = writable;
-		this.readable = readable;
 
 		// if it is not possible to read from the group address --> create a watchdog that monitors the communication
-		if (!this.readable)
+		if (!this.value().isReadable())
 			this.createWatchDog();
 	}
 
@@ -67,17 +63,17 @@ public class DPT_1_ImplKnx extends DPT_1_Impl
 	public void refreshObject()
 	{
 		// here we need to read from the bus, only if the read flag is set at the data point
-//		if (this.readable)
-//		{
-//			boolean value = connector.readBool(groupAddress);
-//			this.value().set(value);
-//		}
+		// if (this.readable)
+		// {
+		// boolean value = connector.readBool(groupAddress);
+		// this.value().set(value);
+		// }
 	}
 
 	@Override
 	public void writeObject(Obj obj)
 	{
-		if (this.writable)
+		if (this.value().isWritable())
 		{
 			// always pass the writeObject call to the super method (triggers, oBIX related internal services like watches, alarms, ...)
 			// also the internal instance variables get updated

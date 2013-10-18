@@ -31,6 +31,7 @@
 
 package at.ac.tuwien.auto.iotsys.commons.obix.objects.general.enumeration.impl;
 
+import obix.Contract;
 import obix.Uri;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.contracts.impl.RangeImpl;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.enumeration.EnumProbabilityCode;
@@ -41,6 +42,8 @@ public class EnumProbabilityCodeImpl extends RangeImpl implements EnumProbabilit
 	public EnumProbabilityCodeImpl()
 	{
 		super(new Uri(EnumProbabilityCode.HREF));
+
+		this.setOf(new Contract("obix:int"));
 	}
 
 	protected void initValues()

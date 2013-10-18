@@ -60,6 +60,10 @@ public interface IObj
 	public void setWritable(boolean writable);
 
 	public void setWritable(boolean writable, boolean recursive);
+	
+	public boolean isReadable();
+
+	public void setReadable(boolean readable);
 
 	// //////////////////////////////////////////////////////////////
 	// Extended Attributes
