@@ -38,7 +38,7 @@ import org.apache.commons.configuration.XMLConfiguration;
 
 public interface DeviceLoader
 {
-	public static final String DEVICE_CONFIGURATION_LOCATION = "config/devices.test.xml";
+	public static final String DEVICE_CONFIGURATION_LOCATION = "config/devices.xml";
 
 	public ArrayList<Connector> initDevices(ObjectBroker objectBroker);
 
