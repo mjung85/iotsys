@@ -313,7 +313,7 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader
 		objectBroker.addObj(n, true);
 
 		// Entities
-		parseEntites(knxConnector, objectBroker, entityById, datapointById, n, referenceById, groupAddressByDatapointID);
+		parseEntites(knxConnector, objectBroker, entityById, datapointById, n, referenceById, groupAddressByDatapointID, enableGroupComm, enableHistories);
 
 		// Views
 		Object building = devicesConfig.getProperty("views.building.part[@id]");
@@ -379,7 +379,7 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader
 		}
 	}
 
-	private void parseEntites(KNXConnector knxConnector, ObjectBroker objectBroker, Hashtable<String, EntityImpl> entityById, Hashtable<String, DatapointImpl> datapointById, NetworkImpl n, Hashtable<String, String> resourceById, Hashtable<String, String> groupAddressByDatapointID)
+	private void parseEntites(KNXConnector knxConnector, ObjectBroker objectBroker, Hashtable<String, EntityImpl> entityById, Hashtable<String, DatapointImpl> datapointById, NetworkImpl n, Hashtable<String, String> resourceById, Hashtable<String, String> groupAddressByDatapointID, boolean enableGroupComm, boolean enableHistories)
 	{
 		for (int entityIdx = 0; entityIdx < sizeOfConfiguration(devicesConfig.getProperty("entities.entity[@id]")); entityIdx++)
 		{
@@ -485,7 +485,10 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader
 						datapointById.put(dataPointId, dataPoint);
 						entity.addDatapoint(dataPoint);
 
-						objectBroker.enableGroupComm(dataPoint);
+						if(enableGroupComm)
+							objectBroker.enableGroupComm(dataPoint);
+						if(enableHistories)
+							objectBroker.addHistoryToDatapoints(dataPoint);
 						objectBroker.addObj(dataPoint, true);
 
 						// Search for child "value"
