@@ -429,7 +429,7 @@ public class HistoryImpl extends Obj implements History, Observer {
 			HistoryRecordImpl firstRecord = (HistoryRecordImpl) events.get(events.size()-1);
 			HistoryRecordImpl lastRecord = (HistoryRecordImpl) events.get(0);
 			
-			count.setSilent(events.size());
+			count.set(events.size(), false);
 			this.start.set(firstRecord.timestamp().get(), TimeZone
 					.getTimeZone((firstRecord.timestamp().getTz())));
 			this.end.set(lastRecord.timestamp().get(), TimeZone

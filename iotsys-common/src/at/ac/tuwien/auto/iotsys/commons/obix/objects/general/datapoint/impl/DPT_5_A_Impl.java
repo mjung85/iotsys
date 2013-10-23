@@ -46,7 +46,7 @@ public abstract class DPT_5_A_Impl extends DatapointImpl implements DPT_5_A
 {
 	private static final Logger log = Logger.getLogger(DPT_5_A_Impl.class.getName());
 
-	protected Real value = new Real();
+	private Real value = new Real();
 
 	public DPT_5_A_Impl(String name, String displayName, String display, boolean writable, boolean readable)
 	{
@@ -58,6 +58,7 @@ public abstract class DPT_5_A_Impl extends DatapointImpl implements DPT_5_A
 		this.value.setHref(new Uri("value"));
 		this.value.setWritable(writable);
 		this.value.setReadable(readable);
+		this.value.setNull(true);
 		this.add(value);
 	}
 

@@ -7,8 +7,7 @@ public abstract class AlarmCondition
 	/**
 	 * @param source
 	 *            the alarm source to check for an alarm condition
-	 * @return <code>true</code> if the given alarm source is in alarm
-	 *         condition, <code>false</code> otherwise
+	 * @return <code>true</code> if the given alarm source is in alarm condition, <code>false</code> otherwise
 	 */
 	public boolean inAlarmCondition(AlarmSource source)
 	{
@@ -18,8 +17,7 @@ public abstract class AlarmCondition
 	/**
 	 * @param source
 	 *            the alarm source to check for an alarm condition
-	 * @return <code>true</code> if given alarm source is in alarm condition
-	 *         (without flipping the result), <code>false</code> otherwise
+	 * @return <code>true</code> if given alarm source is in alarm condition (without flipping the result), <code>false</code> otherwise
 	 */
 	protected abstract boolean checkAlarmCondition(AlarmSource source);
 

@@ -26,9 +26,7 @@ public class DPT_5_A_ImplKnx extends DPT_5_A_Impl
 		this.groupAddress = groupAddress;
 		this.connector = connector;
 
-		// if it is not possible to read from the group address --> create a watchdog that monitors the communication
-		if (!this.value().isReadable())
-			this.createWatchDog();
+		this.createWatchDog();
 	}
 
 	public DPT_5_A_ImplKnx(KNXConnector connector, DataPointInit dataPointInit)
@@ -46,12 +44,12 @@ public class DPT_5_A_ImplKnx extends DPT_5_A_Impl
 				try
 				{
 					DPTXlator8BitUnsigned x = new DPTXlator8BitUnsigned(DPTXlator8BitUnsigned.DPT_VALUE_1_UCOUNT);
-
 					ProcessCommunicatorImpl.extractGroupASDU(apdu, x);
 
-					log.fine("8Bit Unsigned for " + DPT_5_A_ImplKnx.this.getHref() + " now " + x.getValueUnsigned(1));
+					log.info("8Bit Unsigned for " + DPT_5_A_ImplKnx.this.getHref() + " now " + x.getValueUnsigned());
 
-					value.set(x.getValueUnsigned(1));
+					value().set(x.getValueUnsigned());
+					value().setNull(false);
 				}
 				catch (KNXException e)
 				{
@@ -68,7 +66,9 @@ public class DPT_5_A_ImplKnx extends DPT_5_A_Impl
 		if (this.value().isReadable())
 		{
 			int value = connector.readInt(groupAddress, DPTXlator8BitUnsigned.DPT_VALUE_1_UCOUNT.getID());
+			
 			this.value().set(value);
+			this.value().setNull(false);
 		}
 
 		// run refresh from super class
@@ -84,6 +84,9 @@ public class DPT_5_A_ImplKnx extends DPT_5_A_Impl
 			// also the internal instance variables get updated
 			super.writeObject(obj);
 
+			// set isNull to false
+			this.value().setNull(false);
+			
 			// now write this.value to the KNX bus
 			connector.write(groupAddress, this.value().get());
 		}

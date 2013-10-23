@@ -4,8 +4,7 @@
 package obix;
 
 /**
- * Val is base class for value types: Bool, Int, Real, Enum, Abstime, Reltime,
- * and Uri
+ * Val is base class for value types: Bool, Int, Real, Enum, Abstime, Reltime, and Uri
  * 
  * @author Brian Frank
  * @creation 27 Apr 05
@@ -38,8 +37,7 @@ public abstract class Val extends Obj implements Comparable<Object>
 	// //////////////////////////////////////////////////////////////
 
 	/**
-	 * For now return valEquals() TODO maybe should implement name, facet
-	 * equality in Obj.equals()?
+	 * For now return valEquals() TODO maybe should implement name, facet equality in Obj.equals()?
 	 */
 	public final boolean equals(Object that)
 	{
@@ -49,8 +47,7 @@ public abstract class Val extends Obj implements Comparable<Object>
 	}
 
 	/**
-	 * Return if the value is equal to the specified Val's value regardless of
-	 * other aspects like name and facets.
+	 * Return if the value is equal to the specified Val's value regardless of other aspects like name and facets.
 	 */
 	public abstract boolean valEquals(Val that);
 
@@ -79,7 +76,6 @@ public abstract class Val extends Obj implements Comparable<Object>
 	{
 		return encodeVal();
 	}
-	
 
 	/**
 	 * Refreshes the value.

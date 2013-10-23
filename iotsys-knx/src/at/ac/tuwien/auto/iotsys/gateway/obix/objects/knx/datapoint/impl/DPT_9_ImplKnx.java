@@ -26,9 +26,7 @@ public class DPT_9_ImplKnx extends DPT_9_Impl
 		this.groupAddress = groupAddress;
 		this.connector = connector;
 
-		// if it is not possible to read from the group address --> create a watchdog that monitors the communication
-		if (!this.value().isReadable())
-			this.createWatchDog();
+		this.createWatchDog();
 	}
 
 	public DPT_9_ImplKnx(KNXConnector connector, DataPointInit dataPointInit)
@@ -46,12 +44,12 @@ public class DPT_9_ImplKnx extends DPT_9_Impl
 				try
 				{
 					DPTXlator2ByteFloat x = new DPTXlator2ByteFloat(DPTXlator2ByteFloat.DPT_ELECTRICAL_CURRENT);
-
 					ProcessCommunicatorImpl.extractGroupASDU(apdu, x);
 
-					log.fine("2Byte Float for " + DPT_9_ImplKnx.this.getHref() + " now " + x.getValueFloat(1));
+					log.info("2Byte Float for " + DPT_9_ImplKnx.this.getHref() + " now " + x.getValueFloat());
 
-					value.set(x.getValueFloat(1));
+					value().set(x.getValueFloat());					
+					value().setNull(false);
 				}
 				catch (KNXException e)
 				{
@@ -69,6 +67,7 @@ public class DPT_9_ImplKnx extends DPT_9_Impl
 		{
 			float value = connector.readFloat(groupAddress);
 			this.value().set(value);
+			this.value().setNull(false);
 		}
 
 		// run refresh from super class
@@ -83,6 +82,9 @@ public class DPT_9_ImplKnx extends DPT_9_Impl
 			// always pass the writeObject call to the super method (triggers, oBIX related internal services like watches, alarms, ...)
 			// also the internal instance variables get updated
 			super.writeObject(obj);
+			
+			// set isNull to false
+			this.value().setNull(false);
 
 			// now write this.value to the KNX bus
 			connector.write(groupAddress, this.value().get());

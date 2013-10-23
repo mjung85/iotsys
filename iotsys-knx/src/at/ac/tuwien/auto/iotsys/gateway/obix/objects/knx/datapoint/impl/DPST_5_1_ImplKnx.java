@@ -18,7 +18,6 @@ public class DPST_5_1_ImplKnx extends DPST_5_1_Impl
 	private GroupAddress groupAddress;
 	private KNXConnector connector;
 
-	// if more group addresses are needed just add more constructor parameters.
 	public DPST_5_1_ImplKnx(KNXConnector connector, GroupAddress groupAddress, String name, String displayName, String display, boolean writable, boolean readable)
 	{
 		super(name, displayName, display, writable, readable);
@@ -46,12 +45,12 @@ public class DPST_5_1_ImplKnx extends DPST_5_1_Impl
 					try
 					{
 						DPTXlator8BitUnsigned x = new DPTXlator8BitUnsigned(DPTXlator8BitUnsigned.DPT_SCALING);
-
 						ProcessCommunicatorImpl.extractGroupASDU(apdu, x);
 
-						log.fine("Status for " + DPST_5_1_ImplKnx.this.getHref() + " now " + x.getValueUnsigned(1));
+						log.info("Status for " + DPST_5_1_ImplKnx.this.getHref() + " now " + x.getValueUnsigned());
 
-						value.set(x.getValueUnsigned(1));
+						value().set(x.getValueUnsigned());
+						value().setNull(false);
 					}
 					catch (KNXException e)
 					{
@@ -70,6 +69,7 @@ public class DPST_5_1_ImplKnx extends DPST_5_1_Impl
 		{
 			int value = connector.readInt(groupAddress, DPTXlator8BitUnsigned.DPT_SCALING.getID());
 			this.value().set(value);
+			this.value().setNull(false);
 		}
 
 		// run refresh from super class
@@ -84,6 +84,9 @@ public class DPST_5_1_ImplKnx extends DPST_5_1_Impl
 			// always pass the writeObject call to the super method (triggers, oBIX related internal services like watches, alarms, ...)
 			// also the internal instance variables get updated
 			super.writeObject(obj);
+
+			// set isNull to false
+			this.value().setNull(false);
 
 			// now write this.value to the KNX bus
 			connector.write(groupAddress, this.value().get());

@@ -49,9 +49,9 @@ public abstract class DPST_9_8_Impl extends DPT_9_Impl implements DPST_9_8
 		this.addIs(new Contract(DPST_9_8.CONTRACT));
 
 		// value
-		this.value.setUnit(new Uri(UnitPpm.HREF));
-		this.value.setMin(0);
-		this.value.setMax(670760);
+		this.value().setUnit(new Uri(UnitPpm.HREF));
+		this.value().setMin(0);
+		this.value().setMax(670760);
 	}
 
 	@Override

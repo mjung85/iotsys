@@ -154,7 +154,7 @@ public class WeatherForecastImpl extends Obj implements WeatherForecast {
 			dataRecords.remove(0);
 				
 		// update count
-		count.setSilent(dataRecords.size());
+		count.set(dataRecords.size(), false);
 		
 		// update start, end
 		if (dataRecords.size() > 0)
@@ -209,7 +209,7 @@ public class WeatherForecastImpl extends Obj implements WeatherForecast {
 	public void clearForecasts() {
 		dataRecords.clear();
 		
-		count.setSilent(0);
+		count.set(0, false);
 		start.setNull(true);
 		end.setNull(true);
 	}

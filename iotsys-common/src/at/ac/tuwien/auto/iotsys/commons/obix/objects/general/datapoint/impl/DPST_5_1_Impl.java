@@ -49,9 +49,9 @@ public abstract class DPST_5_1_Impl extends DPT_5_A_Impl implements DPST_5_1
 		this.addIs(new Contract(DPST_5_1.CONTRACT));
 
 		// value
-		this.value.setUnit(new Uri(UnitPercent.HREF));
-		this.value.setMin(0);
-		this.value.setMax(100);
+		this.value().setUnit(new Uri(UnitPercent.HREF));
+		this.value().setMin(0);
+		this.value().setMax(100);
 	}
 
 	@Override

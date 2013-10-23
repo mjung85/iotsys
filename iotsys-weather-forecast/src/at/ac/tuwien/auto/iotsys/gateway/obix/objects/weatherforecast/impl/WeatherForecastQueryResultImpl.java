@@ -35,7 +35,7 @@ public class WeatherForecastQueryResultImpl extends Obj implements
 			end.setNull(true);
 		}
 		
-		count.setSilent(data.size());
+		count.set(data.size(), false);
 		count.setNull(false);
 		
 		add(count);

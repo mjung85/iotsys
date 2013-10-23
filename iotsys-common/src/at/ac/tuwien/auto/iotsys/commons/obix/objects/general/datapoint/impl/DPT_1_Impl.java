@@ -48,7 +48,7 @@ public abstract class DPT_1_Impl extends DatapointImpl implements DPT_1
 {
 	private static final Logger log = Logger.getLogger(DPT_1_Impl.class.getName());
 
-	protected Bool value = new Bool();
+	private Bool value = new Bool();
 
 	public DPT_1_Impl(String name, String displayName, String display, boolean writable, boolean readable)
 	{
@@ -60,6 +60,7 @@ public abstract class DPT_1_Impl extends DatapointImpl implements DPT_1
 		this.value.setHref(new Uri("value"));
 		this.value.setWritable(writable);
 		this.value.setReadable(readable);
+		this.value.setNull(true);
 		this.add(value);
 	}
 

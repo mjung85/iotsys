@@ -4,10 +4,7 @@
 package obix;
 
 /**
- * Reltime models a relative duration of time as a 64-bit number of
- * milliseconds. We ignore values with greater precision when parsing. The oBIX
- * reltime is based on xs:duration, exception we disallow year or month periods
- * which just create confusion.
+ * Reltime models a relative duration of time as a 64-bit number of milliseconds. We ignore values with greater precision when parsing. The oBIX reltime is based on xs:duration, exception we disallow year or month periods which just create confusion.
  * 
  * @author Brian Frank
  * @creation 27 Apr 05
@@ -26,7 +23,7 @@ public class Reltime extends Val
 	public Reltime(String name, long millis)
 	{
 		super(name);
-		set(millis);
+		set(millis, false);
 	}
 
 	/**
@@ -35,7 +32,7 @@ public class Reltime extends Val
 	public Reltime(String name)
 	{
 		super(name);
-		set(0);
+		set(0, false);
 	}
 
 	/**
@@ -43,7 +40,7 @@ public class Reltime extends Val
 	 */
 	public Reltime(long millis)
 	{
-		set(millis);
+		set(millis, false);
 	}
 
 	/**
@@ -51,7 +48,7 @@ public class Reltime extends Val
 	 */
 	public Reltime()
 	{
-		set(0);
+		set(0, false);
 	}
 
 	// //////////////////////////////////////////////////////////////
@@ -75,15 +72,23 @@ public class Reltime extends Val
 	}
 
 	/**
-	 * Set value in millis.
+	 * Set value in millis and consider notify-flag.
 	 */
-	public void set(long millis)
+	public void set(long millis, boolean notify)
 	{
 		long oldVal = this.val;
 		this.val = millis;
 
-		if (oldVal != val)
+		if (notify && oldVal != val)
 			notifyObservers();
+	}
+
+	/**
+	 * Set value in millis.
+	 */
+	public void set(long millis)
+	{
+		this.set(millis, true);
 	}
 
 	// //////////////////////////////////////////////////////////////
@@ -117,9 +122,7 @@ public class Reltime extends Val
 	}
 
 	/**
-	 * Compares this object with the specified object for order. Returns a
-	 * negative integer, zero, or a positive integer as this object is less
-	 * than, equal to, or greater than the specified object.
+	 * Compares this object with the specified object for order. Returns a negative integer, zero, or a positive integer as this object is less than, equal to, or greater than the specified object.
 	 */
 	public int compareTo(Object that)
 	{

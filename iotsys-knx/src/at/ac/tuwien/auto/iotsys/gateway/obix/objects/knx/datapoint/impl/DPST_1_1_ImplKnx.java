@@ -6,8 +6,9 @@ import obix.Obj;
 import at.ac.tuwien.auto.calimero.GroupAddress;
 import at.ac.tuwien.auto.calimero.dptxlator.DPTXlatorBoolean;
 import at.ac.tuwien.auto.calimero.exception.KNXException;
-import at.ac.tuwien.auto.calimero.process.ProcessCommunicatorImpl;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.datapoint.impl.DPST_1_1_Impl;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.encoding.EncodingOnOff;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.encoding.impl.EncodingsImpl;
 import at.ac.tuwien.auto.iotsys.gateway.connectors.knx.KNXConnector;
 import at.ac.tuwien.auto.iotsys.gateway.connectors.knx.KNXWatchDog;
 
@@ -45,12 +46,15 @@ public class DPST_1_1_ImplKnx extends DPST_1_1_Impl
 					try
 					{
 						DPTXlatorBoolean x = new DPTXlatorBoolean(DPTXlatorBoolean.DPT_SWITCH);
+						// ProcessCommunicatorImpl.extractGroupASDU(apdu, x);
+						x.setData(apdu, 0); // apdu is different!
 
-						ProcessCommunicatorImpl.extractGroupASDU(apdu, x);
+						log.info("Switch for " + DPST_1_1_ImplKnx.this.getHref() + " now " + x.getValueBoolean());
 
-						log.fine("Switch for " + DPST_1_1_ImplKnx.this.getHref() + " now " + x.getValueBoolean());
-
-						value.set(x.getValueBoolean());
+						value().set(x.getValueBoolean());
+						value().setNull(false);
+						encoding().set(EncodingsImpl.getInstance().getEncoding(EncodingOnOff.HREF).getName(value()), false);
+						encoding().setNull(false);
 					}
 					catch (KNXException e)
 					{
@@ -68,7 +72,10 @@ public class DPST_1_1_ImplKnx extends DPST_1_1_Impl
 		if (this.value().isReadable())
 		{
 			boolean value = connector.readBool(groupAddress);
+
 			this.value().set(value);
+			this.value().setNull(false);
+			this.encoding().setNull(false);
 		}
 
 		// run refresh from super class
@@ -83,6 +90,10 @@ public class DPST_1_1_ImplKnx extends DPST_1_1_Impl
 			// always pass the writeObject call to the super method (triggers, oBIX related internal services like watches, alarms, ...)
 			// also the internal instance variables get updated
 			super.writeObject(obj);
+
+			// set isNull to false
+			this.value().setNull(false);
+			this.encoding().setNull(false);
 
 			// now write this.value to the KNX bus
 			connector.write(groupAddress, this.value().get());

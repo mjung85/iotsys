@@ -58,6 +58,7 @@ public abstract class DPST_1_1_Impl extends DPT_1_Impl implements DPST_1_1
 		this.encoding.setRange(new Uri(EncodingOnOff.HREF));
 		this.encoding.setWritable(writable);
 		this.encoding.setReadable(readable);
+		this.encoding.setNull(true);
 		this.add(encoding);
 	}
 

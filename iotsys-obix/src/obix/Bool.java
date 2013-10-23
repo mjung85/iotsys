@@ -23,8 +23,7 @@ public class Bool extends Val
 	public Bool(String name, boolean val)
 	{
 		super(name);
-		this.val = val; // we don't want to notify observers here
-		// set(val);
+		this.set(val, false);
 	}
 
 	/**
@@ -33,8 +32,7 @@ public class Bool extends Val
 	public Bool(String name)
 	{
 		super(name);
-		this.val = false; // we don't want to notify observers here
-		// set(false);
+		this.set(false, false);
 	}
 
 	/**
@@ -42,8 +40,7 @@ public class Bool extends Val
 	 */
 	public Bool(boolean val)
 	{
-		this.val = val; // we don't want to notify observers here
-		// set(val);
+		this.set(val, false);
 	}
 
 	/**
@@ -51,8 +48,7 @@ public class Bool extends Val
 	 */
 	public Bool()
 	{
-		this.val = false; // we don't want to notify observers here
-		// set(false);
+		this.set(false, false);
 	}
 
 	// //////////////////////////////////////////////////////////////
@@ -68,15 +64,23 @@ public class Bool extends Val
 	}
 
 	/**
-	 * Set value.
+	 * Set value and consider notify-flag.
 	 */
-	public void set(boolean val)
+	public void set(boolean val, boolean notify)
 	{
 		boolean oldVal = this.val;
 		this.val = val;
 
-		if (oldVal != this.val)
+		if (notify && oldVal != this.val)
 			notifyObservers();
+	}
+
+	/**
+	 * Set value.
+	 */
+	public void set(boolean val)
+	{
+		this.set(val, true);
 	}
 
 	/**
@@ -180,9 +184,7 @@ public class Bool extends Val
 	}
 
 	/**
-	 * Compares this object with the specified object for order. Returns a
-	 * negative integer, zero, or a positive integer as this object is less
-	 * than, equal to, or greater than the specified object.
+	 * Compares this object with the specified object for order. Returns a negative integer, zero, or a positive integer as this object is less than, equal to, or greater than the specified object.
 	 */
 	public int compareTo(Object that)
 	{

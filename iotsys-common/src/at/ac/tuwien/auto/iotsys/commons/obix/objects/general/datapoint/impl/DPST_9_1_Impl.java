@@ -49,9 +49,9 @@ public abstract class DPST_9_1_Impl extends DPT_9_Impl implements DPST_9_1
 		this.addIs(new Contract(DPST_9_1.CONTRACT));
 
 		// value
-		this.value.setUnit(new Uri(UnitCelsius.HREF));
-		this.value.setMin(-273);
-		this.value.setMax(670760);
+		this.value().setUnit(new Uri(UnitCelsius.HREF));
+		this.value().setMin(-273);
+		this.value().setMax(670760);
 	}
 
 	@Override

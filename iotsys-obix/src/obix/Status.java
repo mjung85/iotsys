@@ -28,8 +28,7 @@ public class Status
 	}
 
 	/**
-	 * Return the status value for the specified string encoding or null if no
-	 * match.
+	 * Return the status value for the specified string encoding or null if no match.
 	 */
 	public static Status parse(String s)
 	{
@@ -69,8 +68,7 @@ public class Status
 	// //////////////////////////////////////////////////////////////
 
 	/**
-	 * Get the ordinal value such that ordinal 0 (disabled) is higher priority
-	 * than ordinal 7 (ok)
+	 * Get the ordinal value such that ordinal 0 (disabled) is higher priority than ordinal 7 (ok)
 	 */
 	public int getOrdinal()
 	{

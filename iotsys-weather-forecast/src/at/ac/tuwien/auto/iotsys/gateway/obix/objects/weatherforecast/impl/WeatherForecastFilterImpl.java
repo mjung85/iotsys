@@ -15,7 +15,7 @@ public class WeatherForecastFilterImpl extends Obj implements
 		setIs(new Contract(WeatherForecastFilterImpl.CONTRACT));
 		
 		if (limit > 0)
-			this.limit.setSilent(limit);
+			this.limit.set(limit, false);
 
 		this.limit.setNull(limit <= 0);
 		

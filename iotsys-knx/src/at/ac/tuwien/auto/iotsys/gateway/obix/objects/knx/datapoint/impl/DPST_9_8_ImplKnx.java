@@ -44,12 +44,12 @@ public class DPST_9_8_ImplKnx extends DPST_9_8_Impl
 				try
 				{
 					DPTXlator2ByteFloat x = new DPTXlator2ByteFloat(DPTXlator2ByteFloat.DPT_AIRQUALITY);
-
 					ProcessCommunicatorImpl.extractGroupASDU(apdu, x);
 
-					log.fine("Air Quality for " + DPST_9_8_ImplKnx.this.getHref() + " now " + x.getValueFloat(1));
+					log.info("Air Quality for " + DPST_9_8_ImplKnx.this.getHref() + " now " + x.getValueFloat());
 
-					value.set(x.getValueFloat(1));
+					value().set(x.getValueFloat());
+					value().setNull(false);
 				}
 				catch (KNXException e)
 				{
@@ -66,7 +66,9 @@ public class DPST_9_8_ImplKnx extends DPST_9_8_Impl
 		if (this.value().isReadable())
 		{
 			float value = connector.readFloat(groupAddress);
+
 			this.value().set(value);
+			this.value().setNull(false);
 		}
 
 		// run refresh from super class
@@ -81,6 +83,9 @@ public class DPST_9_8_ImplKnx extends DPST_9_8_Impl
 			// always pass the writeObject call to the super method (triggers, oBIX related internal services like watches, alarms, ...)
 			// also the internal instance variables get updated
 			super.writeObject(obj);
+
+			// set isNull to false
+			this.value().setNull(false);
 
 			// now write this.value to the KNX bus
 			connector.write(groupAddress, this.value().get());

@@ -689,9 +689,9 @@ public class Obj implements IObj, Subject, AlarmSource, Cloneable
 	 */
 	public void setDisplay(String display)
 	{
-		if (display!=null && display.isEmpty())
+		if (display != null && display.isEmpty())
 			display = null;
-		
+
 		this.display = display;
 	}
 
@@ -720,9 +720,9 @@ public class Obj implements IObj, Subject, AlarmSource, Cloneable
 	 */
 	public void setDisplayName(String displayName)
 	{
-		if (displayName!=null && displayName.isEmpty())
+		if (displayName != null && displayName.isEmpty())
 			displayName = null;
-		
+
 		this.displayName = displayName;
 	}
 
@@ -891,7 +891,7 @@ public class Obj implements IObj, Subject, AlarmSource, Cloneable
 				kids[i].setWritable(writable, recursive);
 		}
 	}
-	
+
 	/**
 	 * Get readable flag or default to false.
 	 */

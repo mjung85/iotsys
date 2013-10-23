@@ -55,9 +55,9 @@ public class DPST_3_7_ImplKnx extends DPST_3_7_Impl
 				Int value = p.value();
 
 				if (value.get() > ParameterDimming.MAX_VALUE)
-					value.setSilent(ParameterDimming.MAX_VALUE);
+					value.set(ParameterDimming.MAX_VALUE, false);
 				else if (value.get() < ParameterDimming.MIN_VALUE)
-					value.setSilent(ParameterDimming.MIN_VALUE);
+					value.set(ParameterDimming.MIN_VALUE, false);
 
 				int stepCode = 0;
 
