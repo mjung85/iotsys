@@ -101,12 +101,13 @@
   <knx-ets>
     <connector>
         <name>KNX TP1 Suitcase</name>
-        <enabled>true</enabled>
+        <enabled>false</enabled>
         <knx-proj>knx-config/projects/Suitcase_2013_10_18.knxproj</knx-proj>
         <!-- forces unpacking of zip and transformation -->
         <forceRefresh>true</forceRefresh>              
         <router>
-            <ip>192.168.161.59</ip>
+        <!--<ip>192.168.161.59</ip> -->
+            <ip>192.168.1.101</ip>
             <port>3671</port>
         </router>
         <localIP>auto</localIP>
