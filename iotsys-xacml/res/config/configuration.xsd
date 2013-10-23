@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    targetNamespace="http://an.com/configuration"
+    xmlns:an="http://an.com/configuration">
+    <xs:element name="Configuration" type="an:ConfigurationType"/>
+    <xs:complexType name="ConfigurationType">
+        <xs:sequence>
+            <!-- We would add other elements here to extend the configuration.                       -->
+            <xs:element ref="an:Log"/>
+            <xs:element ref="an:PDP" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <!-- The logger configuration. We provided 2 types of logger, one is an internal logger, the     -->
+    <!-- other is a log4j logger. To provide such a log system is intend to avoid libraries conflict -->
+    <!-- in employer system. Users may provide their custom implementation of interface Logger, they -->
+    <!-- should provide the implementation's class name(an.log.Logger's value) with such a           -->
+    <!-- constructor: CustomLogger(ConfigElement config, String tag).                                -->
+    <xs:element name="Log" type="an:LogType" abstract="true"/>
+    <xs:complexType name="LogType" abstract="true">
+        <!-- The actual Logger implementation class.                                                 -->
+        <xs:attribute name="an.log.Logger" type="xs:string" use="required"/>
+    </xs:complexType>
+
+    <xs:element name="DefaultLog" type="an:DefaultLogType" substitutionGroup="an:Log"/>
+    <xs:complexType name="DefaultLogType">
+        <xs:complexContent>
+            <xs:extension base="an:LogType">
+                <xs:sequence>
+                    <!-- Class name filter defines one or more class names pattern as filter. The    -->
+                    <!-- defined class will use the configured specific log level instead.           -->
+                    <xs:element ref="an:ClassNameFilter" minOccurs="0" maxOccurs="unbounded"/>
+                </xs:sequence>
+                <xs:attribute name="path" type="xs:string" use="required"/>
+                <!-- Determine if this logger support roll over. If this attribute is absent or the  -->
+                <!-- value less than 0, then the logger doesn't roll over. Otherwize, it roll over   -->
+                <!-- at the defined size(in KB).                                                     -->
+                <xs:attribute name="rolloverSize" type="xs:int" use="optional" default="-1"/>
+                <!-- Available log levels are: all, trace, debug, info, warn, error, fatal, none.    -->
+                <xs:attribute name="level" type="xs:string" use="optional" default="warn"/>
+                <!-- If singleLevelMode is enabled, only configured level logs will be logged. By    --> 
+                <!-- default, this value is false, all higher level and current configured level     -->
+                <!-- logs will be logged.                                                            -->
+                <xs:attribute name="singleLevelMode" type="xs:boolean" use="optional" default="false"/>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:element name="ClassNameFilter" type="an:ClassNameFilterType"/>
+    <xs:complexType name="ClassNameFilterType">
+        <!-- The pattern supports Java Regular Expression.                                           -->
+        <xs:attribute name="pattern" type="xs:string" use="required"/>
+        <xs:attribute name="level" type="xs:string" use="required"/>
+    </xs:complexType>
+
+    <!-- The Log4j logger has no more attribute to configure, once this type of logger is            -->
+    <!-- configured, the Log4jLogger will find log4j.properties in classpath to configure log4j. You -->
+    <!-- need to add log4j.properties and log4j.jar to your classpath, or configure any of Log4j     -->
+    <!-- configurations to use it as you use it directly.                                            -->
+    <xs:element name="Log4j" type="an:Log4jType" substitutionGroup="an:Log"/>
+    <xs:complexType name="Log4jType">
+        <xs:complexContent>
+            <xs:extension base="an:LogType"/>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:element name="PDP" type="an:PDPType"/>
+    <xs:complexType name="PDPType">
+        <xs:sequence>
+            <xs:element ref="an:DataStore"/>
+            <xs:element ref="an:ContextFactory"/>
+            <xs:element ref="an:CacheManager"/>
+            <!-- We provide such mechanism that can load policies referenced by a PolicyIdReference  -->
+            <!-- or a PolicySetIdReference element. Users can write their own PolicyResolver to      -->
+            <!-- resolve those referenced policies.                                                  -->
+            <xs:element ref="an:PolicyResolverRegistry" minOccurs="0"/>
+            <xs:element ref="an:AttributeRetrieverRegistry" minOccurs="0"/>
+        </xs:sequence>
+        <!-- The domain name is the PDP's identity, it must be identical among all configured PDPs   -->
+        <xs:attribute name="domainName" type="xs:string" use="required"/>
+        <!-- This attribute provides a function id. The function is used to determine which Decision -->
+        <!-- object will be returned when multiple policies or policySets match a same request.      -->
+        <!-- The function should has following signature:                                            -->
+        <!--              function(EvaluationContext ctx, Object[] params) : Result                  -->
+        <!-- The params[0] is an array of AbstractPolicy.                                            -->
+        <!-- For now we support following algorithms:                                                -->
+        <!--              an:multiple-policies-deny-overrides,                                       -->
+        <!--              an:multiple-policies-permit-overrides,                                     -->
+        <!--              an:multiple-policies-first-applicable,                                     -->
+        <!--              an:multiple-policies-only-one-applicable                                   -->
+        <xs:attribute name="multiPoliciesCombineAlg" type="xs:anyURI" use="required"/>
+        <!-- The attribute "MustBePresent" is defined in AttributeDesignator, its default value is   -->
+        <!-- false, means if a request doesn't provide the request attribute, the designator will    -->
+        <!-- return an empty bag. If this value is true, when a designated attribute is missing,     -->
+        <!-- designator should throw an indeterminate error.                                         -->
+        <!-- We place this configure item here, is to turn on or turn off support for this feature,  -->
+        <!-- when the configure item is set to false, regardless the "MustBePresent" value in policy,-->
+        <!-- the designator will never throw the indeterminate error, it just return the empty bag.  -->
+        <!-- When the configure item is set to true, the designator will conform with standard.      -->
+        <!-- The reason of provide this configure item is if "MustBePresent" is set to true for a    -->
+        <!-- policy, regardless the policy is match with the request or not, it is has to be         -->
+        <!-- performed match operation against the request, we don't want do this.                   -->
+        <!-- Because we have an indexable mechanism, which will pre-process the policy's target,     -->
+        <!-- and then use those attributes required by policy as indexes. The coming requests will   -->
+        <!-- use these indexes to find policies that match with them, don't need to perform match    -->
+        <!-- operation on all policies.  So set this configure item to "false" will improve the      -->
+        <!-- PDP's performance.                                                                      -->
+        <xs:attribute name="supportMustBePresent" type="xs:boolean" use="optional" default="true"/>
+        <!-- AttributeValue and its sub-class(AttributeAssignment) all support free form in their    -->
+        <!-- actual value field. So one can put an Expression type element under AttributeValue or   -->
+        <!-- AttributeAssignment. PDP can evaluate this expression and use the result as the parents -->
+        <!-- AttributeValue or AttributeAssignment's evaluation result. Following configuration item -->
+        <!-- is an option which is used to enable or disable this feature.                           -->
+        <!-- Note! we only provide such option for XACML policy element, we don't support the option -->
+        <!-- for context element.                                                                    -->
+        <xs:attribute name="supportInnerExpression" type="xs:boolean" use="optional" default="false"/>
+        <!-- While this attribute is set to true, PDP will try to resolve all referenced policies,   -->
+        <!-- otherwise, those referenced policies will be resolved while they are matching or        -->
+        <!-- evaluating.                                                                             -->
+        <xs:attribute name="resolveReferencedPoliciesOnLoad" type="xs:boolean" use="optional" default="true"/>
+    </xs:complexType>
+
+    <!-- The DataStore element defines an abstract data store configuration, which can be replaced   -->
+    <!-- by an actual data store configuration. We provides a default file data store configuration, -->
+    <!-- which will load all policy files from a specific path.                                      -->
+    <xs:element name="DataStore" type="an:DataStoreType" abstract="true"/>
+    <xs:complexType name="DataStoreType" abstract="true">
+        <!-- The actual data store implementation class                                              -->
+        <xs:attribute name="an.xacml.engine.DataStore" type="xs:string" use="required"/>
+    </xs:complexType>
+
+    <!-- This is a file type data store. you may add a custom type data store, such as a RDBMS one.  -->
+    <!-- Make sure it extends DataStoreType, and the element's substitutionGroup attribute should be -->
+    <!-- "an:DataStore".                                                                             -->
+    <!-- If there is no PolicyResolver configured, by default, FileDataStore will try to resolve all -->
+    <!-- referenced policies from its configured path.                                               -->
+    <xs:element name="FileDataStore" type="an:FileDataStoreType" substitutionGroup="an:DataStore"/>
+    <xs:complexType name="FileDataStoreType">
+        <xs:complexContent>
+            <xs:extension base="an:DataStoreType">
+                <!-- The path that policies located at. Doesn't include subdirectory.                -->
+                <xs:attribute name="path" type="xs:string" use="required"/>
+                <!-- We can specify a pattern that to filter files under the directory, the pattern  -->
+                <!-- is fully support Java Regular Expression.                                       -->
+                <xs:attribute name="pattern" type="xs:string"/>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:element name="ContextFactory" type="an:ContextFactoryType" abstract="true"/>
+    <xs:complexType name="ContextFactoryType" abstract="true">
+        <xs:attribute name="an.xacml.engine.ContextFactory" type="xs:string" use="optional" default="an.xacml.engine.DefaultContextFactory"/>
+    </xs:complexType>
+
+    <xs:element name="DefaultContextFactory" type="an:DefaultContextFactoryType" substitutionGroup="an:ContextFactory"/>
+    <xs:complexType name="DefaultContextFactoryType">
+        <xs:complexContent>
+            <xs:extension base="an:ContextFactoryType">
+                <!-- TODO: other attributes -->
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:element name="CacheManager" type="an:CacheManagerType"/>
+    <xs:complexType name="CacheManagerType">
+        <xs:sequence>
+            <xs:element ref="an:PolicyCache"/>
+            <xs:element ref="an:EvaluationResultCache"/>
+        </xs:sequence>
+        <!-- Option to enable evaluation result cache. Default is enabled.                           -->
+        <xs:attribute name="enableEvaluationResultCache" type="xs:boolean" use="optional" default="true"/>
+    </xs:complexType>
+
+    <xs:element name="PolicyCache" type="an:PolicyCacheType"/>
+    <xs:element name="EvaluationResultCache" type="an:EvaluationResultCacheType"/>
+    <xs:complexType name="CacheType" abstract="true">
+        <!-- The max capacity of the cacahe, if this size is reached, it should first to cleanup     -->
+        <!--  expired objects.                                                                       -->
+        <xs:attribute name="size" type="xs:int" default="5000"/>
+        <!-- expire time in millionseconds. If this value less than 0, it means Cacheables in this   -->
+        <!-- cache will never expired unless force set them to expired.                              -->
+        <xs:attribute name="expireInterval" type="xs:long" default="-1"/>
+        <!-- There are 2 types, 1.expire time from create time; 2.expire time from last touch time.  -->
+        <xs:attribute name="expireType" type="xs:string" default="access"/>
+    </xs:complexType>
+
+    <xs:complexType name="PolicyCacheType">
+        <xs:complexContent>
+            <xs:extension base="an:CacheType">
+                <!-- When this attribute value is "true", PolicyCache will add attribute value as    -->
+                <!-- index, this may improve the performance.                                        -->
+                <xs:attribute name="enableAttributeValueIndex" type="xs:boolean" default="true"/>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="EvaluationResultCacheType">
+        <xs:complexContent>
+            <xs:extension base="an:CacheType"/>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:element name="PolicyResolverRegistry" type="an:PolicyResolverRegistryType"/>
+    <xs:complexType name="PolicyResolverRegistryType">
+        <xs:sequence>
+            <xs:element ref="an:PolicyResolver" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+    
+    <!-- Define an abstract type, so all implementations can extend it to add specific configuration -->
+    <!-- items.                                                                                      -->
+    <xs:element name="PolicyResolver" type="an:PolicyResolverType" abstract="true"/>
+    <xs:complexType name="PolicyResolverType" abstract="true">
+        <xs:attribute name="an.xacml.engine.PolicyResolver" type="xs:string" use="required"/>
+    </xs:complexType>
+    
+    <!-- We provide a default policy resolver that need no extra configurations.                     -->
+    <xs:element name="DefaultDataStorePolicyResolver" type="an:DefaultDataStorePolicyResolverType" substitutionGroup="an:PolicyResolver"/>
+    <xs:complexType name="DefaultDataStorePolicyResolverType">
+        <xs:complexContent>
+            <xs:extension base="an:PolicyResolverType"/>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <!-- PDP need to retrieve external attributes, so we need add such mechanism called "Attribute   --> 
+    <!-- Retriever". The attribute retrievers just need implement an interface, and then register    -->
+    <!-- to this registry. So that PDP can load them during startup.                                 -->
+    <!-- All implementation should have a constructor with following signature:                      -->
+    <!--     RetrieverImpl (ConfigElement config)                                                    -->
+    <xs:element name="AttributeRetrieverRegistry" type="an:AttributeRetrieverRegistryType"/>
+    <xs:complexType name="AttributeRetrieverRegistryType">
+        <xs:sequence>
+            <xs:element ref="an:AttributeRetriever" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+        
+    <!-- Define an abstract type, so all implementations can extend it to add specific configuration -->
+    <!-- items.                                                                                      -->
+    <xs:element name="AttributeRetriever" type="an:AttributeRetrieverType" abstract="true"/>
+    <xs:complexType name="AttributeRetrieverType" abstract="true">
+        <xs:attribute name="an.xacml.engine.AttributeRetriever" type="xs:string" use="required"/>
+    </xs:complexType>
+
+    <!-- We provide a default attribute retriever that need no extra configurations.                 -->
+    <xs:element name="DefaultAttributeRetriever" type="an:DefaultAttributeRetrieverType" substitutionGroup="an:AttributeRetriever"/>
+    <xs:complexType name="DefaultAttributeRetrieverType">
+        <xs:complexContent>
+            <xs:extension base="an:AttributeRetrieverType"/>
+        </xs:complexContent>
+    </xs:complexType>
+</xs:schema>
