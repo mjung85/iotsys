@@ -195,11 +195,11 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader
 					unZip(knxProj, projDirName);
 				}
 
-				String directory = "file:///" + projDir.getAbsolutePath().replace('\\', '/');
+				String directory =  "./" + knxProj.substring(knxProj.indexOf("/")+ 1).replaceFirst(".knxproj", "");
 
 				// now the unpacked ETS project should be available in the directory
-				String transformFileName = directory + "/" + file.getName().replaceFirst(".knxproj", "") + ".xml";
-
+				String transformFileName =  knxProj.replaceFirst(".knxproj", "") + "/" + file.getName().replaceFirst(".knxproj", "") + ".xml";
+				
 				File transformFile = new File(transformFileName);
 
 				if (!transformFile.exists() || forceRefresh)
