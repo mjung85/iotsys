@@ -53,7 +53,7 @@ public class DPST_1_1_ImplKnx extends DPST_1_1_Impl
 
 						value().set(x.getValueBoolean());
 						value().setNull(false);
-						encoding().set(EncodingsImpl.getInstance().getEncoding(EncodingOnOff.HREF).getName(value()), false);
+						encoding().set(EncodingsImpl.getInstance().getEncoding(EncodingOnOff.HREF).getName(value()));
 						encoding().setNull(false);
 					}
 					catch (KNXException e)
