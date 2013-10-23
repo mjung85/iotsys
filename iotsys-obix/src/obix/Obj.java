@@ -137,6 +137,7 @@ public class Obj implements IObj, Subject, AlarmSource, Cloneable
 	private boolean readable;
 	private boolean isNull;
 	private boolean isHidden;
+	
 
 	private boolean isDisabled = false;
 	private boolean isFaulty = false;
@@ -150,6 +151,8 @@ public class Obj implements IObj, Subject, AlarmSource, Cloneable
 
 	private long lastRefresh;
 	private long refreshInterval;
+	
+	private Uri normalizedHref = null;
 
 	// //////////////////////////////////////////////////////////////
 	// Factory
@@ -370,9 +373,14 @@ public class Obj implements IObj, Subject, AlarmSource, Cloneable
 		if (href == null)
 			return null;
 
+		if(normalizedHref != null){
+			return normalizedHref;
+		}
+		
 		if (getParent() != null && getParent().getNormalizedHref() != null && getParent().getNormalizedHref().isAbsolute())
 		{
-			return href.normalize(getParent().getNormalizedHref());
+			normalizedHref = href.normalize(getParent().getNormalizedHref());
+			return normalizedHref;
 		}
 
 		return href;
