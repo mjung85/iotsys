@@ -128,7 +128,7 @@ public class SOAPHandler {
 		if (op == OPERATION.READ) {
 			// read on object, find href attribute
 			StringBuffer obixObj = new StringBuffer(ObixEncoder.toString(obixServer.readObj(hrefURI,
-					"guest")));
+					true)));
 			soapResponse =  SOAP_RESPONSE_START + obixObj.toString() + SOAP_RESPONSE_END;
 
 		} else if (op == OPERATION.INVOKE) {

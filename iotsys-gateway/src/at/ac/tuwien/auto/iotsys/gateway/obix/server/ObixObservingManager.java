@@ -121,7 +121,7 @@ public class ObixObservingManager implements ExternalObserver{
 
 				try {
 					String obixResponse;
-					Obj responseObj = obixServer.readObj(new URI(resourcePath), "guest");
+					Obj responseObj = obixServer.readObj(new URI(resourcePath), false);
 					obixResponse = new CoAPHelper(obixServer).encodeObj(responseObj, request);
 					obixResponse = obixResponse.replaceFirst(DEFAULT_OBIX_URL_PROTOCOL,
 									CoAPServer.COAP_URL_PROTOCOL);

@@ -92,7 +92,7 @@ public class ObjectBrokerImpl implements ObjectBroker
 
 		watchServiceImpl = new WatchServiceImpl(this);
 		alarmSubjectImpl = new AlarmSubjectImpl(this);
-		
+
 		new InternalsImpl(this);
 	}
 
@@ -118,7 +118,7 @@ public class ObjectBrokerImpl implements ObjectBroker
 	}
 
 	@Override
-	public synchronized Obj pullObj(Uri href)
+	public synchronized Obj pullObj(Uri href, boolean refreshObject)
 	{
 		Obj o = rootObject.getByHref(href);
 
@@ -130,15 +130,16 @@ public class ObjectBrokerImpl implements ObjectBroker
 			return error;
 		}
 
-		o.refreshObject();
+		if (refreshObject)
+			o.refreshObject();
+		
 		return o;
 	}
 
 	@Override
 	public synchronized Obj pushObj(Uri href, Obj input, boolean isOp) throws Exception
 	{
-
-		Obj o = pullObj(href);
+		Obj o = pullObj(href, false);
 
 		if (o == null)
 			throw new Exception("Object with URI " + href.get() + " not found");
@@ -218,7 +219,7 @@ public class ObjectBrokerImpl implements ObjectBroker
 	@Override
 	public synchronized void removeObj(String href)
 	{
-		Obj toRemove = pullObj(new Uri(href));
+		Obj toRemove = pullObj(new Uri(href), false);
 		toRemove.removeThis();
 
 		iotLobby.removeReference(href);
@@ -230,7 +231,7 @@ public class ObjectBrokerImpl implements ObjectBroker
 	@Override
 	public synchronized Obj invokeOp(Uri uri, Obj input)
 	{
-		Obj obj = pullObj(uri);
+		Obj obj = pullObj(uri, true);
 
 		if (obj instanceof Op)
 		{

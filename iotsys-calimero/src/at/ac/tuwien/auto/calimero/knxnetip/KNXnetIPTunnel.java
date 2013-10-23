@@ -114,7 +114,7 @@ public class KNXnetIPTunnel extends ConnectionImpl
 		responseTimeout = TUNNELING_REQ_TIMEOUT;
 		serviceRequest = KNXnetIPHeader.TUNNELING_REQ;
 		serviceAck = KNXnetIPHeader.TUNNELING_ACK;
-		maxSendAttempts = 2;
+		maxSendAttempts = 4;
 		connect(localEP, serverCtrlEP, new TunnelCRI(KNXLayer), useNAT);
 	}
 

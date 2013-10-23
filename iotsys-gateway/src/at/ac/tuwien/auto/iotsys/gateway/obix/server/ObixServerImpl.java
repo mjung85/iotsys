@@ -61,8 +61,8 @@ public class ObixServerImpl implements ObixServer {
 
 	}
 
-	public Obj readObj(URI href, String user) {
-		Obj o = objectBroker.pullObj(new Uri(href.toASCIIString()));
+	public Obj readObj(URI href, boolean refreshObject) {
+		Obj o = objectBroker.pullObj(new Uri(href.toASCIIString()), refreshObject);
 		return o;
 	}
 
@@ -86,7 +86,7 @@ public class ObixServerImpl implements ObixServer {
 		}
 
 		Obj o = new Obj();
-		o = objectBroker.pullObj(new Uri(href.toASCIIString()));
+		o = objectBroker.pullObj(new Uri(href.toASCIIString()), false);
 
 		return o;
 	}
@@ -111,7 +111,7 @@ public class ObixServerImpl implements ObixServer {
 	
 	@Override
 	public String getNormalizedPath(String href) {
-		Obj o = objectBroker.pullObj(new Uri(href));
+		Obj o = objectBroker.pullObj(new Uri(href), false);
 		if (o == null) return null;
 		
 		return o.getFullContextPath();
