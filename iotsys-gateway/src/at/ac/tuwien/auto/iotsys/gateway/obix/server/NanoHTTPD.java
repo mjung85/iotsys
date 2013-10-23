@@ -370,7 +370,7 @@ public class NanoHTTPD {
 			String resourcePath = getResourcePath(uri, ipv6Address);
 			
 			if (method.equals("GET")) {
-				responseObj = obixServer.readObj(new URI(resourcePath), "guest");
+				responseObj = obixServer.readObj(new URI(resourcePath), true);
 			} else if (method.equals("PUT")) {
 				responseObj = obixServer.writeObj(new URI(resourcePath), data);
 			} else if (method.equals("POST")) {

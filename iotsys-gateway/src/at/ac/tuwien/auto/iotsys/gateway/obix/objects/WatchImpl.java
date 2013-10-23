@@ -137,7 +137,7 @@ public class WatchImpl extends Obj implements Watch {
 					}
 					
 					for(Uri uri : uris) {
-						Obj observedObject= broker.pullObj(uri);
+						Obj observedObject= broker.pullObj(uri, true);
 						EventObserver<Obj> observer = null;
 						
 						if(!observedObjects.containsKey(uri.get())) {
