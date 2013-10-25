@@ -251,18 +251,16 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader
 					catch (TransformerException e)
 					{
 						e.printStackTrace();
-					}
-
-					try
-					{
-						devicesConfig = new XMLConfiguration(transformFileName);
-					}
-					catch (Exception e)
-					{
-						log.log(Level.SEVERE, e.getMessage(), e);
-					}
-
-					
+					}					
+				}
+				
+				try
+				{
+					devicesConfig = new XMLConfiguration(transformFileName);
+				}
+				catch (Exception e)
+				{
+					log.log(Level.SEVERE, e.getMessage(), e);
 				}
 				
 				KNXConnector knxConnector = new KNXConnector(routerIP, routerPort, localIP);
