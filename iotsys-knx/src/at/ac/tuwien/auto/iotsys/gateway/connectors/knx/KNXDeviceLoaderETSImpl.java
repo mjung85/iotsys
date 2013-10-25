@@ -262,14 +262,16 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader
 						log.log(Level.SEVERE, e.getMessage(), e);
 					}
 
-					KNXConnector knxConnector = new KNXConnector(routerIP, routerPort, localIP);
-
-					connect(knxConnector);
-
-					initNetworks(knxConnector, objectBroker, networks, enableGroupComm, enableHistories);
-
-					connectors.add(knxConnector);
+					
 				}
+				
+				KNXConnector knxConnector = new KNXConnector(routerIP, routerPort, localIP);
+
+				connect(knxConnector);
+
+				initNetworks(knxConnector, objectBroker, networks, enableGroupComm, enableHistories);
+
+				connectors.add(knxConnector);
 			}
 		}
 
