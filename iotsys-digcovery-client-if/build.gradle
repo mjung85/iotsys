@@ -8,10 +8,7 @@ eclipse{
 		file {
 			withXml {
 				def node = it.asNode()				
-				node.appendNode('classpathentry', [kind: 'src', path: '/iotsys-common', exported:'true'])
-				node.appendNode('classpathentry', [kind: 'src', path: '/iotsys-osgi', exported:'true'])				
-				//node.appendNode('classpathentry', [kind: 'src', path: '/iotsys-obix', exported:'true'])
-				//node.appendNode('classpathentry', [kind: 'src', path: '/iotsys-xacml', exported:'true'])					
+							
 			}
 		}
 	}
@@ -42,9 +39,4 @@ jar {
 				   "Bundle-Classpath": ".",
 				   "Export-Package": "at.ac.tuwien.auto.iotsys.digcoveryclient" )
 	}
-}
-
-dependencies {
-	provided project(':iotsys-common')
-	provided project(':iotsys-osgi')
 }
