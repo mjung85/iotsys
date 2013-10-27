@@ -33,12 +33,13 @@
 package at.ac.tuwien.auto.iotsys.commons.obix.objects.general.view.impl;
 
 import obix.Contract;
+import obix.Enum;
 import obix.List;
 import obix.Obj;
 import obix.Uri;
-import obix.Enum;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.entity.impl.EntityImpl;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.enumeration.EnumPart;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.enumeration.impl.EnumsImpl;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.view.Part;
 
 public class PartImpl extends ElementImpl implements Part
@@ -46,12 +47,12 @@ public class PartImpl extends ElementImpl implements Part
 	public PartImpl(String name, String displayName, String display, String type)
 	{
 		super(name, displayName, display, new Contract(Part.CONTRACT));
-		
+
 		Enum t = new Enum();
 		t.setName("type");
 		t.setHref(new Uri("type"));
 		t.setRange(new Uri(EnumPart.HREF));
-		t.set(type);
+		t.set(EnumsImpl.getInstance().getEnum(EnumPart.HREF).getKey(type));
 		this.add(t);
 	}
 
@@ -70,15 +71,14 @@ public class PartImpl extends ElementImpl implements Part
 		instances.setHref(new Uri("instances"));
 		instances.setOf(new Contract(Part.CONTRACT_INSTANCE));
 	}
-	
+
 	public void addPart(PartImpl part)
 	{
 		this.addElement(part);
 	}
 
-	
 	public Obj addInstance(EntityImpl entity)
 	{
-		return addInstance((Obj)entity, new Contract(Part.CONTRACT_INSTANCE));
+		return addInstance((Obj) entity, new Contract(Part.CONTRACT_INSTANCE));
 	}
 }

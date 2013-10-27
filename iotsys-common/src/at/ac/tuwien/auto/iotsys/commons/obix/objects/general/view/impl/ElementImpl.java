@@ -86,7 +86,7 @@ public abstract class ElementImpl extends Obj implements IObj
 		instance.add(ref);
 
 		this.instances.add(instance);
-		
+
 		return instance;
 	}
 

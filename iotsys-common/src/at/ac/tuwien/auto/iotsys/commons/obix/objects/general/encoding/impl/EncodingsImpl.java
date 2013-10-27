@@ -31,7 +31,7 @@
 
 package at.ac.tuwien.auto.iotsys.commons.obix.objects.general.encoding.impl;
 
-import java.util.HashMap;
+import java.util.TreeMap;
 
 import obix.Contract;
 import obix.IObj;
@@ -42,31 +42,38 @@ import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.contracts.impl.Rang
 
 public class EncodingsImpl extends List implements IObj
 {
-	private HashMap<String, RangeImpl> enums;
+	private TreeMap<String, EncodingImpl> encodings;
 
-	public EncodingsImpl()
+	private static final EncodingsImpl instance = new EncodingsImpl();
+
+	private EncodingsImpl()
 	{
 		this.setName("encodings");
 		this.setOf(new Contract(Range.CONTRACT));
 		this.setHref(new Uri("/encodings"));
 
 		// Create enumerations
-		enums = new HashMap<String, RangeImpl>();
+		encodings = new TreeMap<String, EncodingImpl>();
 
-		enums.put(EncodingOnOffImpl.HREF, new EncodingOnOffImpl());
+		encodings.put(EncodingOnOffImpl.HREF, new EncodingOnOffImpl());
 
 		// Add enumerations
-		for (RangeImpl e : enums.values())
+		for (RangeImpl e : encodings.values())
 		{
 			e.setHref(e.getRelativePath());
 
 			this.add(e);
-			this.add(e.getReference(false));
+			this.add(e.getReference());
 		}
 	}
 
-	public RangeImpl getEnum(String href)
+	public static EncodingsImpl getInstance()
 	{
-		return enums.get(href);
+		return instance;
+	}
+
+	public EncodingImpl getEncoding(String href)
+	{
+		return encodings.get(href);
 	}
 }

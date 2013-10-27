@@ -36,15 +36,14 @@ import java.util.ArrayList;
 
 import obix.Contract;
 import obix.List;
+import obix.Obj;
 import obix.Str;
 import obix.Uri;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.datapoint.DataPoint;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.datapoint.impl.DatapointImpl;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.entity.Entity;
-import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.language.Multilingual;
-import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.language.impl.MultilingualImpl;
 
-public class EntityImpl extends MultilingualImpl implements Entity
+public class EntityImpl extends Obj implements Entity
 {
 	private List list;
 	private ArrayList<DataPoint> datapoints;
@@ -56,7 +55,7 @@ public class EntityImpl extends MultilingualImpl implements Entity
 		this.setName(name);
 		this.setDisplay(display);
 		this.setDisplayName(displayName);
-		this.setIs(new Contract(new String[] { Entity.CONTRACT, Multilingual.CONTRACT }));
+		this.setIs(new Contract(Entity.CONTRACT));
 		this.setHidden(true);
 
 		if (manufacturer != null)
@@ -71,8 +70,8 @@ public class EntityImpl extends MultilingualImpl implements Entity
 		if (ordernumber != null)
 		{
 			Str order = new Str();
-			order.setName("mediaType");
-			order.setHref(new Uri("mediaType"));
+			order.setName("orderNumber");
+			order.setHref(new Uri("orderNumber"));
 			order.set(ordernumber);
 			this.add(order);
 		}
@@ -82,7 +81,7 @@ public class EntityImpl extends MultilingualImpl implements Entity
 	{
 		if (this.datapoints == null)
 		{
-			this.list = new List("datapoints", new Contract(new String[] { DataPoint.CONTRACT, Multilingual.CONTRACT }));
+			this.list = new List("datapoints", new Contract(new String[] { "obix:ref", DataPoint.CONTRACT }));
 			this.list.setHref(new Uri("datapoints"));
 			this.add(this.list);
 
@@ -90,6 +89,7 @@ public class EntityImpl extends MultilingualImpl implements Entity
 		}
 
 		this.list.add(datapoint);
+		this.list.add(datapoint.getReference());
 		this.datapoints.add(datapoint);
 	}
 }

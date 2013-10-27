@@ -66,7 +66,7 @@ public class WatchServiceTest extends AbstractGatewayTest {
 		body("{\"is\":\"obix:WatchIn\",\"nodes\":[{\"nodes\":[{\"val\":\"/testDevices/switch3/value\",\"tag\":\"uri\"}],\"tag\":\"list\",\"name\":\"hrefs\"}],\"tag\":\"obj\"}").
 		expect().
 		body(containsString("\"is\":\"obix:WatchOut\"")).
-		body(containsString("{\"val\":false,\"tag\":\"bool\",\"writable\":true,\"href\":\"/testDevices/switch3/value\"}")).
+		body(containsString("{\"val\":false,\"tag\":\"bool\",\"writable\":true,\"displayName\":\"On/Off\",\"href\":\"/testDevices/switch3/value\"}")).
 		post(watchHref + "/add");
 	}
 	

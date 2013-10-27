@@ -74,7 +74,7 @@ public class HistoryQueryOutImpl extends Obj implements HistoryQueryOut {
 		start.setNull(historyRecords.size() == 0);
 		end.setNull(  historyRecords.size() == 0);
 		
-		count.setSilent(resultList.size());
+		count.set(resultList.size(),false);
 		setIs(new Contract(HISTORY_QUERY_OUT_CONTRACT));
 		
 		add(count);

@@ -31,73 +31,19 @@
 
 package at.ac.tuwien.auto.iotsys.commons.obix.objects.general.contracts.impl;
 
-import obix.Contract;
-import obix.Real;
-import obix.Str;
 import obix.Uri;
-import obix.contracts.Dimension;
 import obix.contracts.Unit;
-import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.language.Multilingual;
-import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.language.impl.MultilingualImpl;
+import obix.contracts.impl.DimensionImpl;
 
-public class UnitImpl extends MultilingualImpl implements Unit, Multilingual
+public class UnitImpl extends obix.contracts.impl.UnitImpl implements Unit
 {
-	private Str symbol;
-	private DimensionImpl dimension;
-	private Real scale;
-	private Real offset;
-
-	public UnitImpl(String name, String display, Uri href, String symbol, double scale, double offset, DimensionImpl dimension)
+	public UnitImpl(String name, String displayName, Uri href, String symbol, double scale, double offset, DimensionImpl dimension)
 	{
+		super(symbol, scale, offset, dimension);
+		
 		this.setName(name);
-		this.setDisplay(display);
-		this.setIs(new Contract(new String[] { Multilingual.CONTRACT, Unit.CONTRACT }));
+		this.setDisplayName(displayName);
 		this.setHref(href);
 		this.setHidden(true);
-
-		this.symbol = new Str("symbol", symbol);
-		this.add(this.symbol);
-
-		if (scale != 1)
-		{
-			this.scale = new Real("scale", scale);
-			this.add(this.scale);
-		}
-
-		if (offset != 0)
-		{
-			this.offset = new Real("offset", offset);
-			this.add(this.offset);
-		}
-
-		this.dimension = dimension;
-		if (dimension.kg() != null || dimension.K() != null || dimension.mol() != null || dimension.cd() != null || dimension.m() != null || dimension.sec() != null || dimension.A() != null)
-		{
-			this.add(this.dimension);
-		}
-	}
-
-	@Override
-	public Str symbol()
-	{
-		return symbol;
-	}
-
-	@Override
-	public Dimension dimension()
-	{
-		return dimension;
-	}
-
-	@Override
-	public Real scale()
-	{
-		return scale;
-	}
-
-	@Override
-	public Real offset()
-	{
-		return offset;
 	}
 }

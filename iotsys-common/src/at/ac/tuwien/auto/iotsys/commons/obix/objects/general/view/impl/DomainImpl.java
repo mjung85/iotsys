@@ -61,14 +61,14 @@ public class DomainImpl extends ElementImpl implements Domain
 		instances.setHref(new Uri("instances"));
 		instances.setOf(new Contract(Domain.CONTRACT_INSTANCE));
 	}
-	
+
 	public void addDomain(DomainImpl domain)
 	{
 		this.addElement(domain);
 	}
-	
+
 	public Obj addInstance(EntityImpl entity)
 	{
-		return addInstance((Obj)entity, new Contract(Domain.CONTRACT_INSTANCE));
+		return addInstance((Obj) entity, new Contract(Domain.CONTRACT_INSTANCE));
 	}
 }

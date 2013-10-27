@@ -20,15 +20,102 @@ import at.ac.tuwien.auto.iotsys.obix.observer.Observer;
 import at.ac.tuwien.auto.iotsys.obix.observer.Subject;
 
 /**
- * Obj is the base class for representing Obix objects and managing their tree
- * structure.
+ * Obj is the base class for representing Obix objects and managing their tree structure.
  * 
  * @author Brian Frank
  * @creation 27 Apr 05
  * @version $Revision$ $Date$
  */
+
 public class Obj implements IObj, Subject, AlarmSource, Cloneable
 {
+	// //////////////////////////////////////////////////////////////
+	// Translations
+	// //////////////////////////////////////////////////////////////
+
+	public enum TranslationAttribute {
+		display, displayName,
+	}
+
+	public static final String DEFAULT_LANGUAGE = "en";
+
+	private HashMap<TranslationAttribute, HashMap<String, String>> translations = new HashMap<TranslationAttribute, HashMap<String, String>>();
+
+	public void addTranslation(String language, String attribute, String value) throws Exception
+	{
+		attribute = attribute.toLowerCase().trim();
+
+		if (attribute.equals("name"))
+		{
+			addTranslation(language, TranslationAttribute.displayName, value);
+		}
+		else if (attribute.equals("description"))
+		{
+			addTranslation(language, TranslationAttribute.display, value);
+		}
+		else
+		{
+			throw new Exception("translation attribute '" + attribute + "' is not supported");
+		}
+	}
+
+	public void addTranslations(Obj obj)
+	{
+		this.translations = obj.translations;
+	}
+
+	public void addTranslation(String language, TranslationAttribute attribute, String value)
+	{
+		if (value != null)
+		{
+			// alter language
+			language = language.toLowerCase().trim();
+
+			if (language.indexOf("-") > 0)
+			{
+				language = language.substring(0, language.indexOf("-"));
+			}
+
+			// get map
+			if (!translations.containsKey(attribute))
+				translations.put(attribute, new HashMap<String, String>());
+
+			HashMap<String, String> attributeTranslations = translations.get(attribute);
+
+			// add to map
+			if (!attributeTranslations.containsKey(language))
+			{
+				attributeTranslations.put(language, value);
+			}
+		}
+	}
+
+	public String getTranslation(String language, TranslationAttribute attribute)
+	{
+		// check availability of translation
+		if (language == null || !translations.containsKey(attribute) || (!translations.get(attribute).containsKey(language) && !translations.get(attribute).containsKey(DEFAULT_LANGUAGE)))
+		{
+			switch (attribute)
+			{
+				case display:
+					return this.getDisplay();
+				case displayName:
+					return this.getDisplayName();
+			}
+		}
+
+		// get map of translations
+		HashMap<String, String> attributeTranslations = translations.get(attribute);
+
+		// return translation in default language
+		if (!attributeTranslations.containsKey(language))
+		{
+			return attributeTranslations.get(DEFAULT_LANGUAGE);
+		}
+
+		// return language specific translation
+		return attributeTranslations.get(language);
+	}
 
 	// //////////////////////////////////////////////////////////////
 	// Fields
@@ -47,8 +134,10 @@ public class Obj implements IObj, Subject, AlarmSource, Cloneable
 	private String displayName;
 	private Uri icon;
 	private boolean writable;
+	private boolean readable;
 	private boolean isNull;
 	private boolean isHidden;
+	
 
 	private boolean isDisabled = false;
 	private boolean isFaulty = false;
@@ -59,17 +148,18 @@ public class Obj implements IObj, Subject, AlarmSource, Cloneable
 
 	private LinkedList<Alarm> alarms = new LinkedList<Alarm>();
 	private LinkedList<Alarm> unackedAlarms = new LinkedList<Alarm>();
-	
+
 	private long lastRefresh;
 	private long refreshInterval;
+	
+	private Uri normalizedHref = null;
 
 	// //////////////////////////////////////////////////////////////
 	// Factory
 	// //////////////////////////////////////////////////////////////
 
 	/**
-	 * Get an Obj Class for specified element name or return null if not a oBIX
-	 * element name.
+	 * Get an Obj Class for specified element name or return null if not a oBIX element name.
 	 */
 	public static Class<?> toClass(String elemName)
 	{
@@ -77,8 +167,7 @@ public class Obj implements IObj, Subject, AlarmSource, Cloneable
 	}
 
 	/**
-	 * Get an Obj class for the specified binary object code or return null if
-	 * an invalid code.
+	 * Get an Obj class for the specified binary object code or return null if an invalid code.
 	 */
 	public static Class<?> toClass(int binCode)
 	{
@@ -88,8 +177,7 @@ public class Obj implements IObj, Subject, AlarmSource, Cloneable
 	private static ExternalObserver extObserver = null;
 
 	/**
-	 * Convenience for <code>toClass(elemName).newInstance()</code>. This method
-	 * will return null if elemName is not a oBIX element name.
+	 * Convenience for <code>toClass(elemName).newInstance()</code>. This method will return null if elemName is not a oBIX element name.
 	 */
 	public static Obj toObj(String elemName)
 	{
@@ -186,6 +274,9 @@ public class Obj implements IObj, Subject, AlarmSource, Cloneable
 	{
 		Ref ref = new Ref();
 		ref.setName(this.getName());
+		ref.setIs(this.getIs());
+		ref.setDisplayName(this.getDisplayName());
+		ref.addTranslations(this);
 
 		if (absolute)
 		{
@@ -203,14 +294,11 @@ public class Obj implements IObj, Subject, AlarmSource, Cloneable
 			while (tmp != null && !tmp.getHref().isAbsolute());
 
 			ref.setHref(new Uri(uri));
-
-			// ref.setHref(this.getNormalizedHref());
 		}
 		else
 		{
 			ref.setHref(this.getHref());
 		}
-		ref.setIs(this.getIs());
 		return ref;
 	}
 
@@ -223,8 +311,7 @@ public class Obj implements IObj, Subject, AlarmSource, Cloneable
 	}
 
 	/**
-	 * Set name of this Obj. The name may only be set if name is currently null
-	 * and this Obj hasn't been added a child to another Obj yet.
+	 * Set name of this Obj. The name may only be set if name is currently null and this Obj hasn't been added a child to another Obj yet.
 	 */
 	public void setName(String name)
 	{
@@ -236,8 +323,7 @@ public class Obj implements IObj, Subject, AlarmSource, Cloneable
 	}
 
 	/**
-	 * Set name of this Obj. The name may only be set if name is currently null
-	 * and this Obj hasn't been added a child to another Obj yet.
+	 * Set name of this Obj. The name may only be set if name is currently null and this Obj hasn't been added a child to another Obj yet.
 	 * 
 	 * @param name
 	 *            New name for this Obj
@@ -280,17 +366,21 @@ public class Obj implements IObj, Subject, AlarmSource, Cloneable
 	}
 
 	/**
-	 * Get the absolute normalized href of this object, based on the href of
-	 * this obj's root object. Return null if this object doesn't have an href.
+	 * Get the absolute normalized href of this object, based on the href of this obj's root object. Return null if this object doesn't have an href.
 	 */
 	public Uri getNormalizedHref()
 	{
 		if (href == null)
 			return null;
 
+		if(normalizedHref != null){
+			return normalizedHref;
+		}
+		
 		if (getParent() != null && getParent().getNormalizedHref() != null && getParent().getNormalizedHref().isAbsolute())
 		{
-			return href.normalize(getParent().getNormalizedHref());
+			normalizedHref = href.normalize(getParent().getNormalizedHref());
+			return normalizedHref;
 		}
 
 		return href;
@@ -363,8 +453,7 @@ public class Obj implements IObj, Subject, AlarmSource, Cloneable
 	}
 
 	/**
-	 * Return if the contract list defined by the is attribute contains the
-	 * specified URI.
+	 * Return if the contract list defined by the is attribute contains the specified URI.
 	 */
 	public boolean is(Uri uri)
 	{
@@ -391,7 +480,11 @@ public class Obj implements IObj, Subject, AlarmSource, Cloneable
 
 	public Object clone() throws CloneNotSupportedException
 	{
-		return super.clone();
+
+		Obj obj = (Obj) super.clone();
+		obj.name = null;
+		obj.parent = null;
+		return obj;
 	}
 
 	// //////////////////////////////////////////////////////////////
@@ -578,8 +671,7 @@ public class Obj implements IObj, Subject, AlarmSource, Cloneable
 	// //////////////////////////////////////////////////////////////
 
 	/**
-	 * Get the display string for this obj. If the display facet is specified
-	 * return it, otherwise return type information.
+	 * Get the display string for this obj. If the display facet is specified return it, otherwise return type information.
 	 */
 	public String toDisplayString()
 	{
@@ -605,6 +697,9 @@ public class Obj implements IObj, Subject, AlarmSource, Cloneable
 	 */
 	public void setDisplay(String display)
 	{
+		if (display != null && display.isEmpty())
+			display = null;
+
 		this.display = display;
 	}
 
@@ -633,6 +728,9 @@ public class Obj implements IObj, Subject, AlarmSource, Cloneable
 	 */
 	public void setDisplayName(String displayName)
 	{
+		if (displayName != null && displayName.isEmpty())
+			displayName = null;
+
 		this.displayName = displayName;
 	}
 
@@ -687,8 +785,7 @@ public class Obj implements IObj, Subject, AlarmSource, Cloneable
 	}
 
 	/**
-	 * Set status for this object. If null is passed, then status is to
-	 * Status.ok.
+	 * Set status for this object. If null is passed, then status is to Status.ok.
 	 */
 	public void setStatus(Status status)
 	{
@@ -758,8 +855,7 @@ public class Obj implements IObj, Subject, AlarmSource, Cloneable
 	}
 
 	/**
-	 * Get hidden flag or default to false. Hidden objects are not printed when
-	 * printing an ancestor
+	 * Get hidden flag or default to false. Hidden objects are not printed when printing an ancestor
 	 */
 	public boolean isHidden()
 	{
@@ -791,8 +887,7 @@ public class Obj implements IObj, Subject, AlarmSource, Cloneable
 	}
 
 	/**
-	 * Set writable flag. If recursive is true, then recursively call
-	 * setWritable on all this object's children.
+	 * Set writable flag. If recursive is true, then recursively call setWritable on all this object's children.
 	 */
 	public void setWritable(boolean writable, boolean recursive)
 	{
@@ -803,6 +898,22 @@ public class Obj implements IObj, Subject, AlarmSource, Cloneable
 			for (int i = 0; i < kids.length; ++i)
 				kids[i].setWritable(writable, recursive);
 		}
+	}
+
+	/**
+	 * Get readable flag or default to false.
+	 */
+	public boolean isReadable()
+	{
+		return readable;
+	}
+
+	/**
+	 * Set readable flag.
+	 */
+	public void setReadable(boolean readable)
+	{
+		this.readable = readable;
 	}
 
 	// //////////////////////////////////////////////////////////////
@@ -830,8 +941,7 @@ public class Obj implements IObj, Subject, AlarmSource, Cloneable
 	}
 
 	/**
-	 * Lookup a sub object by name and return its href. If the child doesn't
-	 * exist or has a null href, then throw an exception.
+	 * Lookup a sub object by name and return its href. If the child doesn't exist or has a null href, then throw an exception.
 	 */
 	public Uri getChildHref(String name)
 	{
@@ -950,8 +1060,7 @@ public class Obj implements IObj, Subject, AlarmSource, Cloneable
 	}
 
 	/**
-	 * Get all the children which are instances of the specified class. The
-	 * return array will be of the specified class.
+	 * Get all the children which are instances of the specified class. The return array will be of the specified class.
 	 */
 	public synchronized Object[] list(Class<?> cls)
 	{
@@ -969,8 +1078,7 @@ public class Obj implements IObj, Subject, AlarmSource, Cloneable
 	}
 
 	/**
-	 * Convenience for <code>kid.setName(name); add(kid);</code>. The specified
-	 * kid must be unnamed. Return this.
+	 * Convenience for <code>kid.setName(name); add(kid);</code>. The specified kid must be unnamed. Return this.
 	 */
 	public Obj add(String name, Obj kid)
 	{
@@ -1027,7 +1135,7 @@ public class Obj implements IObj, Subject, AlarmSource, Cloneable
 	 */
 	public Obj add(Obj kid)
 	{
-		return add(kid, true);
+		return add(kid, false);
 	}
 
 	/**
@@ -1166,8 +1274,7 @@ public class Obj implements IObj, Subject, AlarmSource, Cloneable
 	}
 
 	/**
-	 * Write to on object should be handled by the object itself. Can be
-	 * overridden by subclasses.
+	 * Write to on object should be handled by the object itself. Can be overridden by subclasses.
 	 * 
 	 * @param input
 	 */
@@ -1176,8 +1283,7 @@ public class Obj implements IObj, Subject, AlarmSource, Cloneable
 	}
 
 	/**
-	 * If an object is read, then the concrete implementation should refresh the
-	 * data.
+	 * If an object is read, then the concrete implementation should refresh the data.
 	 */
 	public void refreshObject()
 	{
@@ -1214,10 +1320,8 @@ public class Obj implements IObj, Subject, AlarmSource, Cloneable
 	}
 
 	/**
-	 * Notify the observers about a state change and pass the current state.
-	 * NOTE: It is possible that some updates are lost, if the object is updated
-	 * while the notification is finished. This problem could only by solved by
-	 * a major redesign of the update and notification concept of obix objects.
+	 * Notify the observers about a state change and pass the current state. NOTE: It is possible that some updates are lost, if the object is updated while the notification is finished. This problem could only by solved by a major redesign of the update
+	 * and notification concept of obix objects.
 	 */
 
 	@Override
@@ -1261,10 +1365,12 @@ public class Obj implements IObj, Subject, AlarmSource, Cloneable
 	{
 		Obj.extObserver = extObserver;
 	}
-	
+
 	/**
 	 * Adds an alarm to this Obj's list of active alarms.
-	 * @param alarm A alarm that entered its alarm condition
+	 * 
+	 * @param alarm
+	 *            A alarm that entered its alarm condition
 	 */
 	public void setOffNormal(Alarm alarm)
 	{
@@ -1280,22 +1386,26 @@ public class Obj implements IObj, Subject, AlarmSource, Cloneable
 
 	/**
 	 * Removes the specified alarm from this Obj's list of alarms
-	 * @param alarm Alarm whose alarm condition has been exited
+	 * 
+	 * @param alarm
+	 *            Alarm whose alarm condition has been exited
 	 */
 	public void setToNormal(Alarm alarm)
 	{
 		alarms.remove(alarm);
 	}
-	
+
 	/**
 	 * Removes the specified alarm from this Obj's list of unacknowledged alarms
-	 * @param alarm Alarm that has been acknowledged
+	 * 
+	 * @param alarm
+	 *            Alarm that has been acknowledged
 	 */
 	public void alarmAcknowledged(Alarm alarm)
 	{
 		unackedAlarms.remove(alarm);
 	}
-	
+
 	/**
 	 * @return <code>true</code> if this Obj is currently in an alarm condition, otherwise <code>false</code>
 	 */
@@ -1316,8 +1426,7 @@ public class Obj implements IObj, Subject, AlarmSource, Cloneable
 	}
 
 	/**
-	 * Method that can be overridden to contain logic that should be executed if
-	 * all fields are set.
+	 * Method that can be overridden to contain logic that should be executed if all fields are set.
 	 */
 	public void initialize()
 	{
@@ -1325,8 +1434,7 @@ public class Obj implements IObj, Subject, AlarmSource, Cloneable
 	}
 
 	/**
-	 * Get the display string for this obj. If the display facet is specified
-	 * return it, otherwise return type information.
+	 * Get the display string for this obj. If the display facet is specified return it, otherwise return type information.
 	 */
 	@Override
 	public String toDisplay()
@@ -1339,57 +1447,57 @@ public class Obj implements IObj, Subject, AlarmSource, Cloneable
 			return is.toString();
 		return "obix:" + getElement();
 	}
-	
+
 	// //////////////////////////////////////////////////////////////
 	// Refreshable
 	// //////////////////////////////////////////////////////////////
-	
+
 	/**
-	 * Sets the object's refresh interval in milliseconds. Set the refresh
-	 * interval to zero to disable refreshing.
+	 * Sets the object's refresh interval in milliseconds. Set the refresh interval to zero to disable refreshing.
 	 */
-	public void setRefreshInterval(long interval) {
+	public void setRefreshInterval(long interval)
+	{
 		if (interval >= Refreshable.MIN_REFRESH_INTERVAL_MS || interval == 0)
 			refreshInterval = interval;
 		else
 			refreshInterval = Refreshable.MIN_REFRESH_INTERVAL_MS;
 	}
-	
+
 	/**
-	 * Sets the millis of the object's last refresh. 
+	 * Sets the millis of the object's last refresh.
 	 */
-	public void setLastRefresh(long millis) {
+	public void setLastRefresh(long millis)
+	{
 		lastRefresh = millis;
 	}
-	
+
 	/**
 	 * Get the millis of the object's last refresh.
 	 */
-	public long getLastRefresh() {
+	public long getLastRefresh()
+	{
 		return lastRefresh;
 	}
-	
+
 	/**
 	 * Get the object's refresh interval in milliseconds.
 	 */
-	public long getRefreshInterval() {
+	public long getRefreshInterval()
+	{
 		return refreshInterval;
 	}
-	
+
 	/**
 	 * Checks whether or not the object needs to be refreshed.
 	 */
-	public boolean needsRefresh() {
+	public boolean needsRefresh()
+	{
 		boolean needs = false;
-		
+
 		if (refreshInterval > 0)
 			needs = System.currentTimeMillis() >= (lastRefresh + refreshInterval);
-			
+
 		return needs;
 	}
-
-	
-	
-
 
 }

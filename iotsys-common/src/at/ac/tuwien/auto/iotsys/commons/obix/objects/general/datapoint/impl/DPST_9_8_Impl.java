@@ -36,25 +36,27 @@ import obix.Contract;
 import obix.Obj;
 import obix.Uri;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.datapoint.DPST_9_8;
-import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.datapoint.DPT_9;
-import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.datapoint.DataPoint;
-import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.language.Multilingual;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.unit.UnitPpm;
 
-public class DPST_9_8_Impl extends DPT_9_Impl implements DPST_9_8
+public abstract class DPST_9_8_Impl extends DPT_9_Impl implements DPST_9_8
 {
-	public DPST_9_8_Impl(String name, String displayName, String display)
+	public DPST_9_8_Impl(String name, String displayName, String display, boolean writable, boolean readable)
 	{
-		super(name, displayName, display, new Contract(new String[] { DPST_9_8.CONTRACT, DPT_9.CONTRACT, DataPoint.CONTRACT, Multilingual.CONTRACT }));
+		// constructor
+		super(name, displayName, display, writable, readable);
 
-		this.value.setUnit(new Uri(UnitPpm.HREF));
-		this.value.setMin(0);
-		this.value.setMax(670760);
+		// contract
+		this.addIs(new Contract(DPST_9_8.CONTRACT));
+
+		// value
+		this.value().setUnit(new Uri(UnitPpm.HREF));
+		this.value().setMin(0);
+		this.value().setMax(670760);
 	}
 
+	@Override
 	public void writeObject(Obj input)
 	{
-		// not writable
+		super.writeObject(input);
 	}
-
 }

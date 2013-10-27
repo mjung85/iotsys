@@ -32,12 +32,11 @@
 
 package at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators.impl;
 
-import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators.AirDamperActuator;
-import obix.Bool;
 import obix.Contract;
 import obix.Int;
 import obix.Obj;
 import obix.Uri;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators.AirDamperActuator;
 
 public class AirDamperActuatorImpl extends ActuatorImpl implements AirDamperActuator{
 	protected Int actPosSetpFreshAirValue = new Int(0);

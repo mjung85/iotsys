@@ -44,7 +44,7 @@ public class EnumConnectorImpl extends RangeImpl implements EnumConnector
 
 	protected void initValues()
 	{
-		getElements().add(new EnumElement(EnumConnector.KEY_SEND, "Send"));
-		getElements().add(new EnumElement(EnumConnector.KEY_RECEIVE, "Receive"));
+		addElement(new ObjElement(EnumConnector.KEY_SEND, "Send"));
+		addElement(new ObjElement(EnumConnector.KEY_RECEIVE, "Receive"));
 	}
 }

@@ -18,6 +18,8 @@ public class XException
 // Constructors
 ////////////////////////////////////////////////////////////////
 
+  private static final long serialVersionUID = -5025324337338832268L;
+
   /**
    * Construct using specified line and column.
    */

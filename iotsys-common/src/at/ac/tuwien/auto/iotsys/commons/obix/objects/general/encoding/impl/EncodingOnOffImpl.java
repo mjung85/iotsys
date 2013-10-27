@@ -31,28 +31,28 @@
 
 package at.ac.tuwien.auto.iotsys.commons.obix.objects.general.encoding.impl;
 
+import obix.Contract;
 import obix.Uri;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.encoding.EncodingOnOff;
-import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.enumeration.EnumLanguage;
-import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.enumeration.EnumTranslation;
-import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.language.impl.TranslationImpl;
 
 public class EncodingOnOffImpl extends EncodingImpl implements EncodingOnOff
 {
 	public EncodingOnOffImpl()
 	{
 		super(new Uri(EncodingOnOff.HREF));
+
+		this.setOf(new Contract("obix:bool"));
 	}
 
 	protected void initValues()
 	{
-		BoolElement on = new BoolElement(EncodingOnOff.KEY_ON, "On",true);
-		BoolElement off = new BoolElement(EncodingOnOff.KEY_OFF, "Off",false);
-		
-		on.addTranslation(new TranslationImpl(EnumLanguage.KEY_DE_DE,EnumTranslation.KEY_DISPLAYNAME,"Ein"));
-		off.addTranslation(new TranslationImpl(EnumLanguage.KEY_DE_DE,EnumTranslation.KEY_DISPLAYNAME,"Aus"));
-		
-		getElements().add(on);
-		getElements().add(off);
+		BoolElement on = new BoolElement(EncodingOnOff.KEY_ON, "On", true);
+		BoolElement off = new BoolElement(EncodingOnOff.KEY_OFF, "Off", false);
+
+		on.addTranslation("de", TranslationAttribute.displayName, "Ein");
+		off.addTranslation("de", TranslationAttribute.displayName, "Aus");
+
+		addElement(on);
+		addElement(off);
 	}
 }

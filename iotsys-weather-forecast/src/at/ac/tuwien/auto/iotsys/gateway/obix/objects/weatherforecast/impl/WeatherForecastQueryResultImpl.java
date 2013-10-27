@@ -1,7 +1,7 @@
 package at.ac.tuwien.auto.iotsys.gateway.obix.objects.weatherforecast.impl;
 
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.weatherforecast.WeatherForecastQueryResult;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.weatherforecast.WeatherForecastRecord;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.weatherforecast.WeatherForecastQueryResult;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.weatherforecast.WeatherForecastRecord;
 import obix.*;
 
 public class WeatherForecastQueryResultImpl extends Obj implements
@@ -35,7 +35,7 @@ public class WeatherForecastQueryResultImpl extends Obj implements
 			end.setNull(true);
 		}
 		
-		count.setSilent(data.size());
+		count.set(data.size(), false);
 		count.setNull(false);
 		
 		add(count);

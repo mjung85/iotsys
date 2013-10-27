@@ -1,6 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013
- * Institute of Computer Aided Automation, Automation Systems Group, TU Wien.
+ * Copyright (c) 2013, Automation Systems Group, TU Wien.
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -30,59 +29,20 @@
  * This file is part of the IoTSyS project.
  ******************************************************************************/
 
-package at.ac.tuwien.auto.iotsys.commons.obix.objects.general.language.impl;
+package at.ac.tuwien.auto.iotsys.commons.obix.objects.general.unit.impl;
 
-import java.util.ArrayList;
-
-import obix.Contract;
-import obix.List;
-import obix.Obj;
 import obix.Uri;
-import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.language.Multilingual;
-import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.language.Translation;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.contracts.impl.DimensionImpl;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.contracts.impl.UnitImpl;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.unit.UnitMeter;
 
-public abstract class MultilingualImpl extends Obj implements Multilingual
+public class UnitMeterImpl extends UnitImpl implements UnitMeter
 {
-	private List list = null;
-	protected ArrayList<TranslationImpl> translations;
-	private int translationCount = 0;
-
-	public MultilingualImpl()
+	public UnitMeterImpl()
 	{
-		setHref(new Uri(Multilingual.CONTRACT));
-	}
-	
-	public void addTranslation(TranslationImpl translation)
-	{
-		if (translations == null)
-		{
-			this.list = new List("translations", new Contract(Translation.CONTRACT));
-			this.list.setHref(new Uri("translations"));
-			// this.list.setHidden(true);
-			this.add(this.list);
-			// this.add(this.list.getReference(false));
+		super("meter", "meter (m)", new Uri(UnitMeter.HREF), "m", 1, 0, new DimensionImpl(0, 1, 0, 0, 0, 0, 0));
 
-			this.translations = new ArrayList<TranslationImpl>();
-		}
-
-		translation.setHref(new Uri(String.valueOf(++translationCount)));
-
-		this.list.add(translation);
-		this.translations.add(translation);
-	}
-
-	public String getTranslation(String language, String attribute)
-	{
-		if (translations != null)
-		{
-			for (TranslationImpl t : this.translations)
-			{
-				if (t.getLanguage().equals(language) && t.getAttribute().equals(attribute))
-				{
-					return t.getValue();
-				}
-			}
-		}
-		return null;
+		// Translations
+		addTranslation("de", TranslationAttribute.displayName, "Meter (m)");
 	}
 }

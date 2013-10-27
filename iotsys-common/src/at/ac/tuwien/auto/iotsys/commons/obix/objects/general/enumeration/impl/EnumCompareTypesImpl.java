@@ -29,14 +29,25 @@
  * This file is part of the IoTSyS project.
  ******************************************************************************/
 
-package at.ac.tuwien.auto.iotsys.commons.obix.objects.general.enumeration;
+package at.ac.tuwien.auto.iotsys.commons.obix.objects.general.enumeration.impl;
 
-import obix.contracts.Range;
+import obix.Uri;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.contracts.impl.RangeImpl;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.enumeration.EnumCompareTypes;
 
-public interface EnumTranslation extends Range
+public class EnumCompareTypesImpl extends RangeImpl implements EnumCompareTypes
 {
-	public static final String HREF = "/enums/enumTranslation";
+	public EnumCompareTypesImpl()
+	{
+		super(new Uri(EnumCompareTypes.HREF));
+	}
 
-	public static final String KEY_DISPLAY = "display";
-	public static final String KEY_DISPLAYNAME = "displayname";
+	protected void initValues()
+	{
+		addElement(new ObjElement(EnumCompareTypes.KEY_EQ));
+		addElement(new ObjElement(EnumCompareTypes.KEY_LT));
+		addElement(new ObjElement(EnumCompareTypes.KEY_LTE));
+		addElement(new ObjElement(EnumCompareTypes.KEY_GT));
+		addElement(new ObjElement(EnumCompareTypes.KEY_GTE));
+	}
 }

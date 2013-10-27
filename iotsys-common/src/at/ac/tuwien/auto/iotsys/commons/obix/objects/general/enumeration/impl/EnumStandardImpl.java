@@ -44,9 +44,9 @@ public class EnumStandardImpl extends RangeImpl implements EnumStandard
 
 	protected void initValues()
 	{
-		getElements().add(new EnumElement(EnumStandard.KEY_BACNET, "BACnet"));
-		getElements().add(new EnumElement(EnumStandard.KEY_KNX, "KNX"));
-		getElements().add(new EnumElement(EnumStandard.KEY_LONWORKS, "LonWorks"));
-		getElements().add(new EnumElement(EnumStandard.KEY_UNDEF, "undefined"));
+		addElement(new ObjElement(EnumStandard.KEY_BACNET, "BACnet"));
+		addElement(new ObjElement(EnumStandard.KEY_KNX, "KNX"));
+		addElement(new ObjElement(EnumStandard.KEY_LONWORKS, "LonWorks"));
+		addElement(new ObjElement(EnumStandard.KEY_UNDEF, "undefined"));
 	}
 }

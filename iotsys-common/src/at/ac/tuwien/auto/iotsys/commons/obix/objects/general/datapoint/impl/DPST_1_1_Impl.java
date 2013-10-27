@@ -32,65 +32,52 @@
 
 package at.ac.tuwien.auto.iotsys.commons.obix.objects.general.datapoint.impl;
 
-import java.util.logging.Logger;
-
-import obix.Bool;
 import obix.Contract;
 import obix.Enum;
-import obix.Int;
 import obix.Obj;
-import obix.Real;
 import obix.Uri;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.datapoint.DPST_1_1;
-import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.datapoint.DPT_1;
-import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.datapoint.DataPoint;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.encoding.EncodingOnOff;
-import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.language.Multilingual;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.encoding.impl.EncodingsImpl;
 
-public class DPST_1_1_Impl extends DPT_1_Impl implements DPST_1_1
+public abstract class DPST_1_1_Impl extends DPT_1_Impl implements DPST_1_1
 {
-	private static final Logger log = Logger.getLogger(DPST_1_1_Impl.class.getName());
-
 	private Enum encoding = new Enum();
 
-	public DPST_1_1_Impl(String name, String displayName, String display, boolean writable)
+	public DPST_1_1_Impl(String name, String displayName, String display, boolean writable, boolean readable)
 	{
-		super(name, displayName, display, new Contract(new String[] { DPST_1_1.CONTRACT, DPT_1.CONTRACT, DataPoint.CONTRACT, Multilingual.CONTRACT }));
-		
-		this.value.setWritable(writable);
+		// constructor
+		super(name, displayName, display, writable, readable);
 
+		// contract
+		this.addIs(new Contract(DPST_1_1.CONTRACT));
+
+		// encoding
 		this.encoding.setName("encoding");
 		this.encoding.setHref(new Uri("encoding"));
 		this.encoding.setRange(new Uri(EncodingOnOff.HREF));
+		this.encoding.setWritable(writable);
+		this.encoding.setReadable(readable);
+		this.encoding.setNull(true);
 		this.add(encoding);
 	}
 
 	@Override
 	public void writeObject(Obj input)
 	{
-		if (input instanceof DPST_1_1)
-		{
-			DPST_1_1 in = (DPST_1_1) input;
-			log.info("Writing on data point.");
-			this.value.set(in.value().get());
-		}
-		else if (input instanceof Bool)
-		{
-			this.value.set(((Bool) input).get());
-		}
-		else if (input instanceof Real)
-		{
-			this.value.set(((Real) input).get());
-		}
-		else if (input instanceof Int)
-		{
-			this.value.set(((Int) input).get());
-		}
+		super.writeObject(input);
+		this.refreshObject();
 	}
-	
+
+	@Override
+	public void refreshObject()
+	{
+		this.encoding.set(EncodingsImpl.getInstance().getEncoding(EncodingOnOff.HREF).getName(this.value()));
+	}
+
+	@Override
 	public obix.Enum encoding()
 	{
 		return encoding;
 	}
-
 }

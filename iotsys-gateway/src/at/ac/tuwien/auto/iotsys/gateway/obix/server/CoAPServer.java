@@ -163,7 +163,7 @@ public class CoAPServer extends Endpoint {
 			Obj responseObj = null;
 			
 			if (request instanceof GETRequest) {
-				responseObj = obixServer.readObj(new URI(resourcePath), "guest");
+				responseObj = obixServer.readObj(new URI(resourcePath), true);
 			} else if (request instanceof PUTRequest) {
 				responseObj = obixServer.writeObj(new URI(resourcePath), payloadString);
 			} else if (request instanceof POSTRequest) {

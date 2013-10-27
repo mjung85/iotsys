@@ -40,6 +40,7 @@ import obix.Obj;
 import obix.Uri;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.datapoint.impl.DatapointImpl;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.enumeration.EnumConnector;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.enumeration.impl.EnumsImpl;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.view.Group;
 
 public class GroupImpl extends ElementImpl implements Group
@@ -87,12 +88,13 @@ public class GroupImpl extends ElementImpl implements Group
 
 			if (!this.function.getName().equals("function"))
 				this.function.setName("function", true);
-			
+
 			this.function.setHref(new Uri("function"));
 			this.function.setDisplay(null);
 			this.function.setDisplayName(null);
 
 			this.add(function);
+			this.add(function.getReference());
 		}
 	}
 
@@ -104,7 +106,7 @@ public class GroupImpl extends ElementImpl implements Group
 		con.setName("connector");
 		con.setHref(new Uri("connector"));
 		con.setRange(new Uri(EnumConnector.HREF));
-		con.set(connector);
+		con.set(EnumsImpl.getInstance().getEnum(EnumConnector.HREF).getKey(connector));
 		instance.add(con);
 
 		return instance;

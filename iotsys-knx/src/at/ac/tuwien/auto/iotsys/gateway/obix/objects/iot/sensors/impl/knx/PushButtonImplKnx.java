@@ -38,7 +38,6 @@ import at.ac.tuwien.auto.calimero.GroupAddress;
 import at.ac.tuwien.auto.calimero.dptxlator.DPTXlatorBoolean;
 import at.ac.tuwien.auto.calimero.exception.KNXException;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.sensors.impl.PushButtonImpl;
-import at.ac.tuwien.auto.iotsys.commons.util.CsvCreator;
 import at.ac.tuwien.auto.iotsys.gateway.connectors.knx.KNXConnector;
 import at.ac.tuwien.auto.iotsys.gateway.connectors.knx.KNXWatchDog;
 
@@ -49,8 +48,6 @@ public class PushButtonImplKnx extends PushButtonImpl {
 	
 	public static final Logger knxBus = KNXConnector.knxBus;
 	
-	private static final Logger log = Logger.getLogger(PushButtonImplKnx.class.getName());
-
 	public PushButtonImplKnx(KNXConnector connector , GroupAddress observation) {
 		this.observation = observation;
 		this.connector = connector;	

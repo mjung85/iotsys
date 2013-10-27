@@ -4,8 +4,7 @@
 package obix;
 
 /**
- * IObj is the base interface for contract interfaces. IObj should only be
- * implemented by subclasses of Obj.
+ * IObj is the base interface for contract interfaces. IObj should only be implemented by subclasses of Obj.
  * 
  * @author Brian Frank
  * @creation 27 Apr 05
@@ -61,6 +60,10 @@ public interface IObj
 
 	public void setWritable(boolean writable, boolean recursive);
 
+	public boolean isReadable();
+
+	public void setReadable(boolean readable);
+
 	// //////////////////////////////////////////////////////////////
 	// Extended Attributes
 	// //////////////////////////////////////////////////////////////
@@ -91,15 +94,11 @@ public interface IObj
 
 	public boolean is(String is);
 
-	public String getElement();
-
 	public int getBinCode();
 
 	public IObj getParent();
 
 	public IObj getRoot();
-
-	public Ref getReference(boolean absolute);
 
 	public IObj get(String name);
 

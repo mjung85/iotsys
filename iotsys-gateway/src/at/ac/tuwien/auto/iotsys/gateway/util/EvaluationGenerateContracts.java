@@ -367,7 +367,7 @@ public class EvaluationGenerateContracts {
 
 	public Obj getContractObj(String href) {
 		Obj o = new Obj();
-		o = objectBroker.pullObj(new Uri(href));
+		o = objectBroker.pullObj(new Uri(href), true);
 		return o;
 	}
 

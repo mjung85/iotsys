@@ -39,7 +39,7 @@ public class AlarmQueryOutImpl extends Obj implements AlarmQueryOut {
 			end.setNull(true);
 		}
 		
-		count.setSilent(data.size());
+		count.set(data.size(), false);
 		
 		add(count);
 		add(start);

@@ -63,8 +63,7 @@ public class Contract
 	// //////////////////////////////////////////////////////////////
 
 	/**
-	 * The primary Uri is always the first, and is supposed to represent a
-	 * contract that merges the entire rest of the list into one fetchable uri.
+	 * The primary Uri is always the first, and is supposed to represent a contract that merges the entire rest of the list into one fetchable uri.
 	 */
 	public Uri primary()
 	{

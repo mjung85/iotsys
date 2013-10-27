@@ -170,6 +170,18 @@ public class KNXConnector implements Connector {
 		}
 	}
 
+	public void write(GroupAddress a, double value) {
+		try {
+			if (!isConnected()) {
+				return;
+			}
+			log.finest("Writing " + value + " on " + a);
+			pc.write(a, (float)value);
+		} catch (KNXException e) {
+			e.printStackTrace();
+		}
+	}
+
 	public int readInt(GroupAddress a, String scaled) {
 		try {
 			if (!isConnected()) {

@@ -39,7 +39,9 @@ import obix.Uri;
 
 public class ParametersImpl extends List implements IObj
 {
-	public ParametersImpl()
+	private static final ParametersImpl instance = new ParametersImpl();
+
+	private ParametersImpl()
 	{
 		this.setName("parameters");
 		this.setOf(new Contract("obix:obj"));
@@ -52,7 +54,12 @@ public class ParametersImpl extends List implements IObj
 			obj.setHref(obj.getRelativePath());
 
 			this.add(obj);
-			this.add(obj.getReference(false));
+			this.add(obj.getReference());
 		}
+	}
+
+	public static ParametersImpl getInstance()
+	{
+		return instance;
 	}
 }

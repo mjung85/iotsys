@@ -262,7 +262,10 @@ public class DPTXlatorBoolean extends DPTXlator
 	 */
 	public final boolean getValueBoolean()
 	{		
-		return (data[1] & 0x01) != 0 ? true : false;
+		if(data.length > 1){
+			return (data[1] & 0x01) != 0 ? true : false;
+		}
+		return false;
 	}
 
 	/* (non-Javadoc)

@@ -23,7 +23,7 @@ public class Enum extends Val
 	public Enum(String name, String val)
 	{
 		super(name);
-		set(val);
+		set(val, false);
 	}
 
 	/**
@@ -31,7 +31,7 @@ public class Enum extends Val
 	 */
 	public Enum(String val)
 	{
-		set(val);
+		set(val, false);
 	}
 
 	/**
@@ -39,7 +39,7 @@ public class Enum extends Val
 	 */
 	public Enum()
 	{
-		set("");
+		set("", false);
 	}
 
 	// //////////////////////////////////////////////////////////////
@@ -59,11 +59,21 @@ public class Enum extends Val
 	 */
 	public void set(String val)
 	{
+		this.set(val, true);
+	}
+
+	/**
+	 * Set value as string key and consider notify-flag.
+	 */
+	public void set(String val, boolean notify)
+	{
 		if (val == null)
 			throw new IllegalArgumentException("val cannot be null");
+
 		String oldVal = this.val;
 		this.val = val;
-		if (!this.val.equals(oldVal))
+
+		if (notify && !this.val.equals(oldVal))
 		{
 			notifyObservers();
 		}
@@ -110,9 +120,7 @@ public class Enum extends Val
 	}
 
 	/**
-	 * Compares this object with the specified object for order. Returns a
-	 * negative integer, zero, or a positive integer as this object is less
-	 * than, equal to, or greater than the specified object.
+	 * Compares this object with the specified object for order. Returns a negative integer, zero, or a positive integer as this object is less than, equal to, or greater than the specified object.
 	 */
 	public int compareTo(Object that)
 	{
