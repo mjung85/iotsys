@@ -23,9 +23,7 @@ public class Real extends Val
 	public Real(String name, double val)
 	{
 		super(name);
-		this.val = val; // we don't want to notify observers here
-
-		// set(val);
+		this.set(val, false);
 	}
 
 	/**
@@ -34,9 +32,7 @@ public class Real extends Val
 	public Real(String name)
 	{
 		super(name);
-		this.val = 0; // we don't want to notify observers here
-
-		// set(0);
+		this.set(0, false);
 	}
 
 	/**
@@ -44,9 +40,7 @@ public class Real extends Val
 	 */
 	public Real(double val)
 	{
-		this.val = val; // we don't want to notify observers here
-
-		// set(val);
+		this.set(val, false);
 	}
 
 	/**
@@ -54,8 +48,7 @@ public class Real extends Val
 	 */
 	public Real()
 	{
-		this.val = 0; // we don't want to notify observers here
-		// set(0);
+		this.set(0, false);
 	}
 
 	// //////////////////////////////////////////////////////////////
@@ -71,9 +64,9 @@ public class Real extends Val
 	}
 
 	/**
-	 * Set value.
+	 * Set value and consider notify-flag.
 	 */
-	public void set(double val)
+	public void set(double val, boolean notify)
 	{
 		double oldVal = this.val;
 
@@ -89,7 +82,7 @@ public class Real extends Val
 		{
 			this.val = val;
 		}
-		if (this.val != oldVal)
+		if (notify && this.val != oldVal)
 			notifyObservers();
 	}
 
@@ -106,6 +99,14 @@ public class Real extends Val
 		{
 			set(0);
 		}
+	}
+
+	/**
+	 * Set value.
+	 */
+	public void set(double val)
+	{
+		this.set(val, true);
 	}
 
 	// //////////////////////////////////////////////////////////////
@@ -139,9 +140,7 @@ public class Real extends Val
 	}
 
 	/**
-	 * Compares this object with the specified object for order. Returns a
-	 * negative integer, zero, or a positive integer as this object is less
-	 * than, equal to, or greater than the specified object.
+	 * Compares this object with the specified object for order. Returns a negative integer, zero, or a positive integer as this object is less than, equal to, or greater than the specified object.
 	 */
 	public int compareTo(Object that)
 	{

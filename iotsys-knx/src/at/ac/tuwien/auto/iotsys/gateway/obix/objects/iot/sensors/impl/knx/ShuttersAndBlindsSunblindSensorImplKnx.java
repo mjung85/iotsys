@@ -48,8 +48,6 @@ public class ShuttersAndBlindsSunblindSensorImplKnx extends ShuttersAndBlindsSun
 	
 	public static final Logger knxBus = KNXConnector.knxBus;
 	
-	private static final Logger log = Logger.getLogger(ShuttersAndBlindsSunblindSensorImplKnx.class.getName());
-
 	public ShuttersAndBlindsSunblindSensorImplKnx(KNXConnector connector , GroupAddress observation) {
 		this.observation = observation;
 		this.connector = connector;	

@@ -29,33 +29,18 @@
  * This file is part of the IoTSyS project.
  ******************************************************************************/
 
-package at.ac.tuwien.auto.iotsys.commons.obix.objects.general.enumeration.impl;
+package at.ac.tuwien.auto.iotsys.commons.obix.objects.general.enumeration;
 
-import obix.Uri;
-import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.contracts.impl.RangeImpl;
-import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.enumeration.EnumLanguage;
+import obix.contracts.Range;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.logic.LogicBinaryOperation;
 
-public class EnumLanguageImpl extends RangeImpl implements EnumLanguage
+public interface EnumLogicOperationTypes extends Range
 {
-	public EnumLanguageImpl()
-	{
-		super(new Uri(EnumLanguage.HREF));
-	}
+	public static final String HREF = "/enums/logicOperationTypes";
 
-	protected void initValues()
-	{
-		getElements().add(new EnumElement(EnumLanguage.KEY_DE_DE, "German"));
-		getElements().add(new EnumElement(EnumLanguage.KEY_EN_EN, "English"));
-		getElements().add(new EnumElement(EnumLanguage.KEY_EN_US, "English (United States)"));
-		getElements().add(new EnumElement(EnumLanguage.KEY_ES_ES, "Spanish"));
-		getElements().add(new EnumElement(EnumLanguage.KEY_IT_IT, "Italian"));
-		getElements().add(new EnumElement(EnumLanguage.KEY_FR_FR, "French"));
-		getElements().add(new EnumElement(EnumLanguage.KEY_ID_ID, "Indonesian"));
-		getElements().add(new EnumElement(EnumLanguage.KEY_NB_NO, "Norwegian"));
-		getElements().add(new EnumElement(EnumLanguage.KEY_SV_SE, "Swedish"));
-		getElements().add(new EnumElement(EnumLanguage.KEY_DA_DK, "Danish"));
-		getElements().add(new EnumElement(EnumLanguage.KEY_NL_NL, "Dutch"));
-		getElements().add(new EnumElement(EnumLanguage.KEY_EL_GR, "Greek"));
-		getElements().add(new EnumElement(EnumLanguage.KEY_RU_RU, "Russian"));
-	}
+	public static final String KEY_AND = LogicBinaryOperation.BIN_OP_AND;
+	public static final String KEY_OR = LogicBinaryOperation.BIN_OP_OR;
+	public static final String KEY_XOR = LogicBinaryOperation.BIN_OP_XOR;
+	public static final String KEY_NAND = LogicBinaryOperation.BIN_OP_NAND;
+	public static final String KEY_NOR = LogicBinaryOperation.BIN_OP_NOR;
 }

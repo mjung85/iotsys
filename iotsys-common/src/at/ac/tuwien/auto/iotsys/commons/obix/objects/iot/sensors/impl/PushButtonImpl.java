@@ -43,6 +43,7 @@ public class PushButtonImpl extends SensorImpl implements PushButton {
 	public PushButtonImpl(){
 		setIs(new Contract(PushButton.CONTRACT));
 		value.setWritable(false);
+		value.setDisplayName("On/Off");
 		Uri valueUri = new Uri("value");
 	
 		value.setHref(valueUri);

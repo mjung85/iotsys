@@ -52,39 +52,38 @@ public class Uri extends Val
 	// Uri
 	// //////////////////////////////////////////////////////////////
 
-	 /**
-	   * Normalize this uri against the specified absolute
-	   * base uri to produce an absolute uri.
-	   */
-	  public Uri normalize(Uri base)
-	  {      
-		  if(base == null){
-			  return null;
-		  }
+	/**
+	 * Normalize this uri against the specified absolute base uri to produce an absolute uri.
+	 */
+	public Uri normalize(Uri base)
+	{
+		if (base == null)
+		{
+			return null;
+		}
 
-	    try
-	    {                         
-	      if (val.startsWith("obix:"))
-	        return this;
-	       
-	      base.checkAbsolute();  
-	      URL url = url = new URL(new URL(base.val), val);  
-	      if(!base.val.endsWith("/")){
-	    	 url = new URL(new URL(base.val + "/"), val);
-	      }
-	    
-	      
-	      return new Uri(url.toString());
-	    }
-	    catch(MalformedURLException e)
-	    {                      
-	      throw new RuntimeException("Cannot normalize " + base.val + " + " + val);
-	    }
-	  }    
+		try
+		{
+			if (val.startsWith("obix:") || val.startsWith("knx:"))
+				return this;
+
+			base.checkAbsolute();
+			URL url = new URL(new URL(base.val), val);
+			if (!base.val.endsWith("/"))
+			{
+				url = new URL(new URL(base.val + "/"), val);
+			}
+
+			return new Uri(url.toString());
+		}
+		catch (MalformedURLException e)
+		{
+			throw new RuntimeException("Cannot normalize " + base.val + " + " + val);
+		}
+	}
 
 	/**
-	 * Return if this uri is a well formed absolute uri including
-	 * scheme://authority/path
+	 * Return if this uri is a well formed absolute uri including scheme://authority/path
 	 */
 	public boolean isAbsolute()
 	{
@@ -120,9 +119,7 @@ public class Uri extends Val
 	}
 
 	/**
-	 * Get the authority http://host:port/ or null if relative. This is slightly
-	 * different semanatics than java.net.URL where authority doesn't include
-	 * the scheme (in this API that is called address).
+	 * Get the authority http://host:port/ or null if relative. This is slightly different semanatics than java.net.URL where authority doesn't include the scheme (in this API that is called address).
 	 */
 	public String getAuthority()
 	{
@@ -131,8 +128,7 @@ public class Uri extends Val
 	}
 
 	/**
-	 * Convenience for new Uri(getAuthority(). This method can only be used on
-	 * absolute uris.
+	 * Convenience for new Uri(getAuthority(). This method can only be used on absolute uris.
 	 */
 	public Uri getAuthorityUri()
 	{
@@ -151,9 +147,7 @@ public class Uri extends Val
 	}
 
 	/**
-	 * Return if the specified uri is contained within this this base uri. Since
-	 * paths and queries should be treated as opaque, this method really only
-	 * makes sense when this uri is an authority uri used for scoping.
+	 * Return if the specified uri is contained within this this base uri. Since paths and queries should be treated as opaque, this method really only makes sense when this uri is an authority uri used for scoping.
 	 */
 	public boolean contains(Uri uri)
 	{
@@ -164,10 +158,7 @@ public class Uri extends Val
 	}
 
 	/**
-	 * Get the host name and port number as an internet address in the format
-	 * host:port. If port is -1 then this simply the hostname. This method
-	 * equates to java.net.URL.getAuthority() - this API uses the term authority
-	 * to include scheme name.
+	 * Get the host name and port number as an internet address in the format host:port. If port is -1 then this simply the hostname. This method equates to java.net.URL.getAuthority() - this API uses the term authority to include scheme name.
 	 */
 	public String getAddress()
 	{
@@ -221,8 +212,7 @@ public class Uri extends Val
 	}
 
 	/**
-	 * Get this uri as a java.net.URL. This method only works if the uri is
-	 * absolute!
+	 * Get this uri as a java.net.URL. This method only works if the uri is absolute!
 	 */
 	public URL toURL()
 	{
@@ -238,8 +228,7 @@ public class Uri extends Val
 	}
 
 	/**
-	 * If the path section of this uri is a slash separated hierarchy, then
-	 * return the parent uri. Return null if it doesn't make sense for this uri.
+	 * If the path section of this uri is a slash separated hierarchy, then return the parent uri. Return null if it doesn't make sense for this uri.
 	 */
 	public Uri parent()
 	{
@@ -303,8 +292,7 @@ public class Uri extends Val
 	}
 
 	/**
-	 * Parse a query string formated as "name=val&name=val...". If null is
-	 * passed, return null.
+	 * Parse a query string formated as "name=val&name=val...". If null is passed, return null.
 	 */
 	public static Query parseQuery(String str)
 	{
@@ -340,8 +328,7 @@ public class Uri extends Val
 	}
 
 	/**
-	 * Create a new Uri which is ensured to have the specified name/value pair
-	 * removed from the query.
+	 * Create a new Uri which is ensured to have the specified name/value pair removed from the query.
 	 */
 	public Uri removeQueryParam(String key)
 	{
@@ -349,8 +336,7 @@ public class Uri extends Val
 	}
 
 	/**
-	 * Create a new Uri which is ensured to have the specified name/value pair
-	 * included in the query.
+	 * Create a new Uri which is ensured to have the specified name/value pair included in the query.
 	 */
 	public Uri addQueryParam(String key, String value)
 	{
@@ -464,9 +450,7 @@ public class Uri extends Val
 	}
 
 	/**
-	 * If this Uri is resolved then return the Obj it references. If unresolved
-	 * then return null. Resolved Uris are typically used with local internal
-	 * fragment Uris.
+	 * If this Uri is resolved then return the Obj it references. If unresolved then return null. Resolved Uris are typically used with local internal fragment Uris.
 	 */
 	public Obj getResolved()
 	{
@@ -545,9 +529,7 @@ public class Uri extends Val
 	}
 
 	/**
-	 * Compares this object with the specified object for order. Returns a
-	 * negative integer, zero, or a positive integer as this object is less
-	 * than, equal to, or greater than the specified object.
+	 * Compares this object with the specified object for order. Returns a negative integer, zero, or a positive integer as this object is less than, equal to, or greater than the specified object.
 	 */
 	public int compareTo(Object that)
 	{

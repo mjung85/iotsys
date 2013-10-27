@@ -44,7 +44,7 @@ public class ViewFunctionalImpl extends ViewImpl implements ViewFunctional
 	{
 		super("functional", new Uri(ViewFunctional.HREF), new Contract(ViewFunctional.CONTRACT));
 	}
-	
+
 	@Override
 	public void initElements(List elements)
 	{

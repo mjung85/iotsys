@@ -23,8 +23,7 @@ public class Int extends Val
 	public Int(String name, long val)
 	{
 		super(name);
-		// set(val);
-		this.val = val;// we don't want to notify observers here
+		this.set(val, false); // we don't want to notify observers here
 
 	}
 
@@ -34,8 +33,7 @@ public class Int extends Val
 	public Int(String name)
 	{
 		super(name);
-		// set(0);
-		this.val = 0;// we don't want to notify observers here
+		this.set(val, false); // we don't want to notify observers here
 	}
 
 	/**
@@ -43,8 +41,7 @@ public class Int extends Val
 	 */
 	public Int(long val)
 	{
-		// set(val);
-		this.val = val;// we don't want to notify observers here
+		this.set(val, false); // we don't want to notify observers here
 	}
 
 	/**
@@ -52,8 +49,7 @@ public class Int extends Val
 	 */
 	public Int()
 	{
-		this.val = 0; // we don't want to notify observers here
-		// set(0);
+		this.set(0, false); // we don't want to notify observers here
 	}
 
 	// //////////////////////////////////////////////////////////////
@@ -71,7 +67,7 @@ public class Int extends Val
 	/**
 	 * Set value.
 	 */
-	public void set(long val)
+	public void set(long val, boolean notify)
 	{
 		long oldVal = this.val;
 
@@ -88,7 +84,7 @@ public class Int extends Val
 			this.val = val;
 		}
 
-		if (oldVal != this.val)
+		if (notify && oldVal != this.val)
 			notifyObservers();
 	}
 
@@ -120,9 +116,9 @@ public class Int extends Val
 	 * 
 	 * @param val
 	 */
-	public void setSilent(long val)
+	public void set(long val)
 	{
-		this.val = val;
+		this.set(val, true);
 	}
 
 	// //////////////////////////////////////////////////////////////
@@ -156,9 +152,7 @@ public class Int extends Val
 	}
 
 	/**
-	 * Compares this object with the specified object for order. Returns a
-	 * negative integer, zero, or a positive integer as this object is less
-	 * than, equal to, or greater than the specified object.
+	 * Compares this object with the specified object for order. Returns a negative integer, zero, or a positive integer as this object is less than, equal to, or greater than the specified object.
 	 */
 	public int compareTo(Object that)
 	{

@@ -1,69 +1,95 @@
 package at.ac.tuwien.auto.iotsys.gateway.obix.objects.knx.datapoint.impl;
 
+import java.util.logging.Logger;
+
+import obix.Obj;
 import at.ac.tuwien.auto.calimero.GroupAddress;
+import at.ac.tuwien.auto.calimero.dptxlator.DPTXlator8BitUnsigned;
+import at.ac.tuwien.auto.calimero.exception.KNXException;
+import at.ac.tuwien.auto.calimero.process.ProcessCommunicatorImpl;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.datapoint.impl.DPST_5_1_Impl;
 import at.ac.tuwien.auto.iotsys.gateway.connectors.knx.KNXConnector;
 import at.ac.tuwien.auto.iotsys.gateway.connectors.knx.KNXWatchDog;
 
 public class DPST_5_1_ImplKnx extends DPST_5_1_Impl
 {
-	private GroupAddress groupAddress;
+	private static final Logger log = Logger.getLogger(DPST_5_1_ImplKnx.class.getName());
 
+	private GroupAddress groupAddress;
 	private KNXConnector connector;
 
-	private boolean readFlag = true; // TODO need to be set based on ETS
-										// configuration
-
-	// if more group addresses are needed just add more constructor parameters.
-	public DPST_5_1_ImplKnx(KNXConnector connector, GroupAddress groupAddress, String name, String displayName, String display, boolean writable)
+	public DPST_5_1_ImplKnx(KNXConnector connector, GroupAddress groupAddress, String name, String displayName, String display, boolean writable, boolean readable)
 	{
-		super(name, displayName, display, writable);
+		super(name, displayName, display, writable, readable);
 
 		this.groupAddress = groupAddress;
 		this.connector = connector;
 
-		// if it is not possible to read from the group address --> create a
-		// watchdog that monitors the communicaiton
+		this.createWatchDog();
+	}
 
-		if (readFlag)
-			this.createWatchDog();
+	public DPST_5_1_ImplKnx(KNXConnector connector, DataPointInit dataPointInit)
+	{
+		this(connector, dataPointInit.getGroupAddress(), dataPointInit.getName(), dataPointInit.getDisplayName(), dataPointInit.getDisplay(), dataPointInit.isWritable(), dataPointInit.isReadable());
 	}
 
 	public void createWatchDog()
 	{
-
-		connector.addWatchDog(groupAddress, new KNXWatchDog()
+		if (connector != null && groupAddress != null)
 		{
-			@Override
-			public void notifyWatchDog(byte[] apdu)
+			connector.addWatchDog(groupAddress, new KNXWatchDog()
 			{
-//				try
-//				{
-//					DPTXlator2ByteFloat x = new DPTXlator2ByteFloat(DPTXlator2ByteFloat.DPT_TEMPERATURE);
-//
-//					x.setData(apdu, 0);
-//
-//					// String[] a = x.getAllValues();
-//
-//					log.fine("Temperature for " + DPST_5_1_ImplKnx.this.getHref() + " now " + x.getValueFloat(1));
-//					value.set(x.getValueFloat(1));
-//				}
-//				catch (KNXException e)
-//				{
-//					e.printStackTrace();
-//				}
-			}
-		});
+				@Override
+				public void notifyWatchDog(byte[] apdu)
+				{
+					try
+					{
+						DPTXlator8BitUnsigned x = new DPTXlator8BitUnsigned(DPTXlator8BitUnsigned.DPT_SCALING);
+						ProcessCommunicatorImpl.extractGroupASDU(apdu, x);
+
+						log.info("Status for " + DPST_5_1_ImplKnx.this.getHref() + " now " + x.getValueUnsigned());
+
+						value().set(x.getValueUnsigned());
+						value().setNull(false);
+					}
+					catch (KNXException e)
+					{
+						e.printStackTrace();
+					}
+				}
+			});
+		}
 	}
 
 	@Override
 	public void refreshObject()
 	{
-		// here we need to read from the bus, only if the read flag is set at
-		// the data point
-		if (readFlag)
+		// here we need to read from the bus, only if the read flag is set at the data point
+		if (this.value().isReadable())
 		{
-			// TODO read from KNX bus
+			int value = connector.readInt(groupAddress, DPTXlator8BitUnsigned.DPT_SCALING.getID());
+			this.value().set(value);
+			this.value().setNull(false);
+		}
+
+		// run refresh from super class
+		super.refreshObject();
+	}
+
+	@Override
+	public void writeObject(Obj obj)
+	{
+		if (this.value().isWritable())
+		{
+			// always pass the writeObject call to the super method (triggers, oBIX related internal services like watches, alarms, ...)
+			// also the internal instance variables get updated
+			super.writeObject(obj);
+
+			// set isNull to false
+			this.value().setNull(false);
+
+			// now write this.value to the KNX bus
+			connector.write(groupAddress, this.value().get());
 		}
 	}
 }

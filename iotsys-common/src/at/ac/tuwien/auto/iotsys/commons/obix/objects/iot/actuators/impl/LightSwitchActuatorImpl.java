@@ -50,6 +50,7 @@ public class LightSwitchActuatorImpl extends ActuatorImpl implements LightSwitch
 	public LightSwitchActuatorImpl(){
 		setIs(new Contract(LightSwitchActuator.CONTRACT));
 		value.setWritable(true);
+		value.setDisplayName("On/Off");
 		Uri valueUri = new Uri(LightSwitchActuator.VALUE_CONTRACT_HERF);
 	
 		value.setHref(valueUri);

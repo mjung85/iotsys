@@ -29,11 +29,11 @@
  * This file is part of the IoTSyS project.
  ******************************************************************************/
 
-package at.ac.tuwien.auto.iotsys.commons.obix.objects.general.language;
+package at.ac.tuwien.auto.iotsys.commons.obix.objects.general.unit;
 
-import obix.IObj;
+import obix.contracts.Unit;
 
-public interface Translation extends IObj
+public interface UnitDegree extends Unit
 {
-	public static final String CONTRACT = "knx:Translation";
+	public static final String HREF = "/units/degree";
 }

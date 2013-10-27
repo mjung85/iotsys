@@ -40,20 +40,27 @@ import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.contracts.impl.Unit
 
 public class UnitsImpl extends List implements IObj
 {
-	public UnitsImpl()
+	private static final UnitsImpl instance = new UnitsImpl();
+
+	private UnitsImpl()
 	{
 		this.setName("units");
 		this.setOf(new Contract(Unit.CONTRACT));
 		this.setHref(new Uri("/units"));
 
-		UnitImpl[] units = new UnitImpl[] { new UnitCelsiusImpl(), new UnitPercentImpl(), new UnitPpmImpl() };
+		UnitImpl[] units = new UnitImpl[] { new UnitCelsiusImpl(), new UnitPercentImpl(), new UnitPpmImpl(), new UnitBeaufortImpl(), new UnitDegreeImpl(), new UnitHectopascalImpl(), new UnitMeterImpl(), new UnitMillimeterImpl() };
 
 		for (UnitImpl unit : units)
 		{
 			unit.setHref(unit.getRelativePath());
 
 			this.add(unit);
-			this.add(unit.getReference(false));
+			this.add(unit.getReference());
 		}
+	}
+
+	public static UnitsImpl getInstance()
+	{
+		return instance;
 	}
 }

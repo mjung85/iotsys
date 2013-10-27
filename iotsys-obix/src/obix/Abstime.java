@@ -8,9 +8,7 @@ import java.util.Date;
 import java.util.*;
 
 /**
- * Abstime models an absolute point in time modeled as millis since the epoch 1
- * Jan 1970. It also provides access to time of day components relative to a
- * specified time zone: year, month, day, hour, min, and seconds.
+ * Abstime models an absolute point in time modeled as millis since the epoch 1 Jan 1970. It also provides access to time of day components relative to a specified time zone: year, month, day, hour, min, and seconds.
  * 
  * @author Brian Frank
  * @creation 27 Apr 05
@@ -66,8 +64,7 @@ public class Abstime extends Val
 	}
 
 	/**
-	 * Construct unnamed Abstime with components relative to specified time
-	 * zone.
+	 * Construct unnamed Abstime with components relative to specified time zone.
 	 */
 	public Abstime(int year, int month, int day, int hour, int min, int sec, int millis, TimeZone timeZone)
 	{
@@ -119,8 +116,7 @@ public class Abstime extends Val
 	// //////////////////////////////////////////////////////////////
 
 	/**
-	 * @return millis since the Java epoch relative to UTC. This result is
-	 *         independent of this AbsTime's time zone.
+	 * @return millis since the Java epoch relative to UTC. This result is independent of this AbsTime's time zone.
 	 */
 	public long getMillis()
 	{
@@ -128,8 +124,7 @@ public class Abstime extends Val
 	}
 
 	/**
-	 * @return millis since the 1 Jan 2000 UTC epoch. This result is independent
-	 *         of this AbsTime's time zone.
+	 * @return millis since the 1 Jan 2000 UTC epoch. This result is independent of this AbsTime's time zone.
 	 */
 	public long getMillis2000()
 	{
@@ -218,8 +213,7 @@ public class Abstime extends Val
 	}
 
 	/**
-	 * Get the number of milliseconds into the day for this Abstime. An example
-	 * is that 1:00 AM would return 3600000.
+	 * Get the number of milliseconds into the day for this Abstime. An example is that 1:00 AM would return 3600000.
 	 */
 	public final long getTimeOfDayMillis()
 	{
@@ -243,8 +237,7 @@ public class Abstime extends Val
 	// //////////////////////////////////////////////////////////////
 
 	/**
-	 * Get timezone used to compute relative fields such as year, month, day,
-	 * hour, and minutes. The time zone never has any bearing on getMillis().
+	 * Get timezone used to compute relative fields such as year, month, day, hour, and minutes. The time zone never has any bearing on getMillis().
 	 */
 	public final TimeZone getTimeZone()
 	{
@@ -252,8 +245,7 @@ public class Abstime extends Val
 	}
 
 	/**
-	 * Return the offset in millis from GMT taking daylight savings time into
-	 * account if appropriate.
+	 * Return the offset in millis from GMT taking daylight savings time into account if appropriate.
 	 */
 	public int getTimeZoneOffset()
 	{
@@ -265,8 +257,7 @@ public class Abstime extends Val
 	}
 
 	/**
-	 * Does this time fall in daylight savings time based on the current
-	 * TimeZone.
+	 * Does this time fall in daylight savings time based on the current TimeZone.
 	 */
 	public boolean inDaylightTime()
 	{
@@ -276,8 +267,7 @@ public class Abstime extends Val
 	}
 
 	/**
-	 * Convert this instance to an equivalent instance in the current VM's local
-	 * time zone.
+	 * Convert this instance to an equivalent instance in the current VM's local time zone.
 	 */
 	public Abstime toLocalTime()
 	{
@@ -305,8 +295,7 @@ public class Abstime extends Val
 	/**
 	 * Compare to another Abstime.
 	 * 
-	 * @return a negative integer, zero, or a positive integer as this object is
-	 *         less than, equal to, or greater than the specified object.
+	 * @return a negative integer, zero, or a positive integer as this object is less than, equal to, or greater than the specified object.
 	 */
 	public int compareTo(Object that)
 	{
@@ -382,8 +371,7 @@ public class Abstime extends Val
 	}
 
 	/**
-	 * Subtract a relative time from this time and return the new instant in
-	 * time.
+	 * Subtract a relative time from this time and return the new instant in time.
 	 */
 	public Abstime subtract(Reltime relTime)
 	{
@@ -391,9 +379,7 @@ public class Abstime extends Val
 	}
 
 	/**
-	 * Compute the time difference between this time and the specified time. If
-	 * t2 is after this time, the result will be positive. If t2 is before this
-	 * time, the result will be negative.
+	 * Compute the time difference between this time and the specified time. If t2 is after this time, the result will be positive. If t2 is before this time, the result will be negative.
 	 * 
 	 * @param t2
 	 *            The time to compare against.
@@ -404,8 +390,7 @@ public class Abstime extends Val
 	}
 
 	/**
-	 * Create a new instance on the same date as this instance but with a
-	 * different time.
+	 * Create a new instance on the same date as this instance but with a different time.
 	 */
 	public Abstime timeOfDay(int hour, int min, int sec, int millis)
 	{
@@ -471,10 +456,8 @@ public class Abstime extends Val
 	}
 
 	/**
-	 * The same day and time in the next month. If this day is greater than the
-	 * last day in the next month, then cap the day to the next month's last
-	 * day. If this time's day is the last day in this month, then we
-	 * automatically set the month to the next month's last day.
+	 * The same day and time in the next month. If this day is greater than the last day in the next month, then cap the day to the next month's last day. If this time's day is the last day in this month, then we automatically set the month to the next
+	 * month's last day.
 	 */
 	public Abstime nextMonth()
 	{
@@ -508,10 +491,8 @@ public class Abstime extends Val
 	}
 
 	/**
-	 * The same time and day in previous month. If this day is greater than the
-	 * last day in the prev month, then cap the day to the prev month's last
-	 * day. If this time's day is the last day in this month, then we
-	 * automatically set the month to the prev month's last day.
+	 * The same time and day in previous month. If this day is greater than the last day in the prev month, then cap the day to the prev month's last day. If this time's day is the last day in this month, then we automatically set the month to the prev
+	 * month's last day.
 	 */
 	public Abstime prevMonth()
 	{
@@ -545,8 +526,7 @@ public class Abstime extends Val
 	}
 
 	/**
-	 * Get the same time and day in next year. If today is a leap day, then
-	 * return next year Feb 28.
+	 * Get the same time and day in next year. If today is a leap day, then return next year Feb 28.
 	 */
 	public Abstime nextYear()
 	{
@@ -557,8 +537,7 @@ public class Abstime extends Val
 	}
 
 	/**
-	 * Get the same time and day in prev year. If today is a leap day, then
-	 * return prev year Feb 28.
+	 * Get the same time and day in prev year. If today is a leap day, then return prev year Feb 28.
 	 */
 	public Abstime prevYear()
 	{
@@ -569,8 +548,7 @@ public class Abstime extends Val
 	}
 
 	/**
-	 * Get the next day of the specified weekday. If today is the specified
-	 * weekday, then return one week from now.
+	 * Get the next day of the specified weekday. If today is the specified weekday, then return one week from now.
 	 */
 	public Abstime nextWeekday(int weekday)
 	{
@@ -581,8 +559,7 @@ public class Abstime extends Val
 	}
 
 	/**
-	 * Get the prev day of the specified weekday. If today is the specified
-	 * weekday, then return one week before now.
+	 * Get the prev day of the specified weekday. If today is the specified weekday, then return one week before now.
 	 */
 	public Abstime prevWeekday(int weekday)
 	{
@@ -622,8 +599,7 @@ public class Abstime extends Val
 	}
 
 	/**
-	 * Given a year and month (1-12), return the number of days in that month
-	 * taking into consideration leap years.
+	 * Given a year and month (1-12), return the number of days in that month taking into consideration leap years.
 	 */
 	public static int getDaysInMonth(int year, int month)
 	{
@@ -635,8 +611,7 @@ public class Abstime extends Val
 	}
 
 	/**
-	 * Given a year, return the number of days in that year taking into
-	 * consideration leap years.
+	 * Given a year, return the number of days in that year taking into consideration leap years.
 	 */
 	public static int getDaysInYear(int year)
 	{
@@ -981,15 +956,10 @@ public class Abstime extends Val
 	/**
 	 * Map millis and timeZone to its component fields.
 	 * 
-	 * Bits0: ------------------------------------------------ Field Num Bits
-	 * Range Loc ------------------------------------------------ Year 16 short
-	 * 16-31 Millis 16 short 0-15
+	 * Bits0: ------------------------------------------------ Field Num Bits Range Loc ------------------------------------------------ Year 16 short 16-31 Millis 16 short 0-15
 	 * 
-	 * Bits1: ------------------------------------------------ Field Num Bits
-	 * Range Loc ------------------------------------------------ Daylight 1 0-1
-	 * 29-29 Month 4 1-12 25-28 Day 5 1-31 20-24 Hour 5 0-23 15-19 Minutes 6
-	 * 0-59 9-14 Seconds 6 0-59 3-8 Weekday 3 0-6 0-2
-	 * ------------------------------------------------
+	 * Bits1: ------------------------------------------------ Field Num Bits Range Loc ------------------------------------------------ Daylight 1 0-1 29-29 Month 4 1-12 25-28 Day 5 1-31 20-24 Hour 5 0-23 15-19 Minutes 6 0-59 9-14 Seconds 6 0-59 3-8
+	 * Weekday 3 0-6 0-2 ------------------------------------------------
 	 */
 	private void millisToFields()
 	{

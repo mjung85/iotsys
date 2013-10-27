@@ -10,8 +10,7 @@ import java.util.logging.Logger;
 import obix.asm.ObixAssembler;
 
 /**
- * ContractRegistry serves a central database for mapping contract URIs to
- * Contract definitions.
+ * ContractRegistry serves a central database for mapping contract URIs to Contract definitions.
  * 
  * @author Brian Frank
  * @creation 27 Apr 05
@@ -20,7 +19,7 @@ import obix.asm.ObixAssembler;
 public class ContractRegistry
 {
 	private static final Logger log = Logger.getLogger(ContractRegistry.class.getName());
-	
+
 	// //////////////////////////////////////////////////////////////
 	// Access
 	// //////////////////////////////////////////////////////////////
@@ -42,9 +41,7 @@ public class ContractRegistry
 	}
 
 	/**
-	 * Lookup a Class which best supports the specified contract (set of URIs).
-	 * The returned class will be subclassed from base and implement any
-	 * interfaces registered for URIs in the specified contract list.
+	 * Lookup a Class which best supports the specified contract (set of URIs). The returned class will be subclassed from base and implement any interfaces registered for URIs in the specified contract list.
 	 */
 	public static Class<?> toClass(Class<?> base, Contract contract)
 	{
@@ -90,9 +87,7 @@ public class ContractRegistry
 	}
 
 	/**
-	 * Search for a registered interface for each URI in the contract list. Then
-	 * dynamically assemble the bytecode for a class which implements all the
-	 * interfaces.
+	 * Search for a registered interface for each URI in the contract list. Then dynamically assemble the bytecode for a class which implements all the interfaces.
 	 */
 	private static Class<?> compile(Class<?> base, Contract contract) throws Exception
 	{
@@ -143,12 +138,13 @@ public class ContractRegistry
 	public static void put(Uri href, String className)
 	{
 		String mappedClassName = map.get(href.get());
-		if (mappedClassName != null) { // already defined
+		if (mappedClassName != null)
+		{ // already defined
 			if (!mappedClassName.equals(className))
 				log.warning("Tried to redefine contract " + href + " (" + mappedClassName + ") to " + className);
 			return;
 		}
-		
+
 		map.put(href.get(), className);
 		cache.clear(); // clear cache
 	}

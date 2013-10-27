@@ -190,7 +190,14 @@ public class GroupCommImpl extends Obj implements GroupComm, Observer{
 					group = (Inet6Address) Inet6Address.getByName(strObj.get());
 					if(!group.equals(MulticastUDPLayer.getMulticastAddress())){
 						log.finest("Sending out update of " + datapoint.getFullContextPath() + " to group " + group);
-						GroupCommServiceImpl.getInstance().sendUpdate(group, (Obj)state);
+						Obj payload = null;
+						try {
+							payload = (Obj) ((Obj)state).clone();
+						} catch (CloneNotSupportedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						GroupCommServiceImpl.getInstance().sendUpdate(group,payload);
 					}
 				} catch (UnknownHostException e) {
 					e.printStackTrace();

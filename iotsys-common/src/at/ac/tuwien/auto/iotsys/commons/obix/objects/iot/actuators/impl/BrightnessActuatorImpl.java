@@ -53,6 +53,7 @@ public class BrightnessActuatorImpl extends ActuatorImpl implements BrightnessAc
 	public BrightnessActuatorImpl(){
 		setIs(new Contract(BrightnessActuator.CONTRACT));
 		value.setWritable(true);
+		value.setDisplayName("Brightness");
 		Uri valueUri = new Uri("value");
 	
 		value.setHref(valueUri);
@@ -64,7 +65,7 @@ public class BrightnessActuatorImpl extends ActuatorImpl implements BrightnessAc
 	
 	public void writeObject(Obj input){
 		// A write on this object was received, update the according data point.		
-		long newVal = 0;
+
 		if(input instanceof BrightnessActuator){
 			BrightnessActuator in = (BrightnessActuator) input;
 			this.value.set(in.value().get());

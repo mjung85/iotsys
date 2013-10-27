@@ -1,6 +1,6 @@
 package at.ac.tuwien.auto.iotsys.gateway.obix.objects.weatherforecast.impl;
 
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.weatherforecast.WeatherForecastUpdateOut;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.weatherforecast.WeatherForecastUpdateOut;
 import obix.*;
 
 public class WeatherForecastUpdateOutImpl extends Obj implements
@@ -15,13 +15,13 @@ public class WeatherForecastUpdateOutImpl extends Obj implements
 	public WeatherForecastUpdateOutImpl(int added, int updated, int count, Abstime start, Abstime end) {
 		setIs(new Contract(WeatherForecastUpdateOut.CONTRACT));
 		
-		numAdded.setSilent(added);
+		numAdded.set(added, false);
 		numAdded.setNull(false);
 		
-		numUpdated.setSilent(updated);
+		numUpdated.set(updated, false);
 		numUpdated.setNull(false);
 		
-		newCount.setSilent(count);
+		newCount.set(count, false);
 		newCount.setNull(false);
 		
 		if (start != null)

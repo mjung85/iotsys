@@ -1,6 +1,6 @@
 package at.ac.tuwien.auto.iotsys.gateway.obix.objects.weatherforecast.impl;
 
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.weatherforecast.WeatherForecastFilter;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.weatherforecast.WeatherForecastFilter;
 import obix.*;
 
 public class WeatherForecastFilterImpl extends Obj implements
@@ -15,7 +15,7 @@ public class WeatherForecastFilterImpl extends Obj implements
 		setIs(new Contract(WeatherForecastFilterImpl.CONTRACT));
 		
 		if (limit > 0)
-			this.limit.setSilent(limit);
+			this.limit.set(limit, false);
 
 		this.limit.setNull(limit <= 0);
 		

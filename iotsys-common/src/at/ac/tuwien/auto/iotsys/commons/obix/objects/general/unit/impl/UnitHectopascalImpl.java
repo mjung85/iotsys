@@ -29,26 +29,20 @@
  * This file is part of the IoTSyS project.
  ******************************************************************************/
 
-package at.ac.tuwien.auto.iotsys.commons.obix.objects.general.enumeration;
+package at.ac.tuwien.auto.iotsys.commons.obix.objects.general.unit.impl;
 
-import obix.contracts.Range;
+import obix.Uri;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.contracts.impl.DimensionImpl;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.contracts.impl.UnitImpl;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.unit.UnitHectopascal;
 
-public interface EnumLanguage extends Range
+public class UnitHectopascalImpl extends UnitImpl implements UnitHectopascal
 {
-	public static final String HREF = "/enums/enumLanguage";
+	public UnitHectopascalImpl()
+	{
+		super("hectopascal", "atmospheric pressure (hPa)", new Uri(UnitHectopascal.HREF), "hPa", 100, 0, new DimensionImpl(1, -1, -2, 0, 0, 0, 0));
 
-	public static final String KEY_EN_EN = "en-EN";
-	public static final String KEY_DE_DE = "de-DE";
-	public static final String KEY_IT_IT = "it-IT";
-	public static final String KEY_ES_ES = "es-ES";
-	public static final String KEY_EN_US = "en-US";
-	public static final String KEY_FR_FR = "fr-FR";
-	public static final String KEY_ID_ID = "id-ID";
-	public static final String KEY_NB_NO = "nb-NO";
-	public static final String KEY_SV_SE = "sv-SE";
-	public static final String KEY_DA_DK = "da-DK";
-	public static final String KEY_NL_NL = "nl-NL";
-	public static final String KEY_EL_GR = "el-GR";
-	public static final String KEY_RU_RU = "ru-RU";
-
+		// Translations
+		addTranslation("de", TranslationAttribute.displayName, "Luftdruck (hPa)");
+	}
 }

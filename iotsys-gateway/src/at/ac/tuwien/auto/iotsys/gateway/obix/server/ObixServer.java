@@ -56,7 +56,7 @@ public interface ObixServer
 	 *            Name of the user who wants to read the object.
 	 * @return XML representation of the object to be read.
 	 */
-	public Obj readObj(URI href, String user);
+	public Obj readObj(URI href, boolean refreshObject);
 
 	/**
 	 * The object specified via the URI is written by pushing it to the object

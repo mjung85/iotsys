@@ -220,6 +220,7 @@ public class BACnetConnector implements Connector{
 				
 				if (objIdentifier.getObjectType().intValue() > 5) continue;
 				Obj bacnetDevice = BacnetDeviceFactory.createDevice(this, device, objIdentifier);
+				
 				if (bacnetDevice == null) continue;
 				
 				String name = objIdentifier.toString().replaceAll(" ", "");

@@ -1,7 +1,7 @@
 package at.ac.tuwien.auto.iotsys.gateway.obix.objects.weatherforecast.impl;
 
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.weatherforecast.WeatherForecastRecord;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.weatherforecast.WeatherForecastUpdateIn;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.weatherforecast.WeatherForecastRecord;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.weatherforecast.WeatherForecastUpdateIn;
 import obix.*;
 
 public class WeatherForecastUpdateInImpl extends Obj implements

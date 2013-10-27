@@ -32,6 +32,9 @@
 
 package at.ac.tuwien.auto.iotsys.commons.util;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+
 public abstract class UriEncoder
 {
 	public static String getEscapedUri(String decodedStr)
@@ -45,15 +48,35 @@ public abstract class UriEncoder
 		tmp = tmp.replace(" ", "_");
 		tmp = tmp.replace("-", "_");
 		tmp = tmp.replace("/", "_");
+		tmp = tmp.replace("ß", "ss");
+		tmp = tmp.replace("ä", "ae");
+		tmp = tmp.replace("ö", "oe");
+		tmp = tmp.replace("ü", "ue");
+		tmp = tmp.replace("²", "2");
+		tmp = tmp.replace("³", "3");
+		tmp = tmp.replace("!", "");
+		tmp = tmp.replace("?", "");
+		tmp = tmp.replace("=", "");
+		tmp = tmp.replace("&", "and");
+		tmp = tmp.replace("$", "");
 		tmp = tmp.replace(",", "");
 		tmp = tmp.replace(".", "");
 		tmp = tmp.replace("(", "");
 		tmp = tmp.replace(")", "");
-		tmp = tmp.replace("ß", "ss");
-		tmp = tmp.replace("ä", "ae");
-		tmp = tmp.replace("ö", "oe");
-		tmp = tmp.replace("ü", "ue");		
+		tmp = tmp.replace("[", "");
+		tmp = tmp.replace("]", "");
+		tmp = tmp.replace("{", "");
+		tmp = tmp.replace("}", "");
 		
+		try
+		{
+			tmp = URLEncoder.encode(tmp, "UTF-8");
+		}
+		catch (UnsupportedEncodingException e)
+		{
+			e.printStackTrace();
+		}
+				
 		return tmp;
 	}
 }

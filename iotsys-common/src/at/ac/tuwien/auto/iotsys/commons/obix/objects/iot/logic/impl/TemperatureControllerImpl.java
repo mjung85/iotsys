@@ -55,34 +55,41 @@ public class TemperatureControllerImpl extends Obj implements
 	public TemperatureControllerImpl() {
 		setIs(new Contract(TemperatureController.CONTRACT));
 		setpoint.setName("setpoint");
+		setpoint.setDisplayName("Set point");
 		setpoint.setHref(new Uri("setpoint"));
 		setpoint.setUnit(new Uri("obix:units/celsius"));
 		setpoint.setWritable(true);
 
 		temperature.setName("temperature");
+		temperature.setDisplayName("Temperature");
 		temperature.setHref(new Uri("temperature"));
 		temperature.setUnit(new Uri("obix:units/celsius"));
 		temperature.setWritable(true);
 
 		controlValue.setName("controlValue");
+		controlValue.setDisplayName("Control value");
 		controlValue.setHref(new Uri("controlValue"));
 		controlValue.setMin(-100);
 		controlValue.setMax(100);
 
 		tolerance.setName("tolerance");
+		tolerance.setDisplayName("Tolerance");
 		tolerance.setHref(new Uri("tolerance"));
 		tolerance.setUnit(new Uri("obix:units/celsius"));
 		tolerance.setWritable(true);
 
 		enabled.setName("enabled");
+		enabled.setDisplayName("Enabled");
 		enabled.setHref(new Uri("enabled"));
 		enabled.setWritable(true);
 		
 		saveEnergyEnabled.setName("saveEnergyEnabled");
+		saveEnergyEnabled.setDisplayName("Save Energy");
 		saveEnergyEnabled.setHref(new Uri("saveEnergyEnabled"));
 		saveEnergyEnabled.setWritable(true);
 		
 		saveEnergyFactor.setName("saveEnergyFactor");
+		saveEnergyFactor.setDisplayName("Save Energy Factor");
 		saveEnergyFactor.setHref(new Uri("saveEnergyFactor"));
 		saveEnergyFactor.setWritable(true);
 		

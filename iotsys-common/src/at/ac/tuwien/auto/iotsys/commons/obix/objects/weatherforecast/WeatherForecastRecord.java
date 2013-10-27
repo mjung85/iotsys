@@ -1,7 +1,5 @@
-package at.ac.tuwien.auto.iotsys.gateway.obix.objects.weatherforecast;
+package at.ac.tuwien.auto.iotsys.commons.obix.objects.weatherforecast;
 
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.weatherforecast.impl.ProbabilityCodeImpl;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.weatherforecast.impl.WeatherSymbolImpl;
 import obix.Enum;
 import obix.*;
 
@@ -12,7 +10,7 @@ public interface WeatherForecastRecord extends IObj {
 	public static final String timestampContract = "<abstime name='timestamp' val='1969-12-31T19:00:00.000-05:00' null='true'/>";
 	public Abstime timestamp();
 
-	public static final String probabilityCodeContract = "<enum name='probabilityCode' null='true' range='" + ProbabilityCodeImpl.CONTRACT + "'/>";
+	public static final String probabilityCodeContract = "<enum name='probabilityCode' null='true' range='" + ProbabilityCode.CONTRACT + "'/>";
 	public Enum probabilityCode();
 
 	public static final String temperatureContract = "<real name='temperature' null='true'/>";
@@ -36,6 +34,6 @@ public interface WeatherForecastRecord extends IObj {
 	public static final String windSpeedContract = "<int name='windSpeed' min='0' max='12' null='true'/>";
 	public Int windSpeed();
 
-	public static final String symbolContract = "<enum name='symbol' null='true' range='" + WeatherSymbolImpl.CONTRACT + "'/>";
+	public static final String symbolContract = "<enum name='symbol' null='true' range='" + WeatherSymbol.CONTRACT + "'/>";
 	public Enum symbol();
 }

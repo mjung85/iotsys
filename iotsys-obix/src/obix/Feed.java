@@ -144,8 +144,7 @@ public class Feed extends Obj
 	 * Set the maximum number of events to store in the feed
 	 * 
 	 * @param maxEvents
-	 *            Maximum number of events. If 0, an unlimited number of events
-	 *            are stored.
+	 *            Maximum number of events. If 0, an unlimited number of events are stored.
 	 */
 	public void setMaxEvents(int maxEvents)
 	{

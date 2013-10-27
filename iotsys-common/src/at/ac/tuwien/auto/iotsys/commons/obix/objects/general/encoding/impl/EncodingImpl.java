@@ -33,60 +33,51 @@ package at.ac.tuwien.auto.iotsys.commons.obix.objects.general.encoding.impl;
 
 import obix.Bool;
 import obix.Int;
+import obix.Obj;
 import obix.Uri;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.contracts.impl.RangeImpl;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.encoding.EncodingOnOff;
 
 public abstract class EncodingImpl extends RangeImpl implements EncodingOnOff
 {
-	protected class BoolElement extends EnumElement
-	{
-		private Bool value;
-
-		public BoolElement(String key, String displayName, boolean value)
-		{
-			super(key, displayName);
-
-			// Value
-			this.value = new Bool();
-			this.value.setName("value");
-			this.value.setHref(new Uri("value"));
-			this.value.set(value);
-			this.add(this.value);
-		}
-
-		public boolean getBool()
-		{
-			return this.value.get();
-		}
-
-	}
-
-	protected class IntElement extends EnumElement
-	{
-		private Int value;
-
-		public IntElement(String key, String displayName, long value)
-		{
-			super(key, displayName);
-
-			// Value
-			this.value = new Int();
-			this.value.setName("value");
-			this.value.setHref(new Uri("value"));
-			this.value.set(value);
-			this.add(this.value);
-		}
-
-		public long getInt()
-		{
-			return this.value.get();
-		}
-
-	}
-
 	public EncodingImpl(Uri href)
 	{
 		super(href);
+	}
+
+	public Obj getValue(obix.Enum in)
+	{
+		if (in != null)
+		{
+			Obj obj = this.getByHref(this.getChildHref(in.get()));
+
+			if (obj != null)
+			{
+				return obj;
+			}
+		}
+		return null;
+	}
+
+	public String getName(Obj value)
+	{
+		for (Obj child : this.list())
+		{
+			if (child instanceof Bool)
+			{
+				if (child.getBool() == value.getBool())
+				{
+					return child.getName();
+				}
+			}
+			else if (child instanceof Int)
+			{
+				if (child.getInt() == value.getInt())
+				{
+					return child.getName();
+				}
+			}
+		}
+		return null;
 	}
 }

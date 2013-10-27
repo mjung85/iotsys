@@ -1,6 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013
- * Institute of Computer Aided Automation, Automation Systems Group, TU Wien.
+ * Copyright (c) 2013, Automation Systems Group, TU Wien.
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -30,63 +29,11 @@
  * This file is part of the IoTSyS project.
  ******************************************************************************/
 
-package at.ac.tuwien.auto.iotsys.commons.obix.objects.general.language.impl;
+package at.ac.tuwien.auto.iotsys.commons.obix.objects.general.unit;
 
-import obix.Contract;
-import obix.Enum;
-import obix.Obj;
-import obix.Str;
-import obix.Uri;
-import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.enumeration.EnumLanguage;
-import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.enumeration.EnumTranslation;
-import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.language.Translation;
+import obix.contracts.Unit;
 
-public class TranslationImpl extends Obj implements Translation
+public interface UnitMeter extends Unit
 {
-	private Enum language;
-	private Enum attribute;
-	private Str value;
-
-	public TranslationImpl(String language, String attribute, String value)
-	{
-		this.setIs(new Contract(Translation.CONTRACT));
-
-		// Language
-		this.language = new Enum();
-		this.language.setName("language");
-		this.language.setHref(new Uri("language"));
-		this.language.setRange(new Uri(EnumLanguage.HREF));
-		this.language.set(language);
-		this.add(this.language);
-
-		// Attribute
-		this.attribute = new Enum();
-		this.attribute.setName("attribute");
-		this.attribute.setHref(new Uri("attribute"));
-		this.attribute.setRange(new Uri(EnumTranslation.HREF));
-		this.attribute.set(attribute);
-		this.add(this.attribute);
-
-		// Attribute
-		this.value = new Str();
-		this.value.setName("value");
-		this.value.setHref(new Uri("value"));
-		this.value.set(value);
-		this.add(this.value);
-	}
-
-	public String getLanguage()
-	{
-		return language.get();
-	}
-
-	public String getAttribute()
-	{
-		return attribute.get();
-	}
-
-	public String getValue()
-	{
-		return value.get();
-	}
+	public static final String HREF = "/units/meter";
 }

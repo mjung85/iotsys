@@ -152,7 +152,10 @@ public class MdnsResolverImpl implements MdnsResolver {
 					subServiceType = c.toString().substring(c.toString().lastIndexOf(".") + 1);
 				}
 			}
-
+		
+		if(subServiceType == null){
+			return;
+		}
 		subServiceType = subServiceType.toLowerCase();
 		ServiceInfo subTypedServiceCoAP = ServiceInfo.create("_obix._coap." + domain, deviceName, "_" + subServiceType, 5683, null);
 		ServiceInfo subTypedServiceHTTP = ServiceInfo.create("_obix._http." + domain, deviceName, "_" + subServiceType, 8080, null);

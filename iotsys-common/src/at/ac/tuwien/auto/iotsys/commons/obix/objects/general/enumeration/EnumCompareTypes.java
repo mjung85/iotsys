@@ -29,11 +29,17 @@
  * This file is part of the IoTSyS project.
  ******************************************************************************/
 
-package at.ac.tuwien.auto.iotsys.commons.obix.objects.general.language;
+package at.ac.tuwien.auto.iotsys.commons.obix.objects.general.enumeration;
 
-import obix.IObj;
+import obix.contracts.Range;
 
-public interface Multilingual extends IObj
+public interface EnumCompareTypes extends Range
 {
-	public static final String CONTRACT = "knx:Multilingual";
+	public static final String HREF = "/enums/compareTypes";
+
+	public static final String KEY_EQ = "eq";
+	public static final String KEY_GTE = "gte";
+	public static final String KEY_GT = "gte";
+	public static final String KEY_LT = "lt";
+	public static final String KEY_LTE = "lte";
 }

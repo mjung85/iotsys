@@ -41,15 +41,15 @@ import obix.Uri;
 public abstract class ViewImpl extends Obj implements IObj
 {
 	private List elements = null;
-	
+
 	public ViewImpl(String name, Uri href, Contract is)
 	{
 		this.setName(name);
-		this.setHref(href);	
+		this.setHref(href);
 		this.setIs(is);
 		this.setHidden(true);
 	}
-	
+
 	protected void addElement(ElementImpl element)
 	{
 		if (this.elements == null)

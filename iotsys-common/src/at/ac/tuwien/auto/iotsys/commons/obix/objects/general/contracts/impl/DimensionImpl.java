@@ -31,85 +31,14 @@
 
 package at.ac.tuwien.auto.iotsys.commons.obix.objects.general.contracts.impl;
 
-import obix.Contract;
-import obix.Int;
-import obix.Obj;
 import obix.contracts.Dimension;
 
-public class DimensionImpl extends Obj implements Dimension
+public class DimensionImpl extends obix.contracts.impl.DimensionImpl implements Dimension
 {
-	private Int kg, m, sec, K, A, mol, cd;
-
 	public DimensionImpl(int kg, int m, int sec, int K, int A, int mol, int cd)
 	{
+		super(kg, m, sec, K, A, mol, cd);
+
 		this.setName("dimension");
-		this.setIs(new Contract(Dimension.CONTRACT));
-		
-		if (kg != 0)
-			this.add(this.kg = new Int("kg",kg));
-
-		if (m != 0)
-			this.add(this.m = new Int("m",m));
-
-		if (sec != 0)
-			this.add(this.sec = new Int("sec",sec));
-
-		if (K != 0)
-			this.add(this.K = new Int("K",K));
-
-		if (A != 0)
-			this.add(this.A = new Int("A",A));
-
-		if (mol != 0)
-			this.add(this.mol = new Int("mol",mol));
-
-		if (cd != 0)
-			this.add(this.cd = new Int("cd",cd));
-	}
-
-	@Override
-	public Int kg()
-	{
-		return kg;
-	}
-
-	@Override
-	public Int m()
-	{
-		return m;
-	}
-
-	@Override
-	public Int sec()
-	{
-		return sec;
-	}
-
-	@Override
-	public Int K()
-	{
-
-		return K;
-	}
-
-	@Override
-	public Int A()
-	{
-
-		return A;
-	}
-
-	@Override
-	public Int mol()
-	{
-
-		return mol;
-	}
-
-	@Override
-	public Int cd()
-	{
-
-		return cd;
 	}
 }

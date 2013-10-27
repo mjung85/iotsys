@@ -72,6 +72,15 @@
         <href>switch3</href>
         <refreshEnabled>false</refreshEnabled>
       </device>
+      
+       
+      <device>
+        <type>at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators.impl.LightSwitchActuatorImpl
+        </type>
+        <href>switch4</href>
+        <refreshEnabled>false</refreshEnabled>
+        <groupCommEnabled>true</groupCommEnabled>
+      </device>
     </connector>
     <connector>
       <name>testDevicesWatch</name>

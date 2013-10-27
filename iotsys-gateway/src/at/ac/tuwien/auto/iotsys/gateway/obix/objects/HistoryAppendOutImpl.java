@@ -67,8 +67,8 @@ public class HistoryAppendOutImpl extends Obj implements HistoryAppendOut {
 		newEnd.setName("newEnd");
 		newEnd.setHref(new Uri("newEnd"));
 		
-		newCount.setSilent(historyRecords.size());
-		numAdded.setSilent(newRecords.size());
+		newCount.set(historyRecords.size(), false);
+		numAdded.set(newRecords.size(), false);
 		
 		if (historyRecords.size() == 0) {
 			newStart.setNull(true);

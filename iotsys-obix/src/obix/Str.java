@@ -23,7 +23,7 @@ public class Str extends Val
 	public Str(String name, String val)
 	{
 		super(name);
-		set(val);
+		set(val, false);
 	}
 
 	/**
@@ -31,7 +31,7 @@ public class Str extends Val
 	 */
 	public Str(String val)
 	{
-		set(val);
+		set(val, false);
 	}
 
 	/**
@@ -39,7 +39,7 @@ public class Str extends Val
 	 */
 	public Str()
 	{
-		set("");
+		set("", false);
 	}
 
 	// //////////////////////////////////////////////////////////////
@@ -55,19 +55,28 @@ public class Str extends Val
 	}
 
 	/**
+	 * Set value and consider notify-flag.
+	 */
+	public void set(String val, boolean notify)
+	{
+		if (val == null)
+			throw new IllegalArgumentException("val cannot be null");
+
+		String oldVal = this.val;
+		this.val = val;
+
+		if (notify && !this.val.equals(oldVal))
+		{
+			notifyObservers();
+		}
+	}
+
+	/**
 	 * Set value.
 	 */
 	public void set(String val)
 	{
-		if (val == null)
-			throw new IllegalArgumentException("val cannot be null");
-		String oldVal = this.val;
-
-		this.val = val;
-		if (!this.val.equals(oldVal))
-		{
-			notifyObservers();
-		}
+		this.set(val, true);
 	}
 
 	// //////////////////////////////////////////////////////////////
@@ -101,9 +110,7 @@ public class Str extends Val
 	}
 
 	/**
-	 * Compares this object with the specified object for order. Returns a
-	 * negative integer, zero, or a positive integer as this object is less
-	 * than, equal to, or greater than the specified object.
+	 * Compares this object with the specified object for order. Returns a negative integer, zero, or a positive integer as this object is less than, equal to, or greater than the specified object.
 	 */
 	public int compareTo(Object that)
 	{

@@ -515,7 +515,7 @@ public class ProcessCommunicatorImpl implements ProcessCommunicator
 	 * @param apdu application layer protocol data unit, 2 &lt;= apdu.length
 	 * @param t the DPT translator to fill with the ASDU
 	 */
-	private static void extractGroupASDU(byte[] apdu, DPTXlator t)
+	public static void extractGroupASDU(byte[] apdu, DPTXlator t)
 	{
 		if (apdu.length < 2)
 			throw new KNXIllegalArgumentException("minimum APDU length is 2 bytes");

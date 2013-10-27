@@ -50,7 +50,7 @@ public class EntitiesImpl extends List implements Entities
 	{
 		this.setName("entities");
 		this.setIs(new Contract(Entities.CONTRACT));
-		this.setOf(new Contract(Entity.CONTRACT));
+		this.setOf(new Contract(new String[] { "obix:ref", Entity.CONTRACT }));
 		this.setHref(new Uri("entities"));
 		this.setHidden(true);
 
@@ -61,22 +61,24 @@ public class EntitiesImpl extends List implements Entities
 	{
 		if (entity instanceof Obj)
 		{
-			entity.setHref(getHref(entity.getDisplayName()));
-			this.add((Obj)entity);
-			this.add(entity.getReference(false));
+			entity.setHref(getHref(entity));
+			this.add((Obj) entity);
+			this.add(entity.getReference());
 		}
 	}
 
-	private Uri getHref(String displayName)
+	private Uri getHref(Obj entity)
 	{
 		int count = 1;
+		String uri = UriEncoder.getEscapedUri(entity.getDisplayName());
+
 		for (Entity e : entities)
 		{
-			if (UriEncoder.getEscapedUri(e.getDisplayName()).equals(UriEncoder.getEscapedUri(displayName)))
+			if (UriEncoder.getEscapedUri(e.getDisplayName()).equals(uri))
 			{
 				count++;
 			}
 		}
-		return new Uri(UriEncoder.getEscapedUri(displayName) + "/" + count);
+		return new Uri(uri + "/" + count);
 	}
 }

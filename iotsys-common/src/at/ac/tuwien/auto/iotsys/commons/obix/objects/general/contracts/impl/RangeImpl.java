@@ -33,36 +33,73 @@ package at.ac.tuwien.auto.iotsys.commons.obix.objects.general.contracts.impl;
 
 import java.util.ArrayList;
 
+import obix.Bool;
 import obix.Contract;
+import obix.IObj;
+import obix.Int;
 import obix.List;
+import obix.Obj;
 import obix.Uri;
 import obix.contracts.Range;
-import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.language.impl.MultilingualImpl;
+import at.ac.tuwien.auto.iotsys.commons.util.UriEncoder;
 
 public abstract class RangeImpl extends List implements Range
 {
-	protected class EnumElement extends MultilingualImpl
+	public interface RangeElement extends IObj
 	{
-		private String key;
+	}
 
-		public EnumElement(String key, String displayName)
+	protected class ObjElement extends Obj implements RangeElement
+	{
+		public ObjElement(String key)
 		{
-			super();
-			
-			this.key = key;
-
-			this.setName(key);
-			this.setHref(new Uri(key));
-			this.setDisplayName(displayName);
+			this(key, null);
 		}
 
-		public String getKey()
+		public ObjElement(String key, String displayName)
 		{
-			return key;
+			this.setName(key);
+			this.setHref(new Uri(UriEncoder.getEscapedUri(key)));
+
+			if (displayName != null)
+				this.setDisplayName(displayName);
 		}
 	}
 
-	private ArrayList<EnumElement> elements;
+	protected class BoolElement extends Bool implements RangeElement
+	{
+		public BoolElement(String key, String displayName, boolean value)
+		{
+			this.setName(key);
+			this.setHref(new Uri(UriEncoder.getEscapedUri(key)));
+
+			if (displayName != null)
+				this.setDisplayName(displayName);
+
+			this.set(value);
+		}
+	}
+
+	protected class IntElement extends Int implements RangeElement
+	{
+		public IntElement(String key, int value)
+		{
+			this(key, null, value);
+		}
+
+		public IntElement(String key, String displayName, int value)
+		{
+			this.setName(key);
+			this.setHref(new Uri(UriEncoder.getEscapedUri(key)));
+
+			if (displayName != null)
+				this.setDisplayName(displayName);
+
+			this.set(value);
+		}
+	}
+
+	private ArrayList<RangeElement> elements;
 
 	public RangeImpl(Uri href)
 	{
@@ -70,44 +107,94 @@ public abstract class RangeImpl extends List implements Range
 		this.setIs(new Contract(Range.CONTRACT));
 		this.setHidden(true);
 
-		this.elements = new ArrayList<EnumElement>();
+		this.elements = new ArrayList<RangeElement>();
 
 		this.initValues();
 
-		for (EnumElement e : elements)
+		for (RangeElement e : elements)
 		{
-			this.add(e);
+			if (e instanceof Obj)
+			{
+				this.add((Obj) e);
+			}
 		}
 	}
 
 	protected abstract void initValues();
 
-	protected ArrayList<EnumElement> getElements()
+	protected void addElement(RangeElement element)
 	{
-		return elements;
+		elements.add(element);
 	}
 
 	public String getKey(String name)
 	{
-		for (EnumElement e : elements)
+		// search key by name
+		for (RangeElement e : elements)
+		{
+			if ((e.getDisplayName() != null && e.getDisplayName().toLowerCase().equals(name.toLowerCase())) || (e.getDisplayName() == null && e.getName().toLowerCase().equals(name.toLowerCase())))
+			{
+				return e.getName();
+			}
+		}
+
+		// search key in list of keys
+		for (RangeElement e : elements)
 		{
 			if (e.getName().toLowerCase().equals(name.toLowerCase()))
 			{
-				return e.getKey();
+				return e.getName();
 			}
 		}
+
 		return null;
 	}
 
 	public String getName(String key)
 	{
-		for (EnumElement e : elements)
+		for (RangeElement e : elements)
 		{
-			if (e.getKey().toLowerCase().equals(key.toLowerCase()))
+			if (e.getName().toLowerCase().equals(key.toLowerCase()))
 			{
+				if (e.getDisplayName() != null)
+					return e.getDisplayName();
 				return e.getName();
 			}
 		}
 		return null;
+	}
+
+	public boolean getBool(String key)
+	{
+		for (RangeElement e : elements)
+		{
+			if (e instanceof BoolElement)
+			{
+				BoolElement b = (BoolElement) e;
+
+				if (e.getName().toLowerCase().equals(key.toLowerCase()))
+				{
+					return b.get();
+				}
+			}
+		}
+		return false;
+	}
+
+	public long getInt(String key)
+	{
+		for (RangeElement e : elements)
+		{
+			if (e instanceof IntElement)
+			{
+				IntElement i = (IntElement) e;
+
+				if (e.getName().toLowerCase().equals(key.toLowerCase()))
+				{
+					return i.get();
+				}
+			}
+		}
+		return 0;
 	}
 }

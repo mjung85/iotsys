@@ -31,7 +31,7 @@
 
 package at.ac.tuwien.auto.iotsys.commons.obix.objects.general.enumeration.impl;
 
-import java.util.HashMap;
+import java.util.TreeMap;
 
 import obix.Contract;
 import obix.IObj;
@@ -39,45 +39,58 @@ import obix.List;
 import obix.Uri;
 import obix.contracts.Range;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.contracts.impl.RangeImpl;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.enumeration.EnumCompareTypes;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.enumeration.EnumConnector;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.enumeration.EnumEnabled;
-import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.enumeration.EnumLanguage;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.enumeration.EnumLogicOperationTypes;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.enumeration.EnumOperationTypes;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.enumeration.EnumPart;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.enumeration.EnumPriority;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.enumeration.EnumProbabilityCode;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.enumeration.EnumStandard;
-import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.enumeration.EnumTranslation;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.enumeration.EnumWeatherSymbol;
 
 public class EnumsImpl extends List implements IObj
 {
-	private HashMap<String, RangeImpl> enums;
-	
-	public EnumsImpl()
+	private TreeMap<String, RangeImpl> enums;
+
+	private static final EnumsImpl instance = new EnumsImpl();
+
+	private EnumsImpl()
 	{
 		this.setName("enums");
 		this.setOf(new Contract(Range.CONTRACT));
 		this.setHref(new Uri("/enums"));
 
 		// Create enumerations
-		enums = new HashMap<String, RangeImpl>();
+		enums = new TreeMap<String, RangeImpl>();
 
+		enums.put(EnumCompareTypes.HREF, new EnumCompareTypesImpl());
 		enums.put(EnumConnector.HREF, new EnumConnectorImpl());
 		enums.put(EnumEnabled.HREF, new EnumEnabledImpl());
-		enums.put(EnumLanguage.HREF, new EnumLanguageImpl());
+		enums.put(EnumLogicOperationTypes.HREF, new EnumLogicOperationTypesImpl());
+		enums.put(EnumOperationTypes.HREF, new EnumOperationTypesImpl());
 		enums.put(EnumPart.HREF, new EnumPartImpl());
 		enums.put(EnumPriority.HREF, new EnumPriorityImpl());
+		enums.put(EnumProbabilityCode.HREF, new EnumProbabilityCodeImpl());
 		enums.put(EnumStandard.HREF, new EnumStandardImpl());
-		enums.put(EnumTranslation.HREF, new EnumTranslationImpl());
-		
+		enums.put(EnumWeatherSymbol.HREF, new EnumWeatherSymbolImpl());
+
 		// Add enumerations
-		for(RangeImpl e: enums.values())
+		for (RangeImpl e : enums.values())
 		{
 			e.setHref(e.getRelativePath());
-			
+
 			this.add(e);
-			this.add(e.getReference(false));
+			this.add(e.getReference());
 		}
 	}
-	
+
+	public static EnumsImpl getInstance()
+	{
+		return instance;
+	}
+
 	public RangeImpl getEnum(String href)
 	{
 		return enums.get(href);

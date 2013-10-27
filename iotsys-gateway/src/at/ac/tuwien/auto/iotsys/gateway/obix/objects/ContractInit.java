@@ -53,13 +53,9 @@ import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.entity.Entities;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.entity.Entity;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.enumeration.EnumConnector;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.enumeration.EnumEnabled;
-import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.enumeration.EnumLanguage;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.enumeration.EnumPart;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.enumeration.EnumPriority;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.enumeration.EnumStandard;
-import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.enumeration.EnumTranslation;
-import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.language.Multilingual;
-import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.language.Translation;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.network.Network;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.parameter.ParameterDimming;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.unit.UnitCelsius;
@@ -98,67 +94,50 @@ import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.sensors.SmartMeter;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.sensors.SunIntensitySensor;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.sensors.TemperatureSensor;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.sim.HVACSimulation;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.weatherforecast.WeatherForecast;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.weatherforecast.WeatherForecastCrawler;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.weatherforecast.WeatherForecastFilter;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.weatherforecast.WeatherForecastLocation;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.weatherforecast.WeatherForecastQueryResult;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.weatherforecast.WeatherForecastRecord;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.weatherforecast.WeatherForecastUpdateIn;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.weatherforecast.WeatherForecastUpdateOut;
 import at.ac.tuwien.auto.iotsys.gateway.obix.groupcomm.GroupComm;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.weatherforecast.WeatherForecast;
 //import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.ChillerActuator;
 //import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.HeatPumpActuator;
 //import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.TemperatureControlActuator;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.weatherforecast.WeatherForecastCrawler;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.weatherforecast.WeatherForecastFilter;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.weatherforecast.WeatherForecastLocation;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.weatherforecast.WeatherForecastQueryResult;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.weatherforecast.WeatherForecastRecord;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.weatherforecast.WeatherForecastUpdateIn;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.weatherforecast.WeatherForecastUpdateOut;
 
-public class ContractInit {
+public class ContractInit
+{
 
-	public static void init() {
-		try {
-			ContractRegistry.put(LightSwitchActuator.CONTRACT,
-					LightSwitchActuator.class.getName());
-			ContractRegistry.put(BrightnessActuator.CONTRACT,
-					BrightnessActuator.class.getName());
-			ContractRegistry.put(PushButton.CONTRACT,
-					PushButton.class.getName());
-			ContractRegistry.put(TemperatureSensor.CONTRACT,
-					TemperatureSensor.class.getName());
+	public static void init()
+	{
+		try
+		{
+			ContractRegistry.put(LightSwitchActuator.CONTRACT, LightSwitchActuator.class.getName());
+			ContractRegistry.put(BrightnessActuator.CONTRACT, BrightnessActuator.class.getName());
+			ContractRegistry.put(PushButton.CONTRACT, PushButton.class.getName());
+			ContractRegistry.put(TemperatureSensor.CONTRACT, TemperatureSensor.class.getName());
 
 			// Sensor
-			ContractRegistry.put(ShuttersAndBlindsSunblindSensor.CONTRACT,
-					ShuttersAndBlindsSunblindSensor.class.getName());
-			ContractRegistry.put(PresenceDetectorSensor.CONTRACT,
-					PresenceDetectorSensor.class.getName());
-			ContractRegistry.put(RoomRelativeHumiditySensor.CONTRACT,
-					RoomRelativeHumiditySensor.class.getName());
-			ContractRegistry.put(SunIntensitySensor.CONTRACT,
-					SunIntensitySensor.class.getName());
-			ContractRegistry.put(SmartMeter.CONTRACT,
-					SmartMeter.class.getName());
-			ContractRegistry.put(IndoorBrightnessSensor.CONTRACT,
-					IndoorBrightnessSensor.class.getName());
-			ContractRegistry.put(OutsideTemperatureSensor.CONTRACT,
-					OutsideTemperatureSensor.class.getName());
+			ContractRegistry.put(ShuttersAndBlindsSunblindSensor.CONTRACT, ShuttersAndBlindsSunblindSensor.class.getName());
+			ContractRegistry.put(PresenceDetectorSensor.CONTRACT, PresenceDetectorSensor.class.getName());
+			ContractRegistry.put(RoomRelativeHumiditySensor.CONTRACT, RoomRelativeHumiditySensor.class.getName());
+			ContractRegistry.put(SunIntensitySensor.CONTRACT, SunIntensitySensor.class.getName());
+			ContractRegistry.put(SmartMeter.CONTRACT, SmartMeter.class.getName());
+			ContractRegistry.put(IndoorBrightnessSensor.CONTRACT, IndoorBrightnessSensor.class.getName());
+			ContractRegistry.put(OutsideTemperatureSensor.CONTRACT, OutsideTemperatureSensor.class.getName());
 
 			// Actuator
-			ContractRegistry.put(ComplexSunblindActuator.CONTRACT,
-					ComplexSunblindActuator.class.getName());
-			ContractRegistry.put(FanSpeedActuator.CONTRACT,
-					FanSpeedActuator.class.getName());
-			ContractRegistry.put(HVACvalveActuator.CONTRACT,
-					HVACvalveActuator.class.getName());
-			ContractRegistry.put(AirDamperActuator.CONTRACT,
-					AirDamperActuator.class.getName());
-			ContractRegistry.put(BoilerActuator.CONTRACT,
-					BoilerActuator.class.getName());
-			ContractRegistry.put(CoolerActuator.CONTRACT,
-					CoolerActuator.class.getName());
-			ContractRegistry.put(PumpActuator.CONTRACT,
-					PumpActuator.class.getName());
-			ContractRegistry.put(SunblindActuator.CONTRACT,
-					SunblindActuator.class.getName());
-			ContractRegistry.put(SimpleHVACvalveActuator.CONTRACT,
-					SimpleHVACvalveActuator.class.getName());
+			ContractRegistry.put(ComplexSunblindActuator.CONTRACT, ComplexSunblindActuator.class.getName());
+			ContractRegistry.put(FanSpeedActuator.CONTRACT, FanSpeedActuator.class.getName());
+			ContractRegistry.put(HVACvalveActuator.CONTRACT, HVACvalveActuator.class.getName());
+			ContractRegistry.put(AirDamperActuator.CONTRACT, AirDamperActuator.class.getName());
+			ContractRegistry.put(BoilerActuator.CONTRACT, BoilerActuator.class.getName());
+			ContractRegistry.put(CoolerActuator.CONTRACT, CoolerActuator.class.getName());
+			ContractRegistry.put(PumpActuator.CONTRACT, PumpActuator.class.getName());
+			ContractRegistry.put(SunblindActuator.CONTRACT, SunblindActuator.class.getName());
+			ContractRegistry.put(SimpleHVACvalveActuator.CONTRACT, SimpleHVACvalveActuator.class.getName());
 
 			ContractRegistry.put(GroupComm.CONTRACT, GroupComm.class.getName());
 			// ContractRegistry.put(TemperatureControlActuator.CONTRACT,
@@ -169,32 +148,21 @@ public class ContractInit {
 			// HeatPumpActuator.class.getName());
 
 			// Generic Bacnet
-			ContractRegistry.put(AnalogInput.CONTRACT,
-					AnalogInput.class.getName());
-			ContractRegistry.put(AnalogOutput.CONTRACT,
-					AnalogOutput.class.getName());
-			ContractRegistry.put(AnalogValue.CONTRACT,
-					AnalogValue.class.getName());
-			ContractRegistry.put(BinaryInput.CONTRACT,
-					BinaryInput.class.getName());
-			ContractRegistry.put(BinaryOutput.CONTRACT,
-					BinaryOutput.class.getName());
-			ContractRegistry.put(BinaryValue.CONTRACT,
-					BinaryValue.class.getName());
+			ContractRegistry.put(AnalogInput.CONTRACT, AnalogInput.class.getName());
+			ContractRegistry.put(AnalogOutput.CONTRACT, AnalogOutput.class.getName());
+			ContractRegistry.put(AnalogValue.CONTRACT, AnalogValue.class.getName());
+			ContractRegistry.put(BinaryInput.CONTRACT, BinaryInput.class.getName());
+			ContractRegistry.put(BinaryOutput.CONTRACT, BinaryOutput.class.getName());
+			ContractRegistry.put(BinaryValue.CONTRACT, BinaryValue.class.getName());
 
 			// Logic components
-			ContractRegistry.put(Comparator.CONTRACT,
-					Comparator.class.getName());
-			ContractRegistry.put(TemperatureController.CONTRACT,
-					TemperatureController.class.getName());
-			ContractRegistry.put(BinaryOperation.CONTRACT,
-					BinaryOperation.class.getName());
-			ContractRegistry.put(LogicBinaryOperation.CONTRACT,
-					LogicBinaryOperation.class.getName());
+			ContractRegistry.put(Comparator.CONTRACT, Comparator.class.getName());
+			ContractRegistry.put(TemperatureController.CONTRACT, TemperatureController.class.getName());
+			ContractRegistry.put(BinaryOperation.CONTRACT, BinaryOperation.class.getName());
+			ContractRegistry.put(LogicBinaryOperation.CONTRACT, LogicBinaryOperation.class.getName());
 
 			// Simulation
-			ContractRegistry.put(HVACSimulation.CONTRACT,
-					HVACSimulation.class.getName());
+			ContractRegistry.put(HVACSimulation.CONTRACT, HVACSimulation.class.getName());
 
 			// Gateway Commons
 			ContractRegistry.put(DataPoint.CONTRACT, DataPoint.class.getName());
@@ -211,58 +179,35 @@ public class ContractInit {
 			ContractRegistry.put(Entities.CONTRACT, Entities.class.getName());
 			ContractRegistry.put(Entity.CONTRACT, Entity.class.getName());
 
+			ContractRegistry.put(ParameterDimming.CONTRACT, ParameterDimming.class.getName());
+
 			// FIXME the following contracts have already used hrefs
 			// (obix:Range)
-			ContractRegistry.put(EnumConnector.CONTRACT,
-					EnumConnector.class.getName());
-			ContractRegistry.put(EnumEnabled.CONTRACT,
-					EnumEnabled.class.getName());
-			ContractRegistry.put(EnumLanguage.CONTRACT,
-					EnumLanguage.class.getName());
+			ContractRegistry.put(EnumConnector.CONTRACT, EnumConnector.class.getName());
+			ContractRegistry.put(EnumEnabled.CONTRACT, EnumEnabled.class.getName());
 			ContractRegistry.put(EnumPart.CONTRACT, EnumPart.class.getName());
-			ContractRegistry.put(EnumPriority.CONTRACT,
-					EnumPriority.class.getName());
-			ContractRegistry.put(EnumStandard.CONTRACT,
-					EnumStandard.class.getName());
-			ContractRegistry.put(EnumTranslation.CONTRACT,
-					EnumTranslation.class.getName());
+			ContractRegistry.put(EnumPriority.CONTRACT, EnumPriority.class.getName());
+			ContractRegistry.put(EnumStandard.CONTRACT, EnumStandard.class.getName());
 
-			ContractRegistry.put(EncodingOnOff.CONTRACT,
-					EncodingOnOff.class.getName());
-
-			ContractRegistry.put(Multilingual.CONTRACT,
-					Multilingual.class.getName());
-			ContractRegistry.put(Translation.CONTRACT,
-					Translation.class.getName());
+			ContractRegistry.put(EncodingOnOff.CONTRACT, EncodingOnOff.class.getName());
 
 			ContractRegistry.put(Network.CONTRACT, Network.class.getName());
 
-			ContractRegistry.put(ParameterDimming.CONTRACT,
-					ParameterDimming.class.getName());
+			ContractRegistry.put(ParameterDimming.CONTRACT, ParameterDimming.class.getName());
 
 			// Weather forecast
-			ContractRegistry.put(WeatherForecastCrawler.CONTRACT,
-					WeatherForecastCrawler.class.getName());
-			ContractRegistry.put(WeatherForecastFilter.CONTRACT,
-					WeatherForecastFilter.class.getName());
-			ContractRegistry.put(WeatherForecast.CONTRACT,
-					WeatherForecast.class.getName());
-			ContractRegistry.put(WeatherForecastLocation.CONTRACT,
-					WeatherForecastLocation.class.getName());
-			ContractRegistry.put(WeatherForecastQueryResult.CONTRACT,
-					WeatherForecastQueryResult.class.getName());
-			ContractRegistry.put(WeatherForecastRecord.CONTRACT,
-					WeatherForecastRecord.class.getName());
-			ContractRegistry.put(WeatherForecastUpdateIn.CONTRACT,
-					WeatherForecastUpdateIn.class.getName());
-			ContractRegistry.put(WeatherForecastUpdateOut.CONTRACT,
-					WeatherForecastUpdateOut.class.getName());
+			ContractRegistry.put(WeatherForecastCrawler.CONTRACT, WeatherForecastCrawler.class.getName());
+			ContractRegistry.put(WeatherForecastFilter.CONTRACT, WeatherForecastFilter.class.getName());
+			ContractRegistry.put(WeatherForecast.CONTRACT, WeatherForecast.class.getName());
+			ContractRegistry.put(WeatherForecastLocation.CONTRACT, WeatherForecastLocation.class.getName());
+			ContractRegistry.put(WeatherForecastQueryResult.CONTRACT, WeatherForecastQueryResult.class.getName());
+			ContractRegistry.put(WeatherForecastRecord.CONTRACT, WeatherForecastRecord.class.getName());
+			ContractRegistry.put(WeatherForecastUpdateIn.CONTRACT, WeatherForecastUpdateIn.class.getName());
+			ContractRegistry.put(WeatherForecastUpdateOut.CONTRACT, WeatherForecastUpdateOut.class.getName());
 
 			// FIXME the following contracts have already used hrefs (obix:Unit)
-			ContractRegistry.put(UnitCelsius.CONTRACT,
-					UnitCelsius.class.getName());
-			ContractRegistry.put(UnitPercent.CONTRACT,
-					UnitPercent.class.getName());
+			ContractRegistry.put(UnitCelsius.CONTRACT, UnitCelsius.class.getName());
+			ContractRegistry.put(UnitPercent.CONTRACT, UnitPercent.class.getName());
 			ContractRegistry.put(UnitPpm.CONTRACT, UnitPpm.class.getName());
 
 			ContractRegistry.put(Area.CONTRACT, Area.class.getName());
@@ -270,16 +215,14 @@ public class ContractInit {
 			ContractRegistry.put(Group.CONTRACT, Group.class.getName());
 			ContractRegistry.put(Part.CONTRACT, Part.class.getName());
 
-			ContractRegistry.put(ViewBuilding.CONTRACT,
-					ViewBuilding.class.getName());
-			ContractRegistry.put(ViewDomains.CONTRACT,
-					ViewDomains.class.getName());
-			ContractRegistry.put(ViewFunctional.CONTRACT,
-					ViewFunctional.class.getName());
-			ContractRegistry.put(ViewTopology.CONTRACT,
-					ViewTopology.class.getName());
+			ContractRegistry.put(ViewBuilding.CONTRACT, ViewBuilding.class.getName());
+			ContractRegistry.put(ViewDomains.CONTRACT, ViewDomains.class.getName());
+			ContractRegistry.put(ViewFunctional.CONTRACT, ViewFunctional.class.getName());
+			ContractRegistry.put(ViewTopology.CONTRACT, ViewTopology.class.getName());
 
-		} finally {
+		}
+		finally
+		{
 			ContractRegistry.buildReverseMap();
 		}
 	}

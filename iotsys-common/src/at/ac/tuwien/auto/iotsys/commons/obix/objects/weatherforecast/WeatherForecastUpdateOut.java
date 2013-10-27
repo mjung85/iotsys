@@ -1,4 +1,4 @@
-package at.ac.tuwien.auto.iotsys.gateway.obix.objects.weatherforecast;
+package at.ac.tuwien.auto.iotsys.commons.obix.objects.weatherforecast;
 
 import obix.*;
 
