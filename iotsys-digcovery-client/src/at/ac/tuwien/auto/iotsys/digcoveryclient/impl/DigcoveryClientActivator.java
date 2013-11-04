@@ -48,18 +48,14 @@ public class DigcoveryClientActivator implements BundleActivator{
 	
 	@Override
 	public void start(BundleContext bundleContext) throws Exception {
-		log.info("Starting IoTSySGateway.");
-		
 		this.context = bundleContext;
 		
-		DigcoveryClientImpl digCoverClientImpl = new DigcoveryClientImpl();
+		digCoveryClientImpl = new DigcoveryClientImpl();
 
-		bundleContext.registerService(DigcoveryClient.class.getName(), digCoverClientImpl, null);
 
-		log.info("================================");
-		log.info("Register InterceptorBroker");
+		log.info("Registering Digcovery Client!");
+		bundleContext.registerService(DigcoveryClient.class.getName(), digCoveryClientImpl, null);
 
-		bundleContext.registerService(DigcoveryClient.class.getName(),digCoveryClientImpl, null);
 	}
 
 	@Override
