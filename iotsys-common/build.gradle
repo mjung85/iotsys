@@ -67,6 +67,7 @@ sourceSets {
 
 dependencies {
 	provided project(':iotsys-obix')
+	provided project(':iotsys-digcovery-client-if')
 	
 	compile group: 'commons-beanutils', name: 'commons-beanutils', version: '1.8.3'
 	compile group: 'commons-codec', name: 'commons-codec', version: '1.6'

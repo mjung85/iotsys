@@ -50,5 +50,5 @@ dependencies {
 	provided project(':iotsys-common')
 	provided project(':iotsys-osgi')
 	 
-	compile ':cf-client-0.13.3-SNAPSHOT:'
+	compile ':cf-client-0.12.0-SNAPSHOT:'
 }
