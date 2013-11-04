@@ -32,10 +32,12 @@
 
 package at.ac.tuwien.auto.iotsys.digcoveryclient.impl;
 
+import java.io.IOException;
 import java.util.logging.Logger;
 
 import ch.ethz.inf.vs.californium.coap.DELETERequest;
 import ch.ethz.inf.vs.californium.coap.PUTRequest;
+import ch.ethz.inf.vs.californium.coap.Response;
 import at.ac.tuwien.auto.iotsys.commons.PropertiesLoader;
 import at.ac.tuwien.auto.iotsys.digcoveryclient.DigcoveryClient;
 
@@ -49,6 +51,8 @@ public class DigcoveryClientImpl implements DigcoveryClient{
 	public void registerDevice(String ep, String domain, String addr,
 			String protocol, String port, String latitute, String longitute, String cityName) {
 		StringBuilder queryString = new StringBuilder(DIGCOVERY_ENDPOINT);
+		log.info("Digcovery client registering devices: " + ep + ", domain: " + domain + ", addr: " + addr + ", protocol: " + protocol + ", port: " + port + 
+				latitute + ", longitute: " + longitute + ", cityName: " + cityName);
 		
 		if(ep == null || ep.length() == 0){
 			log.severe("Endpoint parameter is mandatory - stopping device registration.");
@@ -90,8 +94,33 @@ public class DigcoveryClientImpl implements DigcoveryClient{
 		log.info("Registering device with request: " + queryString);
 		
 		putRequest.setURI(queryString.toString());
+		
+		putRequest.enableResponseQueue(true);
 			
-		putRequest.send();
+		//putRequest.send();
+		
+		try {
+			putRequest.execute();
+			
+			// receive response			
+			log.info("Receiving response...");
+			Response response = null;
+			try {
+				response = putRequest.receiveResponse();
+			} catch (InterruptedException e) {
+				System.err.println("Failed to receive response: " + e.getMessage());				
+			}
+
+			// output response
+			if (response != null) {
+				response.prettyPrint();
+				log.info("Time elapsed (ms): " + response.getRTT());
+			}
+			
+		} catch (IOException e) {			
+			e.printStackTrace();
+		}
+		
 			
 	}
 
@@ -113,7 +142,11 @@ public class DigcoveryClientImpl implements DigcoveryClient{
 		DELETERequest delRequest = new DELETERequest();
 		delRequest.setURI(queryString.toString());
 		
-		delRequest.send();					
+		try {
+			delRequest.execute();
+		} catch (IOException e) {			
+			e.printStackTrace();
+		}					
 	}
 
 
@@ -135,8 +168,11 @@ public class DigcoveryClientImpl implements DigcoveryClient{
 		DELETERequest delRequest = new DELETERequest();
 		delRequest.setURI(queryString.toString());
 		
-		delRequest.send();
-		
+		try {
+			delRequest.execute();
+		} catch (IOException e) {			
+			e.printStackTrace();
+		}		
 	}
 	
 }

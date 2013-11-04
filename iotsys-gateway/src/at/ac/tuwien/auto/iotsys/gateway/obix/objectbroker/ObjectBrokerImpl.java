@@ -175,8 +175,9 @@ public class ObjectBrokerImpl implements ObjectBroker
 				resolver.addToRecordDict(href, ipv6Address);
 				resolver.registerDevice(href, o.getClass(), ipv6Address);
 			}
+			
 			if(digcoveryClient != null){
-				digcoveryClient.registerDevice(href, "iotsys.auto.tuwien.ac.at", ipv6Address, "_coap._udp", "5683", "48.2083", "16.3731", "Vienna");
+				digcoveryClient.registerDevice(href, "auto.tuwien.ac.at", ipv6Address, "_coap._udp", "5683", "48.2083", "16.3731", "Vienna");
 			}
 
 		}
