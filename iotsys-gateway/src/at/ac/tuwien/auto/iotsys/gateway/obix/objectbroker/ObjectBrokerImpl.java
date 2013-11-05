@@ -177,7 +177,11 @@ public class ObjectBrokerImpl implements ObjectBroker
 			}
 			
 			if(digcoveryClient != null){
-				digcoveryClient.registerDevice(href, "auto.tuwien.ac.at", ipv6Address, "_coap._udp", "5683", "48.2083", "16.3731", "Vienna");
+				log.info("Registering IPv6 object at Digcovery");
+				digcoveryClient.registerDevice(o.getName(), "auto.tuwien.ac.at", ipv6Address, "_coap._udp", "5683", "48.2083", "16.3731", "Vienna");
+			}
+			else{
+				log.info("No digcovery available!.");
 			}
 
 		}
@@ -229,9 +233,17 @@ public class ObjectBrokerImpl implements ObjectBroker
 	public synchronized void removeObj(String href)
 	{
 		Obj toRemove = pullObj(new Uri(href), false);
+		
+		if(ipv6Mapping.containsValue(href) && digcoveryClient != null){
+			log.info("Removing IPv6 from Digcovery.");
+			digcoveryClient.unregisterDevice(toRemove.getName(), "auto.tuwien.ac.at");
+		}
 		toRemove.removeThis();
 
 		iotLobby.removeReference(href);
+		
+		
+		
 		// TODO remove references to descendants of referenced object?
 
 		// TODO deal with group comm objects.

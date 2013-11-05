@@ -70,6 +70,7 @@ public class VirtualBundleActivator implements ServiceListener, BundleActivator 
 				log.info("Initiating Virtual devices.");
 				ObjectBroker objectBroker = (ObjectBroker) context
 						.getService(serviceReference);
+				log.info("Now calling device loader.");
 				connectors = deviceLoader.initDevices(objectBroker);
 				registered = true;
 			}

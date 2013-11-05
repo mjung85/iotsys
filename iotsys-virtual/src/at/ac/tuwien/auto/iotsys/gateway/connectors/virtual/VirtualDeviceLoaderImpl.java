@@ -65,6 +65,7 @@ public class VirtualDeviceLoaderImpl implements DeviceLoader {
 
 	@Override
 	public ArrayList<Connector> initDevices(ObjectBroker objectBroker) {
+		log.info("VirtualDeviceLoaderImpl intiating Devices.");
 		setConfiguration(devicesConfig);
 		
 		// Hard-coded connections and object creation
@@ -270,8 +271,14 @@ public class VirtualDeviceLoaderImpl implements DeviceLoader {
 									
 									virtualObj.setHref(new Uri(URLEncoder.encode(connectorName, "UTF-8") + "/" + href));
 									
+									
+									
 									if(name != null && name.length() > 0 && virtualObj.getName() == null){
 										virtualObj.setName(name);
+									}
+									
+									if(name == null){
+										virtualObj.setName(href);
 									}
 									
 									if(displayName != null && displayName.length() > 0){

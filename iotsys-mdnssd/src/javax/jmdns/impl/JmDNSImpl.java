@@ -1005,7 +1005,7 @@ public class JmDNSImpl extends JmDNS implements DNSStatefulObject, DNSTaskStarte
         this.waitForAnnounced(DNSConstants.SERVICE_INFO_TIMEOUT);
 
         this.makeServiceNameUnique(info);
-        logger.info("PUTING INTO SERVICE REGISTRY: key:" + info.getKey() + " info: " + info.toString());
+        logger.info("PUTTING INTO SERVICE REGISTRY: key:" + info.getKey() + " info: " + info.toString());
         while (_services.putIfAbsent(info.getKey(), info) != null) {
             this.makeServiceNameUnique(info);
         }
