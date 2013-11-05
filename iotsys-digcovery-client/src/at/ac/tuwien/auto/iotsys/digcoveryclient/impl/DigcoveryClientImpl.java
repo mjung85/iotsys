@@ -41,74 +41,82 @@ import ch.ethz.inf.vs.californium.coap.Response;
 import at.ac.tuwien.auto.iotsys.commons.PropertiesLoader;
 import at.ac.tuwien.auto.iotsys.digcoveryclient.DigcoveryClient;
 
-public class DigcoveryClientImpl implements DigcoveryClient{
-	private static final String DIGCOVERY_ENDPOINT = PropertiesLoader.getInstance().getProperties()
-			.getProperty("iotsys.gateway.digcovery.endpoint", "coap://[2001:720:1710:10::1000]:5683/dig");
-	
-	private static final Logger log = Logger.getLogger(DigcoveryClientImpl.class.getName());
-		 
+public class DigcoveryClientImpl implements DigcoveryClient {
+	private static final String DIGCOVERY_ENDPOINT = PropertiesLoader
+			.getInstance()
+			.getProperties()
+			.getProperty("iotsys.gateway.digcovery.endpoint",
+					"coap://[2001:720:1710:10::1000]:5683/dig");
+
+	private static final Logger log = Logger
+			.getLogger(DigcoveryClientImpl.class.getName());
+
 	@Override
 	public void registerDevice(String ep, String domain, String addr,
-			String protocol, String port, String latitute, String longitute, String cityName) {
+			String protocol, String port, String latitute, String longitute,
+			String cityName) {
 		StringBuilder queryString = new StringBuilder(DIGCOVERY_ENDPOINT);
-		log.info("Digcovery client registering devices: " + ep + ", domain: " + domain + ", addr: " + addr + ", protocol: " + protocol + ", port: " + port + 
-				latitute + ", longitute: " + longitute + ", cityName: " + cityName);
-		
-		if(ep == null || ep.length() == 0){
+		log.info("Digcovery client registering devices: " + ep + ", domain: "
+				+ domain + ", addr: " + addr + ", protocol: " + protocol
+				+ ", port: " + port + latitute + ", longitute: " + longitute
+				+ ", cityName: " + cityName);
+
+		if (ep == null || ep.length() == 0) {
 			log.severe("Endpoint parameter is mandatory - stopping device registration.");
-		    return;
+			return;
 		}
-		
-		queryString.append("?ep="+ ep);
-		
-		if(domain != null && domain.length() > 0){
+
+		queryString.append("?ep=" + ep);
+
+		if (domain != null && domain.length() > 0) {
 			queryString.append("&d=" + domain);
 		}
-		
-		if(latitute != null && latitute.length() > 0){
+
+		if (latitute != null && latitute.length() > 0) {
 			queryString.append("&lat=" + latitute);
 		}
-		
-		if(longitute != null && longitute.length() > 0){
+
+		if (longitute != null && longitute.length() > 0) {
 			queryString.append("&long=" + longitute);
 		}
-		
-		if(cityName != null && cityName.length() > 0){
+
+		if (cityName != null && cityName.length() > 0) {
 			queryString.append("&z=" + cityName);
 		}
-		
-		if(protocol != null && protocol.length() > 0){
-			queryString.append("&proto=" + protocol);			
+
+		if (protocol != null && protocol.length() > 0) {
+			queryString.append("&proto=" + protocol);
 		}
-		
-		if(port != null && port.length() > 0){
-			queryString.append("&port=" + port);			
+
+		if (port != null && port.length() > 0) {
+			queryString.append("&port=" + port);
 		}
-		
-		if(addr != null && addr.length() > 0){
-			queryString.append("&addr=" + port);			
+
+		if (addr != null && addr.length() > 0) {
+			queryString.append("&addr=" + addr);
 		}
-		
+
 		PUTRequest putRequest = new PUTRequest();
-		
+
 		log.info("Registering device with request: " + queryString);
-		
+
 		putRequest.setURI(queryString.toString());
-		
+
 		putRequest.enableResponseQueue(true);
-			
-		//putRequest.send();
-		
+
+		// putRequest.send();
+
 		try {
 			putRequest.execute();
-			
-			// receive response			
+
+			// receive response
 			log.info("Receiving response...");
 			Response response = null;
 			try {
 				response = putRequest.receiveResponse();
 			} catch (InterruptedException e) {
-				System.err.println("Failed to receive response: " + e.getMessage());				
+				System.err.println("Failed to receive response: "
+						+ e.getMessage());
 			}
 
 			// output response
@@ -116,63 +124,99 @@ public class DigcoveryClientImpl implements DigcoveryClient{
 				response.prettyPrint();
 				log.info("Time elapsed (ms): " + response.getRTT());
 			}
-			
-		} catch (IOException e) {			
+
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
-			
+
 	}
 
 	@Override
 	public void unregisterDevice(String ep, String domain) {
-		if(domain == null || domain.length() == 0 || ep == null || ep.length() == 0){
+		if (domain == null || domain.length() == 0 || ep == null
+				|| ep.length() == 0) {
 			log.severe("Domain parameter is mandatory - cannot delete device registration.");
-		    return;
+			return;
 		}
 		
-		StringBuilder queryString = new StringBuilder();
-		
-		queryString.append("?ep="+ ep);
-		
-		if(domain != null && domain.length() > 0){
+		log.info("Unregistering at digcovery ep: " + ep + " domain: " + domain);
+
+		StringBuilder queryString = new StringBuilder(DIGCOVERY_ENDPOINT);
+
+		queryString.append("?target=2&ep=" + ep);
+
+		if (domain != null && domain.length() > 0) {
 			queryString.append("&d=" + domain);
 		}
-		
-		DELETERequest delRequest = new DELETERequest();
-		delRequest.setURI(queryString.toString());
-		
-		try {
-			delRequest.execute();
-		} catch (IOException e) {			
-			e.printStackTrace();
-		}					
-	}
 
+		DELETERequest delRequest = new DELETERequest();
+		delRequest.enableResponseQueue(true);
+		delRequest.setURI(queryString.toString());
+
+		try {
+			log.info("Delete request: " + queryString.toString());
+			delRequest.execute();
+
+			// receive response
+			log.info("Receiving response...");
+			Response response = null;
+			try {
+				response = delRequest.receiveResponse();
+			} catch (InterruptedException e) {
+				System.err.println("Failed to receive response: "
+						+ e.getMessage());
+			}
+
+			// output response
+			if (response != null) {
+				response.prettyPrint();
+				log.info("Time elapsed (ms): " + response.getRTT());
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 
 	@Override
 	public void unregisterDomain(String domain) {
-		if(domain == null || domain.length() == 0){
+		if (domain == null || domain.length() == 0) {
 			log.severe("Domain parameter is mandatory - cannot delete device registration.");
-		    return;
+			return;
 		}
-		
-		StringBuilder queryString = new StringBuilder();
-		
-		queryString.append("?d="+ domain);
-		
-		if(domain != null && domain.length() > 0){
+
+		StringBuilder queryString = new StringBuilder(DIGCOVERY_ENDPOINT);
+
+		queryString.append("?target=1&d=" + domain);
+
+		if (domain != null && domain.length() > 0) {
 			queryString.append("&d=" + domain);
 		}
-		
+
 		DELETERequest delRequest = new DELETERequest();
+		delRequest.enableResponseQueue(true);
 		delRequest.setURI(queryString.toString());
-		
+
 		try {
 			delRequest.execute();
-		} catch (IOException e) {			
+
+			// receive response
+			log.info("Receiving response...");
+			Response response = null;
+			try {
+				response = delRequest.receiveResponse();
+			} catch (InterruptedException e) {
+				System.err.println("Failed to receive response: "
+						+ e.getMessage());
+			}
+
+			// output response
+			if (response != null) {
+				response.prettyPrint();
+				log.info("Time elapsed (ms): " + response.getRTT());
+			}
+		} catch (IOException e) {
 			e.printStackTrace();
-		}		
+		}
 	}
-	
+
 }

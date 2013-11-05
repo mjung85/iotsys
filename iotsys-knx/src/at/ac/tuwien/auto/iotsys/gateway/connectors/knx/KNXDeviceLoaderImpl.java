@@ -175,6 +175,10 @@ public class KNXDeviceLoaderImpl implements DeviceLoader {
 													knxDevice.setName(name);
 												}
 												
+												if(name == null){
+													knxDevice.setName(href);
+												}
+												
 												if(displayName != null && displayName.length() > 0){
 													knxDevice.setDisplayName(displayName);
 												}

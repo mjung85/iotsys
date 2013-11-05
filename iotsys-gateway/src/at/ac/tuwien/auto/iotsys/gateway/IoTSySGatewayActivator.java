@@ -89,7 +89,7 @@ public class IoTSySGatewayActivator implements BundleActivator, ServiceListener 
 		if (serviceReference == null) {
 			log.severe("Could not find mDNS-SD Service!");
 		} else {
-			log.info("mDNS-SD service resolved.");
+			log.info(">>>>>>>>>> mDNS-SD service resolved.");
 			resolver = (MdnsResolver) bundleContext
 					.getService(serviceReference);
 			iotsysGateway.setMdnsResolver(resolver);
@@ -100,10 +100,10 @@ public class IoTSySGatewayActivator implements BundleActivator, ServiceListener 
 		if (serviceReferenceDigcovery == null) {
 			log.severe("Could not find the digcovery client service!");
 		} else {
-			log.info("The digcovery client has been found.");
+			log.info(">>>>>>>>>> The digcovery client has been found.");
 			digcoveryClient = (DigcoveryClient) bundleContext
 					.getService(serviceReferenceDigcovery);
-			iotsysGateway.setMdnsResolver(resolver);
+			iotsysGateway.setDigcoveryClient(digcoveryClient);
 		}
 
 		context.addServiceListener(this);
@@ -122,7 +122,7 @@ public class IoTSySGatewayActivator implements BundleActivator, ServiceListener 
 
 		if (event.getType() == ServiceEvent.REGISTERED) {
 			if (objectClass[0].equals(MdnsResolver.class.getName())) {
-
+				
 				log.info(">>>>>>>>>> Mdnssd detected.");
 				resolver = (MdnsResolver) context.getService(event
 						.getServiceReference());
