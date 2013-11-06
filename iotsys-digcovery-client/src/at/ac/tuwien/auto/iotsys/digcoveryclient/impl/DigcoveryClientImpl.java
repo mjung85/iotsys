@@ -143,7 +143,7 @@ public class DigcoveryClientImpl implements DigcoveryClient {
 
 		StringBuilder queryString = new StringBuilder(DIGCOVERY_ENDPOINT);
 
-		queryString.append("?target=2&ep=" + ep);
+		queryString.append("?target=2&ep=_coap._udp." + ep);
 
 		if (domain != null && domain.length() > 0) {
 			queryString.append("&d=" + domain);

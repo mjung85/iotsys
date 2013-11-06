@@ -66,8 +66,7 @@ import at.ac.tuwien.auto.iotsys.xacml.pdp.PDPInterceptorSettings;
  * Standalone class to launch the gateway.
  * 
  */
-public class IoTSySGateway
-{
+public class IoTSySGateway {
 	private ObjectBroker objectBroker;
 	private DeviceLoaderImpl deviceLoader;
 	private InterceptorBroker interceptorBroker;
@@ -76,37 +75,36 @@ public class IoTSySGateway
 
 	private ArrayList<Connector> connectors = new ArrayList<Connector>();
 
-	private static final Logger log = Logger.getLogger(IoTSySGateway.class.getName());
+	private static final Logger log = Logger.getLogger(IoTSySGateway.class
+			.getName());
 
 	private ObixServer obixServer = null;
 
 	private MdnsResolver mdnsResolver;
-	
+
 	private DigcoveryClient digcoveryClient;
 
-	public IoTSySGateway()
-	{
+	public IoTSySGateway() {
 
 	}
 
-	public void startGateway()
-	{
+	public void startGateway() {
 		startGateway(DeviceLoader.DEVICE_CONFIGURATION_LOCATION);
 	}
 
-	public void startGateway(String devicesConfigFile)
-	{
+	public void startGateway(String devicesConfigFile) {
 
 		Log.init();
 		log.info("Server starting.");
 
 		// init exi util
 		ExiUtil.getInstance();
-		
+
 		// init contracts
 		ContractInit.init();
-		
-		String httpPort = PropertiesLoader.getInstance().getProperties().getProperty("iotsys.gateway.http.port", "8080");
+
+		String httpPort = PropertiesLoader.getInstance().getProperties()
+				.getProperty("iotsys.gateway.http.port", "8080");
 
 		log.info("HTTP-Port: " + httpPort);
 
@@ -117,80 +115,78 @@ public class IoTSySGateway
 		objectBroker.setMdnsResolver(mdnsResolver);
 
 		// add initial objects to the database
-		if (devicesConfigFile == null)
-		{
+		if (devicesConfigFile == null) {
 			deviceLoader = new DeviceLoaderImpl();
-		} else
-		{
+		} else {
 			deviceLoader = new DeviceLoaderImpl(devicesConfigFile);
 		}
 		connectors = deviceLoader.initDevices(objectBroker);
 
-		if (objectBroker.getMDnsResolver() != null)
-		{
-			log.info("No of records built: " + objectBroker.getMDnsResolver().getNumberOfRecord());
-		} else
-		{
+		if (objectBroker.getMDnsResolver() != null) {
+			log.info("No of records built: "
+					+ objectBroker.getMDnsResolver().getNumberOfRecord());
+		} else {
 			log.info("No MDNS resolver service found.");
 		}
 
 		interceptorBroker = InterceptorBrokerImpl.getInstance();
 		// initialize interceptor broker
-		boolean enableXacml = Boolean.parseBoolean(PropertiesLoader.getInstance().getProperties().getProperty("iotsys.gateway.xacml", "false"));
+		boolean enableXacml = Boolean.parseBoolean(PropertiesLoader
+				.getInstance().getProperties()
+				.getProperty("iotsys.gateway.xacml", "false"));
 
 		log.info("XACML module enabled: " + enableXacml);
-		if (enableXacml && !isOsgiEnvironment())
-		{
+		if (enableXacml && !isOsgiEnvironment()) {
 			// temporarly register interceptor
-			try
-			{
+			try {
 				// load PDP interceptor if available on class path
 				// load settings for remote pdp
-				boolean remotePdp = Boolean.parseBoolean(PropertiesLoader.getInstance().getProperties().getProperty("iotsys.gateway.xacml.remotePDP", "false"));
+				boolean remotePdp = Boolean
+						.parseBoolean(PropertiesLoader
+								.getInstance()
+								.getProperties()
+								.getProperty("iotsys.gateway.xacml.remotePDP",
+										"false"));
 				// PDPInterceptorSettings.getInstance().setRemotePdp(remotePdp);
 
-				String remotePdpWsdl = PropertiesLoader.getInstance().getProperties().getProperty("iotsys.gateway.xacml.remotePDPWsdl", "");
+				String remotePdpWsdl = PropertiesLoader.getInstance()
+						.getProperties()
+						.getProperty("iotsys.gateway.xacml.remotePDPWsdl", "");
 				// PDPInterceptorSettings.getInstance().setRemotePdpWsdl(remotePdpWsdl);
 				Class pdpSettingsClazz = null;
 
-				try
-				{
-					pdpSettingsClazz = Class.forName("at.ac.tuwien.auto.iotsys.xacml.pdp.PDPInterceptorSettings");
+				try {
+					pdpSettingsClazz = Class
+							.forName("at.ac.tuwien.auto.iotsys.xacml.pdp.PDPInterceptorSettings");
 					log.info("Class found: " + pdpSettingsClazz.getName());
-				} catch (ClassNotFoundException e2)
-				{
+				} catch (ClassNotFoundException e2) {
 					// TODO Auto-generated catch block
 					e2.printStackTrace();
 				}
 
-				if (pdpSettingsClazz != null)
-				{
+				if (pdpSettingsClazz != null) {
 
 					Method getInstance;
-					try
-					{
-						getInstance = pdpSettingsClazz.getDeclaredMethod("getInstance");
-						PDPInterceptorSettings settings = (PDPInterceptorSettings) getInstance.invoke(null, null);
+					try {
+						getInstance = pdpSettingsClazz
+								.getDeclaredMethod("getInstance");
+						PDPInterceptorSettings settings = (PDPInterceptorSettings) getInstance
+								.invoke(null, null);
 						settings.setRemotePdpWsdl(remotePdpWsdl);
 						settings.setRemotePdp(remotePdp);
-					} catch (NoSuchMethodException e)
-					{
+					} catch (NoSuchMethodException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
-					} catch (SecurityException e)
-					{
+					} catch (SecurityException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
-					} catch (IllegalAccessException e)
-					{
+					} catch (IllegalAccessException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
-					} catch (IllegalArgumentException e)
-					{
+					} catch (IllegalArgumentException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
-					} catch (InvocationTargetException e)
-					{
+					} catch (InvocationTargetException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
@@ -198,65 +194,63 @@ public class IoTSySGateway
 				}
 
 				Class clazz = null;
-				try
-				{
-					clazz = Class.forName("at.ac.tuwien.auto.iotsys.xacml.pdp.PDPInterceptor");
-				} catch (ClassNotFoundException e1)
-				{
+				try {
+					clazz = Class
+							.forName("at.ac.tuwien.auto.iotsys.xacml.pdp.PDPInterceptor");
+				} catch (ClassNotFoundException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 
-				if (clazz != null)
-				{
+				if (clazz != null) {
 					Interceptor interceptor;
-					try
-					{
+					try {
 						interceptor = (Interceptor) clazz.newInstance();
 						interceptorBroker.register(interceptor);
-					} catch (InstantiationException e)
-					{
+					} catch (InstantiationException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
-					} catch (IllegalAccessException e)
-					{
+					} catch (IllegalAccessException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 
 				}
-			} catch (ClassAlreadyRegisteredException e)
-			{
+			} catch (ClassAlreadyRegisteredException e) {
 				// silent exceptionhandling
 			}
 		}
 
 		ObixObservingManager.getInstance().setObixServer(obixServer);
 
-		try
-		{
+		try {
 			new CoAPServer(obixServer);
 			new NanoHTTPD(Integer.parseInt(httpPort), obixServer);
-		} catch (IOException ioe)
-		{
+		} catch (IOException ioe) {
 			ioe.printStackTrace();
 		}
 	}
 
-	public void stopGateway()
-	{
+	public void stopGateway() {
 		objectBroker.shutdown();
 		// CsvCreator.instance.close();
 		closeConnectors();
+
+		// register gateway as endpoint
+		if (digcoveryClient != null) {
+			digcoveryClient.unregisterDevice("gateway", "auto.tuwien.ac.at");
+		}
 	}
 
-	public static void main(String[] args)
-	{
+	public static void main(String[] args) {
 		final IoTSySGateway iotsys = new IoTSySGateway();
 		try {
-			Named n = (Named) Class.forName("at.ac.tuwien.auto.iotsys.mdnssd.NamedImpl").newInstance();
-			Class mc = Class.forName("at.ac.tuwien.auto.iotsys.mdnssd.MdnsResolverImpl");
-			MdnsResolver m = (MdnsResolver) mc.getDeclaredMethod("getInstance", null).invoke(null, null);
+			Named n = (Named) Class.forName(
+					"at.ac.tuwien.auto.iotsys.mdnssd.NamedImpl").newInstance();
+			Class mc = Class
+					.forName("at.ac.tuwien.auto.iotsys.mdnssd.MdnsResolverImpl");
+			MdnsResolver m = (MdnsResolver) mc.getDeclaredMethod("getInstance",
+					null).invoke(null, null);
 
 			n.startNamedService();
 			iotsys.setMdnsResolver(m);
@@ -281,7 +275,7 @@ public class IoTSySGateway
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		iotsys.startGateway();
 
 		// TestClient testClient = new TestClient(iotsys.objectBroker);
@@ -291,68 +285,59 @@ public class IoTSySGateway
 
 		BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
 
-		try
-		{
+		try {
 			in.read();
 			iotsys.stopGateway();
-		} catch (IOException ioex)
-		{
+		} catch (IOException ioex) {
 			ioex.printStackTrace();
 			System.exit(1);
 		}
 		System.exit(0);
 	}
 
-	private void closeConnectors()
-	{
-		for (Connector connector : connectors)
-		{
-			try
-			{
+	private void closeConnectors() {
+		for (Connector connector : connectors) {
+			try {
 				connector.disconnect();
 				log.info("Shutting down connector " + connector.toString());
-			} catch (Exception e)
-			{
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
 	}
 
-	public boolean isOsgiEnvironment()
-	{
+	public boolean isOsgiEnvironment() {
 		return osgiEnvironment;
 	}
 
-	public void setOsgiEnvironment(boolean osgiEnvironment)
-	{
+	public void setOsgiEnvironment(boolean osgiEnvironment) {
 		this.osgiEnvironment = osgiEnvironment;
 	}
 
-	public ObjectBroker getObjectBroker()
-	{
+	public ObjectBroker getObjectBroker() {
 		return objectBroker;
 	}
 
-	public MdnsResolver getMdnsResolver()
-	{
+	public MdnsResolver getMdnsResolver() {
 		return mdnsResolver;
 	}
 
-	public void setMdnsResolver(MdnsResolver mdnsResolver)
-	{
+	public void setMdnsResolver(MdnsResolver mdnsResolver) {
 		this.mdnsResolver = mdnsResolver;
 		if (objectBroker != null)
 			objectBroker.setMdnsResolver(mdnsResolver);
 	}
-	
-	public void setDigcoveryClient(DigcoveryClient digcoveryClient){
+
+	public void setDigcoveryClient(DigcoveryClient digcoveryClient) {
 		this.digcoveryClient = digcoveryClient;
-		if (objectBroker != null){
+		if (objectBroker != null) {
 			objectBroker.setDigcoveryClient(digcoveryClient);
-			
+
 			// register gateway as endpoint
-			if(digcoveryClient != null){
-				digcoveryClient.registerDevice("gateway", "auto.tuwien.ac.at", null, "_coap._udp", "5683", "48.2083", "16.3731", "Vienna");
+			if (digcoveryClient != null) {
+				digcoveryClient.registerDevice("gateway", "auto.tuwien.ac.at",
+						null, "_coap._udp", "5683", "48.2083", "16.3731",
+						"Vienna");
 			}
 		}
 	}
