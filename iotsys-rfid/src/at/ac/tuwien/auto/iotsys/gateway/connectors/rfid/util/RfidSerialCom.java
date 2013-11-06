@@ -1,4 +1,4 @@
-package at.ac.tuwien.auto.iotsys.gateway.connectors.enocean.util;
+package at.ac.tuwien.auto.iotsys.gateway.connectors.rfid.util;
 
 import gnu.io.CommPort;
 import gnu.io.CommPortIdentifier;
@@ -10,22 +10,22 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.logging.Logger;
 
-public final class EnoceanSerialCom implements Runnable,
+public final class RfidSerialCom implements Runnable,
 		SerialPortEventListener {
-	private static final Logger log = Logger.getLogger(EnoceanSerialCom.class
+	private static final Logger log = Logger.getLogger(RfidSerialCom.class
 			.getName());
 
 	private static final int SERIAL_TIMEOUT = 2000;
-	private static final int BAUD_RATE = 57600;
+	private static final int BAUD_RATE = 9600;
 
 	private SerialPort serialPort;
 	private Thread readThread;
 	private InputStream inputStream;
 	private CommPort commPort;
-	ESP3Frame frame;
+	RfidFrame frame;
 
-	public EnoceanSerialCom(String portName) {
-		log.info("EnoceanSerialCom loaded ...");
+	public RfidSerialCom(String portName) {
+		log.info("RfidSerialCom loaded ...");
 
 		CommPortIdentifier portIdentifier;
 		try {
@@ -49,7 +49,7 @@ public final class EnoceanSerialCom implements Runnable,
 				e.printStackTrace();
 			}
 
-			log.info("Start listening on USB port ...");
+			log.info("Start listening on USB (/ttyUSBX) port ...");
 
 			readThread = new Thread(this);
 			readThread.start();
@@ -65,6 +65,7 @@ public final class EnoceanSerialCom implements Runnable,
 	}
 
 	public void serialEvent(SerialPortEvent event) {
+		log.info("Serial Event recognized.");
 		switch (event.getEventType()) {
 		case SerialPortEvent.BI:
 		case SerialPortEvent.OE:
@@ -100,7 +101,7 @@ public final class EnoceanSerialCom implements Runnable,
 				}
 				// System.out.println(hexString.toString());
 
-				frame = new ESP3Frame(buffer, numBytes);
+				frame = new RfidFrame(buffer, numBytes);
 				frame.readPacket();
 			} catch (IOException e) {
 				e.printStackTrace();

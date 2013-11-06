@@ -19,7 +19,95 @@
     </device-loader>
     <device-loader>at.ac.tuwien.auto.iotsys.gateway.connectors.weatherforecast.WeatherForecastDeviceLoaderImpl
     </device-loader>
+    <device-loader>at.ac.tuwien.auto.iotsys.gateway.connectors.rfid.RfidDeviceLoaderImpl
+    </device-loader>
   </deviceloaders>
+  
+  <rfid>
+    <connector>
+      <name>RFID</name>
+      <enabled>false</enabled>
+      <serialPort>/dev/ttyUSB0</serialPort>
+       <device>
+        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.rfid.CommandImplRFID
+        </type>
+        <address>0x0010202E</address>
+        <href>RFIDCommand</href>
+        <historyEnabled>false</historyEnabled>
+        <groupCommEnabled>true</groupCommEnabled>
+      </device>
+      <device>
+        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.rfid.EventImpRfidTAG
+        </type>
+        <address>0x0010202F</address>
+        <href>RFIDEvent</href>
+        <historyEnabled>false</historyEnabled>
+        <groupCommEnabled>true</groupCommEnabled>
+      </device>
+    </connector>
+    
+    <connector>
+      <name>RFID-Windows</name>
+      <enabled>false</enabled>
+      <serialPort>COM1</serialPort>
+       <device>
+        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.rfid.CommandImplRFID
+        </type>
+        <address>0x0010202E</address>
+        <href>RFIDCommand</href>
+        <historyEnabled>false</historyEnabled>
+        <groupCommEnabled>true</groupCommEnabled>
+      </device>
+      <device>
+        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.rfid.EventImpRfidTAG
+        </type>
+        <address>0x0010202F</address>
+        <href>RFIDEvent</href>
+        <historyEnabled>false</historyEnabled>
+        <groupCommEnabled>true</groupCommEnabled>
+      </device>
+    </connector>
+  </rfid>
+  
+  <enocean>
+    <connector>
+      <name>EnOcean</name>
+      <enabled>false</enabled>
+      <serialPort>/dev/ttyACM0</serialPort>
+      <device>
+        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.enocean.PushButtonImplEnocean
+        </type>
+        <address>0x0010202B</address>
+        <href>buttonEnocean</href>
+        <historyEnabled>false</historyEnabled>
+        <groupCommEnabled>true</groupCommEnabled>
+      </device>
+      <device>
+        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.enocean.WindowSwitchImplEnocean
+        </type>
+        <address>0x00000E5C</address>
+        <href>buttonEnocean1</href>
+        <historyEnabled>false</historyEnabled>
+        <groupCommEnabled>true</groupCommEnabled>
+      </device>
+      <device>
+        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.enocean.LightSwitchActuatorImplEnocean
+        </type>
+        <address>0x01</address>
+        <href>ligthSwitchEnocean</href>
+        <historyEnabled>false</historyEnabled>
+        <groupCommEnabled>true</groupCommEnabled>
+      </device>
+      <device>
+        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.enocean.LightSwitchActuatorImplEnocean
+        </type>
+        <address>0x02</address>
+        <href>ligthSwitchEnocean1</href>
+        <historyEnabled>false</historyEnabled>
+        <groupCommEnabled>true</groupCommEnabled>
+      </device>      
+    </connector>
+  </enocean>
 
   <weather-forecast>
     <connector>
@@ -79,7 +167,7 @@
     </connector>
   </xbee>
 
-  <enocean>
+  <!-- <enocean>
     <connector>
       <name>EnOcean</name>
       <enabled>false</enabled>
@@ -93,7 +181,7 @@
         <groupCommEnabled>true</groupCommEnabled>
       </device>
     </connector>
-  </enocean>
+  </enocean>-->
 
   <knx-ets>
     <connector>
