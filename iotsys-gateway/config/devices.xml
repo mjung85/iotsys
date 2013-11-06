@@ -48,7 +48,7 @@
     
     <connector>
       <name>RFID-Windows</name>
-      <enabled>true</enabled>
+      <enabled>false</enabled>
       <serialPort>COM1</serialPort>
        <device>
         <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.rfid.CommandImplRFID
