@@ -1,0 +1,43 @@
+// Variables
+description = 'OSGI wrapper for BACnet4J'
+
+sourceCompatibility = 1.6
+
+repositories {
+	flatDir { dirs "lib" }
+}
+
+jar {
+	from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+	
+	manifest {
+		attributes("Manifest-Version": "1.0",
+				   "Bundle-Name": "IoTSyS-BACnet4J",
+				   "Bundle-SymbolicName": "at.ac.tuwien.auto.iotsys.bacnet4j",
+				   "Bundle-Description": "OSGI wrapper for BACnet4J",
+				   "Bundle-Vendor": "Vienna University of Technology, Automation Systems Group, www.auto.tuwien.ac.at",
+				   "Bundle-Version": "0.1",
+				   "Bundle-Classpath": ".",
+				   "Export-Package":"com.serotonin.bacnet4j, com.serotonin.bacnet4j.apdu, com.serotonin.bacnet4j.base, com.serotonin.bacnet4j.enums," +
+									"com.serotonin.bacnet4j.event, com.serotonin.bacnet4j.exception, com.serotonin.bacnet4j.npdu," +
+									"com.serotonin.bacnet4j.npdu.ip, com.serotonin.bacnet4j.obj, com.serotonin.bacnet4j.service," +
+									"com.serotonin.bacnet4j.service.acknowledgement, com.serotonin.bacnet4j.service.confirmed," +
+									"com.serotonin.bacnet4j.service.unconfirmed, com.serotonin.bacnet4j.test, com.serotonin.bacnet4j.type," +
+									"com.serotonin.bacnet4j.type.constructed, com.serotonin.bacnet4j.type.enumerated," +
+									"com.serotonin.bacnet4j.type.error, com.serotonin.bacnet4j.eventParameter," +
+									"com.serotonin.bacnet4j.notificationParamater," +
+									"com.serotonin.bacnet4j.type.primitive, com.serotonin.bacnet4j.util," +
+									"com.serotonin.bkgd, com.serotonin.cache, com.serotonin.db, com.serotonin.db.cache, com.serotonin.graphics, com.serotonin.graphics.graph," +
+									"com.serotonin.io, com.serotonin.io.messaging, com.serotonin.io.serial, com.serotonin.json, com.serotonin.math, com.serotonin.messaging," +
+									"com.serotonin.monitor, com.serotonin.propertyEditor, com.serotonin.swing, com.serotonin.temporal, com.serotonin.timer," +
+									"com.serotonin.util, com.serotonin.util.collections, com.serotonin.util.concurrent, com.serotonin.util.image, com.serotonin.util.list," + 
+									"com.serotonin.util.queue, com.serotonin.util.retry, com.serotonin.web.content, com.serotonin.web.dwr, com.serotonin.web.email," +
+									"com.serotonin.web.context, com.serotonin.web.filter, com.serotonin.web.http, com.serotonin.web.i18n, com.serotonin.web.listener," +
+									"com.serotonin.web.remote, com.serotonin.web.servlet, com.serotonin.web.spring, com.serotonin.taglib, com.serotonin.web.util"
+				 )
+	}
+}
+
+dependencies{
+	compile ":seroUtils:"
+}

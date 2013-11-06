@@ -1,0 +1,165 @@
+allprojects {
+	apply plugin: 'java'
+	apply plugin: 'maven-publish'
+	apply plugin: 'maven'
+
+	group = 'at.ac.tuwien.auto.iotsys'
+	version = '0.1'
+	sourceCompatibility = 1.6
+	
+	repositories(){
+		mavenCentral()
+		mavenRepo url: 'https://repository.jboss.org/nexus/content/repositories/releases/', name: 'JBoss Releases'
+		mavenRepo url: 'https://repository.jboss.org/nexus/content/groups/public/', name: 'JBoss Public'
+
+	}
+}
+
+ext{
+	configDir = file('iotsys-gateway/config')
+	resDir = file('iotsys-gateway/res')
+	knxConfigDir = file('iotsys-gateway/knx-config')
+	distLib = file('dist')
+	distLibRunFile = file('dist/rungateway.bat')
+	distLibRunFileSh = file('dist/rungateway.sh')
+	
+	String felixDir = "felix-framework-4.2.1"
+	
+	felix = file(felixDir)
+	felixConfFile = file(felixDir + '/conf/config.properties')
+	felixBundle = file(felixDir + '/bundle')
+	felixCache = file(felixDir + '/felix-cache')
+}
+
+subprojects{
+	apply plugin: 'eclipse'
+	
+	sourceSets {
+    		main {
+        		java {
+            			srcDir 'src'
+        		}
+    		}
+	}
+			
+	task deploy(dependsOn: jar) << {
+		println "copying $jar.archivePath to $distLib"
+		ant.copy(file:jar.archivePath, todir:distLib)
+	}
+	
+	task deployOsgi(dependsOn: jar) << {
+		println "copying $jar.archivePath to $felixBundle"
+		ant.copy(file:jar.archivePath, todir:felixBundle)
+	}
+	
+	task clearOsgiCache(dependsOn: jar) << {
+		ant.delete (includeemptydirs:"true") {
+			fileset (dir:felixCache, includes:"**/*")
+		}
+	}
+}
+			
+description = 'IoTSyS - Integration middleware for the Internet of Things'
+
+task deploy << {
+	ant.echo(message:'java -cp "iotsys-rfid-0.1.jar;iotsys-bacnet-0.1.jar;iotsys-bacnet4j-0.1.jar;iotsys-calimero-0.1.jar;iotsys-common-0.1.jar;iotsys-control-0.1.jar;iotsys-encoding-json-0.1.jar;iotsys-gateway-0.1.jar;iotsys-knx-0.1.jar;iotsys-obix-0.1.jar;iotsys-virtual-0.1.jar;iotsys-wmbus-0.1.jar;iotsys-enocean-0.1.jar;iotsys-xacml-0.1.jar;res;iotsys-demoapp-0.1.jar;iotsys-xbee-0.1.jar;iotsys-mdnssd-0.1.jar" at.ac.tuwien.auto.iotsys.gateway.IoTSySGateway', file:distLibRunFile)	
+
+	ant.echo(message:'IOTSYS_PATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )${line.separator}"', file:distLibRunFileSh)
+	ant.echo(message:'cd $IOTSYS_PATH${line.separator}', file:distLibRunFileSh, append:true)
+	ant.echo(message:'java -cp "${IOTSYS_PATH}iotsys-rfid-0.1.jar:${IOTSYS_PATH}iotsys-bacnet-0.1.jar:${IOTSYS_PATH}iotsys-bacnet4j-0.1.jar:${IOTSYS_PATH}iotsys-calimero-0.1.jar:${IOTSYS_PATH}iotsys-common-0.1.jar:${IOTSYS_PATH}iotsys-control-0.1.jar:${IOTSYS_PATH}iotsys-encoding-json-0.1.jar:${IOTSYS_PATH}iotsys-gateway-0.1.jar:${IOTSYS_PATH}iotsys-knx-0.1.jar:${IOTSYS_PATH}iotsys-obix-0.1.jar:${IOTSYS_PATH}iotsys-virtual-0.1.jar:${IOTSYS_PATH}iotsys-wmbus-0.1.jar:${IOTSYS_PATH}iotsys-enocean-0.1.jar:${IOTSYS_PATH}iotsys-xacml-0.1.jar:${IOTSYS_PATH}res:${IOTSYS_PATH}iotsys-demoapp-0.1.jar:${IOTSYS_PATH}iotsys-xbee-0.1.jar;${IOTSYS_PATH}iotsys-mdnssd-0.1.jar" at.ac.tuwien.auto.iotsys.gateway.IoTSySGateway', file:distLibRunFileSh, append:true)			
+		
+	File deployResDir = new File(distLib.absolutePath + '/res')
+	File deployConfDir = new File(distLib.absolutePath + '/config')
+	File deployKnxConfDir = new File(distLib.absolutePath + '/knx-config')
+	
+	ant.copy(todir:deployConfDir){
+			fileset(dir:configDir)
+	}
+		
+	ant.copy(todir:deployResDir){
+		fileset(dir:resDir)
+	}
+	
+	ant.copy(todir:deployKnxConfDir){
+		fileset(dir:knxConfigDir)
+	}
+} 
+
+task deployOsgi << {
+	File dstConfigDir = new File(felix.absolutePath + '/config')
+	File dstResDir = new File(felix.absolutePath + '/res')
+	
+	if(felixCache.exists()){
+		ant.delete (includeemptydirs:"true") {
+			fileset (dir:felixCache, includes:"**/*")
+		}
+	}
+	
+	if(dstConfigDir.exists()){
+		
+		println "Copying configuration from " + configDir.absolutePath + " to " + dstConfigDir.absolutePath
+		
+		ant.copy(todir:dstConfigDir){
+			fileset(dir:configDir)
+		}
+		
+	}
+		
+	if(dstResDir.exists()){
+		println "Resource directory already available at " + dstResDir.absolutePath 
+	
+		println "Copying configuration from " + resDir.absolutePath + " to " + dstResDir.absolutePath 
+		ant.copy(todir:dstResDir){
+			fileset(dir:resDir)
+		
+		}
+	}
+}
+
+task setupFelix << {
+	println "Setting up the Felix 4.2 OSGI container at " + felix.absolutePath
+	println "This task copies the IoTSyS gateway configuration and resource files."
+	println "It overrides also the OSGI configuration to make required system libraries available!\n\n"
+	
+	File dstConfigDir = new File(felix.absolutePath + '/config')
+	File dstResDir = new File(felix.absolutePath + '/res')
+		
+	if(!felix.exists()){
+		println "Need to download felix 4.2.1 distribution"
+		ant.get(src:"http://www.auto.tuwien.ac.at/~mjung/org.apache.felix.main.distribution-4.2.1.zip", dest:"org.apache.felix.main.distribution-4.2.1.zip", verbose:true)
+		ant.unzip(src:"org.apache.felix.main.distribution-4.2.1.zip", dest:file('.').absolutePath)
+	}
+	
+		if(dstConfigDir.exists()){
+			println "Configuration already available at " + dstConfigDir.absolutePath
+		}
+		else{
+			println "Copying configuration from " + configDir.absolutePath + " to " + dstConfigDir.absolutePath
+			
+			ant.copy(todir:dstConfigDir){
+				fileset(dir:configDir)
+			}
+		}
+		
+		if(dstResDir.exists()){
+			println "Resource directory already available at " + dstResDir.absolutePath 
+		}
+		else{
+			println "Copying configuration from " + resDir.absolutePath + " to " + dstResDir.absolutePath 
+			ant.copy(todir:dstResDir){
+				fileset(dir:resDir)
+			}
+		}
+		
+		println "Updating felix config.properties file. Setting org.osgi.framework.system.packages.extra property"
+		
+		ant.propertyfile(file: felixConfFile.absolutePath){
+			entry( key: 'org.osgi.framework.system.packages.extra', 
+			value: "javax.crypto, javax.crypto.interfaces, javax.crypto.spec, javax.naming, javax.naming.directory,"+
+					"javax.naming.spi, javax.management, javax.management.loading, javax.management.modelmbean, javax.net," +
+					"javax.net.ssl, javax.crypto, javax.crypto.interfaces, javax.crypto.spec, javax.security.auth," +
+					"javax.security.auth.spi, javax.security.auth.callback, javax.security.auth.login," +
+					"javax.security.cert, javax.xml.parsers,  javax.xml.xpath, javax.xml.transform.sax," + "javax.xml.transform.dom, javax.xml.namespace, javax.xml.transform, javax.xml.transform.stream," +
+					"javax.xml.validation, javax.xml.datatype, org.xml.sax, org.xml.sax.helpers, org.xml.sax.ext," + "com.sun.org.apache.xalan.internal, com.sun.org.apache.xalan.internal.res," + "com.sun.org.apache.xml.internal.utils, com.sun.org.apache.xpath.internal," + "com.sun.org.apache.xpath.internal.jaxp, com.sun.org.apache.xpath.internal.objects," + "com.sun.org.apache.xml.internal, org.w3c.dom, org.w3c.dom.traversal, org.w3c.dom.ls, javax.sql," + "javax.transaction, sun.misc, com.sun.org.apache.xerces.internal.jaxp.validation, com.sun.org.apache.xerces.internal.jaxp, javax.naming.ldap, javax.naming, javax.xml.ws, com.sun.xml.internal.ws.api.message")}	
+	
+}
