@@ -47,7 +47,7 @@ public class RfidDeviceLoaderImpl implements DeviceLoader {
 		ArrayList<Connector> connectors = new ArrayList<Connector>();
 
 		int connectorsSize = 0;
-		// WMBus
+	
 		Object rfidConnectors = devicesConfig
 				.getProperty("rfid.connector.name");
 		if (rfidConnectors != null) {
@@ -164,9 +164,7 @@ public class RfidDeviceLoaderImpl implements DeviceLoader {
 											if (name != null
 													&& name.length() > 0) {
 												rfidDevice.setName(name);
-											}
-
-											ArrayList<String> assignedHrefs = null;
+											}										
 
 											if (ipv6 != null) {
 												objectBroker
