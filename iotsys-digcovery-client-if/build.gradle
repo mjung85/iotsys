@@ -1,0 +1,42 @@
+// Variables
+description = 'IoTSyS Digcovery Client Interface'
+
+sourceCompatibility = 1.6
+
+eclipse{
+	classpath{
+		file {
+			withXml {
+				def node = it.asNode()				
+							
+			}
+		}
+	}
+}
+
+repositories {	
+	flatDir { dirs "lib" }	
+}
+
+configurations {
+	provided
+}
+
+sourceSets{
+	main { compileClasspath += configurations.provided }
+}
+
+jar {
+	from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+	
+	manifest {
+		attributes("Manifest-Version": "1.0",
+				   "Bundle-Name": "IoTSyS-Digcovery-Client-Interfaces", 
+				   "Bundle-SymbolicName": "at.ac.tuwien.auto.iotsys.digcoveryclient",
+				   "Bundle-Description": "Digcovery Client",
+				   "Bundle-Vendor": "Vienna University of Technology, Automation Systems Group, www.auto.tuwien.ac.at",
+				   "Bundle-Version": "0.1", 
+				   "Bundle-Classpath": ".",
+				   "Export-Package": "at.ac.tuwien.auto.iotsys.digcoveryclient" )
+	}
+}

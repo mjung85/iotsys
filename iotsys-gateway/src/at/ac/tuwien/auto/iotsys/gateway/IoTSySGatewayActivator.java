@@ -43,59 +43,76 @@ import org.osgi.framework.ServiceReference;
 import at.ac.tuwien.auto.iotsys.commons.MdnsResolver;
 import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
 import at.ac.tuwien.auto.iotsys.commons.interceptor.InterceptorBroker;
+import at.ac.tuwien.auto.iotsys.digcoveryclient.DigcoveryClient;
 import at.ac.tuwien.auto.iotsys.gateway.interceptor.InterceptorBrokerImpl;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objectbroker.ObjectBrokerImpl;
-
 
 /**
  * Gateway activator for an OSGI container.
  */
-public class IoTSySGatewayActivator implements BundleActivator, ServiceListener{
-	
+public class IoTSySGatewayActivator implements BundleActivator, ServiceListener {
+
 	private IoTSySGateway iotsysGateway = null;
-	
-	private static final Logger log = Logger.getLogger(IoTSySGatewayActivator.class.getName());
-	
+
+	private static final Logger log = Logger
+			.getLogger(IoTSySGatewayActivator.class.getName());
+
 	private DeviceLoaderListener deviceLoaderListener = new DeviceLoaderListener();
-	
+
 	private MdnsResolver resolver;
-	
+
+	private DigcoveryClient digcoveryClient;
+
 	private BundleContext context = null;
-	
+
 	@Override
 	public void start(BundleContext bundleContext) throws Exception {
 		log.info("Starting IoTSySGateway.");
-		
+
 		this.context = bundleContext;
-		
+
 		iotsysGateway = new IoTSySGateway();
 		iotsysGateway.setOsgiEnvironment(true);
-		iotsysGateway.startGateway();	
-		
-		bundleContext.registerService(ObjectBroker.class.getName(), ObjectBrokerImpl.getInstance(), null);
+		iotsysGateway.startGateway();
+
+		bundleContext.registerService(ObjectBroker.class.getName(),
+				ObjectBrokerImpl.getInstance(), null);
 
 		log.info("================================");
 		log.info("Register InterceptorBroker");
 
-		bundleContext.registerService(InterceptorBroker.class.getName(),InterceptorBrokerImpl.getInstance(), null);
+		bundleContext.registerService(InterceptorBroker.class.getName(),
+				InterceptorBrokerImpl.getInstance(), null);
 
 		ServiceReference serviceReference = bundleContext
 				.getServiceReference(MdnsResolver.class.getName());
 		if (serviceReference == null) {
 			log.severe("Could not find mDNS-SD Service!");
 		} else {
+			log.info(">>>>>>>>>> mDNS-SD service resolved.");
 			resolver = (MdnsResolver) bundleContext
 					.getService(serviceReference);
 			iotsysGateway.setMdnsResolver(resolver);
 		}
-		
-		context.addServiceListener(this);	
+
+		ServiceReference serviceReferenceDigcovery = bundleContext
+				.getServiceReference(DigcoveryClient.class.getName());
+		if (serviceReferenceDigcovery == null) {
+			log.severe("Could not find the digcovery client service!");
+		} else {
+			log.info(">>>>>>>>>> The digcovery client has been found.");
+			digcoveryClient = (DigcoveryClient) bundleContext
+					.getService(serviceReferenceDigcovery);
+			iotsysGateway.setDigcoveryClient(digcoveryClient);
+		}
+
+		context.addServiceListener(this);
 	}
 
 	@Override
 	public void stop(BundleContext bundleContext) throws Exception {
 		log.info("Stopping IoTSySGateway.");
-		iotsysGateway.stopGateway();	
+		iotsysGateway.stopGateway();
 	}
 
 	@Override
@@ -105,13 +122,19 @@ public class IoTSySGatewayActivator implements BundleActivator, ServiceListener{
 
 		if (event.getType() == ServiceEvent.REGISTERED) {
 			if (objectClass[0].equals(MdnsResolver.class.getName())) {
+				
+				log.info(">>>>>>>>>> Mdnssd detected.");
+				resolver = (MdnsResolver) context.getService(event
+						.getServiceReference());
+				iotsysGateway.setMdnsResolver(resolver);
 
-				synchronized (this) {
-					log.info(">>>>>>>>>> Mdnssd detected.");
-					resolver = (MdnsResolver) context
-							.getService(event.getServiceReference());
-					iotsysGateway.setMdnsResolver(resolver);
-				}
+			} else if (objectClass[0].equals(DigcoveryClient.class.getName())) {
+
+				log.info(">>>>>>>>>> DigcoveryClient detected.");
+				digcoveryClient = (DigcoveryClient) context.getService(event
+						.getServiceReference());
+				iotsysGateway.setDigcoveryClient(digcoveryClient);
+
 			}
 		}
 

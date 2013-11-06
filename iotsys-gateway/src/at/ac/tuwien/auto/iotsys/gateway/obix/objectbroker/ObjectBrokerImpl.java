@@ -49,6 +49,7 @@ import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.AlarmSubjectImpl;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.internals.impl.InternalsImpl;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.general.impl.LobbyImpl;
+import at.ac.tuwien.auto.iotsys.digcoveryclient.DigcoveryClient;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.AboutImpl;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.HistoryHelper;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.WatchImpl;
@@ -72,6 +73,8 @@ public class ObjectBrokerImpl implements ObjectBroker
 	private final HashMap<String, String> ipv6Mapping = new HashMap<String, String>();
 
 	private static final ObjectBroker instance = new ObjectBrokerImpl();
+	
+	private DigcoveryClient digcoveryClient;
 
 	private ObjectRefresher objectRefresher = new ObjectRefresher();
 
@@ -172,9 +175,19 @@ public class ObjectBrokerImpl implements ObjectBroker
 				resolver.addToRecordDict(href, ipv6Address);
 				resolver.registerDevice(href, o.getClass(), ipv6Address);
 			}
+			
+			if(digcoveryClient != null){
+				log.info("Registering IPv6 object at Digcovery");
+				digcoveryClient.registerDevice(o.getName(), "auto.tuwien.ac.at", ipv6Address, "_coap._udp", "5683", "48.2083", "16.3731", "Vienna");
+			}
+			else{
+				log.info("No digcovery available!.");
+			}
+
 		}
 		catch (UnknownHostException e)
 		{
+			
 			e.printStackTrace();
 		}
 	}
@@ -220,9 +233,17 @@ public class ObjectBrokerImpl implements ObjectBroker
 	public synchronized void removeObj(String href)
 	{
 		Obj toRemove = pullObj(new Uri(href), false);
+		
+		if(ipv6Mapping.containsValue(href) && digcoveryClient != null){
+			log.info("Removing IPv6 from Digcovery.");
+			digcoveryClient.unregisterDevice(toRemove.getName(), "auto.tuwien.ac.at");
+		}
 		toRemove.removeThis();
 
 		iotLobby.removeReference(href);
+		
+		
+		
 		// TODO remove references to descendants of referenced object?
 
 		// TODO deal with group comm objects.
@@ -327,5 +348,10 @@ public class ObjectBrokerImpl implements ObjectBroker
 		obj.setRefreshInterval(interval);
 
 		objectRefresher.addObject(obj);
+	}
+
+	@Override
+	public void setDigcoveryClient(DigcoveryClient digcoveryClient) {
+		this.digcoveryClient = digcoveryClient;
 	}
 }

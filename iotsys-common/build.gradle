@@ -7,6 +7,7 @@ eclipse{
 			withXml {
 				def node = it.asNode()		
 				node.appendNode('classpathentry', [kind: 'src', path: '/iotsys-obix', exported:'true'])
+				node.appendNode('classpathentry', [kind: 'src', path: '/iotsys-digcovery-client-if', exported:'true'])
 			}
 		}
 	}
@@ -38,7 +39,7 @@ jar {
 									 "org.apache.commons.lang, org.apache.commons.lang.builder, org.apache.commons.lang.enums, org.apache.commons.lang.exception, org.apache.commons.lang.math, org.apache.commons.lang.mutable, org.apache.commons.lang.text, org.apache.commons.lang.time," + 
 									 "org.apache.commons.logging, org.apache.commons.logging.impl, gnu.io," +
 									 "at.ac.tuwien.auto.iotsys.commons.obix.objects, at.ac.tuwien.auto.iotsys.commons.obix.objects.general, at.ac.tuwien.auto.iotsys.commons.obix.objects.general.contracts.impl, at.ac.tuwien.auto.iotsys.commons.obix.objects.general.datapoint, at.ac.tuwien.auto.iotsys.commons.obix.objects.general.datapoint.impl, at.ac.tuwien.auto.iotsys.commons.obix.objects.general.encoding, at.ac.tuwien.auto.iotsys.commons.obix.objects.general.encoding.impl, at.ac.tuwien.auto.iotsys.commons.obix.objects.general.entity, at.ac.tuwien.auto.iotsys.commons.obix.objects.general.entity.impl, at.ac.tuwien.auto.iotsys.commons.obix.objects.general.enumeration, at.ac.tuwien.auto.iotsys.commons.obix.objects.general.enumeration.impl, at.ac.tuwien.auto.iotsys.commons.obix.objects.general.language, at.ac.tuwien.auto.iotsys.commons.obix.objects.general.language.impl," +
-									 "at.ac.tuwien.auto.iotsys.commons.obix.objects.general.network,at.ac.tuwien.auto.iotsys.commons.obix.objects.general.network.impl, at.ac.tuwien.auto.iotsys.commons.obix.objects.general.parameter, at.ac.tuwien.auto.iotsys.commons.obix.objects.general.parameter.impl, at.ac.tuwien.auto.iotsys.commons.obix.objects.general.unit, at.ac.tuwien.auto.iotsys.commons.obix.objects.general.unit.impl, at.ac.tuwien.auto.iotsys.commons.obix.objects.general.view, at.ac.tuwien.auto.iotsys.commons.obix.objects.general.view.impl,at.ac.tuwien.auto.iotsys.commons.obix.objects.general.internals.impl",
+									 "at.ac.tuwien.auto.iotsys.commons.obix.objects.general.network,at.ac.tuwien.auto.iotsys.commons.obix.objects.general.network.impl, at.ac.tuwien.auto.iotsys.commons.obix.objects.general.parameter, at.ac.tuwien.auto.iotsys.commons.obix.objects.general.parameter.impl, at.ac.tuwien.auto.iotsys.commons.obix.objects.general.unit, at.ac.tuwien.auto.iotsys.commons.obix.objects.general.unit.impl, at.ac.tuwien.auto.iotsys.commons.obix.objects.general.view, at.ac.tuwien.auto.iotsys.commons.obix.objects.general.view.impl,at.ac.tuwien.auto.iotsys.commons.obix.objects.general.internals.impl, at.ac.tuwien.auto.iotsys.commons.obix.objects.general.view, at.ac.tuwien.auto.iotsys.commons.obix.objects.general.view.impl,at.ac.tuwien.auto.iotsys.commons.obix.objects.general.internals.impl",
 				   "Import-Package": "obix, obix.asm, obix.contracts,  obix.contracts.impl, obix.io, obix.net, obix.test, obix.toos, obix.ui, obix.ui.fields, obix.ui.views, obix.xml,at.ac.tuwien.auto.iotsys.obix, at.ac.tuwien.auto.iotsys.obix.observer," +
 				   					 "org.xml.sax, org.xml.sax.helpers, org.xml.sax.ext,  com.sun.org.apache.xalan.internal, com.sun.org.apache.xalan.internal.res, org.w3c.dom, org.w3c.dom.traversal, org.w3c.dom.ls, javax.xml.parsers,  javax.xml.xpath, javax.xml.transform.sax, javax.xml.transform.dom, javax.xml.namespace, javax.xml.transform, javax.xml.transform.stream, javax.xml.validation, javax.xml.datatype"
 				)
@@ -66,6 +67,7 @@ sourceSets {
 
 dependencies {
 	provided project(':iotsys-obix')
+	provided project(':iotsys-digcovery-client-if')
 	
 	compile group: 'commons-beanutils', name: 'commons-beanutils', version: '1.8.3'
 	compile group: 'commons-codec', name: 'commons-codec', version: '1.6'
