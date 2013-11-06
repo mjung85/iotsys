@@ -55,6 +55,7 @@ public class EnoceanDeviceLoaderImpl implements DeviceLoader {
 		if (enoceanConnectors instanceof Collection<?>) {
 			connectorsSize = ((Collection<?>) enoceanConnectors).size();
 		}
+		
 		log.info("Found " + connectorsSize + " EnOcean connectors.");
 		for (int connector = 0; connector < connectorsSize; connector++) {
 			HierarchicalConfiguration subConfig = devicesConfig.configurationAt("enocean.connector(" + connector + ")");
@@ -67,7 +68,7 @@ public class EnoceanDeviceLoaderImpl implements DeviceLoader {
 			// PropertyConfigurator.configure("log4j.properties");
 			if (enabled) {
 				try {
-					log.info("Connecting EnOcean connector to COM Piort: "+ serialPort);
+					log.info("Connecting EnOcean connector to COM Port: "+ serialPort);
 					EnoceanConnector enoceanConnector = new EnoceanConnector(serialPort);
 					enoceanConnector.connect();
 
