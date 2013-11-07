@@ -36,6 +36,7 @@ import java.io.IOException;
 import java.util.logging.Logger;
 
 import ch.ethz.inf.vs.californium.coap.DELETERequest;
+import ch.ethz.inf.vs.californium.coap.Message.messageType;
 import ch.ethz.inf.vs.californium.coap.PUTRequest;
 import ch.ethz.inf.vs.californium.coap.Response;
 import at.ac.tuwien.auto.iotsys.commons.PropertiesLoader;
@@ -102,28 +103,31 @@ public class DigcoveryClientImpl implements DigcoveryClient {
 
 		putRequest.setURI(queryString.toString());
 
-		putRequest.enableResponseQueue(true);
+		putRequest.enableResponseQueue(false);
+		
+		putRequest.setType(messageType.NON);
+	
 
 		// putRequest.send();
 
 		try {
 			putRequest.execute();
 
-			// receive response
-			log.info("Receiving response...");
-			Response response = null;
-			try {
-				response = putRequest.receiveResponse();
-			} catch (InterruptedException e) {
-				System.err.println("Failed to receive response: "
-						+ e.getMessage());
-			}
-
-			// output response
-			if (response != null) {
-				response.prettyPrint();
-				log.info("Time elapsed (ms): " + response.getRTT());
-			}
+//			// receive response
+//			log.info("Receiving response...");
+//			Response response = null;
+//			try {
+//				response = putRequest.receiveResponse();
+//			} catch (InterruptedException e) {
+//				System.err.println("Failed to receive response: "
+//						+ e.getMessage());
+//			}
+//
+//			// output response
+//			if (response != null) {
+//				response.prettyPrint();
+//				log.info("Time elapsed (ms): " + response.getRTT());
+//			}
 
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -152,26 +156,30 @@ public class DigcoveryClientImpl implements DigcoveryClient {
 		DELETERequest delRequest = new DELETERequest();
 		delRequest.enableResponseQueue(true);
 		delRequest.setURI(queryString.toString());
+		
+		delRequest.enableResponseQueue(false);
+		
+		delRequest.setType(messageType.NON);
 
 		try {
 			log.info("Delete request: " + queryString.toString());
 			delRequest.execute();
 
-			// receive response
-			log.info("Receiving response...");
-			Response response = null;
-			try {
-				response = delRequest.receiveResponse();
-			} catch (InterruptedException e) {
-				System.err.println("Failed to receive response: "
-						+ e.getMessage());
-			}
-
-			// output response
-			if (response != null) {
-				response.prettyPrint();
-				log.info("Time elapsed (ms): " + response.getRTT());
-			}
+//			// receive response
+//			log.info("Receiving response...");
+//			Response response = null;
+//			try {
+//				response = delRequest.receiveResponse();
+//			} catch (InterruptedException e) {
+//				System.err.println("Failed to receive response: "
+//						+ e.getMessage());
+//			}
+//
+//			// output response
+//			if (response != null) {
+//				response.prettyPrint();
+//				log.info("Time elapsed (ms): " + response.getRTT());
+//			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -193,27 +201,31 @@ public class DigcoveryClientImpl implements DigcoveryClient {
 		}
 
 		DELETERequest delRequest = new DELETERequest();
-		delRequest.enableResponseQueue(true);
+		delRequest.enableResponseQueue(false);
 		delRequest.setURI(queryString.toString());
+		
+		delRequest.enableResponseQueue(false);
+		
+		delRequest.setType(messageType.NON);
 
 		try {
 			delRequest.execute();
 
 			// receive response
-			log.info("Receiving response...");
-			Response response = null;
-			try {
-				response = delRequest.receiveResponse();
-			} catch (InterruptedException e) {
-				System.err.println("Failed to receive response: "
-						+ e.getMessage());
-			}
-
-			// output response
-			if (response != null) {
-				response.prettyPrint();
-				log.info("Time elapsed (ms): " + response.getRTT());
-			}
+//			log.info("Receiving response...");
+//			Response response = null;
+//			try {
+//				response = delRequest.receiveResponse();
+//			} catch (InterruptedException e) {
+//				System.err.println("Failed to receive response: "
+//						+ e.getMessage());
+//			}
+//
+//			// output response
+//			if (response != null) {
+//				response.prettyPrint();
+//				log.info("Time elapsed (ms): " + response.getRTT());
+//			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
