@@ -142,7 +142,7 @@ public class ObjectBrokerImpl implements ObjectBroker
 	@Override
 	public synchronized Obj pullObj(Uri href)
 	{		
-		return pullObj(href);
+		return pullObj(href, false);
 	}
 
 	@Override
