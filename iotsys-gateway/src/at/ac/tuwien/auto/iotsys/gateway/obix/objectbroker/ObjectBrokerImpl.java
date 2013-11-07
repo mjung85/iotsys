@@ -138,6 +138,12 @@ public class ObjectBrokerImpl implements ObjectBroker
 		
 		return o;
 	}
+	
+	@Override
+	public synchronized Obj pullObj(Uri href)
+	{		
+		return pullObj(href);
+	}
 
 	@Override
 	public synchronized Obj pushObj(Uri href, Obj input, boolean isOp) throws Exception

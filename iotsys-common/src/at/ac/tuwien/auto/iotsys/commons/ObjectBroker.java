@@ -11,6 +11,8 @@ public interface ObjectBroker
 	public abstract HashMap<String, String> get_ipv6MappingTable();
 
 	public abstract Obj pullObj(Uri href, boolean refreshObject);
+	
+	public abstract Obj pullObj(Uri href);
 
 	public abstract Obj pushObj(Uri href, Obj input, boolean isOp) throws Exception;
 
