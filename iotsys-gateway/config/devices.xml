@@ -774,7 +774,7 @@
       </device-->
     </connector>        
   </knx>
-  </knx>
+
 
   <bacnet>
     <connector>
