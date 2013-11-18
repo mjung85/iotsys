@@ -48,6 +48,7 @@ import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.enumeration.EnumPar
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.enumeration.EnumPriority;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.enumeration.EnumProbabilityCode;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.enumeration.EnumStandard;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.enumeration.EnumStringCompareTypes;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.enumeration.EnumWeatherSymbol;
 
 public class EnumsImpl extends List implements IObj
@@ -66,6 +67,7 @@ public class EnumsImpl extends List implements IObj
 		enums = new TreeMap<String, RangeImpl>();
 
 		enums.put(EnumCompareTypes.HREF, new EnumCompareTypesImpl());
+		enums.put(EnumStringCompareTypes.HREF, new EnumStringCompareTypesImpl());
 		enums.put(EnumConnector.HREF, new EnumConnectorImpl());
 		enums.put(EnumEnabled.HREF, new EnumEnabledImpl());
 		enums.put(EnumLogicOperationTypes.HREF, new EnumLogicOperationTypesImpl());
