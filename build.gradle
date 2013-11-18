@@ -87,6 +87,7 @@ task deploy << {
 
 task deployOsgi << {
 	File dstConfigDir = new File(felix.absolutePath + '/config')
+	File dstKnxConfigDir = new File(felix.absolutePath + '/knx-config')
 	File dstResDir = new File(felix.absolutePath + '/res')
 	
 	if(felixCache.exists()){
@@ -101,8 +102,16 @@ task deployOsgi << {
 		
 		ant.copy(todir:dstConfigDir){
 			fileset(dir:configDir)
-		}
+		}		
+	}
+	
+	if(dstKnxConfigDir.exists()){
 		
+		println "Copying configuration from " + knxConfigDir.absolutePath + " to " + dstKnxConfigDir.absolutePath
+		
+		ant.copy(todir:dstKnxConfigDir){
+			fileset(dir:knxConfigDir)
+		}		
 	}
 		
 	if(dstResDir.exists()){
@@ -123,6 +132,7 @@ task setupFelix << {
 	
 	File dstConfigDir = new File(felix.absolutePath + '/config')
 	File dstResDir = new File(felix.absolutePath + '/res')
+	File dstKnxConfigDir = new File(felix.absolutePath + '/knx-config')
 		
 	if(!felix.exists()){
 		println "Need to download felix 4.2.1 distribution"
@@ -138,6 +148,17 @@ task setupFelix << {
 			
 			ant.copy(todir:dstConfigDir){
 				fileset(dir:configDir)
+			}
+		}
+		
+		if(dstKnxConfigDir.exists()){
+			println "KNX Configuration already available at " + dstKnxConfigDir.absolutePath
+		}
+		else{
+			println "Copying configuration from " + knxConfigDir.absolutePath + " to " + dstKnxConfigDir.absolutePath
+			
+			ant.copy(todir:dstKnxConfigDir){
+				fileset(dir:knxConfigDir)
 			}
 		}
 		
