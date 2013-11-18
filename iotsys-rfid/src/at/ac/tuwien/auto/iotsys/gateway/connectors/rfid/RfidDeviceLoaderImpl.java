@@ -2,6 +2,7 @@ package at.ac.tuwien.auto.iotsys.gateway.connectors.rfid;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -159,7 +160,7 @@ public class RfidDeviceLoaderImpl implements DeviceLoader {
 											// specified KNX device
 											Obj rfidDevice = (Obj) declaredConstructors[k].newInstance(args);
 
-											rfidDevice.setHref(new Uri(href));
+											rfidDevice.setHref(new Uri(URLEncoder.encode(connectorName, "UTF-8") + "/" + href));
 
 											if (name != null
 													&& name.length() > 0) {
