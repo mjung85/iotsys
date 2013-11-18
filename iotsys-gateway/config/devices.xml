@@ -29,18 +29,14 @@
       <enabled>true</enabled>
       <serialPort>/dev/ttyUSB0</serialPort>
        <device>
-        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.rfid.CommandImplRFID
-        </type>
-        <address>0x0010202E</address>
+        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.rfid.CommandImplRFID</type>      
         <href>RFIDCommand</href>
         <historyEnabled>false</historyEnabled>
         <groupCommEnabled>true</groupCommEnabled>
       </device>
       <device>
-        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.rfid.EventImpRfidTAG
-        </type>
-        <address>0x0010202F</address>
-        <href>RFIDEvent</href>
+        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.rfid.EventImplRFID</type>
+        <href>rfidReader</href>
         <historyEnabled>false</historyEnabled>
         <groupCommEnabled>true</groupCommEnabled>
       </device>
@@ -1162,7 +1158,16 @@
       <name>IoTSyS Logic</name>
       <enabled>true</enabled>
 
-      <!-- Logic components -->
+      <!-- Logic components -->      
+      <device>
+        <type>at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.logic.impl.StringComparatorImpl</type>
+        <href>stringComp1</href>
+        <displayName>String Comparator 1</displayName>
+        <historyEnabled>false</historyEnabled>
+        <refreshEnabled>false</refreshEnabled>
+        <groupCommEnabled>true</groupCommEnabled>
+      </device>
+      
       <device>
         <type>at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.logic.impl.BinaryOperationImpl
         </type>

@@ -26,7 +26,7 @@ public class RfidConnector implements Connector, SerialPortEventListener
 	private static final int SERIAL_TIMEOUT = 2000;
 	//private static final int BAUD_RATE = 9600;
 	
-	private static final int BAUD_RATE = 9600;
+	private static final int BAUD_RATE = 460800;
 
 	private SerialPort serialPort;
 	private InputStream inputStream;
@@ -43,7 +43,7 @@ public class RfidConnector implements Connector, SerialPortEventListener
 	public RfidConnector(String portName) {
 		this.port = portName;
 	}
-	private final Hashtable<String, ArrayList<RfidWatchdog>> watchDogs = new Hashtable<String, ArrayList<RfidWatchdog>>();
+	private final ArrayList<RfidWatchdog> watchDogs = new ArrayList<RfidWatchdog>();
 	
 	public static void rfidSend (byte data[])
 	{
@@ -199,6 +199,7 @@ public class RfidConnector implements Connector, SerialPortEventListener
 				log.info("Calling readPacket()");
 				log.info("Frame PacketLength: " + frame.getPacketLength());
 				frame.readPacket();
+				notifyWatchDogs(frame.dataToString());
 				
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -207,16 +208,17 @@ public class RfidConnector implements Connector, SerialPortEventListener
 		//sendCommand();
 	}
 
-	public void addWatchDog(String observation, RfidWatchdog rfidWatchdog) {
-		
-		synchronized (watchDogs) {
-			if (!watchDogs.containsKey(observation)) {
-				watchDogs.put(observation,
-						new ArrayList<RfidWatchdog>());
+	public void addWatchDog(RfidWatchdog rfidWatchdog) {		
+		synchronized (watchDogs) {			
+			watchDogs.add(rfidWatchdog);
+		}
+	}
+	
+	public void notifyWatchDogs(String tag){
+		synchronized (watchDogs){
+			for(RfidWatchdog watchDog : watchDogs){
+				watchDog.notifyWatchDog(tag);
 			}
-			log.finest("Adding watchdog for address "
-					+ observation);
-			watchDogs.get(observation).add(rfidWatchdog);
 		}
 	}
 }
