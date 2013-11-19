@@ -1,0 +1,4 @@
+2008-06-10 00:39:29 level=info, test-log: this is a log string (this is an exception string)
+2008-06-10 00:39:29 level=info, test-log: this is another log string (this is an exception string)
+2008-06-10 00:39:30 level=info, test-log: null (this is an exception string)
+2008-06-10 00:39:30 level=info, test-log: null
