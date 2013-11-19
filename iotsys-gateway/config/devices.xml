@@ -19,8 +19,6 @@
     </device-loader>
     <device-loader>at.ac.tuwien.auto.iotsys.gateway.connectors.weatherforecast.WeatherForecastDeviceLoaderImpl
     </device-loader>
-    <device-loader>at.ac.tuwien.auto.iotsys.gateway.connectors.rfid.RfidDeviceLoaderImpl
-    </device-loader>
   </deviceloaders>
   
   <rfid>
@@ -185,7 +183,7 @@
   <knx-ets>
     <connector>
         <name>KNX TP1 Suitcase</name>
-        <enabled>false</enabled>
+        <enabled>true</enabled>
         <knx-proj>knx-config/projects/Suitcase_2013_10_18.knxproj</knx-proj>
         <!-- forces unpacking of zip and transformation -->
         <forceRefresh>false</forceRefresh>              

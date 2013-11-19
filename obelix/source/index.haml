@@ -8,13 +8,13 @@
   %body(ng-controller="MainCtrl")
     %script(type="text/ng-template" id="directory_template")
       .icon(ng-click="directory.toggle()")
-      %label(ng-click="directory.toggle()") 
+      %label(ng-click="directory.toggle()")
         {{directory.name}}
       %ul.devices(ng-show="directory.expanded")
         %li.device(ng-repeat="device in directory.devices")
           %label(draggable="device") {{device.name}}
       %ul.subdirectories(ng-show="directory.expanded")
-        %li.subdirectory(ng-class="{expanded:directory.expanded}" ng-repeat="directory in directory.subdirectories" ng-include="'directory_template'")
+        %li.subdirectory(ng-class="{expanded:subdirectory.expanded}" ng-repeat="subdirectory in directory.subdirectories" include-directory-template="subdirectory")
     #sidebar(ng-class="{expanded: sidebarExpanded}")
       .content(not-droppable)
         .header
@@ -27,7 +27,7 @@
             %input(type="text" ng-model="watch.interval" inline-editor="watch.updateInterval()")
           .section
             %a(href="#" ng-click="clear()") Clear
-        %div(ng-show="segment!=1" ng-include="'directory_template'")
+        %div(ng-show="segment!=1" ng-if="directory" include-directory-template="directory")
       .btn#toggle(ng-click="sidebarExpanded = !sidebarExpanded; $event.stopPropagation()")
     #canvas(ng-click="sidebarExpanded = false" droppable="placeDevice" jsplumb-container)
       %div(ng-repeat="device in allDevices | filter:{placement:'!!'}")
