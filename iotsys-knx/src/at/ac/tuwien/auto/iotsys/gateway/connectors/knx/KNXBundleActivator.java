@@ -38,6 +38,7 @@ public class KNXBundleActivator implements BundleActivator, ServiceListener {
 			.getName());
 
 	private DeviceLoader deviceLoader = new KNXDeviceLoaderImpl();
+	private DeviceLoader knxETSLoader = new KNXDeviceLoaderETSImpl();
 	private ArrayList<Connector> connectors = null;
 
 	private volatile boolean registered = false;
@@ -58,6 +59,7 @@ public class KNXBundleActivator implements BundleActivator, ServiceListener {
 				ObjectBroker objectBroker = (ObjectBroker) context
 						.getService(serviceReference);
 				connectors = deviceLoader.initDevices(objectBroker);
+				connectors.addAll(knxETSLoader.initDevices(objectBroker));
 				registered = true;
 			}
 
@@ -77,6 +79,7 @@ public class KNXBundleActivator implements BundleActivator, ServiceListener {
 			ObjectBroker objectBroker = (ObjectBroker) context
 					.getService(serviceReference);
 			deviceLoader.removeDevices(objectBroker);
+			knxETSLoader.removeDevices(objectBroker);
 			if (connectors != null) {
 				for (Connector connector : connectors) {
 					try {
@@ -105,6 +108,7 @@ public class KNXBundleActivator implements BundleActivator, ServiceListener {
 								.getService(event.getServiceReference());
 						try {
 							connectors = deviceLoader.initDevices(objectBroker);
+							connectors.addAll(knxETSLoader.initDevices(objectBroker));
 							registered = true;
 						} catch (Exception e) {
 							e.printStackTrace();

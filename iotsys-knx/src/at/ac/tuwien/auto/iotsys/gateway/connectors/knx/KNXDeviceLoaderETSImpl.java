@@ -171,9 +171,9 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader
 			Boolean forceRefresh = subConfig.getBoolean("forceRefresh", false);
 			String knxProj = subConfig.getString("knx-proj");
 
-			Boolean enableGroupComm = subConfig.getBoolean("enableGroupComm", false);
+			Boolean enableGroupComm = subConfig.getBoolean("groupCommEnabled", false);
 
-			Boolean enableHistories = subConfig.getBoolean("enableHistories", false);
+			Boolean enableHistories = subConfig.getBoolean("historyEnabled", false);
 
 			if (enabled)
 			{
