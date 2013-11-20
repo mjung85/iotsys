@@ -34,6 +34,7 @@ public class StringComparatorImpl extends Obj implements StringComparator {
 
 		input1.setWritable(true);
 		input2.setWritable(true);
+		input2.set("0f 56 35 04 ");
 		enabled.setWritable(true);
 
 		result.setName("result");
@@ -129,6 +130,19 @@ public class StringComparatorImpl extends Obj implements StringComparator {
 				}
 			
 		}
+		else if (input instanceof Str) {
+			
+			if ("input1".equals(resourceUriPath)) {
+				input1.set(((Str) input).get());
+			} else if ("input2".equals(resourceUriPath)) {
+				input2.set(((Str) input).get());
+			} else if("enabled".equals(resourceUriPath)){
+				enabled.set(((Str) input).get());
+			} else if("caseSensitive".equals(resourceUriPath)){
+				caseSensitive.set(((Str) input).get());
+			}
+		
+	}
 		else if (input instanceof obix.Enum){
 			this.compareType.set( ((obix.Enum) input).get() );
 		}
