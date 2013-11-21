@@ -74,7 +74,7 @@ public class BACnetConnector implements Connector{
 	public static final UnsignedInteger BACNET_PRIORITY = new UnsignedInteger(10);
 
 	public BACnetConnector() {
-		this(12345, "128.130.56.255", 0xBAC0);
+		this(10000 + (int) ( Math.random() * 10000), "128.130.56.255", 0xBAC0);
 	}
 
 	public BACnetConnector(int localDeviceID, String broadCastIP,
