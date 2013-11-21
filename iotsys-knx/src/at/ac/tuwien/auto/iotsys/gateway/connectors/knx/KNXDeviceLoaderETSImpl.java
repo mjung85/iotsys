@@ -134,10 +134,13 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader
 
 	public ArrayList<Connector> initDevices(ObjectBroker objectBroker)
 	{
+		log.info("KNX ETS device loader starting. - connectorsConfig: " + connectorsConfig);
 		setConfiguration(connectorsConfig);
+		
 
 		ArrayList<Connector> connectors = new ArrayList<Connector>();
 
+		log.info("connectors config now: " + connectorsConfig);
 		Object knxConnectors = connectorsConfig.getProperty("knx-ets.connector.name");
 
 		int connectorsSize = 0;
@@ -158,7 +161,6 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader
 		networks.setOf(new Contract(Network.CONTRACT));
 		networks.setHref(new Uri("/networks"));
 		objectBroker.addObj(networks, true);
-
 		for (int connector = 0; connector < connectorsSize; connector++)
 		{
 			HierarchicalConfiguration subConfig = connectorsConfig.configurationAt("knx-ets.connector(" + connector + ")");
@@ -171,9 +173,9 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader
 			Boolean forceRefresh = subConfig.getBoolean("forceRefresh", false);
 			String knxProj = subConfig.getString("knx-proj");
 
-			Boolean enableGroupComm = subConfig.getBoolean("enableGroupComm", false);
+			Boolean enableGroupComm = subConfig.getBoolean("groupCommEnabled", false);
 
-			Boolean enableHistories = subConfig.getBoolean("enableHistories", false);
+			Boolean enableHistories = subConfig.getBoolean("historyEnabled", false);
 
 			if (enabled)
 			{
@@ -789,7 +791,8 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader
 		{
 			try
 			{
-				connectorsConfig = new XMLConfiguration(DEVICE_CONFIGURATION_LOCATION);
+				log.info("Loading XML configuration from " + DEVICE_CONFIGURATION_LOCATION);
+				this.connectorsConfig = new XMLConfiguration(DEVICE_CONFIGURATION_LOCATION);
 			}
 			catch (Exception e)
 			{
