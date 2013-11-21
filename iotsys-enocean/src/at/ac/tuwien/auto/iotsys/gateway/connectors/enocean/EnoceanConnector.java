@@ -106,7 +106,7 @@ public class EnoceanConnector implements Connector, SerialPortEventListener {
 		readBaseID[i++] = (byte)(CRC8Hash.calculate(crc8d));
 
 		serialSend(readBaseID);
-		ESP3Telegram response = responseQueue.poll(500, TimeUnit.MILLISECONDS);
+		ESP3Telegram response = responseQueue.poll(2500, TimeUnit.MILLISECONDS);
 		if(response == null) 
 		 {
 			 log.info("RESPONSE is NULL!");
@@ -114,14 +114,13 @@ public class EnoceanConnector implements Connector, SerialPortEventListener {
 			 log.info("Received reponse from responseQueue: " + response.getPayloadAsString());
 			 BaseID = DeviceID.fromByteArray(response.getPayload(), 1);
 			 log.info("BaseID: " + BaseID.toString());
+//			 log.info("Received reponse from responseQueue: " + response.getPayloadAsString());
+//				//ESP3Telegram readBaseIDTelegram = new ESP3TelegramCommonCommand(readBaseID, 1, 0);
+//			 BaseID = DeviceID.fromByteArray(response.getPayload(), 1);
 		 }
-		log.info("Received reponse from responseQueue: " + response.getPayloadAsString());
-		//ESP3Telegram readBaseIDTelegram = new ESP3TelegramCommonCommand(readBaseID, 1, 0);
-		BaseID = DeviceID.fromByteArray(response.getPayload(), 1);
-		 
 		
-
 	}
+	
 	public DeviceID getBaseID()
 	 {
 	return BaseID;
