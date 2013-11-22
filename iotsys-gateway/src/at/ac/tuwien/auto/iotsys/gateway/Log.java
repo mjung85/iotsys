@@ -58,7 +58,7 @@ import ch.ethz.inf.vs.californium.util.Properties;
 public class Log {
 	
 	private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-	private static Level logLevel = Level.parse(PropertiesLoader.getInstance().getProperties().getProperty("iotsys.gateway.loglevel", "INFO"));
+	private static Level logLevel = Level.parse(PropertiesLoader.getInstance().getProperties().getProperty("iotsys.gateway.loglevel", "OFF"));
 	
 	private static final Formatter printFormatter = new Formatter() {
 		@Override
@@ -103,25 +103,25 @@ public class Log {
 		globalLogger.setLevel(logLevel);
 		
 		// create custom file handler
-		FileHandler fHandler;
-		try {
-			fHandler = new FileHandler("iotsys-log.%g.txt", true);
-			fHandler.setFormatter(printFormatter);
-			globalLogger.addHandler(fHandler);
-		} catch (Exception e) {
-			globalLogger.severe("Cannot add file logger: " + e.getMessage());
-		}
-		
-		FileHandler knxHandler;
-		
-		try{
-			knxHandler = new FileHandler("KNX.txt",true);
-			knxHandler.setFormatter(csvFormatter);
-			Logger.getLogger("knxbus").addHandler(knxHandler);
-			Logger.getLogger("knxbus").setLevel(logLevel);
-		} catch(Exception e){
-			e.printStackTrace();
-		}
+//		FileHandler fHandler;
+//		try {
+//			fHandler = new FileHandler("iotsys-log.%g.txt", true);
+//			fHandler.setFormatter(printFormatter);
+//			globalLogger.addHandler(fHandler);
+//		} catch (Exception e) {
+//			globalLogger.severe("Cannot add file logger: " + e.getMessage());
+//		}
+//		
+//		FileHandler knxHandler;
+//		
+//		try{
+//			knxHandler = new FileHandler("KNX.txt",true);
+//			knxHandler.setFormatter(csvFormatter);
+//			Logger.getLogger("knxbus").addHandler(knxHandler);
+//			Logger.getLogger("knxbus").setLevel(logLevel);
+//		} catch(Exception e){
+//			e.printStackTrace();
+//		}
 		
 		// customize levels
 		Logger.getLogger(Endpoint.class.getName()).setLevel(logLevel);

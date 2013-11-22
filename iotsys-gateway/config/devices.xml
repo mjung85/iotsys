@@ -24,7 +24,7 @@
   <rfid>
     <connector>
       <name>RFID</name>
-      <enabled>true</enabled>
+      <enabled>false</enabled>
       <serialPort>/dev/ttyUSB0</serialPort>
        <device>
         <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.rfid.CommandImplRFID</type>      
@@ -66,7 +66,7 @@
   <enocean>
     <connector>
       <name>EnOcean</name>
-      <enabled>true</enabled>
+      <enabled>false</enabled>
       <serialPort>/dev/ttyS80</serialPort>
       <device>
         <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.enocean.PushButtonImplEnocean
@@ -183,7 +183,7 @@
   <knx-ets>
     <connector>
         <name>KNX TP1 Suitcase</name>
-        <enabled>true</enabled>
+        <enabled>false</enabled>
         <knx-proj>knx-config/projects/Suitcase_2013_10_18.knxproj</knx-proj>
         <!-- forces unpacking of zip and transformation -->
         <forceRefresh>false</forceRefresh>              
@@ -791,7 +791,7 @@
       <name>BACnet A-Lab (Auto)</name>
       <enabled>true</enabled>
       <discovery-enabled>true</discovery-enabled>
-      <localDeviceID>54321</localDeviceID>
+      <localDeviceID>343434</localDeviceID>
       <broadcastAddress>128.130.56.255</broadcastAddress>
       <localPort>47808</localPort>
       <groupCommEnabled>true</groupCommEnabled>
