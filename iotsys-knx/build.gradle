@@ -58,7 +58,9 @@ jar {
 					"org.apache.commons.jxpath, org.apache.commons.jxpath.functions, org.apache.commons.jxpath.ri, org.apache.commons.jxpath.ri.axes, org.apache.commons.jxpath.ri.compiler, org.apache.commons.jxpath.ri.model, org.apache.commons.jxpath.ri.model.beans, org.apache.commons.jxpath.ri.model.container, org.apache.commons.jxpath.ri.model.dom, org.apache.commons.jxpath.ri.model.dynabeans, org.apache.commons.jxpath.ri.model.dynamic, org.apache.commons.jxpath.ri.model.jdom, org.apache.commons.jxpath.ri.parser,org.apache.commons.jxpath.servlet, org.apache.commons.jxpath.util, org.apache.commons.jxpath.xml, " +
 					"org.apache.commons.lang, org.apache.commons.lang.builder, org.apache.commons.lang.enums, org.apache.commons.lang.exception, org.apache.commons.lang.math, org.apache.commons.lang.mutable, org.apache.commons.lang.text, org.apache.commons.lang.time, " +
 					"org.apache.commons.logging, org.apache.commons.logging.impl, at.ac.tuwien.auto.iotsys.commons.obix.objects.general.network,at.ac.tuwien.auto.iotsys.commons.obix.objects.general.network.impl, at.ac.tuwien.auto.iotsys.commons.obix.objects.general.parameter, at.ac.tuwien.auto.iotsys.commons.obix.objects.general.parameter.impl, at.ac.tuwien.auto.iotsys.commons.obix.objects.general.unit, at.ac.tuwien.auto.iotsys.commons.obix.objects.general.unit.impl, at.ac.tuwien.auto.iotsys.commons.obix.objects.general.view, at.ac.tuwien.auto.iotsys.commons.obix.objects.general.view.impl,at.ac.tuwien.auto.iotsys.commons.obix.objects.general.internals.impl, org.apache.commons.io.filefilter,"+
-					"at.ac.tuwien.auto.iotsys.commons.obix.objects.general.entity, at.ac.tuwien.auto.iotsys.commons.obix.objects.general.entity.impl, at.ac.tuwien.auto.iotsys.commons.obix.objects.general.datapoint, at.ac.tuwien.auto.iotsys.commons.obix.objects.general.datapoint.impl, at.ac.tuwien.auto.iotsys.commons.obix.objects.general.enumeration, at.ac.tuwien.auto.iotsys.commons.obix.objects.general.enumeration.impl, at.ac.tuwien.auto.iotsys.commons.obix.objects.general.contracts.impl"
+					"at.ac.tuwien.auto.iotsys.commons.obix.objects.general.entity, at.ac.tuwien.auto.iotsys.commons.obix.objects.general.entity.impl, at.ac.tuwien.auto.iotsys.commons.obix.objects.general.datapoint, at.ac.tuwien.auto.iotsys.commons.obix.objects.general.datapoint.impl, at.ac.tuwien.auto.iotsys.commons.obix.objects.general.enumeration, at.ac.tuwien.auto.iotsys.commons.obix.objects.general.enumeration.impl, at.ac.tuwien.auto.iotsys.commons.obix.objects.general.contracts.impl,at.ac.tuwien.auto.iotsys.commons.obix.objects.general.encoding.impl," +
+					"net.sf.saxon, net.sf.saxon.dom, net.sf.saxon.event, net.sf.saxon.evpull, net.sf.saxon.expr, net.sf.saxon.expr.flwor,  net.sf.saxon.expr.instruct, net.sf.saxon.expr.number, net.sf.saxon.expr.parser, net.sf.saxon.expr.sort, net.sf.saxon.functions, net.sf.saxon.functions.regex, net.sf.saxon.java, net.sf.saxon.lib, net.sf.saxon.om, net.sf.saxon.pattern, net.sf.saxon.pull, net.sf.saxon.query, net.sf.saxon.s9api," +
+					"net.sf.saxon.serialize, net.sf.saxon.serialize.charcode, net.sf.saxon.serialize.codenorm, net.sf.saxon.style, net.sf.saxon.sxpath, net.sf.saxon.trace, net.sf.saxon.trans, net.sf.saxon.tree, net.sf.saxon.tree.iter, net.sf.saxon.tree.linked, net.sf.saxon.tree.tiny, net.sf.saxon.tree.util, net.sf.saxon.tree.wrapper, net.sf.saxon.type, net.sf.saxon.value, net.sf.saxon.xpath, net.sf.saxon.xqj"
 		)
 	}
 }
@@ -83,9 +85,9 @@ dependencies {
 	provided group: 'commons-lang', name: 'commons-lang', version: '2.3'
 	provided group: 'commons-logging', name: 'commons-logging', version: '1.1.1'
 	
-	provided group: 'net.sf.saxon', name:'Saxon-HE', version:'9.4'
+	compile group: 'net.sf.saxon', name:'Saxon-HE', version:'9.4'	
+	compile group: 'net.lingala.zip4j', name:'zip4j', version:'1.2.3'
 	
-	provided group: 'net.lingala.zip4j', name:'zip4j', version:'1.2.3'
 	provided group: 'commons-io', name:'commons-io', version: '2.4'	
 }
 
