@@ -12,30 +12,29 @@ import obix.Str;
 import obix.Real;
 import obix.Uri;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.sensors.impl.SensorImpl;
+import at.ac.tuwien.auto.iotsys.gateway.connectors.rfid.RfidConnector;
+import at.ac.tuwien.auto.iotsys.gateway.connectors.rfid.RfidWatchdog;
 import at.ac.tuwien.auto.iotsys.gateway.connectors.rfid.util.RfidFrame;
 
 public class EventImplRFID extends SensorImpl implements EventRFID  {
-		private static final Logger log = Logger.getLogger(EventImpRfidTAG.class.getName());
+		private static final Logger log = Logger.getLogger(EventImplRFID.class.getName());
 	
 		protected Str rfidTag = new Str();
 		protected Abstime rfidTime = new Abstime();	
+		
 		Date milis = new Date();
 		TimeZone tz = TimeZone.getTimeZone("Europe/Vienna");
-
-
-
-
-		public EventImplRFID(){
-			
-						
+		
+		public EventImplRFID(RfidConnector connector){
+									
 			setIs(new Contract(new String[]{EventRFID.CONTRACT}));
-			
-			
+						
 			rfidTag.setWritable(false);
 			Uri rfidTagUri = new Uri(EventRFID.RFID_TAG_HREF);
 			rfidTag.setHref(rfidTagUri);
 			rfidTag.setName(EventRFID.RFID_TAG_NAME);
 			rfidTag.set("");
+			rfidTag.setWritable(true);
 			add(rfidTag);
 			
 			log.info("String VALUE: " + rfidTag.get());
@@ -46,7 +45,15 @@ public class EventImplRFID extends SensorImpl implements EventRFID  {
 			rfidTime.setName(EventRFID.RFID_TIME_NAME);
 			rfidTime.set(milis.getTime(), tz);
 			
-			add(rfidTime);		
+			add(rfidTime);
+			
+			connector.addWatchDog(new RfidWatchdog() {
+				
+				@Override
+				public void notifyWatchDog(String tag) {		
+					rfidTag.set(tag);					
+				}
+			});
 		}
 		public void initialize(){
 			super.initialize();
@@ -55,25 +62,22 @@ public class EventImplRFID extends SensorImpl implements EventRFID  {
 		
 		
 
-		public void refreshObject(){
-		
-			if(RfidFrame.instance != null){
-				
-				this.rfidTag().set(RfidFrame.instance.dataToString());
-				log.info("RFID TAG is: " + rfidTag );
-				log.info("INSTANCE: " + RfidFrame.instance.dataToString());
-			}
+		public void refreshObject(){		
+//			if(RfidFrame.instance != null){
+//				
+//				this.rfidTag().set(RfidFrame.instance.dataToString());				
+//				log.info("RFID TAG is: " + rfidTag );
+//				log.info("INSTANCE: " + RfidFrame.instance.dataToString());
+//			}
 		}
 
 		@Override
 		public Str rfidTag() {
-			// TODO Auto-generated method stub
 			return this.rfidTag;
 		}
 
 		@Override
 		public Abstime rfidTagTime() {
-			// TODO Auto-generated method stub
 			return this.rfidTime;
 		}
 		
