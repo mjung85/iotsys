@@ -2,6 +2,7 @@ package at.ac.tuwien.auto.iotsys.gateway.connectors.rfid;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -68,6 +69,10 @@ public class RfidDeviceLoaderImpl implements DeviceLoader {
 			String connectorName = subConfig.getString("name");
 			String serialPort = subConfig.getString("serialPort");
 			Boolean enabled = subConfig.getBoolean("enabled", false);
+			
+			Boolean enableGroupComm = subConfig.getBoolean("enableGroupComm", false);
+
+			Boolean enableHistories = subConfig.getBoolean("enableHistories", false);
 
 			// PropertyConfigurator.configure("log4j.properties");
 			if (enabled) {
@@ -96,8 +101,7 @@ public class RfidDeviceLoaderImpl implements DeviceLoader {
 					for (int i = 0; i < numberOfDevices; i++) {
 						String type = subConfig.getString("device(" + i
 								+ ").type");
-						List<Object> address = subConfig.getList("device(" + i
-								+ ").address");
+						
 						String ipv6 = subConfig.getString("device(" + i
 								+ ").ipv6");
 						String href = subConfig.getString("device(" + i
@@ -118,15 +122,15 @@ public class RfidDeviceLoaderImpl implements DeviceLoader {
 						Boolean refreshEnabled = subConfig.getBoolean("device("
 								+ i + ").refreshEnabled", false);
 
-						if (type != null && address != null) {
-							int addressCount = address.size();
+						if (type != null) {
+							
 							try {
 								Constructor<?>[] declaredConstructors = Class
 										.forName(type)
 										.getDeclaredConstructors();
 								for (int k = 0; k < declaredConstructors.length; k++) {
 									if (declaredConstructors[k]
-											.getParameterTypes().length == addressCount + 1) { // constructor
+											.getParameterTypes().length == 1) { // constructor
 																								// that
 																								// takes
 																								// the
@@ -137,29 +141,17 @@ public class RfidDeviceLoaderImpl implements DeviceLoader {
 																								// address
 																								// as
 																								// argument
-										Object[] args = new Object[address
-												.size() + 1];
+										Object[] args = new Object[1];
 										// first arg is KNX connector
 
 										args[0] = rfidConnector;
-										for (int l = 1; l <= address.size(); l++) {
-
-											String adr = (String) address
-													.get(l - 1);
-											if (adr == null
-													|| adr.equals("null")) {
-												args[l] = null;
-											} else {
-												args[l] = new String(adr);
-											}
-
-										}
+									
 										try {
 											// create a instance of the
 											// specified KNX device
 											Obj rfidDevice = (Obj) declaredConstructors[k].newInstance(args);
 
-											rfidDevice.setHref(new Uri(href));
+											rfidDevice.setHref(new Uri(URLEncoder.encode(connectorName, "UTF-8") + "/" + href));
 
 											if (name != null
 													&& name.length() > 0) {
@@ -172,7 +164,7 @@ public class RfidDeviceLoaderImpl implements DeviceLoader {
 											} else {
 												objectBroker
 														.addObj(rfidDevice);
-											}
+											}																				
 
 											myObjects.add(rfidDevice);
 

@@ -5,19 +5,16 @@ import java.util.logging.Logger;
 
 import at.ac.tuwien.auto.iotsys.gateway.connectors.rfid.RfidConnector;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators.impl.ActuatorImpl;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.rfid.EventImpRfidTAG;
 import obix.Contract;
-import obix.Enum;
-import obix.Str;
 import obix.Uri;
 import obix.Bool;
 import obix.Obj;
+
 public class CommandImplRFID extends ActuatorImpl implements CommandRFID {
-	private static final Logger log = Logger.getLogger(EventImpRfidTAG.class.getName());
+	private static final Logger log = Logger.getLogger(CommandImplRFID.class.getName());
 	
 	
 	private RfidConnector connector;
-	private String hexAddress;
 	
 	protected Bool continousRead = new Bool(false);
 	protected Bool singleSelect = new Bool(false);
@@ -25,7 +22,7 @@ public class CommandImplRFID extends ActuatorImpl implements CommandRFID {
 	protected Bool abortContinousRead = new Bool(false);
 	protected Bool reset = new Bool(false);
 	
-	public CommandImplRFID(RfidConnector connector, final String hexAddress)
+	public CommandImplRFID(RfidConnector connector)
 	{
 		setIs(new Contract(CommandRFID.CONTRACT));
 

@@ -78,6 +78,31 @@ public class Str extends Val
 	{
 		this.set(val, true);
 	}
+	
+	public void set(Real val){
+		this.set(val.toString(), true);
+	}
+	
+	public void set(Int val){
+		this.set(val.toString(), true);
+	}
+	
+
+	public void set(Bool val){
+		this.set(val.toString(), true);
+	}
+	
+	public void set(Long val){
+		this.set(val.toString(), true);
+	}
+	
+	public void set(boolean val){
+		this.set("" + val, true);
+	}
+	
+	public void set(double val){
+		this.set("" + val, true);
+	}
 
 	// //////////////////////////////////////////////////////////////
 	// Val
