@@ -44,14 +44,14 @@ public class CoapConnector implements Connector {
 	@Override
 	public void connect() throws Exception {
 		log.info("CoapConnector connecting.");	
-		//Server Socket erstellen für Observe?
+		//CoAP Server erstellen?
 	}
 
 	@Override
 	public void disconnect() throws Exception {
 		log.info("CoapConnector disconnecting.");
 	}
-
+/*
 	public Boolean readBoolean(Object busAddress) {
 		return true;
 	}
@@ -67,4 +67,5 @@ public class CoapConnector implements Connector {
 	public void writeDouble(Object busAddress, Double value) {
 
 	}
+*/
 }

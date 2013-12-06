@@ -33,6 +33,7 @@
 package at.ac.tuwien.auto.iotsys.gateway.connectors.coap;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -40,10 +41,13 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import obix.Bool;
-import obix.Int;
+import java.net.Inet6Address;
+import java.net.UnknownHostException;
+
+//import obix.Bool;
+//import obix.Int;
 import obix.Obj;
-import obix.Real;
+//import obix.Real;
 import obix.Uri;
 
 import org.apache.commons.configuration.HierarchicalConfiguration;
@@ -52,8 +56,6 @@ import org.apache.commons.configuration.XMLConfiguration;
 import at.ac.tuwien.auto.iotsys.commons.Connector;
 import at.ac.tuwien.auto.iotsys.commons.DeviceLoader;
 import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
-import at.ac.tuwien.auto.iotsys.commons.obix.objects.weatherforecast.WeatherForecastCrawler;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.weatherforecast.impl.WeatherForecastLocationImpl;
 
 public class CoapDeviceLoaderImpl implements DeviceLoader {
 	private final ArrayList<Obj> myObjects = new ArrayList<Obj>();
@@ -63,102 +65,14 @@ public class CoapDeviceLoaderImpl implements DeviceLoader {
 	private static final Logger log = Logger
 			.getLogger(CoapDeviceLoaderImpl.class.getName());
 
-	@Override
 	public ArrayList<Connector> initDevices(ObjectBroker objectBroker) {
 		setConfiguration(devicesConfig);
 		
-		// Hard-coded connections and object creation
-
-		// store all created connectors, will be used by the gateway for closing
 		ArrayList<Connector> connectors = new ArrayList<Connector>();
-		// Open connection
-		CoapConnector coapConnector = new CoapConnector();
-		try {
-			coapConnector.connect();
 
-			connectors.add(coapConnector);
-			
-			Obj complexObj= new Obj();
-			complexObj.setHref(new Uri("examples/complexObj"));
-			Bool b1 = new Bool();
-			
-			b1.setHref(new Uri("b1"));
-			b1.setName("b1");
-			
-			Int i1 = new Int();
-			i1.setHref(new Uri("i1"));
-			i1.setName("i1");
-			
-			Int i2 = new Int();
-			i2.setHref(new Uri("i2"));
-			i2.setName("i2");
-			
-			Obj childObj = new Obj();
-			childObj.setHref(new Uri("childObj"));
-			
-			Real r1 = new Real();
-			r1.setHref(new Uri("r"));
-			r1.setName("r");
-			
-			childObj.add(r1);
-			
-			complexObj.add(b1);
-			complexObj.add(i1);
-			complexObj.add(i2);
-			complexObj.add(childObj);
-					 					
-			objectBroker.addObj(complexObj, "2001:629:2500:60::1:71");
-
-			// add Coap devices
-
-//			TemperatureSensorImpl virtualTemp1 = new TemperatureSensorImplVirtual(
-//					virtualConnector, new Object());
-//			virtualTemp1.setHref(new Uri("virtualTemp1"));
-//			virtualTemp1.setName("virtualTemp1");
-
-			// add virtual devices to object broker and remember all assigned
-			// URIs, due to child objects there could be one or many
-//			synchronized (myObjects) {
-//				myObjects.addAll(objectBroker.addObj(virtualTemp1));
-//			}
-
-			// add obj with IPv6 address
-			// String ipv6 = "fe80::1"
-			// myObjects.addAll(objectBroker.addObj(virtualTemp1, ipv6));
-
-			// enable history yes/no?
-//			objectBroker.addHistoryToDatapoints(virtualTemp1, 100);
-//
-//			LightSwitchActuatorImpl virtualLight1 = new LightSwitchActuatorImplVirtual(
-//					virtualConnector, new Object());
-//			virtualLight1.setHref(new Uri("virtualLight1"));
-//			virtualLight1.setName("virtualLight1");
-
-			// add virtual devices to object broker
-//			synchronized (myObjects) {
-//				myObjects.addAll(objectBroker.addObj(virtualLight1));
-//			}
-
-			// add obj with IPv6 address
-			// String ipv6 = "fe80::1"
-			// objectBroker.addObj(virtualTemp1, ipv6);
-
-			// enable history yes/no?
-//			objectBroker.addHistoryToDatapoints(virtualLight1, 100);
-			
-
-		} catch (Exception e) {
-
-			e.printStackTrace();
-		}
-
-		// parse XML configuration for connections and objects
-		// NOTE: this loader allow to directly instantiate the base oBIX objects
-		// for testing purposes
+		Object coapConnectors = devicesConfig.getProperty("coap.connector.name");
 		int connectorsSize = 0;
-		// Coap
-		Object coapConnectors = devicesConfig
-				.getProperty("coap.connector.name");
+
 		if (coapConnectors != null) {
 			if(coapConnectors instanceof String){
 				connectorsSize = 1;
@@ -173,20 +87,22 @@ public class CoapDeviceLoaderImpl implements DeviceLoader {
 		if (coapConnectors instanceof Collection<?>) {
 			coapConnectors = ((Collection<?>) coapConnectors).size();
 		}
+		
 
 		for (int connector = 0; connector < connectorsSize; connector++) {
 			HierarchicalConfiguration subConfig = devicesConfig
 					.configurationAt("coap.connector(" + connector + ")");
 
-			Object coapConfiguredDevices = subConfig
-					.getProperty("device.type");
+			Object coapConfiguredDevices = subConfig.getProperty("device.type");
 			String connectorName = subConfig.getString("name");
 			Boolean enabled = subConfig.getBoolean("enabled", false);
-			
+
 			if (enabled) {
 				try {
-					CoapConnector vConn = new CoapConnector();
-
+					CoapConnector coapConnector = new CoapConnector();
+					coapConnector.connect();
+					connectors.add(coapConnector);
+					
 					int numberOfDevices = 0;
 					if (coapConfiguredDevices != null) {
 						numberOfDevices = 1; // there is at least one device.
@@ -198,7 +114,7 @@ public class CoapDeviceLoaderImpl implements DeviceLoader {
 					
 					if (numberOfDevices > 0) {
 						log.info(numberOfDevices
-								+ " coap devices found in configuration for connector "
+								+ " CoAP devices found in configuration for connector "
 								+ connectorName);
 
 						for (int i = 0; i < numberOfDevices; i++) {
@@ -206,6 +122,7 @@ public class CoapDeviceLoaderImpl implements DeviceLoader {
 									+ ").type");
 							List<Object> address = subConfig.getList("device("
 									+ i + ").address");
+							//TODO: CoAP Devices already have ipv6-address - needed?
 							String ipv6 = subConfig.getString("device(" + i
 									+ ").ipv6");
 							String href = subConfig.getString("device(" + i
@@ -221,113 +138,135 @@ public class CoapDeviceLoaderImpl implements DeviceLoader {
 							
 							Boolean groupCommEnabled = subConfig.getBoolean(
 									"device(" + i + ").groupCommEnabled", false);
-							
-							Boolean refreshEnabled = subConfig.getBoolean("device(" + i + ").refreshEnabled", false);
 
 							Integer historyCount = subConfig.getInt("device("
 									+ i + ").historyCount", 0);
 							
+							Boolean refreshEnabled = subConfig.getBoolean("device(" + i + ").refreshEnabled", false);
 							
-							
-							// for weather forcast services only
-							String description = subConfig.getString("device(" + i + ").location.description", "");
-							Double latitude = subConfig.getDouble("device(" + i + ").location.latitude", 0);
-							Double longitude = subConfig.getDouble("device(" + i + ").location.longitude", 0);
-							Long height = subConfig.getLong("device(" + i + ").location.height", 0);
-
 							if (type != null && address != null) {
 								try {
-
 									Constructor<?>[] declaredConstructors = Class
 											.forName(type)
 											.getDeclaredConstructors();
 									
-									Object[] args = new Object[1];
-									args[0] = vConn;
-									Obj coapObj = null;
+									//TODO: constructor that takes connector and IPv6 Adress as argument - 
+									// so need only 2 arguments?!?
+									Object[] args = new Object[2];
+									log.info("TEST");
+									
+									// first arg is Coap connector
+									args[0] = coapConnector;
+									
+									Obj coapDevice = null;
+									
 									for (int k = 0; k < declaredConstructors.length; k++) {
-										if (declaredConstructors[k]
-												.getParameterTypes().length == 0) { 
-											coapObj = (Obj) Class.forName(type)
-													.newInstance();
+									
+										if (declaredConstructors[k].getParameterTypes().length == 0) { 
+											//TODO: log wieder entfernen
+											log.info("Parameters == 0");
+											coapDevice = (Obj) Class.forName(type).newInstance();
 										}
-										else if(declaredConstructors[k].getParameterTypes().length == 1){
-											coapObj = (Obj) declaredConstructors[k].newInstance(args);
+										
+										if (declaredConstructors[k].getParameterTypes().length == 1) { 
+											log.info("Parameters == 1");
 										}
-										// for weather forcast services only
-										else if (WeatherForecastCrawler.class.isAssignableFrom(Class.forName(type)) &&
-													declaredConstructors[k].getParameterTypes().length == 3) {
-											// constructor that takes name, location, and connector as argument
-											args = new Object[3];
 
-											args[0] = name;
-											args[1] = new WeatherForecastLocationImpl(description, latitude, longitude, height);
-											args[2] = null;
-											
-											coapObj = (Obj) declaredConstructors[k].newInstance(args);
+										//TODO: das if erfüllt er nicht ... 
+										//weil in den Klassen kein Konstruktor mit 2 parametern
+										//TODO: eigene Implementierungen für CoAP Devices machen - Markus fragen?
+										if (declaredConstructors[k].getParameterTypes().length == 2) {	
+											log.info("TEST2");
+												
+											//Try to make IPv6 address for 2nd arg
+											//for (int l = 1; l <= address.size(); l++) {
+												try {
+													String adr = (String) address.get(0);
+													log.info(adr);
+													if (adr == null || adr.equals("null")) {
+														args[1] = null;
+														//TODO: Throw no Address Exception???
+														log.info("null");
+													} else {
+														//TODO: generate IPv6 Adress right?
+														log.info(adr);
+														Inet6Address generateIPv6Address = (Inet6Address) Inet6Address.getByName(adr);
+														args[1] = generateIPv6Address;
+													}
+													
+													coapDevice = (Obj) declaredConstructors[k].newInstance(args);
+													log.info("Argumente");
+												} catch (UnknownHostException e){
+													e.printStackTrace();
+												}
+											//}			
 										}
+									}	
+									
+									// create a instance of the specified CoAP device
+									//TODO: Throws NullPointerException ... because no Instance for coapDevice is created		
+									coapDevice.setHref(new Uri(URLEncoder.encode(connectorName, "UTF-8") + "/" + href));
+									
+									if(name != null && name.length() > 0){
+										coapDevice.setName(name);
 									}
-									
-									coapObj.setHref(new Uri(URLEncoder.encode(connectorName, "UTF-8") + "/" + href));
-									
-									if(name != null && name.length() > 0 && coapObj.getName() == null){
-										coapObj.setName(name);
-									}
-									
+										
 									if(displayName != null && displayName.length() > 0){
-										coapObj.setDisplayName(displayName);
+										coapDevice.setDisplayName(displayName);
 									}
-									
-									if (ipv6 != null) {
-										objectBroker.addObj(coapObj, ipv6);
-									} else {
-										objectBroker.addObj(coapObj);
-									}
-									
-									myObjects.add(coapObj);
-									
-									coapObj.initialize();
 
-									if (historyEnabled != null
-											&& historyEnabled) {
-										if (historyCount != null
-												&& historyCount != 0) {
-											objectBroker
-													.addHistoryToDatapoints(
-															coapObj,
-															historyCount);
+									//TODO: CoAP Devices already have ipv6-address - needed?
+									if (ipv6 != null) {
+										objectBroker.addObj(coapDevice, ipv6);
+									} else {
+										objectBroker.addObj(coapDevice);
+									}
+										
+									myObjects.add(coapDevice);
+
+									coapDevice.initialize();
+
+									if (historyEnabled != null && historyEnabled) {
+										if (historyCount != null && historyCount != 0) {
+											objectBroker.addHistoryToDatapoints(coapDevice,historyCount);
 										} else {
-											objectBroker
-													.addHistoryToDatapoints(coapObj);
+											objectBroker.addHistoryToDatapoints(coapDevice);
 										}
 									}
-									
+										
 									if(groupCommEnabled){
-										objectBroker.enableGroupComm(coapObj);
+										objectBroker.enableGroupComm(coapDevice);
 									}
-									
+										
 									if(refreshEnabled != null && refreshEnabled){
-										objectBroker.enableObjectRefresh(coapObj);
+										objectBroker.enableObjectRefresh(coapDevice);
 									}
 
 								} catch (SecurityException e) {
 									e.printStackTrace();
 								} catch (ClassNotFoundException e) {
 									e.printStackTrace();
+								} catch (IllegalArgumentException e) {
+									e.printStackTrace();
+								} catch (InstantiationException e) {
+									e.printStackTrace();
+								} catch (IllegalAccessException e) {
+									e.printStackTrace();
+								} catch (InvocationTargetException e) {
+									e.printStackTrace();
 								}
 							}
 						}
 					} else {
-						log.info("No coap devices configured for connector "
+						log.info("No CoAP devices configured for connector "
 								+ connectorName);
 					}
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
+	
 			}
 		}
-		
-	
 		return connectors;
 	}
 
