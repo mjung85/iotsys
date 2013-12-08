@@ -41,6 +41,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import java.net.Inet4Address;
 import java.net.Inet6Address;
 import java.net.UnknownHostException;
 
@@ -67,17 +68,17 @@ public class CoapDeviceLoaderImpl implements DeviceLoader {
 
 	public ArrayList<Connector> initDevices(ObjectBroker objectBroker) {
 		setConfiguration(devicesConfig);
-		
+
 		ArrayList<Connector> connectors = new ArrayList<Connector>();
 
-		Object coapConnectors = devicesConfig.getProperty("coap.connector.name");
+		Object coapConnectors = devicesConfig
+				.getProperty("coap.connector.name");
 		int connectorsSize = 0;
 
 		if (coapConnectors != null) {
-			if(coapConnectors instanceof String){
+			if (coapConnectors instanceof String) {
 				connectorsSize = 1;
-			}
-			else{
+			} else {
 				connectorsSize = ((Collection<?>) coapConnectors).size();
 			}
 		} else {
@@ -87,7 +88,6 @@ public class CoapDeviceLoaderImpl implements DeviceLoader {
 		if (coapConnectors instanceof Collection<?>) {
 			coapConnectors = ((Collection<?>) coapConnectors).size();
 		}
-		
 
 		for (int connector = 0; connector < connectorsSize; connector++) {
 			HierarchicalConfiguration subConfig = devicesConfig
@@ -102,7 +102,7 @@ public class CoapDeviceLoaderImpl implements DeviceLoader {
 					CoapConnector coapConnector = new CoapConnector();
 					coapConnector.connect();
 					connectors.add(coapConnector);
-					
+
 					int numberOfDevices = 0;
 					if (coapConfiguredDevices != null) {
 						numberOfDevices = 1; // there is at least one device.
@@ -111,7 +111,7 @@ public class CoapDeviceLoaderImpl implements DeviceLoader {
 						Collection<?> coapDevices = (Collection<?>) coapConfiguredDevices;
 						numberOfDevices = coapDevices.size();
 					}
-					
+
 					if (numberOfDevices > 0) {
 						log.info(numberOfDevices
 								+ " CoAP devices found in configuration for connector "
@@ -122,126 +122,160 @@ public class CoapDeviceLoaderImpl implements DeviceLoader {
 									+ ").type");
 							List<Object> address = subConfig.getList("device("
 									+ i + ").address");
-							//TODO: CoAP Devices already have ipv6-address - needed?
+							// TODO: CoAP Devices already have ipv6-address -
+							// needed?
 							String ipv6 = subConfig.getString("device(" + i
 									+ ").ipv6");
 							String href = subConfig.getString("device(" + i
 									+ ").href");
-							
+
 							String name = subConfig.getString("device(" + i
 									+ ").name");
-							
-							String displayName = subConfig.getString("device(" + i + ").displayName");
+
+							String displayName = subConfig.getString("device("
+									+ i + ").displayName");
 
 							Boolean historyEnabled = subConfig.getBoolean(
 									"device(" + i + ").historyEnabled", false);
-							
-							Boolean groupCommEnabled = subConfig.getBoolean(
-									"device(" + i + ").groupCommEnabled", false);
+
+							Boolean groupCommEnabled = subConfig
+									.getBoolean("device(" + i
+											+ ").groupCommEnabled", false);
 
 							Integer historyCount = subConfig.getInt("device("
 									+ i + ").historyCount", 0);
-							
-							Boolean refreshEnabled = subConfig.getBoolean("device(" + i + ").refreshEnabled", false);
-							
+
+							Boolean refreshEnabled = subConfig.getBoolean(
+									"device(" + i + ").refreshEnabled", false);
+
 							if (type != null && address != null) {
 								try {
 									Constructor<?>[] declaredConstructors = Class
 											.forName(type)
 											.getDeclaredConstructors();
-									
-									//TODO: constructor that takes connector and IPv6 Adress as argument - 
+
+									// TODO: constructor that takes connector
+									// and IPv6 Adress as argument -
 									// so need only 2 arguments?!?
 									Object[] args = new Object[2];
 									log.info("TEST");
-									
+
 									// first arg is Coap connector
 									args[0] = coapConnector;
-									
+
 									Obj coapDevice = null;
-									
+
 									for (int k = 0; k < declaredConstructors.length; k++) {
-									
-										if (declaredConstructors[k].getParameterTypes().length == 0) { 
-											//TODO: log wieder entfernen
-											log.info("Parameters == 0");
-											coapDevice = (Obj) Class.forName(type).newInstance();
+										
+										if (declaredConstructors[k]
+												.getParameterTypes().length == 0) {
+											
+											coapDevice = (Obj) declaredConstructors[k]
+													.newInstance();
 										}
 										
-										if (declaredConstructors[k].getParameterTypes().length == 1) { 
-											log.info("Parameters == 1");
-										}
+										
+										// TODO: eigene Implementierungen für
+										// CoAP Devices machen - Markus fragen?
+										if (declaredConstructors[k]
+												.getParameterTypes().length == 2) {
 
-										//TODO: das if erfüllt er nicht ... 
-										//weil in den Klassen kein Konstruktor mit 2 parametern
-										//TODO: eigene Implementierungen für CoAP Devices machen - Markus fragen?
-										if (declaredConstructors[k].getParameterTypes().length == 2) {	
-											log.info("TEST2");
+											String adr = null;
+											// Try to make IPv6 address for 2nd arg
+											if(!address.isEmpty()) {
+												adr = (String) address.get(0);
+											}
+											
+											if (adr == null || adr.equals("null")) {
+												throw new UnknownHostException("No Address found");
+											} 
+
+											// TODO: generate IPv6 Address
+											// right?
+											
+											Object inetAddress = Inet6Address
+													.getByName(adr);
+											
+											Inet6Address generateIPv6Address =  null;
+											if(inetAddress instanceof Inet4Address) {
 												
-											//Try to make IPv6 address for 2nd arg
-											//for (int l = 1; l <= address.size(); l++) {
-												try {
-													String adr = (String) address.get(0);
-													log.info(adr);
-													if (adr == null || adr.equals("null")) {
-														args[1] = null;
-														//TODO: Throw no Address Exception???
-														log.info("null");
-													} else {
-														//TODO: generate IPv6 Adress right?
-														log.info(adr);
-														Inet6Address generateIPv6Address = (Inet6Address) Inet6Address.getByName(adr);
-														args[1] = generateIPv6Address;
-													}
-													
-													coapDevice = (Obj) declaredConstructors[k].newInstance(args);
-													log.info("Argumente");
-												} catch (UnknownHostException e){
-													e.printStackTrace();
-												}
-											//}			
+												//TODO: IPv4 Addressen verwendbar machen?
+												adr = "::" + adr;							
+												generateIPv6Address = (Inet6Address) Inet6Address.getByName(adr);
+											} else {
+												generateIPv6Address = (Inet6Address) inetAddress;
+											}
+								
+											
+											
+											
+											args[1] = generateIPv6Address;
+											log.info(generateIPv6Address + "");
+
+											coapDevice = (Obj) declaredConstructors[k]
+													.newInstance(args);
+											
+											
+											
+											// }
 										}
-									}	
-									
+									}
+
 									// create a instance of the specified CoAP device
-									//TODO: Throws NullPointerException ... because no Instance for coapDevice is created		
-									coapDevice.setHref(new Uri(URLEncoder.encode(connectorName, "UTF-8") + "/" + href));
-									
-									if(name != null && name.length() > 0){
+									coapDevice.setHref(new Uri(URLEncoder
+											.encode(connectorName, "UTF-8")
+											+ "/" + href));
+
+									if (name != null && name.length() > 0) {
 										coapDevice.setName(name);
 									}
-										
-									if(displayName != null && displayName.length() > 0){
+
+									if (displayName != null
+											&& displayName.length() > 0) {
 										coapDevice.setDisplayName(displayName);
 									}
 
-									//TODO: CoAP Devices already have ipv6-address - needed?
+									// TODO: CoAP Devices already have
+									// ipv6-address - needed?
 									if (ipv6 != null) {
 										objectBroker.addObj(coapDevice, ipv6);
 									} else {
 										objectBroker.addObj(coapDevice);
 									}
-										
+
 									myObjects.add(coapDevice);
 
 									coapDevice.initialize();
 
-									if (historyEnabled != null && historyEnabled) {
-										if (historyCount != null && historyCount != 0) {
-											objectBroker.addHistoryToDatapoints(coapDevice,historyCount);
+									if (historyEnabled != null
+											&& historyEnabled) {
+										if (historyCount != null
+												&& historyCount != 0) {
+											objectBroker
+													.addHistoryToDatapoints(
+															coapDevice,
+															historyCount);
 										} else {
-											objectBroker.addHistoryToDatapoints(coapDevice);
+											objectBroker
+													.addHistoryToDatapoints(coapDevice);
 										}
 									}
-										
-									if(groupCommEnabled){
-										objectBroker.enableGroupComm(coapDevice);
-									}
-										
-									if(refreshEnabled != null && refreshEnabled){
-										objectBroker.enableObjectRefresh(coapDevice);
+
+									if (groupCommEnabled) {
+										objectBroker
+												.enableGroupComm(coapDevice);
 									}
 
+									if (refreshEnabled != null
+											&& refreshEnabled) {
+										objectBroker
+												.enableObjectRefresh(coapDevice);
+									}
+
+								} catch (UnknownHostException e) {
+									//e.printStackTrace();
+									log.info("No IPv6 Address used for Device Type " + type + "\n Wrong Address: "
+											+ e.getMessage());
 								} catch (SecurityException e) {
 									e.printStackTrace();
 								} catch (ClassNotFoundException e) {
@@ -264,7 +298,7 @@ public class CoapDeviceLoaderImpl implements DeviceLoader {
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-	
+
 			}
 		}
 		return connectors;
@@ -285,7 +319,8 @@ public class CoapDeviceLoaderImpl implements DeviceLoader {
 		this.devicesConfig = devicesConfiguration;
 		if (devicesConfiguration == null) {
 			try {
-				devicesConfig = new XMLConfiguration(DEVICE_CONFIGURATION_LOCATION);
+				devicesConfig = new XMLConfiguration(
+						DEVICE_CONFIGURATION_LOCATION);
 			} catch (Exception e) {
 				log.log(Level.SEVERE, e.getMessage(), e);
 			}

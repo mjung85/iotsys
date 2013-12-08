@@ -30,7 +30,7 @@
       		</device>
 
       		<device>
-        		<type>at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.sensors.impl.TemperatureSensorImpl
+        		<type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.coap.TemperatureSensorImplCoap
         		</type>
 				<address>fc00::3</address>
         		<href>Sens3</href>

@@ -51,7 +51,7 @@ public class CoapConnector implements Connector {
 	public void disconnect() throws Exception {
 		log.info("CoapConnector disconnecting.");
 	}
-/*
+
 	public Boolean readBoolean(Object busAddress) {
 		return true;
 	}
@@ -61,11 +61,11 @@ public class CoapConnector implements Connector {
 	}
 
 	public Double readDouble(Object busAddress) {
-		return Math.random();
+		return Math.random() + 1;
 	}
 
 	public void writeDouble(Object busAddress, Double value) {
-
+		log.info("Wert geschrieben:" + value);
 	}
-*/
+
 }
