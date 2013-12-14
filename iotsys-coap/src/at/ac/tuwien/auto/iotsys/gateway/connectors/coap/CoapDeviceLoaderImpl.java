@@ -122,8 +122,7 @@ public class CoapDeviceLoaderImpl implements DeviceLoader {
 									+ ").type");
 							List<Object> address = subConfig.getList("device("
 									+ i + ").address");
-							// TODO: CoAP Devices already have ipv6-address -
-							// needed?
+							// TODO: CoAP Devices already have ipv6-address - needed for Group Address ?!?
 							String ipv6 = subConfig.getString("device(" + i
 									+ ").ipv6");
 							String href = subConfig.getString("device(" + i
@@ -155,10 +154,8 @@ public class CoapDeviceLoaderImpl implements DeviceLoader {
 											.getDeclaredConstructors();
 
 									// TODO: constructor that takes connector
-									// and IPv6 Adress as argument -
-									// so need only 2 arguments?!?
+									// and IPv6 Adress as argument
 									Object[] args = new Object[2];
-									log.info("TEST");
 
 									// first arg is Coap connector
 									args[0] = coapConnector;
@@ -167,16 +164,8 @@ public class CoapDeviceLoaderImpl implements DeviceLoader {
 
 									for (int k = 0; k < declaredConstructors.length; k++) {
 										
-										if (declaredConstructors[k]
-												.getParameterTypes().length == 0) {
-											
-											coapDevice = (Obj) declaredConstructors[k]
-													.newInstance();
-										}
-										
-										
 										// TODO: eigene Implementierungen für
-										// CoAP Devices machen - Markus fragen?
+										// CoAP Devices machen?!?
 										if (declaredConstructors[k]
 												.getParameterTypes().length == 2) {
 
@@ -185,39 +174,36 @@ public class CoapDeviceLoaderImpl implements DeviceLoader {
 											if(!address.isEmpty()) {
 												adr = (String) address.get(0);
 											}
-											
 											if (adr == null || adr.equals("null")) {
 												throw new UnknownHostException("No Address found");
 											} 
-
-											// TODO: generate IPv6 Address
-											// right?
 											
-											Object inetAddress = Inet6Address
-													.getByName(adr);
+											Object inetAddress = Inet6Address.getByName(adr);
 											
 											Inet6Address generateIPv6Address =  null;
-											if(inetAddress instanceof Inet4Address) {
-												
-												//TODO: IPv4 Addressen verwendbar machen?
+											
+											//TODO: IPv4 Addressen verwendbar machen?
+											//Exceptions Catched for no or wrong Address - but not if an IPv4 Address
+											//is used -> Check for IPv4 Address and make it an IPv6 Address
+											if(inetAddress instanceof Inet4Address) {	
+												//TODO: IPv4 in IPv6 mit prefix fe80::? ... oder Exception werfen?
+												//oder 6to4 -> 2002:ipv4 in hex:0001::1
 												adr = "::" + adr;							
 												generateIPv6Address = (Inet6Address) Inet6Address.getByName(adr);
 											} else {
 												generateIPv6Address = (Inet6Address) inetAddress;
 											}
 								
-											
-											
-											
 											args[1] = generateIPv6Address;
-											log.info(generateIPv6Address + "");
+											
+											//TODO: log entfernen?
+											log.info("Added Device with Address " + generateIPv6Address);
 
-											coapDevice = (Obj) declaredConstructors[k]
-													.newInstance(args);
+											coapDevice = (Obj) declaredConstructors[k].newInstance(args);
 											
-											
-											
-											// }
+										} else if (declaredConstructors[k].getParameterTypes().length == 0) {
+											//TODO: no constructor with 2 arguments - throw exception?
+											coapDevice = (Obj) declaredConstructors[k].newInstance();
 										}
 									}
 
@@ -235,8 +221,7 @@ public class CoapDeviceLoaderImpl implements DeviceLoader {
 										coapDevice.setDisplayName(displayName);
 									}
 
-									// TODO: CoAP Devices already have
-									// ipv6-address - needed?
+									// TODO: CoAP Devices already have ipv6-address - needed?
 									if (ipv6 != null) {
 										objectBroker.addObj(coapDevice, ipv6);
 									} else {
@@ -247,35 +232,26 @@ public class CoapDeviceLoaderImpl implements DeviceLoader {
 
 									coapDevice.initialize();
 
-									if (historyEnabled != null
-											&& historyEnabled) {
+									if (historyEnabled != null && historyEnabled) {
 										if (historyCount != null
 												&& historyCount != 0) {
-											objectBroker
-													.addHistoryToDatapoints(
-															coapDevice,
-															historyCount);
+											objectBroker.addHistoryToDatapoints(coapDevice,historyCount);
 										} else {
-											objectBroker
-													.addHistoryToDatapoints(coapDevice);
+											objectBroker.addHistoryToDatapoints(coapDevice);
 										}
 									}
 
 									if (groupCommEnabled) {
-										objectBroker
-												.enableGroupComm(coapDevice);
+										objectBroker.enableGroupComm(coapDevice);
 									}
 
-									if (refreshEnabled != null
-											&& refreshEnabled) {
-										objectBroker
-												.enableObjectRefresh(coapDevice);
+									if (refreshEnabled != null && refreshEnabled) {
+										objectBroker.enableObjectRefresh(coapDevice);
 									}
 
 								} catch (UnknownHostException e) {
 									//e.printStackTrace();
-									log.info("No IPv6 Address used for Device Type " + type + "\n Wrong Address: "
-											+ e.getMessage());
+									log.info("No IPv6 Address: \"" + e.getMessage() + "\" for Device Type " + type);
 								} catch (SecurityException e) {
 									e.printStackTrace();
 								} catch (ClassNotFoundException e) {
@@ -292,13 +268,11 @@ public class CoapDeviceLoaderImpl implements DeviceLoader {
 							}
 						}
 					} else {
-						log.info("No CoAP devices configured for connector "
-								+ connectorName);
+						log.info("No CoAP devices configured for connector " + connectorName);
 					}
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-
 			}
 		}
 		return connectors;

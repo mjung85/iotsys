@@ -12,10 +12,13 @@ eclipse{
 				node.appendNode('classpathentry', [kind: 'src', path: '/iotsys-obix', exported:'true'])
 				node.appendNode('classpathentry', [kind: 'src', path: '/iotsys-osgi', exported:'true'])
 				node.appendNode('classpathentry', [kind: 'src', path: '/iotsys-mdnssd', exported:'true'])
-				node.appendNode('classpathentry', [kind: 'src', path: '/iotsys-weather-forecast', exported:'true'])
 			}
 		}
 	}
+}
+
+repositories {
+	mavenRepo urls: 'https://github.com/mkovatsc/maven/raw/master/releases/'
 }
 
 configurations {
@@ -38,7 +41,7 @@ jar {
 				   "Bundle-Version": "0.1",
 				   "Bundle-Classpath": ".",
 				   "Bundle-Activator": "at.ac.tuwien.auto.iotsys.gateway.connectors.coap.CoapBundleActivator",
-				   "Import-Package": "at.ac.tuwien.auto.iotsys.commons.obix.objects.weatherforecast, at.ac.tuwien.auto.iotsys.mdnssd, obix, obix.asm, obix.contracts, obix.io, obix.net, obix.test, obix.toos, obix.ui, obix.ui.fields, obix.ui.views, obix.xml," +
+				   "Import-Package": "at.ac.tuwien.auto.iotsys.mdnssd, obix, obix.asm, obix.contracts, obix.io, obix.net, obix.test, obix.toos, obix.ui, obix.ui.fields, obix.ui.views, obix.xml," +
 									 "at.ac.tuwien.auto.iotsys.commons, at.ac.tuwien.auto.iotsys.commons.obix.objects.iot, at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators," +
 									 "at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators.impl, at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.sensors,at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.sim,at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.logic,at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.logic.impl," +
 									 "at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.sensors.impl, org.osgi.framework," +
@@ -65,7 +68,9 @@ dependencies {
 	provided project(':iotsys-common')
 	provided project(':iotsys-osgi')
 	provided project(':iotsys-mdnssd')
-	provided project(':iotsys-weather-forecast')
+	
+	//dependancies für Californium
+	compile 'ch.ethz.inf.vs:californium:0.13.6'
 	
 	//provided group: 'org.apache.felix', name: 'org.apache.felix.framework', version: '4.2.0'
 	provided group: 'org.apache.felix', name: 'org.osgi.core', version: '1.4.0'

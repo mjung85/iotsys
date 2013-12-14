@@ -3,9 +3,10 @@
   	<deviceloaders>
     	<device-loader>at.ac.tuwien.auto.iotsys.gateway.connectors.coap.CoapDeviceLoaderImpl
     	</device-loader>
-    	<device-loader>at.ac.tuwien.auto.iotsys.gateway.connectors.virtual.VirtualDeviceLoaderImpl
-    	</device-loader>
+	<!--<device-loader>at.ac.tuwien.auto.iotsys.gateway.connectors.virtual.VirtualDeviceLoaderImpl
+    	</device-loader>-->
   	</deviceloaders>
+  	
 
 	<coap>
 		<connector>
@@ -14,14 +15,14 @@
 	    
 	    	<!-- SENSOREN -->
       		<device>
-        		<type>at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.sensors.impl.SwitchingSensorImpl
+        		<type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.coap.SwitchingSensorImplCoap
         		</type>
 				<address>fc00::1</address>
         		<href>Sens1</href>
       		</device>
 
       		<device>
-        		<type>at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.sensors.impl.IndoorBrightnessSensorImpl
+        		<type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.coap.IndoorBrightnessSensorImplCoap
        	 		</type>
         		<address>fc00::2</address>
         		<href>Sens2</href>
@@ -40,7 +41,7 @@
       		</device>
 
       		<device>
-        		<type>at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.sensors.impl.PushButtonImpl
+        		<type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.coap.PushButtonImplCoap
         		</type>
 				<address>fc00::4</address>
         		<href>Sens4</href>
@@ -49,7 +50,7 @@
       		<!-- ACTUATORS -->
 
       		<device>
-        		<type>at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators.impl.LightSwitchActuatorImpl
+        		<type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.coap.LightSwitchActuatorImplCoap
         		</type>
 				<address>fc00::11</address>
         		<href>Act1</href>
@@ -59,7 +60,7 @@
       		</device>
 
       		<device>
-        		<type>at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators.impl.FanSpeedActuatorImpl
+        		<type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.coap.FanSpeedActuatorImplCoap
         		</type>
 				<address>fc00::12</address>
         		<href>Act2</href>
@@ -144,6 +145,102 @@
         </type>
         <href>switch4</href>
         <refreshEnabled>false</refreshEnabled>
+        <groupCommEnabled>true</groupCommEnabled>
+      </device>
+    </connector>
+    
+    
+   <connector>
+      <name>HVAC Simulation</name>
+      <enabled>false</enabled>
+
+      <!-- SENSOREN -->
+      <device>
+        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.virtual.TemperatureSensorImplVirtual
+        </type>
+        <href>simTemp</href>
+        <historyEnabled>true</historyEnabled>
+        <refreshEnabled>true</refreshEnabled>
+        <groupCommEnabled>true</groupCommEnabled>
+        <historyCount>200</historyCount>
+      </device>
+
+      <device>
+        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.virtual.TemperatureSensorImplVirtual
+        </type>
+        <href>simTemp2</href>
+        <historyEnabled>true</historyEnabled>
+        <refreshEnabled>true</refreshEnabled>
+        <groupCommEnabled>true</groupCommEnabled>
+      </device>
+
+      <device>
+        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.virtual.BoilerActuatorImplVirtual
+        </type>
+        <href>simBoiler</href>
+        <historyEnabled>true</historyEnabled>
+        <refreshEnabled>false</refreshEnabled>
+        <groupCommEnabled>true</groupCommEnabled>
+      </device>
+
+      <device>
+        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.virtual.CoolerActuatorImplVirtual
+        </type>
+        <href>simCooler</href>
+        <historyEnabled>true</historyEnabled>
+        <refreshEnabled>false</refreshEnabled>
+        <groupCommEnabled>true</groupCommEnabled>
+      </device>
+
+      <device>
+        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.virtual.FanSpeedActuatorImplVirtual
+        </type>
+        <href>simFanSpeedIn</href>
+        <historyEnabled>true</historyEnabled>
+        <refreshEnabled>false</refreshEnabled>
+        <groupCommEnabled>true</groupCommEnabled>
+      </device>
+
+      <device>
+        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.virtual.FanSpeedActuatorImplVirtual
+        </type>
+        <href>simFanSpeedOut</href>
+        <historyEnabled>true</historyEnabled>
+        <refreshEnabled>false</refreshEnabled>
+        <groupCommEnabled>true</groupCommEnabled>
+      </device>
+
+      <device>
+        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.virtual.PumpActuatorImplVirtual
+        </type>
+        <href>simHeatPump</href>
+        <historyEnabled>true</historyEnabled>
+        <refreshEnabled>false</refreshEnabled>
+        <groupCommEnabled>true</groupCommEnabled>
+      </device>
+     
+      <device>
+        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.virtual.PumpActuatorImplVirtual
+        </type>
+        <href>simCoolPump</href>
+        <historyEnabled>true</historyEnabled>
+        <refreshEnabled>false</refreshEnabled>
+        <groupCommEnabled>true</groupCommEnabled>
+      </device>
+      <device>
+        <type>at.ac.tuwien.auto.iotsys.gateway.connectors.virtual.simulation.HVACSimulationImpl
+        </type>
+        <href>hvacSim</href>
+        <historyEnabled>false</historyEnabled>
+        <refreshEnabled>false</refreshEnabled>
+        <groupCommEnabled>false</groupCommEnabled>
+      </device>
+      <device>
+        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.virtual.SmartMeterImplVirtual
+        </type>
+        <href>simMeter</href>
+        <historyEnabled>true</historyEnabled>
+        <refreshEnabled>true</refreshEnabled>
         <groupCommEnabled>true</groupCommEnabled>
       </device>
     </connector>
