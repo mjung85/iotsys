@@ -122,9 +122,6 @@ public class CoapDeviceLoaderImpl implements DeviceLoader {
 									+ ").type");
 							List<Object> address = subConfig.getList("device("
 									+ i + ").address");
-							// TODO: CoAP Devices already have ipv6-address - needed for Group Address ?!?
-							String ipv6 = subConfig.getString("device(" + i
-									+ ").ipv6");
 							String href = subConfig.getString("device(" + i
 									+ ").href");
 
@@ -153,8 +150,7 @@ public class CoapDeviceLoaderImpl implements DeviceLoader {
 											.forName(type)
 											.getDeclaredConstructors();
 
-									// TODO: constructor that takes connector
-									// and IPv6 Adress as argument
+									//constructor that takes connector and IPv6 Adress as argument
 									Object[] args = new Object[2];
 
 									// first arg is Coap connector
@@ -163,9 +159,6 @@ public class CoapDeviceLoaderImpl implements DeviceLoader {
 									Obj coapDevice = null;
 
 									for (int k = 0; k < declaredConstructors.length; k++) {
-										
-										// TODO: eigene Implementierungen für
-										// CoAP Devices machen?!?
 										if (declaredConstructors[k]
 												.getParameterTypes().length == 2) {
 
@@ -182,12 +175,9 @@ public class CoapDeviceLoaderImpl implements DeviceLoader {
 											
 											Inet6Address generateIPv6Address =  null;
 											
-											//TODO: IPv4 Addressen verwendbar machen?
-											//Exceptions Catched for no or wrong Address - but not if an IPv4 Address
-											//is used -> Check for IPv4 Address and make it an IPv6 Address
-											if(inetAddress instanceof Inet4Address) {	
-												//TODO: IPv4 in IPv6 mit prefix fe80::? ... oder Exception werfen?
-												//oder 6to4 -> 2002:ipv4 in hex:0001::1
+											//Check for IPv4 Address and make it an IPv6 Address
+											//cast to Inet6Address throws Error without this step
+											if(inetAddress instanceof Inet4Address) {
 												adr = "::" + adr;							
 												generateIPv6Address = (Inet6Address) Inet6Address.getByName(adr);
 											} else {
@@ -195,8 +185,7 @@ public class CoapDeviceLoaderImpl implements DeviceLoader {
 											}
 								
 											args[1] = generateIPv6Address;
-											
-											//TODO: log entfernen?
+
 											log.info("Added Device with Address " + generateIPv6Address);
 
 											coapDevice = (Obj) declaredConstructors[k].newInstance(args);
@@ -220,16 +209,9 @@ public class CoapDeviceLoaderImpl implements DeviceLoader {
 											&& displayName.length() > 0) {
 										coapDevice.setDisplayName(displayName);
 									}
-
-									// TODO: CoAP Devices already have ipv6-address - needed?
-									if (ipv6 != null) {
-										objectBroker.addObj(coapDevice, ipv6);
-									} else {
-										objectBroker.addObj(coapDevice);
-									}
-
+									
+									objectBroker.addObj(coapDevice);
 									myObjects.add(coapDevice);
-
 									coapDevice.initialize();
 
 									if (historyEnabled != null && historyEnabled) {

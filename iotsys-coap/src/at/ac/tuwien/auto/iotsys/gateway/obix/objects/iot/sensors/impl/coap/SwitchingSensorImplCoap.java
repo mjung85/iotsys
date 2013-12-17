@@ -69,7 +69,7 @@ public class SwitchingSensorImplCoap extends SwitchingSensorImpl {
 	public void refreshObject(){
 		//switchOnOffValue is the protected instance variable of the base class (SwitchingSensorImpl)
 		if(switchOnOffValue() != null){
-			Boolean value = coapConnector.readBoolean(busAddress, new ResponseHandler() {
+			Boolean value = coapConnector.readBoolean(busAddress, "switchOnOff", new ResponseHandler() {
 				public void handleResponse(Response response) {	
 					boolean temp = Boolean.parseBoolean( CoapConnector.extractAttribute("bool", "val",
 							response.getPayloadString().trim()));

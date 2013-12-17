@@ -69,7 +69,7 @@ public class PushButtonImplCoap extends PushButtonImpl {
 	public void refreshObject(){
 		//value is the protected instance variable of the base class (TemperatureSensorImpl)
 		if(value != null){
-			Boolean value = coapConnector.readBoolean(busAddress, new ResponseHandler() {
+			Boolean value = coapConnector.readBoolean(busAddress, "value", new ResponseHandler() {
 				public void handleResponse(Response response) {	
 					boolean temp = Boolean.parseBoolean( CoapConnector.extractAttribute("bool", "val",
 							response.getPayloadString().trim()));

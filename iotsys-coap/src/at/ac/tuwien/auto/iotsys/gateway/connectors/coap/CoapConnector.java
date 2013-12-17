@@ -47,11 +47,12 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import obix.Str;
-import obix.Obj;
+//import obix.Obj;
 
 import ch.ethz.inf.vs.californium.coap.GETRequest;
 import ch.ethz.inf.vs.californium.coap.PUTRequest;
-import ch.ethz.inf.vs.californium.coap.registries.MediaTypeRegistry;
+//import ch.ethz.inf.vs.californium.coap.POSTRequest;
+//import ch.ethz.inf.vs.californium.coap.registries.MediaTypeRegistry;
 import ch.ethz.inf.vs.californium.coap.Option;
 import ch.ethz.inf.vs.californium.coap.registries.OptionNumberRegistry;
 import ch.ethz.inf.vs.californium.coap.Request;
@@ -75,13 +76,34 @@ public class CoapConnector implements Connector {
 		log.info("CoapConnector disconnecting.");
 	}
 	
-	private String createGETRequest(Inet6Address busAddress, String datapoint, ResponseHandler handler) {
+	private String send(Inet6Address busAddress, String datapoint, String rType, String payload, ResponseHandler handler) {
 		
 		//TODO: PORT wieder entfernen ?!?
 		Str tempHref = new Str("coap://[" + busAddress.getHostAddress() + "]:" + PORT);
 		
 		final String tempUri = tempHref.get() + "/" + datapoint;
-		Request request = new GETRequest();
+		
+		Request request = null;
+		
+		//Specify Type of Request
+		if(rType.equals("GET")){
+			request = new GETRequest();
+		} else if(rType.equals("PUT")){
+			request = new PUTRequest();
+			request.setPayload(payload);	
+		/*
+		} else if(rType.equals("POST")){
+			
+		} else if(rType.equals("DELETE")){
+			request = new DELETERequest();
+		} else if(rType.equals("DISCOVER")){
+			request = new GETRequest();
+		*/
+		} else if(rType.equals("OBSERVE")){
+			request = new GETRequest();
+			request.setObserve();
+			request.setOption(new Option(0, OptionNumberRegistry.OBSERVE));
+		}
 		
 		request.setType(messageType.NON);
 		// specify URI of target endpoint
@@ -89,12 +111,18 @@ public class CoapConnector implements Connector {
 		// enable response queue for blocking I/O
 		request.enableResponseQueue(true);
 		
+		// request.setContentType(MediaTypeRegistry.APPLICATION_EXI);
+		// request.setAccept(MediaTypeRegistry.APPLICATION_XML);
+		
 		try {
 			request.execute();
 			
 		} catch (IOException e) {
 			System.err.println("Failed to execute request: " + e.getMessage());
 		}
+		
+		//TODO: No Response for PUT needed ?
+		if(rType.equals("PUT")) return null;
 		
 		// receive response
 		try {
@@ -102,10 +130,6 @@ public class CoapConnector implements Connector {
 			if(response != null && response.getPayloadString() != null){
 				System.out.println("Extract attribute: " + response.getPayloadString().trim());
 				return response.getPayloadString().trim();
-//				String temp = extractAttribute("bool", "val",
-//					response.getPayloadString().trim());
-//				 	// TODO: gibt Double wert zurück
-//					return temp;
 			}
 				
 		} catch (InterruptedException e) {
@@ -113,65 +137,40 @@ public class CoapConnector implements Connector {
 					+ e.getMessage());
 		}
 		
-		request.registerResponseHandler(handler);
+		if(handler != null) request.registerResponseHandler(handler);
 		
 		return null;
 	}
-	
 
-	public Boolean readBoolean(Inet6Address busAddress, ResponseHandler handler) {		
-		String payload = createGETRequest(busAddress, "value", handler);
+	public Boolean readBoolean(Inet6Address busAddress, String datapoint, ResponseHandler handler) {		
+		String payload = send(busAddress, datapoint, "GET", "", handler);
 		if(payload != null) {
 			String temp = extractAttribute("bool", "val", payload);
 			return Boolean.parseBoolean(temp);
 		}	
 		return false;
 	}
-
-	public void writeBoolean(Inet6Address busAddress, Boolean value) {
-		
-		Str tempHref = new Str("coap://[" + busAddress.getHostAddress() + "]:" + PORT);
-		String payload = "<bool val=\""+ value +"\"/>";
-		
-		final String tempUri = tempHref.get() + "/value";
-		Request request = new PUTRequest();
-		
-		request.setType(messageType.NON);
-		// specify URI of target endpoint
-		request.setURI(tempUri);
-		// enable response queue for blocking I/O
-		request.enableResponseQueue(true);
-		
-		request.setPayload(payload);
-		// request.setContentType(MediaTypeRegistry.APPLICATION_EXI);
-		//request.setOption(new Option(0, OptionNumberRegistry.OBSERVE));
-		
-		// execute the request
-		try {
-			request.execute();
-			
-		} catch (IOException e) {
-			System.err.println("Failed to execute request: " + e.getMessage());
-		}	
-		
-	}
 	
-	public Double readDouble(Inet6Address busAddress, ResponseHandler handler) {
-		String payload = createGETRequest(busAddress, "value", handler);
+	public Double readDouble(Inet6Address busAddress, String datapoint, ResponseHandler handler) {
+		String payload = send(busAddress, datapoint, "GET", "", handler);
 		if(payload != null) {
 			String temp = extractAttribute("real", "val", payload);
 			return Double.parseDouble(temp);
 		}
 		return 0.0;
 	}
+	
+	public void writeBoolean(Inet6Address busAddress, String datapoint, Boolean value) {
+		String payload = "<bool val=\""+ value +"\"/>";
+		send(busAddress, datapoint, "PUT", payload, null);
 
-	public void writeDouble(Inet6Address busAddress, Double value) {
-		log.info("Wert geschrieben:" + value);
+	}
+
+	public void writeDouble(Inet6Address busAddress, String datapoint, Double value) {
+		String payload = "<real val=\""+ value +"\"/>";		
+		send(busAddress, datapoint, "PUT", payload, null);
 	}
 	
-	
-	//TODO: für Test
-	//Werte aus xml parsen
 	public static String extractAttribute(String elementName, String attributeName, String xml) {
 		Document document;
 		DocumentBuilder documentBuilder;

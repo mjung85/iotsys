@@ -68,14 +68,14 @@ public class LightSwitchActuatorImplCoap extends LightSwitchActuatorImpl {
 		super.writeObject(input);
 		
 		// write it out to the technology bus
-		coapConnector.writeBoolean(busAddress, this.value().get());	
+		coapConnector.writeBoolean(busAddress, VALUE_CONTRACT_HERF, this.value().get());	
 	}
 	
 	@Override
 	public void refreshObject(){
 		// value is the protected instance variable of the base class (LightSwitchActuatorImpl)
 		if(value != null){
-			Boolean value = coapConnector.readBoolean(busAddress, new ResponseHandler() {
+			Boolean value = coapConnector.readBoolean(busAddress, VALUE_CONTRACT_HERF, new ResponseHandler() {
 				public void handleResponse(Response response) {	
 					boolean temp = Boolean.parseBoolean( CoapConnector.extractAttribute("bool", "val",
 							response.getPayloadString().trim()));

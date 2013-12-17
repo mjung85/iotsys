@@ -32,7 +32,7 @@
 
 package at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.coap;
 
-//import java.util.logging.Logger;
+import java.util.logging.Logger;
 import java.net.Inet6Address;
 
 import ch.ethz.inf.vs.californium.coap.Response;
@@ -41,9 +41,10 @@ import ch.ethz.inf.vs.californium.coap.ResponseHandler;
 import obix.Obj;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.sensors.impl.TemperatureSensorImpl;
 import at.ac.tuwien.auto.iotsys.gateway.connectors.coap.CoapConnector;
+import at.ac.tuwien.auto.iotsys.obix.observer.Observer;
 
 public class TemperatureSensorImplCoap extends TemperatureSensorImpl {
-	//private static final Logger log = Logger.getLogger(TemperatureSensorImplCoap.class.getName());
+	private static final Logger log = Logger.getLogger(TemperatureSensorImplCoap.class.getName());
 	
 	private CoapConnector coapConnector;
 	private Inet6Address busAddress; 
@@ -64,14 +65,17 @@ public class TemperatureSensorImplCoap extends TemperatureSensorImpl {
 	public void writeObject(Obj input){
 		//Sensor not writable
 	}
-	
+
 	@Override
 	public void refreshObject(){
+		
+		System.out.println("TempSensor refresh");
+		
 		//value is the protected instance variable of the base class (TemperatureSensorImpl)
 		if(value != null){
-			Double value = coapConnector.readDouble(busAddress, new ResponseHandler() {
+			Double value = coapConnector.readDouble(busAddress, "value", new ResponseHandler() {
 				public void handleResponse(Response response) {	
-					boolean temp = Boolean.parseBoolean( CoapConnector.extractAttribute("bool", "val",
+					boolean temp = Boolean.parseBoolean( CoapConnector.extractAttribute("real", "val",
 							response.getPayloadString().trim()));
 					
 					TemperatureSensorImplCoap.this.value().set(temp);
