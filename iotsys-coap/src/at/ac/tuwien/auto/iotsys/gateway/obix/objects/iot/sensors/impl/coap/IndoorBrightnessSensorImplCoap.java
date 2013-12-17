@@ -69,9 +69,9 @@ public class IndoorBrightnessSensorImplCoap extends IndoorBrightnessSensorImpl {
 	public void refreshObject(){
 		//value is the protected instance variable of the base class (TemperatureSensorImpl)
 		if(roomIlluminationValue != null){
-			Double value = coapConnector.readDouble(busAddress, new ResponseHandler() {
+			Double value = coapConnector.readDouble(busAddress, "roomIllumination", new ResponseHandler() {
 				public void handleResponse(Response response) {	
-					boolean temp = Boolean.parseBoolean( CoapConnector.extractAttribute("bool", "val",
+					boolean temp = Boolean.parseBoolean( CoapConnector.extractAttribute("real", "val",
 							response.getPayloadString().trim()));
 					
 					IndoorBrightnessSensorImplCoap.this.roomIlluminationValue().set(temp);
