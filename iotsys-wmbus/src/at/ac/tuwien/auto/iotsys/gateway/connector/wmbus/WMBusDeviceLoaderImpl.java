@@ -33,6 +33,7 @@
 package at.ac.tuwien.auto.iotsys.gateway.connector.wmbus;
 
 import java.lang.reflect.Constructor;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -166,7 +167,7 @@ public class WMBusDeviceLoaderImpl implements DeviceLoader {
 																	// specified
 																	// KNX
 																	// device
-										smartMeter.setHref(new Uri(href));
+										smartMeter.setHref(new Uri(URLEncoder.encode(connectorName, "UTF-8") + "/" + href));
 										
 										if (ipv6 != null) {
 											objectBroker.addObj(smartMeter, ipv6);
