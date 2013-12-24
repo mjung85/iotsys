@@ -1,5 +1,4 @@
 <devices>
-
   <deviceloaders>
     <device-loader>at.ac.tuwien.auto.iotsys.gateway.connectors.knx.KNXDeviceLoaderImpl
     </device-loader>
@@ -19,8 +18,72 @@
     </device-loader>
     <device-loader>at.ac.tuwien.auto.iotsys.gateway.connectors.weatherforecast.WeatherForecastDeviceLoaderImpl
     </device-loader>
+	<device-loader>at.ac.tuwien.auto.iotsys.gateway.connectors.coap.CoapDeviceLoader
+    </device-loader>
   </deviceloaders>
   
+  <coap>
+        <connector>
+            <name>CoAP Devices</name>
+            <enabled>false</enabled>
+		
+			<!-- SENSOREN -->
+			<device>
+					<type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.coap.SwitchingSensorImplCoap
+					</type>
+							<address>fc00::1</address>
+					<href>Sens1</href>
+			</device>
+
+			<device>
+					<type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.coap.IndoorBrightnessSensorImplCoap
+					</type>
+					<address>fc00::2</address>
+					<href>Sens2</href>
+					<historyEnabled>false</historyEnabled>
+					<historyCount>200</historyCount>
+			</device>
+
+			<device>
+					<type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.coap.TemperatureSensorImplCoap
+					</type>
+							<address>fc00::3</address>
+					<href>Sens3</href>
+					<historyEnabled>true</historyEnabled>
+					<refreshEnabled>true</refreshEnabled>
+					<groupCommEnabled>true</groupCommEnabled>
+			</device>
+
+			<device>
+					<type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.coap.PushButtonImplCoap
+					</type>
+							<address>fc00::4</address>
+					<href>Sens4</href>
+			</device>
+
+			<!-- ACTUATORS -->
+
+			<device>
+					<type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.coap.LightSwitchActuatorImplCoap
+					</type>
+							<address>fc00::11</address>
+					<href>Act1</href>
+					<historyEnabled>true</historyEnabled>
+					<refreshEnabled>false</refreshEnabled>
+					<groupCommEnabled>true</groupCommEnabled>
+			</device>
+
+			<device>
+					<type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.coap.FanSpeedActuatorImplCoap
+					</type>
+							<address>fc00::12</address>
+					<href>Act2</href>
+					<historyEnabled>false</historyEnabled>
+					<historyCount>200</historyCount>
+			</device>
+
+        </connector>
+  </coap>
   <rfid>
     <connector>
       <name>RFID</name>
