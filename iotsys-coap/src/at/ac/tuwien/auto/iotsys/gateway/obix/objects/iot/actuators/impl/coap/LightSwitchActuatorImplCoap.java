@@ -46,9 +46,9 @@ public class LightSwitchActuatorImplCoap extends LightSwitchActuatorImpl {
 	//private static final Logger log = Logger.getLogger(LightSwitchActuatorImplCoap.class.getName());
 	
 	private CoapConnector coapConnector;
-	private Inet6Address busAddress;
+	private String busAddress;
 	
-	public LightSwitchActuatorImplCoap(CoapConnector coapConnector, Inet6Address busAddress){
+	public LightSwitchActuatorImplCoap(CoapConnector coapConnector, String busAddress){
 		// technology specific initialization
 		this.coapConnector = coapConnector;
 		this.busAddress = busAddress;

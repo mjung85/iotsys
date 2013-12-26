@@ -47,9 +47,9 @@ public class TemperatureSensorImplCoap extends TemperatureSensorImpl {
 	private static final Logger log = Logger.getLogger(TemperatureSensorImplCoap.class.getName());
 	
 	private CoapConnector coapConnector;
-	private Inet6Address busAddress; 
+	private String busAddress; 
 	
-	public TemperatureSensorImplCoap(CoapConnector coapConnector, Inet6Address busAddress){
+	public TemperatureSensorImplCoap(CoapConnector coapConnector, String busAddress){
 		// technology specific initialization
 		this.coapConnector = coapConnector;
 		this.busAddress = busAddress;
@@ -69,7 +69,7 @@ public class TemperatureSensorImplCoap extends TemperatureSensorImpl {
 	@Override
 	public void refreshObject(){
 		
-		System.out.println("TempSensor refresh");
+		log.info("TempSensor refresh");
 		
 		//value is the protected instance variable of the base class (TemperatureSensorImpl)
 		if(value != null){
@@ -82,6 +82,8 @@ public class TemperatureSensorImplCoap extends TemperatureSensorImpl {
 
 				}
 			});	
+			
+			
 			// this calls the implementation of the base class, which triggers also
 			// oBIX services (e.g. watches, history) and CoAP observe!			
 			this.value().set(value); 

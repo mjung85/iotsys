@@ -54,6 +54,7 @@ import ch.ethz.inf.vs.californium.coap.PUTRequest;
 //import ch.ethz.inf.vs.californium.coap.POSTRequest;
 //import ch.ethz.inf.vs.californium.coap.registries.MediaTypeRegistry;
 import ch.ethz.inf.vs.californium.coap.Option;
+import ch.ethz.inf.vs.californium.coap.registries.MediaTypeRegistry;
 import ch.ethz.inf.vs.californium.coap.registries.OptionNumberRegistry;
 import ch.ethz.inf.vs.californium.coap.Request;
 import ch.ethz.inf.vs.californium.coap.Response;
@@ -76,10 +77,10 @@ public class CoapConnector implements Connector {
 		log.info("CoapConnector disconnecting.");
 	}
 	
-	private String send(Inet6Address busAddress, String datapoint, String rType, String payload, ResponseHandler handler) {
+	private String send(String busAddress, String datapoint, String rType, String payload, ResponseHandler handler) {
 		
 		//TODO: PORT wieder entfernen ?!?
-		Str tempHref = new Str("coap://[" + busAddress.getHostAddress() + "]:" + PORT);
+		Str tempHref = new Str(busAddress);
 		
 		final String tempUri = tempHref.get() + "/" + datapoint;
 		
@@ -106,6 +107,8 @@ public class CoapConnector implements Connector {
 		}
 		
 		request.setType(messageType.NON);
+		request.setOption(new Option(MediaTypeRegistry.APPLICATION_XML,OptionNumberRegistry.ACCEPT));
+	
 		// specify URI of target endpoint
 		request.setURI(tempUri);
 		// enable response queue for blocking I/O
@@ -142,7 +145,7 @@ public class CoapConnector implements Connector {
 		return null;
 	}
 
-	public Boolean readBoolean(Inet6Address busAddress, String datapoint, ResponseHandler handler) {		
+	public Boolean readBoolean(String busAddress, String datapoint, ResponseHandler handler) {		
 		String payload = send(busAddress, datapoint, "GET", "", handler);
 		if(payload != null) {
 			String temp = extractAttribute("bool", "val", payload);
@@ -151,7 +154,7 @@ public class CoapConnector implements Connector {
 		return false;
 	}
 	
-	public Double readDouble(Inet6Address busAddress, String datapoint, ResponseHandler handler) {
+	public Double readDouble(String busAddress, String datapoint, ResponseHandler handler) {
 		String payload = send(busAddress, datapoint, "GET", "", handler);
 		if(payload != null) {
 			String temp = extractAttribute("real", "val", payload);
@@ -160,13 +163,13 @@ public class CoapConnector implements Connector {
 		return 0.0;
 	}
 	
-	public void writeBoolean(Inet6Address busAddress, String datapoint, Boolean value) {
+	public void writeBoolean(String busAddress, String datapoint, Boolean value) {
 		String payload = "<bool val=\""+ value +"\"/>";
 		send(busAddress, datapoint, "PUT", payload, null);
 
 	}
 
-	public void writeDouble(Inet6Address busAddress, String datapoint, Double value) {
+	public void writeDouble(String busAddress, String datapoint, Double value) {
 		String payload = "<real val=\""+ value +"\"/>";		
 		send(busAddress, datapoint, "PUT", payload, null);
 	}

@@ -46,9 +46,9 @@ public class IndoorBrightnessSensorImplCoap extends IndoorBrightnessSensorImpl {
 	//private static final Logger log = Logger.getLogger(IndoorBrightnessSensorImplCoap.class.getName());
 	
 	private CoapConnector coapConnector;
-	private Inet6Address busAddress; 
+	private String busAddress; 
 	
-	public IndoorBrightnessSensorImplCoap(CoapConnector coapConnector, Inet6Address busAddress){
+	public IndoorBrightnessSensorImplCoap(CoapConnector coapConnector, String busAddress){
 		// technology specific initialization
 		this.coapConnector = coapConnector;
 		this.busAddress = busAddress;

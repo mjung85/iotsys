@@ -46,9 +46,9 @@ public class SwitchingSensorImplCoap extends SwitchingSensorImpl {
 	//private static final Logger log = Logger.getLogger(SwitchingSensorImplCoap.class.getName());
 	
 	private CoapConnector coapConnector;
-	private Inet6Address busAddress; 
+	private String busAddress; 
 	
-	public SwitchingSensorImplCoap(CoapConnector coapConnector, Inet6Address busAddress){
+	public SwitchingSensorImplCoap(CoapConnector coapConnector, String busAddress){
 		// technology specific initialization
 		this.coapConnector = coapConnector;
 		this.busAddress = busAddress;
