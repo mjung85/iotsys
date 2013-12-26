@@ -46,9 +46,9 @@ public class PushButtonImplCoap extends PushButtonImpl {
 	//private static final Logger log = Logger.getLogger(PushButtonImplCoap.class.getName());
 	
 	private CoapConnector coapConnector;
-	private Inet6Address busAddress; 
+	private String busAddress; 
 	
-	public PushButtonImplCoap(CoapConnector coapConnector, Inet6Address busAddress){
+	public PushButtonImplCoap(CoapConnector coapConnector, String busAddress){
 		// technology specific initialization
 		this.coapConnector = coapConnector;
 		this.busAddress = busAddress;

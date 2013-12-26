@@ -162,31 +162,16 @@ public class CoapDeviceLoaderImpl implements DeviceLoader {
 										if (declaredConstructors[k]
 												.getParameterTypes().length == 2) {
 
-											String adr = null;
+											String adr = "";
 											// Try to make IPv6 address for 2nd arg
 											if(!address.isEmpty()) {
 												adr = (String) address.get(0);
 											}
-											if (adr == null || adr.equals("null")) {
-												throw new UnknownHostException("No Address found");
-											} 
-											
-											Object inetAddress = Inet6Address.getByName(adr);
-											
-											Inet6Address generateIPv6Address =  null;
-											
-											//Check for IPv4 Address and make it an IPv6 Address
-											//cast to Inet6Address throws Error without this step
-											if(inetAddress instanceof Inet4Address) {
-												adr = "::" + adr;							
-												generateIPv6Address = (Inet6Address) Inet6Address.getByName(adr);
-											} else {
-												generateIPv6Address = (Inet6Address) inetAddress;
-											}
+										
 								
-											args[1] = generateIPv6Address;
+											args[1] = adr;
 
-											log.info("Added Device with Address " + generateIPv6Address);
+											log.info("Added Device with URI " + adr);
 
 											coapDevice = (Obj) declaredConstructors[k].newInstance(args);
 											
@@ -230,10 +215,6 @@ public class CoapDeviceLoaderImpl implements DeviceLoader {
 									if (refreshEnabled != null && refreshEnabled) {
 										objectBroker.enableObjectRefresh(coapDevice);
 									}
-
-								} catch (UnknownHostException e) {
-									//e.printStackTrace();
-									log.info("No IPv6 Address: \"" + e.getMessage() + "\" for Device Type " + type);
 								} catch (SecurityException e) {
 									e.printStackTrace();
 								} catch (ClassNotFoundException e) {
