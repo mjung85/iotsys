@@ -69,7 +69,7 @@ dependencies {
 	provided project(':iotsys-osgi')
 	provided project(':iotsys-mdnssd')
 	
-	//dependancies für Californium
+	//dependencies for Californium
 	compile 'ch.ethz.inf.vs:californium:0.13.6'
 	
 	//provided group: 'org.apache.felix', name: 'org.apache.felix.framework', version: '4.2.0'
