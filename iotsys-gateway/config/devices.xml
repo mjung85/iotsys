@@ -25,7 +25,7 @@
   <coap>
         <connector>
             <name>CoAP Devices</name>
-            <enabled>false</enabled>
+            <enabled>true</enabled>
 		
 			<!-- SENSOREN -->
 			<device>
