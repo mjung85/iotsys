@@ -226,6 +226,18 @@
         <localIP>auto</localIP>
         <groupCommEnabled>true</groupCommEnabled>
     </connector>
+	<connector>
+		<name>IoT Suitcase</name>
+		<enabled>true</enabled>
+		<knx-proj>knx-config/projects/Siemens_Koffer_IoTSyS_2014_01_02.knxproj</knx-proj>
+		<forceRefresh>false</forceRefresh>
+		<router>
+			<ip>192.168.1.14</ip>
+			<port>3671</port>
+		</router>
+		  <localIP>auto</localIP>
+        <groupCommEnabled>true</groupCommEnabled>
+	</connector>
   </knx-ets>
  
   <knx>
@@ -811,6 +823,17 @@
       <discovery-enabled>true</discovery-enabled>
       <localDeviceID>343434</localDeviceID>
       <broadcastAddress>128.130.56.255</broadcastAddress>
+      <localPort>47808</localPort>
+      <groupCommEnabled>true</groupCommEnabled>
+      <historyEnabled>false</historyEnabled>
+    </connector>
+    
+    <connector>
+      <name>BACnet IoT Suitcase</name>
+      <enabled>false</enabled>
+      <discovery-enabled>true</discovery-enabled>
+      <localDeviceID>1234</localDeviceID>
+      <broadcastAddress>192.168.1.255</broadcastAddress>
       <localPort>47808</localPort>
       <groupCommEnabled>true</groupCommEnabled>
       <historyEnabled>false</historyEnabled>
