@@ -1,4 +1,4 @@
-package at.ac.tuwien.auto.iotsys.gateway.obix.objects.weatherforecast.impl;
+package at.ac.tuwien.auto.iotsys.commons.obix.objects.weatherforecast.impl;
 
 import java.util.ArrayList;
 import java.util.TimeZone;
@@ -14,6 +14,8 @@ import at.ac.tuwien.auto.iotsys.commons.obix.objects.weatherforecast.WeatherFore
 import obix.*;
 
 public class WeatherForecastImpl extends Obj implements WeatherForecast {
+	
+	//private Ref sourceRef;
 	
 	private ArrayList<WeatherForecastRecordImpl> dataRecords = null;
 	
@@ -31,7 +33,13 @@ public class WeatherForecastImpl extends Obj implements WeatherForecast {
 		new Contract(WeatherForecastFilter.CONTRACT),
 		new Contract(WeatherForecastRecord.CONTRACT));
 	
-	public WeatherForecastImpl() {		
+	public WeatherForecastImpl() {
+		
+		//sourceRef = new Ref("test", new Uri("test"));
+		//root.add(new Ref(String.valueOf(device.getInstanceNumber()), devRoot.getHref()));
+		
+		
+		
 		setIs(new Contract(WeatherForecast.CONTRACT));
 		
 		count.setHref(new Uri("count"));
@@ -67,6 +75,13 @@ public class WeatherForecastImpl extends Obj implements WeatherForecast {
 		add(feed);
 		
 		dataRecords = new ArrayList<WeatherForecastRecordImpl>();
+		
+		
+		
+		
+		
+
+		
 	}
 	
 	public Obj query(Obj in) {
@@ -101,6 +116,7 @@ public class WeatherForecastImpl extends Obj implements WeatherForecast {
 		}
 		
 		return new WeatherForecastQueryResultImpl(results);
+
 	}
 	
 	public Obj update(Obj in) {

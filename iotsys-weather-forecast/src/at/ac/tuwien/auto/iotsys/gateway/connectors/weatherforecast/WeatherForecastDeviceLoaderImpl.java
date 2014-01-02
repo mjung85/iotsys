@@ -48,7 +48,7 @@ import obix.Uri;
 import at.ac.tuwien.auto.iotsys.commons.Connector;
 import at.ac.tuwien.auto.iotsys.commons.DeviceLoader;
 import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.weatherforecast.impl.WeatherForecastLocationImpl;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.weatherforecast.impl.WeatherForecastLocationImpl;
 
 public class WeatherForecastDeviceLoaderImpl implements DeviceLoader {
 
@@ -114,7 +114,11 @@ public class WeatherForecastDeviceLoaderImpl implements DeviceLoader {
 						String href = subConfig.getString("device(" + i	+ ").href");
 						String name = subConfig.getString("device(" + i + ").name");
 						Boolean refreshEnabled = subConfig.getBoolean("device("	+ i + ").refreshEnabled", true);
-
+						Boolean historyEnabled = subConfig.getBoolean(
+								"device(" + i + ").historyEnabled", false);
+						Integer historyCount = subConfig.getInt("device("
+								+ i + ").historyCount", 0);
+						
 						if (type != null && name != null) {
 							try {
 								Constructor<?>[] declaredConstructors = Class.forName(type).getDeclaredConstructors();
@@ -130,18 +134,38 @@ public class WeatherForecastDeviceLoaderImpl implements DeviceLoader {
 											// create an instance of the specified weather forecast crawler
 											Obj crawler = (Obj) declaredConstructors[k].newInstance(args);
 
+											
+											
 											crawler.setHref(new Uri(URLEncoder.encode(connectorName, "UTF-8") + "/" + href));
 											
 											objectBroker.addObj(crawler);
 											myObjects.add(crawler);
+											//crawler.initialize();
 											
 											if (refreshEnabled != null && refreshEnabled) {
 												// refresh weather forecast automatically (once per hour)
+												System.out.println("Dev Loader: refreshObject anfrufen 3600000");
 												objectBroker.enableObjectRefresh(crawler, 3600000);
 											}
 											else {
 												// refresh weather forecast manually
+												System.out.println("Dev Loader: refreshObject anfrufen");
+												
 												crawler.refreshObject();
+											}
+											
+											if (historyEnabled != null
+													&& historyEnabled) {
+												if (historyCount != null
+														&& historyCount != 0) {
+													objectBroker
+															.addHistoryToDatapoints(
+																	crawler,
+																	historyCount);
+												} else {
+													objectBroker
+															.addHistoryToDatapoints(crawler);
+												}
 											}
 
 										} catch (Exception e) {

@@ -53,9 +53,9 @@ public class HistoryHelper {
 	 * @param countMax 
 	 */
 	public static void addHistoryToDatapoints(Obj obj, int countMax){
-		if(obj.isInt() || obj.isStr() || obj.isBool() || obj.isReal()){
+		//if(obj.isInt() || obj.isStr() || obj.isBool() || obj.isReal()){
 			new HistoryImpl(obj, countMax);
-		}
+		//}
 		
 		for(Obj child : obj.list()) {
 			if (child.isHidden()) continue;

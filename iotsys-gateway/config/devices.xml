@@ -103,25 +103,7 @@
     </connector>
   </enocean>
 
-  <weather-forecast>
-    <connector>
-      <name>weather-forecast</name>
-      <enabled>false</enabled>
-      <device>
-        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.weatherforecast.devices.WeatherForecastCrawlerYR_NO
-        </type>
-        <name>yr.no</name>
-        <location>
-          <description>Vienna</description>
-          <latitude>48.21</latitude>
-          <longitude>16.37</longitude>
-          <height>171</height>
-        </location>
-        <href>yr.no</href>
-        <refreshEnabled>true</refreshEnabled>
-      </device>
-    </connector>
-  </weather-forecast>
+
 
   <xbee>
     <connector>
@@ -197,7 +179,7 @@
     </connector>
     <connector>
         <name>E183-1</name>
-        <enabled>true</enabled>
+        <enabled>false</enabled>
         <knx-proj>knx-config/projects/E183-1.knxproj</knx-proj>
         <!-- forces unpacking of zip and transformation -->
         <forceRefresh>false</forceRefresh>              
@@ -210,6 +192,31 @@
     </connector>
   </knx-ets>
  
+ 
+ 
+   <weather-forecast>
+    <connector>
+      <name>weather-forecast</name>
+      <enabled>true</enabled>
+      <device>
+        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.weatherforecast.devices.WeatherForecastCrawlerYR_NO
+        </type>
+        <name>yr.no</name>
+        <location>
+          <description>Vienna</description>
+          <latitude>48.21</latitude>
+          <longitude>16.37</longitude>
+          <height>171</height>
+        </location>
+        <href>test</href>
+        <refreshEnabled>true</refreshEnabled>
+        <historyEnabled>false</historyEnabled>
+        <historyCount>200</historyCount>
+      </device>
+    </connector>
+  </weather-forecast>
+  
+  
   <knx>
     <connector>
       <name>KNX TP1 Suitcase</name>
