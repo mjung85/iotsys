@@ -60,6 +60,8 @@ public class WeatherForecastDeviceLoaderImpl implements DeviceLoader {
 
 	@Override
 	public ArrayList<Connector> initDevices(ObjectBroker objectBroker) {
+		
+		System.out.println("inint Dev Device loader");
 		setConfiguration(devicesConfig);
 		
 		// Hard-coded connections and object creation

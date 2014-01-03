@@ -71,7 +71,82 @@ public class WeatherForecastCrawlerYR_NO extends WeatherForecastCrawlerImpl {
 			List<WeatherForcastObject> weatherList = connector.getWeatherForecas(this.getServiceURL());
 
 			System.out.println("WeatherList: "+weatherList.size());
+
+			
+			
 			for(int i=0; i < weatherList.size();i++){
+
+				if (i==0){
+					WeatherForcastUpcomingWeatherImpl upcomingforcast = new WeatherForcastUpcomingWeatherImpl(); 
+					
+					// set temperature			
+					if (weatherList.get(i).getTemperature() != Double.NaN){
+						upcomingforcast.temperature().set(weatherList.get(i).getTemperature());
+					}
+					else{
+						upcomingforcast.temperature().setNull(true);
+					}
+					
+					// set windDirection			
+					if (weatherList.get(i).getWindDirection() != null){
+						upcomingforcast.windDirection().set(weatherList.get(i).getWindDirection());	
+					}
+					else{
+						upcomingforcast.windDirection().setNull(true);
+					}
+					
+					// set windSpeed			
+					if (weatherList.get(i).getWindSpeed() != Double.NaN){
+						upcomingforcast.windspeed().set(weatherList.get(i).getWindSpeed());
+					}
+					else{
+						upcomingforcast.windspeed().setNull(true);
+					}
+					
+					// set humidity			
+					if (weatherList.get(i).getHumidity() != Double.NaN){
+						upcomingforcast.humidity().set(weatherList.get(i).getHumidity());
+					}
+					else{
+						upcomingforcast.humidity().setNull(true);
+					}
+					
+					// set pressure			
+					if (weatherList.get(i).getPressure() != Double.NaN){
+						upcomingforcast.pressure().set(weatherList.get(i).getPressure());
+					}
+					else{
+						upcomingforcast.pressure().setNull(true);
+					}
+					
+					// set cloudiness 			
+					if (weatherList.get(i).getCloudiness() != Double.NaN){
+						upcomingforcast.cloudiness().set(weatherList.get(i).getCloudiness());
+					}
+					else{
+						upcomingforcast.cloudiness().setNull(true);
+					}
+					
+					// set fog 			
+					if (weatherList.get(i).getFog() != Double.NaN){
+						upcomingforcast.fog().set(weatherList.get(i).getFog());
+					}
+					else{
+						upcomingforcast.fog().setNull(true);
+					}
+					
+					// set dewpointTemperature  			
+					if (weatherList.get(i).getDewpointTemperature() != Double.NaN){
+						upcomingforcast.dewpointTemperature().set(weatherList.get(i).getDewpointTemperature());
+					}
+					else{
+						upcomingforcast.dewpointTemperature().setNull(true);
+					}
+
+				}
+				
+				
+				
 				
 				weather = weatherList.get(i);
 				System.out.println("---------------------------------------");
@@ -88,8 +163,78 @@ public class WeatherForecastCrawlerYR_NO extends WeatherForecastCrawlerImpl {
 				System.out.println("HighClouds: "+weather.getHighClouds());
 				System.out.println("DewpointTemperature: "+weather.getDewpointTemperature());
 				
+				WeatherForecastRecordImpl forecast = new WeatherForecastRecordImpl();
+				
+				
+				
+				forecast.timestamp().set(weatherList.get(i).getTimestamp(), weatherList.get(i).getTimeZone());
+
+				// set temperature			
+				if (weatherList.get(i).getTemperature() != Double.NaN){
+					forecast.temperature().set(weatherList.get(i).getTemperature());
+				}
+				else{
+					forecast.temperature().setNull(true);
+				}
+				
+				// set windDirection			
+				if (weatherList.get(i).getWindDirection() != null){
+					forecast.windDirection().set(weatherList.get(i).getWindDirection());	
+				}
+				else{
+					forecast.windDirection().setNull(true);
+				}
+				
+				// set windSpeed			
+				if (weatherList.get(i).getWindSpeed() != Double.NaN){
+					forecast.windSpeed().set(weatherList.get(i).getWindSpeed());
+				}
+				else{
+					forecast.windSpeed().setNull(true);
+				}
+				
+				// set humidity			
+				if (weatherList.get(i).getHumidity() != Double.NaN){
+					forecast.humidity().set(weatherList.get(i).getHumidity());
+				}
+				else{
+					forecast.humidity().setNull(true);
+				}
+				
+				// set pressure			
+				if (weatherList.get(i).getPressure() != Double.NaN){
+					forecast.pressure().set(weatherList.get(i).getPressure());
+				}
+				else{
+					forecast.pressure().setNull(true);
+				}
+				
+				// set cloudiness 			
+				if (weatherList.get(i).getCloudiness() != Double.NaN){
+					forecast.cloudiness().set(weatherList.get(i).getCloudiness());
+				}
+				else{
+					forecast.cloudiness().setNull(true);
+				}
+				
+				// set fog 			
+				if (weatherList.get(i).getFog() != Double.NaN){
+					forecast.fog().set(weatherList.get(i).getFog());
+				}
+				else{
+					forecast.fog().setNull(true);
+				}
+				
+				// set dewpointTemperature  			
+				if (weatherList.get(i).getDewpointTemperature() != Double.NaN){
+					forecast.dewpointTemperature().set(weatherList.get(i).getDewpointTemperature());
+				}
+				else{
+					forecast.dewpointTemperature().setNull(true);
+				}
+
 			}
-			
+				
 //		
 //		try 
 //		{

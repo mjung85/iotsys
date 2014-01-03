@@ -228,6 +228,9 @@ public class WeatherForecastConnector implements Connector {
 							weatherObject.setTimestamp(to.getTime());
 						//	forecast.timestamp().set(to.getTime(), TimeZone.getTimeZone("GMT" + utcOffset));
 							
+					
+							weatherObject.setTimeZone(TimeZone.getTimeZone("GMT" + utcOffset));
+							
 							
 							
 							//parse temperatureProbability
@@ -252,6 +255,7 @@ public class WeatherForecastConnector implements Connector {
 								weatherObject.setTemperature(Double.parseDouble(((Element) tmp.item(0)).getAttribute("value")));
 							}
 							else{
+								weatherObject.setTemperature(Double.NaN);
 							}
 								
 							// parse windDirection 
@@ -260,6 +264,8 @@ public class WeatherForecastConnector implements Connector {
 								weatherObject.setWindDirection(((Element) tmp.item(0)).getAttribute("name")); 
 							}
 							else{
+								weatherObject.setWindDirection(null);
+								
 							}
 							
 							// parse wind speed
@@ -267,7 +273,8 @@ public class WeatherForecastConnector implements Connector {
 							if (tmp.getLength() >= 1){
 								weatherObject.setWindSpeed(Integer.parseInt(((Element) tmp.item(0)).getAttribute("beaufort")));
 							}
-							else{		
+							else{	
+								weatherObject.setWindSpeed(null);
 							}
 							
 							// parse humidity
@@ -275,8 +282,8 @@ public class WeatherForecastConnector implements Connector {
 							if (tmp.getLength() >= 1){
 								weatherObject.setHumidity(Double.parseDouble(((Element) tmp.item(0)).getAttribute("value")));
 							}
-							
 							else{	
+								weatherObject.setHumidity(Double.NaN);
 							}
 
 							// parse pressure
@@ -285,6 +292,7 @@ public class WeatherForecastConnector implements Connector {
 								weatherObject.setPressure(Double.parseDouble(((Element) tmp.item(0)).getAttribute("value")));
 							}
 							else{	
+								weatherObject.setPressure(Double.NaN);
 							}
 							
 							// parse cloudiness
@@ -293,6 +301,7 @@ public class WeatherForecastConnector implements Connector {
 								weatherObject.setCloudiness(Double.parseDouble(((Element) tmp.item(0)).getAttribute("percent")));
 							}
 							else{
+								weatherObject.setCloudiness(Double.NaN);
 							}
 							
 							// parse fog
@@ -301,6 +310,7 @@ public class WeatherForecastConnector implements Connector {
 								weatherObject.setFog(Double.parseDouble(((Element) tmp.item(0)).getAttribute("percent")));
 							}
 							else{
+								weatherObject.setFog(Double.NaN);
 							}
 							
 							// parse lowClouds
@@ -309,6 +319,7 @@ public class WeatherForecastConnector implements Connector {
 								weatherObject.setLowClouds(Double.parseDouble(((Element) tmp.item(0)).getAttribute("percent")));
 							}
 							else{
+								weatherObject.setLowClouds(Double.NaN);
 							}
 							
 							// parse lowClouds
@@ -317,22 +328,25 @@ public class WeatherForecastConnector implements Connector {
 								weatherObject.setHighClouds(Double.parseDouble(((Element) tmp.item(0)).getAttribute("percent")));
 							}
 							else{
+								weatherObject.setHighClouds(Double.NaN);
 							}
 							
-							// parse lowClouds
+							// parse MediumClouds
 							tmp = location.getElementsByTagName("highClouds");
 							if (tmp.getLength() >= 1){
 								weatherObject.setMediumClouds(Double.parseDouble(((Element) tmp.item(0)).getAttribute("percent")));
 							}
 							else{
+								weatherObject.setMediumClouds(Double.NaN);
 							}
 							
 							// parse dewpointTemperature 
 							tmp = location.getElementsByTagName("dewpointTemperature");
 							if (tmp.getLength() >= 1){
-								weatherObject.setMediumClouds(Double.parseDouble(((Element) tmp.item(0)).getAttribute("value")));
+								weatherObject.setDewpointTemperature(Double.parseDouble(((Element) tmp.item(0)).getAttribute("value")));
 							}
 							else{
+								weatherObject.setDewpointTemperature(Double.NaN);
 							}
 							
 							resultWeatherList.add(weatherObject);

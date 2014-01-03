@@ -16,7 +16,9 @@ public class WeatherForecastRecordImpl extends Obj implements
 	private Real cloudiness = new Real("cloudiness");
 	private Real fog = new Real("fog");
 	private Int windSpeed = new Int("windSpeed");
+	private Str windDirection = new Str("windDirection");
 	private Enum symbol = new Enum("symbol", "");
+	private Real dewpointTemperature = new Real("dewpointTemperature");
 	
 	public WeatherForecastRecordImpl() {
 		setIs(new Contract(WeatherForecastRecord.CONTRACT));
@@ -31,6 +33,7 @@ public class WeatherForecastRecordImpl extends Obj implements
 		cloudiness.setUnit(new Uri("obix:units/percent"));
 		fog.setUnit(new Uri("obix:units/percent"));
 		windSpeed.setUnit(new Uri("obix:units/beaufort"));
+		dewpointTemperature.setUnit(new Uri("obix:units/celsius"));
 		
 		add(timestamp);
 		add(probabilityCode);
@@ -41,7 +44,9 @@ public class WeatherForecastRecordImpl extends Obj implements
 		add(cloudiness);
 		add(fog);
 		add(windSpeed);
+		add(windDirection);
 		add(symbol);
+		add(dewpointTemperature);
 	}
 
 	public WeatherForecastRecordImpl(WeatherForecastRecord rec) {
@@ -67,6 +72,9 @@ public class WeatherForecastRecordImpl extends Obj implements
 		cloudiness.set(rec.cloudiness().get());
 		fog.set(rec.fog().get());
 		windSpeed.set(rec.windSpeed().get());
+		windDirection.set(rec.windDirection().get());
+		dewpointTemperature.set(rec.dewpointTemperature().get());
+		
 		
 		if (WeatherSymbolImpl.GetByName(rec.symbol().get()) != WeatherSymbolImpl.ID_UNKNOWN) {
 			symbol.set(rec.symbol().get());
@@ -124,6 +132,16 @@ public class WeatherForecastRecordImpl extends Obj implements
 	@Override
 	public Enum symbol() {
 		return symbol;
+	}
+
+	@Override
+	public Str windDirection() {
+		return windDirection;
+	}
+
+	@Override
+	public Real dewpointTemperature() {
+		return dewpointTemperature;
 	}
 
 }

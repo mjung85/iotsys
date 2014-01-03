@@ -23,44 +23,45 @@ public class WeatherForcastUpcomingWeatherImpl extends Obj implements WeatherFor
 	
 	
 	private ArrayList<WeatherForecastRecordImpl> dataRecords = null;
-	private Abstime weatherTimestamp = new Abstime("timestamp");
-	private Enum weatherProbabilitycode = new Enum("probabilityCode", "");
-	private Real weatherTemperature = new Real("temperature");
-	private Real weatherHumidity = new Real("humidity");
-	private Real weatherPressure = new Real("pressure");
-	private Real weatherPrecipitation = new Real("precipitation");
-	private Real weatherCloudiness = new Real("cloudiness");
-	private Real weatherFog = new Real("fog");
-	private Int weatherWindspeed = new Int("windSpeed");
+	private Abstime timestamp = new Abstime("timestamp");
+	private Enum probabilitycode = new Enum("probabilityCode", "");
+	private Real temperature = new Real("temperature");
+	private Real humidity = new Real("humidity");
+	private Real pressure = new Real("pressure");
+	private Real precipitation = new Real("precipitation");
+	private Real cloudiness = new Real("cloudiness");
+	private Real fog = new Real("fog");
+	private Int  windSpeed = new Int("windSpeed");
+	private Real dewpointTemperature = new Real("dewpointTemperature");
+	private Str windDirection = new Str("windDirection");
 	
 	
 	public WeatherForcastUpcomingWeatherImpl(){
 		setIs(new Contract(WeatherForcastUpcomingWeather.CONTRACT));
 		
-		weatherProbabilitycode.setRange(new Uri(ProbabilityCodeImpl.CONTRACT));
+		probabilitycode.setRange(new Uri(ProbabilityCodeImpl.CONTRACT));
 		
-		weatherTemperature.setUnit(new Uri("obix:units/celsius"));
-		weatherHumidity.setUnit(new Uri("obix:units/percent"));
-		weatherPressure.setUnit(new Uri("obix:units/hectopascal")); //100*kg^1*m^-1*s^-2
-		weatherPrecipitation.setUnit(new Uri("obix:units/millimeter")); //0.001*m^1
-		weatherCloudiness.setUnit(new Uri("obix:units/percent"));
-		weatherFog.setUnit(new Uri("obix:units/percent"));
-		weatherWindspeed.setUnit(new Uri("obix:units/beaufort"));
+		temperature.setUnit(new Uri("obix:units/celsius"));
+		humidity.setUnit(new Uri("obix:units/percent"));
+		pressure.setUnit(new Uri("obix:units/hectopascal")); //100*kg^1*m^-1*s^-2
+		precipitation.setUnit(new Uri("obix:units/millimeter")); //0.001*m^1
+		cloudiness.setUnit(new Uri("obix:units/percent"));
+		fog.setUnit(new Uri("obix:units/percent"));
+		windSpeed.setUnit(new Uri("obix:units/beaufort"));
+		dewpointTemperature.setUnit(new Uri("obix:units/celsius"));
+		windDirection.setStr("null");
 		
-		
-		//weatherTemperature.set(8.8);
-		
-		
-		
-		add(weatherTimestamp);
-		add(weatherProbabilitycode);
-		add(weatherTemperature);
-		add(weatherHumidity);
-		add(weatherPressure);
-		add(weatherPrecipitation);
-		add(weatherCloudiness);
-		add(weatherFog);
-		add(weatherWindspeed);
+		add(timestamp);
+		add(probabilitycode);
+		add(temperature);
+		add(humidity);
+		add(pressure);
+		add(precipitation);
+		add(cloudiness);
+		add(fog);
+		add(windSpeed);
+		add(windDirection);
+		add(dewpointTemperature);
 
 		dataRecords = new ArrayList<WeatherForecastRecordImpl>();
 		
@@ -73,23 +74,24 @@ public class WeatherForcastUpcomingWeatherImpl extends Obj implements WeatherFor
 	}
 	
 	public void setAll(WeatherForcastUpcomingWeather rec) {
-		weatherTimestamp.set(rec.weatherTimestamp().getMillis(), rec.weatherTimestamp().getTimeZone());
+		timestamp.set(rec.timestamp().getMillis(), rec.timestamp().getTimeZone());
 		
-		if (ProbabilityCodeImpl.GetByName(rec.weatherProbabilitycode().get()) != ProbabilityCodeImpl.ID_UNKNOWN) {
-			weatherProbabilitycode.set(rec.weatherProbabilitycode().get());
+		if (ProbabilityCodeImpl.GetByName(rec.probabilitycode().get()) != ProbabilityCodeImpl.ID_UNKNOWN) {
+			probabilitycode.set(rec.probabilitycode().get());
 		}
 		else {
-			weatherProbabilitycode.set(ProbabilityCodeImpl.NAME_UNKNOWN);
+			probabilitycode.set(ProbabilityCodeImpl.NAME_UNKNOWN);
 		}
 		
-		weatherTemperature.set(rec.weatherTemperature().get());
-		//weatherTemperature.set(8.8);
-		weatherHumidity.set(rec.weatherHumidity().get());
-		weatherPressure.set(rec.weatherPressure().get());
-		weatherPrecipitation.set(rec.weatherPrecipitation().get());
-		weatherCloudiness.set(rec.weatherCloudiness().get());
-		weatherFog.set(rec.weatherFog().get());
-		weatherWindspeed.set(rec.weatherWindspeed().get());
+		temperature.set(rec.temperature().get());
+		humidity.set(rec.humidity().get());
+		pressure.set(rec.pressure().get());
+		precipitation.set(rec.precipitation().get());
+		cloudiness.set(rec.cloudiness().get());
+		fog.set(rec.fog().get());
+		windSpeed.set(rec.windspeed().get());
+		windDirection.set(rec.windDirection().get());
+		dewpointTemperature.set(rec.dewpointTemperature().get());
 		
 	}
 	
@@ -142,58 +144,59 @@ public class WeatherForcastUpcomingWeatherImpl extends Obj implements WeatherFor
 //	
 	
 	@Override
-	public Abstime weatherTimestamp() {
-		// TODO Auto-generated method stub
-		return weatherTimestamp;
+	public Abstime timestamp() {
+		return timestamp;
 	}
 
 	@Override
-	public Enum weatherProbabilitycode() {
-		// TODO Auto-generated method stub
-		return weatherProbabilitycode;
+	public Enum probabilitycode() {
+		return probabilitycode;
 	}
 
 	@Override
-	public Real weatherTemperature() {
-		// TODO Auto-generated method stub
-		System.out.println("Weather Temp upcoming impl: "+weatherTemperature);
-		return weatherTemperature;
+	public Real temperature() {
+		System.out.println("Weather Temp upcoming impl: "+temperature);
+		return temperature;
 	}
 
 	@Override
-	public Real weatherHumidity() {
-		// TODO Auto-generated method stub
-		return weatherHumidity;
+	public Real humidity() {
+		return humidity;
 	}
 
 	@Override
-	public Real weatherPressure() {
-		// TODO Auto-generated method stub
-		return weatherPressure;
+	public Real pressure() {
+		return pressure;
 	}
 
 	@Override
-	public Real weatherPrecipitation() {
-		// TODO Auto-generated method stub
-		return weatherPrecipitation;
+	public Real precipitation() {
+		return precipitation;
 	}
 
 	@Override
-	public Real weatherCloudiness() {
-		// TODO Auto-generated method stub
-		return weatherCloudiness;
+	public Real cloudiness() {
+		return cloudiness;
 	}
 
 	@Override
-	public Real weatherFog() {
-		// TODO Auto-generated method stub
-		return weatherFog;
+	public Real fog() {
+		return fog;
 	}
 
 	@Override
-	public Int weatherWindspeed() {
-		// TODO Auto-generated method stub
-		return weatherWindspeed;
+	public Int windspeed() {
+		return  windSpeed;
+	}
+
+	@Override
+	public Real dewpointTemperature() {
+		return dewpointTemperature;
+	}
+
+	@Override
+	public Str windDirection() {
+		return windDirection;
 	}
 
 
