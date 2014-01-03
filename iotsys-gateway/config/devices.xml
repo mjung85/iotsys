@@ -97,7 +97,7 @@
   
   <enocean>
     <connector>
-      <name>EnOcean</name>
+      <name>EnOcean Linux</name>
       <enabled>false</enabled>
       <serialPort>/dev/ttyS80</serialPort>
       <device>
@@ -127,11 +127,25 @@
       <device>
         <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.enocean.LightSwitchActuatorImplEnocean
         </type>
-        <address>0x02</address>
+        <address>0x01807AEB</address>
         <href>ligthSwitchEnocean1</href>
         <historyEnabled>false</historyEnabled>
         <groupCommEnabled>true</groupCommEnabled>
       </device>      
+    </connector>
+    
+    <connector>
+      <name>EnOcean</name>
+      <enabled>false</enabled>
+      <serialPort>COM6</serialPort>
+      <device>
+        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.enocean.WindowSensorImplEnocean
+        </type>
+        <address>0x01820AE7</address>
+        <href>window</href>
+        <historyEnabled>false</historyEnabled>
+        <groupCommEnabled>true</groupCommEnabled>
+      </device>
     </connector>
   </enocean>
 

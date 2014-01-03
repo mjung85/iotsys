@@ -158,26 +158,29 @@ public class EnoceanConnector implements Connector, SerialPortEventListener {
 					numBytes += inputStream.read(buffer);
 				}
 
-				System.out.print("EnoceanConnector received raw packet: ");
-				StringBuffer hexString = new StringBuffer();
-				for (int i = 0; i < buffer.length && i < numBytes; i++) {
-					String hex = Integer.toHexString(0xFF & buffer[i]);
-					if (hex.length() == 1)
-						hexString.append('0');
-
-					hexString.append(hex + " ");
-				}
-				System.out.println(hexString.toString());
+//				System.out.print("EnoceanConnector received raw packet: ");
+//				StringBuffer hexString = new StringBuffer();
+//				for (int i = 0; i < buffer.length && i < numBytes; i++) {
+//					String hex = Integer.toHexString(0xFF & buffer[i]);
+//					if (hex.length() == 1)
+//						hexString.append('0');
+//
+//					hexString.append(hex + " ");
+//				}
+//				System.out.println(hexString.toString());
 
 				synchronized (watchDogs) {
 					frame = new ESP3Frame(buffer, numBytes);
 					frame.readPacket();
 					String address = new String();
+				
 					if (frame.getPacket().telegram.getSenderID() != null)
 						address = frame.getPacket().telegram.getSenderID().toString();
 
 					if(frame.getPacketHeader().getPacketType() == ESP3PacketHeader.PacketType.RESPONSE)
 						address = "RESPONSE";
+					
+					log.info("Received packet from: " + address);
 
 					// frame.getPacket().telegram.getPayloadAsString();
 					log.info("notify watchdog: " + address);
