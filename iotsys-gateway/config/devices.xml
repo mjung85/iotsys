@@ -18,13 +18,13 @@
     </device-loader>
     <device-loader>at.ac.tuwien.auto.iotsys.gateway.connectors.weatherforecast.WeatherForecastDeviceLoaderImpl
     </device-loader>
-	<device-loader>at.ac.tuwien.auto.iotsys.gateway.connectors.coap.CoapDeviceLoader
+	<device-loader>at.ac.tuwien.auto.iotsys.gateway.connectors.coap.CoapDeviceLoaderImpl
     </device-loader>
   </deviceloaders>
   
   <coap>
         <connector>
-            <name>CoAP Devices</name>
+            <name>CoAP Cooja</name>
             <enabled>false</enabled>
 
 			<device>
@@ -36,7 +36,21 @@
 					<refreshEnabled>true</refreshEnabled>
 					<groupCommEnabled>true</groupCommEnabled>
 			</device>
+        </connector>
+        
+        <connector>
+            <name>CoAP</name>
+            <enabled>true</enabled>
 
+			<device>
+					<type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.coap.TemperatureSensorImplCoap
+					</type>
+					<address>coap://[aaaa::c30c:0:0:1267]:5683/temp</address>
+					<href>temp</href>
+					<historyEnabled>true</historyEnabled>
+					<refreshEnabled>true</refreshEnabled>
+					<groupCommEnabled>true</groupCommEnabled>
+			</device>
         </connector>
   </coap>
   <rfid>
