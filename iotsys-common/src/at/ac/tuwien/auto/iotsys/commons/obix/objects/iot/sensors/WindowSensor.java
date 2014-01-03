@@ -34,11 +34,11 @@ package at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.sensors;
 
 import obix.Bool;
 
-public interface WindowSwitchSensor extends Sensor{
-	public static final String WINDOW_STATUS_CONTRACT_HREF="windowStatus";
-	public static final String WINDOW_STATUS_CONTRACT_NAME="windowStatus";
+public interface WindowSensor extends Sensor{
+	public static final String VALUE_CONTRACT_HREF="value";
+	public static final String VALUE_CONTRACT_NAME="value";
 	
 	public static final String CONTRACT="iot:WindowSwitchSensor";
-	public static final String WINDOW_STATUS_CONTRACT = "<bool name='"+WindowSwitchSensor.WINDOW_STATUS_CONTRACT_NAME+"' href='"+WindowSwitchSensor.WINDOW_STATUS_CONTRACT_HREF+"' val='false'/>";
-	public Bool windowStatusValue();  
+	public static final String WINDOW_VALUE_CONTRACT = "<bool name='"+WindowSensor.VALUE_CONTRACT_NAME+"' href='"+WindowSensor.VALUE_CONTRACT_HREF+"' val='false'/>";
+	public Bool value();  
 }
