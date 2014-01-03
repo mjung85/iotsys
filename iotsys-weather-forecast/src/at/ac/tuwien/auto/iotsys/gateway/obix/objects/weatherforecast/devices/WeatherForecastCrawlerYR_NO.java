@@ -77,70 +77,70 @@ public class WeatherForecastCrawlerYR_NO extends WeatherForecastCrawlerImpl {
 			for(int i=0; i < weatherList.size();i++){
 
 				if (i==0){
-					WeatherForcastUpcomingWeatherImpl upcomingforcast = new WeatherForcastUpcomingWeatherImpl(); 
+				
 					
 					// set temperature			
 					if (weatherList.get(i).getTemperature() != Double.NaN){
-						upcomingforcast.temperature().set(weatherList.get(i).getTemperature());
+						upcoming.temperature().set(weatherList.get(i).getTemperature());
 					}
 					else{
-						upcomingforcast.temperature().setNull(true);
+						upcoming.temperature().setNull(true);
 					}
 					
 					// set windDirection			
 					if (weatherList.get(i).getWindDirection() != null){
-						upcomingforcast.windDirection().set(weatherList.get(i).getWindDirection());	
+						upcoming.windDirection().set(weatherList.get(i).getWindDirection());	
 					}
 					else{
-						upcomingforcast.windDirection().setNull(true);
+						upcoming.windDirection().setNull(true);
 					}
 					
 					// set windSpeed			
 					if (weatherList.get(i).getWindSpeed() != Double.NaN){
-						upcomingforcast.windspeed().set(weatherList.get(i).getWindSpeed());
+						upcoming.windspeed().set(weatherList.get(i).getWindSpeed());
 					}
 					else{
-						upcomingforcast.windspeed().setNull(true);
+						upcoming.windspeed().setNull(true);
 					}
 					
 					// set humidity			
 					if (weatherList.get(i).getHumidity() != Double.NaN){
-						upcomingforcast.humidity().set(weatherList.get(i).getHumidity());
+						upcoming.humidity().set(weatherList.get(i).getHumidity());
 					}
 					else{
-						upcomingforcast.humidity().setNull(true);
+						upcoming.humidity().setNull(true);
 					}
 					
 					// set pressure			
 					if (weatherList.get(i).getPressure() != Double.NaN){
-						upcomingforcast.pressure().set(weatherList.get(i).getPressure());
+						upcoming.pressure().set(weatherList.get(i).getPressure());
 					}
 					else{
-						upcomingforcast.pressure().setNull(true);
+						upcoming.pressure().setNull(true);
 					}
 					
 					// set cloudiness 			
 					if (weatherList.get(i).getCloudiness() != Double.NaN){
-						upcomingforcast.cloudiness().set(weatherList.get(i).getCloudiness());
+						upcoming.cloudiness().set(weatherList.get(i).getCloudiness());
 					}
 					else{
-						upcomingforcast.cloudiness().setNull(true);
+						upcoming.cloudiness().setNull(true);
 					}
 					
 					// set fog 			
 					if (weatherList.get(i).getFog() != Double.NaN){
-						upcomingforcast.fog().set(weatherList.get(i).getFog());
+						upcoming.fog().set(weatherList.get(i).getFog());
 					}
 					else{
-						upcomingforcast.fog().setNull(true);
+						upcoming.fog().setNull(true);
 					}
 					
 					// set dewpointTemperature  			
 					if (weatherList.get(i).getDewpointTemperature() != Double.NaN){
-						upcomingforcast.dewpointTemperature().set(weatherList.get(i).getDewpointTemperature());
+						upcoming.dewpointTemperature().set(weatherList.get(i).getDewpointTemperature());
 					}
 					else{
-						upcomingforcast.dewpointTemperature().setNull(true);
+						upcoming.dewpointTemperature().setNull(true);
 					}
 
 				}
