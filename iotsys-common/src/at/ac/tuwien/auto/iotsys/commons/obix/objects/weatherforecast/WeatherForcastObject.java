@@ -1,16 +1,16 @@
 package at.ac.tuwien.auto.iotsys.commons.obix.objects.weatherforecast;
 
-
-import java.util.Date;
+import java.util.TimeZone;
 
 
 public class WeatherForcastObject {
 	
 	private long timestamp;
+	private TimeZone timeZone;
 	private String probabilityCode;
 	private double temperature;
 	private String WindDirection;
-	private int windSpeed;
+	private Integer windSpeed;
 	private double humidity;
 	private double pressure;
 	private double precipitation;
@@ -24,6 +24,7 @@ public class WeatherForcastObject {
 	private int symbolProbability;
 	private int windProbability;
 	private int temperatureProbability;
+	
 	
 	public String getWindDirection() {
 		return WindDirection;
@@ -56,6 +57,12 @@ public class WeatherForcastObject {
 	}
 	public void setTimestamp(long timestamp) {
 		this.timestamp = timestamp;
+	}
+	public TimeZone getTimeZone() {
+		return timeZone;
+	}
+	public void setTimeZone(TimeZone timeZone) {
+		this.timeZone = timeZone;
 	}
 	public String getProbabilityCode() {
 		return probabilityCode;
@@ -126,7 +133,7 @@ public class WeatherForcastObject {
 	public int getWindSpeed() {
 		return windSpeed;
 	}
-	public void setWindSpeed(int windSpeed) {
+	public void setWindSpeed(Integer windSpeed) {
 		this.windSpeed = windSpeed;
 	}
 	public String getSymbol() {

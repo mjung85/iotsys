@@ -33,7 +33,13 @@ public interface WeatherForecastRecord extends IObj {
 
 	public static final String windSpeedContract = "<int name='windSpeed' min='0' max='12' null='true'/>";
 	public Int windSpeed();
-
+	
+	public static final String windDirection = "<str name='windDirection' val='null'/>";
+	public Str windDirection();
+	
 	public static final String symbolContract = "<enum name='symbol' null='true' range='" + WeatherSymbol.CONTRACT + "'/>";
 	public Enum symbol();
+	
+	public static final String dewpointTemperatureContract = "<real name='dewpointTemperature' null='true'/>";
+	public Real dewpointTemperature();
 }

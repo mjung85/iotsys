@@ -153,7 +153,7 @@ public class WeatherForecastCrawlerImpl extends Obj implements WeatherForecastCr
 	@Override
 	public void refreshObject(){
 		
-		this.upcoming.weatherTemperature().setReal(7.7);
+		this.upcoming.temperature().setReal(7.7);
 		
 	}
 }
