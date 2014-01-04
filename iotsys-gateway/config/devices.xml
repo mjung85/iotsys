@@ -218,6 +218,26 @@
   
   
   <knx>
+      <connector>
+      	<name>KNX SuperSuitcase</name>
+      	<enabled>true</enabled>
+      	<router>
+        	<ip>192.168.1.14</ip>
+        	<port>3671</port>
+      	</router>
+      	<localIP>auto</localIP>
+
+      <device>
+        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.knx.TextDisplayActuatorImplKnx
+        </type>
+        <address>null, 0/0/3</address>
+        <href>textDisplay</href>
+        <historyEnabled>true</historyEnabled>
+        <historyCount>200</historyCount>
+      </device>
+    </connector>
+    
+      
     <connector>
       <name>KNX TP1 Suitcase</name>
       <enabled>false</enabled>
@@ -851,6 +871,7 @@
       <name>VirtualDevices</name>
       <enabled>true</enabled>
 
+
       <!-- SENSOREN -->
 
       <device>
@@ -922,6 +943,17 @@
 
 
       <!-- ACTUATORS -->
+      
+       <device>
+        <type>at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators.impl.TextDisplayActuatorImpl
+        </type>
+        <href>virtualTextDisplayActuator</href>
+        <historyEnabled>false</historyEnabled>
+        <historyCount>200</historyCount>
+        <groupCommEnabled>false</groupCommEnabled>
+      </device>
+      
+      
       <device>
         <type>at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators.impl.SimpleHVACvalveActuatorImpl
         </type>

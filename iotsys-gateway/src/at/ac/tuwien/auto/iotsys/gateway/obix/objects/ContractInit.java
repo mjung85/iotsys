@@ -80,6 +80,7 @@ import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators.LightSwitchAc
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators.PumpActuator;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators.SimpleHVACvalveActuator;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators.SunblindActuator;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators.TextDisplayActuator;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.logic.BinaryOperation;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.logic.Comparator;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.logic.LogicBinaryOperation;
@@ -138,7 +139,8 @@ public class ContractInit
 			ContractRegistry.put(PumpActuator.CONTRACT, PumpActuator.class.getName());
 			ContractRegistry.put(SunblindActuator.CONTRACT, SunblindActuator.class.getName());
 			ContractRegistry.put(SimpleHVACvalveActuator.CONTRACT, SimpleHVACvalveActuator.class.getName());
-
+			ContractRegistry.put(TextDisplayActuator.CONTRACT, TextDisplayActuator.class.getName());
+			
 			ContractRegistry.put(GroupComm.CONTRACT, GroupComm.class.getName());
 			// ContractRegistry.put(TemperatureControlActuator.CONTRACT,
 			// TemperatureControlActuator.class.getName());
