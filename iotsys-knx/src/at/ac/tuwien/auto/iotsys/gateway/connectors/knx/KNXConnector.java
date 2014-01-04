@@ -146,6 +146,19 @@ public class KNXConnector implements Connector {
 		}
 	}
 
+	public void write(GroupAddress a, String value) {
+		try {
+			if (!isConnected()) {
+				return;
+			}
+			log.finest("Writing " + value + " on " + a);
+			pc.write(a, value);
+		} catch (KNXException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	
 	public void write(GroupAddress a, int value, String scaled) {
 		try {
 			if (!isConnected()) {
@@ -197,6 +210,22 @@ public class KNXConnector implements Connector {
 		return 0;
 	}
 
+	public String readString(GroupAddress a) {
+		try {
+			if (!isConnected()) {
+				return null;
+			}
+
+			String ret = pc.readString(a);
+			log.finest("Read " + ret + " from " + a);
+			return ret;
+		} catch (KNXException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	
 	public float readFloat(GroupAddress a) {
 		try {
 			if (!isConnected()) {
@@ -229,6 +258,7 @@ public class KNXConnector implements Connector {
 		}
 	}
 
+	
 	public boolean readBool(GroupAddress a) {
 		try {
 			if (!isConnected()) {
