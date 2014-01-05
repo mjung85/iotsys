@@ -1,6 +1,5 @@
 package at.ac.tuwien.auto.iotsys.commons.obix.objects.weatherforecast.impl;
 
-import at.ac.tuwien.auto.iotsys.commons.obix.objects.weatherforecast.Crawler;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.weatherforecast.WeatherForecastLocation;
 import obix.*;
 
@@ -112,18 +111,6 @@ public class WeatherForecastLocationImpl extends Obj implements
 	
 	@Override
 	public void writeObject(Obj input) {
-		if (input instanceof WeatherForecastLocation ) {
-			WeatherForecastLocation newLocation = (WeatherForecastLocation) input;
-			
-			setLatitude(newLocation.latitude().get());
-			setLongitude(newLocation.longitude().get());
-			setHeight(newLocation.height().get());
-			setDescription(newLocation.description().get());
-			
-			Obj parent = this.getParent();
-			if (parent instanceof Crawler) {
-				((Crawler) parent).reset();
-			}
-		}
+		
 	}
 }
