@@ -30,76 +30,86 @@
  * This file is part of the IoTSyS project.
  ******************************************************************************/
 
-package at.ac.tuwien.auto.iotsys.gateway.obix.objects;
+package at.ac.tuwien.auto.iotsys.commons.obix.objects;
 
 import java.util.List;
-import java.util.TimeZone;
 
 import obix.Abstime;
 import obix.Contract;
 import obix.Int;
 import obix.Obj;
 import obix.Uri;
-import obix.contracts.HistoryQueryOut;
-import obix.contracts.HistoryRecord;
+import obix.contracts.HistoryAppendOut;
 
-public class HistoryQueryOutImpl extends Obj implements HistoryQueryOut {
+public class HistoryAppendOutImpl extends Obj implements HistoryAppendOut {
+	
+	public static final String HISTORY_APPENDOUT_CONTRACT = "obix:HistoryAppendOut";
+	
+	private Int numAdded = new Int();
+	private Int newCount = new Int();
+	private Abstime newStart = new Abstime();
+	private Abstime newEnd = new Abstime();
 
-	private obix.List resultList;
-	private Int count = new Int("count");
-	private Abstime start = new Abstime("start");
-	private Abstime end = new Abstime("end");
+
+	public HistoryAppendOutImpl(List<HistoryRecordImpl> newRecords, List<Obj> historyRecords) {	
 	
-	public static final String HISTORY_QUERY_OUT_CONTRACT = "obix:HistoryQueryOut";
-	
-	public HistoryQueryOutImpl(List<Obj> historyRecords) {	
-	
-		count.setHref(new Uri("count"));
-		start.setHref(new Uri("start"));
-		end.setHref(new Uri("end"));
+		setIs(new Contract(HISTORY_APPENDOUT_CONTRACT));
 		
-		resultList = new obix.List();
-		resultList.setOf(new Contract(HistoryRecordImpl.HISTORY_RECORD_CONTRACT));
-		for(Obj historyRecord : historyRecords) {
-			resultList.add(historyRecord);
+		numAdded.setName("numAdded");
+		numAdded.setHref(new Uri("numAdded"));
+		
+		newCount.setName("newCount");
+		newCount.setHref(new Uri("newCount"));
+		
+		newStart.setName("newStart");
+		newStart.setHref(new Uri("newStart"));
+		
+		newEnd.setName("newEnd");
+		newEnd.setHref(new Uri("newEnd"));
+		
+		newCount.set(historyRecords.size(), false);
+		numAdded.set(newRecords.size(), false);
+		
+		if (historyRecords.size() == 0) {
+			newStart.setNull(true);
+			newEnd.setNull(true);
+		} else {
+			Abstime start = ((HistoryRecordImpl) historyRecords.get(historyRecords.size()-1)).timestamp();
+			newStart.set(start.get(), start.getTimeZone());
+			
+			Abstime end = ((HistoryRecordImpl) historyRecords.get(0)).timestamp();
+			newEnd.set(end.get(), end.getTimeZone());
 		}
 		
-		if(historyRecords.size() > 0) {
-			HistoryRecord firstRecord = (HistoryRecord) historyRecords.get(0);
-			HistoryRecord lastRecord  = (HistoryRecord) historyRecords.get(historyRecords.size()-1);
-			start.set(firstRecord.timestamp().get(), TimeZone.getDefault());
-			end.set(lastRecord.timestamp().get(), TimeZone.getDefault());
-		}
-		
-		start.setNull(historyRecords.size() == 0);
-		end.setNull(  historyRecords.size() == 0);
-		
-		count.set(resultList.size(),false);
-		setIs(new Contract(HISTORY_QUERY_OUT_CONTRACT));
-		
-		add(count);
-		add(start);
-		add(end);
-		add(resultList);
-	}
-	
-	@Override
-	public Int count() {
-		return count;
+		add(numAdded);
+		add(newCount);
+		add(newStart);
+		add(newEnd);
 	}
 
-	@Override
-	public Abstime start() {
-		return start;
-	}
 
 	@Override
-	public Abstime end() {
-		return end;
+	public Int numAdded() {
+		return numAdded;
 	}
 
+
 	@Override
-	public obix.List data() {
-		return resultList;
+	public Int newCount() {
+		return newCount;
 	}
+
+
+	@Override
+	public Abstime newStart() {
+		return newStart;
+	}
+
+
+	@Override
+	public Abstime newEnd() {
+		return newEnd;
+	}
+
+
 }

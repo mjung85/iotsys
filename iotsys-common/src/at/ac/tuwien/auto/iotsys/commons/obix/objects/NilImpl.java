@@ -1,4 +1,4 @@
-package at.ac.tuwien.auto.iotsys.gateway.obix.objects;
+package at.ac.tuwien.auto.iotsys.commons.obix.objects;
 
 import obix.Contract;
 import obix.Obj;

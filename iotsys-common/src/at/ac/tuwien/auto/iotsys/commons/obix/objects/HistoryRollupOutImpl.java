@@ -30,86 +30,69 @@
  * This file is part of the IoTSyS project.
  ******************************************************************************/
 
-package at.ac.tuwien.auto.iotsys.gateway.obix.objects;
+package at.ac.tuwien.auto.iotsys.commons.obix.objects;
 
-import java.util.List;
+import java.util.ArrayList;
 
 import obix.Abstime;
 import obix.Contract;
 import obix.Int;
+import obix.List;
 import obix.Obj;
 import obix.Uri;
-import obix.contracts.HistoryAppendOut;
+import obix.contracts.HistoryRollupOut;
 
-public class HistoryAppendOutImpl extends Obj implements HistoryAppendOut {
+public class HistoryRollupOutImpl extends Obj implements HistoryRollupOut {
 	
-	public static final String HISTORY_APPENDOUT_CONTRACT = "obix:HistoryAppendOut";
+	public static final String HISTORY_ROLLUPOUT_CONTRACT = "obix:HistoryRollupOut";
 	
-	private Int numAdded = new Int();
-	private Int newCount = new Int();
-	private Abstime newStart = new Abstime();
-	private Abstime newEnd = new Abstime();
+	private List resultList;
+	private Int count = new Int();
+	private Abstime start = new Abstime();
+	private Abstime end = new Abstime();
 
 
-	public HistoryAppendOutImpl(List<HistoryRecordImpl> newRecords, List<Obj> historyRecords) {	
+	public HistoryRollupOutImpl(ArrayList<HistoryRollupRecordImpl> historyRecords) {	
 	
-		setIs(new Contract(HISTORY_APPENDOUT_CONTRACT));
+		count.setName("count");
+		count.setHref(new Uri("count"));
 		
-		numAdded.setName("numAdded");
-		numAdded.setHref(new Uri("numAdded"));
+		start.setName("start");
+		start.setHref(new Uri("start"));
 		
-		newCount.setName("newCount");
-		newCount.setHref(new Uri("newCount"));
+		end.setName("end");
+		end.setHref(new Uri("end"));
 		
-		newStart.setName("newStart");
-		newStart.setHref(new Uri("newStart"));
+		resultList = new List();
+		resultList.setOf(new Contract(HistoryRollupRecordImpl.HISTORY_ROLLUPRECORD_CONTRACT));
+
+		count.set(resultList.size(), false);
+		setIs(new Contract(HISTORY_ROLLUPOUT_CONTRACT));
 		
-		newEnd.setName("newEnd");
-		newEnd.setHref(new Uri("newEnd"));
-		
-		newCount.set(historyRecords.size(), false);
-		numAdded.set(newRecords.size(), false);
-		
-		if (historyRecords.size() == 0) {
-			newStart.setNull(true);
-			newEnd.setNull(true);
-		} else {
-			Abstime start = ((HistoryRecordImpl) historyRecords.get(historyRecords.size()-1)).timestamp();
-			newStart.set(start.get(), start.getTimeZone());
-			
-			Abstime end = ((HistoryRecordImpl) historyRecords.get(0)).timestamp();
-			newEnd.set(end.get(), end.getTimeZone());
+		for(HistoryRollupRecordImpl historyRecord : historyRecords) {
+			resultList.add(historyRecord);
 		}
 		
-		add(numAdded);
-		add(newCount);
-		add(newStart);
-		add(newEnd);
+		add(count);
+		add(start);
+		add(end);
+		add(resultList);
 	}
 
-
-	@Override
-	public Int numAdded() {
-		return numAdded;
+	public Int count() {
+		return count;
 	}
 
-
-	@Override
-	public Int newCount() {
-		return newCount;
+	public Abstime start() {
+		return start;
 	}
 
-
-	@Override
-	public Abstime newStart() {
-		return newStart;
+	public Abstime end() {
+		return end;
 	}
 
-
-	@Override
-	public Abstime newEnd() {
-		return newEnd;
+	public List data() {
+		return resultList;
 	}
-
 
 }
