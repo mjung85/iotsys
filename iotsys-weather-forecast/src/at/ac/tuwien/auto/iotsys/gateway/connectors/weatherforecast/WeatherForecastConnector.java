@@ -65,7 +65,6 @@ import org.xml.sax.SAXException;
 import at.ac.tuwien.auto.iotsys.commons.Connector;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.weatherforecast.WeatherForcastObject;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.weatherforecast.impl.UpcomingWeatherImpl;
-import at.ac.tuwien.auto.iotsys.commons.obix.objects.weatherforecast.impl.WeatherForecastRecordImpl;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.weatherforecast.impl.WeatherSymbolImpl;
 
 public class WeatherForecastConnector implements Connector {
