@@ -30,22 +30,24 @@
  * This file is part of the IoTSyS project.
  ******************************************************************************/
 
-package at.ac.tuwien.auto.iotsys.gateway.obix.groupcomm;
+package at.ac.tuwien.auto.iotsys.commons.obix.objects;
 
+import obix.Contract;
 import obix.List;
-import obix.Op;
+import obix.Obj;
+import obix.contracts.WatchOut;
 
-public interface GroupComm {
-	public static final String joinGroupContract = "<op name='joinGroup' in='obix:Str' out='obix:List'/>";
-	public Op joinGroup();
+public class WatchOutImpl extends Obj implements WatchOut{
 	
-	public static final String leaveGroupContract = "<op name='leaveGroup' in='obix:Str' out='obix:List'/>";
-	public Op leaveGroup();
+	private List list  = new List();
 	
-	public static final String GROUPS_HREF ="groups";
-	public static final String GROUPS_NAME="groups";
-	
-	public static final String CONTRACT="iot:GroupComm";
-	public static final String GROUPS_CONTRACT = "<list name='"+ GROUPS_NAME +"' href='"+ GROUPS_HREF + "'/>";
-	public List groups();  
+	public WatchOutImpl(){
+		setIs(new Contract(WatchImpl.WATCH_OUT_CONTRACT));
+		add(values());
+	}
+		
+	@Override
+	public List values() {
+		return list;
+	}
 }

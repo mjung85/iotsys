@@ -30,24 +30,92 @@
  * This file is part of the IoTSyS project.
  ******************************************************************************/
 
-package at.ac.tuwien.auto.iotsys.gateway.obix.objects;
+package at.ac.tuwien.auto.iotsys.commons.obix.objects;
 
-import obix.Contract;
-import obix.List;
+import obix.Abstime;
+import obix.Int;
 import obix.Obj;
-import obix.contracts.WatchOut;
+import obix.Real;
+import obix.Uri;
+import obix.contracts.HistoryRollupRecord;
 
-public class WatchOutImpl extends Obj implements WatchOut{
+public class HistoryRollupRecordImpl extends Obj implements HistoryRollupRecord{
 	
-	private List list  = new List();
+	public static final String HISTORY_ROLLUPRECORD_CONTRACT = "obix:HistoryRollupRecord";
 	
-	public WatchOutImpl(){
-		setIs(new Contract(WatchImpl.WATCH_OUT_CONTRACT));
-		add(values());
-	}
+	private Abstime start = new Abstime();
+	private Abstime end = new Abstime();
+	
+	private Int count = new Int(0);
+	private Real min = new Real(0);
+	private Real max = new Real(0);
+	private Real avg = new Real(0);
+	private Real sum = new Real(0);
+	
+	public HistoryRollupRecordImpl(){
+		count.setName("count");
+		count.setHref(new Uri("count"));
+		add(count);
 		
-	@Override
-	public List values() {
-		return list;
+		start.setName("start");
+		start.setHref(new Uri("start"));
+		add(start);
+		
+		end.setName("end");
+		end.setHref(new Uri("end"));
+		add(end);
+		
+		min.setName("min");
+		min.setHref(new Uri("min"));
+		add(min);
+		
+		max.setName("max");
+		max.setHref(new Uri("max"));
+		add(max);
+		
+		avg.setName("avg");
+		avg.setHref(new Uri("avg"));
+		add(avg);
+		
+		sum.setName("sum");
+		sum.setHref(new Uri("sum"));
+		add(sum);
 	}
+	
+
+	public Abstime start() {
+
+		return start;
+	}
+
+	public Abstime end() {
+
+		return end;
+	}
+
+	public Int count() {
+
+		return count;
+	}
+
+	public Real min() {
+
+		return min;
+	}
+
+	public Real max() {
+
+		return max;
+	}
+
+	public Real avg() {
+
+		return avg;
+	}
+
+	public Real sum() {
+
+		return sum;
+	}
+
 }

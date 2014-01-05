@@ -30,42 +30,41 @@
  * This file is part of the IoTSyS project.
  ******************************************************************************/
 
-package at.ac.tuwien.auto.iotsys.gateway.obix.objects;
+package at.ac.tuwien.auto.iotsys.commons.obix.objects;
 
-import obix.Abstime;
+import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
+import at.ac.tuwien.auto.iotsys.obix.OperationHandler;
+import obix.Contract;
 import obix.Obj;
-import obix.contracts.HistoryRecord;
+import obix.Op;
+import obix.Uri;
+import obix.contracts.WatchService;
 
-public class HistoryRecordImpl extends Obj implements HistoryRecord {
-	protected Obj value = new Obj();
-	protected Abstime abstime = new Abstime();
+public class WatchServiceImpl extends Obj implements WatchService {
 	
-	public static final String HISTORY_RECORD_CONTRACT = "obix:HistoryRecord";
+	private ObjectBroker broker;
 	
-	public HistoryRecordImpl(Obj value) {
-		this.value = value;
-		abstime = new Abstime(System.currentTimeMillis());
-
-		add(timestamp());
-		add(value());
+	public WatchServiceImpl(final ObjectBroker broker) {
+		this.broker = broker;
+		setHref(new Uri("watchService"));
+		setIs(new Contract(WatchService.CONTRACT));
+		add(make()); 
 	}
 	
-	public HistoryRecordImpl(HistoryRecord record) {
-		this.value = record.value();
-		this.abstime = new Abstime(record.timestamp().getMillis());
-		
-		add(timestamp());
-		add(value());
+	public Op make() {
+		Op make = new Op("make", new Contract("obix:Nil"), new Contract("obix:Watch"));
+		make.setHref(new Uri("make"));
+		make.setOperationHandler(new OperationHandler() {
+			public Obj invoke(Obj in) {
+				return doMake();
+			}
+		});
+		return make;
 	}
 	
-	@Override
-	public Abstime timestamp() {
-		return abstime;
+	public Obj doMake() {
+		WatchImpl watchImpl = new WatchImpl(broker);	
+		broker.addObj(watchImpl, true);
+		return watchImpl;
 	}
-
-	@Override
-	public Obj value() {
-		return value;
-	}
-
 }

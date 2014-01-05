@@ -30,69 +30,36 @@
  * This file is part of the IoTSyS project.
  ******************************************************************************/
 
-package at.ac.tuwien.auto.iotsys.gateway.obix.objects;
+package at.ac.tuwien.auto.iotsys.commons.obix.objects;
 
-import java.util.ArrayList;
-
-import obix.Abstime;
-import obix.Contract;
-import obix.Int;
-import obix.List;
 import obix.Obj;
-import obix.Uri;
-import obix.contracts.HistoryRollupOut;
 
-public class HistoryRollupOutImpl extends Obj implements HistoryRollupOut {
+public class HistoryHelper {
+	public static final int HISTORY_COUNT_DEFAULT = 10;
 	
-	public static final String HISTORY_ROLLUPOUT_CONTRACT = "obix:HistoryRollupOut";
+	/**
+	 * Adds the history to all value data points (bool, real, int) of an oBIX object
+	 * This method required the passed oBIX object to be completely initialized (href,...)
+	 * @param obj
+	 */
+	public static void addHistoryToDatapoints(Obj obj){
+		addHistoryToDatapoints(obj, HISTORY_COUNT_DEFAULT);	
+	}
 	
-	private List resultList;
-	private Int count = new Int();
-	private Abstime start = new Abstime();
-	private Abstime end = new Abstime();
-
-
-	public HistoryRollupOutImpl(ArrayList<HistoryRollupRecordImpl> historyRecords) {	
-	
-		count.setName("count");
-		count.setHref(new Uri("count"));
+	/**
+	 * Adds the history to all value data points (bool, real, int) of an oBIX object
+	 * This method required the passed oBIX object to be completely initialized (href,...)
+	 * @param obj
+	 * @param countMax 
+	 */
+	public static void addHistoryToDatapoints(Obj obj, int countMax){
+		//if(obj.isInt() || obj.isStr() || obj.isBool() || obj.isReal()){
+			new HistoryImpl(obj, countMax);
+		//}
 		
-		start.setName("start");
-		start.setHref(new Uri("start"));
-		
-		end.setName("end");
-		end.setHref(new Uri("end"));
-		
-		resultList = new List();
-		resultList.setOf(new Contract(HistoryRollupRecordImpl.HISTORY_ROLLUPRECORD_CONTRACT));
-
-		count.set(resultList.size(), false);
-		setIs(new Contract(HISTORY_ROLLUPOUT_CONTRACT));
-		
-		for(HistoryRollupRecordImpl historyRecord : historyRecords) {
-			resultList.add(historyRecord);
+		for(Obj child : obj.list()) {
+			if (child.isHidden()) continue;
+			addHistoryToDatapoints(child, countMax);
 		}
-		
-		add(count);
-		add(start);
-		add(end);
-		add(resultList);
 	}
-
-	public Int count() {
-		return count;
-	}
-
-	public Abstime start() {
-		return start;
-	}
-
-	public Abstime end() {
-		return end;
-	}
-
-	public List data() {
-		return resultList;
-	}
-
 }

@@ -29,7 +29,7 @@
  * 
  * This file is part of the IoTSyS project.
  ******************************************************************************/
-package at.ac.tuwien.auto.iotsys.gateway.obix.objects;
+package at.ac.tuwien.auto.iotsys.commons.obix.objects;
 
 import obix.ContractRegistry;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.bacnet.AnalogInput;
@@ -96,18 +96,8 @@ import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.sensors.SunIntensitySen
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.sensors.TemperatureSensor;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.sensors.WindowSensor;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.sim.HVACSimulation;
-import at.ac.tuwien.auto.iotsys.commons.obix.objects.weatherforecast.WeatherForecast;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.weatherforecast.Crawler;
-import at.ac.tuwien.auto.iotsys.commons.obix.objects.weatherforecast.WeatherForecastFilter;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.weatherforecast.WeatherForecastLocation;
-import at.ac.tuwien.auto.iotsys.commons.obix.objects.weatherforecast.WeatherForecastQueryResult;
-import at.ac.tuwien.auto.iotsys.commons.obix.objects.weatherforecast.WeatherForecastRecord;
-import at.ac.tuwien.auto.iotsys.commons.obix.objects.weatherforecast.WeatherForecastUpdateIn;
-import at.ac.tuwien.auto.iotsys.commons.obix.objects.weatherforecast.WeatherForecastUpdateOut;
-import at.ac.tuwien.auto.iotsys.gateway.obix.groupcomm.GroupComm;
-//import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.ChillerActuator;
-//import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.HeatPumpActuator;
-//import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.TemperatureControlActuator;
 
 public class ContractInit
 {
@@ -201,13 +191,9 @@ public class ContractInit
 
 			// Weather forecast
 			ContractRegistry.put(Crawler.CONTRACT, Crawler.class.getName());
-			ContractRegistry.put(WeatherForecastFilter.CONTRACT, WeatherForecastFilter.class.getName());
-			ContractRegistry.put(WeatherForecast.CONTRACT, WeatherForecast.class.getName());
+
 			ContractRegistry.put(WeatherForecastLocation.CONTRACT, WeatherForecastLocation.class.getName());
-			ContractRegistry.put(WeatherForecastQueryResult.CONTRACT, WeatherForecastQueryResult.class.getName());
-			ContractRegistry.put(WeatherForecastRecord.CONTRACT, WeatherForecastRecord.class.getName());
-			ContractRegistry.put(WeatherForecastUpdateIn.CONTRACT, WeatherForecastUpdateIn.class.getName());
-			ContractRegistry.put(WeatherForecastUpdateOut.CONTRACT, WeatherForecastUpdateOut.class.getName());
+			
 
 			// FIXME the following contracts have already used hrefs (obix:Unit)
 			ContractRegistry.put(UnitCelsius.CONTRACT, UnitCelsius.class.getName());

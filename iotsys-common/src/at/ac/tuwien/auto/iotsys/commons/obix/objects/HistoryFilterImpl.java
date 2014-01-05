@@ -30,7 +30,7 @@
  * This file is part of the IoTSyS project.
  ******************************************************************************/
 
-package at.ac.tuwien.auto.iotsys.gateway.obix.objects;
+package at.ac.tuwien.auto.iotsys.commons.obix.objects;
 
 import java.util.ArrayList;
 import java.util.Collections;

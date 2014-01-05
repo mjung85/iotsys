@@ -30,92 +30,76 @@
  * This file is part of the IoTSyS project.
  ******************************************************************************/
 
-package at.ac.tuwien.auto.iotsys.gateway.obix.objects;
+package at.ac.tuwien.auto.iotsys.commons.obix.objects;
+
+import java.util.List;
+import java.util.TimeZone;
 
 import obix.Abstime;
+import obix.Contract;
 import obix.Int;
 import obix.Obj;
-import obix.Real;
 import obix.Uri;
-import obix.contracts.HistoryRollupRecord;
+import obix.contracts.HistoryQueryOut;
+import obix.contracts.HistoryRecord;
 
-public class HistoryRollupRecordImpl extends Obj implements HistoryRollupRecord{
+public class HistoryQueryOutImpl extends Obj implements HistoryQueryOut {
+
+	private obix.List resultList;
+	private Int count = new Int("count");
+	private Abstime start = new Abstime("start");
+	private Abstime end = new Abstime("end");
 	
-	public static final String HISTORY_ROLLUPRECORD_CONTRACT = "obix:HistoryRollupRecord";
+	public static final String HISTORY_QUERY_OUT_CONTRACT = "obix:HistoryQueryOut";
 	
-	private Abstime start = new Abstime();
-	private Abstime end = new Abstime();
+	public HistoryQueryOutImpl(List<Obj> historyRecords) {	
 	
-	private Int count = new Int(0);
-	private Real min = new Real(0);
-	private Real max = new Real(0);
-	private Real avg = new Real(0);
-	private Real sum = new Real(0);
-	
-	public HistoryRollupRecordImpl(){
-		count.setName("count");
 		count.setHref(new Uri("count"));
-		add(count);
-		
-		start.setName("start");
 		start.setHref(new Uri("start"));
-		add(start);
-		
-		end.setName("end");
 		end.setHref(new Uri("end"));
+		
+		resultList = new obix.List();
+		resultList.setOf(new Contract(HistoryRecordImpl.HISTORY_RECORD_CONTRACT));
+		for(Obj historyRecord : historyRecords) {
+			resultList.add(historyRecord);
+		}
+		
+		if(historyRecords.size() > 0) {
+			HistoryRecord firstRecord = (HistoryRecord) historyRecords.get(0);
+			HistoryRecord lastRecord  = (HistoryRecord) historyRecords.get(historyRecords.size()-1);
+			start.set(firstRecord.timestamp().get(), TimeZone.getDefault());
+			end.set(lastRecord.timestamp().get(), TimeZone.getDefault());
+		}
+		
+		start.setNull(historyRecords.size() == 0);
+		end.setNull(  historyRecords.size() == 0);
+		
+		count.set(resultList.size(),false);
+		setIs(new Contract(HISTORY_QUERY_OUT_CONTRACT));
+		
+		add(count);
+		add(start);
 		add(end);
-		
-		min.setName("min");
-		min.setHref(new Uri("min"));
-		add(min);
-		
-		max.setName("max");
-		max.setHref(new Uri("max"));
-		add(max);
-		
-		avg.setName("avg");
-		avg.setHref(new Uri("avg"));
-		add(avg);
-		
-		sum.setName("sum");
-		sum.setHref(new Uri("sum"));
-		add(sum);
+		add(resultList);
 	}
 	
-
-	public Abstime start() {
-
-		return start;
-	}
-
-	public Abstime end() {
-
-		return end;
-	}
-
+	@Override
 	public Int count() {
-
 		return count;
 	}
 
-	public Real min() {
-
-		return min;
+	@Override
+	public Abstime start() {
+		return start;
 	}
 
-	public Real max() {
-
-		return max;
+	@Override
+	public Abstime end() {
+		return end;
 	}
 
-	public Real avg() {
-
-		return avg;
+	@Override
+	public obix.List data() {
+		return resultList;
 	}
-
-	public Real sum() {
-
-		return sum;
-	}
-
 }

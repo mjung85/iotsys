@@ -30,7 +30,7 @@
  * This file is part of the IoTSyS project.
  ******************************************************************************/
 
-package at.ac.tuwien.auto.iotsys.gateway.obix.objects;
+package at.ac.tuwien.auto.iotsys.commons.obix.objects;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -76,12 +76,24 @@ public class HistoryImpl extends Obj implements History, Observer {
 	private Op append = new Op();
 
 	private Obj observedDatapoint;
+	
+	public HistoryImpl(Obj observedDatapoint, int historyCountMax){
+		this("history", observedDatapoint, historyCountMax, true, true);
+	}
 
-	public HistoryImpl(Obj observedDatapoint, int historyCountMax) {
+	/**
+	 * 
+	 * @param name Name of history object
+	 * @param observedDatapoint Datpoint that should be observed or that acts as parent
+	 * @param historyCountMax Maximum number of history entries
+	 * @param autoObserve observe basic datapoint and automatically create history 
+	 * @param enableRollup For complex objects and Str objects rollup makes no sense
+	 */
+	public HistoryImpl(String name, Obj observedDatapoint, int historyCountMax, boolean autoObserve, boolean enableRollup) {
 		this.observedDatapoint = observedDatapoint;
 
-		this.setName("history");
-		this.setHref(new Uri("history"));
+		this.setName(name);
+		this.setHref(new Uri(name));
 		this.setIs(new Contract(HISTORY_CONTRACT));
 
 		count.setName("count");
@@ -96,7 +108,8 @@ public class HistoryImpl extends Obj implements History, Observer {
 		tz.setName("tz");
 		tz.setHref(new Uri("tz"));
 
-		observedDatapoint.attach(this);
+		if(autoObserve)
+			observedDatapoint.attach(this);
 
 		add(count);
 		add(start);
@@ -119,12 +132,14 @@ public class HistoryImpl extends Obj implements History, Observer {
 				HistoryQueryOutImpl.HISTORY_QUERY_OUT_CONTRACT));
 		add(query);
 
-		rollup.setName("rollup");
-		rollup.setHref(new Uri("rollup"));
-		rollup.setIn(new Contract(HistoryRollupInImpl.HISTORY_ROLLUPIN_CONTRACT));
-		rollup.setOut(new Contract(
-				HistoryRollupOutImpl.HISTORY_ROLLUPOUT_CONTRACT));
-		add(rollup);
+		if(enableRollup){
+			rollup.setName("rollup");
+			rollup.setHref(new Uri("rollup"));
+			rollup.setIn(new Contract(HistoryRollupInImpl.HISTORY_ROLLUPIN_CONTRACT));
+			rollup.setOut(new Contract(
+					HistoryRollupOutImpl.HISTORY_ROLLUPOUT_CONTRACT));
+			add(rollup);
+		}
 		
 		append.setName("append");
 		append.setHref(new Uri("append"));
@@ -132,8 +147,6 @@ public class HistoryImpl extends Obj implements History, Observer {
 		append.setOut(new Contract(HistoryAppendOutImpl.HISTORY_APPENDOUT_CONTRACT));
 		add(append);
 		
-		
-		this.setHref(new Uri("history"));
 		observedDatapoint.add(this, false);
 
 		query.setOperationHandler(new OperationHandler() {
@@ -142,11 +155,13 @@ public class HistoryImpl extends Obj implements History, Observer {
 			}
 		});
 
-		rollup.setOperationHandler(new OperationHandler() {
-			public Obj invoke(Obj in) {
-				return HistoryImpl.this.rollup(in);
-			}
-		});
+		if(enableRollup){
+			rollup.setOperationHandler(new OperationHandler() {
+				public Obj invoke(Obj in) {
+					return HistoryImpl.this.rollup(in);
+				}
+			});
+		}
 
 		append.setOperationHandler(new OperationHandler() {
 			public Obj invoke(Obj in) {
@@ -157,8 +172,8 @@ public class HistoryImpl extends Obj implements History, Observer {
 		// add history reference in the parent element
 		this.setHidden(true);
 		if (observedDatapoint.getParent() != null) {
-			Ref ref = new Ref(observedDatapoint.getName() + " history", new Uri(
-					observedDatapoint.getHref() + "/history"));
+			Ref ref = new Ref(observedDatapoint.getName() + " " + name, new Uri(
+					observedDatapoint.getHref() + "/" + name));
 			ref.setIs(new Contract(HISTORY_CONTRACT));
 			observedDatapoint.getParent().add(ref);
 		}
@@ -384,33 +399,40 @@ public class HistoryImpl extends Obj implements History, Observer {
 	@Override
 	public void update(Object state) {
 		if (state instanceof Obj) {
-			HistoryRecordImpl historyRecordImpl = new HistoryRecordImpl(
-					new Obj());
-			// only allow basic value types
-			if (state instanceof Bool) {
-				historyRecordImpl = new HistoryRecordImpl(new Bool(
-						((Bool) state).get()));
-			}
-
-			if (state instanceof Real) {
-				historyRecordImpl = new HistoryRecordImpl(new Real(
-						((Real) state).get()));
-			}
-
-			if (state instanceof Int) {
-				historyRecordImpl = new HistoryRecordImpl(new Int(
-						((Int) state).get()));
-			}
-
-			if (state instanceof Str) {
-				historyRecordImpl = new HistoryRecordImpl(new Str(
-						((Str) state).get()));
-			}
-
-			feed.addEvent(historyRecordImpl);
-
-			updateKids();
+			addObjToHistory((Obj)state, new Abstime(System.currentTimeMillis()));
 		}
+	}
+	
+	/**
+	 * Adds an object to the history
+	 * @param obj
+	 * @param timestamp Timestamp to be used within the history, if null provided then the current time when adding the object is taken
+	 */
+	public void addObjToHistory(Obj obj, Abstime timestamp){
+		HistoryRecordImpl historyRecordImpl = new HistoryRecordImpl(obj, timestamp);
+		// only allow basic value types
+		if (obj instanceof Bool) {
+			historyRecordImpl = new HistoryRecordImpl(new Bool(
+					((Bool) obj).get()), timestamp);
+		}
+
+		if (obj instanceof Real) {
+			historyRecordImpl = new HistoryRecordImpl(new Real(
+					((Real) obj).get()), timestamp);
+		}
+
+		if (obj instanceof Int) {
+			historyRecordImpl = new HistoryRecordImpl(new Int(
+					((Int) obj).get()), timestamp);
+		}
+
+		if (obj instanceof Str) {
+			historyRecordImpl = new HistoryRecordImpl(new Str(
+					((Str) obj).get()), timestamp);
+		}
+		feed.addEvent(historyRecordImpl);
+
+		updateKids();
 	}
 	
 	@Override
@@ -447,5 +469,4 @@ public class HistoryImpl extends Obj implements History, Observer {
 	public Subject getSubject() {
 		return null;
 	}
-
 }

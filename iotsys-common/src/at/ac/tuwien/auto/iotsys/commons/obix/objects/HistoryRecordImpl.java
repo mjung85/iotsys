@@ -30,41 +30,52 @@
  * This file is part of the IoTSyS project.
  ******************************************************************************/
 
-package at.ac.tuwien.auto.iotsys.gateway.obix.objects;
+package at.ac.tuwien.auto.iotsys.commons.obix.objects;
 
-import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
-import at.ac.tuwien.auto.iotsys.obix.OperationHandler;
-import obix.Contract;
+import obix.Abstime;
 import obix.Obj;
-import obix.Op;
-import obix.Uri;
-import obix.contracts.WatchService;
+import obix.contracts.HistoryRecord;
 
-public class WatchServiceImpl extends Obj implements WatchService {
+public class HistoryRecordImpl extends Obj implements HistoryRecord {
+	protected Obj value = new Obj();
+	protected Abstime abstime = new Abstime();
 	
-	private ObjectBroker broker;
+	public static final String HISTORY_RECORD_CONTRACT = "obix:HistoryRecord";
 	
-	public WatchServiceImpl(final ObjectBroker broker) {
-		this.broker = broker;
-		setHref(new Uri("watchService"));
-		setIs(new Contract(WatchService.CONTRACT));
-		add(make()); 
+	
+	public HistoryRecordImpl(Obj value){
+		this(value, new Abstime(System.currentTimeMillis()));
 	}
 	
-	public Op make() {
-		Op make = new Op("make", new Contract("obix:Nil"), new Contract("obix:Watch"));
-		make.setHref(new Uri("make"));
-		make.setOperationHandler(new OperationHandler() {
-			public Obj invoke(Obj in) {
-				return doMake();
-			}
-		});
-		return make;
+	public HistoryRecordImpl(Obj value, Abstime time) {
+		if(time != null){
+			abstime = new Abstime(time.getMillis(), time.getTimeZone());
+		}
+		else{
+			abstime = new Abstime(System.currentTimeMillis());
+		}
+		this.value = value;
+		
+		add(timestamp());
+		add(value());
 	}
 	
-	public Obj doMake() {
-		WatchImpl watchImpl = new WatchImpl(broker);	
-		broker.addObj(watchImpl, true);
-		return watchImpl;
+	public HistoryRecordImpl(HistoryRecord record) {
+		this.value = record.value();
+		this.abstime = new Abstime(record.timestamp().getMillis());
+		
+		add(timestamp());
+		add(value());
 	}
+	
+	@Override
+	public Abstime timestamp() {
+		return abstime;
+	}
+
+	@Override
+	public Obj value() {
+		return value;
+	}
+
 }
