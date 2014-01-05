@@ -94,9 +94,10 @@ import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.sensors.ShuttersAndBlin
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.sensors.SmartMeter;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.sensors.SunIntensitySensor;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.sensors.TemperatureSensor;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.sensors.WindowSensor;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.sim.HVACSimulation;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.weatherforecast.WeatherForecast;
-import at.ac.tuwien.auto.iotsys.commons.obix.objects.weatherforecast.WeatherForecastCrawler;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.weatherforecast.Crawler;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.weatherforecast.WeatherForecastFilter;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.weatherforecast.WeatherForecastLocation;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.weatherforecast.WeatherForecastQueryResult;
@@ -128,6 +129,7 @@ public class ContractInit
 			ContractRegistry.put(SmartMeter.CONTRACT, SmartMeter.class.getName());
 			ContractRegistry.put(IndoorBrightnessSensor.CONTRACT, IndoorBrightnessSensor.class.getName());
 			ContractRegistry.put(OutsideTemperatureSensor.CONTRACT, OutsideTemperatureSensor.class.getName());
+			ContractRegistry.put(WindowSensor.CONTRACT, WindowSensor.class.getName());
 
 			// Actuator
 			ContractRegistry.put(ComplexSunblindActuator.CONTRACT, ComplexSunblindActuator.class.getName());
@@ -198,7 +200,7 @@ public class ContractInit
 			ContractRegistry.put(ParameterDimming.CONTRACT, ParameterDimming.class.getName());
 
 			// Weather forecast
-			ContractRegistry.put(WeatherForecastCrawler.CONTRACT, WeatherForecastCrawler.class.getName());
+			ContractRegistry.put(Crawler.CONTRACT, Crawler.class.getName());
 			ContractRegistry.put(WeatherForecastFilter.CONTRACT, WeatherForecastFilter.class.getName());
 			ContractRegistry.put(WeatherForecast.CONTRACT, WeatherForecast.class.getName());
 			ContractRegistry.put(WeatherForecastLocation.CONTRACT, WeatherForecastLocation.class.getName());

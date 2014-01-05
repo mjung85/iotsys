@@ -30,15 +30,56 @@
  * This file is part of the IoTSyS project.
  ******************************************************************************/
 
-package at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.sensors;
+package at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.coap;
 
-import obix.Bool;
+//import java.util.logging.Logger;
+import java.net.Inet6Address;
 
-public interface WindowSwitchSensor extends Sensor{
-	public static final String WINDOW_STATUS_CONTRACT_HREF="windowStatus";
-	public static final String WINDOW_STATUS_CONTRACT_NAME="windowStatus";
+import ch.ethz.inf.vs.californium.coap.Response;
+import ch.ethz.inf.vs.californium.coap.ResponseHandler;
+
+import obix.Obj;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.sensors.impl.SwitchingSensorImpl;
+import at.ac.tuwien.auto.iotsys.gateway.connectors.coap.CoapConnector;
+
+public class SwitchingSensorImplCoap extends SwitchingSensorImpl {
+	//private static final Logger log = Logger.getLogger(SwitchingSensorImplCoap.class.getName());
 	
-	public static final String CONTRACT="iot:WindowSwitchSensor";
-	public static final String WINDOW_STATUS_CONTRACT = "<bool name='"+WindowSwitchSensor.WINDOW_STATUS_CONTRACT_NAME+"' href='"+WindowSwitchSensor.WINDOW_STATUS_CONTRACT_HREF+"' val='false'/>";
-	public Bool windowStatusValue();  
+	private CoapConnector coapConnector;
+	private String busAddress; 
+	
+	public SwitchingSensorImplCoap(CoapConnector coapConnector, String busAddress){
+		// technology specific initialization
+		this.coapConnector = coapConnector;
+		this.busAddress = busAddress;
+	}
+	
+	@Override
+	public void initialize(){
+		super.initialize();
+		// But stuff here that should be executed after object creation
+	}
+	
+	@Override
+	public void writeObject(Obj input){
+		//not writable
+	}
+	
+	@Override
+	public void refreshObject(){
+		//switchOnOffValue is the protected instance variable of the base class (SwitchingSensorImpl)
+		if(switchOnOffValue() != null){
+			Boolean value = coapConnector.readBoolean(busAddress, "switchOnOff", new ResponseHandler() {
+				public void handleResponse(Response response) {	
+					boolean temp = Boolean.parseBoolean( CoapConnector.extractAttribute("bool", "val",
+							response.getPayloadString().trim()));
+					
+					SwitchingSensorImplCoap.this.switchOnOffValue().set(temp);
+				}
+			});	
+			// this calls the implementation of the base class, which triggers also
+			// oBIX services (e.g. watches, history) and CoAP observe!			
+			this.switchOnOffValue().set(value); 
+		}	
+	}
 }
