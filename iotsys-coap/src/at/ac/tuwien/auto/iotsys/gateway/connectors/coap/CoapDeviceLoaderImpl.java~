@@ -52,8 +52,8 @@ import org.apache.commons.configuration.XMLConfiguration;
 import at.ac.tuwien.auto.iotsys.commons.Connector;
 import at.ac.tuwien.auto.iotsys.commons.DeviceLoader;
 import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
-import at.ac.tuwien.auto.iotsys.commons.obix.objects.weatherforecast.Crawler;
-import at.ac.tuwien.auto.iotsys.commons.obix.objects.weatherforecast.impl.WeatherForecastLocationImpl;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.weatherforecast.WeatherForecastCrawler;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.weatherforecast.impl.WeatherForecastLocationImpl;
 
 public class VirtualDeviceLoaderImpl implements DeviceLoader {
 	private final ArrayList<Obj> myObjects = new ArrayList<Obj>();
@@ -255,7 +255,7 @@ public class VirtualDeviceLoaderImpl implements DeviceLoader {
 											virtualObj = (Obj) declaredConstructors[k].newInstance(args);
 										}
 										// for weather forcast services only
-										else if (Crawler.class.isAssignableFrom(Class.forName(type)) &&
+										else if (WeatherForecastCrawler.class.isAssignableFrom(Class.forName(type)) &&
 													declaredConstructors[k].getParameterTypes().length == 3) {
 											// constructor that takes name, location, and connector as argument
 											args = new Object[3];

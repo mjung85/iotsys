@@ -1,5 +1,4 @@
 <devices>
-
   <deviceloaders>
     <device-loader>at.ac.tuwien.auto.iotsys.gateway.connectors.knx.KNXDeviceLoaderImpl
     </device-loader>
@@ -19,8 +18,41 @@
     </device-loader>
     <device-loader>at.ac.tuwien.auto.iotsys.gateway.connectors.weatherforecast.WeatherForecastDeviceLoaderImpl
     </device-loader>
+	<device-loader>at.ac.tuwien.auto.iotsys.gateway.connectors.coap.CoapDeviceLoaderImpl
+    </device-loader>
   </deviceloaders>
   
+  <coap>
+        <connector>
+            <name>CoAP Cooja</name>
+            <enabled>false</enabled>
+
+			<device>
+					<type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.coap.TemperatureSensorImplCoap
+					</type>
+					<address>coap://[aaaa::c30c:0:0:2]:5683/temp</address>
+					<href>temp</href>
+					<historyEnabled>true</historyEnabled>
+					<refreshEnabled>true</refreshEnabled>
+					<groupCommEnabled>true</groupCommEnabled>
+			</device>
+        </connector>
+        
+        <connector>
+            <name>CoAP</name>
+            <enabled>false</enabled>
+
+			<device>
+					<type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.coap.TemperatureSensorImplCoap
+					</type>
+					<address>coap://[aaaa::c30c:0:0:1267]:5683/temp</address>
+					<href>temp</href>
+					<historyEnabled>true</historyEnabled>
+					<refreshEnabled>true</refreshEnabled>
+					<groupCommEnabled>true</groupCommEnabled>
+			</device>
+        </connector>
+  </coap>
   <rfid>
     <connector>
       <name>RFID</name>
@@ -65,7 +97,7 @@
   
   <enocean>
     <connector>
-      <name>EnOcean</name>
+      <name>EnOcean Linux</name>
       <enabled>false</enabled>
       <serialPort>/dev/ttyS80</serialPort>
       <device>
@@ -95,11 +127,25 @@
       <device>
         <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.enocean.LightSwitchActuatorImplEnocean
         </type>
-        <address>0x02</address>
+        <address>0x01807AEB</address>
         <href>ligthSwitchEnocean1</href>
         <historyEnabled>false</historyEnabled>
         <groupCommEnabled>true</groupCommEnabled>
       </device>      
+    </connector>
+    
+    <connector>
+      <name>EnOcean</name>
+      <enabled>false</enabled>
+      <serialPort>COM6</serialPort>
+      <device>
+        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.enocean.WindowSensorImplEnocean
+        </type>
+        <address>0x01820AE7</address>
+        <href>window</href>
+        <historyEnabled>false</historyEnabled>
+        <groupCommEnabled>true</groupCommEnabled>
+      </device>
     </connector>
   </enocean>
 
@@ -171,8 +217,8 @@
         <forceRefresh>false</forceRefresh>              
         <router>
         <!--<ip>192.168.161.59</ip> -->
-         <!--   <ip>192.168.1.101</ip> -->
-          	<ip>192.168.161.61</ip>
+        <ip>192.168.1.100</ip>
+          	<!-- <ip>192.168.161.61</ip>  -->
             <port>3671</port>
         </router>
         <localIP>auto</localIP>
@@ -190,6 +236,18 @@
         <localIP>auto</localIP>
         <groupCommEnabled>true</groupCommEnabled>
     </connector>
+	<connector>
+		<name>IoT Suitcase</name>
+		<enabled>false</enabled>
+		<knx-proj>knx-config/projects/Siemens_Koffer_IoTSyS_2014_01_02.knxproj</knx-proj>
+		<forceRefresh>false</forceRefresh>
+		<router>
+			<ip>192.168.1.14</ip>
+			<port>3671</port>
+		</router>
+		  <localIP>auto</localIP>
+        <groupCommEnabled>true</groupCommEnabled>
+	</connector>
   </knx-ets>
  
  
@@ -199,7 +257,7 @@
       <name>weather-forecast</name>
       <enabled>true</enabled>
       <device>
-        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.weatherforecast.devices.WeatherForecastCrawlerYR_NO
+        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.weatherforecast.devices.CrawlerYR_NO
         </type>
         <name>yr.no</name>
         <location>
@@ -208,7 +266,7 @@
           <longitude>16.37</longitude>
           <height>171</height>
         </location>
-        <href>test</href>
+        <href>weather</href>
         <refreshEnabled>true</refreshEnabled>
         <historyEnabled>false</historyEnabled>
         <historyCount>200</historyCount>
@@ -220,7 +278,7 @@
   <knx>
       <connector>
       	<name>KNX SuperSuitcase</name>
-      	<enabled>true</enabled>
+      	<enabled>false</enabled>
       	<router>
         	<ip>192.168.1.14</ip>
         	<port>3671</port>
@@ -816,10 +874,21 @@
 
     <connector>
       <name>BACnet A-Lab (Auto)</name>
-      <enabled>true</enabled>
+      <enabled>false</enabled>
       <discovery-enabled>true</discovery-enabled>
       <localDeviceID>343434</localDeviceID>
       <broadcastAddress>128.130.56.255</broadcastAddress>
+      <localPort>47808</localPort>
+      <groupCommEnabled>true</groupCommEnabled>
+      <historyEnabled>false</historyEnabled>
+    </connector>
+    
+    <connector>
+      <name>BACnet IoT Suitcase</name>
+      <enabled>false</enabled>
+      <discovery-enabled>true</discovery-enabled>
+      <localDeviceID>1234</localDeviceID>
+      <broadcastAddress>192.168.1.255</broadcastAddress>
       <localPort>47808</localPort>
       <groupCommEnabled>true</groupCommEnabled>
       <historyEnabled>false</historyEnabled>
@@ -836,9 +905,7 @@
       <device>
         <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.wmbus.SmartMeterImplWMBus
         </type>
-        <address>15004474, 66 77 66 77 66 77 66 77 66 77 66 77 66 77 66
-          77
-        </address>
+        <address>15004474, 66 77 66 77 66 77 66 77 66 77 66 77 66 77 66 77</address>
         <ipv6>fe80::b170:1416:1194:8db2</ipv6>
         <href>smartmeter</href>
         <historyEnabled>true</historyEnabled>
@@ -850,13 +917,11 @@
     <connector>
       <name>W-MBus Smart Meter Windows</name>
       <enabled>false</enabled>
-      <serialPort>COM8</serialPort>
+      <serialPort>COM6</serialPort>
       <device>
         <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.wmbus.SmartMeterImplWMBus
         </type>
-        <address>15004474, 66 77 66 77 66 77 66 77 66 77 66 77 66 77 66
-          77
-        </address>
+        <address>15004474, 66 77 66 77 66 77 66 77 66 77 66 77 66 77 66 77</address>
         <href>smartmeter</href>
         <ipv6>fe80::b170:1416:1194:8db2</ipv6>
         <historyEnabled>true</historyEnabled>
