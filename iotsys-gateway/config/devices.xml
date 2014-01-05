@@ -266,7 +266,7 @@
           <longitude>16.37</longitude>
           <height>171</height>
         </location>
-        <href>weather</href>
+        <href>vienna</href>
         <refreshEnabled>true</refreshEnabled>
         <historyEnabled>false</historyEnabled>
         <historyCount>200</historyCount>

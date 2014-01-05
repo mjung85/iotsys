@@ -120,7 +120,7 @@ public class ContractRegistry
 
 		// compile a class
 		Class<?> cls = ObixAssembler.compile(base, interfaces);
-		System.out.println("-- Compile: " + base.getName() + ": " + contract + " -> " + cls.getName());
+		
 		return cls;
 	}
 
@@ -232,8 +232,6 @@ public class ContractRegistry
 	public static Contract lookupContract(Class<?> clazz)
 	{
 		// tries to lookup a contract for a class
-
-		// System.out.println("#### looking up contract: " + clazz.getName());
 
 		boolean found = false;
 
