@@ -131,7 +131,7 @@ public class CoapConnector implements Connector {
 		try {
 			Response response = request.receiveResponse();
 			if(response != null && response.getPayloadString() != null){
-				System.out.println("Extract attribute: " + response.getPayloadString().trim());
+				
 				return response.getPayloadString().trim();
 			}
 				

@@ -11,11 +11,11 @@ public class Test {
 				public void handleResponse(Response response) {	
 					double temp = Double.parseDouble( CoapConnector.extractAttribute("real", "val",
 							response.getPayloadString().trim()));
-					System.out.println("Observed temp: " + temp);
+					
 									
 				}
 			});
-		System.out.println("Temp is: " + readDouble);
+		
 	}
 
 }

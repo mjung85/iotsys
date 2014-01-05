@@ -60,8 +60,6 @@ public class WeatherForecastDeviceLoaderImpl implements DeviceLoader {
 
 	@Override
 	public ArrayList<Connector> initDevices(ObjectBroker objectBroker) {
-		
-		System.out.println("inint Dev Device loader");
 		setConfiguration(devicesConfig);
 		
 		// Hard-coded connections and object creation
@@ -145,14 +143,11 @@ public class WeatherForecastDeviceLoaderImpl implements DeviceLoader {
 											//crawler.initialize();
 											
 											if (refreshEnabled != null && refreshEnabled) {
-												// refresh weather forecast automatically (once per hour)
-												System.out.println("Dev Loader: refreshObject anfrufen 3600000");
+												// refresh weather forecast automatically (once per hour)						
 												objectBroker.enableObjectRefresh(crawler, 3600000);
 											}
 											else {
-												// refresh weather forecast manually
-												System.out.println("Dev Loader: refreshObject anfrufen");
-												
+												// refresh weather forecast manually											
 												crawler.refreshObject();
 											}
 											
