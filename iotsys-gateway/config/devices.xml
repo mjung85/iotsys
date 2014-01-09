@@ -40,7 +40,7 @@
         
         <connector>
             <name>CoAP</name>
-            <enabled>false</enabled>
+            <enabled>true</enabled>
 
 			<device>
 					<type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.coap.TemperatureSensorImplCoap
@@ -147,6 +147,20 @@
         <groupCommEnabled>true</groupCommEnabled>
       </device>
     </connector>
+    
+    <connector>
+      <name>EnOcean</name>
+      <enabled>false</enabled>
+      <serialPort>/dev/ttyS80</serialPort>
+      <device>
+        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.enocean.WindowSensorImplEnocean
+        </type>
+        <address>0x01820AE7</address>
+        <href>window</href>
+        <historyEnabled>false</historyEnabled>
+        <groupCommEnabled>true</groupCommEnabled>
+      </device>
+    </connector>
   </enocean>
 
 
@@ -238,7 +252,7 @@
     </connector>
 	<connector>
 		<name>IoT Suitcase</name>
-		<enabled>false</enabled>
+		<enabled>true</enabled>
 		<knx-proj>knx-config/projects/Siemens_Koffer_IoTSyS_2014_01_02.knxproj</knx-proj>
 		<forceRefresh>false</forceRefresh>
 		<router>
@@ -885,7 +899,7 @@
     
     <connector>
       <name>BACnet IoT Suitcase</name>
-      <enabled>false</enabled>
+      <enabled>true</enabled>
       <discovery-enabled>true</discovery-enabled>
       <localDeviceID>1234</localDeviceID>
       <broadcastAddress>192.168.1.255</broadcastAddress>
@@ -900,7 +914,7 @@
   <wmbus>
     <connector>
       <name>W-MBus Smart Meter Linux</name>
-      <enabled>false</enabled>
+      <enabled>true</enabled>
       <serialPort>/dev/ttyUSB0</serialPort>
       <device>
         <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.wmbus.SmartMeterImplWMBus
@@ -934,7 +948,7 @@
   <virtual>
     <connector>
       <name>VirtualDevices</name>
-      <enabled>true</enabled>
+      <enabled>false</enabled>
 
 
       <!-- SENSOREN -->
@@ -1164,7 +1178,7 @@
     </connector>
     <connector>
       <name>HVAC Simulation</name>
-      <enabled>true</enabled>
+      <enabled>false</enabled>
 
       <!-- SENSOREN -->
       <device>

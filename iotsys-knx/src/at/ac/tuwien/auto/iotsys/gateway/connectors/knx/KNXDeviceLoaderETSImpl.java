@@ -207,7 +207,7 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader
 				if (!transformFile.exists() || forceRefresh)
 				{
 					log.info("Transforming ETS configuration.");
-					System.setProperty("javax.xml.transform.TransformerFactory", "net.sf.saxon.TransformerFactoryImpl");
+//					System.setProperty("javax.xml.transform.TransformerFactory", "net.sf.saxon.TransformerFactoryImpl");
 					// Create a transform factory instance.
 					TransformerFactory tfactory = TransformerFactory.newInstance();
 
