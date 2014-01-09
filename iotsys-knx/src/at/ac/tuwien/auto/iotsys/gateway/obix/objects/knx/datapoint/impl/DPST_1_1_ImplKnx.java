@@ -88,7 +88,7 @@ public class DPST_1_1_ImplKnx extends DPST_1_1_Impl
 		if (this.value().isWritable())
 		{
 			// always pass the writeObject call to the super method (triggers, oBIX related internal services like watches, alarms, ...)
-			// also the internal instance variables get updated
+			// also the internal instance variables get updated	
 			super.writeObject(obj);
 
 			// set isNull to false
