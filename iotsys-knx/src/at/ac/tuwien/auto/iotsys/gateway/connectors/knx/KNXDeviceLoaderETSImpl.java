@@ -625,6 +625,10 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader
 				try
 				{
 					DatapointImpl dp = datapointById.get(instanceId);
+					if(dp == null){
+						log.warning("No datapoint type found for instance: " + instanceId);
+						continue;
+					}
 					Class<?> clazz = dp.getClass();
 
 					if (clazz != null)
