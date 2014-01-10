@@ -253,7 +253,7 @@
 	<connector>
 		<name>IoT Suitcase</name>
 		<enabled>true</enabled>
-		<knx-proj>knx-config/projects/Siemens_Koffer_IoTSyS_2014_01_02.knxproj</knx-proj>
+		<knx-proj>knx-config/projects/IoT_Koffer_09_01_2014_with_data_point_types.knxproj</knx-proj>
 		<forceRefresh>false</forceRefresh>
 		<router>
 			<ip>192.168.1.14</ip>
@@ -291,7 +291,7 @@
   
   <knx>
       <connector>
-      	<name>KNX SuperSuitcase</name>
+      	<name>KNX IoT Suitcase</name>
       	<enabled>false</enabled>
       	<router>
         	<ip>192.168.1.14</ip>
