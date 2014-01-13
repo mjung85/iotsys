@@ -83,6 +83,7 @@ import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators.SunblindActua
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators.TextDisplayActuator;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.logic.BinaryOperation;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.logic.Comparator;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.logic.RoomTemperatureControlSimulation;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.logic.LogicBinaryOperation;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.logic.TemperatureController;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.sensors.IndoorBrightnessSensor;
@@ -96,6 +97,7 @@ import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.sensors.SunIntensitySen
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.sensors.TemperatureSensor;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.sensors.WindowSensor;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.sim.HVACSimulation;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.sim.HVACSimulationSuitcase;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.weatherforecast.Crawler;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.weatherforecast.WeatherForecastLocation;
 
@@ -154,10 +156,12 @@ public class ContractInit
 			ContractRegistry.put(TemperatureController.CONTRACT, TemperatureController.class.getName());
 			ContractRegistry.put(BinaryOperation.CONTRACT, BinaryOperation.class.getName());
 			ContractRegistry.put(LogicBinaryOperation.CONTRACT, LogicBinaryOperation.class.getName());
-
+			ContractRegistry.put(RoomTemperatureControlSimulation.CONTRACT, RoomTemperatureControlSimulation.class.getName());
+			
 			// Simulation
 			ContractRegistry.put(HVACSimulation.CONTRACT, HVACSimulation.class.getName());
-
+			ContractRegistry.put(HVACSimulationSuitcase.CONTRACT, HVACSimulationSuitcase.class.getName());
+			
 			// Gateway Commons
 			ContractRegistry.put(DataPoint.CONTRACT, DataPoint.class.getName());
 			ContractRegistry.put(DPT_1.CONTRACT, DPT_1.class.getName());

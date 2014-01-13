@@ -1247,6 +1247,14 @@
         <refreshEnabled>false</refreshEnabled>
         <groupCommEnabled>false</groupCommEnabled>
       </device>
+       <device>
+        <type>at.ac.tuwien.auto.iotsys.gateway.connectors.virtual.simulation.HVACSimulationSuitcaseImpl
+        </type>
+        <href>hvacSimSuitcase</href>
+        <historyEnabled>false</historyEnabled>
+        <refreshEnabled>false</refreshEnabled>
+        <groupCommEnabled>false</groupCommEnabled>
+      </device>
       <device>
         <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.virtual.SmartMeterImplVirtual
         </type>
@@ -1386,6 +1394,17 @@
         <refreshEnabled>false</refreshEnabled>
         <groupCommEnabled>true</groupCommEnabled>
       </device>
+      
+       <device>
+        <type>at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.logic.impl.RoomTemperatureControlSimulationImpl
+        </type>
+        <href>interworkingUC1</href>
+        <displayName>Room Temp. Controller</displayName>
+        <historyEnabled>false</historyEnabled>
+        <refreshEnabled>false</refreshEnabled>
+        <groupCommEnabled>true</groupCommEnabled>
+      </device>
+      
       <!-- <device> <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.logic.impl.TemperatureControllerImpl
         </type> <href>tempControl12</href> <historyEnabled>false</historyEnabled>
         <refreshEnabled>false</refreshEnabled> <groupCommEnabled>true</groupCommEnabled>

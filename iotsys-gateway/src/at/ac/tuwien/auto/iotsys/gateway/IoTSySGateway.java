@@ -45,6 +45,7 @@ import at.ac.tuwien.auto.iotsys.commons.DeviceLoader;
 import at.ac.tuwien.auto.iotsys.commons.MdnsResolver;
 import at.ac.tuwien.auto.iotsys.commons.Named;
 import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
+import at.ac.tuwien.auto.iotsys.commons.ObjectBrokerHelper;
 import at.ac.tuwien.auto.iotsys.commons.PropertiesLoader;
 import at.ac.tuwien.auto.iotsys.commons.interceptor.ClassAlreadyRegisteredException;
 import at.ac.tuwien.auto.iotsys.commons.interceptor.Interceptor;
@@ -110,7 +111,10 @@ public class IoTSySGateway
 		// initialize object broker
 		objectBroker = ObjectBrokerImpl.getInstance();
 		obixServer = new ObixServerImpl(objectBroker);
-
+		
+		// set object broker to a shared global variable
+		ObjectBrokerHelper.setInstance(objectBroker);
+		
 		objectBroker.setMdnsResolver(mdnsResolver);
 
 		// add initial objects to the database
