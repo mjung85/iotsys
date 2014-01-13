@@ -51,6 +51,12 @@ public interface HVACSimulationSuitcase {
 	public static final String valveOutPositionContract = "<int name='valveOutPosition' href='valveOutPosition' val='0'/>";
 	public Int valveOutPosition();
 	
+	public static final String tempOutsideContract = "<real name='tempOutside' href='tempOutside' val='0'/>";
+	public Real tempOutside();
+	
+	public static final String windowClosedContract = "<bool name='windowClosed' href='windowClosed' val='false'/>";
+	public Bool windowClosed();
+	
 	public static final String tempContract = "<real name='temp' href='temp' val='0'/>";
 	public Real temp();
 

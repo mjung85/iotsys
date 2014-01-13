@@ -9,14 +9,22 @@ import obix.Obj;
 import obix.Real;
 import obix.Str;
 import obix.Uri;
+import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
+import at.ac.tuwien.auto.iotsys.commons.ObjectBrokerHelper;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.sim.HVACSimulationSuitcase;
+import at.ac.tuwien.auto.iotsys.obix.observer.Observer;
+import at.ac.tuwien.auto.iotsys.obix.observer.Subject;
 
 public class HVACSimulationSuitcaseImpl extends Obj implements HVACSimulationSuitcase {
+	
+	private final String LINK_OUTSIDE_TEMP = "/BACnetIoTSuitcase/2098177/AnalogInput1";
+	private final String LINK_WINDOW_CLOSED ="";
 	
 	public static HVACSimulationSuitcaseImpl instance = null;
 	
 	private static final Logger log = Logger.getLogger(HVACSimulationSuitcaseImpl.class.getName());
 	
+	private ObjectBroker objectBroker;
 	
 	protected Bool enabled = new Bool(false);
 	private Real temp = new Real(18);
@@ -45,6 +53,8 @@ public class HVACSimulationSuitcaseImpl extends Obj implements HVACSimulationSui
 	protected Int valveInPosition = new Int(0);
 	protected Int valveOutPosition = new Int(0);
 	
+	protected Bool windowClosed = new Bool(false);
+	protected Real tempOutside = new Real();
 	
 	public static final int TIME_INTERVALL_MS = 2000;
 	
@@ -53,6 +63,9 @@ public class HVACSimulationSuitcaseImpl extends Obj implements HVACSimulationSui
 	private SimSuitcaseThread simThread;
 
 	public HVACSimulationSuitcaseImpl() {
+		
+		objectBroker= ObjectBrokerHelper.getInstance();
+				
 		setIs(new Contract(HVACSimulationSuitcaseImpl.CONTRACT));
 		instance = this;
 		
@@ -116,6 +129,84 @@ public class HVACSimulationSuitcaseImpl extends Obj implements HVACSimulationSui
 		this.valveOutPosition.setName("valveOutPosition");
 		this.valveOutPosition.setHref(new Uri("valveOutPosition"));
 		this.add(valveOutPosition);	
+		
+		this.windowClosed.setName("windowClosed");
+		this.windowClosed.setHref(new Uri("windowClosed"));
+		this.add(windowClosed);
+		
+		this.tempOutside.setName("tempOutside");
+		this.tempOutside.setHref(new Uri("tempOutside"));
+		this.add(tempOutside);	
+		
+		Obj objOutsideTemp = objectBroker.pullObj(new Uri(LINK_OUTSIDE_TEMP), false);
+		
+		
+		
+//		if (obj instanceof HVACSimulationSuitcase)
+//		{
+	//		hvacSim = (HVACSimulationSuitcase) obj;
+
+			//System.out.println("Current Temp: " + hvacSim.temp());
+		//	roomCurrentTemp.set(hvacSim.temp());
+			
+			objOutsideTemp.attach(new Observer(){
+		//	this.tempOutside.attach(new Observer(){
+			//hvacSim.temp().attach(new Observer(){
+
+			
+				@Override
+				public void update(Object state) {
+					// TODO Auto-generated method stub
+					if(state instanceof Obj){
+						System.out.println("set Outside Temp");
+						tempOutside.set(((Obj) state).getReal());
+						
+					
+					}
+					
+				}
+
+				@Override
+				public void setSubject(Subject object) {
+					// TODO Auto-generated method stub
+					
+				}
+
+				@Override
+				public Subject getSubject() {
+					// TODO Auto-generated method stub
+					return null;
+				}
+				
+			});
+			
+			
+			Obj objwindowClosed = objectBroker.pullObj(new Uri(LINK_WINDOW_CLOSED), false);
+			
+			objwindowClosed.attach(new Observer(){
+					
+					@Override
+					public void update(Object state) {
+						if(state instanceof Obj){
+							System.out.println("set Outside Temp");
+							windowClosed.set(((Obj) state).getBool());
+						}
+							
+					}
+
+					@Override
+					public void setSubject(Subject object) {		
+					}
+
+					@Override
+					public Subject getSubject() {
+					return null;
+				}
+						
+			});
+			
+		//}
+		
 	}
 
 	public double getHeatingImpact() {
@@ -302,6 +393,16 @@ public class HVACSimulationSuitcaseImpl extends Obj implements HVACSimulationSui
 	}
 	
 	@Override
+	public Real tempOutside() {
+		return tempOutside;
+	}
+
+	@Override
+	public Bool windowClosed() {
+		return windowClosed;
+	}
+	
+	@Override
 	public void writeObject(Obj input){
 		String resourceUriPath = "";
 		
@@ -390,6 +491,8 @@ public class HVACSimulationSuitcaseImpl extends Obj implements HVACSimulationSui
 			}
 		}	
 	}
+
+
 
 	
 }
