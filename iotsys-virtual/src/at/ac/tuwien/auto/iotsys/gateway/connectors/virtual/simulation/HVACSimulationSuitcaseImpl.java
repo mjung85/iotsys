@@ -18,7 +18,8 @@ import at.ac.tuwien.auto.iotsys.obix.observer.Subject;
 public class HVACSimulationSuitcaseImpl extends Obj implements HVACSimulationSuitcase {
 	
 	private final String LINK_OUTSIDE_TEMP = "/BACnetIoTSuitcase/2098177/AnalogInput1";
-	private final String LINK_WINDOW_CLOSED ="";
+	private final String LINK_WINDOW_CLOSED ="/EnOcean/window/value";
+	protected Str season = new Str("winter");
 	
 	public static HVACSimulationSuitcaseImpl instance = null;
 	
@@ -33,7 +34,6 @@ public class HVACSimulationSuitcaseImpl extends Obj implements HVACSimulationSui
 //	// depicts the impact on the temperature
 //	private SEASON season = SEASON.SUMMER;
 
-	protected Str season = new Str("winter");
 	// change of degree celsius per TIME_INTERVALL_MS depending on season
 	protected Real summerImpact = new Real(0.1); // raise 0.05 degree 
 
