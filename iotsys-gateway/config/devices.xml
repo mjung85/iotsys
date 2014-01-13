@@ -40,7 +40,7 @@
         
         <connector>
             <name>CoAP</name>
-            <enabled>true</enabled>
+            <enabled>false</enabled>
 
 			<device>
 					<type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.coap.TemperatureSensorImplCoap
