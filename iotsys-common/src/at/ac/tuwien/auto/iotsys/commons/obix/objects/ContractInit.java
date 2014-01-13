@@ -86,6 +86,7 @@ import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.logic.Comparator;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.logic.RoomTemperatureControlSimulation;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.logic.LogicBinaryOperation;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.logic.TemperatureController;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.logic.WindowInfluenceSimulation;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.sensors.IndoorBrightnessSensor;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.sensors.OutsideTemperatureSensor;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.sensors.PresenceDetectorSensor;
@@ -157,6 +158,7 @@ public class ContractInit
 			ContractRegistry.put(BinaryOperation.CONTRACT, BinaryOperation.class.getName());
 			ContractRegistry.put(LogicBinaryOperation.CONTRACT, LogicBinaryOperation.class.getName());
 			ContractRegistry.put(RoomTemperatureControlSimulation.CONTRACT, RoomTemperatureControlSimulation.class.getName());
+			ContractRegistry.put(WindowInfluenceSimulation.CONTRACT, WindowInfluenceSimulation.class.getName());
 			
 			// Simulation
 			ContractRegistry.put(HVACSimulation.CONTRACT, HVACSimulation.class.getName());

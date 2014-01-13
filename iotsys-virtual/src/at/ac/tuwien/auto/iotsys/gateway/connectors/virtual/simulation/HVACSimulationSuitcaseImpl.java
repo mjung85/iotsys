@@ -142,47 +142,33 @@ public class HVACSimulationSuitcaseImpl extends Obj implements HVACSimulationSui
 		
 		
 		
-//		if (obj instanceof HVACSimulationSuitcase)
-//		{
-	//		hvacSim = (HVACSimulationSuitcase) obj;
-
-			//System.out.println("Current Temp: " + hvacSim.temp());
-		//	roomCurrentTemp.set(hvacSim.temp());
-			
+		if (objOutsideTemp instanceof Real)
+		{			
 			objOutsideTemp.attach(new Observer(){
-		//	this.tempOutside.attach(new Observer(){
-			//hvacSim.temp().attach(new Observer(){
-
-			
 				@Override
 				public void update(Object state) {
-					// TODO Auto-generated method stub
 					if(state instanceof Obj){
-						System.out.println("set Outside Temp");
 						tempOutside.set(((Obj) state).getReal());
-						
-					
 					}
 					
 				}
 
 				@Override
-				public void setSubject(Subject object) {
-					// TODO Auto-generated method stub
-					
+				public void setSubject(Subject object) {				
 				}
 
 				@Override
 				public Subject getSubject() {
-					// TODO Auto-generated method stub
 					return null;
 				}
 				
 			});
+		}	
 			
+		
+		Obj objwindowClosed = objectBroker.pullObj(new Uri(LINK_WINDOW_CLOSED), false);
 			
-			Obj objwindowClosed = objectBroker.pullObj(new Uri(LINK_WINDOW_CLOSED), false);
-			
+		if (objwindowClosed instanceof Bool){
 			objwindowClosed.attach(new Observer(){
 					
 					@Override
@@ -204,8 +190,7 @@ public class HVACSimulationSuitcaseImpl extends Obj implements HVACSimulationSui
 				}
 						
 			});
-			
-		//}
+		}
 		
 	}
 

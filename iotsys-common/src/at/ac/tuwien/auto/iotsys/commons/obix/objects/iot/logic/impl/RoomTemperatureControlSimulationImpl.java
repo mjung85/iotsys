@@ -22,7 +22,7 @@ public class RoomTemperatureControlSimulationImpl extends Obj implements RoomTem
 	protected Real roomTempSetPoint = new Real();
 	protected Real roomCurrentTemp = new Real();
 	protected Real tolerance = new Real();
-	private HVACSimulationSuitcase hvacSim ;
+	private HVACSimulationSuitcase hvacSim;
 	
 	public RoomTemperatureControlSimulationImpl(){
 		
