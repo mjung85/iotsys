@@ -207,7 +207,7 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader
 				if (!transformFile.exists() || forceRefresh)
 				{
 					log.info("Transforming ETS configuration.");
-					System.setProperty("javax.xml.transform.TransformerFactory", "net.sf.saxon.TransformerFactoryImpl");
+//					System.setProperty("javax.xml.transform.TransformerFactory", "net.sf.saxon.TransformerFactoryImpl");
 					// Create a transform factory instance.
 					TransformerFactory tfactory = TransformerFactory.newInstance();
 
@@ -441,6 +441,7 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader
 					dataPointTypeIds = dataPointTypeIds.substring(0, dataPointTypeIds.indexOf(" "));
 				}
 
+				log.info("Found data point type id: " + dataPointTypeIds);
 				String clazzName = "at.ac.tuwien.auto.iotsys.gateway.obix.objects.knx.datapoint.impl." + dataPointTypeIds.replace('-', '_') + "_ImplKnx";
 				Class<?> clazz = null;
 
@@ -452,8 +453,10 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader
 				catch (ClassNotFoundException e)
 				{
 					log.warning(clazzName + " not found. Cannot instantiate according sub data point type. Trying fallback to generic main type.");
-					clazzName = "at.ac.tuwien.auto.iotsys.gateway.obix.objects.knx.datapoint.impl." + "DPT_" + dataPointTypeIds.charAt(5) + "_ImplKnx"; //
-
+					int firstIndexOf = dataPointTypeIds.indexOf('-');
+					int secondIndexOf = dataPointTypeIds.indexOf('-', firstIndexOf+1);
+					clazzName = "at.ac.tuwien.auto.iotsys.gateway.obix.objects.knx.datapoint.impl." + "DPT_" + dataPointTypeIds.substring(firstIndexOf+1, secondIndexOf) + "_ImplKnx"; //
+					
 					try
 					{
 						log.info("Loading: " + clazzName);
@@ -462,6 +465,7 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader
 					catch (ClassNotFoundException e1)
 					{
 						e1.printStackTrace();
+						log.warning(clazzName + " not found. Cannot instantiate according main data point type.");
 					}
 				}
 
@@ -625,6 +629,10 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader
 				try
 				{
 					DatapointImpl dp = datapointById.get(instanceId);
+					if(dp == null){
+						log.warning("No datapoint type found for instance: " + instanceId);
+						continue;
+					}
 					Class<?> clazz = dp.getClass();
 
 					if (clazz != null)
