@@ -46,9 +46,12 @@ public class DPT_1_ImplKnx extends DPT_1_Impl
 					x.setData(apdu, 0); // apdu is different!
 
 					log.info("Switch for " + DPT_1_ImplKnx.this.getHref() + " now " + x.getValueBoolean());
-
-					value().set(x.getValueBoolean());
+					
+					// first set null to false, since the set on the instance variable immediately 
+					// let's to an update of observers
 					value().setNull(false);
+					value().set(x.getValueBoolean());
+					
 				}
 				catch (KNXException e)
 				{

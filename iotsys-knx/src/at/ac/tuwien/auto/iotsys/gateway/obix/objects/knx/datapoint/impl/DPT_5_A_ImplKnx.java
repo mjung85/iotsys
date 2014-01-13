@@ -48,8 +48,9 @@ public class DPT_5_A_ImplKnx extends DPT_5_A_Impl
 
 					log.info("8Bit Unsigned for " + DPT_5_A_ImplKnx.this.getHref() + " now " + x.getValueUnsigned());
 
-					value().set(x.getValueUnsigned());
 					value().setNull(false);
+					value().set(x.getValueUnsigned());
+					
 				}
 				catch (KNXException e)
 				{
