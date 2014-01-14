@@ -271,7 +271,7 @@
       <name>weather-forecast</name>
       <enabled>true</enabled>
       <device>
-        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.weatherforecast.devices.CrawlerYR_NO
+        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.weatherforecast.objects.WeatherObjectImplYR_NO
         </type>
         <name>yr.no</name>
         <location>

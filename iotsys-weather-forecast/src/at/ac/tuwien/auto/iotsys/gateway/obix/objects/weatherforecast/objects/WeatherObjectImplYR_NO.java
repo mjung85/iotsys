@@ -30,7 +30,7 @@
  * This file is part of the IoTSyS project.
  ******************************************************************************/
 
-package at.ac.tuwien.auto.iotsys.gateway.obix.objects.weatherforecast.devices;
+package at.ac.tuwien.auto.iotsys.gateway.obix.objects.weatherforecast.objects;
 
 import java.util.List;
 import java.util.TimeZone;

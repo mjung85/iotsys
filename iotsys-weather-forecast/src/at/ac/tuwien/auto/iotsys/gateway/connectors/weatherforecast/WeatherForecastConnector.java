@@ -146,6 +146,35 @@ public class WeatherForecastConnector implements Connector {
 				now += threeHours;
 			}					
 		}
+		else if(overwrite == ManualOverwrite.STORM_WARNING){
+			
+			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssX");
+			long now = System.currentTimeMillis();
+			long threeHours = 1000 * 60 * 60 * 3;
+			WeatherForcastObject weatherObject = new WeatherForcastObject();
+			weatherObject.setCloudiness(100);
+			weatherObject.setDewpointTemperature(0);
+			weatherObject.setFog(0);
+			weatherObject.setHighClouds(100);
+			weatherObject.setMediumClouds(100);
+			weatherObject.setPrecipitation(100);
+			weatherObject.setPressure(1024);
+			weatherObject.setTemperatureProbability(100);
+			weatherObject.setTemperature(10);
+			weatherObject.setWindDirection("W");
+			weatherObject.setWindProbability(100);
+			weatherObject.setWindSpeed(5);
+		
+			weatherObject.setTimestamp(now);		
+			weatherObject.setTimeZone(TimeZone.getTimeZone("CET"));	
+			
+			for(int i = 0; i < 10 ; i++){
+				weatherObject.setTimestamp(now);
+				resultWeatherList.add(weatherObject);
+				now += threeHours;
+				weatherObject.setWindSpeed(11);
+			}	
+		}
 		else{
 			log.info("Retrieving weather forecast from " + serviceURL + ".");
 			try {
@@ -355,8 +384,4 @@ public class WeatherForecastConnector implements Connector {
 		
 		httpConnection = null;
 	}
-}
-
-enum ManualOverwrite{
-	STORM_WARNING, STORM_ALARM, OFF
 }
