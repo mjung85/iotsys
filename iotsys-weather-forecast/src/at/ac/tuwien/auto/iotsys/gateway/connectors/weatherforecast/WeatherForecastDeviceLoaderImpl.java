@@ -49,6 +49,8 @@ import at.ac.tuwien.auto.iotsys.commons.Connector;
 import at.ac.tuwien.auto.iotsys.commons.DeviceLoader;
 import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.weatherforecast.impl.WeatherForecastLocationImpl;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.weatherforecast.objects.WeatherControlImpl;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.weatherforecast.objects.WeatherObjectImplYR_NO;
 
 public class WeatherForecastDeviceLoaderImpl implements DeviceLoader {
 
@@ -133,12 +135,17 @@ public class WeatherForecastDeviceLoaderImpl implements DeviceLoader {
 										try {
 											// create an instance of the specified weather forecast crawler
 											Obj crawler = (Obj) declaredConstructors[k].newInstance(args);
-
-											
-											
+			
 											crawler.setHref(new Uri(URLEncoder.encode(connectorName, "UTF-8") + "/" + href));
+	
 											
-											objectBroker.addObj(crawler);
+											objectBroker.addObj(crawler, true);
+											
+											if(crawler instanceof WeatherObjectImplYR_NO){
+												WeatherObjectImplYR_NO weatherObject = (WeatherObjectImplYR_NO) crawler;
+												objectBroker.addObj(weatherObject.getChildByHref(new Uri("upcoming")));
+												objectBroker.addObj(weatherObject.getChildByHref(new Uri("location")));
+											}
 											myObjects.add(crawler);
 											//crawler.initialize();
 											
@@ -176,6 +183,12 @@ public class WeatherForecastDeviceLoaderImpl implements DeviceLoader {
 							}
 						}
 					}
+					
+					// add weather control for manual overwriting of weather
+					WeatherControlImpl weatherControl = new WeatherControlImpl("weatherControl",forecastConnector);
+					weatherControl.setHref(new Uri(URLEncoder.encode(connectorName, "UTF-8") + "/weatherControl"));
+					myObjects.add(weatherControl);
+					objectBroker.addObj(weatherControl, true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}

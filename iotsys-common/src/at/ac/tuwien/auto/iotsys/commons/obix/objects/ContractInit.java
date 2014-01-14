@@ -56,6 +56,7 @@ import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.enumeration.EnumEna
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.enumeration.EnumPart;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.enumeration.EnumPriority;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.enumeration.EnumStandard;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.enumeration.EnumWeatherManualOverwrite;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.network.Network;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.parameter.ParameterDimming;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.unit.UnitCelsius;
@@ -99,6 +100,7 @@ import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.sensors.TemperatureSens
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.sensors.WindowSensor;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.sim.HVACSimulation;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.sim.HVACSimulationSuitcase;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.weatherforecast.WeatherManualOverwrite;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.weatherforecast.WeatherObject;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.weatherforecast.WeatherForecastLocation;
 
@@ -197,6 +199,8 @@ public class ContractInit
 
 			// Weather forecast
 			ContractRegistry.put(WeatherObject.CONTRACT, WeatherObject.class.getName());
+			
+			ContractRegistry.put(WeatherManualOverwrite.CONTRACT, WeatherManualOverwrite.class.getName());
 
 			ContractRegistry.put(WeatherForecastLocation.CONTRACT, WeatherForecastLocation.class.getName());
 			
