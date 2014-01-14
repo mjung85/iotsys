@@ -37,25 +37,25 @@ import java.util.logging.Logger;
 import javax.xml.parsers.FactoryConfigurationError;
 import javax.xml.parsers.ParserConfigurationException;
 
-import at.ac.tuwien.auto.iotsys.commons.obix.objects.weatherforecast.Crawler;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.weatherforecast.WeatherObject;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.weatherforecast.impl.UpcomingWeatherImpl;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.weatherforecast.impl.WeatherForecastLocationImpl;
 import at.ac.tuwien.auto.iotsys.gateway.connectors.weatherforecast.WeatherForecastConnector;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.HistoryImpl;
 import obix.*;
 
-public class CrawlerImpl extends Obj implements Crawler {
-	private static final Logger log = Logger.getLogger(CrawlerImpl.class.getName());
+public class WeatherObjImpl extends Obj implements WeatherObject {
+	private static final Logger log = Logger.getLogger(WeatherObjImpl.class.getName());
 	
 	protected WeatherForecastConnector connector;
 	
 	protected WeatherForecastLocationImpl location;
 	protected UpcomingWeatherImpl upcoming;
 
-	public CrawlerImpl(WeatherForecastLocationImpl location, WeatherForecastConnector connector) 
+	public WeatherObjImpl(WeatherForecastLocationImpl location, WeatherForecastConnector connector) 
 				throws FactoryConfigurationError, ParserConfigurationException {
 		
-		setIs(new Contract(Crawler.CONTRACT));
+		setIs(new Contract(WeatherObject.CONTRACT));
 		
 		// store connector
 		if (connector != null)

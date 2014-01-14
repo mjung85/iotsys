@@ -2,7 +2,7 @@ package at.ac.tuwien.auto.iotsys.commons.obix.objects.weatherforecast;
 
 import obix.*;
 
-public interface Crawler extends IObj {
+public interface WeatherObject extends IObj {
 
 	public static final String CONTRACT = "iot:WeatherForecast";
 
