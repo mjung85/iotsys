@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema id="obix" 
+  targetNamespace="http://obix.org/ns/schema/1.1" 
+  xmlns="http://obix.org/ns/schema/1.1" 
+  xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  elementFormDefault="qualified">
+  
+  <!-- Simple Types
+     ===================== -->
+
+  <xs:simpleType name="status">
+    <xs:restriction base = "xs:string">
+      <!-- ordered by priority -->
+      <xs:enumeration value="disabled"/>
+      <xs:enumeration value="fault"/>
+      <xs:enumeration value="down"/>
+      <xs:enumeration value="unackedAlarm"/>
+      <xs:enumeration value="alarm"/>
+      <xs:enumeration value="unacked"/>
+      <xs:enumeration value="overridden"/>
+      <xs:enumeration value="ok"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="contract">
+    <xs:list itemType="xs:anyURI"/>
+  </xs:simpleType>  
+
+  <!-- Complex Types
+     ===================== -->
+
+  <xs:complexType name="Obj">
+    <xs:sequence>
+      <xs:element ref="obj" maxOccurs="unbounded" minOccurs="0"/>
+      <xs:any 
+          namespace="##other" 
+          processContents="lax" 
+          maxOccurs="unbounded" 
+          minOccurs="0"/>
+    </xs:sequence>
+    <xs:attribute name="display"     type="xs:string"/>
+    <xs:attribute name="displayName" type="xs:string"/>
+    <xs:attribute name="href"        type="xs:anyURI"/>
+    <xs:attribute name="icon"        type="xs:anyURI"/>
+    <xs:attribute name="is"          type="contract"/>
+    <xs:attribute name="name"        type="xs:NMTOKEN"/>
+    <xs:attribute name="null"        type="xs:boolean"/>
+    <xs:attribute name="status"      type="status"     default="ok"/>
+    <xs:attribute name="writable"    type="xs:boolean" default="false"/>
+  </xs:complexType>
+
+  <xs:complexType name="AbsTime">
+    <xs:complexContent>
+      <xs:extension base="Obj">
+        <xs:attribute name="min" type="xs:dateTime"/>
+        <xs:attribute name="max" type="xs:dateTime"/>
+        <xs:attribute name="val" type="xs:dateTime"/>
+		<!-- oBIX 1.1 -->
+		<xs:attribute name="tz" type="xs:string"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="Bool">
+    <xs:complexContent>
+      <xs:extension base="Obj">
+        <xs:attribute name="range" type="xs:anyURI"/>
+        <xs:attribute name="val"   type="xs:boolean" default="false"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="Err">
+    <xs:complexContent>
+      <xs:extension base="Obj">
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="Enum">
+    <xs:complexContent>
+      <xs:extension base="Obj">
+        <xs:attribute name="range" type="xs:anyURI"/>
+        <xs:attribute name="val"   type="xs:NMTOKEN"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="Feed">
+    <xs:complexContent>
+      <xs:extension base="Obj">
+        <xs:attribute name="in" type="contract" default="obix:Nil"/>
+        <xs:attribute name="of" type="contract" default="obix:obj"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="Int">
+    <xs:complexContent>
+      <xs:extension base="Obj">
+        <xs:attribute name="min"  type="xs:int"/>
+        <xs:attribute name="max"  type="xs:int"/>
+        <xs:attribute name="unit" type="xs:anyURI"/>
+        <xs:attribute name="val"  type="xs:int" default="0"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="List">
+    <xs:complexContent>
+      <xs:extension base="Obj">
+        <xs:attribute name="min" type="xs:int"/>
+        <xs:attribute name="max" type="xs:int"/>
+        <xs:attribute name="of"  type="contract" default="obix:obj"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="Op">
+    <xs:complexContent>
+      <xs:extension base="Obj">
+        <xs:attribute name="in"  type="contract" default="obix:Nil"/>
+        <xs:attribute name="out" type="contract" default="obix:Nil"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="Real">
+    <xs:complexContent>
+      <xs:extension base="Obj">
+        <xs:attribute name="min"       type="xs:double"/>
+        <xs:attribute name="max"       type="xs:double"/>
+        <xs:attribute name="precision" type="xs:int"/>
+        <xs:attribute name="unit"      type="xs:anyURI"/>
+        <xs:attribute name="val"       type="xs:double" default="0"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="RelTime">
+    <xs:complexContent>
+      <xs:extension base="Obj">
+        <xs:attribute name="min" type="xs:duration"/>
+        <xs:attribute name="max" type="xs:duration"/>
+        <xs:attribute name="val" type="xs:duration" default="PT0S"/>
+		<!-- oBIX 1.1 -->
+		<xs:attribute name="tz" type="xs:string"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="Str">
+    <xs:complexContent>
+      <xs:extension base="Obj">
+        <xs:attribute name="min" type="xs:int"/>
+        <xs:attribute name="max" type="xs:int"/>
+        <xs:attribute name="val" type="xs:string" default=""/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="Uri">
+    <xs:complexContent>
+      <xs:extension base="Obj">
+        <xs:attribute name="val" type="xs:anyURI"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  
+  <!-- oBIX 1.1 -->
+  <xs:complexType name="Date">
+    <xs:complexContent>
+      <xs:extension base="Obj">
+        <xs:attribute name="min" type="xs:date"/>
+        <xs:attribute name="max" type="xs:date"/>
+        <xs:attribute name="val" type="xs:date"/>		
+		<xs:attribute name="tz"  type="xs:string"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+
+  <!-- Global Elements
+     ===================== -->
+
+  <xs:element name="obj"     type="Obj"/>
+  <xs:element name="abstime" type="AbsTime" substitutionGroup="obj"/>
+  <xs:element name="bool"    type="Bool"    substitutionGroup="obj"/>
+  <xs:element name="enum"    type="Enum"    substitutionGroup="obj"/>
+  <xs:element name="err"     type="Obj"     substitutionGroup="obj"/>
+  <xs:element name="feed"    type="Feed"    substitutionGroup="obj"/>
+  <xs:element name="int"     type="Int"     substitutionGroup="obj"/>
+  <xs:element name="list"    type="List"    substitutionGroup="obj"/>
+  <xs:element name="op"      type="Op"      substitutionGroup="obj"/>
+  <xs:element name="real"    type="Real"    substitutionGroup="obj"/>
+  <xs:element name="ref"     type="Obj"     substitutionGroup="obj"/>
+  <xs:element name="reltime" type="RelTime" substitutionGroup="obj"/>
+  <xs:element name="str"     type="Str"     substitutionGroup="obj"/>
+  <xs:element name="uri"     type="Uri"     substitutionGroup="obj"/>
+  <!-- oBIX 1.1 -->
+  <xs:element name="date" 	 type="Date" 	substitutionGroup="obj"/>
+</xs:schema>
