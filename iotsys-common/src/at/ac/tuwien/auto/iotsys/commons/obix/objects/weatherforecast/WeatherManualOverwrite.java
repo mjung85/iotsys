@@ -1,4 +1,4 @@
-package at.ac.tuwien.auto.iotsys.commons.obix.objects.general.enumeration;
+package at.ac.tuwien.auto.iotsys.commons.obix.objects.weatherforecast;
 
 public interface WeatherManualOverwrite {
 	public static final String CONTRACT = "iot:WeatherManualOverwrite";
