@@ -118,181 +118,209 @@ public class WeatherForecastConnector implements Connector {
 		
 		ArrayList<WeatherForcastObject> resultWeatherList = new ArrayList<WeatherForcastObject>();
 		
-		
-		
-		log.info("Retrieving weather forecast from " + serviceURL + ".");
-		try {
-			Document doc = getWeatherForecastAsXML(serviceURL);
+		if(overwrite == ManualOverwrite.STORM_ALARM){
 			
-			if (doc != null)
-			{
-				DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssX");
+			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssX");
+			long now = System.currentTimeMillis();
+			long threeHours = 1000 * 60 * 60 * 3;
+			WeatherForcastObject weatherObject = new WeatherForcastObject();
+			weatherObject.setCloudiness(100);
+			weatherObject.setDewpointTemperature(0);
+			weatherObject.setFog(0);
+			weatherObject.setHighClouds(100);
+			weatherObject.setMediumClouds(100);
+			weatherObject.setPrecipitation(100);
+			weatherObject.setPressure(1024);
+			weatherObject.setTemperatureProbability(100);
+			weatherObject.setTemperature(10);
+			weatherObject.setWindDirection("W");
+			weatherObject.setWindProbability(100);
+			weatherObject.setWindSpeed(11);
+		
+			weatherObject.setTimestamp(now);		
+			weatherObject.setTimeZone(TimeZone.getTimeZone("CET"));	
+			
+			for(int i = 0; i < 10 ; i++){
+				weatherObject.setTimestamp(now);
+				resultWeatherList.add(weatherObject);
+				now += threeHours;
+			}					
+		}
+		else{
+			log.info("Retrieving weather forecast from " + serviceURL + ".");
+			try {
+				Document doc = getWeatherForecastAsXML(serviceURL);
 				
-				NodeList elements = doc.getElementsByTagName("location");
-				
-				for (int i=0; i < elements.getLength(); i++)
+				if (doc != null)
 				{
-					Element location = (Element) elements.item(i);
+					DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssX");
 					
-					if (location != null)
+					NodeList elements = doc.getElementsByTagName("location");
+					
+					for (int i=0; i < elements.getLength(); i++)
 					{
-						Date from;
-						Date to;
-						NodeList tmp;
-						Element time = (Element) location.getParentNode();
-
-						try
+						Element location = (Element) elements.item(i);
+						
+						if (location != null)
 						{
-							// Z in xs:dateTime means UTC time!
-							from = dateFormat.parse(time.getAttribute("from").replaceAll("Z", "+00:00"));
-							to = dateFormat.parse(time.getAttribute("to").replaceAll("Z", "+00:00"));			
-						}
-						catch (ParseException pe)
-						{
-							log.log(Level.WARNING, pe.getMessage());
-							
-							// ignore time element
-							continue;
-						}
-			
-						if (from.equals(to))
-						{		
-							WeatherForcastObject weatherObject = new WeatherForcastObject();
-							String utcOffset = time.getAttribute("to");		 
-							// strip date
-							utcOffset = utcOffset.substring(utcOffset.indexOf('T'));
-							// 'Z' means utc
-							utcOffset = utcOffset.replaceAll("Z", "+00:00");
-							// strip time (note that either '+' or '-' is present)
-							utcOffset = utcOffset.substring(utcOffset.lastIndexOf('+') + utcOffset.lastIndexOf('-') + 1);
-							
-							weatherObject.setTimestamp(to.getTime());		
-							weatherObject.setTimeZone(TimeZone.getTimeZone("GMT" + utcOffset));			
-							//parse temperatureProbability
-							tmp = location.getElementsByTagName("temperatureProbability");
-							
-							if (tmp.getLength() >= 1){
-								weatherObject.setTemperatureProbability(Integer.parseInt(((Element) tmp.item(0)).getAttribute("value")));
+							Date from;
+							Date to;
+							NodeList tmp;
+							Element time = (Element) location.getParentNode();
+	
+							try
+							{
+								// Z in xs:dateTime means UTC time!
+								from = dateFormat.parse(time.getAttribute("from").replaceAll("Z", "+00:00"));
+								to = dateFormat.parse(time.getAttribute("to").replaceAll("Z", "+00:00"));			
 							}
-							
-							//parese windProbability
-							tmp = location.getElementsByTagName("windProbability");
-							if (tmp.getLength() >= 1){
-								weatherObject.setWindProbability(Integer.parseInt(((Element) tmp.item(0)).getAttribute("value")));
-							}
-							
-							// parse temperature
-							tmp = location.getElementsByTagName("temperature");
-							if (tmp.getLength() >= 1){
-								weatherObject.setTemperature(Double.parseDouble(((Element) tmp.item(0)).getAttribute("value")));
-							}
-							else{
-								weatherObject.setTemperature(Double.NaN);
-							}
+							catch (ParseException pe)
+							{
+								log.log(Level.WARNING, pe.getMessage());
 								
-							// parse windDirection 
-							tmp = location.getElementsByTagName("windDirection");
-							if (tmp.getLength() >= 1){
-								weatherObject.setWindDirection(((Element) tmp.item(0)).getAttribute("name")); 
+								// ignore time element
+								continue;
 							}
-							else{
-								weatherObject.setWindDirection(null);
+				
+							if (from.equals(to))
+							{		
+								WeatherForcastObject weatherObject = new WeatherForcastObject();
+								String utcOffset = time.getAttribute("to");		 
+								// strip date
+								utcOffset = utcOffset.substring(utcOffset.indexOf('T'));
+								// 'Z' means utc
+								utcOffset = utcOffset.replaceAll("Z", "+00:00");
+								// strip time (note that either '+' or '-' is present)
+								utcOffset = utcOffset.substring(utcOffset.lastIndexOf('+') + utcOffset.lastIndexOf('-') + 1);
 								
+								weatherObject.setTimestamp(to.getTime());		
+								weatherObject.setTimeZone(TimeZone.getTimeZone("GMT" + utcOffset));			
+								//parse temperatureProbability
+								tmp = location.getElementsByTagName("temperatureProbability");
+								
+								if (tmp.getLength() >= 1){
+									weatherObject.setTemperatureProbability(Integer.parseInt(((Element) tmp.item(0)).getAttribute("value")));
+								}
+								
+								//parese windProbability
+								tmp = location.getElementsByTagName("windProbability");
+								if (tmp.getLength() >= 1){
+									weatherObject.setWindProbability(Integer.parseInt(((Element) tmp.item(0)).getAttribute("value")));
+								}
+								
+								// parse temperature
+								tmp = location.getElementsByTagName("temperature");
+								if (tmp.getLength() >= 1){
+									weatherObject.setTemperature(Double.parseDouble(((Element) tmp.item(0)).getAttribute("value")));
+								}
+								else{
+									weatherObject.setTemperature(Double.NaN);
+								}
+									
+								// parse windDirection 
+								tmp = location.getElementsByTagName("windDirection");
+								if (tmp.getLength() >= 1){
+									weatherObject.setWindDirection(((Element) tmp.item(0)).getAttribute("name")); 
+								}
+								else{
+									weatherObject.setWindDirection(null);
+									
+								}
+								
+								// parse wind speed
+								tmp = location.getElementsByTagName("windSpeed");
+								if (tmp.getLength() >= 1){
+									weatherObject.setWindSpeed(Integer.parseInt(((Element) tmp.item(0)).getAttribute("beaufort")));
+								}
+								else{	
+									weatherObject.setWindSpeed(null);
+								}
+								
+								// parse humidity
+								tmp = location.getElementsByTagName("humidity");
+								if (tmp.getLength() >= 1){
+									weatherObject.setHumidity(Double.parseDouble(((Element) tmp.item(0)).getAttribute("value")));
+								}
+								else{	
+									weatherObject.setHumidity(Double.NaN);
+								}
+	
+								// parse pressure
+								tmp = location.getElementsByTagName("pressure");
+								if (tmp.getLength() >= 1){
+									weatherObject.setPressure(Double.parseDouble(((Element) tmp.item(0)).getAttribute("value")));
+								}
+								else{	
+									weatherObject.setPressure(Double.NaN);
+								}
+								
+								// parse cloudiness
+								tmp = location.getElementsByTagName("cloudiness");
+								if (tmp.getLength() >= 1){
+									weatherObject.setCloudiness(Double.parseDouble(((Element) tmp.item(0)).getAttribute("percent")));
+								}
+								else{
+									weatherObject.setCloudiness(Double.NaN);
+								}
+								
+								// parse fog
+								tmp = location.getElementsByTagName("fog");
+								if (tmp.getLength() >= 1){
+									weatherObject.setFog(Double.parseDouble(((Element) tmp.item(0)).getAttribute("percent")));
+								}
+								else{
+									weatherObject.setFog(Double.NaN);
+								}
+								
+								// parse lowClouds
+								tmp = location.getElementsByTagName("lowClouds");
+								if (tmp.getLength() >= 1){
+									weatherObject.setLowClouds(Double.parseDouble(((Element) tmp.item(0)).getAttribute("percent")));
+								}
+								else{
+									weatherObject.setLowClouds(Double.NaN);
+								}
+								
+								// parse lowClouds
+								tmp = location.getElementsByTagName("mediumClouds");
+								if (tmp.getLength() >= 1){
+									weatherObject.setHighClouds(Double.parseDouble(((Element) tmp.item(0)).getAttribute("percent")));
+								}
+								else{
+									weatherObject.setHighClouds(Double.NaN);
+								}
+								
+								// parse MediumClouds
+								tmp = location.getElementsByTagName("highClouds");
+								if (tmp.getLength() >= 1){
+									weatherObject.setMediumClouds(Double.parseDouble(((Element) tmp.item(0)).getAttribute("percent")));
+								}
+								else{
+									weatherObject.setMediumClouds(Double.NaN);
+								}
+								
+								// parse dewpointTemperature 
+								tmp = location.getElementsByTagName("dewpointTemperature");
+								if (tmp.getLength() >= 1){
+									weatherObject.setDewpointTemperature(Double.parseDouble(((Element) tmp.item(0)).getAttribute("value")));
+								}
+								else{
+									weatherObject.setDewpointTemperature(Double.NaN);
+								}
+								
+								resultWeatherList.add(weatherObject);
 							}
-							
-							// parse wind speed
-							tmp = location.getElementsByTagName("windSpeed");
-							if (tmp.getLength() >= 1){
-								weatherObject.setWindSpeed(Integer.parseInt(((Element) tmp.item(0)).getAttribute("beaufort")));
-							}
-							else{	
-								weatherObject.setWindSpeed(null);
-							}
-							
-							// parse humidity
-							tmp = location.getElementsByTagName("humidity");
-							if (tmp.getLength() >= 1){
-								weatherObject.setHumidity(Double.parseDouble(((Element) tmp.item(0)).getAttribute("value")));
-							}
-							else{	
-								weatherObject.setHumidity(Double.NaN);
-							}
-
-							// parse pressure
-							tmp = location.getElementsByTagName("pressure");
-							if (tmp.getLength() >= 1){
-								weatherObject.setPressure(Double.parseDouble(((Element) tmp.item(0)).getAttribute("value")));
-							}
-							else{	
-								weatherObject.setPressure(Double.NaN);
-							}
-							
-							// parse cloudiness
-							tmp = location.getElementsByTagName("cloudiness");
-							if (tmp.getLength() >= 1){
-								weatherObject.setCloudiness(Double.parseDouble(((Element) tmp.item(0)).getAttribute("percent")));
-							}
-							else{
-								weatherObject.setCloudiness(Double.NaN);
-							}
-							
-							// parse fog
-							tmp = location.getElementsByTagName("fog");
-							if (tmp.getLength() >= 1){
-								weatherObject.setFog(Double.parseDouble(((Element) tmp.item(0)).getAttribute("percent")));
-							}
-							else{
-								weatherObject.setFog(Double.NaN);
-							}
-							
-							// parse lowClouds
-							tmp = location.getElementsByTagName("lowClouds");
-							if (tmp.getLength() >= 1){
-								weatherObject.setLowClouds(Double.parseDouble(((Element) tmp.item(0)).getAttribute("percent")));
-							}
-							else{
-								weatherObject.setLowClouds(Double.NaN);
-							}
-							
-							// parse lowClouds
-							tmp = location.getElementsByTagName("mediumClouds");
-							if (tmp.getLength() >= 1){
-								weatherObject.setHighClouds(Double.parseDouble(((Element) tmp.item(0)).getAttribute("percent")));
-							}
-							else{
-								weatherObject.setHighClouds(Double.NaN);
-							}
-							
-							// parse MediumClouds
-							tmp = location.getElementsByTagName("highClouds");
-							if (tmp.getLength() >= 1){
-								weatherObject.setMediumClouds(Double.parseDouble(((Element) tmp.item(0)).getAttribute("percent")));
-							}
-							else{
-								weatherObject.setMediumClouds(Double.NaN);
-							}
-							
-							// parse dewpointTemperature 
-							tmp = location.getElementsByTagName("dewpointTemperature");
-							if (tmp.getLength() >= 1){
-								weatherObject.setDewpointTemperature(Double.parseDouble(((Element) tmp.item(0)).getAttribute("value")));
-							}
-							else{
-								weatherObject.setDewpointTemperature(Double.NaN);
-							}
-							
-							resultWeatherList.add(weatherObject);
-						}
-					}			
-				}
-			}	
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (SAXException e) {
-			e.printStackTrace();
-		}		
+						}			
+					}
+				}	
+			} catch (MalformedURLException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			} catch (SAXException e) {
+				e.printStackTrace();
+			}		
+		}
 		return resultWeatherList;
 	}
 	

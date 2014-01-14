@@ -66,7 +66,7 @@ public abstract class RangeImpl extends List implements Range
 		}
 	}
 
-	protected class BoolElement extends Bool implements RangeElement
+	public class BoolElement extends Bool implements RangeElement
 	{
 		public BoolElement(String key, String displayName, boolean value)
 		{
@@ -80,7 +80,7 @@ public abstract class RangeImpl extends List implements Range
 		}
 	}
 
-	protected class IntElement extends Int implements RangeElement
+	public class IntElement extends Int implements RangeElement
 	{
 		public IntElement(String key, int value)
 		{

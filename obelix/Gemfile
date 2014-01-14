@@ -9,3 +9,6 @@ gem 'json', '~> 1.7.7'
 gem 'closure-compiler'
 
 gem 'compass'
+
+require 'rbconfig'
+gem 'wdm', '>= 0.1.0' if RbConfig::CONFIG['target_os'] =~ /mswin|mingw|cygwin/i

@@ -50,4 +50,4 @@
               %span.enum(ng-switch-when="enum")
                 %select(ng-model="property.value" ng-options="x for x in property.range" ng-change="property.write()")
               %span.other(ng-switch-default)
-                %input(type="text" ng-model="property.value" ng-disabled="property.readonly")
+                %input(type="text" ng-model="property.value" ng-disabled="property.readonly" ng-change="property.write()" ng-model-onblur)

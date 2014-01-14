@@ -99,7 +99,7 @@ import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.sensors.TemperatureSens
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.sensors.WindowSensor;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.sim.HVACSimulation;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.sim.HVACSimulationSuitcase;
-import at.ac.tuwien.auto.iotsys.commons.obix.objects.weatherforecast.Crawler;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.weatherforecast.WeatherObject;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.weatherforecast.WeatherForecastLocation;
 
 public class ContractInit
@@ -196,7 +196,7 @@ public class ContractInit
 			ContractRegistry.put(ParameterDimming.CONTRACT, ParameterDimming.class.getName());
 
 			// Weather forecast
-			ContractRegistry.put(Crawler.CONTRACT, Crawler.class.getName());
+			ContractRegistry.put(WeatherObject.CONTRACT, WeatherObject.class.getName());
 
 			ContractRegistry.put(WeatherForecastLocation.CONTRACT, WeatherForecastLocation.class.getName());
 			
