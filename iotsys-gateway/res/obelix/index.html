@@ -70,7 +70,7 @@
                 <select ng-change='property.write()' ng-model='property.value' ng-options='x for x in property.range'></select>
               </span>
               <span class='other' ng-switch-default>
-                <input ng-disabled='property.readonly' ng-model='property.value' type='text'>
+                <input ng-change='property.write()' ng-disabled='property.readonly' ng-model-onblur ng-model='property.value' type='text'>
               </span>
             </div>
           </div>

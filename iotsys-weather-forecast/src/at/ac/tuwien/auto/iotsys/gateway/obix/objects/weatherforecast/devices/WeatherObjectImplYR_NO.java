@@ -44,15 +44,15 @@ import at.ac.tuwien.auto.iotsys.commons.obix.objects.HistoryImpl;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.weatherforecast.WeatherForcastObject;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.weatherforecast.impl.UpcomingWeatherImpl;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.weatherforecast.impl.WeatherForecastLocationImpl;
-import at.ac.tuwien.auto.iotsys.gateway.weatherforecast.crawler.impl.CrawlerImpl;
+import at.ac.tuwien.auto.iotsys.gateway.weatherforecast.crawler.impl.WeatherObjImpl;
 import at.ac.tuwien.auto.iotsys.gateway.connectors.weatherforecast.WeatherForecastConnector;
 
-public class CrawlerYR_NO extends CrawlerImpl {
+public class WeatherObjectImplYR_NO extends WeatherObjImpl {
 	private static final String SERVICE_URL = "http://api.yr.no/weatherapi/locationforecast/1.8/?";
-	private static final Logger log = Logger.getLogger(CrawlerYR_NO.class
+	private static final Logger log = Logger.getLogger(WeatherObjectImplYR_NO.class
 			.getName());
 
-	public CrawlerYR_NO(String name, WeatherForecastLocationImpl location,
+	public WeatherObjectImplYR_NO(String name, WeatherForecastLocationImpl location,
 			WeatherForecastConnector connector)
 			throws FactoryConfigurationError, ParserConfigurationException {
 		super(location, connector);
