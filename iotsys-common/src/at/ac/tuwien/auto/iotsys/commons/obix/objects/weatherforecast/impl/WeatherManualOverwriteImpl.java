@@ -5,7 +5,7 @@ import obix.Int;
 import obix.Obj;
 import obix.Uri;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.contracts.impl.RangeImpl;
-import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.enumeration.WeatherManualOverwrite;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.weatherforecast.WeatherManualOverwrite;
 
 public class WeatherManualOverwriteImpl extends RangeImpl implements WeatherManualOverwrite{
 

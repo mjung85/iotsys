@@ -35,14 +35,13 @@ import obix.Contract;
 import obix.Uri;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.contracts.impl.RangeImpl;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.enumeration.EnumWeatherManualOverwrite;
-import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.enumeration.EnumWeatherSymbol;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.weatherforecast.WeatherManualOverwrite;
 
 public class EnumWeatherManualOverwriteImpl extends RangeImpl implements EnumWeatherManualOverwrite
 {
 	public EnumWeatherManualOverwriteImpl()
 	{
-		super(new Uri(EnumWeatherSymbol.HREF));
+		super(new Uri(EnumWeatherManualOverwrite.HREF));
 
 		this.setOf(new Contract("obix:int"));
 	}
