@@ -37,7 +37,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Hashtable;
 import java.util.List;
 import java.util.TimeZone;
 import java.util.logging.Level;
@@ -54,22 +53,19 @@ import javax.xml.parsers.ParserConfigurationException;
 
 //import obix.WeatherForcastObject;
 
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-
-
 import at.ac.tuwien.auto.iotsys.commons.Connector;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.weatherforecast.WeatherForcastObject;
-import at.ac.tuwien.auto.iotsys.commons.obix.objects.weatherforecast.impl.UpcomingWeatherImpl;
-import at.ac.tuwien.auto.iotsys.commons.obix.objects.weatherforecast.impl.WeatherSymbolImpl;
 
 public class WeatherForecastConnector implements Connector {
 	
 	private static final Logger log = Logger.getLogger(WeatherForecastConnector.class.getName());
+	
+	private ManualOverwrite overwrite = ManualOverwrite.OFF;
 	
 	private HttpURLConnection httpConnection = null;
 	private DocumentBuilder docBuilder = null;
@@ -88,6 +84,15 @@ public class WeatherForecastConnector implements Connector {
 	
 	public void disconnect() {
 		// nothing to do
+	}
+	
+	// create a bad weather front
+	public void setManualOverwrite(ManualOverwrite overwrite){
+		this.overwrite = overwrite;
+	}
+	
+	public ManualOverwrite getManualOverwrite(){
+		return this.overwrite;
 	}
 	
 	public Document getWeatherForecastAsXML(String serviceURL) throws IOException, MalformedURLException, SAXException
@@ -109,7 +114,11 @@ public class WeatherForecastConnector implements Connector {
 	}
 	
 	public List<WeatherForcastObject> getWeatherForecast(String serviceURL){
+		
+		
 		ArrayList<WeatherForcastObject> resultWeatherList = new ArrayList<WeatherForcastObject>();
+		
+		
 		
 		log.info("Retrieving weather forecast from " + serviceURL + ".");
 		try {
@@ -318,4 +327,8 @@ public class WeatherForecastConnector implements Connector {
 		
 		httpConnection = null;
 	}
+}
+
+enum ManualOverwrite{
+	STORM_WARNING, STORM_ALARM, OFF
 }
