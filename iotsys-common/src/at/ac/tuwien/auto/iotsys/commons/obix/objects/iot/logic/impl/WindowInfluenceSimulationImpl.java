@@ -4,6 +4,8 @@ import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
 import at.ac.tuwien.auto.iotsys.commons.ObjectBrokerHelper;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.logic.WindowInfluenceSimulation;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.sim.HVACSimulationSuitcase;
+import at.ac.tuwien.auto.iotsys.obix.observer.Observer;
+import at.ac.tuwien.auto.iotsys.obix.observer.Subject;
 import obix.Bool;
 import obix.Contract;
 import obix.Obj;
@@ -49,6 +51,37 @@ public class WindowInfluenceSimulationImpl extends Obj implements WindowInfluenc
 		this.add(windowClosed);
 		this.add(comfortModeActive);
 		this.add(standbyModeActive);
+		
+		
+		Obj obj = objectBroker.pullObj(new Uri("/HVAC+Simulation/hvacSimSuitcase"), false);
+			
+		if (obj instanceof HVACSimulationSuitcase)
+		{
+			hvacSim = (HVACSimulationSuitcase) obj;
+
+			//System.out.println("Current Temp: " + hvacSim.temp());
+			windowClosed.set(hvacSim.temp());
+			
+			hvacSim.temp().attach(new Observer(){
+				@Override
+				public void update(Object state) {
+					// TODO Auto-generated method stub
+					if(state instanceof Obj){
+						doControl();
+						windowClosed.set(((Obj) state).getBool());
+					}
+				}
+				@Override
+				public void setSubject(Subject object) {		
+				}
+				@Override
+				public Subject getSubject() {
+					return null;
+				}
+			});
+			
+		}
+		
 	}
 	
 	@Override
@@ -76,4 +109,8 @@ public class WindowInfluenceSimulationImpl extends Obj implements WindowInfluenc
 		return null;
 	}
 
+	private void doControl() {
+		if (enabled.get()) {
+		}
+	}
 }

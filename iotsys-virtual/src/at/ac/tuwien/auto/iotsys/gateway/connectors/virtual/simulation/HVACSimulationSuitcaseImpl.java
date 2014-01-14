@@ -19,6 +19,9 @@ public class HVACSimulationSuitcaseImpl extends Obj implements HVACSimulationSui
 	
 	private final String LINK_OUTSIDE_TEMP = "/BACnetIoTSuitcase/2098177/AnalogInput1";
 	private final String LINK_WINDOW_CLOSED ="/EnOcean/window/value";
+	private final String LINK_STANDBY_MODE_ACTIVE="";
+	private final String LINK_COMFORT_MODE_ACTIVE="";
+	private final String LINK_DOOR_OPENER_ACTIVE="";
 	protected Str season = new Str("winter");
 	
 	public static HVACSimulationSuitcaseImpl instance = null;
@@ -56,6 +59,12 @@ public class HVACSimulationSuitcaseImpl extends Obj implements HVACSimulationSui
 	protected Bool windowClosed = new Bool(false);
 	protected Real tempOutside = new Real();
 	
+	protected Bool comfortModeActive = new Bool(false);
+	protected Bool standbyModeActive = new Bool(false);
+	
+	protected Bool doorOpenerActive = new Bool(false);
+	
+	
 	public static final int TIME_INTERVALL_MS = 2000;
 	
 	private volatile boolean threadStarted = false;
@@ -82,6 +91,10 @@ public class HVACSimulationSuitcaseImpl extends Obj implements HVACSimulationSui
 		this.coolerActive.setHref(new Uri("coolerActive"));
 		this.add(coolerActive);
 		
+		this.doorOpenerActive.setName("doorOpenerActive");
+		this.doorOpenerActive.setHref(new Uri("doorOpenerActive"));
+		this.add(doorOpenerActive);
+			
 		this.fanInActive.setName("fanInActive");
 		this.fanInActive.setHref(new Uri("fanInActive"));
 		this.add(fanInActive);
@@ -138,9 +151,16 @@ public class HVACSimulationSuitcaseImpl extends Obj implements HVACSimulationSui
 		this.tempOutside.setHref(new Uri("tempOutside"));
 		this.add(tempOutside);	
 		
+		this.comfortModeActive.setName("comfortModeActive");
+		this.comfortModeActive.setHref(new Uri("comfortModeActive"));
+		this.add(comfortModeActive);
+		
+		this.standbyModeActive.setName("standbyModeActive");
+		this.standbyModeActive.setHref(new Uri("standbyModeActive"));
+		this.add(standbyModeActive);
+		
+		
 		Obj objOutsideTemp = objectBroker.pullObj(new Uri(LINK_OUTSIDE_TEMP), false);
-		
-		
 		
 		if (objOutsideTemp instanceof Real)
 		{			
@@ -166,32 +186,81 @@ public class HVACSimulationSuitcaseImpl extends Obj implements HVACSimulationSui
 		}	
 			
 		
-		Obj objwindowClosed = objectBroker.pullObj(new Uri(LINK_WINDOW_CLOSED), false);
-			
+		Obj objwindowClosed = objectBroker.pullObj(new Uri(LINK_WINDOW_CLOSED), false);	
 		if (objwindowClosed instanceof Bool){
 			objwindowClosed.attach(new Observer(){
-					
 					@Override
 					public void update(Object state) {
 						if(state instanceof Obj){
-							System.out.println("set Outside Temp");
 							windowClosed.set(((Obj) state).getBool());
-						}
-							
+						}	
 					}
-
 					@Override
 					public void setSubject(Subject object) {		
 					}
-
 					@Override
 					public Subject getSubject() {
 					return null;
-				}
-						
+				}		
 			});
 		}
 		
+		Obj objStandbyModeActive = objectBroker.pullObj(new Uri(LINK_STANDBY_MODE_ACTIVE), false);	
+		if (objStandbyModeActive instanceof Bool){
+			objStandbyModeActive.attach(new Observer(){
+					@Override
+					public void update(Object state) {
+						if(state instanceof Obj){
+							standbyModeActive.set(((Obj) state).getBool());
+						}	
+					}
+					@Override
+					public void setSubject(Subject object) {		
+					}
+					@Override
+					public Subject getSubject() {
+					return null;
+				}		
+			});
+		}
+		
+		Obj objComfortModeActive = objectBroker.pullObj(new Uri(LINK_COMFORT_MODE_ACTIVE), false);	
+		if (objComfortModeActive instanceof Bool){
+			objComfortModeActive.attach(new Observer(){
+					@Override
+					public void update(Object state) {
+						if(state instanceof Obj){
+							comfortModeActive.set(((Obj) state).getBool());
+						}	
+					}
+					@Override
+					public void setSubject(Subject object) {		
+					}
+					@Override
+					public Subject getSubject() {
+					return null;
+					}		
+			});
+		}
+		
+		Obj objDoorOpenerActive = objectBroker.pullObj(new Uri(LINK_DOOR_OPENER_ACTIVE), false);	
+		if (objDoorOpenerActive instanceof Bool){
+			objDoorOpenerActive.attach(new Observer(){
+					@Override
+					public void update(Object state) {
+						if(state instanceof Obj){
+							doorOpenerActive.set(((Obj) state).getBool());
+						}	
+					}
+					@Override
+					public void setSubject(Subject object) {		
+					}
+					@Override
+					public Subject getSubject() {
+					return null;
+					}		
+			});
+		}
 	}
 
 	public double getHeatingImpact() {
@@ -301,7 +370,14 @@ public class HVACSimulationSuitcaseImpl extends Obj implements HVACSimulationSui
 		this.coolerActive.set(coolerActive);
 	}
 
+	public void setcomfortModeActive(boolean comfortModeActive) {
+		this.comfortModeActive.set(comfortModeActive);
+	}
 
+	public void setstandbyModeActive(boolean standbyModeActive) {
+		this.standbyModeActive.set(standbyModeActive);
+	}
+	
 	@Override
 	public Bool enabled() {
 		return enabled;
@@ -385,6 +461,21 @@ public class HVACSimulationSuitcaseImpl extends Obj implements HVACSimulationSui
 	@Override
 	public Bool windowClosed() {
 		return windowClosed;
+	}
+	
+	@Override
+	public Bool comfortModeActive() {
+		return comfortModeActive;
+	}
+
+	@Override
+	public Bool standbyModeActive() {
+		return standbyModeActive;
+	}
+	
+	@Override
+	public Bool doorOpenerActive() {
+		return doorOpenerActive;
 	}
 	
 	@Override
@@ -476,9 +567,6 @@ public class HVACSimulationSuitcaseImpl extends Obj implements HVACSimulationSui
 			}
 		}	
 	}
-
-
-
 	
 }
 

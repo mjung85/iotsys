@@ -1,0 +1,518 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ApplicationProgram Id="id-0001_982C_01" InternalVersion="0" LastModified="2011-07-15T00:00:00.000" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="I:\Projekte\_TDD\TDD_Config\Schema\GenericPlugIn_4.xsd">
+  <Languages>
+    <Language LanguageId="de-DE">
+      <Data RefId="M-0001-982C-01-ComObjId_8_bit_Szene">
+        <Translation AttributeName="Text" Text="8-bit Szene" />
+      </Data>
+      <Data RefId="M-0001-982C-01-ComObjId_Betriebsstunden_A">
+        <Translation AttributeName="Text" Text="A, Betriebsstunden" />
+      </Data>
+      <Data RefId="M-0001-982C-01-ComObjId_Betriebsstundengrenzwert_A">
+        <Translation AttributeName="Text" Text="A, Betriebsstunden-Grenzwert" />
+      </Data>
+      <Data RefId="M-0001-982C-01-ComObjId_BetriebsstundengrenzwertÜberschreitung_A">
+        <Translation AttributeName="Text" Text="A, Betriebsstunden-Grenzwertüberschreitung" />
+      </Data>
+      <Data RefId="M-0001-982C-01-ComObjId_Dimmen_A">
+        <Translation AttributeName="Text" Text="A, Dimmen" />
+      </Data>
+      <Data RefId="M-0001-982C-01-ComObjId_Dimmwert_A">
+        <Translation AttributeName="Text" Text="A, Dimmwert" />
+      </Data>
+      <Data RefId="M-0001-982C-01-ComObjId_Nachtbetrieb_A">
+        <Translation AttributeName="Text" Text="A, Nachtbetrieb" />
+      </Data>
+      <Data RefId="M-0001-982C-01-ComObjId_Schalten_A">
+        <Translation AttributeName="Text" Text="A, Schalten" />
+      </Data>
+      <Data RefId="M-0001-982C-01-ComObjId_Schaltspielgrenzwert_A">
+        <Translation AttributeName="Text" Text="A, Schaltspielzähler-Grenzwert" />
+      </Data>
+      <Data RefId="M-0001-982C-01-ComObjId_SchaltspielgrenzwertÜberschreitung_A">
+        <Translation AttributeName="Text" Text="A, Schaltspielzähler-Grenzwertüberschreitung" />
+      </Data>
+      <Data RefId="M-0001-982C-01-ComObjId_Schaltspielzahl_A">
+        <Translation AttributeName="Text" Text="A, Schaltspielzähler" />
+      </Data>
+      <Data RefId="M-0001-982C-01-ComObjId_Sperren_A">
+        <Translation AttributeName="Text" Text="A, Sperren" />
+      </Data>
+      <Data RefId="M-0001-982C-01-ComObjId_Status_Dimmwert_A">
+        <Translation AttributeName="Text" Text="A, Status Dimmwert" />
+      </Data>
+      <Data RefId="M-0001-982C-01-ComObjId_Status_Schalten_A">
+        <Translation AttributeName="Text" Text="A, Status Schalten" />
+      </Data>
+      <Data RefId="M-0001-982C-01-ComObjRefId_8_bit_Szene">
+        <Translation AttributeName="FunctionText" Text="abrufen / speichern" />
+      </Data>
+      <Data RefId="M-0001-982C-01-ComObjRefId_Betriebsstunden_A">
+        <Translation AttributeName="FunctionText" Text="4-byte Wert" />
+      </Data>
+      <Data RefId="M-0001-982C-01-ComObjRefId_Betriebsstundengrenzwert_A">
+        <Translation AttributeName="FunctionText" Text="4-byte Wert" />
+      </Data>
+      <Data RefId="M-0001-982C-01-ComObjRefId_BetriebsstundengrenzwertÜberschreitung_A">
+        <Translation AttributeName="FunctionText" Text="1 = Ja / 0 = Nein" />
+      </Data>
+      <Data RefId="M-0001-982C-01-ComObjRefId_Dimmen_A">
+        <Translation AttributeName="FunctionText" Text="heller / dunkler" />
+      </Data>
+      <Data RefId="M-0001-982C-01-ComObjRefId_Dimmwert_A">
+        <Translation AttributeName="FunctionText" Text="8-bit Wert" />
+      </Data>
+      <Data RefId="M-0001-982C-01-ComObjRefId_Nachtbetrieb_A">
+        <Translation AttributeName="FunctionText" Text="Ein / Aus" />
+      </Data>
+      <Data RefId="M-0001-982C-01-ComObjRefId_Schalten_A">
+        <Translation AttributeName="FunctionText" Text="Ein / Aus" />
+      </Data>
+      <Data RefId="M-0001-982C-01-ComObjRefId_Schaltspielgrenzwert_A">
+        <Translation AttributeName="FunctionText" Text="4-byte Wert" />
+      </Data>
+      <Data RefId="M-0001-982C-01-ComObjRefId_SchaltspielgrenzwertÜberschreitung_A">
+        <Translation AttributeName="FunctionText" Text="1 = Ja / 0 = Nein" />
+      </Data>
+      <Data RefId="M-0001-982C-01-ComObjRefId_Schaltspielzahl_A">
+        <Translation AttributeName="FunctionText" Text="4-byte Wert" />
+      </Data>
+      <Data RefId="M-0001-982C-01-ComObjRefId_Sperren_A">
+        <Translation AttributeName="FunctionText" Text="Ein / Aus" />
+      </Data>
+      <Data RefId="M-0001-982C-01-ComObjRefId_Status_Dimmwert_A">
+        <Translation AttributeName="FunctionText" Text="8-bit Wert" />
+      </Data>
+      <Data RefId="M-0001-982C-01-ComObjRefId_Status_Schalten_A">
+        <Translation AttributeName="FunctionText" Text="Ein / Aus" />
+      </Data>
+      <Data RefId="M-0001-982C-01-id_Betriebsart_0">
+        <Translation AttributeName="Text" Text="Normalbetrieb" />
+      </Data>
+      <Data RefId="M-0001-982C-01-id_Betriebsart_1">
+        <Translation AttributeName="Text" Text="Zeitschalterbetrieb 1-stufig" />
+      </Data>
+      <Data RefId="M-0001-982C-01-id_Betriebsart_2">
+        <Translation AttributeName="Text" Text="Zeitschalterbetrieb 2-stufig" />
+      </Data>
+      <Data RefId="M-0001-982C-01-id_Betriebsart_3">
+        <Translation AttributeName="Text" Text="Blinken" />
+      </Data>
+      <Data RefId="M-0001-982C-01-id_Betriebsstundenzählung_0">
+        <Translation AttributeName="Text" Text="Nein" />
+      </Data>
+      <Data RefId="M-0001-982C-01-id_Betriebsstundenzählung_1">
+        <Translation AttributeName="Text" Text="ohne Grenzwertüberwachung" />
+      </Data>
+      <Data RefId="M-0001-982C-01-id_Betriebsstundenzählung_2">
+        <Translation AttributeName="Text" Text="mit Grenzwertüberwachung" />
+      </Data>
+      <Data RefId="M-0001-982C-01-id_Betriebsstundenzählung_3">
+        <Translation AttributeName="Text" Text="mit Grenzwertüberwachung und automatischer Meldung" />
+      </Data>
+      <Data RefId="M-0001-982C-01-id_DPT_NoYes_0">
+        <Translation AttributeName="Text" Text="Nein" />
+      </Data>
+      <Data RefId="M-0001-982C-01-id_DPT_NoYes_1">
+        <Translation AttributeName="Text" Text="Ja" />
+      </Data>
+      <Data RefId="M-0001-982C-01-id_Einschalten_auf_0">
+        <Translation AttributeName="Text" Text="Dimmwert beim Ausschalten" />
+      </Data>
+      <Data RefId="M-0001-982C-01-id_Einschalten_auf_1">
+        <Translation AttributeName="Text" Text="Einschaltwert gemäß Parameter" />
+      </Data>
+      <Data RefId="M-0001-982C-01-id_Einschalten_auf_2">
+        <Translation AttributeName="Text" Text="zuletzt empfangener Dimmwert" />
+      </Data>
+      <Data RefId="M-0001-982C-01-id_Lastanpassung_0">
+        <Translation AttributeName="Text" Text="Automatische Lasterkennung" />
+      </Data>
+      <Data RefId="M-0001-982C-01-id_Lastanpassung_1">
+        <Translation AttributeName="Text" Text="Phasenanschnittbetrieb" />
+      </Data>
+      <Data RefId="M-0001-982C-01-id_Lastanpassung_2">
+        <Translation AttributeName="Text" Text="Phasenabschnittbetrieb" />
+      </Data>
+      <Data RefId="M-0001-982C-01-id_PowerReturnMode_0">
+        <Translation AttributeName="Text" Text="ausschalten" />
+      </Data>
+      <Data RefId="M-0001-982C-01-id_PowerReturnMode_1">
+        <Translation AttributeName="Text" Text="einschalten" />
+      </Data>
+      <Data RefId="M-0001-982C-01-id_PowerReturnMode_3">
+        <Translation AttributeName="Text" Text="einschalten auf &quot;Dimmwert bei Spannungswiederkehr&quot;" />
+      </Data>
+      <Data RefId="M-0001-982C-01-id_PowerReturnMode_4">
+        <Translation AttributeName="Text" Text="wie vor Ausfall" />
+      </Data>
+      <Data RefId="M-0001-982C-01-id_PowerValueMode_0">
+        <Translation AttributeName="Text" Text="ausschalten" />
+      </Data>
+      <Data RefId="M-0001-982C-01-id_PowerValueMode_1">
+        <Translation AttributeName="Text" Text="einschalten auf maximalen Dimmwert" />
+      </Data>
+      <Data RefId="M-0001-982C-01-id_PowerValueMode_2">
+        <Translation AttributeName="Text" Text="keine Aktion" />
+      </Data>
+      <Data RefId="M-0001-982C-01-id_Schalten_über_Dimmwert_0">
+        <Translation AttributeName="Text" Text="nicht möglich" />
+      </Data>
+      <Data RefId="M-0001-982C-01-id_Schalten_über_Dimmwert_1">
+        <Translation AttributeName="Text" Text="Ein bei Dimmwert &gt;=min. Dimmwert" />
+      </Data>
+      <Data RefId="M-0001-982C-01-id_Schalten_über_Dimmwert_2">
+        <Translation AttributeName="Text" Text="Aus bei Dimmwert &lt; min. Dimmwert" />
+      </Data>
+      <Data RefId="M-0001-982C-01-id_Schalten_über_Dimmwert_3">
+        <Translation AttributeName="Text" Text="Ein- und Ausschalten möglich" />
+      </Data>
+      <Data RefId="M-0001-982C-01-id_Schalten_über_Dimmwert_4">
+        <Translation AttributeName="Text" Text="Ein bei Dimmwert &gt; 0% / Aus bei Dimmwert = 0%" />
+      </Data>
+      <Data RefId="M-0001-982C-01-id_Schaltspielzählung_0">
+        <Translation AttributeName="Text" Text="Nein" />
+      </Data>
+      <Data RefId="M-0001-982C-01-id_Schaltspielzählung_1">
+        <Translation AttributeName="Text" Text="ohne Grenzwertüberwachung" />
+      </Data>
+      <Data RefId="M-0001-982C-01-id_Schaltspielzählung_2">
+        <Translation AttributeName="Text" Text="mit Grenzwertüberwachung" />
+      </Data>
+      <Data RefId="M-0001-982C-01-id_Schaltspielzählung_3">
+        <Translation AttributeName="Text" Text="mit Grenzwertüberwachung und automatischer Meldung" />
+      </Data>
+      <Data RefId="M-0001-982C-01-id_Statusobjekt_Sichtbarkeit_0">
+        <Translation AttributeName="Text" Text="senden nur über Leseanforderung" />
+      </Data>
+      <Data RefId="M-0001-982C-01-id_Statusobjekt_Sichtbarkeit_1">
+        <Translation AttributeName="Text" Text="senden bei Statusänderung" />
+      </Data>
+      <Data RefId="M-0001-982C-01-id_Statusobjekt_Sichtbarkeit_2">
+        <Translation AttributeName="Text" Text="Nein" />
+      </Data>
+      <Data RefId="M-0001-982C-01-ParameterBlockID_DimmenA">
+        <Translation AttributeName="Text" Text="A, Dimmen" />
+      </Data>
+      <Data RefId="M-0001-982C-01-ParameterBlockID_FunktionenObjekteA">
+        <Translation AttributeName="Text" Text="A, Funktionen, Objekte" />
+      </Data>
+      <Data RefId="M-0001-982C-01-ParameterBlockID_Module">
+        <Translation AttributeName="Text" Text="Modul Funktionen" />
+      </Data>
+      <Data RefId="M-0001-982C-01-ParameterBlockID_SzenensteuerungA">
+        <Translation AttributeName="Text" Text="A, Szenen" />
+      </Data>
+      <Data RefId="M-0001-982C-01-ParId_AusschaltzeitBlinkenA">
+        <Translation AttributeName="Text" Text="Ausschaltzeit Blinken [1...255 Sekunden]" />
+      </Data>
+      <Data RefId="M-0001-982C-01-ParId_DeleteTeachedInSceneA1">
+        <Translation AttributeName="Text" Text="     eingelernten Szenenwert löschen" />
+      </Data>
+      <Data RefId="M-0001-982C-01-ParId_DeleteTeachedInSceneA2">
+        <Translation AttributeName="Text" Text="     eingelernten Szenenwert löschen" />
+      </Data>
+      <Data RefId="M-0001-982C-01-ParId_DeleteTeachedInSceneA3">
+        <Translation AttributeName="Text" Text="     eingelernten Szenenwert löschen" />
+      </Data>
+      <Data RefId="M-0001-982C-01-ParId_DeleteTeachedInSceneA4">
+        <Translation AttributeName="Text" Text="     eingelernten Szenenwert löschen" />
+      </Data>
+      <Data RefId="M-0001-982C-01-ParId_DeleteTeachedInSceneA5">
+        <Translation AttributeName="Text" Text="     eingelernten Szenenwert löschen" />
+      </Data>
+      <Data RefId="M-0001-982C-01-ParId_DeleteTeachedInSceneA6">
+        <Translation AttributeName="Text" Text="     eingelernten Szenenwert löschen" />
+      </Data>
+      <Data RefId="M-0001-982C-01-ParId_DeleteTeachedInSceneA7">
+        <Translation AttributeName="Text" Text="     eingelernten Szenenwert löschen" />
+      </Data>
+      <Data RefId="M-0001-982C-01-ParId_DeleteTeachedInSceneA8">
+        <Translation AttributeName="Text" Text="     eingelernten Szenenwert löschen" />
+      </Data>
+      <Data RefId="M-0001-982C-01-ParId_Dimmzeit_bei_SzenensteuerungA1">
+        <Translation AttributeName="Text" Text="     Dimmzeit [0…255 Sekunden]" />
+      </Data>
+      <Data RefId="M-0001-982C-01-ParId_Dimmzeit_bei_SzenensteuerungA2">
+        <Translation AttributeName="Text" Text="     Dimmzeit [0…255 Sekunden]" />
+      </Data>
+      <Data RefId="M-0001-982C-01-ParId_Dimmzeit_bei_SzenensteuerungA3">
+        <Translation AttributeName="Text" Text="     Dimmzeit [0…255 Sekunden]" />
+      </Data>
+      <Data RefId="M-0001-982C-01-ParId_Dimmzeit_bei_SzenensteuerungA4">
+        <Translation AttributeName="Text" Text="     Dimmzeit [0…255 Sekunden]" />
+      </Data>
+      <Data RefId="M-0001-982C-01-ParId_Dimmzeit_bei_SzenensteuerungA5">
+        <Translation AttributeName="Text" Text="     Dimmzeit [0…255 Sekunden]" />
+      </Data>
+      <Data RefId="M-0001-982C-01-ParId_Dimmzeit_bei_SzenensteuerungA6">
+        <Translation AttributeName="Text" Text="     Dimmzeit [0…255 Sekunden]" />
+      </Data>
+      <Data RefId="M-0001-982C-01-ParId_Dimmzeit_bei_SzenensteuerungA7">
+        <Translation AttributeName="Text" Text="     Dimmzeit [0…255 Sekunden]" />
+      </Data>
+      <Data RefId="M-0001-982C-01-ParId_Dimmzeit_bei_SzenensteuerungA8">
+        <Translation AttributeName="Text" Text="     Dimmzeit [0…255 Sekunden]" />
+      </Data>
+      <Data RefId="M-0001-982C-01-ParId_DimmzeitDimmenA">
+        <Translation AttributeName="Text" Text="Dimmzeit bei Dimmen heller / dunkler \nvon 0% - 100% [0…255 Sekunden]" />
+      </Data>
+      <Data RefId="M-0001-982C-01-ParId_DimmzeitDimmwertA">
+        <Translation AttributeName="Text" Text="Dimmzeit bei Wertsetzen \nvon 0% - 100% [0…255 Sekunden]" />
+      </Data>
+      <Data RefId="M-0001-982C-01-ParId_DimmzeitSchaltenA">
+        <Translation AttributeName="Text" Text="Dimmzeit bei Schalten Ein / Aus  [0…255 Sekunden]" />
+      </Data>
+      <Data RefId="M-0001-982C-01-ParId_Einschaltdauer1A">
+        <Translation AttributeName="Text" Text="Einschaltdauer 1 [1...255 Minuten]" />
+      </Data>
+      <Data RefId="M-0001-982C-01-ParId_Einschaltdauer2A">
+        <Translation AttributeName="Text" Text="Einschaltdauer 2 [1...255 Minuten]" />
+      </Data>
+      <Data RefId="M-0001-982C-01-ParId_EinschaltzeitBlinkenA">
+        <Translation AttributeName="Text" Text="Einschaltzeit Blinken [1…255 Sekunden]" />
+      </Data>
+      <Data RefId="M-0001-982C-01-ParId_id_8bit_Szenensteuerung">
+        <Translation AttributeName="Text" Text="8 bit Szenensteuerung" />
+      </Data>
+      <Data RefId="M-0001-982C-01-ParId_id_AusschaltverzögerungA">
+        <Translation AttributeName="Text" Text="Ausschaltverzögerung [0…600 Sekunden]" />
+      </Data>
+      <Data RefId="M-0001-982C-01-ParId_id_BetriebsartA">
+        <Translation AttributeName="Text" Text="Betriebsart" />
+      </Data>
+      <Data RefId="M-0001-982C-01-ParId_id_BetriebsstundenzählungA">
+        <Translation AttributeName="Text" Text="Betriebsstundenzähler" />
+      </Data>
+      <Data RefId="M-0001-982C-01-ParId_id_EinschaltdauerNachtbetriebA">
+        <Translation AttributeName="Text" Text="Einschaltdauer Nachtbetrieb [1…255 Minuten]" />
+      </Data>
+      <Data RefId="M-0001-982C-01-ParId_id_Einschalten_aufA">
+        <Translation AttributeName="Text" Text="Einschalten auf" />
+      </Data>
+      <Data RefId="M-0001-982C-01-ParId_id_EinschaltverzögerungA">
+        <Translation AttributeName="Text" Text="Einschaltverzögerung [0…600 Sekunden]" />
+      </Data>
+      <Data RefId="M-0001-982C-01-ParId_id_LastanpassungA">
+        <Translation AttributeName="Text" Text="Lastanpassung: Dimmen gemäß" />
+      </Data>
+      <Data RefId="M-0001-982C-01-ParId_id_Max_DimmwertA">
+        <Translation AttributeName="Text" Text="maximaler Dimmwert [10...100%]" />
+      </Data>
+      <Data RefId="M-0001-982C-01-ParId_id_Min_DimmwertA">
+        <Translation AttributeName="Text" Text="minimaler Dimmwert [1…50%]" />
+      </Data>
+      <Data RefId="M-0001-982C-01-ParId_id_NachtbetriebA">
+        <Translation AttributeName="Text" Text="Nachtbetrieb" />
+      </Data>
+      <Data RefId="M-0001-982C-01-ParId_id_PowerFailureMode">
+        <Translation AttributeName="Text" Text="Verhalten bei KNX Spannungsausfall" />
+      </Data>
+      <Data RefId="M-0001-982C-01-ParId_id_PowerReturnMode">
+        <Translation AttributeName="Text" Text="Verhalten bei KNX Spannungswiederkehr" />
+      </Data>
+      <Data RefId="M-0001-982C-01-ParId_id_PowerReturnValue">
+        <Translation AttributeName="Text" Text="Dimmwert bei Spannungswiederkehr [0...100%]" />
+      </Data>
+      <Data RefId="M-0001-982C-01-ParId_id_RelativeOffEnableA">
+        <Translation AttributeName="Text" Text="Ausschalten über Dimmen" />
+      </Data>
+      <Data RefId="M-0001-982C-01-ParId_id_RelativeOnEnableA">
+        <Translation AttributeName="Text" Text="Einschalten über Dimmen" />
+      </Data>
+      <Data RefId="M-0001-982C-01-ParId_id_RippleControlA">
+        <Translation AttributeName="Text" Text="Kompensation Rundsteuersignale" />
+      </Data>
+      <Data RefId="M-0001-982C-01-ParId_id_Schalten_über_DimmwertA">
+        <Translation AttributeName="Text" Text="Schalten über Dimmwert" />
+      </Data>
+      <Data RefId="M-0001-982C-01-ParId_id_SchaltspielzählungA">
+        <Translation AttributeName="Text" Text="Schaltspielzähler" />
+      </Data>
+      <Data RefId="M-0001-982C-01-ParId_id_SendesperrzeitStatusobjekte">
+        <Translation AttributeName="Text" Text="Sendesperrzeit für Statusobjekte nach \nNetz- / Busspannungswiederkehr [1…60 Sekunden]" />
+      </Data>
+      <Data RefId="M-0001-982C-01-ParId_id_SendeverzögerungStatusobjekte">
+        <Translation AttributeName="Text" Text="Sendeverzögerung zwischen Statusobjekten [0…10 in 1/10 Sekunden]" />
+      </Data>
+      <Data RefId="M-0001-982C-01-ParId_id_SperrObjektA">
+        <Translation AttributeName="Text" Text="Sperrobjekt" />
+      </Data>
+      <Data RefId="M-0001-982C-01-ParId_id_StatusDimmwertA">
+        <Translation AttributeName="Text" Text="Statusobjekt Dimmwert" />
+      </Data>
+      <Data RefId="M-0001-982C-01-ParId_id_StatusDimmwertIdlePeriodA">
+        <Translation AttributeName="Text" Text="     Sendesperrzeit [1…60 Sekunden]" />
+      </Data>
+      <Data RefId="M-0001-982C-01-ParId_id_StatusSchaltenA">
+        <Translation AttributeName="Text" Text="Statusobjekt Schalten" />
+      </Data>
+      <Data RefId="M-0001-982C-01-ParId_id_Warnen_vor_AusschaltenA">
+        <Translation AttributeName="Text" Text="Warnen vor Ausschalten [0…255 Sekunden]" />
+      </Data>
+      <Data RefId="M-0001-982C-01-ParId_nDimmwertEinschaltdauer2A">
+        <Translation AttributeName="Text" Text="Dimmwert während Einschaltdauer 2 [0…100%]" />
+      </Data>
+      <Data RefId="M-0001-982C-01-ParId_ParameterEinschaltwertA">
+        <Translation AttributeName="Text" Text="Einschaltwert [1…100%]" />
+      </Data>
+      <Data RefId="M-0001-982C-01-ParId_Scene_Learning_Mode_Enabled">
+        <Translation AttributeName="Text" Text="8-bit Szenen durch Nutzer einstellbar" />
+      </Data>
+      <Data RefId="M-0001-982C-01-ParId_Scene_PredefinedA1">
+        <Translation AttributeName="Text" Text="     Szenenwert vordefinieren" />
+      </Data>
+      <Data RefId="M-0001-982C-01-ParId_Scene_PredefinedA2">
+        <Translation AttributeName="Text" Text="     Szenenwert vordefinieren" />
+      </Data>
+      <Data RefId="M-0001-982C-01-ParId_Scene_PredefinedA3">
+        <Translation AttributeName="Text" Text="     Szenenwert vordefinieren" />
+      </Data>
+      <Data RefId="M-0001-982C-01-ParId_Scene_PredefinedA4">
+        <Translation AttributeName="Text" Text="     Szenenwert vordefinieren" />
+      </Data>
+      <Data RefId="M-0001-982C-01-ParId_Scene_PredefinedA5">
+        <Translation AttributeName="Text" Text="     Szenenwert vordefinieren" />
+      </Data>
+      <Data RefId="M-0001-982C-01-ParId_Scene_PredefinedA6">
+        <Translation AttributeName="Text" Text="     Szenenwert vordefinieren" />
+      </Data>
+      <Data RefId="M-0001-982C-01-ParId_Scene_PredefinedA7">
+        <Translation AttributeName="Text" Text="     Szenenwert vordefinieren" />
+      </Data>
+      <Data RefId="M-0001-982C-01-ParId_Scene_PredefinedA8">
+        <Translation AttributeName="Text" Text="     Szenenwert vordefinieren" />
+      </Data>
+      <Data RefId="M-0001-982C-01-ParId_SceneInfoA1">
+        <Translation AttributeName="Text" Text="Zuordnung 1 zu Szene [1…64] (0=nicht verwendet)" />
+      </Data>
+      <Data RefId="M-0001-982C-01-ParId_SceneInfoA2">
+        <Translation AttributeName="Text" Text="Zuordnung 2 zu Szene [1…64] (0=nicht verwendet)" />
+      </Data>
+      <Data RefId="M-0001-982C-01-ParId_SceneInfoA3">
+        <Translation AttributeName="Text" Text="Zuordnung 3 zu Szene [1…64] (0=nicht verwendet)" />
+      </Data>
+      <Data RefId="M-0001-982C-01-ParId_SceneInfoA4">
+        <Translation AttributeName="Text" Text="Zuordnung 4 zu Szene [1…64] (0=nicht verwendet)" />
+      </Data>
+      <Data RefId="M-0001-982C-01-ParId_SceneInfoA5">
+        <Translation AttributeName="Text" Text="Zuordnung 5 zu Szene [1…64] (0=nicht verwendet)" />
+      </Data>
+      <Data RefId="M-0001-982C-01-ParId_SceneInfoA6">
+        <Translation AttributeName="Text" Text="Zuordnung 6 zu Szene [1…64] (0=nicht verwendet)" />
+      </Data>
+      <Data RefId="M-0001-982C-01-ParId_SceneInfoA7">
+        <Translation AttributeName="Text" Text="Zuordnung 7 zu Szene [1…64] (0=nicht verwendet)" />
+      </Data>
+      <Data RefId="M-0001-982C-01-ParId_SceneInfoA8">
+        <Translation AttributeName="Text" Text="Zuordnung 8 zu Szene [1…64] (0=nicht verwendet)" />
+      </Data>
+      <Data RefId="M-0001-982C-01-ParId_SceneValueA1">
+        <Translation AttributeName="Text" Text="     Dimmwert [0…100%]" />
+      </Data>
+      <Data RefId="M-0001-982C-01-ParId_SceneValueA2">
+        <Translation AttributeName="Text" Text="     Dimmwert [0…100%]" />
+      </Data>
+      <Data RefId="M-0001-982C-01-ParId_SceneValueA3">
+        <Translation AttributeName="Text" Text="     Dimmwert [0…100%]" />
+      </Data>
+      <Data RefId="M-0001-982C-01-ParId_SceneValueA4">
+        <Translation AttributeName="Text" Text="     Dimmwert [0…100%]" />
+      </Data>
+      <Data RefId="M-0001-982C-01-ParId_SceneValueA5">
+        <Translation AttributeName="Text" Text="     Dimmwert [0…100%]" />
+      </Data>
+      <Data RefId="M-0001-982C-01-ParId_SceneValueA6">
+        <Translation AttributeName="Text" Text="     Dimmwert [0…100%]" />
+      </Data>
+      <Data RefId="M-0001-982C-01-ParId_SceneValueA7">
+        <Translation AttributeName="Text" Text="     Dimmwert [0…100%]" />
+      </Data>
+      <Data RefId="M-0001-982C-01-ParId_SceneValueA8">
+        <Translation AttributeName="Text" Text="     Dimmwert [0…100%]" />
+      </Data>
+      <PlugInData DefaultText="AboutCopyRight" Text="(c) 2007  Siemens AG Regensburg" />
+      <PlugInData DefaultText="AboutLink" Text="http://www.siemens.com/gamma" />
+      <PlugInData DefaultText="ApplicationNotCompatible" Text="Inkompatibles Programm geladen" />
+      <PlugInData DefaultText="ApplicationProgramPropNotReadable" Text="Das Applikations Property 203 konnte nicht gelesen werden" />
+      <PlugInData DefaultText="Attention" Text="Achtung" />
+      <PlugInData DefaultText="Cancel" Text="Abbrechen" />
+      <PlugInData DefaultText="Cancel Button" Text="A&amp;bbrechen" />
+      <PlugInData DefaultText="ChecksumError" Text="Die Checksumme der Datei ist ungültig!" />
+      <PlugInData DefaultText="ChecksumMissing" Text="Die Checksumme der Datei konnte nicht gefunden werden!" />
+      <PlugInData DefaultText="Close Menu" Text="&amp;Schließen" />
+      <PlugInData DefaultText="Count" Text="Anzahl" />
+      <PlugInData DefaultText="CreatePagesFailed" Text="Create pages fehlgeschlagen" />
+      <PlugInData DefaultText="Error" Text="Fehler" />
+      <PlugInData DefaultText="ErrorConnectingGroupAddressToComObject" Text="Kommunikationsobjekt(e) konnte(n) nicht mit einer existierenden Gruppenadresse verbunden werden,&#xD;&#xA;weil diese schon mit einem inkompatiblen Objekt verbunden ist" />
+      <PlugInData DefaultText="ErrorFindCreateGroupAddress" Text="Fehler beim Gruppenadressen suchen/erzeugen" />
+      <PlugInData DefaultText="ErrorFindGroupAddress" Text="Fehler beim Gruppenadressen suchen" />
+      <PlugInData DefaultText="ErrorLoadingTables" Text="Fehler beim Laden der Tabellen" />
+      <PlugInData DefaultText="ErrorSetAssociation" Text="Fehler beim Verbinden des Objekts" />
+      <PlugInData DefaultText="expected" Text="erwartet" />
+      <PlugInData DefaultText="Export Menu" Text="&amp;Export" />
+      <PlugInData DefaultText="ExportFailed" Text="Der Daten-Export ist fehlgeschlagen" />
+      <PlugInData DefaultText="ExportGroupAddressFailed" Text="Der Export der Gruppenadressen ist fehlgeschlagen" />
+      <PlugInData DefaultText="File Menu" Text="&amp;Datei" />
+      <PlugInData DefaultText="FileNotFound" Text="Datei nicht gefunden" />
+      <PlugInData DefaultText="found" Text="gefunden" />
+      <PlugInData DefaultText="GetComObjectDataFailed" Text="GetComObject fehlgeschlagen" />
+      <PlugInData DefaultText="GetComObjectGroupAddressStringFailed" Text="Holen der Gruppenadressen für ein Kommunikationsobjekt fehlgeschlagen" />
+      <PlugInData DefaultText="HardwareTypeNotCompatible" Text="Inkompatibles Gerät" />
+      <PlugInData DefaultText="Help Menu" Text="&amp;Hilfe" />
+      <PlugInData DefaultText="ID" Text="ID" />
+      <PlugInData DefaultText="Import Menu" Text="&amp;Import" />
+      <PlugInData DefaultText="ImportFailed" Text="Der Daten-Import ist fehlgeschlagen" />
+      <PlugInData DefaultText="ImportFileNotFound" Text="Die Import-Datei wurde nicht gefunden" />
+      <PlugInData DefaultText="Info Menu" Text="&amp;Info" />
+      <PlugInData DefaultText="LastModif" Text="Datum" />
+      <PlugInData DefaultText="LengthOfApplicationProgramNotFound" Text="Länge des Applikationsprogramms wurde im der XML- Datei nicht gefunden" />
+      <PlugInData DefaultText="Loading..." Text="Lade..." />
+      <PlugInData DefaultText="Name" Text="Name" />
+      <PlugInData DefaultText="No" Text="Nein" />
+      <PlugInData DefaultText="OK" Text="OK" />
+      <PlugInData DefaultText="OK Button" Text="&amp;OK" />
+      <PlugInData DefaultText="Open last used" Text="Zu&amp;letzt geöffnet" />
+      <PlugInData DefaultText="Open Menu" Text="&amp;Öffnen" />
+      <PlugInData DefaultText="Parameter Dialog Title" Text="Parameter Fenster" />
+      <PlugInData DefaultText="ParameterIdNotValid" Text="Parameter ID nicht gültig" />
+      <PlugInData DefaultText="Preview Menu" Text="&amp;Vorschau" />
+      <PlugInData DefaultText="Print Menu" Text="&amp;Drucken" />
+      <PlugInData DefaultText="PrintApplProgramText" Text="Applikationsprogramm" />
+      <PlugInData DefaultText="PrintCommObjectHeader" Text="Kommunikationsobjekte" />
+      <PlugInData DefaultText="PrintDeviceInformation" Text="Geräte-Info vom Projekt" />
+      <PlugInData DefaultText="Printer Menu" Text="Druck&amp;er" />
+      <PlugInData DefaultText="PrintPage" Text="Seite" />
+      <PlugInData DefaultText="PrintPhysAddrText" Text="Physikalische Adresse" />
+      <PlugInData DefaultText="Question" Text="Frage" />
+      <PlugInData DefaultText="QuestionAllValuesToStandard" Text="Alle Werte auf Standardwert zurücksetzten?" />
+      <PlugInData DefaultText="QuestionImportGroupAddresses" Text="Auch die Gruppenadressen importieren?" />
+      <PlugInData DefaultText="QuestionOverwriteAllValues" Text="Alle Werte mit importierten Werte überschreiben?" />
+      <PlugInData DefaultText="QuestionStore" Text="Speichern?" />
+      <PlugInData DefaultText="QuestionStoreChanges" Text="Änderungen müssen zuerst gespeichert werden" />
+      <PlugInData DefaultText="Reload Menu" Text="&amp;Neu laden" />
+      <PlugInData DefaultText="SavingDataFailed" Text="Sichern der Daten fehlgeschlagen" />
+      <PlugInData DefaultText="Standard Menu" Text="&amp;Standard" />
+      <PlugInData DefaultText="Store Menu" Text="&amp;Speichern" />
+      <PlugInData DefaultText="UnexpectedDownloadState" Text="Unerwarteter Download Status" />
+      <PlugInData DefaultText="Value" Text="Wert" />
+      <PlugInData DefaultText="ValueBiggerAsMax" Text="Wert ist größer als Maximalwert" />
+      <PlugInData DefaultText="ValueNumberParameterNotValid" Text="Der Wert eines Zählwert-Parameters ist ungültig" />
+      <PlugInData DefaultText="ValueSetToMax" Text="Wert wird auf Maximalwert gesetzt" />
+      <PlugInData DefaultText="ValueSetToMin" Text="Wert wird auf Minimalwert gesetzt" />
+      <PlugInData DefaultText="ValueSmallerAsMin" Text="Wert ist kleiner als Minimalwert" />
+      <PlugInData DefaultText="ValueTimeParameterNotValid" Text="Der Wert eines Zeit-Parameters ist ungültig" />
+      <PlugInData DefaultText="ValueToBig" Text="Wert zu groß" />
+      <PlugInData DefaultText="Version" Text="Version" />
+      <PlugInData DefaultText="WrongComObjDataFoundInImportFile" Text="Falsche Kommunikationsobjekt-Daten in der Import-Datei gefunden" />
+      <PlugInData DefaultText="WrongDataInImportFile" Text="Fehlerhafte Daten in der Import-Datei gefunden" />
+      <PlugInData DefaultText="WrongDeviceTypeInImportFile" Text="Falscher Device-Typ in der Import-Datei" />
+      <PlugInData DefaultText="WrongManufacturerDataInImportFile" Text="Falscher Hersteller in der Import-Datei" />
+      <PlugInData DefaultText="WrongVersionInImportFile" Text="Falsche Version in der Import-Datei" />
+      <PlugInData DefaultText="XmlExportStoreFile" Text="XML Export - Datei speichern" />
+      <PlugInData DefaultText="XmlFileFilter" Text="XML Dateien (*.xml)|*.xml" />
+      <PlugInData DefaultText="XmlImportStoreFile" Text="XML Import - Datei laden" />
+      <PlugInData DefaultText="Yes" Text="Ja" />
+    </Language>
+  </Languages>
+</ApplicationProgram><!--H01(23e4b18c)-->
