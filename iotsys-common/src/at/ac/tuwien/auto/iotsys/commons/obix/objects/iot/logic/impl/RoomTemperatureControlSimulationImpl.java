@@ -206,6 +206,7 @@ public class RoomTemperatureControlSimulationImpl extends Obj implements RoomTem
 				//controlValue.set(0);
 				controllerState = ControllerState.INACTIVE;
 			}
+			
 		}
 		else{
 			System.out.println("not enabled");

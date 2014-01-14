@@ -17,9 +17,9 @@ import at.ac.tuwien.auto.iotsys.obix.observer.Subject;
 
 public class HVACSimulationSuitcaseImpl extends Obj implements HVACSimulationSuitcase {
 	
-	private final String LINK_OUTSIDE_TEMP = "/BACnetIoTSuitcase/2098177/AnalogInput1";
+	private final String LINK_OUTSIDE_TEMP = "BACnetIoTSuitcase/2098177/AnalogInput2/value";
 	private final String LINK_WINDOW_CLOSED ="/EnOcean/window/value";
-	private final String LINK_STANDBY_MODE_ACTIVE="";
+	private final String LINK_STANDBY_MODE_ACTIVE="/networks/siemens_koffer_iotsys/entities/fcu_operator_panel_office_up_237e_delta_i_system/1/datapoints/standby_mode/value";
 	private final String LINK_COMFORT_MODE_ACTIVE="";
 	private final String LINK_DOOR_OPENER_ACTIVE="";
 	protected Str season = new Str("winter");
@@ -239,7 +239,7 @@ public class HVACSimulationSuitcaseImpl extends Obj implements HVACSimulationSui
 					@Override
 					public Subject getSubject() {
 					return null;
-					}		
+					}		 
 			});
 		}
 		
@@ -620,6 +620,9 @@ class SimSuitcaseThread extends Thread{
 					log.finest("HVAC simulation temp is now (after cooling): " + hvacSimulation.getTemp());
 					hvacSimulation.decreaseTemp(hvacSimulation.getCoolingImpact());
 				}
+		
+				
+				
 			} catch (InterruptedException e) {			
 				e.printStackTrace();
 			}
