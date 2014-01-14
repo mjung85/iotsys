@@ -136,7 +136,7 @@
     
     <connector>
       <name>EnOcean</name>
-      <enabled>true</enabled>
+      <enabled>false</enabled>
       <serialPort>COM6</serialPort>
       <device>
         <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.enocean.WindowSensorImplEnocean
@@ -914,7 +914,7 @@
   <wmbus>
     <connector>
       <name>W-MBus Smart Meter Linux</name>
-      <enabled>true</enabled>
+      <enabled>false</enabled>
       <serialPort>/dev/ttyUSB0</serialPort>
       <device>
         <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.wmbus.SmartMeterImplWMBus
