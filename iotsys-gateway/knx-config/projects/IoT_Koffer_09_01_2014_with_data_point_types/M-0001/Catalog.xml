@@ -1,0 +1,321 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<KNX xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" CreatedBy="ETS4" ToolVersion="ETS 4.1.5 (Build 3246)" xmlns="http://knx.org/xml/project/11">
+  <ManufacturerData>
+    <Manufacturer RefId="M-0001">
+      <Catalog>
+        <CatalogSection Id="M-0001_CS-DI" Name="Display" Number="DI" VisibleDescription="_Display.vd1" DefaultLanguage="en" NonRegRelevantDataVersion="0">
+          <CatalogSection Id="M-0001_CS-DI-DU" Name="Display units" Number="DU" VisibleDescription="" DefaultLanguage="en" NonRegRelevantDataVersion="0">
+            <CatalogSection Id="M-0001_CS-DI-DU-UP" Name="Wall Mounted Devices" Number="UP" VisibleDescription="" DefaultLanguage="en" NonRegRelevantDataVersion="0">
+              <CatalogSection Id="M-0001_CS-DI-DU-UP-5WG1.20587.2D2AB.5F1" Name="UP 587/01" Number="5WG1 587-2AB_1" VisibleDescription="UP587_01.VD2" DefaultLanguage="en" NonRegRelevantDataVersion="0">
+                <CatalogItem Id="M-0001_H-hp.5F00209-1_HP-9089-10-FC09_CI-5WG1.20587.202AB.5F1-1" Name="Text display UP 587/01" Number="1" ProductRefId="M-0001_H-hp.5F00209-1_P-5WG1.20587.202AB.5F1" Hardware2ProgramRefId="M-0001_H-hp.5F00209-1_HP-9089-10-FC09" DefaultLanguage="en" NonRegRelevantDataVersion="0" />
+              </CatalogSection>
+            </CatalogSection>
+          </CatalogSection>
+        </CatalogSection>
+        <CatalogSection Id="M-0001_CS-HE" Name="Heating, Air conditioning, Ventilation" Number="HE" VisibleDescription="_Heating.vd1" DefaultLanguage="en" NonRegRelevantDataVersion="0">
+          <CatalogSection Id="M-0001_CS-HE-FCB" Name="FanCoilUnit Control Elements" Number="FCB" VisibleDescription="" DefaultLanguage="en-US" NonRegRelevantDataVersion="0">
+            <CatalogSection Id="M-0001_CS-HE-FCB-B" Name="Office" Number="B" VisibleDescription="UP25x_EB.VD2" DefaultLanguage="en-US" NonRegRelevantDataVersion="0">
+              <CatalogItem Id="M-0001_H-hp.5F00197-1_HP-8025-01-C29E_CI-5WG1.20237.2D2EB.5F1-1" Name="FCU Operator Panel Office UP 237E DELTA i-system" Number="1" ProductRefId="M-0001_H-hp.5F00197-1_P-5WG1.20237.2D2EB.5F1" Hardware2ProgramRefId="M-0001_H-hp.5F00197-1_HP-8025-01-C29E" DefaultLanguage="en-US" NonRegRelevantDataVersion="0" />
+            </CatalogSection>
+          </CatalogSection>
+        </CatalogSection>
+        <CatalogSection Id="M-0001_CS-IL" Name="Lighting" Number="IL" VisibleDescription="_Lightin.vd1" DefaultLanguage="en-US" NonRegRelevantDataVersion="0">
+          <CatalogSection Id="M-0001_CS-IL-DM" Name="Dimmer" Number="DM" VisibleDescription="" DefaultLanguage="en-US" NonRegRelevantDataVersion="0">
+            <CatalogSection Id="M-0001_CS-IL-DM-UP" Name="Wall Mounted Devices" Number="UP" VisibleDescription="" DefaultLanguage="en-US" NonRegRelevantDataVersion="0">
+              <CatalogSection Id="M-0001_CS-IL-DM-UP-5WG1.20525.2D2AB31" Name="UP 525/_3" Number="5WG1 525-2AB31" VisibleDescription="UP525_31.VD2" DefaultLanguage="en-US" NonRegRelevantDataVersion="0">
+                <CatalogItem Id="M-0001_H-hp.5F00271-1_HP-982C-01-F5C9_CI-5WG1.20525.2D2AB03-1" Name="Universal dimmer UP 525/03" Number="1" VisibleDescription="Dimmer, 1 x 250VA, AC 230V 50/60Hz" ProductRefId="M-0001_H-hp.5F00271-1_P-5WG1.20525.2D2AB03" Hardware2ProgramRefId="M-0001_H-hp.5F00271-1_HP-982C-01-F5C9" DefaultLanguage="en-US" NonRegRelevantDataVersion="0" />
+              </CatalogSection>
+            </CatalogSection>
+          </CatalogSection>
+        </CatalogSection>
+        <CatalogSection Id="M-0001_CS-PB" Name="Push button" Number="PB" VisibleDescription="_Pushbut.vd1" DefaultLanguage="en" NonRegRelevantDataVersion="0">
+          <CatalogSection Id="M-0001_CS-PB-1.2E.2E.2E4" Name="Push button, 1 ... 4 fold" Number="1...4" VisibleDescription="" DefaultLanguage="en-US" NonRegRelevantDataVersion="0">
+            <CatalogSection Id="M-0001_CS-PB-1.2E.2E.2E4-UP" Name="Wall Mounted Devices" Number="UP" VisibleDescription="" DefaultLanguage="en-US" NonRegRelevantDataVersion="0">
+              <CatalogItem Id="M-0001_H-hp.5F00264-1_HP-9093-01-EFC1_CI-5WG1.202xx.2D2AB.5F.5F-1" Name="BTM Wall Switch UP22x / UP24x / UP28x" Number="1" ProductRefId="M-0001_H-hp.5F00264-1_P-5WG1.202xx.2D2AB.5F.5F" Hardware2ProgramRefId="M-0001_H-hp.5F00264-1_HP-9093-01-EFC1" DefaultLanguage="en-US" NonRegRelevantDataVersion="0" />
+            </CatalogSection>
+          </CatalogSection>
+        </CatalogSection>
+        <CatalogSection Id="M-0001_CS-SY" Name="System devices" Number="SY" VisibleDescription="_Sys_Dev.vd1" DefaultLanguage="en-US" NonRegRelevantDataVersion="0">
+          <CatalogSection Id="M-0001_CS-SY-ip" Name="IP-Router" Number="ip" VisibleDescription="N146.VD1" DefaultLanguage="en-US" NonRegRelevantDataVersion="0">
+            <CatalogItem Id="M-0001_H-hp.5F00156-1_HP-0010-02-3D95_CI-5WG1.20146.2D1AB02-1" Name="IP-Router N 146/02" Number="1" VisibleDescription="IP-Router N 146/02" ProductRefId="M-0001_H-hp.5F00156-1_P-5WG1.20146.2D1AB02" Hardware2ProgramRefId="M-0001_H-hp.5F00156-1_HP-0010-02-3D95" DefaultLanguage="en-US" NonRegRelevantDataVersion="0" />
+          </CatalogSection>
+        </CatalogSection>
+      </Catalog>
+      <Languages>
+        <Language Identifier="de-DE">
+          <TranslationUnit RefId="M-0001_CS-DI" Version="0">
+            <TranslationElement RefId="M-0001_CS-DI">
+              <Translation AttributeName="Name" Text="Anzeige" />
+              <Translation AttributeName="VisibleDescription" Text="_anzeige.vd2" />
+            </TranslationElement>
+          </TranslationUnit>
+          <TranslationUnit RefId="M-0001_CS-DI-DU" Version="0">
+            <TranslationElement RefId="M-0001_CS-DI-DU">
+              <Translation AttributeName="Name" Text="Anzeigeeinheiten" />
+            </TranslationElement>
+          </TranslationUnit>
+          <TranslationUnit RefId="M-0001_CS-DI-DU-UP" Version="0">
+            <TranslationElement RefId="M-0001_CS-DI-DU-UP">
+              <Translation AttributeName="Name" Text="UP-Geräte" />
+            </TranslationElement>
+          </TranslationUnit>
+          <TranslationUnit RefId="M-0001_CS-DI-DU-UP-5WG1.20587.2D2AB.5F1" Version="0">
+            <TranslationElement RefId="M-0001_CS-DI-DU-UP-5WG1.20587.2D2AB.5F1">
+              <Translation AttributeName="Name" Text="UP 587/01" />
+              <Translation AttributeName="VisibleDescription" Text="UP587_01.VD2" />
+            </TranslationElement>
+          </TranslationUnit>
+          <TranslationUnit RefId="M-0001_CS-HE" Version="0">
+            <TranslationElement RefId="M-0001_CS-HE">
+              <Translation AttributeName="Name" Text="Heizung, Klima, Lüftung" />
+              <Translation AttributeName="VisibleDescription" Text="_HEIZUNG.VD2" />
+            </TranslationElement>
+          </TranslationUnit>
+          <TranslationUnit RefId="M-0001_CS-HE-FCB" Version="0">
+            <TranslationElement RefId="M-0001_CS-HE-FCB">
+              <Translation AttributeName="Name" Text="FanCoilUnit Bediengeräte" />
+            </TranslationElement>
+          </TranslationUnit>
+          <TranslationUnit RefId="M-0001_CS-HE-FCB-B" Version="0">
+            <TranslationElement RefId="M-0001_CS-HE-FCB-B">
+              <Translation AttributeName="Name" Text="Büro" />
+              <Translation AttributeName="VisibleDescription" Text="UP25x_EB.VD2" />
+            </TranslationElement>
+          </TranslationUnit>
+          <TranslationUnit RefId="M-0001_CS-IL" Version="0">
+            <TranslationElement RefId="M-0001_CS-IL">
+              <Translation AttributeName="Name" Text="Beleuchtung" />
+              <Translation AttributeName="VisibleDescription" Text="_BELEUCH.VD2" />
+            </TranslationElement>
+          </TranslationUnit>
+          <TranslationUnit RefId="M-0001_CS-IL-DM" Version="0">
+            <TranslationElement RefId="M-0001_CS-IL-DM">
+              <Translation AttributeName="Name" Text="Dimmer" />
+            </TranslationElement>
+          </TranslationUnit>
+          <TranslationUnit RefId="M-0001_CS-IL-DM-UP" Version="0">
+            <TranslationElement RefId="M-0001_CS-IL-DM-UP">
+              <Translation AttributeName="Name" Text="UP-Geräte" />
+            </TranslationElement>
+          </TranslationUnit>
+          <TranslationUnit RefId="M-0001_CS-IL-DM-UP-5WG1.20525.2D2AB31" Version="0">
+            <TranslationElement RefId="M-0001_CS-IL-DM-UP-5WG1.20525.2D2AB31">
+              <Translation AttributeName="Name" Text="UP 525/_3" />
+              <Translation AttributeName="VisibleDescription" Text="UP525_31.VD2" />
+            </TranslationElement>
+          </TranslationUnit>
+          <TranslationUnit RefId="M-0001_CS-PB" Version="0">
+            <TranslationElement RefId="M-0001_CS-PB">
+              <Translation AttributeName="Name" Text="Taster" />
+              <Translation AttributeName="VisibleDescription" Text="_TASTER.VD2" />
+            </TranslationElement>
+          </TranslationUnit>
+          <TranslationUnit RefId="M-0001_CS-PB-1.2E.2E.2E4" Version="0">
+            <TranslationElement RefId="M-0001_CS-PB-1.2E.2E.2E4">
+              <Translation AttributeName="Name" Text="Taster 1 ... 4 fach" />
+            </TranslationElement>
+          </TranslationUnit>
+          <TranslationUnit RefId="M-0001_CS-PB-1.2E.2E.2E4-UP" Version="0">
+            <TranslationElement RefId="M-0001_CS-PB-1.2E.2E.2E4-UP">
+              <Translation AttributeName="Name" Text="UP-Geräte" />
+            </TranslationElement>
+          </TranslationUnit>
+          <TranslationUnit RefId="M-0001_CS-SY" Version="0">
+            <TranslationElement RefId="M-0001_CS-SY">
+              <Translation AttributeName="Name" Text="Systemgeräte" />
+              <Translation AttributeName="VisibleDescription" Text="_SYS_GER.VD2" />
+            </TranslationElement>
+          </TranslationUnit>
+          <TranslationUnit RefId="M-0001_CS-SY-ip" Version="0">
+            <TranslationElement RefId="M-0001_CS-SY-ip">
+              <Translation AttributeName="Name" Text="IP-Router" />
+              <Translation AttributeName="VisibleDescription" Text="N146.VD2" />
+            </TranslationElement>
+          </TranslationUnit>
+          <TranslationUnit RefId="M-0001_H-hp.5F00156-1_HP-0010-02-3D95_CI-5WG1.20146.2D1AB02-1" Version="0">
+            <TranslationElement RefId="M-0001_H-hp.5F00156-1_HP-0010-02-3D95_CI-5WG1.20146.2D1AB02-1">
+              <Translation AttributeName="Name" Text="IP-Router N 146/02" />
+              <Translation AttributeName="VisibleDescription" Text="IP-Router N 146/02" />
+            </TranslationElement>
+          </TranslationUnit>
+          <TranslationUnit RefId="M-0001_H-hp.5F00197-1_HP-8025-01-C29E_CI-5WG1.20237.2D2EB.5F1-1" Version="0">
+            <TranslationElement RefId="M-0001_H-hp.5F00197-1_HP-8025-01-C29E_CI-5WG1.20237.2D2EB.5F1-1">
+              <Translation AttributeName="Name" Text="Bediengerät Büro UP 237E DELTA i-system" />
+            </TranslationElement>
+          </TranslationUnit>
+          <TranslationUnit RefId="M-0001_H-hp.5F00209-1_HP-9089-10-FC09_CI-5WG1.20587.202AB.5F1-1" Version="0">
+            <TranslationElement RefId="M-0001_H-hp.5F00209-1_HP-9089-10-FC09_CI-5WG1.20587.202AB.5F1-1">
+              <Translation AttributeName="Name" Text="Textdisplay DELTA i-system UP 587/01" />
+            </TranslationElement>
+          </TranslationUnit>
+          <TranslationUnit RefId="M-0001_H-hp.5F00264-1_HP-9093-01-EFC1_CI-5WG1.202xx.2D2AB.5F.5F-1" Version="0">
+            <TranslationElement RefId="M-0001_H-hp.5F00264-1_HP-9093-01-EFC1_CI-5WG1.202xx.2D2AB.5F.5F-1">
+              <Translation AttributeName="Name" Text="BTM-Taster UP22x / UP24x / UP28x" />
+            </TranslationElement>
+          </TranslationUnit>
+          <TranslationUnit RefId="M-0001_H-hp.5F00271-1_HP-982C-01-F5C9_CI-5WG1.20525.2D2AB03-1" Version="0">
+            <TranslationElement RefId="M-0001_H-hp.5F00271-1_HP-982C-01-F5C9_CI-5WG1.20525.2D2AB03-1">
+              <Translation AttributeName="Name" Text="Universaldimmer UP 525/03" />
+              <Translation AttributeName="VisibleDescription" Text="Dimmer, 1 x 250VA, AC 230V 50/60Hz" />
+            </TranslationElement>
+          </TranslationUnit>
+        </Language>
+        <Language Identifier="en-US">
+          <TranslationUnit RefId="M-0001_CS-DI" Version="0">
+            <TranslationElement RefId="M-0001_CS-DI">
+              <Translation AttributeName="Name" Text="Display" />
+              <Translation AttributeName="VisibleDescription" Text="_Display.vd1" />
+            </TranslationElement>
+          </TranslationUnit>
+          <TranslationUnit RefId="M-0001_CS-DI-DU" Version="0">
+            <TranslationElement RefId="M-0001_CS-DI-DU">
+              <Translation AttributeName="Name" Text="Display units" />
+            </TranslationElement>
+          </TranslationUnit>
+          <TranslationUnit RefId="M-0001_CS-DI-DU-UP" Version="0">
+            <TranslationElement RefId="M-0001_CS-DI-DU-UP">
+              <Translation AttributeName="Name" Text="Wall Mounted Devices" />
+            </TranslationElement>
+          </TranslationUnit>
+          <TranslationUnit RefId="M-0001_CS-DI-DU-UP-5WG1.20587.2D2AB.5F1" Version="0">
+            <TranslationElement RefId="M-0001_CS-DI-DU-UP-5WG1.20587.2D2AB.5F1">
+              <Translation AttributeName="Name" Text="UP 587/01" />
+              <Translation AttributeName="VisibleDescription" Text="UP587_01.VD2" />
+            </TranslationElement>
+          </TranslationUnit>
+          <TranslationUnit RefId="M-0001_CS-HE" Version="0">
+            <TranslationElement RefId="M-0001_CS-HE">
+              <Translation AttributeName="Name" Text="Heating, Air conditioning, Ventilation" />
+              <Translation AttributeName="VisibleDescription" Text="_Heating.vd1" />
+            </TranslationElement>
+          </TranslationUnit>
+          <TranslationUnit RefId="M-0001_CS-HE-FCB" Version="0">
+            <TranslationElement RefId="M-0001_CS-HE-FCB">
+              <Translation AttributeName="Name" Text="FanCoilUnit Control Elements" />
+            </TranslationElement>
+          </TranslationUnit>
+          <TranslationUnit RefId="M-0001_CS-HE-FCB-B" Version="0">
+            <TranslationElement RefId="M-0001_CS-HE-FCB-B">
+              <Translation AttributeName="Name" Text="Office" />
+            </TranslationElement>
+          </TranslationUnit>
+          <TranslationUnit RefId="M-0001_CS-IL" Version="0">
+            <TranslationElement RefId="M-0001_CS-IL">
+              <Translation AttributeName="Name" Text="Lighting" />
+              <Translation AttributeName="VisibleDescription" Text="_Lightin.vd1" />
+            </TranslationElement>
+          </TranslationUnit>
+          <TranslationUnit RefId="M-0001_CS-IL-DM" Version="0">
+            <TranslationElement RefId="M-0001_CS-IL-DM">
+              <Translation AttributeName="Name" Text="Dimmer" />
+            </TranslationElement>
+          </TranslationUnit>
+          <TranslationUnit RefId="M-0001_CS-IL-DM-UP" Version="0">
+            <TranslationElement RefId="M-0001_CS-IL-DM-UP">
+              <Translation AttributeName="Name" Text="Wall Mounted Devices" />
+            </TranslationElement>
+          </TranslationUnit>
+          <TranslationUnit RefId="M-0001_CS-IL-DM-UP-5WG1.20525.2D2AB31" Version="0">
+            <TranslationElement RefId="M-0001_CS-IL-DM-UP-5WG1.20525.2D2AB31">
+              <Translation AttributeName="Name" Text="UP 525/31" />
+              <Translation AttributeName="VisibleDescription" Text="up525_31.vd2" />
+            </TranslationElement>
+          </TranslationUnit>
+          <TranslationUnit RefId="M-0001_CS-PB" Version="0">
+            <TranslationElement RefId="M-0001_CS-PB">
+              <Translation AttributeName="Name" Text="Push button" />
+              <Translation AttributeName="VisibleDescription" Text="_Pushbut.vd1" />
+            </TranslationElement>
+          </TranslationUnit>
+          <TranslationUnit RefId="M-0001_CS-PB-1.2E.2E.2E4" Version="0">
+            <TranslationElement RefId="M-0001_CS-PB-1.2E.2E.2E4">
+              <Translation AttributeName="Name" Text="Push button, 1 ... 4 fold" />
+            </TranslationElement>
+          </TranslationUnit>
+          <TranslationUnit RefId="M-0001_CS-PB-1.2E.2E.2E4-UP" Version="0">
+            <TranslationElement RefId="M-0001_CS-PB-1.2E.2E.2E4-UP">
+              <Translation AttributeName="Name" Text="Wall Mounted Devices" />
+            </TranslationElement>
+          </TranslationUnit>
+          <TranslationUnit RefId="M-0001_CS-SY" Version="0">
+            <TranslationElement RefId="M-0001_CS-SY">
+              <Translation AttributeName="Name" Text="System devices" />
+              <Translation AttributeName="VisibleDescription" Text="_Sys_Dev.vd1" />
+            </TranslationElement>
+          </TranslationUnit>
+          <TranslationUnit RefId="M-0001_CS-SY-ip" Version="0">
+            <TranslationElement RefId="M-0001_CS-SY-ip">
+              <Translation AttributeName="Name" Text="IP-Router" />
+              <Translation AttributeName="VisibleDescription" Text="N146.VD1" />
+            </TranslationElement>
+          </TranslationUnit>
+          <TranslationUnit RefId="M-0001_H-hp.5F00156-1_HP-0010-02-3D95_CI-5WG1.20146.2D1AB02-1" Version="0">
+            <TranslationElement RefId="M-0001_H-hp.5F00156-1_HP-0010-02-3D95_CI-5WG1.20146.2D1AB02-1">
+              <Translation AttributeName="Name" Text="IP-Router N 146/02" />
+              <Translation AttributeName="VisibleDescription" Text="IP-Router N 146/02" />
+            </TranslationElement>
+          </TranslationUnit>
+          <TranslationUnit RefId="M-0001_H-hp.5F00197-1_HP-8025-01-C29E_CI-5WG1.20237.2D2EB.5F1-1" Version="0">
+            <TranslationElement RefId="M-0001_H-hp.5F00197-1_HP-8025-01-C29E_CI-5WG1.20237.2D2EB.5F1-1">
+              <Translation AttributeName="Name" Text="FCU Operator Panel Office UP 237E DELTA i-system" />
+            </TranslationElement>
+          </TranslationUnit>
+          <TranslationUnit RefId="M-0001_H-hp.5F00209-1_HP-9089-10-FC09_CI-5WG1.20587.202AB.5F1-1" Version="0">
+            <TranslationElement RefId="M-0001_H-hp.5F00209-1_HP-9089-10-FC09_CI-5WG1.20587.202AB.5F1-1">
+              <Translation AttributeName="Name" Text="Text display UP 587/01" />
+            </TranslationElement>
+          </TranslationUnit>
+          <TranslationUnit RefId="M-0001_H-hp.5F00264-1_HP-9093-01-EFC1_CI-5WG1.202xx.2D2AB.5F.5F-1" Version="0">
+            <TranslationElement RefId="M-0001_H-hp.5F00264-1_HP-9093-01-EFC1_CI-5WG1.202xx.2D2AB.5F.5F-1">
+              <Translation AttributeName="Name" Text="BTM Wall Switch UP22x / UP24x / UP28x" />
+            </TranslationElement>
+          </TranslationUnit>
+          <TranslationUnit RefId="M-0001_H-hp.5F00271-1_HP-982C-01-F5C9_CI-5WG1.20525.2D2AB03-1" Version="0">
+            <TranslationElement RefId="M-0001_H-hp.5F00271-1_HP-982C-01-F5C9_CI-5WG1.20525.2D2AB03-1">
+              <Translation AttributeName="Name" Text="Universal dimmer UP 525/03" />
+              <Translation AttributeName="VisibleDescription" Text="Dimmer, 1 x 250VA, AC 230V 50/60Hz" />
+            </TranslationElement>
+          </TranslationUnit>
+        </Language>
+        <Language Identifier="es-ES">
+          <TranslationUnit RefId="M-0001_CS-IL" Version="0">
+            <TranslationElement RefId="M-0001_CS-IL">
+              <Translation AttributeName="Name" Text="Iluminación" />
+              <Translation AttributeName="VisibleDescription" Text="_light.vd1" />
+            </TranslationElement>
+          </TranslationUnit>
+          <TranslationUnit RefId="M-0001_CS-IL-DM" Version="0">
+            <TranslationElement RefId="M-0001_CS-IL-DM">
+              <Translation AttributeName="Name" Text="Regulación" />
+            </TranslationElement>
+          </TranslationUnit>
+          <TranslationUnit RefId="M-0001_CS-PB" Version="0">
+            <TranslationElement RefId="M-0001_CS-PB">
+              <Translation AttributeName="Name" Text="Pulsador" />
+              <Translation AttributeName="VisibleDescription" Text="_pulsador.vd1" />
+            </TranslationElement>
+          </TranslationUnit>
+        </Language>
+        <Language Identifier="it-IT">
+          <TranslationUnit RefId="M-0001_CS-IL" Version="0">
+            <TranslationElement RefId="M-0001_CS-IL">
+              <Translation AttributeName="Name" Text="Illuminazione" />
+              <Translation AttributeName="VisibleDescription" Text="_Lightin.vd1" />
+            </TranslationElement>
+          </TranslationUnit>
+          <TranslationUnit RefId="M-0001_CS-IL-DM" Version="0">
+            <TranslationElement RefId="M-0001_CS-IL-DM">
+              <Translation AttributeName="Name" Text="Dimmer" />
+            </TranslationElement>
+          </TranslationUnit>
+          <TranslationUnit RefId="M-0001_CS-PB" Version="0">
+            <TranslationElement RefId="M-0001_CS-PB">
+              <Translation AttributeName="Name" Text="Pulsante" />
+              <Translation AttributeName="VisibleDescription" Text="_Push.vd1" />
+            </TranslationElement>
+          </TranslationUnit>
+        </Language>
+      </Languages>
+    </Manufacturer>
+  </ManufacturerData>
+</KNX>
