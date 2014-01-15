@@ -83,7 +83,7 @@ public class UpcomingWeatherImpl extends Obj implements UpcomingWeather {
 		windDirection.setName("windDirection");
 		
 		add(timestamp);
-		add(probabilitycode);
+		//add(probabilitycode);
 		add(temperature);
 		add(humidity);
 		add(pressure);

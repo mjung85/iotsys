@@ -41,6 +41,8 @@ import at.ac.tuwien.auto.iotsys.commons.obix.objects.weatherforecast.WeatherObje
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.weatherforecast.impl.UpcomingWeatherImpl;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.weatherforecast.impl.WeatherForecastLocationImpl;
 import at.ac.tuwien.auto.iotsys.gateway.connectors.weatherforecast.WeatherForecastConnector;
+import at.ac.tuwien.auto.iotsys.obix.observer.Observer;
+import at.ac.tuwien.auto.iotsys.obix.observer.Subject;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.HistoryImpl;
 import obix.*;
 
@@ -86,6 +88,26 @@ public class WeatherObjImpl extends Obj implements WeatherObject {
 		this.upcoming.setHref(new Uri("upcoming"));
 
 		add(this.upcoming);	
+		
+		connector.attach(new Observer(){
+
+			@Override
+			public void update(Object state) {
+				WeatherObjImpl.this.refreshObject();
+			}
+
+			@Override
+			public void setSubject(Subject object) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public Subject getSubject() {
+				// TODO Auto-generated method stub
+				return null;
+			}
+		});
 	}
 	
 	public Obj location() {
