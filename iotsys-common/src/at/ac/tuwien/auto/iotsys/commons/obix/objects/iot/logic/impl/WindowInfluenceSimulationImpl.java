@@ -109,7 +109,10 @@ public class WindowInfluenceSimulationImpl extends Obj implements WindowInfluenc
 			System.out.println("standbyModeActive Status: "+standbyModeActive.get());
 			System.out.println("comfortModeActive Status: "+comfortModeActive.get());
 			
-			
+			if((windowClosed.get() == false) && comfortModeActive.get()){
+				standbyModeActive.setBool(true);
+			}
+	//		else if (windowClosed.get() == true)
 //			if (windowClosed.get() < roomTempSetPoint.get() - tolerance.get()
 //					&& controllerState != ControllerState.HEATING) {
 //					// we need to heat!
