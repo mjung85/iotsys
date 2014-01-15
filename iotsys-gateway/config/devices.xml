@@ -136,7 +136,7 @@
     
     <connector>
       <name>EnOcean</name>
-      <enabled>true</enabled>
+      <enabled>false</enabled>
       <serialPort>COM6</serialPort>
       <device>
         <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.enocean.WindowSensorImplEnocean
@@ -252,7 +252,7 @@
     </connector>
 	<connector>
 		<name>IoT Suitcase</name>
-		<enabled>true</enabled>
+		<enabled>false</enabled>
 		<knx-proj>knx-config/projects/IoT_Koffer_09_01_2014_with_data_point_types.knxproj</knx-proj>
 		<forceRefresh>false</forceRefresh>
 		<router>

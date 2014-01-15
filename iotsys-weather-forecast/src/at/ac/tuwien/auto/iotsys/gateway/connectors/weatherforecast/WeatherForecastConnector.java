@@ -180,11 +180,12 @@ public class WeatherForecastConnector implements Connector, Subject{
 		else{
 			log.info("Retrieving weather forecast from " + serviceURL + ".");
 			try {
+				
 				Document doc = getWeatherForecastAsXML(serviceURL);
 				
 				if (doc != null)
 				{
-					DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssX");
+					DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 					
 					NodeList elements = doc.getElementsByTagName("location");
 					
@@ -344,33 +345,7 @@ public class WeatherForecastConnector implements Connector, Subject{
 						}			
 					}
 				}	
-				else{
-					// otherwise create mockup data
-					long now = System.currentTimeMillis();
-					long threeHours = 1000 * 60 * 60 * 3;
-					WeatherForcastObject weatherObject = new WeatherForcastObject();
-					weatherObject.setCloudiness(100);
-					weatherObject.setDewpointTemperature(0);
-					weatherObject.setFog(0);
-					weatherObject.setHighClouds(100);
-					weatherObject.setMediumClouds(100);
-					weatherObject.setPrecipitation(100);
-					weatherObject.setPressure(1024);
-					weatherObject.setTemperatureProbability(100);
-					weatherObject.setTemperature(10);
-					weatherObject.setWindDirection("W");
-					weatherObject.setWindProbability(100);
-					weatherObject.setWindSpeed(3);
 				
-					weatherObject.setTimestamp(now);		
-					weatherObject.setTimeZone(TimeZone.getTimeZone("CET"));	
-					
-					for(int i = 0; i < 10 ; i++){
-						weatherObject.setTimestamp(now);
-						resultWeatherList.add(weatherObject);
-						now += threeHours;
-					}				
-				}
 			} catch (MalformedURLException e) {
 				e.printStackTrace();
 			} catch (IOException e) {
@@ -378,7 +353,36 @@ public class WeatherForecastConnector implements Connector, Subject{
 			} catch (SAXException e) {
 				e.printStackTrace();
 			}		
+			
+			if(resultWeatherList.size() == 0){
+				// otherwise create mockup data
+				long now = System.currentTimeMillis();
+				long threeHours = 1000 * 60 * 60 * 3;
+				WeatherForcastObject weatherObject = new WeatherForcastObject();
+				weatherObject.setCloudiness(100);
+				weatherObject.setDewpointTemperature(0);
+				weatherObject.setFog(0);
+				weatherObject.setHighClouds(100);
+				weatherObject.setMediumClouds(100);
+				weatherObject.setPrecipitation(100);
+				weatherObject.setPressure(1024);
+				weatherObject.setTemperatureProbability(100);
+				weatherObject.setTemperature(10);
+				weatherObject.setWindDirection("W");
+				weatherObject.setWindProbability(100);
+				weatherObject.setWindSpeed(3);
+			
+				weatherObject.setTimestamp(now);		
+				weatherObject.setTimeZone(TimeZone.getTimeZone("CET"));	
+				
+				for(int i = 0; i < 10 ; i++){
+					weatherObject.setTimestamp(now);
+					resultWeatherList.add(weatherObject);
+					now += threeHours;
+				}				
+			}
 		}
+		
 		return resultWeatherList;
 	}
 	
