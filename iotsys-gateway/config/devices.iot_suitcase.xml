@@ -150,7 +150,7 @@
     
     <connector>
       <name>EnOcean</name>
-      <enabled>false</enabled>
+      <enabled>true</enabled>
       <serialPort>/dev/ttyS80</serialPort>
       <device>
         <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.enocean.WindowSensorImplEnocean
@@ -253,7 +253,7 @@
 	<connector>
 		<name>IoT Suitcase</name>
 		<enabled>true</enabled>
-		<knx-proj>knx-config/projects/Siemens_Koffer_IoTSyS_2014_01_02.knxproj</knx-proj>
+		<knx-proj>knx-config/projects/IoT_Koffer_09_01_2014_with_data_point_types.knxproj</knx-proj>
 		<forceRefresh>false</forceRefresh>
 		<router>
 			<ip>192.168.1.14</ip>
@@ -291,7 +291,7 @@
   
   <knx>
       <connector>
-      	<name>KNX SuperSuitcase</name>
+      	<name>KNX IoT Suitcase</name>
       	<enabled>false</enabled>
       	<router>
         	<ip>192.168.1.14</ip>
@@ -914,7 +914,7 @@
   <wmbus>
     <connector>
       <name>W-MBus Smart Meter Linux</name>
-      <enabled>true</enabled>
+      <enabled>false</enabled>
       <serialPort>/dev/ttyUSB0</serialPort>
       <device>
         <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.wmbus.SmartMeterImplWMBus
@@ -1176,98 +1176,19 @@
         <groupCommEnabled>true</groupCommEnabled>
       </device>
     </connector>
+    
     <connector>
       <name>HVAC Simulation</name>
-      <enabled>false</enabled>
+      <enabled>true</enabled>
 
       <!-- SENSOREN -->
       <device>
-        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.virtual.TemperatureSensorImplVirtual
+        <type>at.ac.tuwien.auto.iotsys.gateway.connectors.virtual.simulation.HVACSimulationSuitcaseImpl
         </type>
-        <href>simTemp</href>
-        <historyEnabled>true</historyEnabled>
-        <refreshEnabled>true</refreshEnabled>
-        <groupCommEnabled>true</groupCommEnabled>
-        <historyCount>200</historyCount>
-      </device>
-
-      <device>
-        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.virtual.TemperatureSensorImplVirtual
-        </type>
-        <href>simTemp2</href>
-        <historyEnabled>true</historyEnabled>
-        <refreshEnabled>true</refreshEnabled>
-        <groupCommEnabled>true</groupCommEnabled>
-      </device>
-
-      <device>
-        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.virtual.BoilerActuatorImplVirtual
-        </type>
-        <href>simBoiler</href>
-        <historyEnabled>true</historyEnabled>
-        <refreshEnabled>false</refreshEnabled>
-        <groupCommEnabled>true</groupCommEnabled>
-      </device>
-
-      <device>
-        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.virtual.CoolerActuatorImplVirtual
-        </type>
-        <href>simCooler</href>
-        <historyEnabled>true</historyEnabled>
-        <refreshEnabled>false</refreshEnabled>
-        <groupCommEnabled>true</groupCommEnabled>
-      </device>
-
-      <device>
-        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.virtual.FanSpeedActuatorImplVirtual
-        </type>
-        <href>simFanSpeedIn</href>
-        <historyEnabled>true</historyEnabled>
-        <refreshEnabled>false</refreshEnabled>
-        <groupCommEnabled>true</groupCommEnabled>
-      </device>
-
-      <device>
-        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.virtual.FanSpeedActuatorImplVirtual
-        </type>
-        <href>simFanSpeedOut</href>
-        <historyEnabled>true</historyEnabled>
-        <refreshEnabled>false</refreshEnabled>
-        <groupCommEnabled>true</groupCommEnabled>
-      </device>
-
-      <device>
-        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.virtual.PumpActuatorImplVirtual
-        </type>
-        <href>simHeatPump</href>
-        <historyEnabled>true</historyEnabled>
-        <refreshEnabled>false</refreshEnabled>
-        <groupCommEnabled>true</groupCommEnabled>
-      </device>
-     
-      <device>
-        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.virtual.PumpActuatorImplVirtual
-        </type>
-        <href>simCoolPump</href>
-        <historyEnabled>true</historyEnabled>
-        <refreshEnabled>false</refreshEnabled>
-        <groupCommEnabled>true</groupCommEnabled>
-      </device>
-      <device>
-        <type>at.ac.tuwien.auto.iotsys.gateway.connectors.virtual.simulation.HVACSimulationImpl
-        </type>
-        <href>hvacSim</href>
+        <href>hvacSimSuitcase</href>
         <historyEnabled>false</historyEnabled>
         <refreshEnabled>false</refreshEnabled>
         <groupCommEnabled>false</groupCommEnabled>
-      </device>
-      <device>
-        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.virtual.SmartMeterImplVirtual
-        </type>
-        <href>simMeter</href>
-        <historyEnabled>true</historyEnabled>
-        <refreshEnabled>true</refreshEnabled>
-        <groupCommEnabled>true</groupCommEnabled>
       </device>
     </connector>
 
@@ -1400,6 +1321,28 @@
         <refreshEnabled>false</refreshEnabled>
         <groupCommEnabled>true</groupCommEnabled>
       </device>
+      
+       <device>
+        <type>at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.logic.impl.RoomTemperatureControlSimulationImpl
+        </type>
+        <href>interworkingUC1</href>
+        <displayName>Room Temp. Controller</displayName>
+        <historyEnabled>false</historyEnabled>
+        <refreshEnabled>false</refreshEnabled>
+        <groupCommEnabled>true</groupCommEnabled>
+      </device>
+      
+       <device>
+        <type>at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.logic.impl.WindowInfluenceSimulationImpl
+        </type>
+        <href>windowInfluence</href>
+        <displayName>Window Influence</displayName>
+        <historyEnabled>false</historyEnabled>
+        <refreshEnabled>false</refreshEnabled>
+        <groupCommEnabled>true</groupCommEnabled>
+      </device>
+      
+      
       <!-- <device> <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.logic.impl.TemperatureControllerImpl
         </type> <href>tempControl12</href> <historyEnabled>false</historyEnabled>
         <refreshEnabled>false</refreshEnabled> <groupCommEnabled>true</groupCommEnabled>
