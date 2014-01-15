@@ -630,24 +630,18 @@ class SimSuitcaseThread extends Thread {
 						+ hvacSimulation.getTemp());
 				Thread.sleep(HVACSimulationImpl.TIME_INTERVALL_MS * 2);
 
-				// System.out.println("isBoilerActive"+hvacSimulation.isBoilerActive());
-				// System.out.println("isFanInActive"+hvacSimulation.isFanInActive());
-
 				if (hvacSimulation.isBoilerActive()
 						&& hvacSimulation.isFanInActive()) {
-					System.out.println("increaseTemp");
+					
 					hvacSimulation.increaseTemp(hvacSimulation
 							.getHeatingImpact());
 					log.finest("HVAC simulation temp is now (after heating): "
 							+ hvacSimulation.getTemp());
 				}
-
-				// System.out.println("isCoolerActive"+hvacSimulation.isCoolerActive());
-				// System.out.println("isFanOutActive"+hvacSimulation.isFanOutActive());
-
+				
 				if (hvacSimulation.isCoolerActive()
 						&& hvacSimulation.isFanOutActive()) {
-					System.out.println("decreaseTemp");
+					
 					log.finest("HVAC simulation temp is now (after cooling): "
 							+ hvacSimulation.getTemp());
 					hvacSimulation.decreaseTemp(hvacSimulation
