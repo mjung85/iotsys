@@ -37,6 +37,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.TimeZone;
 import java.util.logging.Level;
@@ -60,9 +61,12 @@ import org.xml.sax.SAXException;
 
 import at.ac.tuwien.auto.iotsys.commons.Connector;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.weatherforecast.WeatherForcastObject;
+import at.ac.tuwien.auto.iotsys.obix.observer.Observer;
+import at.ac.tuwien.auto.iotsys.obix.observer.Subject;
 
-public class WeatherForecastConnector implements Connector {
+public class WeatherForecastConnector implements Connector, Subject{
 	
+	private static final HashSet<Observer> observers = new HashSet<Observer>();
 	private static final Logger log = Logger.getLogger(WeatherForecastConnector.class.getName());
 	
 	private ManualOverwrite overwrite = ManualOverwrite.OFF;
@@ -89,6 +93,7 @@ public class WeatherForecastConnector implements Connector {
 	// create a bad weather front
 	public void setManualOverwrite(ManualOverwrite overwrite){
 		this.overwrite = overwrite;
+		this.notifyObservers();
 	}
 	
 	public ManualOverwrite getManualOverwrite(){
@@ -339,6 +344,33 @@ public class WeatherForecastConnector implements Connector {
 						}			
 					}
 				}	
+				else{
+					// otherwise create mockup data
+					long now = System.currentTimeMillis();
+					long threeHours = 1000 * 60 * 60 * 3;
+					WeatherForcastObject weatherObject = new WeatherForcastObject();
+					weatherObject.setCloudiness(100);
+					weatherObject.setDewpointTemperature(0);
+					weatherObject.setFog(0);
+					weatherObject.setHighClouds(100);
+					weatherObject.setMediumClouds(100);
+					weatherObject.setPrecipitation(100);
+					weatherObject.setPressure(1024);
+					weatherObject.setTemperatureProbability(100);
+					weatherObject.setTemperature(10);
+					weatherObject.setWindDirection("W");
+					weatherObject.setWindProbability(100);
+					weatherObject.setWindSpeed(3);
+				
+					weatherObject.setTimestamp(now);		
+					weatherObject.setTimeZone(TimeZone.getTimeZone("CET"));	
+					
+					for(int i = 0; i < 10 ; i++){
+						weatherObject.setTimestamp(now);
+						resultWeatherList.add(weatherObject);
+						now += threeHours;
+					}				
+				}
 			} catch (MalformedURLException e) {
 				e.printStackTrace();
 			} catch (IOException e) {
@@ -380,5 +412,37 @@ public class WeatherForecastConnector implements Connector {
 			httpConnection.disconnect();
 		
 		httpConnection = null;
+	}
+
+	@Override
+	public void attach(Observer observer) {
+		synchronized(observers){
+			observers.add(observer);
+		}
+		
+	}
+
+	@Override
+	public void detach(Observer observer) {
+		synchronized(observers){
+			observers.remove(observer);
+		}
+		
+	}
+
+	@Override
+	public void notifyObservers() {
+		synchronized(observers){
+			for(Observer observer : observers){
+				observer.update(null); // just notify
+			}
+		}
+		
+	}
+
+	@Override
+	public Object getCurrentState() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

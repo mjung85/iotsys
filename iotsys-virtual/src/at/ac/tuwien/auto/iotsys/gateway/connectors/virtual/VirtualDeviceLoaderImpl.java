@@ -78,38 +78,7 @@ public class VirtualDeviceLoaderImpl implements DeviceLoader {
 
 			connectors.add(virtualConnector);
 			
-			Obj complexObj= new Obj();
-			complexObj.setHref(new Uri("examples/complexObj"));
-			Bool b1 = new Bool();
-			
-			b1.setHref(new Uri("b1"));
-			b1.setName("b1");
-			
-			Int i1 = new Int();
-			i1.setHref(new Uri("i1"));
-			i1.setName("i1");
-			
-			Int i2 = new Int();
-			i2.setHref(new Uri("i2"));
-			i2.setName("i2");
-			
-			Obj childObj = new Obj();
-			childObj.setHref(new Uri("childObj"));
-			
-			Real r1 = new Real();
-			r1.setHref(new Uri("r"));
-			r1.setName("r");
-			
-			childObj.add(r1);
-			
-			complexObj.add(b1);
-			complexObj.add(i1);
-			complexObj.add(i2);
-			complexObj.add(childObj);
-					 					
-			objectBroker.addObj(complexObj, "2001:629:2500:60::1:71");
-
-			// add virtual devices
+		
 
 //			TemperatureSensorImpl virtualTemp1 = new TemperatureSensorImplVirtual(
 //					virtualConnector, new Object());
