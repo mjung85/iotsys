@@ -26,6 +26,11 @@ public class HVACSimulationSuitcaseImpl extends Obj implements
 	private final String LINK_TEMP_OUTSIDE_OFFSET = "/networks/siemens_koffer_iotsys/views/functional/groups/koffer/groups/sensor/groups/sollwertverschiebung/value";
 	protected Str season = new Str("winter");
 	
+	public final static String WINTER = "winter";
+	public final static String SUMMER = "summer";
+	public final static String SPRING = "spring";
+	public final static String FALL = "fall";
+	
 	public final static String HEATER_LINK = "BACnetIoTSuitcase/2098177/AnalogOutput12/value";
 	public final static String AIR_IN_LINK = "BACnetIoTSuitcase/2098177/AnalogOutput11/value";
 	public final static String COOLER_LINK = "BACnetIoTSuitcase/2098177/AnalogOutput13/value";
@@ -46,7 +51,7 @@ public class HVACSimulationSuitcaseImpl extends Obj implements
 	// // depicts the impact on the temperature
 	// private SEASON season = SEASON.SUMMER;
 	// change of degree celsius per TIME_INTERVALL_MS depending on season
-	protected Real summerImpact = new Real(0.1); // raise 0.05 degree
+	protected Real summerImpact = new Real(0.2); // raise 0.05 degree
 	protected Real springImpact = new Real(summerImpact.get() / 2);
 	protected Real winterImpact = new Real(-summerImpact.get());
 	protected Real fallImpact = new Real(winterImpact.get() / 2);
@@ -465,6 +470,16 @@ public class HVACSimulationSuitcaseImpl extends Obj implements
 				public void update(Object state) {
 					if (state instanceof Obj) {
 						tempOutside.set(((Obj) state).getReal());
+						
+						if (tempOutside.getReal() >= 30)
+						{	setSeason(HVACSimulationSuitcaseImpl.SUMMER);
+						} else if (tempOutside.getReal() < 30 && tempOutside.getReal() >= 20){
+							setSeason(HVACSimulationSuitcaseImpl.SPRING);
+						} else if (tempOutside.getReal() < 20 && tempOutside.getReal() >= 10){
+							setSeason(HVACSimulationSuitcaseImpl.FALL);	
+						} else if (tempOutside.getReal() <= 10){
+							setSeason(HVACSimulationSuitcaseImpl.WINTER);
+						}
 					}
 				}
 				@Override
@@ -611,16 +626,16 @@ class SimSuitcaseThread extends Thread {
 		while (!stopped) {
 			try {
 				double impact = 0;
-				if (hvacSimulation.getSeason().equals("summer")) {
+				if (hvacSimulation.getSeason().equals(HVACSimulationSuitcaseImpl.SUMMER)) {
 					if (hvacSimulation.getTemp() < 40)
 						impact = hvacSimulation.getSummerImpact();
-				} else if (hvacSimulation.getSeason().equals("winter")) {
+				} else if (hvacSimulation.getSeason().equals(HVACSimulationSuitcaseImpl.WINTER)) {
 					if (hvacSimulation.getTemp() > -10)
 						impact = hvacSimulation.getWinterImpact();
-				} else if (hvacSimulation.getSeason().equals("spring")) {
+				} else if (hvacSimulation.getSeason().equals(HVACSimulationSuitcaseImpl.SPRING)) {
 					if (hvacSimulation.getTemp() < 30)
 						impact = hvacSimulation.getSpringImpact();
-				} else if (hvacSimulation.getSeason().equals("fall")) {
+				} else if (hvacSimulation.getSeason().equals(HVACSimulationSuitcaseImpl.FALL)) {
 					if (hvacSimulation.getTemp() > 10)
 						impact = hvacSimulation.getFallImpact();
 				}
