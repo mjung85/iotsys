@@ -120,7 +120,6 @@ public class WeatherForecastConnector implements Connector {
 		
 		if(overwrite == ManualOverwrite.STORM_ALARM){
 			
-			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssX");
 			long now = System.currentTimeMillis();
 			long threeHours = 1000 * 60 * 60 * 3;
 			WeatherForcastObject weatherObject = new WeatherForcastObject();
@@ -147,8 +146,6 @@ public class WeatherForecastConnector implements Connector {
 			}					
 		}
 		else if(overwrite == ManualOverwrite.STORM_WARNING){
-			
-			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssX");
 			long now = System.currentTimeMillis();
 			long threeHours = 1000 * 60 * 60 * 3;
 			WeatherForcastObject weatherObject = new WeatherForcastObject();
@@ -163,7 +160,7 @@ public class WeatherForecastConnector implements Connector {
 			weatherObject.setTemperature(10);
 			weatherObject.setWindDirection("W");
 			weatherObject.setWindProbability(100);
-			weatherObject.setWindSpeed(5);
+			weatherObject.setWindSpeed(6);
 		
 			weatherObject.setTimestamp(now);		
 			weatherObject.setTimeZone(TimeZone.getTimeZone("CET"));	
@@ -172,7 +169,7 @@ public class WeatherForecastConnector implements Connector {
 				weatherObject.setTimestamp(now);
 				resultWeatherList.add(weatherObject);
 				now += threeHours;
-				weatherObject.setWindSpeed(11);
+				weatherObject.setWindSpeed(6);
 			}	
 		}
 		else{

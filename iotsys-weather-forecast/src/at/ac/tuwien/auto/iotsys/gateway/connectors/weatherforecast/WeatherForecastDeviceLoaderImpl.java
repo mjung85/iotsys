@@ -78,6 +78,7 @@ public class WeatherForecastDeviceLoaderImpl implements DeviceLoader {
 		if (configuredConnectors instanceof Collection<?>) {
 			connectorsSize = ((Collection<?>) configuredConnectors).size();
 		}
+		
 		log.info("Found " + connectorsSize + " weather forecast connectors.");
 		for (int connector = 0; connector < connectorsSize; connector++) {
 			HierarchicalConfiguration subConfig = devicesConfig.configurationAt("weather-forecast.connector(" + connector + ")");
@@ -118,6 +119,8 @@ public class WeatherForecastDeviceLoaderImpl implements DeviceLoader {
 						Boolean refreshEnabled = subConfig.getBoolean("device("	+ i + ").refreshEnabled", true);
 						Boolean historyEnabled = subConfig.getBoolean(
 								"device(" + i + ").historyEnabled", false);
+						Boolean groupCommEnabled = subConfig.getBoolean(
+								"device(" + i + ").groupCommEnabled", false);
 						Integer historyCount = subConfig.getInt("device("
 								+ i + ").historyCount", 0);
 						
@@ -171,6 +174,11 @@ public class WeatherForecastDeviceLoaderImpl implements DeviceLoader {
 															.addHistoryToDatapoints(crawler);
 												}
 											}
+											
+											if(groupCommEnabled != null && groupCommEnabled){
+												objectBroker.enableGroupComm(crawler);
+											}
+										 
 											crawler.initialize();
 
 										} catch (Exception e) {
