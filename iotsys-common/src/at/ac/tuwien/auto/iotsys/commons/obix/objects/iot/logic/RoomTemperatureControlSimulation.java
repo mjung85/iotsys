@@ -24,6 +24,15 @@ public interface RoomTemperatureControlSimulation extends IObj {
 	public static final String tempOutsideOffset = "<real name='tempOutsideOffset' href='tempOutsideOffset' val='0'/>";
 	public Real tempOutsideOffset();
 	
+	public static final String windowClosedContract = "<bool name='windowClosed' href='windowClosed' val='false'/>";
+	public Bool windowClosed(); 
+	
+	public static final String comfortModeActiveContract = "<bool name='comfortModeActive' href='comfortModeActive' val='false'/>";
+	public Bool comfortModeActive(); 
+	
+	public static final String standbyModeActiveContract = "<bool name='standbyModeActive' href='standbyModeActive' val='false'/>";
+	public Bool standbyModeActive();
+	
 	
 //	public static final String seasonContract = "<str name='season' href='season' val='winter'/>";
 //	public Str season();  <

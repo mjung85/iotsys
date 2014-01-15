@@ -61,7 +61,7 @@ public class HVACSimulationSuitcaseImpl extends Obj implements
 	protected Bool windowClosed = new Bool(false);
 	protected Real tempOutside = new Real();
 	protected Real tempOutsideOffset = new Real();
-	protected Bool comfortModeActive = new Bool(false);
+	protected Bool comfortModeActive = new Bool(true);
 	protected Bool standbyModeActive = new Bool(false);
 	protected Bool doorOpenerActive = new Bool(false);
 	private boolean observersRegistered = false;
