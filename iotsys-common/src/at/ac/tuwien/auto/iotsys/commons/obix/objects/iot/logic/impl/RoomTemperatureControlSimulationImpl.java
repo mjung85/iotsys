@@ -23,7 +23,7 @@ public class RoomTemperatureControlSimulationImpl extends Obj implements RoomTem
 	protected Real roomTempSetPoint = new Real();
 	protected Real roomCurrentTemp = new Real();
 	protected Real tolerance = new Real();
-	protected Real tempOutsideOffset = new Real();
+	protected Real setPointDifference = new Real();
 	protected Bool windowOpen = new Bool(false);
 	protected Bool comfortModeActive = new Bool(true);
 	protected Bool standbyModeActive = new Bool(false);
@@ -74,11 +74,11 @@ public class RoomTemperatureControlSimulationImpl extends Obj implements RoomTem
 		tolerance.setWritable(true);
 		tolerance.set(1);
 		
-		tempOutsideOffset.setName("tempOutsideOffset");
-		tempOutsideOffset.setDisplayName("tempOutsideOffset");
-		tempOutsideOffset.setHref(new Uri("tempOutsideOffset"));
-		tempOutsideOffset.setUnit(new Uri("obix:units/celsius"));
-		tempOutsideOffset.setWritable(false);
+		setPointDifference.setName("setPointDifference");
+		setPointDifference.setDisplayName("setPointDifference");
+		setPointDifference.setHref(new Uri("setPointDifference"));
+		setPointDifference.setUnit(new Uri("obix:units/celsius"));
+		setPointDifference.setWritable(false);
 		
 		windowOpen.setName("windowOpen");
 		windowOpen.setDisplayName("windowOpen");
@@ -99,7 +99,7 @@ public class RoomTemperatureControlSimulationImpl extends Obj implements RoomTem
 		this.add(roomCurrentTemp);
 		this.add(roomTempSetPoint);
 		this.add(tolerance);
-		this.add(tempOutsideOffset);
+		this.add(setPointDifference);
 		this.add(windowOpen);
 		this.add(comfortModeActive);
 		this.add(standbyModeActive);
@@ -203,7 +203,7 @@ public class RoomTemperatureControlSimulationImpl extends Obj implements RoomTem
 				@Override
 				public void update(Object state) {
 					if (state instanceof Obj) {
-						tempOutsideOffset.set(((Obj) state).getReal());
+						setPointDifference.set(((Obj) state).getReal());
 					}
 				}
 				@Override
@@ -274,7 +274,7 @@ public class RoomTemperatureControlSimulationImpl extends Obj implements RoomTem
 				ObjectBrokerHelper.getInstance().pullObj(new Uri(LINK_COMFORT_MODE_ACTIVE), false).writeObject(new Bool(true));
 				ObjectBrokerHelper.getInstance().pullObj(new Uri(LINK_STANDBY_MODE_ACTIVE), false).writeObject(new Bool(false));
 				
-				if (roomCurrentTemp.get() < roomTempSetPoint.get() - tolerance.get() + tempOutsideOffset.get()
+				if (roomCurrentTemp.get() < roomTempSetPoint.get() - tolerance.get() + setPointDifference.get()
 						&& controllerState != ControllerState.HEATING) {
 						// we need to heat!
 						log.info("We need to heat!");
@@ -296,7 +296,7 @@ public class RoomTemperatureControlSimulationImpl extends Obj implements RoomTem
 						ObjectBrokerHelper.getInstance().pullObj(new Uri(AIR_OUT_VALVE_LINK), false).writeObject(new Real(100));				
 						ObjectBrokerHelper.getInstance().pullObj(new Uri(HEATING_STATUS_LINK), false).writeObject(new Real(100));					
 					//controlValue.set(100);
-				} else if (roomCurrentTemp.get() > roomTempSetPoint.get() + tolerance.get() + tempOutsideOffset.get()
+				} else if (roomCurrentTemp.get() > roomTempSetPoint.get() + tolerance.get() + setPointDifference.get()
 						&& controllerState != ControllerState.COOLING) {
 						log.info("We need to cool!");
 						//controlValue.set(-100);
@@ -314,7 +314,7 @@ public class RoomTemperatureControlSimulationImpl extends Obj implements RoomTem
 						ObjectBrokerHelper.getInstance().pullObj(new Uri(AIR_IN_VALVE_LINK), false).writeObject(new Real(100));
 						ObjectBrokerHelper.getInstance().pullObj(new Uri(AIR_OUT_VALVE_LINK), false).writeObject(new Real(100));
 						ObjectBrokerHelper.getInstance().pullObj(new Uri(HEATING_STATUS_LINK), false).writeObject(new Real(-100));	
-				} else if (roomCurrentTemp.get() > roomTempSetPoint.get() + tempOutsideOffset.get()
+				} else if (roomCurrentTemp.get() > roomTempSetPoint.get() + setPointDifference.get()
 						&& controllerState == ControllerState.HEATING) {
 					// we have reached the target heating temp
 					log.info("Target state reached from heating.");
@@ -333,7 +333,7 @@ public class RoomTemperatureControlSimulationImpl extends Obj implements RoomTem
 					ObjectBrokerHelper.getInstance().pullObj(new Uri(AIR_IN_VALVE_LINK), false).writeObject(new Real(0));
 					ObjectBrokerHelper.getInstance().pullObj(new Uri(AIR_OUT_VALVE_LINK), false).writeObject(new Real(0));
 					ObjectBrokerHelper.getInstance().pullObj(new Uri(HEATING_STATUS_LINK), false).writeObject(new Real(0));	
-				} else if (roomCurrentTemp.get() < roomTempSetPoint.get() + tempOutsideOffset.get()
+				} else if (roomCurrentTemp.get() < roomTempSetPoint.get() + setPointDifference.get()
 						&& controllerState == ControllerState.COOLING ) {
 					// we have reached the target cooling temp
 					log.info("Target state reached from cooling.");
@@ -376,8 +376,8 @@ public class RoomTemperatureControlSimulationImpl extends Obj implements RoomTem
 		return tolerance;
 	}
 	@Override
-	public Real tempOutsideOffset() {
-		return tempOutsideOffset;
+	public Real setPointDifference() {
+		return setPointDifference;
 	}
 	@Override
 	public Bool windowOpen() {

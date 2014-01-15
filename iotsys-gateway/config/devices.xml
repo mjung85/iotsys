@@ -136,7 +136,7 @@
     
     <connector>
       <name>EnOcean</name>
-      <enabled>false</enabled>
+      <enabled>true</enabled>
       <serialPort>COM6</serialPort>
       <device>
         <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.enocean.WindowSensorImplEnocean

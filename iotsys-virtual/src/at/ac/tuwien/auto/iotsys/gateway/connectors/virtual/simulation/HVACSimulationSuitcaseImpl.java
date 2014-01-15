@@ -96,27 +96,27 @@ public class HVACSimulationSuitcaseImpl extends Obj implements
 
 		this.doorOpenerActive.setName("doorOpenerActive");
 		this.doorOpenerActive.setHref(new Uri("doorOpenerActive"));
-		this.add(doorOpenerActive);
+//		this.add(doorOpenerActive);
 
 		this.fanInActive.setName("fanInActive");
 		this.fanInActive.setHref(new Uri("fanInActive"));
-		this.add(fanInActive);
+//		this.add(fanInActive);
 
 		this.fanOutActive.setName("fanOutActive");
 		this.fanOutActive.setHref(new Uri("fanOutActive"));
-		this.add(fanOutActive);
+//		this.add(fanOutActive);
 
 		this.coolingImpact.setName("coolingImpact");
 		this.coolingImpact.setHref(new Uri("coolingImpact"));
-		this.add(coolingImpact);
+//		this.add(coolingImpact);
 
 		this.fallImpact.setName("fallImpact");
 		this.fallImpact.setHref(new Uri("fallImpact"));
-		this.add(fallImpact);
+//		this.add(fallImpact);
 
 		this.heatingImpact.setName("heatingImpact");
 		this.heatingImpact.setHref(new Uri("heatingImpact"));
-		this.add(heatingImpact);
+//		this.add(heatingImpact);
 
 		this.season.setName("season");
 		this.season.setHref(new Uri("season"));
@@ -124,31 +124,31 @@ public class HVACSimulationSuitcaseImpl extends Obj implements
 
 		this.springImpact.setName("springImpact");
 		this.springImpact.setHref(new Uri("springImpact"));
-		this.add(springImpact);
+//		this.add(springImpact);
 
 		this.summerImpact.setName("summerImpact");
 		this.summerImpact.setHref(new Uri("summerImpact"));
-		this.add(summerImpact);
+//		this.add(summerImpact);
 
 		this.temp.setName("temp");
 		this.temp.setHref(new Uri("temp"));
-		this.add(temp);
+//		this.add(temp);
 
 		this.winterImpact.setName("winterImpact");
 		this.winterImpact.setHref(new Uri("winterImpact"));
-		this.add(winterImpact);
+//		this.add(winterImpact);
 
 		this.valveInPosition.setName("valveInPosition");
 		this.valveInPosition.setHref(new Uri("valveInPosition"));
-		this.add(valveInPosition);
+//		this.add(valveInPosition);
 
 		this.valveOutPosition.setName("valveOutPosition");
 		this.valveOutPosition.setHref(new Uri("valveOutPosition"));
-		this.add(valveOutPosition);
+//		this.add(valveOutPosition);
 
 		this.windowOpen.setName("windowOpen");
 		this.windowOpen.setHref(new Uri("windowOpen"));
-		this.add(windowOpen);
+//		this.add(windowOpen);
 
 		this.tempOutside.setName("tempOutside");
 		this.tempOutside.setHref(new Uri("tempOutside"));
@@ -156,15 +156,15 @@ public class HVACSimulationSuitcaseImpl extends Obj implements
 
 		this.tempOutsideOffset.setName("tempOutsideOffset");
 		this.tempOutsideOffset.setHref(new Uri("tempOutsideOffset"));
-		this.add(tempOutsideOffset);
+//		this.add(tempOutsideOffset);
 		
 		this.comfortModeActive.setName("comfortModeActive");
 		this.comfortModeActive.setHref(new Uri("comfortModeActive"));
-		this.add(comfortModeActive);
+//		this.add(comfortModeActive);
 
 		this.standbyModeActive.setName("standbyModeActive");
 		this.standbyModeActive.setHref(new Uri("standbyModeActive"));
-		this.add(standbyModeActive);
+//		this.add(standbyModeActive);
 	}
 
 	public double getHeatingImpact() {
@@ -467,34 +467,19 @@ public class HVACSimulationSuitcaseImpl extends Obj implements
 				true);
 
 		if (objOutsideTemp instanceof Real) {
-			System.out.println("DADADADASDSAAAAAAAAAAAAAAAAAAAAA");
-			objOutsideTemp.attach(new Observer() {
-				@Override
-				public void update(Object state) {
-					if (state instanceof Obj) {
-						tempOutside.set(((Obj) state).getReal());
-						
-						if (tempOutside.getReal() >= 30)
-						{	setSeason(HVACSimulationSuitcaseImpl.SUMMER);
-						} else if (tempOutside.getReal() < 30 && tempOutside.getReal() >= 20){
-							setSeason(HVACSimulationSuitcaseImpl.SPRING);
-						} else if (tempOutside.getReal() < 20 && tempOutside.getReal() >= 10){
-							setSeason(HVACSimulationSuitcaseImpl.FALL);	
-						} else if (tempOutside.getReal() <= 10){
-							setSeason(HVACSimulationSuitcaseImpl.WINTER);
-						}
-						System.out.println("Season:++++++++++++++++++++++++++"+getSeason());
-					}
-				}
-				@Override
-				public void setSubject(Subject object) {
-				}
-				@Override
-				public Subject getSubject() {
-					return null;
-				}
-
-			});
+			
+			tempOutside.set(((Real) objOutsideTemp).getReal());
+			
+			if (tempOutside.getReal() >= 30)
+			{	setSeason(HVACSimulationSuitcaseImpl.SUMMER);
+			} else if (tempOutside.getReal() < 30 && tempOutside.getReal() >= 20){
+				setSeason(HVACSimulationSuitcaseImpl.SPRING);
+			} else if (tempOutside.getReal() < 20 && tempOutside.getReal() >= 10){
+				setSeason(HVACSimulationSuitcaseImpl.FALL);	
+			} else if (tempOutside.getReal() <= 10){
+				setSeason(HVACSimulationSuitcaseImpl.WINTER);
+			}		
+				
 		}
 
 		Obj objWindowOpen = objectBroker.pullObj(new Uri(LINK_WINDOW_OPEN),
@@ -608,6 +593,28 @@ public class HVACSimulationSuitcaseImpl extends Obj implements
 		
 
 	}
+	
+	@Override
+	public void refreshObject(){
+		Obj objOutsideTemp = objectBroker.pullObj(new Uri(LINK_OUTSIDE_TEMP),
+				true);
+
+		if (objOutsideTemp instanceof Real) {
+			
+			tempOutside.set(((Real) objOutsideTemp).getReal());
+			
+			if (tempOutside.getReal() >= 30)
+			{	setSeason(HVACSimulationSuitcaseImpl.SUMMER);
+			} else if (tempOutside.getReal() < 30 && tempOutside.getReal() >= 20){
+				setSeason(HVACSimulationSuitcaseImpl.SPRING);
+			} else if (tempOutside.getReal() < 20 && tempOutside.getReal() >= 10){
+				setSeason(HVACSimulationSuitcaseImpl.FALL);	
+			} else if (tempOutside.getReal() <= 10){
+				setSeason(HVACSimulationSuitcaseImpl.WINTER);
+			}		
+				
+		}
+	}
 
 	
 
@@ -629,6 +636,8 @@ class SimSuitcaseThread extends Thread {
 	public void run() {
 		while (!stopped) {
 			try {
+				
+				hvacSimulation.refreshObject();
 				double impact = 0;
 				if (hvacSimulation.getSeason().equals(HVACSimulationSuitcaseImpl.SUMMER)) {
 					if (hvacSimulation.getTemp() < 40)
