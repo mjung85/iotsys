@@ -165,7 +165,6 @@ public class HVACSimulationSuitcaseImpl extends Obj implements
 		this.standbyModeActive.setName("standbyModeActive");
 		this.standbyModeActive.setHref(new Uri("standbyModeActive"));
 		this.add(standbyModeActive);
-
 	}
 
 	public double getHeatingImpact() {
@@ -438,6 +437,7 @@ public class HVACSimulationSuitcaseImpl extends Obj implements
 			}
 		}
 
+		
 		if (enabled().get() && !threadStarted) {
 			synchronized (this) {
 				simThread = new SimSuitcaseThread(this);
@@ -445,6 +445,7 @@ public class HVACSimulationSuitcaseImpl extends Obj implements
 				if (!observersRegistered) {
 					observersRegistered = true;
 					registerObservers();
+					
 				}
 
 				simThread.setDaemon(true);
@@ -460,11 +461,13 @@ public class HVACSimulationSuitcaseImpl extends Obj implements
 	}
 
 	private void registerObservers() {
+	
 		ObjectBroker objectBroker = ObjectBrokerHelper.getInstance();
 		Obj objOutsideTemp = objectBroker.pullObj(new Uri(LINK_OUTSIDE_TEMP),
 				true);
 
 		if (objOutsideTemp instanceof Real) {
+			System.out.println("DADADADASDSAAAAAAAAAAAAAAAAAAAAA");
 			objOutsideTemp.attach(new Observer() {
 				@Override
 				public void update(Object state) {
@@ -480,6 +483,7 @@ public class HVACSimulationSuitcaseImpl extends Obj implements
 						} else if (tempOutside.getReal() <= 10){
 							setSeason(HVACSimulationSuitcaseImpl.WINTER);
 						}
+						System.out.println("Season:++++++++++++++++++++++++++"+getSeason());
 					}
 				}
 				@Override

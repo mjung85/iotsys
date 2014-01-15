@@ -162,7 +162,7 @@ public class RoomTemperatureControlSimulationImpl extends Obj implements RoomTem
 
 		} else if (input instanceof Real) {
 			if ("roomTempSetPoint".equals(resourceUriPath)) {
-				System.out.println("set roomTempSetPoint");
+				//System.out.println("set roomTempSetPoint");
 				this.roomTempSetPoint.set(((Real) input).get());
 			} else if ("tolerance".equals(resourceUriPath)) {
 					tolerance.set(((Real) input).get());
