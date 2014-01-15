@@ -157,7 +157,7 @@ public class RoomTemperatureControlSimulationImpl extends Obj implements RoomTem
 	
 	private void doControl() {
 		if (enabled.get()) {
-			System.out.println("enabede");
+			System.out.println("enabled");
 			System.out.println(roomTempSetPoint);
 			System.out.println(tolerance);
 			
