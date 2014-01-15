@@ -21,8 +21,8 @@ public interface RoomTemperatureControlSimulation extends IObj {
 	public static final String toleranceContract = "<real name='tolerance' href='tolerance' val='0'/>";
 	public Real tolerance();
 	
-	public static final String tempOutsideOffset = "<real name='tempOutsideOffset' href='tempOutsideOffset' val='0'/>";
-	public Real tempOutsideOffset();
+	public static final String setPointDifference = "<real name='setPointDifference' href='setPointDifference' val='0'/>";
+	public Real setPointDifference();
 	
 	public static final String windowOpenContract = "<bool name='windowOpen' href='windowOpen' val='false'/>";
 	public Bool windowOpen(); 
