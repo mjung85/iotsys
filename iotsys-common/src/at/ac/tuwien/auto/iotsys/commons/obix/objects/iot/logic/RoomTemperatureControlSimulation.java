@@ -21,42 +21,17 @@ public interface RoomTemperatureControlSimulation extends IObj {
 	public static final String toleranceContract = "<real name='tolerance' href='tolerance' val='0'/>";
 	public Real tolerance();
 	
+	public static final String tempOutsideOffset = "<real name='tempOutsideOffset' href='tempOutsideOffset' val='0'/>";
+	public Real tempOutsideOffset();
 	
-//	public static final String seasonContract = "<str name='season' href='season' val='winter'/>";
-//	public Str season();  <
-//	
-//	
-//	public static final String winterImpactContract = "<real name='winterImpact' href='winterImpact' val='0'/>";
-//	public Real winterImpact();
-//	
-//	public static final String fallImpactContract = "<real name='fallImpact' href='fallImpact' val='0'/>";
-//	public Real fallImpact();
-//	
-//	public static final String summerImpactContract = "<real name='summerImpact' href='summerImpact' val='0'/>";
-//	public Real summerImpact();
-//	
-//	public static final String heatingImpactContract = "<real name='heatingImpact' href='heatingImpact' val='0'/>";
-//	public Real heatingImpact();
-//	
-//	public static final String coolingImpactContract = "<real name='coolingImpact' href='coolingImpact' val='0'/>";
-//	public Real coolingImpact();
-//	
-//	public static final String boilerActiveContract = "<bool name='boilerActive' href='boilerActive' val='false'/>";
-//	public Bool boilerActive();
-//	
-//	public static final String heatPumpActiveContract = "<bool name='heatPumpActive' href='heatPumpActive' val='false'/>";
-//	public Bool heatPumpActive();
-//	
-//	public static final String fanInActiveContract = "<bool name='fanInActive' href='fanInActive' val='false'/>";
-//	public Bool fanInActive();
-//	
-//	public static final String coolerActiveContract = "<bool name='coolerActive' href='coolerActive' val='false'/>";
-//	public Bool coolerActive();
-//	
-//	public static final String coolPumpActiveContract = "<bool name='coolPumpActive' href='coolPumpActive' val='false'/>";
-//	public Bool coolPumpActive();
-//		
-//	public static final String tempContract = "<real name='temp' href='temp' val='0'/>";
-//	public Real temp();
+	public static final String windowOpenContract = "<bool name='windowOpen' href='windowOpen' val='false'/>";
+	public Bool windowOpen(); 
+	
+	public static final String comfortModeActiveContract = "<bool name='comfortModeActive' href='comfortModeActive' val='false'/>";
+	public Bool comfortModeActive(); 
+	
+	public static final String standbyModeActiveContract = "<bool name='standbyModeActive' href='standbyModeActive' val='false'/>";
+	public Bool standbyModeActive();
+	
 
 }
