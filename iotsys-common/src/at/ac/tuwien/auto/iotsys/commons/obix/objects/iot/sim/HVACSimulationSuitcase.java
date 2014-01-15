@@ -59,5 +59,14 @@ public interface HVACSimulationSuitcase {
 	
 	public static final String tempContract = "<real name='temp' href='temp' val='0'/>";
 	public Real temp();
+	
+	public static final String comfortModeActiveContract = "<bool name='comfortModeActive' href='comfortModeActive' val='false'/>";
+	public Bool comfortModeActive(); 
+	
+	public static final String standbyModeActiveContract = "<bool name='standbyModeActive' href='standbyModeActive' val='false'/>";
+	public Bool standbyModeActive();
+	
+	public static final String doorOpenerActiveContract = "<bool name='doorOpenerActive' href='doorOpenerActive' val='false'/>";
+	public Bool doorOpenerActive();
 
 }

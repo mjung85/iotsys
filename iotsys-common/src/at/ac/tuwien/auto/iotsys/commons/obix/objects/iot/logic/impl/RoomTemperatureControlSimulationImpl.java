@@ -24,6 +24,17 @@ public class RoomTemperatureControlSimulationImpl extends Obj implements RoomTem
 	protected Real tolerance = new Real();
 	private HVACSimulationSuitcase hvacSim;
 	
+	private final String HEATER_LINK = "BACnetIoTSuitcase/2098177/AnalogOutput12/value";
+	private final String AIR_IN_LINK = "BACnetIoTSuitcase/2098177/AnalogOutput11/value";
+	private final String COOLER_LINK = "BACnetIoTSuitcase/2098177/AnalogOutput13/value";
+	private final String AIR_OUT_LINK = "BACnetIoTSuitcase/2098177/AnalogOutput10/value";
+	private final String AIR_IN_VALVE_LINK = "BACnetIoTSuitcase/2098177/AnalogOutput9/value";
+	private final String AIR_OUT_VALVE_LINK = "BACnetIoTSuitcase/2098177/AnalogOutput8/value";
+	
+	private final String HEATING_STATUS_LINK = "networks/siemens_koffer_iotsys/entities/fcu_operator_panel_office_up_237e_delta_i_system/1/datapoints/status_heating___cooling_mode/value";
+	
+	
+	
 	public RoomTemperatureControlSimulationImpl(){
 		
 		objectBroker= ObjectBrokerHelper.getInstance();
@@ -157,7 +168,7 @@ public class RoomTemperatureControlSimulationImpl extends Obj implements RoomTem
 	
 	private void doControl() {
 		if (enabled.get()) {
-			System.out.println("enabede");
+			System.out.println("enabled");
 			System.out.println(roomTempSetPoint);
 			System.out.println(tolerance);
 			
@@ -166,12 +177,21 @@ public class RoomTemperatureControlSimulationImpl extends Obj implements RoomTem
 					// we need to heat!
 					controllerState = ControllerState.HEATING;
 					hvacSim.coolerActive().setBool(false);
+				
 					hvacSim.boilerActive().setBool(true);
 					hvacSim.fanOutActive().setBool(false);
 					hvacSim.fanInActive().setBool(true);
 					hvacSim.valveInPosition().setInt(100);
 					hvacSim.valveOutPosition().setInt(50);
 					//hvacSim.heatPumpActive().setBool(true);
+					ObjectBrokerHelper.getInstance().pullObj(new Uri(HEATER_LINK), false).writeObject(new Real(100));
+					ObjectBrokerHelper.getInstance().pullObj(new Uri(COOLER_LINK), false).writeObject(new Real(0));
+					ObjectBrokerHelper.getInstance().pullObj(new Uri(AIR_IN_LINK), false).writeObject(new Real(100));
+					ObjectBrokerHelper.getInstance().pullObj(new Uri(AIR_OUT_VALVE_LINK), false).writeObject(new Real(100));
+					ObjectBrokerHelper.getInstance().pullObj(new Uri(AIR_IN_VALVE_LINK), false).writeObject(new Real(100));
+					ObjectBrokerHelper.getInstance().pullObj(new Uri(AIR_OUT_VALVE_LINK), false).writeObject(new Real(100));				
+					ObjectBrokerHelper.getInstance().pullObj(new Uri(HEATING_STATUS_LINK), false).writeObject(new Real(100));					
+					
 				//controlValue.set(100);
 			} else if (roomCurrentTemp.get() > roomTempSetPoint.get() + tolerance.get()
 					&& controllerState != ControllerState.COOLING) {
@@ -183,6 +203,14 @@ public class RoomTemperatureControlSimulationImpl extends Obj implements RoomTem
 					hvacSim.valveInPosition().setInt(50);
 					hvacSim.valveOutPosition().setInt(100);
 					controllerState = ControllerState.COOLING;
+					
+					ObjectBrokerHelper.getInstance().pullObj(new Uri(HEATER_LINK), false).writeObject(new Real(0));
+					ObjectBrokerHelper.getInstance().pullObj(new Uri(COOLER_LINK), false).writeObject(new Real(100));
+					ObjectBrokerHelper.getInstance().pullObj(new Uri(AIR_IN_LINK), false).writeObject(new Real(100));
+					ObjectBrokerHelper.getInstance().pullObj(new Uri(AIR_OUT_VALVE_LINK), false).writeObject(new Real(100));
+					ObjectBrokerHelper.getInstance().pullObj(new Uri(AIR_IN_VALVE_LINK), false).writeObject(new Real(100));
+					ObjectBrokerHelper.getInstance().pullObj(new Uri(AIR_OUT_VALVE_LINK), false).writeObject(new Real(100));
+					ObjectBrokerHelper.getInstance().pullObj(new Uri(HEATING_STATUS_LINK), false).writeObject(new Real(-100));	
 			} else if (roomCurrentTemp.get() > roomTempSetPoint.get()
 					&& controllerState == ControllerState.HEATING) {
 				// we have reached the target heating temp
@@ -194,6 +222,14 @@ public class RoomTemperatureControlSimulationImpl extends Obj implements RoomTem
 				hvacSim.valveOutPosition().setInt(0);
 				//controlValue.set(0);
 				controllerState = ControllerState.INACTIVE;
+				
+				ObjectBrokerHelper.getInstance().pullObj(new Uri(HEATER_LINK), false).writeObject(new Real(0));
+				ObjectBrokerHelper.getInstance().pullObj(new Uri(COOLER_LINK), false).writeObject(new Real(0));
+				ObjectBrokerHelper.getInstance().pullObj(new Uri(AIR_IN_LINK), false).writeObject(new Real(0));
+				ObjectBrokerHelper.getInstance().pullObj(new Uri(AIR_OUT_VALVE_LINK), false).writeObject(new Real(0));
+				ObjectBrokerHelper.getInstance().pullObj(new Uri(AIR_IN_VALVE_LINK), false).writeObject(new Real(0));
+				ObjectBrokerHelper.getInstance().pullObj(new Uri(AIR_OUT_VALVE_LINK), false).writeObject(new Real(0));
+				ObjectBrokerHelper.getInstance().pullObj(new Uri(HEATING_STATUS_LINK), false).writeObject(new Real(0));	
 			} else if (roomCurrentTemp.get() < roomTempSetPoint.get()
 					&& controllerState == ControllerState.COOLING) {
 				// we have reached the target cooling temp
@@ -205,7 +241,15 @@ public class RoomTemperatureControlSimulationImpl extends Obj implements RoomTem
 				hvacSim.valveOutPosition().setInt(0);
 				//controlValue.set(0);
 				controllerState = ControllerState.INACTIVE;
+				ObjectBrokerHelper.getInstance().pullObj(new Uri(HEATER_LINK), false).writeObject(new Real(0));
+				ObjectBrokerHelper.getInstance().pullObj(new Uri(COOLER_LINK), false).writeObject(new Real(0));
+				ObjectBrokerHelper.getInstance().pullObj(new Uri(AIR_IN_LINK), false).writeObject(new Real(0));
+				ObjectBrokerHelper.getInstance().pullObj(new Uri(AIR_OUT_VALVE_LINK), false).writeObject(new Real(0));
+				ObjectBrokerHelper.getInstance().pullObj(new Uri(AIR_IN_VALVE_LINK), false).writeObject(new Real(0));
+				ObjectBrokerHelper.getInstance().pullObj(new Uri(AIR_OUT_VALVE_LINK), false).writeObject(new Real(0));
+				ObjectBrokerHelper.getInstance().pullObj(new Uri(HEATING_STATUS_LINK), false).writeObject(new Real(0));	
 			}
+			
 		}
 		else{
 			System.out.println("not enabled");

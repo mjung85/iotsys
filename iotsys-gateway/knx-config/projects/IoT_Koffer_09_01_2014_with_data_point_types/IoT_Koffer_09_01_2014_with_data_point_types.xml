@@ -1,0 +1,784 @@
+<?xml version="1.0" encoding="utf-8"?>
+  <network xmlns="http://auto.tuwien.ac.at"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://auto.tuwien.ac.at schema.xsd"
+         id="P-081A"
+         name="Siemens_Koffer_IoTSyS"
+         standard="KNX">
+   <entities>
+      <entity id="P-081A-0_DI-6"
+              name="IP-Router N 146/02"
+              description="Productinfo - see file:   1461ab02_tpi_e.pdf"
+              orderNumber="5WG1 146-1AB02"
+              manufacturerId="M-0001">
+         <translations>
+            <translation language="de-DE" attribute="name" value="IP-Router N 146/02"/>
+            <translation language="de-DE"
+                         attribute="description"
+                         value="Produktinfo - siehe Datei:   1461ab02_tpi.pdf"/>
+            <translation language="en-US" attribute="name" value="IP-Router N 146/02"/>
+            <translation language="en-US"
+                         attribute="description"
+                         value="Productinfo - see file:   1461ab02_tpi_e.pdf"/>
+         </translations>
+      </entity>
+      <entity id="P-081A-0_DI-2"
+              name="FCU Operator Panel Office UP 237E DELTA i-system"
+              orderNumber="5WG1 237-2EB_1"
+              manufacturerId="M-0001">
+         <translations>
+            <translation language="de-DE"
+                         attribute="name"
+                         value="Bediengerät Büro UP 237E DELTA i-system"/>
+            <translation language="en-US"
+                         attribute="name"
+                         value="FCU Operator Panel Office UP 237E DELTA i-system"/>
+         </translations>
+         <datapoints>
+            <datapoint id="P-081A-0_DI-2_M-0001_A-8025-01-C29E_O-10_R-11"
+                       name="Status of window"
+                       description="1=open / 0=closed"
+                       datapointTypeIds="DPST-1-9"
+                       priority="Low"
+                       writeFlag="Enabled"
+                       communicationFlag="Enabled"
+                       readFlag="Disabled"
+                       readOnInitFlag="Disabled"
+                       transmitFlag="Enabled"
+                       updateFlag="Enabled">
+               <translations>
+                  <translation language="de-DE" attribute="name" value="Fensterstatus"/>
+                  <translation language="de-DE"
+                               attribute="description"
+                               value="1=geöffnet / 0=geschlossen"/>
+                  <translation language="en-US" attribute="name" value="Status of window"/>
+                  <translation language="en-US" attribute="description" value="1=open / 0=closed"/>
+               </translations>
+            </datapoint>
+            <datapoint id="P-081A-0_DI-2_M-0001_A-8025-01-C29E_O-9_R-10"
+                       name="Fan rotational speed"
+                       description="0% ... 100%"
+                       datapointTypeIds="DPST-5-5"
+                       priority="Low"
+                       writeFlag="Disabled"
+                       communicationFlag="Enabled"
+                       readFlag="Disabled"
+                       readOnInitFlag="Disabled"
+                       transmitFlag="Enabled"
+                       updateFlag="Disabled">
+               <translations>
+                  <translation language="de-DE" attribute="name" value="Ventilatordrehzahl"/>
+                  <translation language="de-DE" attribute="description" value="0% ... 100%"/>
+                  <translation language="en-US" attribute="name" value="Fan rotational speed"/>
+                  <translation language="en-US" attribute="description" value="0% ... 100%"/>
+               </translations>
+            </datapoint>
+            <datapoint id="P-081A-0_DI-2_M-0001_A-8025-01-C29E_O-8_R-9"
+                       name="Fan status"
+                       description="Automatic / manual mode"
+                       datapointTypeIds="DPST-1-1"
+                       priority="Low"
+                       writeFlag="Enabled"
+                       communicationFlag="Enabled"
+                       readFlag="Disabled"
+                       readOnInitFlag="Disabled"
+                       transmitFlag="Enabled"
+                       updateFlag="Enabled">
+               <translations>
+                  <translation language="de-DE" attribute="name" value="Ventilator-Status"/>
+                  <translation language="de-DE"
+                               attribute="description"
+                               value="Automatik- /Handbetrieb"/>
+                  <translation language="en-US" attribute="name" value="Fan status"/>
+                  <translation language="en-US"
+                               attribute="description"
+                               value="Automatic / manual mode"/>
+               </translations>
+            </datapoint>
+            <datapoint id="P-081A-0_DI-2_M-0001_A-8025-01-C29E_O-7_R-8"
+                       name="Fan automatic mode"
+                       description="On / Off"
+                       datapointTypeIds="DPST-1-1"
+                       priority="Low"
+                       writeFlag="Disabled"
+                       communicationFlag="Enabled"
+                       readFlag="Disabled"
+                       readOnInitFlag="Disabled"
+                       transmitFlag="Enabled"
+                       updateFlag="Disabled">
+               <translations>
+                  <translation language="de-DE"
+                               attribute="name"
+                               value="Ventilator Automatikbetrieb"/>
+                  <translation language="de-DE" attribute="description" value="Ein / Aus"/>
+                  <translation language="en-US" attribute="name" value="Fan automatic mode"/>
+                  <translation language="en-US" attribute="description" value="On / Off"/>
+               </translations>
+            </datapoint>
+            <datapoint id="P-081A-0_DI-2_M-0001_A-8025-01-C29E_O-6_R-7"
+                       name="Frost/heat protection"
+                       description="On / Off"
+                       datapointTypeIds="DPST-1-1"
+                       priority="Low"
+                       writeFlag="Enabled"
+                       communicationFlag="Enabled"
+                       readFlag="Disabled"
+                       readOnInitFlag="Disabled"
+                       transmitFlag="Enabled"
+                       updateFlag="Enabled">
+               <translations>
+                  <translation language="de-DE"
+                               attribute="name"
+                               value="Frost-/ Hitzeschutzbetrieb"/>
+                  <translation language="de-DE" attribute="description" value="Ein / Aus"/>
+                  <translation language="en-US" attribute="name" value="Frost/heat protection"/>
+                  <translation language="en-US" attribute="description" value="On / Off"/>
+               </translations>
+            </datapoint>
+            <datapoint id="P-081A-0_DI-2_M-0001_A-8025-01-C29E_O-5_R-6"
+                       name="Night mode"
+                       description="On / Off"
+                       datapointTypeIds="DPST-1-1"
+                       priority="Low"
+                       writeFlag="Enabled"
+                       communicationFlag="Enabled"
+                       readFlag="Disabled"
+                       readOnInitFlag="Disabled"
+                       transmitFlag="Enabled"
+                       updateFlag="Enabled">
+               <translations>
+                  <translation language="de-DE" attribute="name" value="Nachtbetrieb"/>
+                  <translation language="de-DE" attribute="description" value="Ein / Aus"/>
+                  <translation language="en-US" attribute="name" value="Night mode"/>
+                  <translation language="en-US" attribute="description" value="On / Off"/>
+               </translations>
+            </datapoint>
+            <datapoint id="P-081A-0_DI-2_M-0001_A-8025-01-C29E_O-4_R-5"
+                       name="Standby mode"
+                       description="On / Off"
+                       datapointTypeIds="DPST-1-1"
+                       priority="Low"
+                       writeFlag="Enabled"
+                       communicationFlag="Enabled"
+                       readFlag="Disabled"
+                       readOnInitFlag="Disabled"
+                       transmitFlag="Enabled"
+                       updateFlag="Enabled">
+               <translations>
+                  <translation language="de-DE" attribute="name" value="Standbybetrieb"/>
+                  <translation language="de-DE" attribute="description" value="Ein / Aus"/>
+                  <translation language="en-US" attribute="name" value="Standby mode"/>
+                  <translation language="en-US" attribute="description" value="On / Off"/>
+               </translations>
+            </datapoint>
+            <datapoint id="P-081A-0_DI-2_M-0001_A-8025-01-C29E_O-3_R-4"
+                       name="Status of comfort mode"
+                       description="On / Off"
+                       datapointTypeIds="DPST-1-1"
+                       priority="Low"
+                       writeFlag="Enabled"
+                       communicationFlag="Enabled"
+                       readFlag="Disabled"
+                       readOnInitFlag="Disabled"
+                       transmitFlag="Enabled"
+                       updateFlag="Enabled">
+               <translations>
+                  <translation language="de-DE" attribute="name" value="Status Komfortbetrieb"/>
+                  <translation language="de-DE" attribute="description" value="Ein / Aus"/>
+                  <translation language="en-US" attribute="name" value="Status of comfort mode"/>
+                  <translation language="en-US" attribute="description" value="On / Off"/>
+               </translations>
+            </datapoint>
+            <datapoint id="P-081A-0_DI-2_M-0001_A-8025-01-C29E_O-1_R-2"
+                       name="Status heating / cooling mode"
+                       description="Positioning value of PI regulator"
+                       datapointTypeIds="DPT-9"
+                       priority="Low"
+                       writeFlag="Enabled"
+                       communicationFlag="Enabled"
+                       readFlag="Disabled"
+                       readOnInitFlag="Disabled"
+                       transmitFlag="Enabled"
+                       updateFlag="Enabled">
+               <translations>
+                  <translation language="de-DE" attribute="name" value="Status Heiz-/ Kühlbetrieb"/>
+                  <translation language="de-DE"
+                               attribute="description"
+                               value="Stellgröße PI-Regler"/>
+                  <translation language="en-US"
+                               attribute="name"
+                               value="Status heating / cooling mode"/>
+                  <translation language="en-US"
+                               attribute="description"
+                               value="Positioning value of PI regulator"/>
+               </translations>
+            </datapoint>
+            <datapoint id="P-081A-0_DI-2_M-0001_A-8025-01-C29E_O-0_R-1"
+                       name="Setpoint shifting"
+                       description="EIS 5001"
+                       datapointTypeIds="DPST-9-2"
+                       priority="Low"
+                       writeFlag="Disabled"
+                       communicationFlag="Enabled"
+                       readFlag="Enabled"
+                       readOnInitFlag="Disabled"
+                       transmitFlag="Enabled"
+                       updateFlag="Disabled">
+               <translations>
+                  <translation language="de-DE" attribute="name" value="Sollwertverschiebung"/>
+                  <translation language="de-DE" attribute="description" value="EIS 5001"/>
+                  <translation language="en-US" attribute="name" value="Setpoint shifting"/>
+                  <translation language="en-US" attribute="description" value="EIS 5001"/>
+               </translations>
+            </datapoint>
+         </datapoints>
+      </entity>
+      <entity id="P-081A-0_DI-3"
+              name="Text display UP 587/01"
+              orderNumber="5WG1 587 2AB_1"
+              manufacturerId="M-0001">
+         <translations>
+            <translation language="de-DE"
+                         attribute="name"
+                         value="Textdisplay DELTA i-system UP 587/01"/>
+            <translation language="en-US" attribute="name" value="Text display UP 587/01"/>
+         </translations>
+         <datapoints>
+            <datapoint id="P-081A-0_DI-3_M-0001_A-9089-10-FC09_O-2_R-63"
+                       name="LCD-backlight"
+                       description="On / Off"
+                       datapointTypeIds="DPST-1-1"
+                       priority="Low"
+                       writeFlag="Enabled"
+                       communicationFlag="Enabled"
+                       readFlag="Disabled"
+                       readOnInitFlag="Disabled"
+                       transmitFlag="Disabled"
+                       updateFlag="Disabled">
+               <translations>
+                  <translation language="de-DE" attribute="name" value="LCD-Hinterleuchtung"/>
+                  <translation language="de-DE" attribute="description" value="Aus / Ein"/>
+                  <translation language="en-US" attribute="name" value="LCD-backlight"/>
+                  <translation language="en-US" attribute="description" value="Off / On"/>
+               </translations>
+            </datapoint>
+            <datapoint id="P-081A-0_DI-3_M-0001_A-9089-10-FC09_O-3_R-4"
+                       name="Alarm"
+                       description="On / Off"
+                       datapointTypeIds="DPST-1-5"
+                       priority="Low"
+                       writeFlag="Enabled"
+                       communicationFlag="Enabled"
+                       readFlag="Disabled"
+                       readOnInitFlag="Disabled"
+                       transmitFlag="Disabled"
+                       updateFlag="Disabled">
+               <translations>
+                  <translation language="de-DE" attribute="name" value="Alarm"/>
+                  <translation language="de-DE" attribute="description" value="Ein / Aus"/>
+                  <translation language="en-US" attribute="name" value="Alarm"/>
+                  <translation language="en-US" attribute="description" value="On / Off"/>
+               </translations>
+            </datapoint>
+            <datapoint id="P-081A-0_DI-3_M-0001_A-9089-10-FC09_O-7_R-1729"
+                       name="Function 1, First text line"
+                       description="receive"
+                       datapointTypeIds="DPST-16-1"
+                       priority="Low"
+                       writeFlag="Enabled"
+                       communicationFlag="Enabled"
+                       readFlag="Disabled"
+                       readOnInitFlag="Disabled"
+                       transmitFlag="Enabled"
+                       updateFlag="Disabled">
+               <translations>
+                  <translation language="de-DE"
+                               attribute="name"
+                               value="Funktion 1, Schalten links"/>
+                  <translation language="de-DE" attribute="description" value="Aus"/>
+                  <translation language="en-US" attribute="name" value="Function 1, Switch left"/>
+                  <translation language="en-US" attribute="description" value="Off"/>
+               </translations>
+            </datapoint>
+            <datapoint id="P-081A-0_DI-3_M-0001_A-9089-10-FC09_O-8_R-1730"
+                       name="Function 1, Second text line"
+                       description="receive"
+                       datapointTypeIds="DPST-16-1"
+                       priority="Low"
+                       writeFlag="Enabled"
+                       communicationFlag="Enabled"
+                       readFlag="Disabled"
+                       readOnInitFlag="Disabled"
+                       transmitFlag="Enabled"
+                       updateFlag="Disabled">
+               <translations>
+                  <translation language="de-DE"
+                               attribute="name"
+                               value="Funktion 1, Schalten rechts"/>
+                  <translation language="de-DE" attribute="description" value="Aus"/>
+                  <translation language="en-US" attribute="name" value="Function 1, Switch right"/>
+                  <translation language="en-US" attribute="description" value="Off"/>
+               </translations>
+            </datapoint>
+            <datapoint id="P-081A-0_DI-3_M-0001_A-9089-10-FC09_O-16_R-1998"
+                       name="Function 2, Warning message"
+                       description="trigger"
+                       datapointTypeIds="DPST-1-5"
+                       priority="Low"
+                       writeFlag="Enabled"
+                       communicationFlag="Enabled"
+                       readFlag="Disabled"
+                       readOnInitFlag="Disabled"
+                       transmitFlag="Enabled"
+                       updateFlag="Disabled">
+               <translations>
+                  <translation language="de-DE" attribute="name" value="Funktion 2, Status"/>
+                  <translation language="de-DE" attribute="description" value="LED rechts"/>
+                  <translation language="en-US" attribute="name" value="Function 2, Status"/>
+                  <translation language="en-US" attribute="description" value="LED right"/>
+               </translations>
+            </datapoint>
+            <datapoint id="P-081A-0_DI-3_M-0001_A-9089-10-FC09_O-18_R-2000"
+                       name="Function 2, Warning/Alarm message"
+                       description="acknowledge"
+                       datapointTypeIds="DPST-1-16"
+                       priority="Low"
+                       writeFlag="Enabled"
+                       communicationFlag="Enabled"
+                       readFlag="Disabled"
+                       readOnInitFlag="Disabled"
+                       transmitFlag="Enabled"
+                       updateFlag="Disabled">
+               <translations>
+                  <translation language="de-DE" attribute="name" value="Funktion 2, Status"/>
+                  <translation language="de-DE"
+                               attribute="description"
+                               value="LED rechts blinkend"/>
+                  <translation language="en-US" attribute="name" value="Function 2, Status"/>
+                  <translation language="en-US" attribute="description" value="LED right blinking"/>
+               </translations>
+            </datapoint>
+            <datapoint id="P-081A-0_DI-3_M-0001_A-9089-10-FC09_O-23_R-2257"
+                       name="Function 3, Alarm message"
+                       description="trigger"
+                       datapointTypeIds="DPST-1-5"
+                       priority="Low"
+                       writeFlag="Enabled"
+                       communicationFlag="Enabled"
+                       readFlag="Disabled"
+                       readOnInitFlag="Disabled"
+                       transmitFlag="Enabled"
+                       updateFlag="Disabled">
+               <translations>
+                  <translation language="de-DE" attribute="name" value="Funktion 3, Status"/>
+                  <translation language="de-DE" attribute="description" value="LED links blinkend"/>
+                  <translation language="en-US" attribute="name" value="Function 3, Status"/>
+                  <translation language="en-US" attribute="description" value="LED left blinking"/>
+               </translations>
+            </datapoint>
+            <datapoint id="P-081A-0_DI-3_M-0001_A-9089-10-FC09_O-24_R-2258"
+                       name="Function 3, Warning/Alarm message"
+                       description="acknowledge"
+                       datapointTypeIds="DPST-1-5"
+                       priority="Low"
+                       writeFlag="Enabled"
+                       communicationFlag="Enabled"
+                       readFlag="Disabled"
+                       readOnInitFlag="Disabled"
+                       transmitFlag="Enabled"
+                       updateFlag="Disabled">
+               <translations>
+                  <translation language="de-DE" attribute="name" value="Funktion 3, Status"/>
+                  <translation language="de-DE"
+                               attribute="description"
+                               value="LED rechts blinkend"/>
+                  <translation language="en-US" attribute="name" value="Function 3, Status"/>
+                  <translation language="en-US" attribute="description" value="LED right blinking"/>
+               </translations>
+            </datapoint>
+            <datapoint id="P-081A-0_DI-3_M-0001_A-9089-10-FC09_O-25_R-2409"
+                       name="Function 4, First text line"
+                       description="receive"
+                       datapointTypeIds="DPST-16-1"
+                       priority="Low"
+                       writeFlag="Enabled"
+                       communicationFlag="Enabled"
+                       readFlag="Disabled"
+                       readOnInitFlag="Disabled"
+                       transmitFlag="Enabled"
+                       updateFlag="Disabled">
+               <translations>
+                  <translation language="de-DE"
+                               attribute="name"
+                               value="Funktion 4, Schalten links"/>
+                  <translation language="de-DE" attribute="description" value="Aus"/>
+                  <translation language="en-US" attribute="name" value="Function 4, Switch left"/>
+                  <translation language="en-US" attribute="description" value="Off"/>
+               </translations>
+            </datapoint>
+            <datapoint id="P-081A-0_DI-3_M-0001_A-9089-10-FC09_O-26_R-2410"
+                       name="Function 4, Second text line"
+                       description="receive"
+                       datapointTypeIds="DPST-16-1"
+                       priority="Low"
+                       writeFlag="Enabled"
+                       communicationFlag="Enabled"
+                       readFlag="Disabled"
+                       readOnInitFlag="Disabled"
+                       transmitFlag="Enabled"
+                       updateFlag="Disabled">
+               <translations>
+                  <translation language="de-DE"
+                               attribute="name"
+                               value="Funktion 4, Schalten rechts"/>
+                  <translation language="de-DE" attribute="description" value="Ein"/>
+                  <translation language="en-US" attribute="name" value="Function 4, Switch right"/>
+                  <translation language="en-US" attribute="description" value="On"/>
+               </translations>
+            </datapoint>
+         </datapoints>
+      </entity>
+      <entity id="P-081A-0_DI-4"
+              name="Universal Dimmer UP 525/03"
+              orderNumber="5WG1 525-2AB03"
+              manufacturerId="M-0001">
+         <translations>
+            <translation language="de-DE" attribute="name" value="Universaldimmer UP 525/03"/>
+            <translation language="en-US"
+                         attribute="name"
+                         value="Universal Dimmer UP 525/03"/>
+         </translations>
+         <datapoints>
+            <datapoint id="P-081A-0_DI-4_M-0001_A-982C-01-F5C9_O-4_R-4"
+                       name="A, Switching"
+                       description="On / Off"
+                       datapointTypeIds="DPST-1-1"
+                       priority="Low"
+                       writeFlag="Enabled"
+                       communicationFlag="Enabled"
+                       readFlag="Disabled"
+                       readOnInitFlag="Disabled"
+                       transmitFlag="Disabled"
+                       updateFlag="Disabled">
+               <translations>
+                  <translation language="de-DE" attribute="name" value="A, Schalten"/>
+                  <translation language="de-DE" attribute="description" value="Ein / Aus"/>
+                  <translation language="en-US" attribute="name" value="A, Switching"/>
+                  <translation language="en-US" attribute="description" value="On / Off"/>
+               </translations>
+            </datapoint>
+            <datapoint id="P-081A-0_DI-4_M-0001_A-982C-01-F5C9_O-5_R-5"
+                       name="A, Dimming"
+                       description="brighter / darker"
+                       datapointTypeIds="DPST-3-7"
+                       priority="Low"
+                       writeFlag="Enabled"
+                       communicationFlag="Enabled"
+                       readFlag="Disabled"
+                       readOnInitFlag="Disabled"
+                       transmitFlag="Disabled"
+                       updateFlag="Disabled">
+               <translations>
+                  <translation language="de-DE" attribute="name" value="A, Dimmen"/>
+                  <translation language="de-DE" attribute="description" value="heller / dunkler"/>
+                  <translation language="en-US" attribute="name" value="A, Dimming"/>
+                  <translation language="en-US" attribute="description" value="brighter / darker"/>
+               </translations>
+            </datapoint>
+            <datapoint id="P-081A-0_DI-4_M-0001_A-982C-01-F5C9_O-6_R-6"
+                       name="A, Dimming value"
+                       description="8-bit value"
+                       datapointTypeIds="DPST-5-1"
+                       priority="Low"
+                       writeFlag="Enabled"
+                       communicationFlag="Enabled"
+                       readFlag="Disabled"
+                       readOnInitFlag="Disabled"
+                       transmitFlag="Disabled"
+                       updateFlag="Disabled">
+               <translations>
+                  <translation language="de-DE" attribute="name" value="A, Dimmwert"/>
+                  <translation language="de-DE" attribute="description" value="8-bit Wert"/>
+                  <translation language="en-US" attribute="name" value="A, Dimming value"/>
+                  <translation language="en-US" attribute="description" value="8-bit value"/>
+               </translations>
+            </datapoint>
+         </datapoints>
+      </entity>
+      <entity id="P-081A-0_DI-5"
+              name="BTM Wall Switch UP22x / UP24x / UP28x"
+              orderNumber="5WG1 2xx-2AB__"
+              manufacturerId="M-0001">
+         <translations>
+            <translation language="de-DE"
+                         attribute="name"
+                         value="BTM-Taster UP22x / UP24x / UP28x"/>
+            <translation language="en-US"
+                         attribute="name"
+                         value="BTM Wall Switch UP22x / UP24x / UP28x"/>
+         </translations>
+         <datapoints>
+            <datapoint id="P-081A-0_DI-5_M-0001_A-9093-01-EFC1_O-0_R-20668"
+                       name="Button pair A switching"
+                       description="On / Off"
+                       datapointTypeIds="DPST-1-1"
+                       priority="Low"
+                       writeFlag="Disabled"
+                       communicationFlag="Enabled"
+                       readFlag="Disabled"
+                       readOnInitFlag="Disabled"
+                       transmitFlag="Enabled"
+                       updateFlag="Disabled">
+               <translations>
+                  <translation language="de-DE"
+                               attribute="name"
+                               value="Wippe A  Prozentwert (variabel)"/>
+                  <translation language="de-DE" attribute="description" value="Wert"/>
+                  <translation language="en-US"
+                               attribute="name"
+                               value="Button pair A percentage (variable)"/>
+                  <translation language="en-US" attribute="description" value="value"/>
+               </translations>
+            </datapoint>
+            <datapoint id="P-081A-0_DI-5_M-0001_A-9093-01-EFC1_O-2_R-20669"
+                       name="Button pair A dimming"
+                       description="brighter / darker"
+                       datapointTypeIds="DPST-3-7"
+                       priority="Low"
+                       writeFlag="Disabled"
+                       communicationFlag="Enabled"
+                       readFlag="Disabled"
+                       readOnInitFlag="Disabled"
+                       transmitFlag="Enabled"
+                       updateFlag="Disabled">
+               <translations>
+                  <translation language="de-DE" attribute="name" value="Wippe A  Dimmen"/>
+                  <translation language="de-DE" attribute="description" value="heller / dunkler"/>
+                  <translation language="en-US" attribute="name" value="Button pair A dimming"/>
+                  <translation language="en-US" attribute="description" value="brighter / darker"/>
+               </translations>
+            </datapoint>
+            <datapoint id="P-081A-0_DI-5_M-0001_A-9093-01-EFC1_O-7_R-21623"
+                       name="Button pair B switching"
+                       description="On / Off"
+                       datapointTypeIds="DPST-1-1"
+                       priority="Low"
+                       writeFlag="Disabled"
+                       communicationFlag="Enabled"
+                       readFlag="Disabled"
+                       readOnInitFlag="Disabled"
+                       transmitFlag="Enabled"
+                       updateFlag="Disabled">
+               <translations>
+                  <translation language="de-DE"
+                               attribute="name"
+                               value="Wippe B  Prozentwert (variabel)"/>
+                  <translation language="de-DE" attribute="description" value="Wert"/>
+                  <translation language="en-US"
+                               attribute="name"
+                               value="Button pair B percentage (variable)"/>
+                  <translation language="en-US" attribute="description" value="value"/>
+               </translations>
+            </datapoint>
+            <datapoint id="P-081A-0_DI-5_M-0001_A-9093-01-EFC1_O-14_R-21803"
+                       name="Button pair C switching"
+                       description="On / Off"
+                       datapointTypeIds="DPST-1-1"
+                       priority="Low"
+                       writeFlag="Disabled"
+                       communicationFlag="Enabled"
+                       readFlag="Disabled"
+                       readOnInitFlag="Disabled"
+                       transmitFlag="Enabled"
+                       updateFlag="Disabled">
+               <translations>
+                  <translation language="de-DE"
+                               attribute="name"
+                               value="Wippe C  Prozentwert (variabel)"/>
+                  <translation language="de-DE" attribute="description" value="Wert"/>
+                  <translation language="en-US"
+                               attribute="name"
+                               value="Button pair C percentage (variable)"/>
+                  <translation language="en-US" attribute="description" value="value"/>
+               </translations>
+            </datapoint>
+            <datapoint id="P-081A-0_DI-5_M-0001_A-9093-01-EFC1_O-16_R-21804"
+                       name="Button pair C dimming"
+                       description="brighter / darker"
+                       datapointTypeIds="DPST-3-8"
+                       priority="Low"
+                       writeFlag="Disabled"
+                       communicationFlag="Enabled"
+                       readFlag="Disabled"
+                       readOnInitFlag="Disabled"
+                       transmitFlag="Enabled"
+                       updateFlag="Disabled">
+               <translations>
+                  <translation language="de-DE" attribute="name" value="Taste C2, Zwangsführung"/>
+                  <translation language="de-DE"
+                               attribute="description"
+                               value="zwangsgeführt Aus / inaktiv"/>
+                  <translation language="en-US" attribute="name" value="Button C2, forced control"/>
+                  <translation language="en-US"
+                               attribute="description"
+                               value="forced Off / inactive"/>
+               </translations>
+            </datapoint>
+         </datapoints>
+      </entity>
+   </entities>
+   <views>
+      <functional>
+         <group id="P-081A-0_GR-1" name="Koffer" address="1">
+            <group id="P-081A-0_GR-2" name="Aktuator" address="1">
+               <group id="P-081A-0_GA-1" name="Lampe_Dimmwert" address="1">
+                  <instance id="P-081A-0_DI-4_M-0001_A-982C-01-F5C9_O-6_R-6" connector="send"/>
+               </group>
+               <group id="P-081A-0_GA-2" name="Lampe schalten" address="2">
+                  <instance id="P-081A-0_DI-4_M-0001_A-982C-01-F5C9_O-4_R-4" connector="send"/>
+               </group>
+               <group id="P-081A-0_GA-3" name="Textzeile1" address="3">
+                  <instance id="P-081A-0_DI-3_M-0001_A-9089-10-FC09_O-7_R-1729" connector="send"/>
+               </group>
+               <group id="P-081A-0_GA-4" name="Textzeile2" address="4">
+                  <instance id="P-081A-0_DI-3_M-0001_A-9089-10-FC09_O-8_R-1730" connector="send"/>
+               </group>
+               <group id="P-081A-0_GA-26" name="Alarm" address="5">
+                  <instance id="P-081A-0_DI-3_M-0001_A-9089-10-FC09_O-3_R-4" connector="send"/>
+               </group>
+               <group id="P-081A-0_GA-27" name="LCD Beleuchtung" address="6">
+                  <instance id="P-081A-0_DI-3_M-0001_A-9089-10-FC09_O-2_R-63" connector="send"/>
+               </group>
+               <group id="P-081A-0_GA-28" name="Sturmwarnung" address="7">
+                  <instance id="P-081A-0_DI-3_M-0001_A-9089-10-FC09_O-16_R-1998" connector="send"/>
+               </group>
+               <group id="P-081A-0_GA-29" name="Sturmalarm" address="8">
+                  <instance id="P-081A-0_DI-3_M-0001_A-9089-10-FC09_O-23_R-2257" connector="send"/>
+               </group>
+               <group id="P-081A-0_GA-30" name="Sturmwarnung abschalten" address="9">
+                  <instance id="P-081A-0_DI-3_M-0001_A-9089-10-FC09_O-18_R-2000" connector="send"/>
+               </group>
+               <group id="P-081A-0_GA-31" name="Sturmalarm abschalten" address="10">
+                  <instance id="P-081A-0_DI-3_M-0001_A-9089-10-FC09_O-24_R-2258" connector="send"/>
+               </group>
+               <group id="P-081A-0_GA-32" name="Textzeile 3" address="11">
+                  <instance id="P-081A-0_DI-3_M-0001_A-9089-10-FC09_O-25_R-2409" connector="send"/>
+               </group>
+               <group id="P-081A-0_GA-33" name="Textzeile 4" address="12">
+                  <instance id="P-081A-0_DI-3_M-0001_A-9089-10-FC09_O-26_R-2410" connector="send"/>
+               </group>
+            </group>
+            <group id="P-081A-0_GR-3" name="Sensor" address="256">
+               <group id="P-081A-0_GA-5" name="LCD_schalten_W1_Ein" address="256"/>
+               <group id="P-081A-0_GA-6" name="LCD_schalten_W1_Aus" address="257"/>
+               <group id="P-081A-0_GA-34" name="Alarm Ein/Aus" address="258">
+                  <instance id="P-081A-0_DI-5_M-0001_A-9093-01-EFC1_O-7_R-21623" connector="send"/>
+                  <instance id="P-081A-0_DI-3_M-0001_A-9089-10-FC09_O-3_R-4" connector="receive"/>
+               </group>
+               <group id="P-081A-0_GA-41" name="Status Komfortbetrieb" address="259">
+                  <instance id="P-081A-0_DI-2_M-0001_A-8025-01-C29E_O-3_R-4" connector="send"/>
+               </group>
+               <group id="P-081A-0_GA-9" name="Sollwertverschiebung" address="260">
+                  <instance id="P-081A-0_DI-2_M-0001_A-8025-01-C29E_O-0_R-1" connector="send"/>
+               </group>
+               <group id="P-081A-0_GA-10" name="Status Heizen Kühlen" address="261">
+                  <instance id="P-081A-0_DI-2_M-0001_A-8025-01-C29E_O-1_R-2" connector="send"/>
+               </group>
+               <group id="P-081A-0_GA-40" name="Fensterstatus" address="262">
+                  <instance id="P-081A-0_DI-2_M-0001_A-8025-01-C29E_O-10_R-11" connector="receive"/>
+               </group>
+               <group id="P-081A-0_GA-12" name="Standbybetrieb" address="263">
+                  <instance id="P-081A-0_DI-2_M-0001_A-8025-01-C29E_O-4_R-5" connector="send"/>
+               </group>
+               <group id="P-081A-0_GA-13" name="Nachtbetrieb" address="264">
+                  <instance id="P-081A-0_DI-2_M-0001_A-8025-01-C29E_O-5_R-6" connector="send"/>
+               </group>
+               <group id="P-081A-0_GA-14" name="Frost_Hietzschutzbetrieb" address="265">
+                  <instance id="P-081A-0_DI-2_M-0001_A-8025-01-C29E_O-6_R-7" connector="send"/>
+               </group>
+               <group id="P-081A-0_GA-15"
+                      name="Ventilator_Automatikbetrieb"
+                      address="266">
+                  <instance id="P-081A-0_DI-2_M-0001_A-8025-01-C29E_O-7_R-8" connector="send"/>
+               </group>
+               <group id="P-081A-0_GA-16" name="Status_Ventilator" address="267">
+                  <instance id="P-081A-0_DI-2_M-0001_A-8025-01-C29E_O-8_R-9" connector="send"/>
+               </group>
+               <group id="P-081A-0_GA-17" name="Ventilatordrehzahl" address="268">
+                  <instance id="P-081A-0_DI-2_M-0001_A-8025-01-C29E_O-9_R-10" connector="send"/>
+               </group>
+               <group id="P-081A-0_GA-18" name="Status_Fenster" address="269">
+                  <instance id="P-081A-0_DI-2_M-0001_A-8025-01-C29E_O-10_R-11" connector="send"/>
+               </group>
+               <group id="P-081A-0_GA-19" name="LCD_dimmen_W2_ein" address="270"/>
+               <group id="P-081A-0_GA-20" name="LCD_dimmen_W2_aus" address="271"/>
+               <group id="P-081A-0_GA-21" name="LCD_W3_Tasterfunktion" address="272"/>
+               <group id="P-081A-0_GA-22" name="Licht schalten" address="273">
+                  <instance id="P-081A-0_DI-5_M-0001_A-9093-01-EFC1_O-0_R-20668" connector="send"/>
+                  <instance id="P-081A-0_DI-4_M-0001_A-982C-01-F5C9_O-4_R-4" connector="receive"/>
+               </group>
+               <group id="P-081A-0_GA-23" name="Licht dimmen" address="274">
+                  <instance id="P-081A-0_DI-4_M-0001_A-982C-01-F5C9_O-5_R-5" connector="send"/>
+                  <instance id="P-081A-0_DI-5_M-0001_A-9093-01-EFC1_O-2_R-20669" connector="send"/>
+               </group>
+               <group id="P-081A-0_GA-24" name="Taster schalten" address="275">
+                  <instance id="P-081A-0_DI-5_M-0001_A-9093-01-EFC1_O-14_R-21803" connector="send"/>
+               </group>
+               <group id="P-081A-0_GA-25" name="Taster dimmen" address="276">
+                  <instance id="P-081A-0_DI-5_M-0001_A-9093-01-EFC1_O-16_R-21804" connector="send"/>
+               </group>
+            </group>
+         </group>
+      </functional>
+      <topology>
+         <area id="P-081A-0_A-0" name="Backbone Bereich" address="0">
+            <area id="P-081A-0_L-0"
+                  name="Bereichslinie"
+                  address="0"
+                  mediaTypeId="MT-5"/>
+         </area>
+         <area id="P-081A-0_A-1" name="Neuer Bereich" address="1">
+            <area id="P-081A-0_L-1"
+                  name="Hauptlinie"
+                  address="0"
+                  mediaTypeId="MT-5"/>
+            <area id="P-081A-0_L-2"
+                  name="Neue Linie"
+                  address="1"
+                  mediaTypeId="MT-0"/>
+         </area>
+         <area id="P-081A-0_A-2" name="Neuer Bereich" address="2">
+            <area id="P-081A-0_L-3"
+                  name="Neue Linie"
+                  address="1"
+                  mediaTypeId="MT-0">
+               <instance id="P-081A-0_DI-6" address="0"/>
+               <instance id="P-081A-0_DI-2" address="1"/>
+               <instance id="P-081A-0_DI-3" address="3"/>
+               <instance id="P-081A-0_DI-4" address="5"/>
+               <instance id="P-081A-0_DI-5" address="6"/>
+            </area>
+         </area>
+      </topology>
+   </views>
+   <references>
+      <reference id="DPST-1-1" name="DPT_Switch" description="switch"/>
+      <reference id="DPST-1-5" name="DPT_Alarm" description="alarm"/>
+      <reference id="DPST-1-9" name="DPT_OpenClose" description="open/close"/>
+      <reference id="DPST-1-16" name="DPT_Ack" description="acknowledge"/>
+      <reference id="DPST-3-7"
+                 name="DPT_Control_Dimming"
+                 description="dimming control"/>
+      <reference id="DPST-3-8" name="DPT_Control_Blinds" description="blind control"/>
+      <reference id="DPST-5-1" name="DPT_Scaling" description="percentage (0..100%)"/>
+      <reference id="DPST-5-5" name="DPT_DecimalFactor" description="ratio (0..255)"/>
+      <reference id="DPT-9" name="9.xxx" description="2-byte float value"/>
+      <reference id="DPST-16-1"
+                 name="DPT_String_8859_1"
+                 description="Character String (ISO 8859-1)"/>
+      <reference id="MT-0" name="TP" description="Twisted Pair"/>
+      <reference id="MT-5" name="IP" description="KNXnet/IP"/>
+      <reference id="M-0001" name="Siemens"/>
+   </references>
+</network>
+
