@@ -23,7 +23,7 @@ public interface RoomTemperatureControlSimulation extends IObj {
 	
 	
 //	public static final String seasonContract = "<str name='season' href='season' val='winter'/>";
-//	public Str season();  
+//	public Str season();  <
 //	
 //	
 //	public static final String winterImpactContract = "<real name='winterImpact' href='winterImpact' val='0'/>";

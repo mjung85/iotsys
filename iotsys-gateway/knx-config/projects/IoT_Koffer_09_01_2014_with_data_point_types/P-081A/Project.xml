@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<KNX xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" CreatedBy="ETS4" ToolVersion="ETS 4.1.5 (Build 3246)" xmlns="http://knx.org/xml/project/11">
+  <Project Id="P-081A">
+    <ProjectInformation Name="Siemens_Koffer_IoTSyS" LastModified="2014-01-09T17:15:46" ProjectStart="2013-12-23T14:44:29" ProjectId="0" ProjectTracingLevel="None" Hide16BitGroupsFromLegacyPlugins="1" GroupAddressStyle="ThreeLevel" CompletionStatus="Undefined" />
+    <UserFiles>
+      <UserFile Filename="BTM-Taster_UP22x_UP24x_UP28x.vd5" Comment="" />
+      <UserFile Filename="UP525_x3.vd5" Comment="" />
+    </UserFiles>
+  </Project>
+</KNX>
