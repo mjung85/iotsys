@@ -191,4 +191,11 @@ public class UpcomingWeatherImpl extends Obj implements UpcomingWeather {
 		this.windDirection.setHref(null);
 		this.windSpeed.setHref(null);
 	}
+	
+	@Override
+	public void refreshObject(){
+		if(this.getParent() != null){
+			this.getParent().refreshObject();
+		}
+	}
 }
