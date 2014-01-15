@@ -21,57 +21,52 @@ public class HVACSimulationSuitcaseImpl extends Obj implements
 	private final String LINK_OUTSIDE_TEMP = "BACnetIoTSuitcase/2098177/AnalogInput2/value";
 	private final String LINK_WINDOW_CLOSED = "/EnOcean/window/value";
 	private final String LINK_STANDBY_MODE_ACTIVE = "/networks/siemens_koffer_iotsys/entities/fcu_operator_panel_office_up_237e_delta_i_system/1/datapoints/standby_mode/value";
-	private final String LINK_COMFORT_MODE_ACTIVE = "";
-	private final String LINK_DOOR_OPENER_ACTIVE = "";
+	private final String LINK_COMFORT_MODE_ACTIVE = "/networks/siemens_koffer_iotsys/entities/fcu_operator_panel_office_up_237e_delta_i_system/1/datapoints/status_of_comfort_mode/value";
+	private final String LINK_DOOR_OPENER_ACTIVE = "/networks/siemens_koffer_iotsys/entities/fcu_operator_panel_office_up_237e_delta_i_system/1/datapoints/status_of_comfort_mode/value";
+	private final String LINK_TEMP_OUTSIDE_OFFSET = "/networks/siemens_koffer_iotsys/views/functional/groups/koffer/groups/sensor/groups/sollwertverschiebung/value";
 	protected Str season = new Str("winter");
-
+	
+	public final static String HEATER_LINK = "BACnetIoTSuitcase/2098177/AnalogOutput12/value";
+	public final static String AIR_IN_LINK = "BACnetIoTSuitcase/2098177/AnalogOutput11/value";
+	public final static String COOLER_LINK = "BACnetIoTSuitcase/2098177/AnalogOutput13/value";
+	public final static String AIR_OUT_LINK = "BACnetIoTSuitcase/2098177/AnalogOutput10/value";
+	public final static String AIR_IN_VALVE_LINK = "BACnetIoTSuitcase/2098177/AnalogOutput9/value";
+	public final static String AIR_OUT_VALVE_LINK = "BACnetIoTSuitcase/2098177/AnalogOutput8/value";
+	public final static String HEATING_STATUS_LINK = "networks/siemens_koffer_iotsys/entities/fcu_operator_panel_office_up_237e_delta_i_system/1/datapoints/status_heating___cooling_mode/value";
+	
 	public static HVACSimulationSuitcaseImpl instance = null;
-
 	private static final Logger log = Logger
 			.getLogger(HVACSimulationSuitcaseImpl.class.getName());
 
 	private ObjectBroker objectBroker;
-
+	
 	protected Bool enabled = new Bool(false);
 	private Real temp = new Real(18);
-
 	// // if no cooling or heating happens the season
 	// // depicts the impact on the temperature
 	// private SEASON season = SEASON.SUMMER;
-
 	// change of degree celsius per TIME_INTERVALL_MS depending on season
 	protected Real summerImpact = new Real(0.1); // raise 0.05 degree
-
 	protected Real springImpact = new Real(summerImpact.get() / 2);
 	protected Real winterImpact = new Real(-summerImpact.get());
 	protected Real fallImpact = new Real(winterImpact.get() / 2);
-
 	protected Real heatingImpact = new Real(summerImpact.get() * 2);
 	protected Real coolingImpact = new Real(winterImpact.get() * 2);
-
 	protected Bool coolerActive = new Bool(false);
 	protected Bool boilerActive = new Bool(false);
-
 	protected Bool fanInActive = new Bool(false);
 	protected Bool fanOutActive = new Bool(false);
-
 	protected Int valveInPosition = new Int(0);
 	protected Int valveOutPosition = new Int(0);
-
 	protected Bool windowClosed = new Bool(false);
 	protected Real tempOutside = new Real();
-
+	protected Real tempOutsideOffset = new Real();
 	protected Bool comfortModeActive = new Bool(false);
 	protected Bool standbyModeActive = new Bool(false);
-
 	protected Bool doorOpenerActive = new Bool(false);
-
 	private boolean observersRegistered = false;
-
 	public static final int TIME_INTERVALL_MS = 2000;
-
 	private volatile boolean threadStarted = false;
-
 	private SimSuitcaseThread simThread;
 
 	public HVACSimulationSuitcaseImpl() {
@@ -154,6 +149,10 @@ public class HVACSimulationSuitcaseImpl extends Obj implements
 		this.tempOutside.setHref(new Uri("tempOutside"));
 		this.add(tempOutside);
 
+		this.tempOutsideOffset.setName("tempOutsideOffset");
+		this.tempOutsideOffset.setHref(new Uri("tempOutsideOffset"));
+		this.add(tempOutsideOffset);
+		
 		this.comfortModeActive.setName("comfortModeActive");
 		this.comfortModeActive.setHref(new Uri("comfortModeActive"));
 		this.add(comfortModeActive);
@@ -283,102 +282,87 @@ public class HVACSimulationSuitcaseImpl extends Obj implements
 	public Bool enabled() {
 		return enabled;
 	}
-
 	@Override
 	public Str season() {
 		return season;
 	}
-
 	@Override
 	public Real springImpact() {
 		return springImpact;
 	}
-
 	@Override
 	public Real winterImpact() {
 		return winterImpact;
 	}
-
 	@Override
 	public Real fallImpact() {
 		return fallImpact;
 	}
-
 	@Override
 	public Real summerImpact() {
 		return summerImpact;
 	}
-
 	@Override
 	public Real heatingImpact() {
 		return heatingImpact;
 	}
-
 	@Override
 	public Real coolingImpact() {
 		return coolingImpact;
 	}
-
 	@Override
 	public Bool boilerActive() {
 		return boilerActive;
 	}
-
 	@Override
 	public Bool coolerActive() {
 		return coolerActive;
 	}
-
 	@Override
 	public Bool fanInActive() {
 		return fanInActive;
 	}
-
 	@Override
 	public Bool fanOutActive() {
 		return fanOutActive;
 	}
-
 	@Override
 	public Int valveInPosition() {
 		return valveInPosition;
 	}
-
 	@Override
 	public Int valveOutPosition() {
 		return valveOutPosition;
 	}
-
 	@Override
 	public Real temp() {
 		return temp;
 	}
-
 	@Override
 	public Real tempOutside() {
 		return tempOutside;
 	}
-
 	@Override
 	public Bool windowClosed() {
 		return windowClosed;
 	}
-
 	@Override
 	public Bool comfortModeActive() {
 		return comfortModeActive;
 	}
-
 	@Override
 	public Bool standbyModeActive() {
 		return standbyModeActive;
 	}
-
 	@Override
 	public Bool doorOpenerActive() {
 		return doorOpenerActive;
 	}
-
+	@Override
+	public Real tempOutsideOffset() {
+		return tempOutsideOffset;
+	}
+	
 	@Override
 	public void writeObject(Obj input) {
 		String resourceUriPath = "";
@@ -474,7 +458,7 @@ public class HVACSimulationSuitcaseImpl extends Obj implements
 	private void registerObservers() {
 		ObjectBroker objectBroker = ObjectBrokerHelper.getInstance();
 		Obj objOutsideTemp = objectBroker.pullObj(new Uri(LINK_OUTSIDE_TEMP),
-				false);
+				true);
 
 		if (objOutsideTemp instanceof Real) {
 			objOutsideTemp.attach(new Observer() {
@@ -483,13 +467,10 @@ public class HVACSimulationSuitcaseImpl extends Obj implements
 					if (state instanceof Obj) {
 						tempOutside.set(((Obj) state).getReal());
 					}
-
 				}
-
 				@Override
 				public void setSubject(Subject object) {
 				}
-
 				@Override
 				public Subject getSubject() {
 					return null;
@@ -506,8 +487,13 @@ public class HVACSimulationSuitcaseImpl extends Obj implements
 				@Override
 				public void update(Object state) {
 					if (state instanceof Obj) {
-						System.out.println("Windows change ############");
-						windowClosed.set(((Obj) state).getBool());
+					//	System.out.println("Windows change ############");
+						if(((Obj) state).getBool()){
+							windowClosed.set(false);
+						}else{
+							windowClosed.set(true);
+						}
+					//	windowClosed.set(((Obj) state).getBool());
 					}
 				}
 
@@ -587,8 +573,31 @@ public class HVACSimulationSuitcaseImpl extends Obj implements
 				}
 			});
 		}
+		
+		Obj objTempOutsideOffset = objectBroker.pullObj(new Uri(
+				LINK_TEMP_OUTSIDE_OFFSET), false);
+		if (objTempOutsideOffset instanceof Real) {
+			objTempOutsideOffset.attach(new Observer() {
+				@Override
+				public void update(Object state) {
+					if (state instanceof Obj) {
+						tempOutsideOffset.set(((Obj) state).getReal());
+					}
+				}
+				@Override
+				public void setSubject(Subject object) {
+				}
+				@Override
+				public Subject getSubject() {
+					return null;
+				}
+			});
+		}
+		
 
 	}
+
+	
 }
 
 class SimSuitcaseThread extends Thread {
@@ -658,6 +667,13 @@ class SimSuitcaseThread extends Thread {
 
 	public void stopSim() {
 		stopped = true;
+		ObjectBrokerHelper.getInstance().pullObj(new Uri(HVACSimulationSuitcaseImpl.HEATER_LINK), false).writeObject(new Real(0));
+		ObjectBrokerHelper.getInstance().pullObj(new Uri(HVACSimulationSuitcaseImpl.COOLER_LINK), false).writeObject(new Real(0));
+		ObjectBrokerHelper.getInstance().pullObj(new Uri(HVACSimulationSuitcaseImpl.AIR_IN_LINK), false).writeObject(new Real(0));
+		ObjectBrokerHelper.getInstance().pullObj(new Uri(HVACSimulationSuitcaseImpl.AIR_OUT_VALVE_LINK), false).writeObject(new Real(0));
+		ObjectBrokerHelper.getInstance().pullObj(new Uri(HVACSimulationSuitcaseImpl.AIR_IN_VALVE_LINK), false).writeObject(new Real(0));
+		ObjectBrokerHelper.getInstance().pullObj(new Uri(HVACSimulationSuitcaseImpl.AIR_OUT_VALVE_LINK), false).writeObject(new Real(0));
+		ObjectBrokerHelper.getInstance().pullObj(new Uri(HVACSimulationSuitcaseImpl.HEATING_STATUS_LINK), false).writeObject(new Real(0));
 	}
 
 }
