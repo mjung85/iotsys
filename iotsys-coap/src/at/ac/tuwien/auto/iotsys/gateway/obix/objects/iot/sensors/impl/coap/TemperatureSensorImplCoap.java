@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013
+ * Copyright (c) 2013 - IotSys CoAP Proxy
  * Institute of Computer Aided Automation, Automation Systems Group, TU Wien.
  * All rights reserved.
  * 
@@ -32,8 +32,7 @@
 
 package at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.coap;
 
-import java.util.logging.Logger;
-import java.net.Inet6Address;
+//import java.util.logging.Logger;
 
 import ch.ethz.inf.vs.californium.coap.Response;
 import ch.ethz.inf.vs.californium.coap.ResponseHandler;
@@ -41,10 +40,9 @@ import ch.ethz.inf.vs.californium.coap.ResponseHandler;
 import obix.Obj;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.sensors.impl.TemperatureSensorImpl;
 import at.ac.tuwien.auto.iotsys.gateway.connectors.coap.CoapConnector;
-import at.ac.tuwien.auto.iotsys.obix.observer.Observer;
 
 public class TemperatureSensorImplCoap extends TemperatureSensorImpl {
-	private static final Logger log = Logger.getLogger(TemperatureSensorImplCoap.class.getName());
+	//private static final Logger log = Logger.getLogger(TemperatureSensorImplCoap.class.getName());
 	
 	private CoapConnector coapConnector;
 	private String busAddress; 
@@ -59,6 +57,19 @@ public class TemperatureSensorImplCoap extends TemperatureSensorImpl {
 	public void initialize(){
 		super.initialize();
 		// But stuff here that should be executed after object creation
+		addWatchDog();
+	}
+	
+	public void addWatchDog(){
+		coapConnector.createWatchDog(busAddress, "value", new ResponseHandler() {
+			public void handleResponse(Response response) {	
+				double temp = Double.parseDouble( CoapConnector.extractAttribute("real", "val",
+						response.getPayloadString().trim()));
+				
+				TemperatureSensorImplCoap.this.value().set(temp);
+
+			}
+		});	
 	}
 	
 	@Override
@@ -69,20 +80,11 @@ public class TemperatureSensorImplCoap extends TemperatureSensorImpl {
 	@Override
 	public void refreshObject(){
 		
-		log.info("TempSensor refresh");
+		//log.info("TempSensor refresh");
 		
 		//value is the protected instance variable of the base class (TemperatureSensorImpl)
 		if(value != null){
-			Double value = coapConnector.readDouble(busAddress, "value", new ResponseHandler() {
-				public void handleResponse(Response response) {	
-					boolean temp = Boolean.parseBoolean( CoapConnector.extractAttribute("real", "val",
-							response.getPayloadString().trim()));
-					
-					TemperatureSensorImplCoap.this.value().set(temp);
-
-				}
-			});	
-			
+			Double value = coapConnector.readDouble(busAddress, "value");			
 			
 			// this calls the implementation of the base class, which triggers also
 			// oBIX services (e.g. watches, history) and CoAP observe!			
