@@ -33,7 +33,6 @@
 package at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.coap;
 
 //import java.util.logging.Logger;
-import java.net.Inet6Address;
 
 import ch.ethz.inf.vs.californium.coap.Response;
 import ch.ethz.inf.vs.californium.coap.ResponseHandler;
@@ -58,6 +57,20 @@ public class IndoorBrightnessSensorImplCoap extends IndoorBrightnessSensorImpl {
 	public void initialize(){
 		super.initialize();
 		// But stuff here that should be executed after object creation
+		addWatchDog();
+	}
+	
+	
+	public void addWatchDog(){
+		coapConnector.createWatchDog(busAddress, ROOM_ILLUMINATION_CONTRACT_HREF, new ResponseHandler() {
+			public void handleResponse(Response response) {	
+				double temp = Double.parseDouble( CoapConnector.extractAttribute("real", "val",
+						response.getPayloadString().trim()));
+				
+				IndoorBrightnessSensorImplCoap.this.roomIlluminationValue().set(temp); 
+
+			}
+		});	
 	}
 	
 	@Override
@@ -69,15 +82,8 @@ public class IndoorBrightnessSensorImplCoap extends IndoorBrightnessSensorImpl {
 	public void refreshObject(){
 		//value is the protected instance variable of the base class (TemperatureSensorImpl)
 		if(roomIlluminationValue != null){
-			Double value = coapConnector.readDouble(busAddress, "roomIllumination", new ResponseHandler() {
-				public void handleResponse(Response response) {	
-					boolean temp = Boolean.parseBoolean( CoapConnector.extractAttribute("real", "val",
-							response.getPayloadString().trim()));
-					
-					IndoorBrightnessSensorImplCoap.this.roomIlluminationValue().set(temp);
-
-				}
-			});	
+			Double value = coapConnector.readDouble(busAddress, ROOM_ILLUMINATION_CONTRACT_HREF);
+			
 			// this calls the implementation of the base class, which triggers also
 			// oBIX services (e.g. watches, history) and CoAP observe!			
 			this.roomIlluminationValue().set(value); 

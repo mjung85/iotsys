@@ -36,7 +36,6 @@ package at.ac.tuwien.auto.iotsys.gateway.connectors.coap;
 import java.util.logging.Logger;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.net.Inet6Address;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -46,8 +45,9 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import obix.Str;
+//import obix.Str;
 //import obix.Obj;
+//import obix.Int;
 
 import ch.ethz.inf.vs.californium.coap.GETRequest;
 import ch.ethz.inf.vs.californium.coap.PUTRequest;
@@ -65,7 +65,6 @@ import at.ac.tuwien.auto.iotsys.commons.Connector;
 
 public class CoapConnector implements Connector {
 	private static final Logger log = Logger.getLogger(CoapConnector.class.getName());
-	private static final int PORT = 5681;
 
 	@Override
 	public void connect() throws Exception {
@@ -79,10 +78,13 @@ public class CoapConnector implements Connector {
 	
 	private String send(String busAddress, String datapoint, String rType, String payload, ResponseHandler handler) {
 		
-		//TODO: PORT wieder entfernen ?!?
-		Str tempHref = new Str(busAddress);
+		/*Str tempHref = new Str(busAddress);
 		
-		final String tempUri = tempHref.get() + "/" + datapoint;
+		final String tempUri = tempHref.get() + "/" + datapoint;*/
+		
+		final String tempUri = busAddress + "/" + datapoint;
+		
+		//System.out.println(tempUri);
 		
 		Request request = null;
 		
@@ -124,7 +126,7 @@ public class CoapConnector implements Connector {
 			System.err.println("Failed to execute request: " + e.getMessage());
 		}
 		
-		//TODO: No Response for PUT needed ?
+		//No Response for PUT needed
 		if(rType.equals("PUT")) return null;
 		
 		// receive response
@@ -144,9 +146,14 @@ public class CoapConnector implements Connector {
 		
 		return null;
 	}
+	
+	//sends Observe to a new Sensor/Actor with Response to be handled in Sensor/Actor
+	public void createWatchDog(String busAddress, String datapoint, ResponseHandler handler) {
+		send(busAddress, datapoint, "OBSERVE", "", handler);	
+	}
 
-	public Boolean readBoolean(String busAddress, String datapoint, ResponseHandler handler) {		
-		String payload = send(busAddress, datapoint, "GET", "", handler);
+	public Boolean readBoolean(String busAddress, String datapoint) {		
+		String payload = send(busAddress, datapoint, "GET", "", null);
 		if(payload != null) {
 			String temp = extractAttribute("bool", "val", payload);
 			return Boolean.parseBoolean(temp);
@@ -154,8 +161,8 @@ public class CoapConnector implements Connector {
 		return false;
 	}
 	
-	public Double readDouble(String busAddress, String datapoint, ResponseHandler handler) {
-		String payload = send(busAddress, datapoint, "GET", "", handler);
+	public Double readDouble(String busAddress, String datapoint) {
+		String payload = send(busAddress, datapoint, "GET", "", null);
 		if(payload != null) {
 			String temp = extractAttribute("real", "val", payload);
 			return Double.parseDouble(temp);
@@ -163,14 +170,27 @@ public class CoapConnector implements Connector {
 		return 0.0;
 	}
 	
+	public Long readInt(String busAddress, String datapoint) {
+		String payload = send(busAddress, datapoint, "GET", "", null);
+		if(payload != null) {
+			String temp = extractAttribute("int", "val", payload);
+			return Long.parseLong(temp);
+		}
+		return 0L;
+	}
+
 	public void writeBoolean(String busAddress, String datapoint, Boolean value) {
 		String payload = "<bool val=\""+ value +"\"/>";
 		send(busAddress, datapoint, "PUT", payload, null);
-
 	}
 
 	public void writeDouble(String busAddress, String datapoint, Double value) {
 		String payload = "<real val=\""+ value +"\"/>";		
+		send(busAddress, datapoint, "PUT", payload, null);
+	}
+	
+	public void writeInt(String busAddress, String datapoint, Long value) {
+		String payload = "<int val=\""+ value +"\"/>";		
 		send(busAddress, datapoint, "PUT", payload, null);
 	}
 	
