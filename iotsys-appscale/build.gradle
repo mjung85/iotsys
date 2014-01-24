@@ -1,0 +1,185 @@
+// Variables
+description = 'Appscale API for the IoTSyS project'
+
+//copies the finished iotsys-appscale jar (and the
+//custom ant script to insert the api into the google
+//testserver) into the build/deploy directory
+task copyDeploy(type: Copy) {
+	description = 'Copies the api jar to the deploy directory.'
+	from("deploy") {
+		include("*")
+	}
+	from("build/libs") {
+		include("*.jar")
+	}
+	into "build/deploy"
+}
+assemble.finalizedBy copyDeploy
+
+//inserts the iotsys-appscale-api into the testserver jars
+//by copying the api jar and the service files from
+//build/deploy into the test directory and calling
+//gradle updateTestserver from that directory
+task prepareTestserver(dependsOn: assemble) << {
+	if(!file("test/appengine-java-sdk-repacked").isDirectory()) {
+		copy {
+			from "build/deploy"
+			into "test"
+			include "**/*"
+			exclude "build.xml"
+		}
+		exec {
+			println "----- executing \"gradle updateTestserver\" in test directory -----"
+			workingDir "test"
+			executable "gradle"
+			args "updateTestserver"
+		}	
+	}
+}
+
+//cleans the iotsys-appscale/test directory by removing
+//built or copied files
+//see test/build.gradle for more information
+task cleanTestserver << {
+  	exec {
+		println "----- executing \"gradle clean\" in test directory -----"
+		workingDir "test"
+		executable "gradle"
+		args "clean"
+	}
+}
+
+//cleans the iotsys-appscale/test directory by removing
+//all downloaded and copied/extracted files
+//see test/build.gradle for more information
+task cleanAllTestserver << {
+  	exec {
+		println "----- executing \"gradle cleanAll\" in test directory -----"
+		workingDir "test"
+		executable "gradle"
+		args "cleanAll"
+	}
+}
+
+//generates eclipse data for the demo projects
+//see demos/build.gradle for more information
+task eclipseDemos << {
+	exec {
+		println "----- executing \"gradle eclipse\" in demos directory -----"
+		workingDir "demos"
+		executable "gradle"
+		args "eclipse"
+	}
+}
+
+//removes eclipse data for the demo projects
+//see demos/build.gradle for more information
+task cleanEclipseDemos << {
+	exec {
+		println "----- executing \"gradle cleanEclipse\" in demos directory -----"
+		workingDir "demos"
+		executable "gradle"
+		args "cleanEclipse"
+	}
+}
+
+//copies necessary libraries from the repacked testserver into
+//the war/WEB-INF/lib directory of the demos
+task prepareDemos(dependsOn: prepareTestserver) << {
+	FileCollection demos = files(
+		'demos/ModifyObjects/war/WEB-INF/lib',
+		'demos/RecordHistory/war/WEB-INF/lib'
+	)
+	demos.each{File demo ->
+		delete demo
+	}
+	demos.each{File demo ->
+		copy {
+			from "test/appengine-java-sdk-repacked/lib/shared"
+			into demo
+			include "**/*.jar"
+		}
+		copy {
+			from "test/appengine-java-sdk-repacked/lib/user"
+			into demo
+			include "**/*.jar"
+		}	
+	}
+}
+
+//compiles the java code of the demos and prepares them
+//for use with the testserver
+task compileJavaDemos(dependsOn: prepareDemos) << {
+	exec {
+		println "----- executing \"gradle compileJava\" in demos directory -----"
+		workingDir "demos"
+		executable "gradle"
+		args "compileJava"
+	}
+}
+
+//deletes class files and /war/WEB-INF/lib directories of the demos
+//see demos/build.gradle for more information
+task cleanDemos << {
+	exec {
+		println "----- executing \"gradle clean\" in demos directory -----"
+		workingDir "demos"
+		executable "gradle"
+		args "clean"
+	}
+}
+
+jar {
+
+	sourceSets {
+    		main {
+        		java {
+            			srcDir 'src'
+        		}
+    		}
+	}
+
+	configurations.all*.dependencies*.withType(ModuleDependency)*.each {
+		it.exclude
+	}
+
+	from { 
+		configurations.compileJar.collect { 
+			if(it.isDirectory()) {
+				it
+			} else {	
+				zipTree(it)	
+			} 
+		} 	
+	}
+	
+	manifest {
+		attributes("Manifest-Version": "1.0",
+				   "Bundle-Name": "IoTSyS-Appscale-API", 
+				   "Bundle-SymbolicName": "com.google.appengine.api.iotsys",
+				   "Bundle-Description": "Appscale API for the IoTSyS Project",
+				   "Bundle-Vendor": "Vienna University of Technology, Automation Systems Group, www.auto.tuwien.ac.at",
+				   "Bundle-Version": "0.1", 
+				   "Bundle-Classpath": "."
+		)
+	}
+}
+
+configurations {
+	compileJar
+}
+
+dependencies {	
+	compile project(':iotsys-obix')
+	compile project(':iotsys-common')
+	compile files("lib/californium-appscale.jar")
+	compile files("lib/appengine-tools-api.jar")
+	compile files("lib/appengine-api.jar")
+	compile files("lib/appengine-local-runtime.jar")
+	compile files("lib/appengine-api-stubs.jar")
+	
+	compileJar project(':iotsys-obix')
+	compileJar project(':iotsys-common')
+	compileJar files("lib/californium-appscale.jar")
+}
+
