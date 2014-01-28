@@ -1,5 +1,11 @@
+import org.apache.tools.ant.taskdefs.condition.Os
+
 // Variables
 description = 'Appscale API for the IoTSyS project'
+
+ext {
+	isWindows = Os.isFamily(Os.FAMILY_WINDOWS)
+}
 
 //copies the finished iotsys-appscale jar (and the
 //custom ant script to insert the api into the google
@@ -31,7 +37,11 @@ task prepareTestserver(dependsOn: assemble) << {
 		exec {
 			println "----- executing \"gradle updateTestserver\" in test directory -----"
 			workingDir "test"
-			executable "gradle"
+			if(isWindows) {
+				executable "gradle.bat"
+			} else {
+				executable "gradle"
+			}
 			args "updateTestserver"
 		}	
 	}
@@ -44,7 +54,11 @@ task cleanTestserver << {
   	exec {
 		println "----- executing \"gradle clean\" in test directory -----"
 		workingDir "test"
-		executable "gradle"
+		if(isWindows) {
+			executable "gradle.bat"
+		} else {
+			executable "gradle"
+		}
 		args "clean"
 	}
 }
@@ -56,7 +70,11 @@ task cleanAllTestserver << {
   	exec {
 		println "----- executing \"gradle cleanAll\" in test directory -----"
 		workingDir "test"
-		executable "gradle"
+		if(isWindows) {
+			executable "gradle.bat"
+		} else {
+			executable "gradle"
+		}
 		args "cleanAll"
 	}
 }
@@ -67,7 +85,11 @@ task eclipseDemos << {
 	exec {
 		println "----- executing \"gradle eclipse\" in demos directory -----"
 		workingDir "demos"
-		executable "gradle"
+		if(isWindows) {
+			executable "gradle.bat"
+		} else {
+			executable "gradle"
+		}
 		args "eclipse"
 	}
 }
@@ -78,7 +100,11 @@ task cleanEclipseDemos << {
 	exec {
 		println "----- executing \"gradle cleanEclipse\" in demos directory -----"
 		workingDir "demos"
-		executable "gradle"
+		if(isWindows) {
+			executable "gradle.bat"
+		} else {
+			executable "gradle"
+		}
 		args "cleanEclipse"
 	}
 }
@@ -113,7 +139,11 @@ task compileJavaDemos(dependsOn: prepareDemos) << {
 	exec {
 		println "----- executing \"gradle compileJava\" in demos directory -----"
 		workingDir "demos"
-		executable "gradle"
+		if(isWindows) {
+			executable "gradle.bat"
+		} else {
+			executable "gradle"
+		}
 		args "compileJava"
 	}
 }
@@ -124,7 +154,11 @@ task cleanDemos << {
 	exec {
 		println "----- executing \"gradle clean\" in demos directory -----"
 		workingDir "demos"
-		executable "gradle"
+		if(isWindows) {
+			executable "gradle.bat"
+		} else {
+			executable "gradle"
+		}
 		args "clean"
 	}
 }
@@ -182,4 +216,3 @@ dependencies {
 	compileJar project(':iotsys-common')
 	compileJar files("lib/californium-appscale.jar")
 }
-
