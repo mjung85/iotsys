@@ -41,10 +41,6 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import java.net.Inet4Address;
-import java.net.Inet6Address;
-import java.net.UnknownHostException;
-
 //import obix.Bool;
 //import obix.Int;
 import obix.Obj;
@@ -150,7 +146,7 @@ public class CoapDeviceLoaderImpl implements DeviceLoader {
 											.forName(type)
 											.getDeclaredConstructors();
 
-									//constructor that takes connector and IPv6 Adress as argument
+									//constructor that takes connector and IPv6 coap URI as argument
 									Object[] args = new Object[2];
 
 									// first arg is Coap connector
@@ -163,11 +159,9 @@ public class CoapDeviceLoaderImpl implements DeviceLoader {
 												.getParameterTypes().length == 2) {
 
 											String adr = "";
-											// Try to make IPv6 address for 2nd arg
 											if(!address.isEmpty()) {
 												adr = (String) address.get(0);
 											}
-										
 								
 											args[1] = adr;
 

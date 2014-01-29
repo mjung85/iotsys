@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013
+ * Copyright (c) 2013 - IotSys CoAP Proxy
  * Institute of Computer Aided Automation, Automation Systems Group, TU Wien.
  * All rights reserved.
  * 
@@ -33,8 +33,9 @@
 package at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.coap;
 
 //import java.util.logging.Logger;
-import java.net.Inet6Address;
 
+import ch.ethz.inf.vs.californium.coap.Response;
+import ch.ethz.inf.vs.californium.coap.ResponseHandler;
 import obix.Obj;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators.impl.FanSpeedActuatorImpl;
 import at.ac.tuwien.auto.iotsys.gateway.connectors.coap.CoapConnector;
@@ -43,9 +44,9 @@ public class FanSpeedActuatorImplCoap extends FanSpeedActuatorImpl{
 	//private static final Logger log = Logger.getLogger(FanSpeedActuatorImplCoap.class.getName());
 	
 	private CoapConnector coapConnector;
-	private Inet6Address busAddress;
+	private String busAddress;
 
-	public FanSpeedActuatorImplCoap(CoapConnector coapConnector, Inet6Address busAddress) {
+	public FanSpeedActuatorImplCoap(CoapConnector coapConnector, String busAddress) {
 		// technology specific initialization
 		this.coapConnector = coapConnector;
 		this.busAddress = busAddress;
@@ -55,6 +56,25 @@ public class FanSpeedActuatorImplCoap extends FanSpeedActuatorImpl{
 	public void initialize(){
 		super.initialize();
 		// But stuff here that should be executed after object creation
+		addWatchDog();
+	}
+	
+	public void addWatchDog(){
+		coapConnector.createWatchDog(busAddress, ENBALED_CONTRACT_HREF, new ResponseHandler() {
+			public void handleResponse(Response response) {	
+				boolean temp = Boolean.parseBoolean(CoapConnector.extractAttribute("bool", "val", 
+						response.getPayloadString().trim()));
+				FanSpeedActuatorImplCoap.this.enabled().set(temp);
+			}
+		});	
+		
+		coapConnector.createWatchDog(busAddress, FAN_SPEED_SETPOINT_CONTRACT_HREF, new ResponseHandler() {
+			public void handleResponse(Response response) {	
+				long temp = Long.parseLong( CoapConnector.extractAttribute("int", "val",
+						response.getPayloadString().trim()));
+				FanSpeedActuatorImplCoap.this.fanSpeedSetpointValue().set(temp);
+			}
+		});	
 	}
 	
 	@Override
@@ -64,20 +84,21 @@ public class FanSpeedActuatorImplCoap extends FanSpeedActuatorImpl{
 		// all the oBIX specific processing.
 		super.writeObject(input);
 		
-		//TODO: FanSpeed ansprechen
 		// write it out to the technology bus
-		//coapConnector.writeBoolean(busAddress, this.value().get());	
+		coapConnector.writeBoolean(busAddress, ENBALED_CONTRACT_HREF, this.enabled().get());
+		coapConnector.writeInt(busAddress, FAN_SPEED_SETPOINT_CONTRACT_HREF, this.fanSpeedSetpointValue().get());
 	}
 	
 	@Override
 	public void refreshObject(){
-		// value is the protected instance variable of the base class (LightSwitchActuatorImpl)
-		/*if(value != null){
-			Boolean value = coapConnector.readBoolean(busAddress);	
-			
-			// this calls the implementation of the base class, which triggers also
-			// oBIX services (e.g. watches, history) and CoAP observe!
-			this.value().set(value); 
-		}	*/
+		// value is the protected instance variable of the base class (FanSpeedActuatorImpl)
+		if(enabledValue != null){
+			Boolean value = coapConnector.readBoolean(busAddress, ENBALED_CONTRACT_HREF);	
+			this.enabled().set(value);
+		}
+		if(fanSpeedSetpointValue != null){			
+			Long value = coapConnector.readInt(busAddress, FAN_SPEED_SETPOINT_CONTRACT_HREF);
+			this.fanSpeedSetpointValue().set(value); 
+		}
 	}
 }

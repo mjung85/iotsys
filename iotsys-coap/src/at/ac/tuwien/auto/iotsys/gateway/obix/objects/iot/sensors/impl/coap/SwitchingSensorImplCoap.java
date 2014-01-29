@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013
+ * Copyright (c) 2013 - IotSys CoAP Proxy
  * Institute of Computer Aided Automation, Automation Systems Group, TU Wien.
  * All rights reserved.
  * 
@@ -33,7 +33,6 @@
 package at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.coap;
 
 //import java.util.logging.Logger;
-import java.net.Inet6Address;
 
 import ch.ethz.inf.vs.californium.coap.Response;
 import ch.ethz.inf.vs.californium.coap.ResponseHandler;
@@ -58,6 +57,19 @@ public class SwitchingSensorImplCoap extends SwitchingSensorImpl {
 	public void initialize(){
 		super.initialize();
 		// But stuff here that should be executed after object creation
+		addWatchDog();
+	}
+	
+	public void addWatchDog(){
+		coapConnector.createWatchDog(busAddress, "value", new ResponseHandler() {
+			public void handleResponse(Response response) {	
+				boolean temp = Boolean.parseBoolean( CoapConnector.extractAttribute("bool", "val",
+						response.getPayloadString().trim()));
+				
+				SwitchingSensorImplCoap.this.switchOnOffValue().set(temp);
+
+			}
+		});	
 	}
 	
 	@Override
@@ -69,14 +81,7 @@ public class SwitchingSensorImplCoap extends SwitchingSensorImpl {
 	public void refreshObject(){
 		//switchOnOffValue is the protected instance variable of the base class (SwitchingSensorImpl)
 		if(switchOnOffValue() != null){
-			Boolean value = coapConnector.readBoolean(busAddress, "switchOnOff", new ResponseHandler() {
-				public void handleResponse(Response response) {	
-					boolean temp = Boolean.parseBoolean( CoapConnector.extractAttribute("bool", "val",
-							response.getPayloadString().trim()));
-					
-					SwitchingSensorImplCoap.this.switchOnOffValue().set(temp);
-				}
-			});	
+			Boolean value = coapConnector.readBoolean(busAddress, "switchOnOff");
 			// this calls the implementation of the base class, which triggers also
 			// oBIX services (e.g. watches, history) and CoAP observe!			
 			this.switchOnOffValue().set(value); 
