@@ -23,7 +23,7 @@
   </deviceloaders>
   
   <coap>
-        <connector>
+         <connector>
             <name>CoAP Cooja</name>
             <enabled>false</enabled>
 
@@ -39,9 +39,44 @@
         </connector>
         
         <connector>
+            <name>CoapDevices</name>
+            <enabled>true</enabled>
+
+			<device>
+					<type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.coap.TemperatureSensorImplCoap
+					</type>
+					<address>coap://[aaaa::c30c:0:0:2]:5683/temp</address>
+					<href>temp</href>
+					<historyEnabled>true</historyEnabled>
+					<refreshEnabled>true</refreshEnabled>
+					<groupCommEnabled>true</groupCommEnabled>
+			</device>
+			
+			<device>
+					<type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.coap.TemperatureSensorImplCoap
+					</type>
+					<address>coap://[fc00::3]:5681</address>
+					<href>temp2</href>
+					<historyEnabled>true</historyEnabled>
+					<refreshEnabled>true</refreshEnabled>
+					<groupCommEnabled>true</groupCommEnabled>
+			</device>
+
+			<device>
+					<type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.coap.FanSpeedActuatorImplCoap
+					</type>
+					<address>coap://[fc00::1]:5681</address>
+					<href>temp1</href>
+			</device>
+
+
+      </connector>
+           
+        
+        <connector>
             <name>CoAP</name>
             <enabled>false</enabled>
-
+			
 			<device>
 					<type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.coap.TemperatureSensorImplCoap
 					</type>
@@ -51,8 +86,19 @@
 					<refreshEnabled>true</refreshEnabled>
 					<groupCommEnabled>true</groupCommEnabled>
 			</device>
-        </connector>
+
+			<device>
+					<type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.coap.FanSpeedActuatorImplCoap
+					</type>
+					<address>coap://[fc00::1]:5681</address>
+					<href>temp1</href>
+			</device>
+
+
+      </connector>
+
   </coap>
+  
   <rfid>
     <connector>
       <name>RFID</name>
@@ -949,7 +995,7 @@
   <virtual>
     <connector>
       <name>VirtualDevices</name>
-      <enabled>true</enabled>
+      <enabled>false</enabled>
 
 
       <!-- SENSOREN -->
@@ -1179,7 +1225,7 @@
     </connector>
     <connector>
       <name>HVAC Simulation</name>
-      <enabled>true</enabled>
+      <enabled>false</enabled>
 
       <!-- SENSOREN -->
      
@@ -1196,7 +1242,7 @@
 
     <connector>
       <name>IoTSyS Logic</name>
-      <enabled>true</enabled>
+      <enabled>false</enabled>
 
       <!-- Logic components -->      
       <device>
