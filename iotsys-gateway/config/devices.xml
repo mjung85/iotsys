@@ -996,6 +996,7 @@
     <connector>
       <name>VirtualDevices</name>
       <enabled>false</enabled>
+     
 
 
       <!-- SENSOREN -->
@@ -1008,6 +1009,7 @@
         <ipv6>2001:629:2500:570::10d</ipv6>
         <historyEnabled>false</historyEnabled>
         <historyCount>200</historyCount>
+         <groupCommEnabled>true</groupCommEnabled>
       </device>
 
       <device>
@@ -1023,23 +1025,27 @@
         <href>virtualPresence</href>
         <ipv6>2001:629:2500:570::10f</ipv6>
         <historyEnabled>false</historyEnabled>
-        <historyCount>200</historyCount>
+        <historyCount>200</historyCount> 
+        <groupCommEnabled>true</groupCommEnabled>
       </device>
 
       <device>
         <type>at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.sensors.impl.PushButtonImpl
         </type>
         <href>virtualPushButton</href>
+         <groupCommEnabled>true</groupCommEnabled>
       </device>
       <device>
         <type>at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.sensors.impl.RoomRelativeHumiditySensorImpl
         </type>
         <href>virtualRoomRelativeHumiditySensor</href>
+         <groupCommEnabled>true</groupCommEnabled>
       </device>
       <device>
         <type>at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.sensors.impl.RoomTemperatureSensorImpl
         </type>
         <href>virtualRoomTemperatureSensor</href>
+         <groupCommEnabled>true</groupCommEnabled>
       </device>
       <device>
         <type>at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.sensors.impl.TemperatureSensorImpl
@@ -1076,7 +1082,7 @@
         <href>virtualTextDisplayActuator</href>
         <historyEnabled>false</historyEnabled>
         <historyCount>200</historyCount>
-        <groupCommEnabled>false</groupCommEnabled>
+        <groupCommEnabled>true</groupCommEnabled>
       </device>
       
       
