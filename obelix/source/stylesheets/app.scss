@@ -30,6 +30,12 @@ body {
   @include border-radius(4px);
 }
 
+.btnclose {
+	width: 20px;
+	height: 20px;
+	background: red;
+}
+
 @mixin sidebar-shadow {
   @include box-shadow(rgba(0,0,0,0.5) 2px 2px 2px);
 }
