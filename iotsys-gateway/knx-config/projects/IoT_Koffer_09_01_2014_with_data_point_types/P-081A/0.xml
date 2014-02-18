@@ -1,0 +1,273 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<KNX xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" CreatedBy="ETS4" ToolVersion="ETS 4.1.5 (Build 3246)" xmlns="http://knx.org/xml/project/11">
+  <Project Id="P-081A">
+    <Installations>
+      <Installation InstallationId="0" Name="" BCUKey="4294967295" DefaultLine="P-081A-0_L-2" IPRoutingMulticastAddress="224.0.23.12" SplitType="None" CompletionStatus="Undefined">
+        <Topology>
+          <Area Id="P-081A-0_A-0" Name="Backbone Bereich" Address="0" CompletionStatus="Undefined">
+            <Line Id="P-081A-0_L-0" Name="Bereichslinie" Address="0" MediumTypeRefId="MT-5" DomainAddress="0" DomainAddressIsChecked="0" CompletionStatus="Undefined" IPRoutingMulticastAddress="224.0.23.12" MulticastTTL="16" />
+          </Area>
+          <Area Id="P-081A-0_A-1" Name="Neuer Bereich" Address="1" CompletionStatus="Undefined">
+            <Line Id="P-081A-0_L-1" Name="Hauptlinie" Address="0" MediumTypeRefId="MT-5" DomainAddress="0" DomainAddressIsChecked="0" CompletionStatus="Undefined" IPRoutingMulticastAddress="224.0.23.12" MulticastTTL="16" />
+            <Line Id="P-081A-0_L-2" Name="Neue Linie" Address="1" MediumTypeRefId="MT-0" DomainAddress="0" DomainAddressIsChecked="0" CompletionStatus="Undefined" IPRoutingMulticastAddress="224.0.23.12" MulticastTTL="16" />
+          </Area>
+          <Area Id="P-081A-0_A-2" Name="Neuer Bereich" Address="2" CompletionStatus="Undefined">
+            <Line Id="P-081A-0_L-3" Name="Neue Linie" Address="1" MediumTypeRefId="MT-0" DomainAddress="0" DomainAddressIsChecked="0" CompletionStatus="Undefined" IPRoutingMulticastAddress="224.0.23.12" MulticastTTL="16">
+              <DeviceInstance Id="P-081A-0_DI-6" ProductRefId="M-0001_H-hp.5F00156-1_P-5WG1.20146.2D1AB02" Hardware2ProgramRefId="M-0001_H-hp.5F00156-1_HP-0010-02-3D95" Address="0" LastModified="2014-01-02T15:40:19" LastDownload="2014-01-02T15:40:19" CompletionStatus="Undefined" IndividualAddressLoaded="1" ApplicationProgramLoaded="1" ParametersLoaded="1" CommunicationPartLoaded="1" MediumConfigLoaded="1" IsCommunicationObjectVisibilityCalculated="1" Broken="0">
+                <ParameterInstanceRefs>
+                  <ParameterInstanceRef RefId="M-0001_A-0010-02-3D95_P-2_R-2" Value="1" />
+                  <ParameterInstanceRef RefId="M-0001_A-0010-02-3D95_P-3_R-3" Value="1" />
+                  <ParameterInstanceRef RefId="M-0001_A-0010-02-3D95_P-42_R-42" Value="1" />
+                  <ParameterInstanceRef RefId="M-0001_A-0010-02-3D95_P-44_R-44" Value="1" />
+                </ParameterInstanceRefs>
+              </DeviceInstance>
+              <DeviceInstance Id="P-081A-0_DI-2" ProductRefId="M-0001_H-hp.5F00197-1_P-5WG1.20237.2D2EB.5F1" Hardware2ProgramRefId="M-0001_H-hp.5F00197-1_HP-8025-01-C29E" Address="1" LastModified="2014-01-02T11:03:51" LastDownload="2014-01-02T11:03:51" CompletionStatus="Undefined" IndividualAddressLoaded="1" ApplicationProgramLoaded="1" ParametersLoaded="1" CommunicationPartLoaded="1" MediumConfigLoaded="1" IsCommunicationObjectVisibilityCalculated="1" Broken="0">
+                <ParameterInstanceRefs>
+                  <ParameterInstanceRef RefId="M-0001_A-8025-01-C29E_P-56_R-56" Value="3" />
+                  <ParameterInstanceRef RefId="M-0001_A-8025-01-C29E_P-40_R-40" Value="0" />
+                  <ParameterInstanceRef RefId="M-0001_A-8025-01-C29E_P-46_R-46" Value="1" />
+                </ParameterInstanceRefs>
+                <ComObjectInstanceRefs>
+                  <ComObjectInstanceRef RefId="M-0001_A-8025-01-C29E_O-10_R-11" DatapointType="DPST-1-9" IsActive="1">
+                    <Connectors>
+                      <Send GroupAddressRefId="P-081A-0_GA-18" />
+                      <Receive GroupAddressRefId="P-081A-0_GA-40" />
+                    </Connectors>
+                  </ComObjectInstanceRef>
+                  <ComObjectInstanceRef RefId="M-0001_A-8025-01-C29E_O-9_R-10" DatapointType="DPST-5-5" IsActive="1">
+                    <Connectors>
+                      <Send GroupAddressRefId="P-081A-0_GA-17" />
+                    </Connectors>
+                  </ComObjectInstanceRef>
+                  <ComObjectInstanceRef RefId="M-0001_A-8025-01-C29E_O-8_R-9" DatapointType="DPST-1-1" IsActive="1">
+                    <Connectors>
+                      <Send GroupAddressRefId="P-081A-0_GA-16" />
+                    </Connectors>
+                  </ComObjectInstanceRef>
+                  <ComObjectInstanceRef RefId="M-0001_A-8025-01-C29E_O-7_R-8" DatapointType="DPST-1-1" IsActive="1">
+                    <Connectors>
+                      <Send GroupAddressRefId="P-081A-0_GA-15" />
+                    </Connectors>
+                  </ComObjectInstanceRef>
+                  <ComObjectInstanceRef RefId="M-0001_A-8025-01-C29E_O-6_R-7" DatapointType="DPST-1-1" IsActive="1">
+                    <Connectors>
+                      <Send GroupAddressRefId="P-081A-0_GA-14" />
+                    </Connectors>
+                  </ComObjectInstanceRef>
+                  <ComObjectInstanceRef RefId="M-0001_A-8025-01-C29E_O-5_R-6" DatapointType="DPST-1-1" IsActive="1">
+                    <Connectors>
+                      <Send GroupAddressRefId="P-081A-0_GA-13" />
+                    </Connectors>
+                  </ComObjectInstanceRef>
+                  <ComObjectInstanceRef RefId="M-0001_A-8025-01-C29E_O-4_R-5" DatapointType="DPST-1-1" IsActive="1">
+                    <Connectors>
+                      <Send GroupAddressRefId="P-081A-0_GA-12" />
+                    </Connectors>
+                  </ComObjectInstanceRef>
+                  <ComObjectInstanceRef RefId="M-0001_A-8025-01-C29E_O-3_R-4" DatapointType="DPST-1-1" IsActive="1">
+                    <Connectors>
+                      <Send GroupAddressRefId="P-081A-0_GA-41" />
+                    </Connectors>
+                  </ComObjectInstanceRef>
+                  <ComObjectInstanceRef RefId="M-0001_A-8025-01-C29E_O-1_R-2" DatapointType="DPT-9" IsActive="1">
+                    <Connectors>
+                      <Send GroupAddressRefId="P-081A-0_GA-10" />
+                    </Connectors>
+                  </ComObjectInstanceRef>
+                  <ComObjectInstanceRef RefId="M-0001_A-8025-01-C29E_O-0_R-1" DatapointType="DPST-9-2" IsActive="1">
+                    <Connectors>
+                      <Send GroupAddressRefId="P-081A-0_GA-9" />
+                    </Connectors>
+                  </ComObjectInstanceRef>
+                </ComObjectInstanceRefs>
+              </DeviceInstance>
+              <DeviceInstance Id="P-081A-0_DI-3" ProductRefId="M-0001_H-hp.5F00209-1_P-5WG1.20587.202AB.5F1" Hardware2ProgramRefId="M-0001_H-hp.5F00209-1_HP-9089-10-FC09" Address="3" LastModified="2014-01-02T10:01:41" LastDownload="2014-01-02T10:01:41" CompletionStatus="Undefined" IndividualAddressLoaded="1" ApplicationProgramLoaded="1" ParametersLoaded="1" CommunicationPartLoaded="1" MediumConfigLoaded="1" IsCommunicationObjectVisibilityCalculated="1" Broken="0">
+                <ParameterInstanceRefs>
+                  <ParameterInstanceRef RefId="M-0001_A-9089-10-FC09_UP-1308_R-1308" Value="26" />
+                  <ParameterInstanceRef RefId="M-0001_A-9089-10-FC09_UP-2442_R-2442" Value="1" />
+                  <ParameterInstanceRef RefId="M-0001_A-9089-10-FC09_P-13_R-13" Value="2" />
+                  <ParameterInstanceRef RefId="M-0001_A-9089-10-FC09_UP-1182_R-1182" Value="26" />
+                  <ParameterInstanceRef RefId="M-0001_A-9089-10-FC09_P-15_R-15" Value="0" />
+                  <ParameterInstanceRef RefId="M-0001_A-9089-10-FC09_UP-1434_R-1434" Value="28" />
+                  <ParameterInstanceRef RefId="M-0001_A-9089-10-FC09_UP-177_R-1491" Value="Sturm!" />
+                  <ParameterInstanceRef RefId="M-0001_A-9089-10-FC09_UP-1560_R-1560" Value="28" />
+                  <ParameterInstanceRef RefId="M-0001_A-9089-10-FC09_P-302_R-1676" Value="Alarm!" />
+                  <ParameterInstanceRef RefId="M-0001_A-9089-10-FC09_UP-303_R-1675" Value="Sturm!" />
+                  <ParameterInstanceRef RefId="M-0001_A-9089-10-FC09_P-176_R-1492" Value="Warnung!" />
+                  <ParameterInstanceRef RefId="M-0001_A-9089-10-FC09_UP-1686_R-1686" Value="26" />
+                </ParameterInstanceRefs>
+                <ComObjectInstanceRefs>
+                  <ComObjectInstanceRef RefId="M-0001_A-9089-10-FC09_O-2_R-63" IsActive="1">
+                    <Connectors>
+                      <Send GroupAddressRefId="P-081A-0_GA-27" />
+                    </Connectors>
+                  </ComObjectInstanceRef>
+                  <ComObjectInstanceRef RefId="M-0001_A-9089-10-FC09_O-3_R-4" DatapointType="DPST-1-5" IsActive="1">
+                    <Connectors>
+                      <Send GroupAddressRefId="P-081A-0_GA-26" />
+                      <Receive GroupAddressRefId="P-081A-0_GA-34" />
+                    </Connectors>
+                  </ComObjectInstanceRef>
+                  <ComObjectInstanceRef RefId="M-0001_A-9089-10-FC09_O-7_R-1729" DatapointType="DPST-16-1" IsActive="1">
+                    <Connectors>
+                      <Send GroupAddressRefId="P-081A-0_GA-3" />
+                    </Connectors>
+                  </ComObjectInstanceRef>
+                  <ComObjectInstanceRef RefId="M-0001_A-9089-10-FC09_O-8_R-1730" DatapointType="DPST-16-1" IsActive="1">
+                    <Connectors>
+                      <Send GroupAddressRefId="P-081A-0_GA-4" />
+                    </Connectors>
+                  </ComObjectInstanceRef>
+                  <ComObjectInstanceRef RefId="M-0001_A-9089-10-FC09_O-13_R-1996" DatapointType="DPST-16-1" IsActive="1" />
+                  <ComObjectInstanceRef RefId="M-0001_A-9089-10-FC09_O-14_R-2001" DatapointType="DPST-16-1" IsActive="1" />
+                  <ComObjectInstanceRef RefId="M-0001_A-9089-10-FC09_O-15_R-1997" DatapointType="DPST-16-1" IsActive="1" />
+                  <ComObjectInstanceRef RefId="M-0001_A-9089-10-FC09_O-16_R-1998" DatapointType="DPST-1-5" IsActive="1">
+                    <Connectors>
+                      <Send GroupAddressRefId="P-081A-0_GA-28" />
+                    </Connectors>
+                  </ComObjectInstanceRef>
+                  <ComObjectInstanceRef RefId="M-0001_A-9089-10-FC09_O-17_R-1999" DatapointType="DPST-1-5" IsActive="1" />
+                  <ComObjectInstanceRef RefId="M-0001_A-9089-10-FC09_O-18_R-2000" DatapointType="DPST-1-16" IsActive="1">
+                    <Connectors>
+                      <Send GroupAddressRefId="P-081A-0_GA-30" />
+                    </Connectors>
+                  </ComObjectInstanceRef>
+                  <ComObjectInstanceRef RefId="M-0001_A-9089-10-FC09_O-19_R-2254" DatapointType="DPST-16-1" IsActive="1" />
+                  <ComObjectInstanceRef RefId="M-0001_A-9089-10-FC09_O-20_R-2259" DatapointType="DPST-16-1" IsActive="1" />
+                  <ComObjectInstanceRef RefId="M-0001_A-9089-10-FC09_O-21_R-2255" DatapointType="DPST-16-1" IsActive="1" />
+                  <ComObjectInstanceRef RefId="M-0001_A-9089-10-FC09_O-22_R-2256" DatapointType="DPST-1-5" IsActive="1" />
+                  <ComObjectInstanceRef RefId="M-0001_A-9089-10-FC09_O-23_R-2257" DatapointType="DPST-1-5" IsActive="1">
+                    <Connectors>
+                      <Send GroupAddressRefId="P-081A-0_GA-29" />
+                    </Connectors>
+                  </ComObjectInstanceRef>
+                  <ComObjectInstanceRef RefId="M-0001_A-9089-10-FC09_O-24_R-2258" DatapointType="DPST-1-5" IsActive="1">
+                    <Connectors>
+                      <Send GroupAddressRefId="P-081A-0_GA-31" />
+                    </Connectors>
+                  </ComObjectInstanceRef>
+                  <ComObjectInstanceRef RefId="M-0001_A-9089-10-FC09_O-25_R-2409" DatapointType="DPST-16-1" IsActive="1">
+                    <Connectors>
+                      <Send GroupAddressRefId="P-081A-0_GA-32" />
+                    </Connectors>
+                  </ComObjectInstanceRef>
+                  <ComObjectInstanceRef RefId="M-0001_A-9089-10-FC09_O-26_R-2410" DatapointType="DPST-16-1" IsActive="1">
+                    <Connectors>
+                      <Send GroupAddressRefId="P-081A-0_GA-33" />
+                    </Connectors>
+                  </ComObjectInstanceRef>
+                </ComObjectInstanceRefs>
+              </DeviceInstance>
+              <DeviceInstance Id="P-081A-0_DI-4" ProductRefId="M-0001_H-hp.5F00271-1_P-5WG1.20525.2D2AB03" Hardware2ProgramRefId="M-0001_H-hp.5F00271-1_HP-982C-01-F5C9" Address="5" LastModified="2014-01-02T10:02:54" LastDownload="2014-01-02T10:02:54" CompletionStatus="Undefined" IndividualAddressLoaded="1" ApplicationProgramLoaded="1" ParametersLoaded="1" CommunicationPartLoaded="1" MediumConfigLoaded="1" IsCommunicationObjectVisibilityCalculated="1" Broken="0">
+                <ComObjectInstanceRefs>
+                  <ComObjectInstanceRef RefId="M-0001_A-982C-01-F5C9_O-4_R-4" IsActive="1">
+                    <Connectors>
+                      <Send GroupAddressRefId="P-081A-0_GA-2" />
+                      <Receive GroupAddressRefId="P-081A-0_GA-22" />
+                    </Connectors>
+                  </ComObjectInstanceRef>
+                  <ComObjectInstanceRef RefId="M-0001_A-982C-01-F5C9_O-5_R-5" IsActive="1">
+                    <Connectors>
+                      <Send GroupAddressRefId="P-081A-0_GA-23" />
+                    </Connectors>
+                  </ComObjectInstanceRef>
+                  <ComObjectInstanceRef RefId="M-0001_A-982C-01-F5C9_O-6_R-6" IsActive="1">
+                    <Connectors>
+                      <Send GroupAddressRefId="P-081A-0_GA-1" />
+                    </Connectors>
+                  </ComObjectInstanceRef>
+                </ComObjectInstanceRefs>
+                <BinaryData>
+                  <BinaryData Id="07bea3fc-a8d4-4ac2-8e51-e91e35aa7f24" Name="BLOB_STRING" />
+                </BinaryData>
+              </DeviceInstance>
+              <DeviceInstance Id="P-081A-0_DI-5" ProductRefId="M-0001_H-hp.5F00264-1_P-5WG1.202xx.2D2AB.5F.5F" Hardware2ProgramRefId="M-0001_H-hp.5F00264-1_HP-9093-01-EFC1" Address="6" LastModified="2014-01-02T10:04:53" LastDownload="2014-01-02T10:04:53" CompletionStatus="Undefined" IndividualAddressLoaded="1" ApplicationProgramLoaded="1" ParametersLoaded="1" CommunicationPartLoaded="1" MediumConfigLoaded="1" IsCommunicationObjectVisibilityCalculated="1" Broken="0">
+                <ParameterInstanceRefs>
+                  <ParameterInstanceRef RefId="M-0001_A-9093-01-EFC1_P-10854_R-10854" Value="2" />
+                  <ParameterInstanceRef RefId="M-0001_A-9093-01-EFC1_UP-10853_R-10853" Value="1" />
+                  <ParameterInstanceRef RefId="M-0001_A-9093-01-EFC1_P-2635_R-2635" Value="0" />
+                  <ParameterInstanceRef RefId="M-0001_A-9093-01-EFC1_P-2900_R-2900" Value="0" />
+                  <ParameterInstanceRef RefId="M-0001_A-9093-01-EFC1_P-1377_R-1377" Value="0" />
+                </ParameterInstanceRefs>
+                <ComObjectInstanceRefs>
+                  <ComObjectInstanceRef RefId="M-0001_A-9093-01-EFC1_O-0_R-20668" DatapointType="DPST-1-1" IsActive="1">
+                    <Connectors>
+                      <Send GroupAddressRefId="P-081A-0_GA-22" />
+                    </Connectors>
+                  </ComObjectInstanceRef>
+                  <ComObjectInstanceRef RefId="M-0001_A-9093-01-EFC1_O-2_R-20669" DatapointType="DPST-3-7" IsActive="1">
+                    <Connectors>
+                      <Send GroupAddressRefId="P-081A-0_GA-23" />
+                    </Connectors>
+                  </ComObjectInstanceRef>
+                  <ComObjectInstanceRef RefId="M-0001_A-9093-01-EFC1_O-7_R-21623" DatapointType="DPST-1-1" IsActive="1">
+                    <Connectors>
+                      <Send GroupAddressRefId="P-081A-0_GA-34" />
+                    </Connectors>
+                  </ComObjectInstanceRef>
+                  <ComObjectInstanceRef RefId="M-0001_A-9093-01-EFC1_O-9_R-21624" DatapointType="DPST-3-7" IsActive="1" />
+                  <ComObjectInstanceRef RefId="M-0001_A-9093-01-EFC1_O-14_R-21803" DatapointType="DPST-1-1" IsActive="1">
+                    <Connectors>
+                      <Send GroupAddressRefId="P-081A-0_GA-24" />
+                    </Connectors>
+                  </ComObjectInstanceRef>
+                  <ComObjectInstanceRef RefId="M-0001_A-9093-01-EFC1_O-16_R-21804" DatapointType="DPST-3-8" IsActive="1">
+                    <Connectors>
+                      <Send GroupAddressRefId="P-081A-0_GA-25" />
+                    </Connectors>
+                  </ComObjectInstanceRef>
+                  <ComObjectInstanceRef RefId="M-0001_A-9093-01-EFC1_O-27_R-25612" DatapointType="DPST-1-1" IsActive="1" />
+                  <ComObjectInstanceRef RefId="M-0001_A-9093-01-EFC1_O-158_R-21186" DatapointType="DPST-1-1" IsActive="1" />
+                </ComObjectInstanceRefs>
+              </DeviceInstance>
+            </Line>
+          </Area>
+        </Topology>
+        <Buildings />
+        <GroupAddresses>
+          <GroupRanges>
+            <GroupRange Id="P-081A-0_GR-1" Name="Koffer" RangeStart="1" RangeEnd="2047">
+              <GroupRange Id="P-081A-0_GR-2" Name="Aktuator" RangeStart="1" RangeEnd="255">
+                <GroupAddress Id="P-081A-0_GA-1" Address="1" Name="Lampe_Dimmwert" />
+                <GroupAddress Id="P-081A-0_GA-2" Address="2" Name="Lampe schalten" />
+                <GroupAddress Id="P-081A-0_GA-3" Address="3" Name="Textzeile1" />
+                <GroupAddress Id="P-081A-0_GA-4" Address="4" Name="Textzeile2" />
+                <GroupAddress Id="P-081A-0_GA-26" Address="5" Name="Alarm" />
+                <GroupAddress Id="P-081A-0_GA-27" Address="6" Name="LCD Beleuchtung" />
+                <GroupAddress Id="P-081A-0_GA-28" Address="7" Name="Sturmwarnung" />
+                <GroupAddress Id="P-081A-0_GA-29" Address="8" Name="Sturmalarm" />
+                <GroupAddress Id="P-081A-0_GA-30" Address="9" Name="Sturmwarnung abschalten" />
+                <GroupAddress Id="P-081A-0_GA-31" Address="10" Name="Sturmalarm abschalten" />
+                <GroupAddress Id="P-081A-0_GA-32" Address="11" Name="Textzeile 3" />
+                <GroupAddress Id="P-081A-0_GA-33" Address="12" Name="Textzeile 4" />
+              </GroupRange>
+              <GroupRange Id="P-081A-0_GR-3" Name="Sensor" RangeStart="256" RangeEnd="511">
+                <GroupAddress Id="P-081A-0_GA-5" Address="256" Name="LCD_schalten_W1_Ein" />
+                <GroupAddress Id="P-081A-0_GA-6" Address="257" Name="LCD_schalten_W1_Aus" />
+                <GroupAddress Id="P-081A-0_GA-34" Address="258" Name="Alarm Ein/Aus" />
+                <GroupAddress Id="P-081A-0_GA-41" Address="259" Name="Status Komfortbetrieb" />
+                <GroupAddress Id="P-081A-0_GA-9" Address="260" Name="Sollwertverschiebung" />
+                <GroupAddress Id="P-081A-0_GA-10" Address="261" Name="Status Heizen Kühlen" />
+                <GroupAddress Id="P-081A-0_GA-40" Address="262" Name="Fensterstatus" />
+                <GroupAddress Id="P-081A-0_GA-12" Address="263" Name="Standbybetrieb" />
+                <GroupAddress Id="P-081A-0_GA-13" Address="264" Name="Nachtbetrieb" />
+                <GroupAddress Id="P-081A-0_GA-14" Address="265" Name="Frost_Hietzschutzbetrieb" />
+                <GroupAddress Id="P-081A-0_GA-15" Address="266" Name="Ventilator_Automatikbetrieb" />
+                <GroupAddress Id="P-081A-0_GA-16" Address="267" Name="Status_Ventilator" />
+                <GroupAddress Id="P-081A-0_GA-17" Address="268" Name="Ventilatordrehzahl" />
+                <GroupAddress Id="P-081A-0_GA-18" Address="269" Name="Status_Fenster" />
+                <GroupAddress Id="P-081A-0_GA-19" Address="270" Name="LCD_dimmen_W2_ein" />
+                <GroupAddress Id="P-081A-0_GA-20" Address="271" Name="LCD_dimmen_W2_aus" />
+                <GroupAddress Id="P-081A-0_GA-21" Address="272" Name="LCD_W3_Tasterfunktion" />
+                <GroupAddress Id="P-081A-0_GA-22" Address="273" Name="Licht schalten" />
+                <GroupAddress Id="P-081A-0_GA-23" Address="274" Name="Licht dimmen" />
+                <GroupAddress Id="P-081A-0_GA-24" Address="275" Name="Taster schalten" />
+                <GroupAddress Id="P-081A-0_GA-25" Address="276" Name="Taster dimmen" />
+              </GroupRange>
+            </GroupRange>
+          </GroupRanges>
+        </GroupAddresses>
+      </Installation>
+    </Installations>
+  </Project>
+</KNX>
