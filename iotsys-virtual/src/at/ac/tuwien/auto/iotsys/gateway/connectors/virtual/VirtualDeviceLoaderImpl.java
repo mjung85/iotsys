@@ -152,6 +152,7 @@ public class VirtualDeviceLoaderImpl implements DeviceLoader {
 			String connectorName = subConfig.getString("name");
 			Boolean enabled = subConfig.getBoolean("enabled", false);
 			
+			
 			if (enabled) {
 				try {
 					VirtualConnector vConn = new VirtualConnector();
