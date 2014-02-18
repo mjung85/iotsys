@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013
+ * Copyright (c) 2013 - IotSys CoAP Proxy
  * Institute of Computer Aided Automation, Automation Systems Group, TU Wien.
  * All rights reserved.
  * 
@@ -33,7 +33,6 @@
 package at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.coap;
 
 //import java.util.logging.Logger;
-import java.net.Inet6Address;
 
 import ch.ethz.inf.vs.californium.coap.Response;
 import ch.ethz.inf.vs.californium.coap.ResponseHandler;
@@ -58,6 +57,19 @@ public class LightSwitchActuatorImplCoap extends LightSwitchActuatorImpl {
 	public void initialize(){
 		super.initialize();
 		// But stuff here that should be executed after object creation
+		addWatchDog();
+	}
+	
+	public void addWatchDog(){
+		coapConnector.createWatchDog(busAddress, VALUE_CONTRACT_HERF, new ResponseHandler() {
+			public void handleResponse(Response response) {	
+				boolean temp = Boolean.parseBoolean( CoapConnector.extractAttribute("bool", "val",
+						response.getPayloadString().trim()));
+				
+				LightSwitchActuatorImplCoap.this.value().set(temp);
+
+			}
+		});	
 	}
 	
 	@Override
@@ -75,15 +87,7 @@ public class LightSwitchActuatorImplCoap extends LightSwitchActuatorImpl {
 	public void refreshObject(){
 		// value is the protected instance variable of the base class (LightSwitchActuatorImpl)
 		if(value != null){
-			Boolean value = coapConnector.readBoolean(busAddress, VALUE_CONTRACT_HERF, new ResponseHandler() {
-				public void handleResponse(Response response) {	
-					boolean temp = Boolean.parseBoolean( CoapConnector.extractAttribute("bool", "val",
-							response.getPayloadString().trim()));
-					
-					LightSwitchActuatorImplCoap.this.value().set(temp);
-
-				}
-			});	
+			Boolean value = coapConnector.readBoolean(busAddress, VALUE_CONTRACT_HERF);
 			
 			// this calls the implementation of the base class, which triggers also
 			// oBIX services (e.g. watches, history) and CoAP observe!
