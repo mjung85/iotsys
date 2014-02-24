@@ -6,6 +6,8 @@
     </device-loader>
     <device-loader>at.ac.tuwien.auto.iotsys.gateway.connector.wmbus.WMBusDeviceLoaderImpl
     </device-loader>
+	<device-loader>at.ac.tuwien.auto.iotsys.gateway.connector.mbus.MBusDeviceLoaderImpl
+    </device-loader>
     <device-loader>at.ac.tuwien.auto.iotsys.gateway.connectors.xbee.XBeeDeviceLoaderImpl
     </device-loader>
     <device-loader>at.ac.tuwien.auto.iotsys.gateway.connectors.virtual.VirtualDeviceLoaderImpl
