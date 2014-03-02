@@ -182,7 +182,7 @@
     
     <connector>
       <name>EnOcean Windows</name>
-      <enabled>true</enabled>
+      <enabled>false</enabled>
       <serialPort>COM15</serialPort>
       <device>
         <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.enocean.PushButtonImplEnocean
@@ -285,7 +285,7 @@
   <knx-ets>
     <connector>
         <name>KNX TP1 Suitcase</name>
-        <enabled>true</enabled>
+        <enabled>false</enabled>
         <groupCommEnabled>true</groupCommEnabled>
         <knx-proj>knx-config/projects/Suitcase_2013_10_18.knxproj</knx-proj>
         <!-- forces unpacking of zip and transformation -->
