@@ -56,7 +56,7 @@ public class FanSpeedActuatorImplCoap extends FanSpeedActuatorImpl{
 	public void initialize(){
 		super.initialize();
 		// But stuff here that should be executed after object creation
-		addWatchDog();
+		//addWatchDog();
 	}
 	
 	public void addWatchDog(){
@@ -65,6 +65,7 @@ public class FanSpeedActuatorImplCoap extends FanSpeedActuatorImpl{
 				boolean temp = Boolean.parseBoolean(CoapConnector.extractAttribute("bool", "val", 
 						response.getPayloadString().trim()));
 				FanSpeedActuatorImplCoap.this.enabled().set(temp);
+				System.out.println(temp);
 			}
 		});	
 		
@@ -73,6 +74,7 @@ public class FanSpeedActuatorImplCoap extends FanSpeedActuatorImpl{
 				long temp = Long.parseLong( CoapConnector.extractAttribute("int", "val",
 						response.getPayloadString().trim()));
 				FanSpeedActuatorImplCoap.this.fanSpeedSetpointValue().set(temp);
+				System.out.println(temp);
 			}
 		});	
 	}
@@ -96,9 +98,10 @@ public class FanSpeedActuatorImplCoap extends FanSpeedActuatorImpl{
 			Boolean value = coapConnector.readBoolean(busAddress, ENBALED_CONTRACT_HREF);	
 			this.enabled().set(value);
 		}
-		if(fanSpeedSetpointValue != null){			
+		if(fanSpeedSetpointValue != null){
 			Long value = coapConnector.readInt(busAddress, FAN_SPEED_SETPOINT_CONTRACT_HREF);
 			this.fanSpeedSetpointValue().set(value); 
+			
 		}
 	}
 }
