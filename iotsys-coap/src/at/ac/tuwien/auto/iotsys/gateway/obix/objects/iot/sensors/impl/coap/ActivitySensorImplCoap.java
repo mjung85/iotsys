@@ -38,16 +38,16 @@ import ch.ethz.inf.vs.californium.coap.Response;
 import ch.ethz.inf.vs.californium.coap.ResponseHandler;
 
 import obix.Obj;
-import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.sensors.impl.TemperatureSensorImpl;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.sensors.impl.ActivitySensorImpl;
 import at.ac.tuwien.auto.iotsys.gateway.connectors.coap.CoapConnector;
 
-public class TemperatureSensorImplCoap extends TemperatureSensorImpl {
+public class ActivitySensorImplCoap extends ActivitySensorImpl {
 	//private static final Logger log = Logger.getLogger(TemperatureSensorImplCoap.class.getName());
 	
 	private CoapConnector coapConnector;
 	private String busAddress; 
 	
-	public TemperatureSensorImplCoap(CoapConnector coapConnector, String busAddress){
+	public ActivitySensorImplCoap(CoapConnector coapConnector, String busAddress){
 		// technology specific initialization
 		this.coapConnector = coapConnector;
 		this.busAddress = busAddress;
@@ -61,12 +61,11 @@ public class TemperatureSensorImplCoap extends TemperatureSensorImpl {
 	}
 	
 	public void addWatchDog(){
-		coapConnector.createWatchDog(busAddress, "value", new ResponseHandler() {
+		coapConnector.createWatchDog(busAddress, ACTIVITY_CONTRACT_HREF, new ResponseHandler() {
 			public void handleResponse(Response response) {	
-				double temp = Double.parseDouble( CoapConnector.extractAttribute("real", "val",
-						response.getPayloadString().trim()));
+				String temp = CoapConnector.extractAttribute("bool", "val", response.getPayloadString().trim());
 				
-				TemperatureSensorImplCoap.this.value().set(temp);
+				ActivitySensorImplCoap.this.activityValue().set(temp);
 
 			}
 		});	
@@ -80,15 +79,15 @@ public class TemperatureSensorImplCoap extends TemperatureSensorImpl {
 	@Override
 	public void refreshObject(){
 		
-		//log.info("TempSensor refresh");
+		//log.info("ActivitySensor refresh");
 		
 		//value is the protected instance variable of the base class (TemperatureSensorImpl)
 		if(value != null){
-			Double value = coapConnector.readDouble(busAddress, "value");			
+			String value = coapConnector.readActivity(busAddress, ACTIVITY_CONTRACT_HREF);			
 			
 			// this calls the implementation of the base class, which triggers also
 			// oBIX services (e.g. watches, history) and CoAP observe!			
-			this.value().set(value); 
+			this.activityValue().set(value); 
 		}	
 	}
 }

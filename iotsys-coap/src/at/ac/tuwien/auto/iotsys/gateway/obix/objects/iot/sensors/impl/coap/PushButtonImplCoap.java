@@ -57,7 +57,7 @@ public class PushButtonImplCoap extends PushButtonImpl {
 	public void initialize(){
 		super.initialize();
 		// But stuff here that should be executed after object creation
-		addWatchDog();
+		//addWatchDog();
 	}
 	
 	public void addWatchDog(){

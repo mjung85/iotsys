@@ -30,7 +30,7 @@
 			</device>
 			
 			<device>
-					<type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.coap.LedsActuatorImplCoap
+					<type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.coap.LedsActuatorImplCoap
 					</type>
 					<address>coap://[aaaa::c30c:0:0:518]:5683/leds</address>
 					<href>leds</href>

@@ -30,29 +30,28 @@
  * This file is part of the IoTSyS project.
  ******************************************************************************/
 
-package at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.coap;
+package at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.coap;
 
 //import java.util.logging.Logger;
 
 import ch.ethz.inf.vs.californium.coap.Response;
 import ch.ethz.inf.vs.californium.coap.ResponseHandler;
-
 import obix.Obj;
-import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.sensors.impl.TemperatureSensorImpl;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators.impl.LedsActuatorImpl;
 import at.ac.tuwien.auto.iotsys.gateway.connectors.coap.CoapConnector;
 
-public class TemperatureSensorImplCoap extends TemperatureSensorImpl {
-	//private static final Logger log = Logger.getLogger(TemperatureSensorImplCoap.class.getName());
+public class LedsActuatorImplCoap extends LedsActuatorImpl{
+	//private static final Logger log = Logger.getLogger(LedsActuatorImplCoap.class.getName());
 	
 	private CoapConnector coapConnector;
-	private String busAddress; 
-	
-	public TemperatureSensorImplCoap(CoapConnector coapConnector, String busAddress){
+	private String busAddress;
+
+	public LedsActuatorImplCoap(CoapConnector coapConnector, String busAddress) {
 		// technology specific initialization
 		this.coapConnector = coapConnector;
 		this.busAddress = busAddress;
 	}
-	
+
 	@Override
 	public void initialize(){
 		super.initialize();
@@ -61,34 +60,58 @@ public class TemperatureSensorImplCoap extends TemperatureSensorImpl {
 	}
 	
 	public void addWatchDog(){
-		coapConnector.createWatchDog(busAddress, "value", new ResponseHandler() {
+		coapConnector.createWatchDog(busAddress, LED_BLUE_CONTRACT_HREF, new ResponseHandler() {
 			public void handleResponse(Response response) {	
-				double temp = Double.parseDouble( CoapConnector.extractAttribute("real", "val",
+				boolean temp = Boolean.parseBoolean(CoapConnector.extractAttribute("bool", "val", 
 						response.getPayloadString().trim()));
-				
-				TemperatureSensorImplCoap.this.value().set(temp);
-
+				LedsActuatorImplCoap.this.blue().set(temp);
 			}
 		});	
+		
+		coapConnector.createWatchDog(busAddress, LED_RED_CONTRACT_HREF, new ResponseHandler() {
+			public void handleResponse(Response response) {	
+				boolean temp = Boolean.parseBoolean(CoapConnector.extractAttribute("bool", "val", 
+						response.getPayloadString().trim()));
+				LedsActuatorImplCoap.this.red().set(temp);
+			}
+		});
+		
+		coapConnector.createWatchDog(busAddress, LED_GREEN_CONTRACT_HREF, new ResponseHandler() {
+			public void handleResponse(Response response) {	
+				boolean temp = Boolean.parseBoolean(CoapConnector.extractAttribute("bool", "val", 
+						response.getPayloadString().trim()));
+				LedsActuatorImplCoap.this.green().set(temp);
+			}
+		});
 	}
 	
 	@Override
 	public void writeObject(Obj input){
-		//Sensor not writable
+		// A write on this object was received, update the according data point.	
+		// The base class knows how to update the internal variable and to trigger
+		// all the oBIX specific processing.
+		super.writeObject(input);
+		
+		// write it out to the technology bus
+		coapConnector.writeBoolean(busAddress, LED_BLUE_CONTRACT_HREF, this.blue().get());
+		coapConnector.writeBoolean(busAddress, LED_RED_CONTRACT_HREF, this.red().get());
+		coapConnector.writeBoolean(busAddress, LED_GREEN_CONTRACT_HREF, this.green().get());
 	}
-
+	
 	@Override
 	public void refreshObject(){
-		
-		//log.info("TempSensor refresh");
-		
-		//value is the protected instance variable of the base class (TemperatureSensorImpl)
-		if(value != null){
-			Double value = coapConnector.readDouble(busAddress, "value");			
-			
-			// this calls the implementation of the base class, which triggers also
-			// oBIX services (e.g. watches, history) and CoAP observe!			
-			this.value().set(value); 
-		}	
+		// value is the protected instance variable of the base class (FanSpeedActuatorImpl)
+		if(blue != null){
+			Boolean value = coapConnector.readBoolean(busAddress, LED_BLUE_CONTRACT_HREF);	
+			this.blue().set(value);
+		}
+		if(red != null){
+			Boolean value = coapConnector.readBoolean(busAddress, LED_RED_CONTRACT_HREF);	
+			this.red().set(value);
+		}
+		if(green != null){
+			Boolean value = coapConnector.readBoolean(busAddress, LED_GREEN_CONTRACT_HREF);	
+			this.green().set(value);
+		}
 	}
 }
