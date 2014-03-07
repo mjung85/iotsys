@@ -52,7 +52,6 @@ import org.w3c.dom.NodeList;
 import ch.ethz.inf.vs.californium.coap.GETRequest;
 import ch.ethz.inf.vs.californium.coap.PUTRequest;
 //import ch.ethz.inf.vs.californium.coap.POSTRequest;
-//import ch.ethz.inf.vs.californium.coap.registries.MediaTypeRegistry;
 import ch.ethz.inf.vs.californium.coap.Option;
 import ch.ethz.inf.vs.californium.coap.registries.MediaTypeRegistry;
 import ch.ethz.inf.vs.californium.coap.registries.OptionNumberRegistry;
@@ -177,6 +176,25 @@ public class CoapConnector implements Connector {
 			return Long.parseLong(temp);
 		}
 		return 0L;
+	}
+	
+	public String readStr(String busAddress, String datapoint) {
+		String payload = send(busAddress, datapoint, "GET", "", null);
+		if(payload != null) {
+			String temp = extractAttribute("str", "val", payload);
+			return temp;
+		}
+		return "";
+	}
+	
+	//TODO: Activity Contract von bool auf str aendern?!?
+	public String readActivity(String busAddress, String datapoint) {
+		String payload = send(busAddress, datapoint, "GET", "", null);
+		if(payload != null) {
+			String temp = extractAttribute("bool", "val", payload);
+			return temp;
+		}
+		return "";
 	}
 
 	public void writeBoolean(String busAddress, String datapoint, Boolean value) {
