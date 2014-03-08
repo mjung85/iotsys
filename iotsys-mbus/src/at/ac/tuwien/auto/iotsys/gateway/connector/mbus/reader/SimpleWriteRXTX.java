@@ -35,6 +35,11 @@ package at.ac.tuwien.auto.iotsys.gateway.connector.mbus.reader;
 import java.io.*;
 import java.util.*;
 import java.util.logging.Logger;
+import java.util.TooManyListenersException;
+
+import at.ac.tuwien.auto.iotsys.gateway.connector.mbus.telegrams.Telegram;
+
+import at.ac.tuwien.auto.iotsys.gateway.connector.mbus.util.Converter;
 //import javax.comm.*;
 import gnu.io.*;
 
@@ -43,20 +48,29 @@ import gnu.io.*;
  * 
  * 
  * @author
- * @version 1.10, 08/04/00
+ * @version 1.00, 03/08/14
  */
 public class SimpleWriteRXTX {
 	static Enumeration<?> portList;
 	static CommPortIdentifier portId;
-	static String messageString = "Hello, world!";
-	//static String messageString = "10 40 01 41 16";
-	//static String messageString = "10 7B 01 7C 16";
+	//static String messageString = "Hello, world!";
 	static SerialPort serialPort;
 	static OutputStream outputStream;
+	static InputStream inputStream;
+	static boolean serialPortIsOpen = false;
+	static boolean meterFound = false;
+	static boolean dataFound = false;
 	static boolean outputBufferEmptyFlag = false;
+	
+	static String messageString_SND_NKE = "10 40 01 41 16";
+	static String messageString_REQ_UD2 = "10 7B 01 7C 16";
+	static byte[] byteArray_SND_NKE = {0x10,0x40,0x01,0x41,0x16};
+	static byte[] byteArray_REQ_UD2 = {0x10,0x7B,0x01,0x7C,0x16};
+	
+	static Telegram telegram;
 
 	private static final Logger log = Logger.getLogger(SimpleWriteRXTX.class
-			.getName());
+			.getName());	
 
 	/**
 	 * Method declaration
@@ -66,7 +80,7 @@ public class SimpleWriteRXTX {
 	 * 
 	 * @see
 	 */
-	public static void main(String[] args) {
+	public static void main(String[] args) {		
 		boolean portFound = false;
 		String defaultPort = "COM4";
 
@@ -99,42 +113,175 @@ public class SimpleWriteRXTX {
 						outputStream = serialPort.getOutputStream();
 					} catch (IOException e) {
 					}
+				
+					try {
+						inputStream = serialPort.getInputStream();
+					} catch (IOException e) {
+						System.out.println("Keinen Zugriff auf InputStream");
+					}
+					try {						
+						serialPort.addEventListener(new SerialPortReader());
+					} catch (TooManyListenersException e) {
+						System.out.println("TooManyListenersException für Serialport");
+					}									
+					
+					try {
+						serialPort.notifyOnDataAvailable(true);
+					} catch (Exception e) {
+						log.severe("Error setting event notification"
+								+ e.toString());
+					}					
+					serialPortIsOpen=true;
 
 					try {
 						serialPort.setSerialPortParams(2400,
 								SerialPort.DATABITS_8, SerialPort.STOPBITS_1,
-								SerialPort.PARITY_NONE);
+								SerialPort.PARITY_EVEN);
 					} catch (UnsupportedCommOperationException e) {
 					}
-
+					
 					try {
-						serialPort.notifyOnOutputEmpty(true);
+						serialPort.setFlowControlMode(SerialPort.FLOWCONTROL_NONE);
+					} catch (UnsupportedCommOperationException e) {						
+						e.printStackTrace();
+					}
+					serialPort.setRTS(false); 
+					serialPort.setDTR(false);	
+
+//					try {
+//						serialPort.notifyOnOutputEmpty(true);
+//					} catch (Exception e) {
+//						log.severe("Error setting event notification"
+//								+ e.toString());
+//					}
+
+//					log.finest("Writing \"" + messageString_SND_NKE + "\" to "
+//							+ serialPort.getName());					
+
+//					try {
+//						outputStream.write(messageString.getBytes());					
+//					} catch (IOException e) {
+//						System.out.println("Error while writing: " +e);
+//					}
+
+//					try {
+//						Thread.sleep(5000); // Be sure data is xferred before
+//											// closing
+//					} catch (Exception e) {
+//					}					
+					
+					startReadingMeter();		
+					
+					try {
+						System.out.println("Waiting for processing data");	
+						Thread.sleep(15000); 												
 					} catch (Exception e) {
-						log.severe("Error setting event notification"
-								+ e.toString());
+						System.out.println("Error while sleeping: " +e);
 					}
-
-					log.finest("Writing \"" + messageString + "\" to "
-							+ serialPort.getName());
-
-					try {
-						outputStream.write(messageString.getBytes());
-					} catch (IOException e) {
-					}
-
-					try {
-						Thread.sleep(2000); // Be sure data is xferred before
-											// closing
-					} catch (Exception e) {
-					}
-					serialPort.close();				
+										
+					closePort();
 				}
 			}
 		}
+		
+		System.out.println("Finished successfully \nMeter Found: " + meterFound + "\ndataFound: " +dataFound );
 
 		if (!portFound) {
 			log.warning("port " + defaultPort + " not found.");
 		}
 	}
+	
+	static void sendSerialPortMessage(byte[] message)
+	{		
+		System.out.println("Sende: " + message.toString());
+		if (serialPortIsOpen != true)
+			return;
+		try {
+			outputStream.write(message);
+		} catch (IOException e) {
+			System.out.println("Fehler beim Senden");
+		}
+	}
+	
+	 static void startReadingMeter()
+	 {
+		 sendSerialPortMessage(byteArray_SND_NKE);
+	 }
+	 
+//	 public static String ConvertByteArrayToString(byte[] ba){		 
+//		 StringBuilder sb = new StringBuilder();
+//		 for (byte b : ba) {
+//			 sb.append(String.format("%02X ", b));
+//		 }		 
+//		 return sb.toString();
+//	 }
+	
+	static void serialPortDataAvailable() {
+		telegram = new Telegram();	
+		byte[] readBuffer = new byte[512];
 
+		try {			
+			int num=0;
+			while(inputStream.available() > 0) {
+				num = inputStream.read(readBuffer, 0, readBuffer.length);		
+			}
+			System.out.println("Empfange: "+ Integer.toHexString(readBuffer[0] & 0xFF));
+			if(Integer.toHexString(readBuffer[0] & 0xFF).equalsIgnoreCase("e5")) {
+				System.out.println("Einzelzeichen E5 empfangen");
+				sendSerialPortMessage(byteArray_REQ_UD2);
+				meterFound=true;
+			}
+			if(readBuffer[0] == 0x68) {
+				System.out.println("Daten empfangen");				
+				// add telegram
+				telegram.createTelegram(Converter.convertByteArrayToString(readBuffer));		
+				telegram.parse();
+				telegram.debugOutput();
+				dataFound=true;
+
+			}
+		} catch (IOException e) {
+			System.out.println("Fehler beim Lesen empfangener Daten");
+		}
+	}
+	
+	 static public void closePort(){    	
+	    	try {
+				if (inputStream != null) inputStream.close();
+				if (outputStream != null) outputStream.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			serialPort.close();	
+			serialPortIsOpen=false;
+	    }
+
+	static class SerialPortReader implements SerialPortEventListener {
+		public void serialEvent(SerialPortEvent event) {
+			System.out.println("serialPortEventlistener");
+			switch (event.getEventType()) {
+			case SerialPortEvent.DATA_AVAILABLE:
+				System.out.println("wait 2 seconds for data");
+				 //after Data is available, give it a couple of seconds to process
+	            try {
+	                Thread.sleep(2000);
+	            } catch (InterruptedException e) {
+	            	e.printStackTrace();            	
+	            }	            
+				serialPortDataAvailable();
+				break;
+			case SerialPortEvent.BI:
+			case SerialPortEvent.CD:
+			case SerialPortEvent.CTS:
+			case SerialPortEvent.DSR:
+			case SerialPortEvent.FE:
+			case SerialPortEvent.OUTPUT_BUFFER_EMPTY:
+				System.out.println("OutputBufferEmpty");
+				break;
+			case SerialPortEvent.PE:
+			case SerialPortEvent.RI:
+			default:
+			}
+		}
+	}
 }

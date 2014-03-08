@@ -993,6 +993,38 @@
       </device>
     </connector>
   </wmbus>
+  
+ <mbus>
+    <connector>
+      <name>MBus Smart Meter Linux</name>
+      <enabled>false</enabled>
+      <serialPort>/dev/ttyAMA0</serialPort>
+      <device>
+        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.mbus.SmartMeterImplMBus
+        </type>
+        <address>15004474, 66 77 66 77 66 77 66 77 66 77 66 77 66 77 66 77</address>
+        <href>smartmeter</href>
+        <historyEnabled>true</historyEnabled>
+        <historyCount>1000</historyCount>
+        <groupCommEnabled>true</groupCommEnabled>
+      </device>
+    </connector>
+
+    <connector>
+      <name>MBus Smart Meter Windows</name>
+      <enabled>false</enabled>
+      <serialPort>COM4</serialPort>
+      <device>
+        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.mbus.SmartMeterImplMBus
+        </type>
+        <address>15004474, 66 77 66 77 66 77 66 77 66 77 66 77 66 77 66 77</address>
+        <href>smartmeter</href>
+        <historyEnabled>true</historyEnabled>
+        <historyCount>1000</historyCount>
+        <groupCommEnabled>true</groupCommEnabled>
+      </device>
+    </connector>
+  </wmbus>
 
   <virtual>
     <connector>
