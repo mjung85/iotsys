@@ -46,26 +46,34 @@ public class PushButtonImplCoap extends PushButtonImpl {
 	
 	private CoapConnector coapConnector;
 	private String busAddress; 
+	private boolean isObserved;
 	
 	public PushButtonImplCoap(CoapConnector coapConnector, String busAddress){
 		// technology specific initialization
 		this.coapConnector = coapConnector;
 		this.busAddress = busAddress;
+		this.isObserved = false;
 	}
 	
 	@Override
 	public void initialize(){
 		super.initialize();
 		// But stuff here that should be executed after object creation
-		//addWatchDog();
+		addWatchDog();
 	}
 	
 	public void addWatchDog(){
 		coapConnector.createWatchDog(busAddress, "value", new ResponseHandler() {
 			public void handleResponse(Response response) {	
-				boolean temp = Boolean.parseBoolean( CoapConnector.extractAttribute("bool", "val",
-						response.getPayloadString().trim()));
+				String payload = response.getPayloadString().trim();
 				
+				if(payload.equals("")) return;
+				
+				if(payload.startsWith("Added")) {
+					isObserved = true;
+					return;
+				}
+				boolean temp = Boolean.parseBoolean( CoapConnector.extractAttribute("bool", "val",payload));
 				PushButtonImplCoap.this.value().set(temp);
 			}
 		});	
@@ -79,7 +87,7 @@ public class PushButtonImplCoap extends PushButtonImpl {
 	@Override
 	public void refreshObject(){
 		//value is the protected instance variable of the base class (TemperatureSensorImpl)
-		if(value != null){
+		if(value != null && !isObserved){
 			Boolean value = coapConnector.readBoolean(busAddress, "value");
 			
 			// this calls the implementation of the base class, which triggers also

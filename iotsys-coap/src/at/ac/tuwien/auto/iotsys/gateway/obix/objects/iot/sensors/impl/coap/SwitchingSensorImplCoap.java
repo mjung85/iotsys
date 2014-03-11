@@ -46,11 +46,13 @@ public class SwitchingSensorImplCoap extends SwitchingSensorImpl {
 	
 	private CoapConnector coapConnector;
 	private String busAddress; 
+	private boolean isObserved;
 	
 	public SwitchingSensorImplCoap(CoapConnector coapConnector, String busAddress){
 		// technology specific initialization
 		this.coapConnector = coapConnector;
 		this.busAddress = busAddress;
+		this.isObserved = false;
 	}
 	
 	@Override
@@ -63,9 +65,15 @@ public class SwitchingSensorImplCoap extends SwitchingSensorImpl {
 	public void addWatchDog(){
 		coapConnector.createWatchDog(busAddress, "value", new ResponseHandler() {
 			public void handleResponse(Response response) {	
-				boolean temp = Boolean.parseBoolean( CoapConnector.extractAttribute("bool", "val",
-						response.getPayloadString().trim()));
+				String payload = response.getPayloadString().trim();
 				
+				if(payload.equals("")) return;
+				
+				if(payload.startsWith("Added")) {
+					isObserved = true;
+					return;
+				}
+				boolean temp = Boolean.parseBoolean( CoapConnector.extractAttribute("bool", "val",payload));
 				SwitchingSensorImplCoap.this.switchOnOffValue().set(temp);
 
 			}
@@ -80,7 +88,7 @@ public class SwitchingSensorImplCoap extends SwitchingSensorImpl {
 	@Override
 	public void refreshObject(){
 		//switchOnOffValue is the protected instance variable of the base class (SwitchingSensorImpl)
-		if(switchOnOffValue() != null){
+		if(switchOnOffValue() != null  && !isObserved){
 			Boolean value = coapConnector.readBoolean(busAddress, "switchOnOff");
 			// this calls the implementation of the base class, which triggers also
 			// oBIX services (e.g. watches, history) and CoAP observe!			

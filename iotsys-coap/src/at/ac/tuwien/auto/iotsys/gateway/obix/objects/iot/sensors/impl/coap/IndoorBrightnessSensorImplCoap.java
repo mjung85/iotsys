@@ -46,11 +46,13 @@ public class IndoorBrightnessSensorImplCoap extends IndoorBrightnessSensorImpl {
 	
 	private CoapConnector coapConnector;
 	private String busAddress; 
+	private boolean isObserved;
 	
 	public IndoorBrightnessSensorImplCoap(CoapConnector coapConnector, String busAddress){
 		// technology specific initialization
 		this.coapConnector = coapConnector;
 		this.busAddress = busAddress;
+		this.isObserved = false;
 	}
 	
 	@Override
@@ -64,9 +66,16 @@ public class IndoorBrightnessSensorImplCoap extends IndoorBrightnessSensorImpl {
 	public void addWatchDog(){
 		coapConnector.createWatchDog(busAddress, ROOM_ILLUMINATION_CONTRACT_HREF, new ResponseHandler() {
 			public void handleResponse(Response response) {	
-				double temp = Double.parseDouble( CoapConnector.extractAttribute("real", "val",
-						response.getPayloadString().trim()));
+				String payload = response.getPayloadString().trim();
 				
+				if(payload.equals("")) return;
+				
+				if(payload.startsWith("Added")) {
+					isObserved = true;
+					return;
+				}
+				
+				double temp = Double.parseDouble( CoapConnector.extractAttribute("real", "val", payload));
 				IndoorBrightnessSensorImplCoap.this.roomIlluminationValue().set(temp); 
 
 			}
@@ -81,7 +90,7 @@ public class IndoorBrightnessSensorImplCoap extends IndoorBrightnessSensorImpl {
 	@Override
 	public void refreshObject(){
 		//value is the protected instance variable of the base class (TemperatureSensorImpl)
-		if(roomIlluminationValue != null){
+		if(roomIlluminationValue != null && !isObserved){
 			Double value = coapConnector.readDouble(busAddress, ROOM_ILLUMINATION_CONTRACT_HREF);
 			
 			// this calls the implementation of the base class, which triggers also

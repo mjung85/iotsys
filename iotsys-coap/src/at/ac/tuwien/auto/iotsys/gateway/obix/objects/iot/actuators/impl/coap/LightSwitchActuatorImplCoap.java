@@ -46,11 +46,13 @@ public class LightSwitchActuatorImplCoap extends LightSwitchActuatorImpl {
 	
 	private CoapConnector coapConnector;
 	private String busAddress;
+	private boolean isObserved;
 	
 	public LightSwitchActuatorImplCoap(CoapConnector coapConnector, String busAddress){
 		// technology specific initialization
 		this.coapConnector = coapConnector;
 		this.busAddress = busAddress;
+		this.isObserved = false;
 	}
 	
 	@Override
@@ -63,8 +65,15 @@ public class LightSwitchActuatorImplCoap extends LightSwitchActuatorImpl {
 	public void addWatchDog(){
 		coapConnector.createWatchDog(busAddress, VALUE_CONTRACT_HERF, new ResponseHandler() {
 			public void handleResponse(Response response) {	
-				boolean temp = Boolean.parseBoolean( CoapConnector.extractAttribute("bool", "val",
-						response.getPayloadString().trim()));
+				String payload = response.getPayloadString().trim();
+				
+				if(payload.equals("")) return;
+				
+				if(payload.startsWith("Added")) {
+					isObserved = true;
+					return;
+				}
+				boolean temp = Boolean.parseBoolean(CoapConnector.extractAttribute("bool", "val", payload));
 				
 				LightSwitchActuatorImplCoap.this.value().set(temp);
 
@@ -86,7 +95,7 @@ public class LightSwitchActuatorImplCoap extends LightSwitchActuatorImpl {
 	@Override
 	public void refreshObject(){
 		// value is the protected instance variable of the base class (LightSwitchActuatorImpl)
-		if(value != null){
+		if(value != null && !isObserved){
 			Boolean value = coapConnector.readBoolean(busAddress, VALUE_CONTRACT_HERF);
 			
 			// this calls the implementation of the base class, which triggers also

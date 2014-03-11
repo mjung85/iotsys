@@ -42,53 +42,59 @@ import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.sensors.impl.Temperatur
 import at.ac.tuwien.auto.iotsys.gateway.connectors.coap.CoapConnector;
 
 public class TemperatureSensorImplCoap extends TemperatureSensorImpl {
-	//private static final Logger log = Logger.getLogger(TemperatureSensorImplCoap.class.getName());
-	
+	// private static final Logger log =
+	// Logger.getLogger(TemperatureSensorImplCoap.class.getName());
+
 	private CoapConnector coapConnector;
-	private String busAddress; 
-	
-	public TemperatureSensorImplCoap(CoapConnector coapConnector, String busAddress){
+	private String busAddress;
+	private boolean isObserved;
+
+	public TemperatureSensorImplCoap(CoapConnector coapConnector,
+			String busAddress) {
 		// technology specific initialization
 		this.coapConnector = coapConnector;
 		this.busAddress = busAddress;
+		this.isObserved = false;
 	}
-	
+
 	@Override
-	public void initialize(){
+	public void initialize() {
 		super.initialize();
 		// But stuff here that should be executed after object creation
-		//addWatchDog();
+		addWatchDog();
 	}
-	
-	public void addWatchDog(){
-		coapConnector.createWatchDog(busAddress, "value", new ResponseHandler() {
-			public void handleResponse(Response response) {	
-				double temp = Double.parseDouble( CoapConnector.extractAttribute("real", "val",
-						response.getPayloadString().trim()));
-				
+
+	public void addWatchDog() {
+		coapConnector.createWatchDog(busAddress, "value",new ResponseHandler() {
+			public void handleResponse(Response response) {
+				String payload = response.getPayloadString().trim();
+						
+				if(payload.equals("")) return;
+						
+				if(payload.startsWith("Added")) {
+					isObserved = true;
+					return;
+				}
+
+				double temp = Double.parseDouble( CoapConnector.extractAttribute("real", "val", payload));
 				TemperatureSensorImplCoap.this.value().set(temp);
-
 			}
-		});	
-	}
-	
-	@Override
-	public void writeObject(Obj input){
-		//Sensor not writable
+		});
 	}
 
 	@Override
-	public void refreshObject(){
-		
-		//log.info("TempSensor refresh");
-		
-		//value is the protected instance variable of the base class (TemperatureSensorImpl)
-		if(value != null){
-			Double value = coapConnector.readDouble(busAddress, "value");			
-			
+	public void writeObject(Obj input) {
+		// Sensor not writable
+	}
+
+	@Override
+	public void refreshObject() {
+		// value is the protected instance variable of the base class (TemperatureSensorImpl)
+		if (value != null && !isObserved) {
+			Double value = coapConnector.readDouble(busAddress, "value");
 			// this calls the implementation of the base class, which triggers also
-			// oBIX services (e.g. watches, history) and CoAP observe!			
-			this.value().set(value); 
-		}	
+			// oBIX services (e.g. watches, history) and CoAP observe!
+			this.value().set(value);
+		}
 	}
 }

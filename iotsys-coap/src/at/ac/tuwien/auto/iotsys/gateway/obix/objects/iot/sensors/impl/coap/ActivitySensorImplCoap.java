@@ -46,27 +46,36 @@ public class ActivitySensorImplCoap extends ActivitySensorImpl {
 	
 	private CoapConnector coapConnector;
 	private String busAddress; 
+	private boolean isObserved;
 	
 	public ActivitySensorImplCoap(CoapConnector coapConnector, String busAddress){
 		// technology specific initialization
 		this.coapConnector = coapConnector;
 		this.busAddress = busAddress;
+		this.isObserved = false;
 	}
 	
 	@Override
 	public void initialize(){
 		super.initialize();
 		// But stuff here that should be executed after object creation
-		//addWatchDog();
+		addWatchDog();
 	}
 	
 	public void addWatchDog(){
 		coapConnector.createWatchDog(busAddress, ACTIVITY_CONTRACT_HREF, new ResponseHandler() {
 			public void handleResponse(Response response) {	
-				String temp = CoapConnector.extractAttribute("bool", "val", response.getPayloadString().trim());
-				
-				ActivitySensorImplCoap.this.activityValue().set(temp);
-
+					String payload = response.getPayloadString().trim();
+					
+					if(payload.equals("")) return;
+					
+					if(payload.startsWith("Added")) {
+						isObserved = true;
+						return;
+					}
+					
+					String temp = CoapConnector.extractAttribute("bool", "val", payload);
+					ActivitySensorImplCoap.this.activityValue().set(temp);
 			}
 		});	
 	}
@@ -78,13 +87,9 @@ public class ActivitySensorImplCoap extends ActivitySensorImpl {
 
 	@Override
 	public void refreshObject(){
-		
-		//log.info("ActivitySensor refresh");
-		
-		//value is the protected instance variable of the base class (TemperatureSensorImpl)
-		if(value != null){
-			String value = coapConnector.readActivity(busAddress, ACTIVITY_CONTRACT_HREF);			
-			
+		//value is the protected instance variable of the base class (ActivitySensorImpl)
+		if(value != null && !isObserved){
+			String value = coapConnector.readActivity(busAddress, ACTIVITY_CONTRACT_HREF);
 			// this calls the implementation of the base class, which triggers also
 			// oBIX services (e.g. watches, history) and CoAP observe!			
 			this.activityValue().set(value); 
