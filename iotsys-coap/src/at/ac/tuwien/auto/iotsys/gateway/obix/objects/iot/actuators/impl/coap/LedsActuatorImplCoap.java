@@ -45,41 +45,68 @@ public class LedsActuatorImplCoap extends LedsActuatorImpl{
 	
 	private CoapConnector coapConnector;
 	private String busAddress;
+	private boolean redObserved;
+	private boolean blueObserved;
+	private boolean greenObserved;
 
 	public LedsActuatorImplCoap(CoapConnector coapConnector, String busAddress) {
 		// technology specific initialization
 		this.coapConnector = coapConnector;
 		this.busAddress = busAddress;
+		this.redObserved = false;
+		this.blueObserved = false;
+		this.greenObserved = false;
 	}
 
 	@Override
 	public void initialize(){
 		super.initialize();
 		// But stuff here that should be executed after object creation
-		//addWatchDog();
+		addWatchDog();
 	}
 	
 	public void addWatchDog(){
 		coapConnector.createWatchDog(busAddress, LED_BLUE_CONTRACT_HREF, new ResponseHandler() {
 			public void handleResponse(Response response) {	
-				boolean temp = Boolean.parseBoolean(CoapConnector.extractAttribute("bool", "val", 
-						response.getPayloadString().trim()));
+				String payload = response.getPayloadString().trim();
+				
+				if(payload.equals("")) return;
+				
+				if(payload.startsWith("Added")) {
+					blueObserved = true;
+					return;
+				}
+				boolean temp = Boolean.parseBoolean(CoapConnector.extractAttribute("bool", "val", payload));
 				LedsActuatorImplCoap.this.blue().set(temp);
 			}
 		});	
 		
 		coapConnector.createWatchDog(busAddress, LED_RED_CONTRACT_HREF, new ResponseHandler() {
 			public void handleResponse(Response response) {	
-				boolean temp = Boolean.parseBoolean(CoapConnector.extractAttribute("bool", "val", 
-						response.getPayloadString().trim()));
+				String payload = response.getPayloadString().trim();
+				
+				if(payload.equals("")) return;
+				
+				if(payload.startsWith("Added")) {
+					redObserved = true;
+					return;
+				}
+				boolean temp = Boolean.parseBoolean(CoapConnector.extractAttribute("bool", "val", payload));
 				LedsActuatorImplCoap.this.red().set(temp);
 			}
 		});
 		
 		coapConnector.createWatchDog(busAddress, LED_GREEN_CONTRACT_HREF, new ResponseHandler() {
 			public void handleResponse(Response response) {	
-				boolean temp = Boolean.parseBoolean(CoapConnector.extractAttribute("bool", "val", 
-						response.getPayloadString().trim()));
+				String payload = response.getPayloadString().trim();
+				
+				if(payload.equals("")) return;
+				
+				if(payload.startsWith("Added")) {
+					greenObserved = true;
+					return;
+				}
+				boolean temp = Boolean.parseBoolean(CoapConnector.extractAttribute("bool", "val", payload));
 				LedsActuatorImplCoap.this.green().set(temp);
 			}
 		});
@@ -101,15 +128,15 @@ public class LedsActuatorImplCoap extends LedsActuatorImpl{
 	@Override
 	public void refreshObject(){
 		// value is the protected instance variable of the base class (FanSpeedActuatorImpl)
-		if(blue != null){
+		if(blue != null && !blueObserved){
 			Boolean value = coapConnector.readBoolean(busAddress, LED_BLUE_CONTRACT_HREF);	
 			this.blue().set(value);
 		}
-		if(red != null){
+		if(red != null && !redObserved){
 			Boolean value = coapConnector.readBoolean(busAddress, LED_RED_CONTRACT_HREF);	
 			this.red().set(value);
 		}
-		if(green != null){
+		if(green != null && !greenObserved){
 			Boolean value = coapConnector.readBoolean(busAddress, LED_GREEN_CONTRACT_HREF);	
 			this.green().set(value);
 		}

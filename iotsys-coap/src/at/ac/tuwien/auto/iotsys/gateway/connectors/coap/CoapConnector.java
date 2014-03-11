@@ -77,13 +77,7 @@ public class CoapConnector implements Connector {
 	
 	private String send(String busAddress, String datapoint, String rType, String payload, ResponseHandler handler) {
 		
-		/*Str tempHref = new Str(busAddress);
-		
-		final String tempUri = tempHref.get() + "/" + datapoint;*/
-		
 		final String tempUri = busAddress + "/" + datapoint;
-		
-		//System.out.println(tempUri);
 		
 		Request request = null;
 		
@@ -105,6 +99,7 @@ public class CoapConnector implements Connector {
 			request = new GETRequest();
 			request.setObserve();
 			request.setOption(new Option(0, OptionNumberRegistry.OBSERVE));
+			if(handler != null) request.registerResponseHandler(handler);
 		}
 		
 		request.setType(messageType.NON);
@@ -135,14 +130,12 @@ public class CoapConnector implements Connector {
 				
 				return response.getPayloadString().trim();
 			}
+			
 				
 		} catch (InterruptedException e) {
 			System.err.println("Receiving of response interrupted: "
 					+ e.getMessage());
-		}
-		
-		if(handler != null) request.registerResponseHandler(handler);
-		
+		}	
 		return null;
 	}
 	
