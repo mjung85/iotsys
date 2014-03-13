@@ -339,8 +339,8 @@ public class IoTSySGateway {
 			// register gateway as endpoint
 			if (digcoveryClient != null) {
 				digcoveryClient.registerDevice("gateway", "auto.tuwien.ac.at",
-						null, "_coap._udp", "5683", "48.2083", "16.3731",
-						"Vienna");
+						null, "_coap._udp", "5683", "37.9667", "23.7167",
+						"Athens");
 			}
 		}
 	}
