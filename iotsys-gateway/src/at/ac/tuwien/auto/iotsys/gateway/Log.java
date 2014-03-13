@@ -104,25 +104,25 @@ public class Log {
 		globalLogger.setLevel(logLevel);
 		
 		// create custom file handler
-		FileHandler fHandler;
-		try {
-			fHandler = new FileHandler("iotsys-log.%g.txt", true);
-			fHandler.setFormatter(printFormatter);
-			globalLogger.addHandler(fHandler);
-		} catch (Exception e) {
-			globalLogger.severe("Cannot add file logger: " + e.getMessage());
-		}
-		
-		FileHandler knxHandler;
-		
-		try{
-			knxHandler = new FileHandler("KNX.txt",true);
-			knxHandler.setFormatter(csvFormatter);
-			Logger.getLogger("knxbus").addHandler(knxHandler);
-			Logger.getLogger("knxbus").setLevel(logLevel);
-		} catch(Exception e){
-			e.printStackTrace();
-		}
+//		FileHandler fHandler;
+//		try {
+//			fHandler = new FileHandler("iotsys-log.%g.txt", true);
+//			fHandler.setFormatter(printFormatter);
+//			globalLogger.addHandler(fHandler);
+//		} catch (Exception e) {
+//			globalLogger.severe("Cannot add file logger: " + e.getMessage());
+//		}
+//		
+//		FileHandler knxHandler;
+//		
+//		try{
+//			knxHandler = new FileHandler("KNX.txt",true);
+//			knxHandler.setFormatter(csvFormatter);
+//			Logger.getLogger("knxbus").addHandler(knxHandler);
+//			Logger.getLogger("knxbus").setLevel(logLevel);
+//		} catch(Exception e){
+//			e.printStackTrace();
+//		}
 		
 		// customize levels
 		Logger.getLogger(Endpoint.class.getName()).setLevel(logLevel);

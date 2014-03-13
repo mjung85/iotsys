@@ -48,7 +48,9 @@ import obix.Uri;
 import at.ac.tuwien.auto.iotsys.commons.Connector;
 import at.ac.tuwien.auto.iotsys.commons.DeviceLoader;
 import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.weatherforecast.impl.WeatherForecastLocationImpl;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.weatherforecast.impl.WeatherForecastLocationImpl;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.weatherforecast.objects.WeatherControlImpl;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.weatherforecast.objects.WeatherObjectImplYR_NO;
 
 public class WeatherForecastDeviceLoaderImpl implements DeviceLoader {
 
@@ -76,6 +78,7 @@ public class WeatherForecastDeviceLoaderImpl implements DeviceLoader {
 		if (configuredConnectors instanceof Collection<?>) {
 			connectorsSize = ((Collection<?>) configuredConnectors).size();
 		}
+		
 		log.info("Found " + connectorsSize + " weather forecast connectors.");
 		for (int connector = 0; connector < connectorsSize; connector++) {
 			HierarchicalConfiguration subConfig = devicesConfig.configurationAt("weather-forecast.connector(" + connector + ")");
@@ -114,7 +117,13 @@ public class WeatherForecastDeviceLoaderImpl implements DeviceLoader {
 						String href = subConfig.getString("device(" + i	+ ").href");
 						String name = subConfig.getString("device(" + i + ").name");
 						Boolean refreshEnabled = subConfig.getBoolean("device("	+ i + ").refreshEnabled", true);
-
+						Boolean historyEnabled = subConfig.getBoolean(
+								"device(" + i + ").historyEnabled", false);
+						Boolean groupCommEnabled = subConfig.getBoolean(
+								"device(" + i + ").groupCommEnabled", false);
+						Integer historyCount = subConfig.getInt("device("
+								+ i + ").historyCount", 0);
+						
 						if (type != null && name != null) {
 							try {
 								Constructor<?>[] declaredConstructors = Class.forName(type).getDeclaredConstructors();
@@ -129,20 +138,48 @@ public class WeatherForecastDeviceLoaderImpl implements DeviceLoader {
 										try {
 											// create an instance of the specified weather forecast crawler
 											Obj crawler = (Obj) declaredConstructors[k].newInstance(args);
-
+			
 											crawler.setHref(new Uri(URLEncoder.encode(connectorName, "UTF-8") + "/" + href));
+	
 											
-											objectBroker.addObj(crawler);
+											objectBroker.addObj(crawler, true);
+											
+											if(crawler instanceof WeatherObjectImplYR_NO){
+												WeatherObjectImplYR_NO weatherObject = (WeatherObjectImplYR_NO) crawler;
+												objectBroker.addObj(weatherObject.getChildByHref(new Uri("upcoming")));
+												objectBroker.addObj(weatherObject.getChildByHref(new Uri("location")));
+											}
 											myObjects.add(crawler);
+											//crawler.initialize();
 											
 											if (refreshEnabled != null && refreshEnabled) {
-												// refresh weather forecast automatically (once per hour)
+												// refresh weather forecast automatically (once per hour)						
 												objectBroker.enableObjectRefresh(crawler, 3600000);
 											}
 											else {
-												// refresh weather forecast manually
+												// refresh weather forecast manually											
 												crawler.refreshObject();
 											}
+											
+											if (historyEnabled != null
+													&& historyEnabled) {
+												if (historyCount != null
+														&& historyCount != 0) {
+													objectBroker
+															.addHistoryToDatapoints(
+																	crawler,
+																	historyCount);
+												} else {
+													objectBroker
+															.addHistoryToDatapoints(crawler);
+												}
+											}
+											
+											if(groupCommEnabled != null && groupCommEnabled){
+												objectBroker.enableGroupComm(crawler);
+											}
+										 
+											crawler.initialize();
 
 										} catch (Exception e) {
 											log.log(Level.SEVERE, e.getMessage(), e);
@@ -154,6 +191,12 @@ public class WeatherForecastDeviceLoaderImpl implements DeviceLoader {
 							}
 						}
 					}
+					
+					// add weather control for manual overwriting of weather
+					WeatherControlImpl weatherControl = new WeatherControlImpl("weatherControl",forecastConnector);
+					weatherControl.setHref(new Uri(URLEncoder.encode(connectorName, "UTF-8") + "/weatherControl"));
+					myObjects.add(weatherControl);
+					objectBroker.addObj(weatherControl, true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}

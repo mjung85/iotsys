@@ -43,6 +43,7 @@ import obix.Op;
 import obix.Ref;
 import obix.Str;
 import obix.Uri;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.GroupComm;
 import at.ac.tuwien.auto.iotsys.gateway.service.GroupCommService;
 import at.ac.tuwien.auto.iotsys.gateway.service.impl.GroupCommServiceImpl;
 import at.ac.tuwien.auto.iotsys.obix.OperationHandler;

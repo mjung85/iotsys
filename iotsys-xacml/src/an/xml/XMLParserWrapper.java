@@ -97,20 +97,14 @@ public abstract class XMLParserWrapper {
     }
 
     private static DocumentBuilderFactory getDocumentBuilderFactory() throws XMLGeneralException {
-        String opt = System.getProperty(OPT_FORCE_SUNDOM);
-        // If no such option configured, we use default method to initialize the factory.
-        if (opt == null) {
-            return DocumentBuilderFactory.newInstance();
+    
+        try {
+            Class<?> fClz = Class.forName(SUN_DOCUMENTBUILDER_FACTORY_CLASSNAME);
+            return (DocumentBuilderFactory)fClz.newInstance();
+        } catch (Exception e) {
+            throw new XMLGeneralException("Error occurs while initialize the Sun's DocumentBuilderFactory", e);
         }
-        // We forced use Sun's implementation to avoid Xerces or other DOM implementation's effects.
-        else {
-            try {
-                Class<?> fClz = Class.forName(SUN_DOCUMENTBUILDER_FACTORY_CLASSNAME);
-                return (DocumentBuilderFactory)fClz.newInstance();
-            } catch (Exception e) {
-                throw new XMLGeneralException("Error occurs while initialize the Sun's DocumentBuilderFactory", e);
-            }
-        }
+        
     }
 
     private synchronized static DocumentBuilder getDefaultDocumentBuilder(String ... schemaLocations)

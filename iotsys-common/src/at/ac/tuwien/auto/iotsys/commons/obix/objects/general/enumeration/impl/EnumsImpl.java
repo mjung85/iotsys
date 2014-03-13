@@ -49,6 +49,7 @@ import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.enumeration.EnumPri
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.enumeration.EnumProbabilityCode;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.enumeration.EnumStandard;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.enumeration.EnumStringCompareTypes;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.enumeration.EnumWeatherManualOverwrite;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.enumeration.EnumWeatherSymbol;
 
 public class EnumsImpl extends List implements IObj
@@ -77,6 +78,7 @@ public class EnumsImpl extends List implements IObj
 		enums.put(EnumProbabilityCode.HREF, new EnumProbabilityCodeImpl());
 		enums.put(EnumStandard.HREF, new EnumStandardImpl());
 		enums.put(EnumWeatherSymbol.HREF, new EnumWeatherSymbolImpl());
+		enums.put(EnumWeatherManualOverwrite.HREF, new EnumWeatherManualOverwriteImpl());
 
 		// Add enumerations
 		for (RangeImpl e : enums.values())

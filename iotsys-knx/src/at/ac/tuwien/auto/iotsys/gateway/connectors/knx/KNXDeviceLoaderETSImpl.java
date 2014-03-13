@@ -134,10 +134,13 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader
 
 	public ArrayList<Connector> initDevices(ObjectBroker objectBroker)
 	{
+		log.info("KNX ETS device loader starting. - connectorsConfig: " + connectorsConfig);
 		setConfiguration(connectorsConfig);
+		
 
 		ArrayList<Connector> connectors = new ArrayList<Connector>();
 
+		log.info("connectors config now: " + connectorsConfig);
 		Object knxConnectors = connectorsConfig.getProperty("knx-ets.connector.name");
 
 		int connectorsSize = 0;
@@ -158,7 +161,6 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader
 		networks.setOf(new Contract(Network.CONTRACT));
 		networks.setHref(new Uri("/networks"));
 		objectBroker.addObj(networks, true);
-
 		for (int connector = 0; connector < connectorsSize; connector++)
 		{
 			HierarchicalConfiguration subConfig = connectorsConfig.configurationAt("knx-ets.connector(" + connector + ")");
@@ -171,9 +173,9 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader
 			Boolean forceRefresh = subConfig.getBoolean("forceRefresh", false);
 			String knxProj = subConfig.getString("knx-proj");
 
-			Boolean enableGroupComm = subConfig.getBoolean("enableGroupComm", false);
+			Boolean enableGroupComm = subConfig.getBoolean("groupCommEnabled", false);
 
-			Boolean enableHistories = subConfig.getBoolean("enableHistories", false);
+			Boolean enableHistories = subConfig.getBoolean("historyEnabled", false);
 
 			if (enabled)
 			{
@@ -205,7 +207,7 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader
 				if (!transformFile.exists() || forceRefresh)
 				{
 					log.info("Transforming ETS configuration.");
-					System.setProperty("javax.xml.transform.TransformerFactory", "net.sf.saxon.TransformerFactoryImpl");
+//					System.setProperty("javax.xml.transform.TransformerFactory", "net.sf.saxon.TransformerFactoryImpl");
 					// Create a transform factory instance.
 					TransformerFactory tfactory = TransformerFactory.newInstance();
 
@@ -439,6 +441,7 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader
 					dataPointTypeIds = dataPointTypeIds.substring(0, dataPointTypeIds.indexOf(" "));
 				}
 
+				log.info("Found data point type id: " + dataPointTypeIds);
 				String clazzName = "at.ac.tuwien.auto.iotsys.gateway.obix.objects.knx.datapoint.impl." + dataPointTypeIds.replace('-', '_') + "_ImplKnx";
 				Class<?> clazz = null;
 
@@ -450,8 +453,10 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader
 				catch (ClassNotFoundException e)
 				{
 					log.warning(clazzName + " not found. Cannot instantiate according sub data point type. Trying fallback to generic main type.");
-					clazzName = "at.ac.tuwien.auto.iotsys.gateway.obix.objects.knx.datapoint.impl." + "DPT_" + dataPointTypeIds.charAt(5) + "_ImplKnx"; //
-
+					int firstIndexOf = dataPointTypeIds.indexOf('-');
+					int secondIndexOf = dataPointTypeIds.indexOf('-', firstIndexOf+1);
+					clazzName = "at.ac.tuwien.auto.iotsys.gateway.obix.objects.knx.datapoint.impl." + "DPT_" + dataPointTypeIds.substring(firstIndexOf+1, secondIndexOf) + "_ImplKnx"; //
+					
 					try
 					{
 						log.info("Loading: " + clazzName);
@@ -460,6 +465,7 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader
 					catch (ClassNotFoundException e1)
 					{
 						e1.printStackTrace();
+						log.warning(clazzName + " not found. Cannot instantiate according main data point type.");
 					}
 				}
 
@@ -623,6 +629,10 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader
 				try
 				{
 					DatapointImpl dp = datapointById.get(instanceId);
+					if(dp == null){
+						log.warning("No datapoint type found for instance: " + instanceId);
+						continue;
+					}
 					Class<?> clazz = dp.getClass();
 
 					if (clazz != null)
@@ -789,7 +799,8 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader
 		{
 			try
 			{
-				connectorsConfig = new XMLConfiguration(DEVICE_CONFIGURATION_LOCATION);
+				log.info("Loading XML configuration from " + DEVICE_CONFIGURATION_LOCATION);
+				this.connectorsConfig = new XMLConfiguration(DEVICE_CONFIGURATION_LOCATION);
 			}
 			catch (Exception e)
 			{

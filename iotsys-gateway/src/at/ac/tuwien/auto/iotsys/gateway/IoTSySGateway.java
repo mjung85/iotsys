@@ -45,14 +45,15 @@ import at.ac.tuwien.auto.iotsys.commons.DeviceLoader;
 import at.ac.tuwien.auto.iotsys.commons.MdnsResolver;
 import at.ac.tuwien.auto.iotsys.commons.Named;
 import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
+import at.ac.tuwien.auto.iotsys.commons.ObjectBrokerHelper;
 import at.ac.tuwien.auto.iotsys.commons.PropertiesLoader;
 import at.ac.tuwien.auto.iotsys.commons.interceptor.ClassAlreadyRegisteredException;
 import at.ac.tuwien.auto.iotsys.commons.interceptor.Interceptor;
 import at.ac.tuwien.auto.iotsys.commons.interceptor.InterceptorBroker;
 import at.ac.tuwien.auto.iotsys.digcoveryclient.DigcoveryClient;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.ContractInit;
 import at.ac.tuwien.auto.iotsys.gateway.interceptor.InterceptorBrokerImpl;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objectbroker.ObjectBrokerImpl;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.ContractInit;
 import at.ac.tuwien.auto.iotsys.gateway.obix.server.CoAPServer;
 import at.ac.tuwien.auto.iotsys.gateway.obix.server.NanoHTTPD;
 import at.ac.tuwien.auto.iotsys.gateway.obix.server.ObixObservingManager;
@@ -81,7 +82,7 @@ public class IoTSySGateway {
 	private ObixServer obixServer = null;
 
 	private MdnsResolver mdnsResolver;
-
+	
 	private DigcoveryClient digcoveryClient;
 
 	public IoTSySGateway() {
@@ -111,8 +112,15 @@ public class IoTSySGateway {
 		// initialize object broker
 		objectBroker = ObjectBrokerImpl.getInstance();
 		obixServer = new ObixServerImpl(objectBroker);
+		
 
-		objectBroker.setMdnsResolver(mdnsResolver);
+		boolean enableServiceDiscovery = Boolean.parseBoolean(PropertiesLoader.getInstance().getProperties().getProperty("iotsys.gateway.servicediscovery.enabled", "false"));
+		// set object broker to a shared global variable
+		ObjectBrokerHelper.setInstance(objectBroker);
+		
+		if(enableServiceDiscovery){
+			objectBroker.setMdnsResolver(mdnsResolver);
+		}
 
 		// add initial objects to the database
 		if (devicesConfigFile == null) {
@@ -244,44 +252,39 @@ public class IoTSySGateway {
 
 	public static void main(String[] args) {
 		final IoTSySGateway iotsys = new IoTSySGateway();
-		try {
-			Named n = (Named) Class.forName(
-					"at.ac.tuwien.auto.iotsys.mdnssd.NamedImpl").newInstance();
-			Class mc = Class
-					.forName("at.ac.tuwien.auto.iotsys.mdnssd.MdnsResolverImpl");
-			MdnsResolver m = (MdnsResolver) mc.getDeclaredMethod("getInstance",
-					null).invoke(null, null);
-
-			n.startNamedService();
-			iotsys.setMdnsResolver(m);
-		} catch (InstantiationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
-			log.info(">>>>>>>>>>>>mdnssd service not found");
-		} catch (IllegalArgumentException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (InvocationTargetException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (NoSuchMethodException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (SecurityException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		boolean enableServiceDiscovery = Boolean.parseBoolean(PropertiesLoader.getInstance().getProperties().getProperty("iotsys.gateway.servicediscovery.enabled", "false"));
+		
+		if(enableServiceDiscovery){
+			try {
+				Named n = (Named) Class.forName("at.ac.tuwien.auto.iotsys.mdnssd.NamedImpl").newInstance();
+				Class mc = Class.forName("at.ac.tuwien.auto.iotsys.mdnssd.MdnsResolverImpl");
+				MdnsResolver m = (MdnsResolver) mc.getDeclaredMethod("getInstance", null).invoke(null, null);
+				n.startNamedService();
+				iotsys.setMdnsResolver(m);
+			} catch (InstantiationException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IllegalAccessException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ClassNotFoundException e) {
+				log.info("Mdnssd service not found");
+			} catch (IllegalArgumentException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (InvocationTargetException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (NoSuchMethodException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (SecurityException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 
 		iotsys.startGateway();
-
-		// TestClient testClient = new TestClient(iotsys.objectBroker);
-		// testClient.runTests();
-
-		// EvaluationUtil.evaluation();
 
 		BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
 

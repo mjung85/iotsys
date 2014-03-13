@@ -634,6 +634,20 @@ app.directive('draggable', function() {
 //   }
 // });
 
+
+app.directive('includeDirectoryTemplate', ['$compile','$templateCache',function($compile, $templateCache) {
+  return {
+    restrict: 'A',
+    terminal: true,
+    scope: {directory:'=includeDirectoryTemplate'},
+    link: function(scope, element, attrs) {
+      var template = $templateCache.get('directory_template');
+      element.append(template);
+      $compile(element.contents())(scope.$new());
+    }
+  };
+}]);
+
 app.directive('droppable', ['$parse',function($parse) {
   return {
     restrict: 'A',
