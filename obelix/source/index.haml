@@ -8,13 +8,13 @@
   %body(ng-controller="MainCtrl")
     %script(type="text/ng-template" id="directory_template")
       .icon(ng-click="directory.toggle()")
-      %label(ng-click="directory.toggle()") 
+      %label(ng-click="directory.toggle()")
         {{directory.name}}
       %ul.devices(ng-show="directory.expanded")
         %li.device(ng-repeat="device in directory.devices")
           %label(draggable="device") {{device.name}}
       %ul.subdirectories(ng-show="directory.expanded")
-        %li.subdirectory(ng-class="{expanded:directory.expanded}" ng-repeat="directory in directory.subdirectories" ng-include="'directory_template'")
+        %li.subdirectory(ng-class="{expanded:subdirectory.expanded}" ng-repeat="subdirectory in directory.subdirectories" include-directory-template="subdirectory")
     #sidebar(ng-class="{expanded: sidebarExpanded}")
       .content(not-droppable)
         .header
@@ -27,15 +27,16 @@
             %input(type="text" ng-model="watch.interval" inline-editor="watch.updateInterval()")
           .section
             %a(href="#" ng-click="clear()") Clear
-        %div(ng-show="segment!=1" ng-include="'directory_template'")
+        %div(ng-show="segment!=1" ng-if="directory" include-directory-template="directory")
       .btn#toggle(ng-click="sidebarExpanded = !sidebarExpanded; $event.stopPropagation()")
     #canvas(ng-click="sidebarExpanded = false" droppable="placeDevice" jsplumb-container)
       %div(ng-repeat="device in allDevices | filter:{placement:'!!'}")
-        .device(ng-style="{left: device.placement.left, top: device.placement.top}" draggable="device" draggable-distance="5" draggable-helper="original" draggable-via-jsplumb="true" ng-dblclick="device.destroy()")
+        .device(ng-style="{left: device.placement.left, top: device.placement.top}" draggable="device" draggable-distance="5" draggable-helper="original" draggable-via-jsplumb="true")
           %header(ng-switch="device.editing")
             %input(type="text" ng-switch-when="true" ng-model="device.name" inline-editor="device.rename(); device.editing = false")
             %label.name(ng-switch-default ng-click="device.editing = true")
               {{device.name}}
+            .btnclose(ng-click="device.destroy()")
           .properties
             .property(ng-repeat="property in device.properties" ng-class="klass" ng-switch on="property.klass" jsplumb-endpoint="property")
               %label {{property.displayName}}
@@ -50,4 +51,4 @@
               %span.enum(ng-switch-when="enum")
                 %select(ng-model="property.value" ng-options="x for x in property.range" ng-change="property.write()")
               %span.other(ng-switch-default)
-                %input(type="text" ng-model="property.value" ng-disabled="property.readonly")
+                %input(type="text" ng-model="property.value" ng-disabled="property.readonly" ng-change="property.write()" ng-model-onblur)

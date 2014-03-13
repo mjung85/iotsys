@@ -82,6 +82,10 @@ public class Bool extends Val
 	{
 		this.set(val, true);
 	}
+	
+	public void set(String val){
+		this.set(Boolean.parseBoolean(val), true);
+	}
 
 	/**
 	 * Auto cast for int

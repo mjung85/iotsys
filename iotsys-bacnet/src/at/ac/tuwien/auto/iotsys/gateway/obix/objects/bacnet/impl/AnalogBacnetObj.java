@@ -24,6 +24,8 @@ package at.ac.tuwien.auto.iotsys.gateway.obix.objects.bacnet.impl;
 
 import java.util.logging.Logger;
 
+import obix.Bool;
+import obix.Int;
 import obix.Obj;
 import obix.Real;
 import obix.Uri;
@@ -46,7 +48,8 @@ public abstract class AnalogBacnetObj extends BacnetObj {
 		super(bacnetConnector, dataPointInfo);
 		
 		Uri valueUri = new Uri("value");
-		
+		value.setMin(0);
+		value.setMax(100);
 		value.setHref(valueUri);
 		value.setName("value");
 		add(value);
@@ -62,11 +65,18 @@ public abstract class AnalogBacnetObj extends BacnetObj {
 		} else if (input instanceof Real) {
 			val = new com.serotonin.bacnet4j.type.primitive.Real((float) input.getReal());
 			value.setReal(input.getReal());
+		} else if (input instanceof Int) {
+			val = new com.serotonin.bacnet4j.type.primitive.Real((float) input.getInt());
+			value.setReal(input.getInt());
+		} else if (input instanceof Bool){
+			val = new com.serotonin.bacnet4j.type.primitive.Real( (input.getBool()?(100):(0)));
+			value.setReal((input.getBool()?(100):(0)));
 		} else {
 			return;
 		}
 		
 		try {
+			log.info("Writing " + val + " on " + deviceID + ", " + objectIdentifier + ", " + propertyIdentifier);
 			bacnetConnector.writeProperty(deviceID, objectIdentifier, propertyIdentifier, 
 					val, BACnetConnector.BACNET_PRIORITY);
 		} catch (BACnetException e) {

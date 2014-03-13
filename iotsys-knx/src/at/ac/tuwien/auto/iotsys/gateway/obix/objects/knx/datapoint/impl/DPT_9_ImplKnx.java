@@ -48,8 +48,9 @@ public class DPT_9_ImplKnx extends DPT_9_Impl
 
 					log.info("2Byte Float for " + DPT_9_ImplKnx.this.getHref() + " now " + x.getValueFloat());
 
-					value().set(x.getValueFloat());					
 					value().setNull(false);
+					value().set(x.getValueFloat());					
+					
 				}
 				catch (KNXException e)
 				{

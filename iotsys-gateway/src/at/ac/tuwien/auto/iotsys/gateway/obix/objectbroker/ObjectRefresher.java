@@ -68,16 +68,28 @@ public class ObjectRefresher implements Runnable {
 		}
 	}
 	
-	public void addObject(Obj obj){
-		synchronized(objects){
-			objects.add(obj);
-		}
+	public void addObject(final Obj obj){		
+		// avoid locking of calling thread if object refresh is ongoing and takes some time (e.g. timeout)
+		Thread t = new Thread(){
+			public void run(){
+				synchronized(objects){
+					objects.add(obj);
+				}
+			}
+		};
+		t.start();
 	}
 	
-	public void removeObject(Obj obj){
-		synchronized(objects){
-			objects.remove(obj);
-		}
+	public void removeObject(final Obj obj){
+		// avoid locking of calling thread if object refresh is ongoing and takes some time (e.g. timeout)
+		Thread t = new Thread(){
+			public void run(){
+				synchronized(objects){
+					objects.add(obj);
+				}
+			}
+		};
+		t.start();
 	}
 
 	public void stop() {

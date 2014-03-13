@@ -18,7 +18,7 @@
         </li>
       </ul>
       <ul class='subdirectories' ng-show='directory.expanded'>
-        <li class='subdirectory' ng-class='{expanded:directory.expanded}' ng-include="'directory_template'" ng-repeat='directory in directory.subdirectories'></li>
+        <li class='subdirectory' include-directory-template='subdirectory' ng-class='{expanded:subdirectory.expanded}' ng-repeat='subdirectory in directory.subdirectories'></li>
       </ul>
     </script>
     <div id='sidebar' ng-class='{expanded: sidebarExpanded}'>
@@ -38,7 +38,7 @@
             <a href='#' ng-click='clear()'>Clear</a>
           </div>
         </div>
-        <div ng-include="'directory_template'" ng-show='segment!=1'></div>
+        <div include-directory-template='directory' ng-if='directory' ng-show='segment!=1'></div>
       </div>
       <div class='btn' id='toggle' ng-click='sidebarExpanded = !sidebarExpanded; $event.stopPropagation()'></div>
     </div>
@@ -70,7 +70,7 @@
                 <select ng-change='property.write()' ng-model='property.value' ng-options='x for x in property.range'></select>
               </span>
               <span class='other' ng-switch-default>
-                <input ng-disabled='property.readonly' ng-model='property.value' type='text'>
+                <input ng-change='property.write()' ng-disabled='property.readonly' ng-model-onblur ng-model='property.value' type='text'>
               </span>
             </div>
           </div>

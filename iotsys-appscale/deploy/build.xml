@@ -1,0 +1,90 @@
+<!-- create repacked package from source -->
+<project name="IotsysApi" default="deploy">
+  <property name="api_jar_name" value="iotsys-appscale-0.1.jar" />
+  <property name="api_factoryprovider_file" value="com.google.appengine.spi.FactoryProvider" />
+  <property name="api_localrpcservice_file" value="com.google.appengine.tools.development.LocalRpcService" />
+  <property name="api_extraxt_dir" value="tempapi" />
+  <property name="gae_version" value="1.8.0" />
+  
+  
+  <target name="clean-all">
+    <delete dir="${api_extraxt_dir}" />
+    <delete dir="${api_jar_name}" />
+  </target>
+
+  <target name="clean-build">
+    <delete dir="${api_extraxt_dir}" />
+  </target>
+
+  <target name="extract-api">
+    <unjar src="${api_jar_name}" dest="${api_extraxt_dir}" />
+  	<copy file="${api_factoryprovider_file}" todir="${api_extraxt_dir}/META-INF/services"/>
+  	<copy file="${api_localrpcservice_file}" todir="${api_extraxt_dir}/META-INF/services"/>
+  	<touch file="${api_extraxt_dir}/META-INF/services/${api_factoryprovider_file}"/>
+  	<touch file="${api_extraxt_dir}/META-INF/services/${api_localrpcservice_file}"/>
+  </target>
+
+  <target name="update-api-jar" depends="extract-api">
+  	<jar destfile="lib/impl/appengine-api.jar" basedir="${api_extraxt_dir}" update="true">
+  		<include name="META-INF/services/${api_factoryprovider_file}"/> 
+  		<include name="com/google/apphosting/api/*.class"/> 
+  		<include name="com/google/appengine/api/iotsys/**/*"/>
+  		<exclude name="com/google/appengine/api/iotsys/dev/**"/>
+  	</jar>
+  </target>
+
+  <target name="update-api-jar-user" depends="extract-api">
+  	<jar destfile="lib/user/appengine-api-1.0-sdk-${gae_version}.jar" basedir="${api_extraxt_dir}" update="true">
+  		<include name="META-INF/services/${api_factoryprovider_file}"/>  
+  		<include name="com/google/apphosting/api/*.class"/> 
+  		<include name="com/google/appengine/api/iotsys/**/*"/>
+  		<exclude name="com/google/appengine/api/iotsys/dev/**"/>
+  	</jar>
+  </target>
+  
+  <target name="update-api-labs-jar" depends="extract-api">
+    <jar destfile="lib/impl/appengine-api-labs.jar" basedir="${api_extraxt_dir}" update="true">
+    	<include name="com/google/appengine/api/iotsys/dev/**/*"/> 
+    	<include name="org/**/*"/>
+    	<include name="obix/**/*"/>
+    	<include name="junit/**/*"/>
+    	<include name="gnu/**/*"/>
+    	<include name="at/**/*"/>
+    	<include name="ch/**/*"/>
+    </jar>
+  </target>
+
+  <target name="update-api-labs-jar-user" depends="extract-api">
+  	<jar destfile="lib/user/appengine-api-labs-${gae_version}.jar" basedir="${api_extraxt_dir}" update="true">
+  	  	<include name="com/google/appengine/api/iotsys/dev/**/*"/> 
+  	    <include name="org/**/*"/>
+  	    <include name="obix/**/*"/>
+  	    <include name="junit/**/*"/>
+  	    <include name="gnu/**/*"/>
+  	    <include name="at/**/*"/>
+  	    <include name="ch/**/*"/>
+  	</jar>
+  </target>
+
+  <target name="update-api-stubs-jar" depends="extract-api">
+  	<jar destfile="lib/impl/appengine-api-stubs.jar" basedir="${api_extraxt_dir}" update="true">
+  		<include name="META-INF/services/${api_localrpcservice_file}"/>
+  	  	<include name="com/google/appengine/api/iotsys/dev/**/*"/> 
+  	 	<include name="org/**/*"/>
+  	    <include name="obix/**/*"/>
+  	  	<include name="junit/**/*"/>
+  	  	<include name="gnu/**/*"/>
+  	  	<include name="at/**/*"/>
+  	  	<include name="ch/**/*"/>
+  	</jar>
+  </target>
+ 
+  <target name="update-jars" depends="update-api-jar, update-api-jar-user, update-api-labs-jar, update-api-labs-jar-user, update-api-stubs-jar" />
+
+  <target name="deploy" depends="update-jars">
+  	<delete dir="${api_extraxt_dir}"/>
+  </target>
+</project>
+
+
+

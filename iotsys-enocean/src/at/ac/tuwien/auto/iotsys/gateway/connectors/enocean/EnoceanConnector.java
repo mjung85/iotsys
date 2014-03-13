@@ -106,7 +106,7 @@ public class EnoceanConnector implements Connector, SerialPortEventListener {
 		readBaseID[i++] = (byte)(CRC8Hash.calculate(crc8d));
 
 		serialSend(readBaseID);
-		ESP3Telegram response = responseQueue.poll(500, TimeUnit.MILLISECONDS);
+		ESP3Telegram response = responseQueue.poll(2500, TimeUnit.MILLISECONDS);
 		if(response == null) 
 		 {
 			 log.info("RESPONSE is NULL!");
@@ -114,14 +114,13 @@ public class EnoceanConnector implements Connector, SerialPortEventListener {
 			 log.info("Received reponse from responseQueue: " + response.getPayloadAsString());
 			 BaseID = DeviceID.fromByteArray(response.getPayload(), 1);
 			 log.info("BaseID: " + BaseID.toString());
+//			 log.info("Received reponse from responseQueue: " + response.getPayloadAsString());
+//				//ESP3Telegram readBaseIDTelegram = new ESP3TelegramCommonCommand(readBaseID, 1, 0);
+//			 BaseID = DeviceID.fromByteArray(response.getPayload(), 1);
 		 }
-		log.info("Received reponse from responseQueue: " + response.getPayloadAsString());
-		//ESP3Telegram readBaseIDTelegram = new ESP3TelegramCommonCommand(readBaseID, 1, 0);
-		BaseID = DeviceID.fromByteArray(response.getPayload(), 1);
-		 
 		
-
 	}
+	
 	public DeviceID getBaseID()
 	 {
 	return BaseID;
@@ -159,26 +158,29 @@ public class EnoceanConnector implements Connector, SerialPortEventListener {
 					numBytes += inputStream.read(buffer);
 				}
 
-				System.out.print("EnoceanConnector received raw packet: ");
-				StringBuffer hexString = new StringBuffer();
-				for (int i = 0; i < buffer.length && i < numBytes; i++) {
-					String hex = Integer.toHexString(0xFF & buffer[i]);
-					if (hex.length() == 1)
-						hexString.append('0');
-
-					hexString.append(hex + " ");
-				}
-				System.out.println(hexString.toString());
+//				System.out.print("EnoceanConnector received raw packet: ");
+//				StringBuffer hexString = new StringBuffer();
+//				for (int i = 0; i < buffer.length && i < numBytes; i++) {
+//					String hex = Integer.toHexString(0xFF & buffer[i]);
+//					if (hex.length() == 1)
+//						hexString.append('0');
+//
+//					hexString.append(hex + " ");
+//				}
+//				System.out.println(hexString.toString());
 
 				synchronized (watchDogs) {
 					frame = new ESP3Frame(buffer, numBytes);
 					frame.readPacket();
 					String address = new String();
+				
 					if (frame.getPacket().telegram.getSenderID() != null)
 						address = frame.getPacket().telegram.getSenderID().toString();
 
 					if(frame.getPacketHeader().getPacketType() == ESP3PacketHeader.PacketType.RESPONSE)
 						address = "RESPONSE";
+					
+					log.info("Received packet from: " + address);
 
 					// frame.getPacket().telegram.getPayloadAsString();
 					log.info("notify watchdog: " + address);
