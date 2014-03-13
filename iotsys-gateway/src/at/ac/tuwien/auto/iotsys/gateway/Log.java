@@ -42,6 +42,7 @@ import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 
 import at.ac.tuwien.auto.iotsys.commons.PropertiesLoader;
+import at.ac.tuwien.auto.iotsys.gateway.obix.server.NanoHTTPD;
 
 import ch.ethz.inf.vs.californium.coap.EndpointAddress;
 import ch.ethz.inf.vs.californium.coap.LinkFormat;
@@ -58,7 +59,7 @@ import ch.ethz.inf.vs.californium.util.Properties;
 public class Log {
 	
 	private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-	private static Level logLevel = Level.parse(PropertiesLoader.getInstance().getProperties().getProperty("iotsys.gateway.loglevel", "INFO"));
+	private static Level logLevel = Level.parse(PropertiesLoader.getInstance().getProperties().getProperty("iotsys.gateway.loglevel", "FINEST"));
 	
 	private static final Formatter printFormatter = new Formatter() {
 		@Override
@@ -136,12 +137,15 @@ public class Log {
 		// obix server logger
 		
 		Logger.getLogger(IoTSySGateway.class.getName()).setLevel(logLevel);
+	
 		
 		
 		// indicate new start-up
 		Logger.getLogger(Log.class.getName()).info("==[ START-UP ]========================================================");
 		Logger.getLogger(Log.class.getName()).finest("==[ Finest ]========================================================");
 
+		Logger.getLogger(NanoHTTPD.class
+				.getName()).setLevel(Level.FINEST);
 	}
 }
 
