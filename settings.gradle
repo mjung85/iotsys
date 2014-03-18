@@ -1,0 +1,2 @@
+include 'iotsys-obix', 'iotsys-common', 'iotsys-encoding-json', 'iotsys-mdnssd', 'iotsys-gateway', 'iotsys-calimero', 'iotsys-knx', 'iotsys-bacnet4j', 'iotsys-bacnet', 'iotsys-wmbus', 'iotsys-virtual', 'iotsys-control', 'iotsys-xbee', 'iotsys-xacml',
+'iotsys-demoapp', 'iotsys-enocean', 'iotsys-osgi', 'iotsys-weather-forecast', 'iotsys-rfid', 'iotsys-coap', 'iotsys-appscale', 'iotsys-mbus'

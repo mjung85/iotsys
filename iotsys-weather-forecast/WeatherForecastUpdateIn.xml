@@ -1,0 +1,3 @@
+<obj href="iot:WeatherForecastUpdateIn">
+	<list name="data" of="iot:WeatherForecastRecord"/>
+</obj>
