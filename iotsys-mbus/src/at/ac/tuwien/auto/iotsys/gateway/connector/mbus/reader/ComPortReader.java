@@ -46,21 +46,31 @@ public class ComPortReader implements Runnable, SerialPortEventListener {
     private SerialPort serialPort;
     private Thread readThread;
     private TelegramManagerInterface tManager;
-    private boolean serialPortIsOpen = false;
-    private boolean meterFound = false;
-    private boolean dataFound = false;
+    private boolean serialPortIsOpen;
+    private int interval = 60; // interval in seconds
+    private int intervalCnt;
+    private byte address = 1;
     
 //    private static String messageString_SND_NKE = "10 40 01 41 16 \r\n";
 //	private static String messageString_REQ_UD2 = "10 7B 01 7C 16 \r\n";
-	static byte[] byteArray_SND_NKE = {0x10,0x40,0x01,0x41,0x16};
-	static byte[] byteArray_REQ_UD2 = {0x10,0x7B,0x01,0x7C,0x16};
+//	static byte[] byteArray_SND_NKE = {0x10,0x40,0x01,0x41,0x16};
+//	static byte[] byteArray_REQ_UD2 = {0x10,0x7B,0x01,0x7C,0x16};
     
     private static Logger log = Logger.getLogger(ComPortReader.class.getName());
     
     //public static String COMPORT = "/dev/ttyAMA0";
     private static String COMPORT = "COM4";
+    
+    public ComPortReader(CommPortIdentifier portId, TelegramManagerInterface tManager, int interval, byte address){
+    	this(portId, tManager);
+    	this.interval = interval;
+    	this.address = address;    	
+    }
 
     public ComPortReader(CommPortIdentifier portId, TelegramManagerInterface tManager) {
+    	
+    	this.serialPortIsOpen = false;
+    	this.intervalCnt = 0;    	
     	
     	this.tManager = tManager;
     	try {
@@ -110,12 +120,44 @@ public class ComPortReader implements Runnable, SerialPortEventListener {
     }
 
     public void run() {
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-        	e.printStackTrace();
-        }
+    	while(serialPortIsOpen){
+    		try {
+                Thread.sleep(1000);
+                intervalCnt++;
+//                System.out.println("DEBUG: PortStatus: " +serialPortIsOpen +" IntervalCount " +intervalCnt);
+                if(intervalCnt == interval){
+                	startReadingMeter();
+                	intervalCnt = 0;
+                }
+            } catch (InterruptedException e) {
+            	e.printStackTrace();
+            }
+    	}        
     }      
+    
+    byte[] create_SND_NKE(byte address){
+    	byte[] tempBA = new byte[5];
+    	tempBA[0] = 0x10;	// Start 10h
+    	tempBA[1] = 0x40;	// C-Field: 0x40 for SND_NKE 
+    	tempBA[2] = address;// A-Field
+    	tempBA[3] = (byte)(tempBA[1]+tempBA[2]);	// Checksum
+    	tempBA[4] = 0x16;	// Stop 16h
+    	    	
+    	System.out.println("DEBUG create_SND_NKE: " +Converter.convertByteArrayToString(tempBA));
+    	return tempBA;
+    }
+    
+    byte[] create_REQ_UD2(byte address){
+    	byte[] tempBA = new byte[5];
+    	tempBA[0] = 0x10;	// Start 10h
+    	tempBA[1] = 0x7B;	// C-Field: 0x7B for REQ_UD2 
+    	tempBA[2] = address;// A-Field
+    	tempBA[3] = (byte)(tempBA[1]+tempBA[2]);	// Checksum
+    	tempBA[4] = 0x16;	// Stop 16h
+    	
+    	System.out.println("DEBUG create_REQ_UD2: " +Converter.convertByteArrayToString(tempBA));
+    	return tempBA;
+    }
     
     void sendSerialPortMessage(byte[] message)
 	{		
@@ -130,7 +172,8 @@ public class ComPortReader implements Runnable, SerialPortEventListener {
 	
 	 void startReadingMeter()
 	 {
-		 sendSerialPortMessage(byteArray_SND_NKE);
+//		 sendSerialPortMessage(create_SND_NKE(address));
+		 sendSerialPortMessage(create_REQ_UD2(address));
 	 }
     
     void serialPortDataAvailable() {	
@@ -142,40 +185,17 @@ public class ComPortReader implements Runnable, SerialPortEventListener {
 				numBytes += inputStream.read(readBuffer);		
 			}			
 			if(Integer.toHexString(readBuffer[0] & 0xFF).equalsIgnoreCase("e5")) {
-//				System.out.println("Received single character E5");
-				sendSerialPortMessage(byteArray_REQ_UD2);
-				meterFound=true;
+//				System.out.println("DEBUG: Received single character E5");
+				sendSerialPortMessage(create_REQ_UD2(address));
 			}
 			if(readBuffer[0] == 0x68) {
-//				System.out.println("Revceived data");				
+				System.out.println("DEBUG: Revceived data");				
 				// add telegram
 				tManager.addTelegram(Converter.convertByteArrayToString(readBuffer));
-				dataFound=true;
 			}			
 		} catch (IOException e) {
 			e.printStackTrace();
-		}		
-    	
-//    	try {
-//        	int numBytes = 0;
-//            while (inputStream.available() > 0) {
-//                numBytes += inputStream.read(readBuffer);
-//            }
-//           
-//            StringBuffer hexString = new StringBuffer();
-//            for (int i = 0; i < readBuffer.length && i < numBytes; i++) {
-//                String hex = Integer.toHexString(0xFF & readBuffer[i]);
-//                if (hex.length() == 1) {
-//                    // could use a for loop, but we're only dealing with a single byte
-//                    hexString.append('0');
-//                }
-//                hexString.append(hex + " ");
-//            }               
-//            tManager.addTelegram(hexString.toString());
-//            
-//        } catch (IOException e) {
-//        	e.printStackTrace();
-//        }
+		}
 	}
 
     public void serialEvent(SerialPortEvent event) {
@@ -229,4 +249,19 @@ public class ComPortReader implements Runnable, SerialPortEventListener {
 		serialPortIsOpen=false;
     }
     
+    public void setAdress(byte address){
+    	this.address = address;
+    }
+    
+    public byte getAddress(){
+    	return this.address;
+    }
+    
+    public void setInterval(int interval){
+    	this.interval = interval;
+    }
+    
+    public int getInterval(){
+    	return this.interval;
+    }
 }
