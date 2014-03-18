@@ -183,6 +183,20 @@
     </connector>
     
     <connector>
+      <name>EnOcean Windows</name>
+      <enabled>false</enabled>
+      <serialPort>COM15</serialPort>
+      <device>
+        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.enocean.PushButtonImplEnocean
+        </type>
+        <address>0x0010202B</address>
+        <href>buttonEnocean</href>
+        <historyEnabled>false</historyEnabled>
+        <groupCommEnabled>true</groupCommEnabled>
+      </device>
+    </connector>
+    
+    <connector>
       <name>EnOcean</name>
       <enabled>false</enabled>
       <serialPort>COM6</serialPort>
@@ -274,12 +288,13 @@
     <connector>
         <name>KNX TP1 Suitcase</name>
         <enabled>false</enabled>
+        <groupCommEnabled>true</groupCommEnabled>
         <knx-proj>knx-config/projects/Suitcase_2013_10_18.knxproj</knx-proj>
         <!-- forces unpacking of zip and transformation -->
         <forceRefresh>false</forceRefresh>              
         <router>
         <!--<ip>192.168.161.59</ip> -->
-        <ip>192.168.1.100</ip>
+        <ip>192.168.1.102</ip>
           	<!-- <ip>192.168.161.61</ip>  -->
             <port>3671</port>
         </router>
@@ -317,7 +332,7 @@
    <weather-forecast>
     <connector>
       <name>weather-forecast</name>
-      <enabled>true</enabled>
+      <enabled>false</enabled>
       <device>
         <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.weatherforecast.objects.WeatherObjectImplYR_NO
         </type>
@@ -948,7 +963,7 @@
     
     <connector>
       <name>BACnet IoT Suitcase</name>
-      <enabled>true</enabled>
+      <enabled>false</enabled>
       <discovery-enabled>true</discovery-enabled>
       <localDeviceID>1234</localDeviceID>
       <broadcastAddress>192.168.1.255</broadcastAddress>
@@ -1029,7 +1044,7 @@
   <virtual>
     <connector>
       <name>VirtualDevices</name>
-      <enabled>false</enabled>
+      <enabled>true</enabled>
      
 
 
@@ -1265,7 +1280,7 @@
     </connector>
     <connector>
       <name>HVAC Simulation</name>
-      <enabled>false</enabled>
+      <enabled>true</enabled>
 
       <!-- SENSOREN -->
      
@@ -1282,7 +1297,7 @@
 
     <connector>
       <name>IoTSyS Logic</name>
-      <enabled>false</enabled>
+      <enabled>true</enabled>
 
       <!-- Logic components -->      
       <device>
