@@ -98,8 +98,8 @@ public class MBusDeviceLoaderImpl implements DeviceLoader {
 
 					int mbusDevicesCount = 0;
 					if (mbusConfiguredDevices instanceof Collection<?>) {
-						Collection<?> wmbusDevice = (Collection<?>) mbusConfiguredDevices;
-						mbusDevicesCount = wmbusDevice.size();
+						Collection<?> mbusDevice = (Collection<?>) mbusConfiguredDevices;
+						mbusDevicesCount = mbusDevice.size();
 
 					} else if (mbusConfiguredDevices != null) {
 						mbusDevicesCount = 1;
@@ -112,13 +112,16 @@ public class MBusDeviceLoaderImpl implements DeviceLoader {
 					for (int i = 0; i < mbusDevicesCount; i++) {
 						String type = subConfig.getString("device(" + i
 								+ ").type");
-						List<Object> address = subConfig.getList("device(" + i
-								+ ").address");
+						Integer address = subConfig.getInteger("device(" + i
+								+ ").address",0);
+						Integer interval = subConfig.getInteger("device(" + i
+								+ ").interval", 0);
+						String serialnr = subConfig.getString("device(" + i
+								+ ").serialnr");
 						String ipv6 = subConfig.getString("device(" + i
 								+ ").ipv6");
 						String href = subConfig.getString("device(" + i
-								+ ").href");
-						
+								+ ").href");						
 						String name = subConfig.getString("device(" + i
 								+ ").name");
 
@@ -129,15 +132,24 @@ public class MBusDeviceLoaderImpl implements DeviceLoader {
 								+ i + ").groupCommEnabled", false);
 
 						Integer historyCount = subConfig.getInt("device(" + i
-								+ ").historyCount", 0);
+								+ ").historyCount", 0);						
+						
+						if(interval > 0){
+							mbusConnector.setInterval(interval);
+						}
+						
+						if(address > 0 && address <= 255){
+							mbusConnector.setAdress((byte)(address&0xFF));;
+						}
 
-						if (type != null && address != null) {
-							String serialNr = (String) address.get(0);
-							String aesKey = (String) address.get(1);
+						if (type != null && serialnr != null && address != null) {
+//							String serialNr = (String) address;
+//							String aesKey = (String) address.get(1);
 
-							Object[] args = new Object[2];
+							Object[] args = new Object[3];
 							args[0] = mbusConnector;
-							args[1] = serialNr;
+							args[1] = serialnr;
+							args[2] = address;							
 //							args[2] = aesKey;
 
 							try {

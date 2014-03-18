@@ -99,8 +99,8 @@ public class MBusConnector implements TelegramManagerInterface, Connector{
 //		}
 		telegram.parse();
 		
-		String idNr = telegram.getIdNr();		// Change name serial to ID 
-		log.fine("Serial number: " + idNr);
+		String idNr = telegram.getIdNr();
+		log.fine("ID number: " + idNr);
 		
 		SimpleTelegram simpleTelegram = null;
 		if(timeStamp == 0) {
@@ -128,7 +128,7 @@ public class MBusConnector implements TelegramManagerInterface, Connector{
 			}
 		}
 				
-		//telegram.debugOutput();
+//		telegram.debugOutput();
 		
 		return telegram;
 	}
@@ -158,10 +158,6 @@ public class MBusConnector implements TelegramManagerInterface, Connector{
 			simpleTestTelegrams.add(simpleTelegram);
 		}
 	}
-
-//	public void registerAESKey(String serialNr, String aesKey) {
-//		this.aesKey = aesKey;		
-//	}	
 	
 	public void connect(){
 		CommPortIdentifier portId = ComPortReader.lookupPorts(serialPort);
@@ -171,4 +167,20 @@ public class MBusConnector implements TelegramManagerInterface, Connector{
 	public void disconnect(){
 		comPortReader.closePort();
 	}
+	
+	public void setAdress(byte address){
+    	comPortReader.setAdress(address);
+    }
+    
+    public byte getAddress(){
+    	return comPortReader.getAddress();
+    }
+    
+    public void setInterval(int interval){
+    	comPortReader.setInterval(interval);
+    }
+    
+    public int getInterval(){
+    	return comPortReader.getInterval();
+    }
 }

@@ -38,7 +38,6 @@ import java.util.logging.Logger;
 import java.util.TooManyListenersException;
 
 import at.ac.tuwien.auto.iotsys.gateway.connector.mbus.telegrams.Telegram;
-
 import at.ac.tuwien.auto.iotsys.gateway.connector.mbus.util.Converter;
 //import javax.comm.*;
 import gnu.io.*;
@@ -48,7 +47,7 @@ import gnu.io.*;
  * 
  * 
  * @author
- * @version 1.00, 03/08/14
+ * @version 1.10, 08/04/00
  */
 public class SimpleWriteRXTX {
 	static Enumeration<?> portList;
@@ -61,11 +60,12 @@ public class SimpleWriteRXTX {
 	static boolean meterFound = false;
 	static boolean dataFound = false;
 	static boolean outputBufferEmptyFlag = false;
+	static private byte address = 1;
 	
-	static String messageString_SND_NKE = "10 40 01 41 16";
-	static String messageString_REQ_UD2 = "10 7B 01 7C 16";
-	static byte[] byteArray_SND_NKE = {0x10,0x40,0x01,0x41,0x16};
-	static byte[] byteArray_REQ_UD2 = {0x10,0x7B,0x01,0x7C,0x16};
+//	static String messageString_SND_NKE = "10 40 01 41 16";
+//	static String messageString_REQ_UD2 = "10 7B 01 7C 16";
+//	static byte[] byteArray_SND_NKE = {0x10,0x40,0x01,0x41,0x16};
+//	static byte[] byteArray_REQ_UD2 = {0x10,0x7B,0x01,0x7C,0x16};
 	
 	static Telegram telegram;
 
@@ -191,6 +191,31 @@ public class SimpleWriteRXTX {
 		}
 	}
 	
+	static byte[] create_SND_NKE(byte address){
+    	byte[] tempBA = new byte[5];
+    	tempBA[0] = 0x10;	// Start 10h
+    	tempBA[1] = 0x40;	// C-Field: 0x40 for SND_NKE 
+    	tempBA[2] = address;// A-Field
+    	tempBA[3] = (byte)(tempBA[1]+tempBA[2]);	// Checksum
+    	tempBA[4] = 0x16;	// Stop 16h
+    	    	
+    	System.out.println("DEBUG create_SND_NKE: " +Converter.convertByteArrayToString(tempBA));
+    	return tempBA;
+    }
+    
+	static byte[] create_REQ_UD2(byte address){
+    	byte[] tempBA = new byte[5];
+    	tempBA[0] = 0x10;	// Start 10h
+    	tempBA[1] = 0x7B;	// C-Field: 0x7B for REQ_UD2 
+    	tempBA[2] = address;// A-Field
+    	tempBA[3] = (byte)(tempBA[1]+tempBA[2]);	// Checksum
+    	tempBA[4] = 0x16;	// Stop 16h
+    	
+    	System.out.println("DEBUG create_REQ_UD2: " +Converter.convertByteArrayToString(tempBA));
+    	return tempBA;
+    }
+    
+	
 	static void sendSerialPortMessage(byte[] message)
 	{		
 		System.out.println("Sende: " + message.toString());
@@ -205,7 +230,9 @@ public class SimpleWriteRXTX {
 	
 	 static void startReadingMeter()
 	 {
-		 sendSerialPortMessage(byteArray_SND_NKE);
+//		 sendSerialPortMessage(byteArray_SND_NKE);
+//		 sendSerialPortMessage(create_SND_NKE(address));
+		 sendSerialPortMessage(create_REQ_UD2(address));
 	 }
 	 
 //	 public static String ConvertByteArrayToString(byte[] ba){		 
@@ -228,7 +255,8 @@ public class SimpleWriteRXTX {
 			System.out.println("Empfange: "+ Integer.toHexString(readBuffer[0] & 0xFF));
 			if(Integer.toHexString(readBuffer[0] & 0xFF).equalsIgnoreCase("e5")) {
 				System.out.println("Einzelzeichen E5 empfangen");
-				sendSerialPortMessage(byteArray_REQ_UD2);
+				sendSerialPortMessage(create_REQ_UD2(address));
+//				sendSerialPortMessage(byteArray_REQ_UD2);
 				meterFound=true;
 			}
 			if(readBuffer[0] == 0x68) {
