@@ -39,6 +39,7 @@ import obix.Uri;
 public class SmartMeterImpl extends SensorImpl implements SmartMeter{
 	protected Real powerValue = new Real(0);
 	protected Real energyValue = new Real(0);	
+	protected Real volumeValue = new Real(0);
 	
 	public SmartMeterImpl(){
 		setIs(new Contract(new String[]{SmartMeter.CONTRACT}));
@@ -48,6 +49,13 @@ public class SmartMeterImpl extends SensorImpl implements SmartMeter{
 		powerValue.setName(SmartMeter.POWER_CONTRACT_NAME);
 		powerValue.setUnit(new Uri(SmartMeter.POWER_CONTRACT_UNIT));
 		add(powerValue);
+		
+		volumeValue.setWritable(false);
+		Uri volumeValueUri = new Uri(SmartMeter.VOLUME_CONTRACT_HREF);
+		volumeValue.setHref(volumeValueUri);
+		volumeValue.setName(SmartMeter.VOLUME_CONTRACT_NAME);
+		volumeValue.setUnit(new Uri(SmartMeter.VOLUME_CONTRACT_UNIT));
+		add(volumeValue); 
 		
 		energyValue.setWritable(false);
 		Uri energyValueUri = new Uri(SmartMeter.ENERGY_CONTRACT_HREF);
@@ -63,6 +71,10 @@ public class SmartMeterImpl extends SensorImpl implements SmartMeter{
 	
 	public Real energyValue() {		
 		return energyValue;
+	}
+	
+	public Real volumeValue(){
+		return volumeValue;
 	}
 	
 	
