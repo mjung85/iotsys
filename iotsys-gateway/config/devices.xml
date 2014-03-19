@@ -1,27 +1,16 @@
 <devices>
   <deviceloaders>
-    <device-loader>at.ac.tuwien.auto.iotsys.gateway.connectors.knx.KNXDeviceLoaderImpl
-    </device-loader>
-    <device-loader>at.ac.tuwien.auto.iotsys.gateway.connectors.bacnet.BacnetDeviceLoaderImpl
-    </device-loader>
-    <device-loader>at.ac.tuwien.auto.iotsys.gateway.connector.wmbus.WMBusDeviceLoaderImpl
-    </device-loader>
-	<device-loader>at.ac.tuwien.auto.iotsys.gateway.connector.mbus.MBusDeviceLoaderImpl
-    </device-loader>
-    <device-loader>at.ac.tuwien.auto.iotsys.gateway.connectors.xbee.XBeeDeviceLoaderImpl
-    </device-loader>
-    <device-loader>at.ac.tuwien.auto.iotsys.gateway.connectors.virtual.VirtualDeviceLoaderImpl
-    </device-loader>
-    <device-loader>at.ac.tuwien.auto.iotsys.gateway.connectors.enocean.EnoceanDeviceLoaderImpl
-    </device-loader>
-    <device-loader>at.ac.tuwien.auto.iotsys.demoapp.DemoAppLoaderImpl
-    </device-loader>
-    <device-loader>at.ac.tuwien.auto.iotsys.gateway.connectors.knx.KNXDeviceLoaderETSImpl
-    </device-loader>
-    <device-loader>at.ac.tuwien.auto.iotsys.gateway.connectors.weatherforecast.WeatherForecastDeviceLoaderImpl
-    </device-loader>
-	<device-loader>at.ac.tuwien.auto.iotsys.gateway.connectors.coap.CoapDeviceLoaderImpl
-    </device-loader>
+    <device-loader>at.ac.tuwien.auto.iotsys.gateway.connectors.knx.KNXDeviceLoaderImpl</device-loader>
+    <device-loader>at.ac.tuwien.auto.iotsys.gateway.connectors.bacnet.BacnetDeviceLoaderImpl</device-loader>
+    <device-loader>at.ac.tuwien.auto.iotsys.gateway.connector.wmbus.WMBusDeviceLoaderImpl</device-loader>
+	<device-loader>at.ac.tuwien.auto.iotsys.gateway.connector.mbus.MBusDeviceLoaderImpl</device-loader>
+    <device-loader>at.ac.tuwien.auto.iotsys.gateway.connectors.xbee.XBeeDeviceLoaderImpl</device-loader>
+    <device-loader>at.ac.tuwien.auto.iotsys.gateway.connectors.virtual.VirtualDeviceLoaderImpl</device-loader>
+    <device-loader>at.ac.tuwien.auto.iotsys.gateway.connectors.enocean.EnoceanDeviceLoaderImpl</device-loader>
+    <device-loader>at.ac.tuwien.auto.iotsys.demoapp.DemoAppLoaderImpl</device-loader>
+    <device-loader>at.ac.tuwien.auto.iotsys.gateway.connectors.knx.KNXDeviceLoaderETSImpl</device-loader>
+    <device-loader>at.ac.tuwien.auto.iotsys.gateway.connectors.weatherforecast.WeatherForecastDeviceLoaderImpl</device-loader>
+	<device-loader>at.ac.tuwien.auto.iotsys.gateway.connectors.coap.CoapDeviceLoaderImpl</device-loader>
   </deviceloaders>
   
   <coap>
@@ -1012,11 +1001,10 @@
 
 <connector>
   <name>MBus Smart Meter Windows</name>
-  <enabled>false</enabled>
-  <serialPort>COM4</serialPort>
+  <enabled>true</enabled>
+  <serialPort>COM17</serialPort>
   <device>
-        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.wmbus.SmartMeterImplWMBus
-        </type>
+        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.mbus.SmartMeterImplMBus</type>
 	  <interval>60</interval>
       <address>01</address>
 	  <serialnr>07935343</serialnr>

@@ -146,10 +146,10 @@ public class MBusDeviceLoaderImpl implements DeviceLoader {
 //							String serialNr = (String) address;
 //							String aesKey = (String) address.get(1);
 
-							Object[] args = new Object[3];
+							Object[] args = new Object[2];
 							args[0] = mbusConnector;
 							args[1] = serialnr;
-							args[2] = address;							
+							//args[2] = address;							
 //							args[2] = aesKey;
 
 							try {

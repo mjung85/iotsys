@@ -32,12 +32,15 @@
 
 package at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.mbus;
 
+import java.util.logging.Logger;
+
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.sensors.impl.SmartMeterImpl;
 import at.ac.tuwien.auto.iotsys.gateway.connector.mbus.MBusConnector;
 import at.ac.tuwien.auto.iotsys.gateway.connector.mbus.MBusWatchDog;
 import at.ac.tuwien.auto.iotsys.gateway.connector.mbus.telegrams.SimpleTelegram;
 
 public class SmartMeterImplMBus extends SmartMeterImpl {
+	protected final Logger log = Logger.getLogger(SmartMeterImplMBus.class.getName());
 	private MBusConnector connector;
 	private String idNr;
 	
@@ -51,7 +54,7 @@ public class SmartMeterImplMBus extends SmartMeterImpl {
 
 			@Override
 			public void notifyWatchDog(double volume, double energy) {
-				powerValue.set(volume);
+				volumeValue.set(volume);
 				energyValue.set(energy);				
 			}
 			
@@ -60,6 +63,12 @@ public class SmartMeterImplMBus extends SmartMeterImpl {
 			}			
 		});
 	}	
+	
+	@Override 
+	public void refreshObject(){
+		log.info("Refresh object called.");
+		
+	}
 	
 	@Override
 	public void initialize(){

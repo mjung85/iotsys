@@ -90,7 +90,7 @@ public class MBusConnector implements TelegramManagerInterface, Connector{
 	}
 	
 	private Telegram createTelegram(String telegramString, long timeStamp) {
-		log.fine("Received MBus telegram.");
+		log.info("Received MBus telegram.");
 		Telegram telegram = new Telegram();
 		telegram.createTelegram(telegramString);
 //		if(telegram.decryptTelegram(aesKey) == false) {
@@ -100,7 +100,7 @@ public class MBusConnector implements TelegramManagerInterface, Connector{
 		telegram.parse();
 		
 		String idNr = telegram.getIdNr();
-		log.fine("ID number: " + idNr);
+		log.info("ID number: " + idNr);
 		
 		SimpleTelegram simpleTelegram = null;
 		if(timeStamp == 0) {
@@ -109,12 +109,12 @@ public class MBusConnector implements TelegramManagerInterface, Connector{
 		else {
 			simpleTelegram = new SimpleTelegram(timeStamp);
 		}
-		simpleTelegram.setEnergy(new Double(telegram.getEnergyValue())/1000);
-		simpleTelegram.setEnergyUnit(Measure_Unit.KWH);
-		log.fine("Energy is: " + simpleTelegram.getEnergy() +simpleTelegram.getEnergyUnit().getValue());
-		simpleTelegram.setVolume(Double.parseDouble(telegram.getVolumeValue())*1000);
-		simpleTelegram.setVolumeUnit(Measure_Unit.L);
-		log.fine("Volume is: " + simpleTelegram.getVolume() + simpleTelegram.getVolumeUnit().getValue());
+		simpleTelegram.setEnergy(new Double(telegram.getEnergyValue()));
+		simpleTelegram.setEnergyUnit(Measure_Unit.WH);
+		log.info("Energy is: " + simpleTelegram.getEnergy() +simpleTelegram.getEnergyUnit().getValue());
+		simpleTelegram.setVolume(Double.parseDouble(telegram.getVolumeValue()));
+		simpleTelegram.setVolumeUnit(Measure_Unit.M3);
+		log.info("Volume is: " + simpleTelegram.getVolume() + simpleTelegram.getVolumeUnit().getValue());
 		
 		synchronized(watchDogs){
 			if(watchDogs.containsKey(idNr)){
@@ -122,7 +122,7 @@ public class MBusConnector implements TelegramManagerInterface, Connector{
 				ArrayList<MBusWatchDog> arrayList = watchDogs.get(idNr);
 				log.finest("Notifying watchdog for telegram from smart meter with ID number " + idNr);
 				for(MBusWatchDog watchDog : arrayList){
-					watchDog.notifyWatchDog(simpleTelegram.getVolume()*1000, simpleTelegram.getEnergy() / 1000);
+					watchDog.notifyWatchDog(simpleTelegram.getVolume() * 1000, simpleTelegram.getEnergy() / 1000);
 					watchDog.notifyWatchDog(simpleTelegram);
 				}
 			}
