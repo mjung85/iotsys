@@ -82,7 +82,7 @@ public class SimpleWriteRXTX {
 	 */
 	public static void main(String[] args) {		
 		boolean portFound = false;
-		String defaultPort = "COM4";
+		String defaultPort = "COM17";
 
 		if (args.length > 0) {
 			defaultPort = args[0];

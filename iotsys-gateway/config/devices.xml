@@ -1039,7 +1039,7 @@
         <groupCommEnabled>true</groupCommEnabled>
       </device>
     </connector>
-  </wmbus>
+  </mbus>
 
   <virtual>
     <connector>
