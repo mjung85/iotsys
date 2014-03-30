@@ -1,9 +1,6 @@
-<?xml version="1.0" ?>
-<S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/">
-	<S:Body>
-		<ns2:write xmlns="http://obix.org/ns/schema/1.1" xmlns:ns2="http://obix.org/ns/wsdl/1.1"
-			href="/lightA/value">
-			<bool val="true" />
-		</ns2:write>
-	</S:Body>
-</S:Envelope>
+<obj href="sunblindMiddleA/" is="iot:SunblindActuator">
+	<bool name="moveDownValue" href="sunblindMiddleA/moveDownValue"
+		val="false" writable="true" />
+	<bool name="moveUpValue" href="sunblindMiddleA/moveUpValue" val="false"
+		writable="true" />
+</obj>
