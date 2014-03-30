@@ -225,7 +225,7 @@
   <knx-ets>
     <connector>
         <name>KNX TP1 Suitcase</name>
-        <enabled>false</enabled>
+        <enabled>true</enabled>
         <knx-proj>knx-config/projects/Suitcase_2013_10_18.knxproj</knx-proj>
         <!-- forces unpacking of zip and transformation -->
         <forceRefresh>false</forceRefresh>              
@@ -963,6 +963,8 @@
         <historyEnabled>false</historyEnabled>
         <historyCount>200</historyCount>
       </device>
+      
+     
 
       <device>
         <type>at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.sensors.impl.OutsideTemperatureSensorImpl
@@ -1062,6 +1064,19 @@
         <historyCount>200</historyCount>
         <groupCommEnabled>true</groupCommEnabled>
       </device>
+      
+       <device>
+        <type>at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators.impl.ComplexSunblindActuatorImpl
+        </type>
+        <address>null, 5/3/7, 5/3/8</address>
+        <href>sunblindMiddleA</href>
+        <ipv6>2001:629:2500:570::11b</ipv6>
+        <historyEnabled>false</historyEnabled>
+        <historyCount>200</historyCount>
+        <groupCommEnabled>true</groupCommEnabled>
+      </device>
+      
+       
       <device>
         <type>at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators.impl.SunblindActuatorImpl
         </type>

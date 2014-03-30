@@ -1,8 +1,6 @@
 // Variables
 description = 'JSON encoding for the IoTSyS project'
 
-sourceCompatibility = 1.6
-
 jar {
 	manifest {
 		attributes("Manifest-Version": "1.0",
