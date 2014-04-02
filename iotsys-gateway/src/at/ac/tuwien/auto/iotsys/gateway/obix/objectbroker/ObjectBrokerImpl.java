@@ -44,6 +44,7 @@ import obix.Obj;
 import obix.Op;
 import obix.Ref;
 import obix.Uri;
+import at.ac.tuwien.auto.iotsys.commons.Connector;
 import at.ac.tuwien.auto.iotsys.commons.MdnsResolver;
 import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.AboutImpl;
@@ -307,6 +308,12 @@ public class ObjectBrokerImpl implements ObjectBroker
 	public void enableGroupComm(Obj obj)
 	{
 		GroupCommHelper.enableGroupCommForObject(obj);
+	}
+	
+	@Override
+	public void enableGroupComm(Obj obj, Connector connector, String adr)
+	{
+		GroupCommHelper.enableGroupCommForObject(obj, connector, adr);
 	}
 
 	@Override

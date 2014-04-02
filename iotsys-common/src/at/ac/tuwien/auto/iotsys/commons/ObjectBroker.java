@@ -32,6 +32,8 @@ public interface ObjectBroker
 	public void addHistoryToDatapoints(Obj obj);
 
 	public void enableGroupComm(Obj obj);
+	
+	public void enableGroupComm(Obj obj, Connector connector, String adr);
 
 	public void addHistoryToDatapoints(Obj obj, int countMax);
 

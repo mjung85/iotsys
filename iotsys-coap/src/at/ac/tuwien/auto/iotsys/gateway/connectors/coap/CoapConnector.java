@@ -45,13 +45,9 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-//import obix.Str;
-//import obix.Obj;
-//import obix.Int;
-
 import ch.ethz.inf.vs.californium.coap.GETRequest;
 import ch.ethz.inf.vs.californium.coap.PUTRequest;
-//import ch.ethz.inf.vs.californium.coap.POSTRequest;
+import ch.ethz.inf.vs.californium.coap.POSTRequest;
 import ch.ethz.inf.vs.californium.coap.Option;
 import ch.ethz.inf.vs.californium.coap.registries.MediaTypeRegistry;
 import ch.ethz.inf.vs.californium.coap.registries.OptionNumberRegistry;
@@ -87,9 +83,11 @@ public class CoapConnector implements Connector {
 		} else if(rType.equals("PUT")){
 			request = new PUTRequest();
 			request.setPayload(payload);	
-		/*
 		} else if(rType.equals("POST")){
-			
+			request = new POSTRequest();
+			System.out.println("Adresse: " + tempUri + "\nPayload: " + payload);
+			return null;
+			/*	
 		} else if(rType.equals("DELETE")){
 			request = new DELETERequest();
 		} else if(rType.equals("DISCOVER")){
@@ -139,9 +137,15 @@ public class CoapConnector implements Connector {
 		return null;
 	}
 	
-	//sends Observe to a new Sensor/Actor with Response to be handled in Sensor/Actor
+	//sends Observe to Sensor/Actor with Response to be handled in Sensor/Actor
 	public void createWatchDog(String busAddress, String datapoint, ResponseHandler handler) {
 		send(busAddress, datapoint, "OBSERVE", "", handler);	
+	}
+	
+	//sends POST for GroupCommunication
+	public void groupComm(String busAddress, String datapoint, String groupAddress) {
+		String payload = "<str val=\""+ groupAddress +"\"/>";
+		send(busAddress, datapoint, "POST", payload, null);
 	}
 
 	public Boolean readBoolean(String busAddress, String datapoint) {		
@@ -205,7 +209,7 @@ public class CoapConnector implements Connector {
 		send(busAddress, datapoint, "PUT", payload, null);
 	}
 	
-	public static String extractAttribute(String elementName, String attributeName, String xml) {
+	public static String extractAttribute(String elementName, String attributeName, String xml){
 		Document document;
 		DocumentBuilder documentBuilder;
 		DocumentBuilderFactory documentBuilderFactory;
