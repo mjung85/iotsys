@@ -69,7 +69,7 @@ public class TemperatureSensorImplCoap extends TemperatureSensorImpl {
 			public void handleResponse(Response response) {
 				String payload = response.getPayloadString().trim();
 						
-				if(payload.equals("")) return;
+				if(payload.equals("") || payload.equals("TooManyObservers")) return;
 						
 				if(payload.startsWith("Added")) {
 					isObserved = true;

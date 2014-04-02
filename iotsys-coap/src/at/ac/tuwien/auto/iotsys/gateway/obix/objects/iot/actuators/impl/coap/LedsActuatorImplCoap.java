@@ -40,7 +40,7 @@ import obix.Obj;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators.impl.LedsActuatorImpl;
 import at.ac.tuwien.auto.iotsys.gateway.connectors.coap.CoapConnector;
 
-public class LedsActuatorImplCoap extends LedsActuatorImpl{
+public class LedsActuatorImplCoap extends LedsActuatorImpl {
 	//private static final Logger log = Logger.getLogger(LedsActuatorImplCoap.class.getName());
 	
 	private CoapConnector coapConnector;
@@ -70,7 +70,7 @@ public class LedsActuatorImplCoap extends LedsActuatorImpl{
 			public void handleResponse(Response response) {	
 				String payload = response.getPayloadString().trim();
 				
-				if(payload.equals("")) return;
+				if(payload.equals("") || payload.equals("TooManyObservers")) return;
 				
 				if(payload.startsWith("Added")) {
 					blueObserved = true;
@@ -85,7 +85,7 @@ public class LedsActuatorImplCoap extends LedsActuatorImpl{
 			public void handleResponse(Response response) {	
 				String payload = response.getPayloadString().trim();
 				
-				if(payload.equals("")) return;
+				if(payload.equals("") || payload.equals("TooManyObservers")) return;
 				
 				if(payload.startsWith("Added")) {
 					redObserved = true;
@@ -100,7 +100,7 @@ public class LedsActuatorImplCoap extends LedsActuatorImpl{
 			public void handleResponse(Response response) {	
 				String payload = response.getPayloadString().trim();
 				
-				if(payload.equals("")) return;
+				if(payload.equals("") || payload.equals("TooManyObservers")) return;
 				
 				if(payload.startsWith("Added")) {
 					greenObserved = true;

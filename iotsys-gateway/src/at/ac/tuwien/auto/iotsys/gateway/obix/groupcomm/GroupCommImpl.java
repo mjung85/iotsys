@@ -165,7 +165,6 @@ public class GroupCommImpl extends Obj implements GroupComm, Observer{
 					try {
 						Inet6Address groupAddr = (Inet6Address) Inet6Address.getByName(str.get());
 						GroupCommServiceImpl.getInstance().unregisterObject(groupAddr, this.datapoint);
-						
 					} catch (UnknownHostException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();

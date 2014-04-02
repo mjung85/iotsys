@@ -153,12 +153,12 @@ public class CoapDeviceLoaderImpl implements DeviceLoader {
 									args[0] = coapConnector;
 
 									Obj coapDevice = null;
+									String adr = "";
 
 									for (int k = 0; k < declaredConstructors.length; k++) {
 										if (declaredConstructors[k]
 												.getParameterTypes().length == 2) {
 
-											String adr = "";
 											if(!address.isEmpty()) {
 												adr = (String) address.get(0);
 											}
@@ -203,7 +203,7 @@ public class CoapDeviceLoaderImpl implements DeviceLoader {
 									}
 
 									if (groupCommEnabled) {
-										objectBroker.enableGroupComm(coapDevice);
+										objectBroker.enableGroupComm(coapDevice, coapConnector, adr);
 									}
 
 									if (refreshEnabled != null && refreshEnabled) {
