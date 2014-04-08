@@ -44,6 +44,12 @@ public interface SmartMeter extends IObj {
 	public static final String POWER_CONTRACT = "<int name='"+POWER_CONTRACT_NAME+"' href='"+POWER_CONTRACT_HREF+"' val='0'/>";
 	public Real powerValue();
 	
+	public static final String VOLUME_CONTRACT_NAME="volume";
+	public static final String VOLUME_CONTRACT_HREF="volume";
+	public static final String VOLUME_CONTRACT_UNIT="obix:units/liter";
+	public static final String VOLUME_CONTRACT = "<int name='"+VOLUME_CONTRACT_NAME+"' href='"+VOLUME_CONTRACT_HREF+"' val='0'/>";
+	public Real volumeValue();
+	
 	public static final String ENERGY_CONTRACT_NAME="energy";
 	public static final String ENERGY_CONTRACT_HREF="energy";
 	public static final String ENERGY_CONTRACT_UNIT="obix:units/kilowatthours";

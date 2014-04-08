@@ -40,7 +40,6 @@ import java.util.logging.Logger;
 
 import at.ac.tuwien.auto.iotsys.commons.Connector;
 import at.ac.tuwien.auto.iotsys.gateway.connector.wmbus.WMBusWatchDog;
-
 import at.ac.tuwien.auto.iotsys.gateway.connector.wmbus.TelegramManagerInterface;
 import at.ac.tuwien.auto.iotsys.gateway.connector.wmbus.telegrams.SimpleTelegram;
 import at.ac.tuwien.auto.iotsys.gateway.connector.wmbus.telegrams.util.Measure_Unit;
@@ -173,5 +172,10 @@ public class WMBusConnector implements TelegramManagerInterface, Connector{
 	
 	public void disconnect(){
 		comPortReader.closePort();
+	}
+	
+	@Override
+	public boolean isCoap() {
+		return false;
 	}
 }

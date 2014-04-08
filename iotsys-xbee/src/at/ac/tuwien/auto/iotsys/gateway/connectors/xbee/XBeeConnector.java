@@ -80,4 +80,9 @@ public class XBeeConnector implements Connector{
 			watchDogs.get(observation).add(xbeeWatchdog);
 		}
 	}
+	
+	@Override
+	public boolean isCoap() {
+		return false;
+	}
 }

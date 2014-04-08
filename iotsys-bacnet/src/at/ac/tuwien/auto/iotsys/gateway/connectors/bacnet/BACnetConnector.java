@@ -263,4 +263,10 @@ public class BACnetConnector implements Connector{
 	public Obj getRootObj() {
 		return root;
 	}
+	
+	@Override
+	public boolean isCoap() {
+		return false;
+	}
+
 }

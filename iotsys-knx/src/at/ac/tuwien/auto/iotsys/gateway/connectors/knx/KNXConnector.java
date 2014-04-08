@@ -24,9 +24,7 @@ import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.net.UnknownHostException;
-
 import java.net.InetSocketAddress;
-
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Hashtable;
@@ -340,4 +338,10 @@ public class KNXConnector implements Connector {
 	public void removeNetworkListener(NetworkLinkListener listener) {
 		nl.removeLinkListener(listener);
 	}
+	
+	@Override
+	public boolean isCoap() {
+		return false;
+	}
+
 }
