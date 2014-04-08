@@ -67,4 +67,9 @@ public class VirtualConnector implements Connector {
 	public void writeDouble(Object busAddress, Double value) {
 
 	}
+	
+	@Override
+	public boolean isCoap() {
+		return false;
+	}
 }

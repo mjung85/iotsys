@@ -251,4 +251,10 @@ public class EnoceanConnector implements Connector, SerialPortEventListener {
 			watchDogs.get(observation).add(enoceanWatchdog);
 		}
 	}
+	
+	@Override
+	public boolean isCoap() {
+		return false;
+	}
+
 }

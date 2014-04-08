@@ -5,13 +5,12 @@ allprojects {
 
 	group = 'at.ac.tuwien.auto.iotsys'
 	version = '0.1'
-	sourceCompatibility = 1.6
 	
 	repositories(){
 		mavenCentral()
 		mavenRepo url: 'https://repository.jboss.org/nexus/content/repositories/releases/', name: 'JBoss Releases'
 		mavenRepo url: 'https://repository.jboss.org/nexus/content/groups/public/', name: 'JBoss Public'
-
+		flatDir { dirs "../lib/californium"}
 	}
 }
 

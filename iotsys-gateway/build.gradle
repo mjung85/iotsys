@@ -1,8 +1,6 @@
 // Variables
 description = 'IoTSyS Gateway'
 
-sourceCompatibility = 1.6
-
 eclipse{
 	classpath{
 		file {
@@ -32,8 +30,7 @@ eclipse{
 }
 
 repositories {	
-	flatDir { dirs "lib/exi", "lib/californium" }
-	//mavenRepo urls: 'https://github.com/mkovatsc/maven/raw/master/releases/'
+	flatDir { dirs "lib/exi"}
 }
 
 configurations {
@@ -85,7 +82,8 @@ jar {
 									   "org.apache.commons.lang, org.apache.commons.lang.builder, org.apache.commons.lang.enums, org.apache.commons.lang.exception, org.apache.commons.lang.math, org.apache.commons.lang.mutable, org.apache.commons.lang.text, org.apache.commons.lang.time, " +
 									   "org.apache.commons.logging, org.apache.commons.logging.impl," +
 									   "at.ac.tuwien.auto.iotsys.commons.obix.objects, at.ac.tuwien.auto.iotsys.commons.obix.objects.general.contracts.impl, at.ac.tuwien.auto.iotsys.commons.obix.objects.general.datapoint, at.ac.tuwien.auto.iotsys.commons.obix.objects.general.datapoint.impl, at.ac.tuwien.auto.iotsys.commons.obix.objects.general.encoding, at.ac.tuwien.auto.iotsys.commons.obix.objects.general.encoding.impl, at.ac.tuwien.auto.iotsys.commons.obix.objects.general.entity, at.ac.tuwien.auto.iotsys.commons.obix.objects.general.entity.impl, at.ac.tuwien.auto.iotsys.commons.obix.objects.general.enumeration, at.ac.tuwien.auto.iotsys.commons.obix.objects.general.enumeration.impl, at.ac.tuwien.auto.iotsys.commons.obix.objects.general.language, at.ac.tuwien.auto.iotsys.commons.obix.objects.general.language.impl," +
-									   "at.ac.tuwien.auto.iotsys.commons.obix.objects.general.network,at.ac.tuwien.auto.iotsys.commons.obix.objects.general.network.impl, at.ac.tuwien.auto.iotsys.commons.obix.objects.general.parameter, at.ac.tuwien.auto.iotsys.commons.obix.objects.general.parameter.impl, at.ac.tuwien.auto.iotsys.commons.obix.objects.general.unit, at.ac.tuwien.auto.iotsys.commons.obix.objects.general.unit.impl, at.ac.tuwien.auto.iotsys.commons.obix.objects.general.view, at.ac.tuwien.auto.iotsys.commons.obix.objects.general.view.impl, at.ac.tuwien.auto.iotsys.commons.obix.objects.general.internals.impl, at.ac.tuwien.auto.iotsys.gateway.connectors.coap"
+									   "at.ac.tuwien.auto.iotsys.commons.obix.objects.general.network,at.ac.tuwien.auto.iotsys.commons.obix.objects.general.network.impl, at.ac.tuwien.auto.iotsys.commons.obix.objects.general.parameter, at.ac.tuwien.auto.iotsys.commons.obix.objects.general.parameter.impl, at.ac.tuwien.auto.iotsys.commons.obix.objects.general.unit, at.ac.tuwien.auto.iotsys.commons.obix.objects.general.unit.impl, at.ac.tuwien.auto.iotsys.commons.obix.objects.general.view, at.ac.tuwien.auto.iotsys.commons.obix.objects.general.view.impl, at.ac.tuwien.auto.iotsys.commons.obix.objects.general.internals.impl," +
+									   "ch.ethz.inf.vs.californium.coap, ch.ethz.inf.vs.californium.coap.registries, ch.ethz.inf.vs.californium.dtls, ch.ethz.inf.vs.californium.endpoint, ch.ethz.inf.vs.californium.endpoint.resources, ch.ethz.inf.vs.californium.layers, ch.ethz.inf.vs.californium.util"
 									   
 				   )
 	}
@@ -119,9 +117,7 @@ dependencies {
 	
 	provided group: 'net.sourceforge.javacsv', name: 'javacsv', version: '2.0'
 		
-	compile ":nagasena:"
-	compile ":californium-0.12.0-mif_mc:"
-	//compile 'ch.ethz.inf.vs:californium:0.13.6'
+	compile ":nagasena:"	
 
 	testProvided project(':iotsys-obix')
 	testProvided project(':iotsys-common')

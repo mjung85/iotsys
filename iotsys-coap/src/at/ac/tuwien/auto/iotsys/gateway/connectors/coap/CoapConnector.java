@@ -229,4 +229,9 @@ public class CoapConnector implements Connector {
 		return "";
 	}
 
+	@Override
+	public boolean isCoap() {
+		return true;
+	}
+
 }

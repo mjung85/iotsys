@@ -35,4 +35,5 @@ package at.ac.tuwien.auto.iotsys.commons;
 public interface Connector {
 	public void connect() throws Exception;
 	public void disconnect() throws Exception;
+	public boolean isCoap();
 }

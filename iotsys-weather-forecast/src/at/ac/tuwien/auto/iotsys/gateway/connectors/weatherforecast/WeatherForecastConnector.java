@@ -54,6 +54,7 @@ import javax.xml.parsers.ParserConfigurationException;
 
 //import obix.WeatherForcastObject;
 
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -448,5 +449,10 @@ public class WeatherForecastConnector implements Connector, Subject{
 	public Object getCurrentState() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	
+	@Override
+	public boolean isCoap() {
+		return false;
 	}
 }

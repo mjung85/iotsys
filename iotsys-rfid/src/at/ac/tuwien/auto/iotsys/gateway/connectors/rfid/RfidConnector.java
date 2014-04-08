@@ -10,7 +10,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.Hashtable;
 import java.util.logging.Logger;
 
 import at.ac.tuwien.auto.iotsys.commons.Connector;
@@ -47,9 +46,7 @@ public class RfidConnector implements Connector, SerialPortEventListener
 	
 	public static void rfidSend (byte data[])
 	{
-		//log.info("sending data" + data.toString());
-
-		
+		//log.info("sending data" + data.toString());	
 	}
 	
 	public void sendCommand(String cmd)
@@ -220,5 +217,10 @@ public class RfidConnector implements Connector, SerialPortEventListener
 				watchDog.notifyWatchDog(tag);
 			}
 		}
+	}
+	
+	@Override
+	public boolean isCoap() {
+		return false;
 	}
 }
