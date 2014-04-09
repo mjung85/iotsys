@@ -16,7 +16,7 @@ public class MulticastTestRequest {
 		
 		Inet6Address group = null;
 		try {
-			group = (Inet6Address) Inet6Address.getByName("FF02::1");
+			group = (Inet6Address) Inet6Address.getByName("FF02::0FF");
 		} catch (UnknownHostException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();

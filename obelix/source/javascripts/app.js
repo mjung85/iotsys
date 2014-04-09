@@ -317,7 +317,7 @@ app.factory('Connection', ['Storage', function(Storage) {
       console.log("Restored connection",ipv6,"with",fromProperty,toProperty);
       this.ipv6 = ipv6;
     } else {
-      this.ipv6 = "FF02:FFFF::"+Connection.incrementCounter();
+      this.ipv6 = "FF15::"+Connection.incrementCounter();
     }
     this.fromProperty.connect(this, true);
     this.toProperty.connect(this, true);
