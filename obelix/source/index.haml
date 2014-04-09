@@ -31,12 +31,11 @@
       .btn#toggle(ng-click="sidebarExpanded = !sidebarExpanded; $event.stopPropagation()")
     #canvas(ng-click="sidebarExpanded = false" droppable="placeDevice" jsplumb-container)
       %div(ng-repeat="device in allDevices | filter:{placement:'!!'}")
-        .device(ng-style="{left: device.placement.left, top: device.placement.top}" draggable="device" draggable-distance="5" draggable-helper="original" draggable-via-jsplumb="true")
+        .device(ng-style="{left: device.placement.left, top: device.placement.top}" draggable="device" draggable-distance="5" draggable-helper="original" draggable-via-jsplumb="true" ng-dblclick="device.destroy()")
           %header(ng-switch="device.editing")
             %input(type="text" ng-switch-when="true" ng-model="device.name" inline-editor="device.rename(); device.editing = false")
             %label.name(ng-switch-default ng-click="device.editing = true")
               {{device.name}}
-            .btnclose(ng-click="device.destroy()")
           .properties
             .property(ng-repeat="property in device.properties" ng-class="klass" ng-switch on="property.klass" jsplumb-endpoint="property")
               %label {{property.displayName}}

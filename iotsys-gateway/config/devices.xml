@@ -1018,7 +1018,7 @@
   <virtual>
     <connector>
       <name>VirtualDevices</name>
-      <enabled>false</enabled>
+      <enabled>true</enabled>
      
 
 
