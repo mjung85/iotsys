@@ -38,10 +38,11 @@ import ch.ethz.inf.vs.californium.coap.Response;
 import ch.ethz.inf.vs.californium.coap.ResponseHandler;
 
 import obix.Obj;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.Addressable;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.sensors.impl.TemperatureSensorImpl;
 import at.ac.tuwien.auto.iotsys.gateway.connectors.coap.CoapConnector;
 
-public class TemperatureSensorImplCoap extends TemperatureSensorImpl {
+public class TemperatureSensorImplCoap extends TemperatureSensorImpl implements Addressable {
 	// private static final Logger log =
 	// Logger.getLogger(TemperatureSensorImplCoap.class.getName());
 
@@ -96,5 +97,10 @@ public class TemperatureSensorImplCoap extends TemperatureSensorImpl {
 			// oBIX services (e.g. watches, history) and CoAP observe!
 			this.value().set(value);
 		}
+	}
+
+	@Override
+	public String getBusAddress() {
+		return busAddress;
 	}
 }

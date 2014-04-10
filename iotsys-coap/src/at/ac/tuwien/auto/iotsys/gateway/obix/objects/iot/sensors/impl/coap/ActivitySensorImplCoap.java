@@ -38,10 +38,11 @@ import ch.ethz.inf.vs.californium.coap.Response;
 import ch.ethz.inf.vs.californium.coap.ResponseHandler;
 
 import obix.Obj;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.Addressable;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.sensors.impl.ActivitySensorImpl;
 import at.ac.tuwien.auto.iotsys.gateway.connectors.coap.CoapConnector;
 
-public class ActivitySensorImplCoap extends ActivitySensorImpl {
+public class ActivitySensorImplCoap extends ActivitySensorImpl implements Addressable {
 	//private static final Logger log = Logger.getLogger(TemperatureSensorImplCoap.class.getName());
 	
 	private CoapConnector coapConnector;
@@ -59,11 +60,11 @@ public class ActivitySensorImplCoap extends ActivitySensorImpl {
 	public void initialize(){
 		super.initialize();
 		// But stuff here that should be executed after object creation
-		addWatchDog();
+		//addWatchDog();
 	}
 	
 	public void addWatchDog(){
-		coapConnector.createWatchDog(busAddress, ACTIVITY_CONTRACT_HREF, new ResponseHandler() {
+		coapConnector.createWatchDog(busAddress, ACTIVE_CONTRACT_HREF, new ResponseHandler() {
 			public void handleResponse(Response response) {	
 					String payload = response.getPayloadString().trim();
 					
@@ -74,8 +75,23 @@ public class ActivitySensorImplCoap extends ActivitySensorImpl {
 						return;
 					}
 					
-					String temp = CoapConnector.extractAttribute("bool", "val", payload);
-					ActivitySensorImplCoap.this.activityValue().set(temp);
+					String bool = CoapConnector.extractAttribute("bool", "val", payload);
+					ActivitySensorImplCoap.this.activeValue().set(Boolean.valueOf(bool));
+			}
+		});	
+		coapConnector.createWatchDog(busAddress, FREEFALL_CONTRACT_HREF, new ResponseHandler() {
+			public void handleResponse(Response response) {	
+					String payload = response.getPayloadString().trim();
+					
+					if(payload.equals("") || payload.equals("TooManyObservers")) return;
+					
+					if(payload.startsWith("Added")) {
+						isObserved = true;
+						return;
+					}
+					
+					String bool = CoapConnector.extractAttribute("bool", "val", payload);
+					ActivitySensorImplCoap.this.freefallValue().set(Boolean.valueOf(bool));
 			}
 		});	
 	}
@@ -88,11 +104,24 @@ public class ActivitySensorImplCoap extends ActivitySensorImpl {
 	@Override
 	public void refreshObject(){
 		//value is the protected instance variable of the base class (ActivitySensorImpl)
-		if(value != null && !isObserved){
-			String value = coapConnector.readActivity(busAddress, ACTIVITY_CONTRACT_HREF);
+		if(active != null && !isObserved){
+			Boolean value = coapConnector.readBoolean(busAddress, ACTIVE_CONTRACT_HREF);
 			// this calls the implementation of the base class, which triggers also
 			// oBIX services (e.g. watches, history) and CoAP observe!			
-			this.activityValue().set(value); 
+			this.activeValue().set(value); 
 		}	
+		
+		//value is the protected instance variable of the base class (ActivitySensorImpl)
+		if(freefall != null && !isObserved){
+			Boolean value = coapConnector.readBoolean(busAddress, FREEFALL_CONTRACT_HREF);
+			// this calls the implementation of the base class, which triggers also
+			// oBIX services (e.g. watches, history) and CoAP observe!			
+			this.freefallValue().set(value); 
+		}
+	}
+
+	@Override
+	public String getBusAddress() {
+		return busAddress;
 	}
 }

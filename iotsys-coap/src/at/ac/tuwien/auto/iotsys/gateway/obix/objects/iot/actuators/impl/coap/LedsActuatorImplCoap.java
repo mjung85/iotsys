@@ -36,11 +36,14 @@ package at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.coap;
 
 import ch.ethz.inf.vs.californium.coap.Response;
 import ch.ethz.inf.vs.californium.coap.ResponseHandler;
+import obix.Bool;
 import obix.Obj;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.Addressable;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators.LedsActuator;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators.impl.LedsActuatorImpl;
 import at.ac.tuwien.auto.iotsys.gateway.connectors.coap.CoapConnector;
 
-public class LedsActuatorImplCoap extends LedsActuatorImpl {
+public class LedsActuatorImplCoap extends LedsActuatorImpl implements Addressable {
 	//private static final Logger log = Logger.getLogger(LedsActuatorImplCoap.class.getName());
 	
 	private CoapConnector coapConnector;
@@ -62,7 +65,7 @@ public class LedsActuatorImplCoap extends LedsActuatorImpl {
 	public void initialize(){
 		super.initialize();
 		// But stuff here that should be executed after object creation
-		addWatchDog();
+		//addWatchDog();
 	}
 	
 	public void addWatchDog(){
@@ -119,26 +122,53 @@ public class LedsActuatorImplCoap extends LedsActuatorImpl {
 		// all the oBIX specific processing.
 		super.writeObject(input);
 		
-		// write it out to the technology bus
-		coapConnector.writeBoolean(busAddress, LED_BLUE_CONTRACT_HREF, this.blue().get());
-		coapConnector.writeBoolean(busAddress, LED_RED_CONTRACT_HREF, this.red().get());
-		coapConnector.writeBoolean(busAddress, LED_GREEN_CONTRACT_HREF, this.green().get());
+		// write it out to the technology bus 
+		// if a data point has changed only write to the data point
+		String resourceUriPath = "";
+		if (input.getHref() == null) {
+			resourceUriPath = input.getInvokedHref().substring(
+					input.getInvokedHref().lastIndexOf('/') + 1);
+		} else {
+			resourceUriPath = input.getHref().get();
+		}
+		if (input instanceof LedsActuator) {
+			coapConnector.writeBoolean(busAddress, LED_BLUE_CONTRACT_HREF, this.blue().get());
+			coapConnector.writeBoolean(busAddress, LED_RED_CONTRACT_HREF, this.red().get());
+			coapConnector.writeBoolean(busAddress, LED_GREEN_CONTRACT_HREF, this.green().get());
+		} else if (input instanceof Bool) {
+
+			if (LedsActuator.LED_BLUE_CONTRACT_HREF
+					.equals(resourceUriPath)) {
+				coapConnector.writeBoolean(busAddress, LED_BLUE_CONTRACT_HREF, this.blue().get());
+			} else if (LedsActuator.LED_RED_CONTRACT_HREF
+					.equals(resourceUriPath)) {
+				coapConnector.writeBoolean(busAddress, LED_RED_CONTRACT_HREF, this.red().get());
+			} else if (LedsActuator.LED_GREEN_CONTRACT_HREF
+					.equals(resourceUriPath)) {
+				coapConnector.writeBoolean(busAddress, LED_GREEN_CONTRACT_HREF, this.green().get());
+			}
+		}
 	}
 	
 	@Override
 	public void refreshObject(){
 		// value is the protected instance variable of the base class (FanSpeedActuatorImpl)
-		if(blue != null && !blueObserved){
-			Boolean value = coapConnector.readBoolean(busAddress, LED_BLUE_CONTRACT_HREF);	
-			this.blue().set(value);
-		}
-		if(red != null && !redObserved){
-			Boolean value = coapConnector.readBoolean(busAddress, LED_RED_CONTRACT_HREF);	
-			this.red().set(value);
-		}
-		if(green != null && !greenObserved){
-			Boolean value = coapConnector.readBoolean(busAddress, LED_GREEN_CONTRACT_HREF);	
-			this.green().set(value);
-		}
+//		if(blue != null && !blueObserved){
+//			Boolean value = coapConnector.readBoolean(busAddress, LED_BLUE_CONTRACT_HREF);	
+//			this.blue().set(value);
+//		}
+//		if(red != null && !redObserved){
+//			Boolean value = coapConnector.readBoolean(busAddress, LED_RED_CONTRACT_HREF);	
+//			this.red().set(value);
+//		}
+//		if(green != null && !greenObserved){
+//			Boolean value = coapConnector.readBoolean(busAddress, LED_GREEN_CONTRACT_HREF);	
+//			this.green().set(value);
+//		}
+	}
+
+	@Override
+	public String getBusAddress() {
+		return busAddress;
 	}
 }

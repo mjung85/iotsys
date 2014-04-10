@@ -35,23 +35,32 @@ package at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.sensors.impl;
 import java.util.logging.Logger;
 
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.sensors.ActivitySensor;
+import obix.Bool;
 import obix.Contract;
 import obix.Obj;
 import obix.Str;
 import obix.Uri;
 
 public class ActivitySensorImpl extends SensorImpl implements ActivitySensor {
-	protected Str value = new Str("inactivity");	
+	protected Bool active = new Bool(false);
+	protected Bool freefall = new Bool(false);
+	
 	private static final Logger log = Logger.getLogger(ActivitySensorImpl.class.getName());
 
 	public ActivitySensorImpl() {
 		setIs(new Contract(ActivitySensor.CONTRACT));
 		
-		value.setWritable(false);
-		value.setHref(new Uri(ActivitySensor.ACTIVITY_CONTRACT_HREF));
-		value.setName(ActivitySensor.ACTIVITY_CONTRACT_NAME);
+		active.setWritable(false);
+		active.setHref(new Uri(ActivitySensor.ACTIVE_CONTRACT_HREF));
+		active.setName(ActivitySensor.ACTIVE_CONTRACT_NAME);
 		
-		add(value);				
+		add(active);
+		
+		freefall.setWritable(false);
+		freefall.setHref(new Uri(ActivitySensor.FREEFALL_CONTRACT_HREF));
+		freefall.setName(ActivitySensor.FREEFALL_CONTRACT_NAME);
+		
+		add(freefall);
 	}
 
 	public void writeObject(Obj input) {
@@ -69,7 +78,12 @@ public class ActivitySensorImpl extends SensorImpl implements ActivitySensor {
 	}
 
 	@Override
-	public Str activityValue() {
-		return this.value;
+	public Bool activeValue() {
+		return this.active;
+	}
+	
+	@Override
+	public Bool freefallValue() {
+		return this.freefall;
 	}
 }
