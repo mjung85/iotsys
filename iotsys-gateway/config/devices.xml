@@ -18,7 +18,7 @@
             <name>CoapDevicesCooja</name>
             <enabled>true</enabled>
 
-                <device>
+                <!--<device>
                                 <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.coap.PushButtonImplCoap
                                 </type>
                                 <address>coap://[aaaa::c30c:0:0:525]:5683/button</address>
@@ -36,7 +36,7 @@
                                 <historyEnabled>true</historyEnabled>
                                 <refreshEnabled>true</refreshEnabled>
                                 <groupCommEnabled>true</groupCommEnabled>
-                </device>
+                </device>-->
                        
                 <!--<device>
                                 <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.coap.ActivitySensorImplCoap
@@ -66,9 +66,9 @@
                                 <historyEnabled>true</historyEnabled>
                                 <refreshEnabled>true</refreshEnabled>
                                 <groupCommEnabled>true</groupCommEnabled>
-                </device>
+                </device>-->
                 
-                <device>
+                <!--<device>
                                 <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.coap.PushButtonImplCoap
                                 </type>
                                 <address>coap://[aaaa::c30c:0:0:523]:5683/button</address>
@@ -80,7 +80,7 @@
                 
 				<device>
                                 <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.coap.ActivitySensorImplCoap</type>
-                                <address>coap://[aaaa::c30c:0:0:524]:5683/acc</address>
+                                <address>coap://[aaaa::c30c:0:0:523]:5683/acc</address>
                                 <href>dev3/acc</href>
                                 <historyEnabled>true</historyEnabled>
                                 <refreshEnabled>true</refreshEnabled>
