@@ -38,10 +38,11 @@ import ch.ethz.inf.vs.californium.coap.Response;
 import ch.ethz.inf.vs.californium.coap.ResponseHandler;
 
 import obix.Obj;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.Addressable;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.sensors.impl.SwitchingSensorImpl;
 import at.ac.tuwien.auto.iotsys.gateway.connectors.coap.CoapConnector;
 
-public class SwitchingSensorImplCoap extends SwitchingSensorImpl {
+public class SwitchingSensorImplCoap extends SwitchingSensorImpl implements Addressable {
 	//private static final Logger log = Logger.getLogger(SwitchingSensorImplCoap.class.getName());
 	
 	private CoapConnector coapConnector;
@@ -94,5 +95,10 @@ public class SwitchingSensorImplCoap extends SwitchingSensorImpl {
 			// oBIX services (e.g. watches, history) and CoAP observe!			
 			this.switchOnOffValue().set(value); 
 		}	
+	}
+
+	@Override
+	public String getBusAddress() {
+		return busAddress;
 	}
 }

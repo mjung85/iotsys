@@ -37,10 +37,11 @@ package at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.coap;
 import ch.ethz.inf.vs.californium.coap.Response;
 import ch.ethz.inf.vs.californium.coap.ResponseHandler;
 import obix.Obj;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.Addressable;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators.impl.FanSpeedActuatorImpl;
 import at.ac.tuwien.auto.iotsys.gateway.connectors.coap.CoapConnector;
 
-public class FanSpeedActuatorImplCoap extends FanSpeedActuatorImpl{
+public class FanSpeedActuatorImplCoap extends FanSpeedActuatorImpl implements Addressable{
 	//private static final Logger log = Logger.getLogger(FanSpeedActuatorImplCoap.class.getName());
 	
 	private CoapConnector coapConnector;
@@ -118,5 +119,10 @@ public class FanSpeedActuatorImplCoap extends FanSpeedActuatorImpl{
 			Long value = coapConnector.readInt(busAddress, FAN_SPEED_SETPOINT_CONTRACT_HREF);
 			this.fanSpeedSetpointValue().set(value); 		
 		}
+	}
+
+	@Override
+	public String getBusAddress() {
+		return busAddress;
 	}
 }

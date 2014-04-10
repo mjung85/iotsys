@@ -38,10 +38,11 @@ import ch.ethz.inf.vs.californium.coap.Response;
 import ch.ethz.inf.vs.californium.coap.ResponseHandler;
 
 import obix.Obj;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.Addressable;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.sensors.impl.PushButtonImpl;
 import at.ac.tuwien.auto.iotsys.gateway.connectors.coap.CoapConnector;
 
-public class PushButtonImplCoap extends PushButtonImpl {
+public class PushButtonImplCoap extends PushButtonImpl implements Addressable {
 	//private static final Logger log = Logger.getLogger(PushButtonImplCoap.class.getName());
 	
 	private CoapConnector coapConnector;
@@ -59,7 +60,7 @@ public class PushButtonImplCoap extends PushButtonImpl {
 	public void initialize(){
 		super.initialize();
 		// But stuff here that should be executed after object creation
-		addWatchDog();
+		//addWatchDog();
 	}
 	
 	public void addWatchDog(){
@@ -94,5 +95,10 @@ public class PushButtonImplCoap extends PushButtonImpl {
 			// oBIX services (e.g. watches, history) and CoAP observe!			
 			this.value().set(value); 
 		}	
+	}
+
+	@Override
+	public String getBusAddress() {
+		return busAddress;
 	}
 }

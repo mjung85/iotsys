@@ -14,6 +14,80 @@
   </deviceloaders>
   
   <coap>
+       <connector>
+            <name>CoapDevicesCooja</name>
+            <enabled>true</enabled>
+
+                <device>
+                                <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.coap.PushButtonImplCoap
+                                </type>
+                                <address>coap://[aaaa::c30c:0:0:525]:5683/button</address>
+                                <href>dev1/button</href>
+                                <historyEnabled>true</historyEnabled>
+                                <refreshEnabled>true</refreshEnabled>
+                                <groupCommEnabled>true</groupCommEnabled>
+                </device>
+                
+                      <device>
+                                <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.coap.LedsActuatorImplCoap
+                                </type>
+                                <address>coap://[aaaa::c30c:0:0:525]:5683/leds</address>
+                                <href>dev1/leds</href>
+                                <historyEnabled>true</historyEnabled>
+                                <refreshEnabled>true</refreshEnabled>
+                                <groupCommEnabled>true</groupCommEnabled>
+                </device>
+                       
+                <!--<device>
+                                <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.coap.ActivitySensorImplCoap
+                                </type>
+                                <address>coap://[aaaa::c30c:0:0:527]:5683/acc</address>
+                                <href>acc</href>
+                                <historyEnabled>true</historyEnabled>
+                                <refreshEnabled>true</refreshEnabled>
+                                <groupCommEnabled>true</groupCommEnabled>
+                </device>-->
+                
+                <!-- <device>
+                                <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.coap.TemperatureSensorImplCoap
+                                </type>
+                                <address>coap://[aaaa::c30c:0:0:518]:5683/temp</address>
+                                <href>temp</href>
+                                <historyEnabled>true</historyEnabled>
+                                <refreshEnabled>true</refreshEnabled>
+                                <groupCommEnabled>true</groupCommEnabled>
+                </device>-->
+                
+                <!--<device>
+                                <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.coap.LedsActuatorImplCoap
+                                </type>
+                                <address>coap://[aaaa::c30c:0:0:523]:5683/leds</address>
+                                <href>dev2/leds</href>
+                                <historyEnabled>true</historyEnabled>
+                                <refreshEnabled>true</refreshEnabled>
+                                <groupCommEnabled>true</groupCommEnabled>
+                </device>
+                
+                <device>
+                                <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.coap.PushButtonImplCoap
+                                </type>
+                                <address>coap://[aaaa::c30c:0:0:523]:5683/button</address>
+                                <href>dev2/button</href>
+                                <historyEnabled>true</historyEnabled>
+                                <refreshEnabled>true</refreshEnabled>
+                                <groupCommEnabled>true</groupCommEnabled>
+                </device>-->
+                
+				<device>
+                                <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.coap.ActivitySensorImplCoap</type>
+                                <address>coap://[aaaa::c30c:0:0:524]:5683/acc</address>
+                                <href>dev3/acc</href>
+                                <historyEnabled>true</historyEnabled>
+                                <refreshEnabled>true</refreshEnabled>
+                                <groupCommEnabled>true</groupCommEnabled>
+                </device>
+                                  
+         </connector>
          <connector>
             <name>CoAP Cooja</name>
             <enabled>false</enabled>
@@ -1198,6 +1272,7 @@
         <href>virtualLight</href>
         <historyEnabled>false</historyEnabled>
         <historyCount>10</historyCount>
+          <groupCommEnabled>true</groupCommEnabled>
       </device>
 
       <device>
@@ -1269,7 +1344,7 @@
     </connector>
     <connector>
       <name>HVAC Simulation</name>
-      <enabled>false</enabled>
+      <enabled>true</enabled>
 
       <!-- SENSOREN -->
      

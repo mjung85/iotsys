@@ -38,10 +38,11 @@ import ch.ethz.inf.vs.californium.coap.Response;
 import ch.ethz.inf.vs.californium.coap.ResponseHandler;
 
 import obix.Obj;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.Addressable;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators.impl.LightSwitchActuatorImpl;
 import at.ac.tuwien.auto.iotsys.gateway.connectors.coap.CoapConnector;
 
-public class LightSwitchActuatorImplCoap extends LightSwitchActuatorImpl {
+public class LightSwitchActuatorImplCoap extends LightSwitchActuatorImpl implements Addressable{
 	//private static final Logger log = Logger.getLogger(LightSwitchActuatorImplCoap.class.getName());
 	
 	private CoapConnector coapConnector;
@@ -102,5 +103,10 @@ public class LightSwitchActuatorImplCoap extends LightSwitchActuatorImpl {
 			// oBIX services (e.g. watches, history) and CoAP observe!
 			this.value().set(value); 
 		}	
+	}
+
+	@Override
+	public String getBusAddress() {
+		return busAddress;
 	}
 }
