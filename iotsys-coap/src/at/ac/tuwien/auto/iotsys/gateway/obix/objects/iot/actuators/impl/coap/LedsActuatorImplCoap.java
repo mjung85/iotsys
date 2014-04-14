@@ -38,12 +38,12 @@ import ch.ethz.inf.vs.californium.coap.Response;
 import ch.ethz.inf.vs.californium.coap.ResponseHandler;
 import obix.Bool;
 import obix.Obj;
-import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.Addressable;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.IoTSySDevice;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators.LedsActuator;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators.impl.LedsActuatorImpl;
 import at.ac.tuwien.auto.iotsys.gateway.connectors.coap.CoapConnector;
 
-public class LedsActuatorImplCoap extends LedsActuatorImpl implements Addressable {
+public class LedsActuatorImplCoap extends LedsActuatorImpl implements IoTSySDevice {
 	//private static final Logger log = Logger.getLogger(LedsActuatorImplCoap.class.getName());
 	
 	private CoapConnector coapConnector;
@@ -52,8 +52,9 @@ public class LedsActuatorImplCoap extends LedsActuatorImpl implements Addressabl
 	private boolean blueObserved;
 	private boolean greenObserved;
 	private boolean shouldObserve;
+	private boolean forwardGroupAddress;
 
-	public LedsActuatorImplCoap(CoapConnector coapConnector, String busAddress, boolean shouldObserve) {
+	public LedsActuatorImplCoap(CoapConnector coapConnector, String busAddress, boolean shouldObserve, boolean forwardGroupAddress) {
 		// technology specific initialization
 		this.coapConnector = coapConnector;
 		this.busAddress = busAddress;
@@ -61,6 +62,7 @@ public class LedsActuatorImplCoap extends LedsActuatorImpl implements Addressabl
 		this.blueObserved = false;
 		this.greenObserved = false;
 		this.shouldObserve = shouldObserve;
+		this.forwardGroupAddress = forwardGroupAddress;
 	}
 
 	@Override
@@ -174,4 +176,11 @@ public class LedsActuatorImplCoap extends LedsActuatorImpl implements Addressabl
 	public String getBusAddress() {
 		return busAddress;
 	}
+
+	@Override
+	public boolean forwardGroupAddress() {	
+		return this.forwardGroupAddress;
+	}
+	
+	
 }

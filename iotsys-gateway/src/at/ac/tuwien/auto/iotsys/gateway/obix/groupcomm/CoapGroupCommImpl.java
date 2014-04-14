@@ -15,7 +15,7 @@ import ch.ethz.inf.vs.californium.coap.registries.OptionNumberRegistry;
 
 import obix.Obj;
 import obix.Str;
-import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.Addressable;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.IoTSySDevice;
 import at.ac.tuwien.auto.iotsys.gateway.service.GroupCommService;
 
 
@@ -29,8 +29,8 @@ public class CoapGroupCommImpl extends GroupCommImpl{
 	public synchronized Obj joinGroup(Obj in){
 		System.out.println("CoAP join group.");
 		
-		if(datapoint.getParent() instanceof Addressable){
-			final String tempUri = ((Addressable) datapoint.getParent()).getBusAddress() + "/" + datapoint.getHref() + "/groupComm/joinGroup";
+		if(datapoint.getParent() instanceof IoTSySDevice){
+			final String tempUri = ((IoTSySDevice) datapoint.getParent()).getBusAddress() + "/" + datapoint.getHref() + "/groupComm/joinGroup";
 			
 			Str str = (Str) in;
 			try {
@@ -82,8 +82,8 @@ public class CoapGroupCommImpl extends GroupCommImpl{
 	public synchronized Obj leaveGroup(Obj in){
 System.out.println("CoAP join group.");
 		
-		if(datapoint.getParent() instanceof Addressable){
-			final String tempUri = ((Addressable) datapoint.getParent()).getBusAddress() + "/" + datapoint.getHref() + "/groupComm/leaveGroup";
+		if(datapoint.getParent() instanceof IoTSySDevice){
+			final String tempUri = ((IoTSySDevice) datapoint.getParent()).getBusAddress() + "/" + datapoint.getHref() + "/groupComm/leaveGroup";
 			
 			Str str = (Str) in;
 			try {

@@ -136,6 +136,10 @@ public class CoapDeviceLoaderImpl implements DeviceLoader {
 							Boolean shouldObserve = subConfig
 									.getBoolean("device(" + i
 											+ ").observe", false);
+							
+							Boolean forwardGroupAddress = subConfig
+									.getBoolean("device(" + i
+											+ ").forwardGroupAddress", true);
 
 							Integer historyCount = subConfig.getInt("device("
 									+ i + ").historyCount", 0);
@@ -150,18 +154,19 @@ public class CoapDeviceLoaderImpl implements DeviceLoader {
 											.getDeclaredConstructors();
 
 									//constructor that takes connector and IPv6 coap URI as argument
-									Object[] args = new Object[3];
+									Object[] args = new Object[4];
 
 									// first arg is Coap connector
 									args[0] = coapConnector;
 									args[2] = shouldObserve;
+									args[3] = forwardGroupAddress;
 
 									Obj coapDevice = null;
 									String adr = "";
 
 									for (int k = 0; k < declaredConstructors.length; k++) {
 										if (declaredConstructors[k]
-												.getParameterTypes().length == 3) {
+												.getParameterTypes().length == 4) {
 
 											if(!address.isEmpty()) {
 												adr = (String) address.get(0);
@@ -174,7 +179,7 @@ public class CoapDeviceLoaderImpl implements DeviceLoader {
 											coapDevice = (Obj) declaredConstructors[k].newInstance(args);
 											
 										} else if (declaredConstructors[k].getParameterTypes().length == 0) {
-											//TODO: no constructor with 3 arguments - throw exception?
+											//TODO: no constructor with 4 arguments - throw exception?
 											coapDevice = (Obj) declaredConstructors[k].newInstance();
 										}
 									}

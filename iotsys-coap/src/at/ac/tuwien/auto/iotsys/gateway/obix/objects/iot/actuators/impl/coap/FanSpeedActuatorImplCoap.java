@@ -37,11 +37,11 @@ package at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.coap;
 import ch.ethz.inf.vs.californium.coap.Response;
 import ch.ethz.inf.vs.californium.coap.ResponseHandler;
 import obix.Obj;
-import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.Addressable;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.IoTSySDevice;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators.impl.FanSpeedActuatorImpl;
 import at.ac.tuwien.auto.iotsys.gateway.connectors.coap.CoapConnector;
 
-public class FanSpeedActuatorImplCoap extends FanSpeedActuatorImpl implements Addressable{
+public class FanSpeedActuatorImplCoap extends FanSpeedActuatorImpl implements IoTSySDevice{
 	//private static final Logger log = Logger.getLogger(FanSpeedActuatorImplCoap.class.getName());
 	
 	private CoapConnector coapConnector;
@@ -49,14 +49,16 @@ public class FanSpeedActuatorImplCoap extends FanSpeedActuatorImpl implements Ad
 	private boolean enableObserved;
 	private boolean speedObserved;
 	private boolean shouldObserve;
+	private boolean forwardGroupAddress;	
 
-	public FanSpeedActuatorImplCoap(CoapConnector coapConnector, String busAddress, boolean shouldObserve) {
+	public FanSpeedActuatorImplCoap(CoapConnector coapConnector, String busAddress, boolean shouldObserve, boolean forwardGroupAddress) {
 		// technology specific initialization
 		this.coapConnector = coapConnector;
 		this.busAddress = busAddress;
 		this.enableObserved = false;
 		this.speedObserved = false;
 		this.shouldObserve = shouldObserve;
+		this.forwardGroupAddress = forwardGroupAddress;
 	}
 
 	@Override
@@ -127,5 +129,10 @@ public class FanSpeedActuatorImplCoap extends FanSpeedActuatorImpl implements Ad
 	@Override
 	public String getBusAddress() {
 		return busAddress;
+	}
+
+	@Override
+	public boolean forwardGroupAddress() {
+		return forwardGroupAddress;
 	}
 }
