@@ -15,18 +15,20 @@
   
   <coap>
        <connector>
-            <name>CoapDevices</name>
-            <enabled>false</enabled>
+            <name>IoTSyS Devices</name>
+            <enabled>true</enabled>
 
-                <!--<device>
-                                <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.coap.PushButtonImplCoap
+                <device>
+                                <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.coap.TemperatureSensorImplCoap
                                 </type>
-                                <address>coap://[aaaa::c30c:0:0:525]:5683/button</address>
-                                <href>dev1/button</href>
+                                <address>coap://[aaaa::c30c:0:0:523]:5683/temp</address>
+                                <href>dev1/temp</href>
                                 <historyEnabled>true</historyEnabled>
                                 <refreshEnabled>true</refreshEnabled>
+                                <observe>true</observe>
                                 <groupCommEnabled>true</groupCommEnabled>
                 </device>
+                <!--
                 
                 <device>
                                 <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.coap.LedsActuatorImplCoap

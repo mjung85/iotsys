@@ -135,7 +135,7 @@ public class CoapDeviceLoaderImpl implements DeviceLoader {
 											+ ").groupCommEnabled", false);
 							Boolean shouldObserve = subConfig
 									.getBoolean("device(" + i
-											+ ").groupCommEnabled", false);
+											+ ").observe", false);
 
 							Integer historyCount = subConfig.getInt("device("
 									+ i + ").historyCount", 0);
