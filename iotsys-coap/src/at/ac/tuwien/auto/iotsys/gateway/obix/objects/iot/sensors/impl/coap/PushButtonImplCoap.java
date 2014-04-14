@@ -48,12 +48,14 @@ public class PushButtonImplCoap extends PushButtonImpl implements Addressable {
 	private CoapConnector coapConnector;
 	private String busAddress; 
 	private boolean isObserved;
+	private boolean shouldObserve;
 	
-	public PushButtonImplCoap(CoapConnector coapConnector, String busAddress){
+	public PushButtonImplCoap(CoapConnector coapConnector, String busAddress, boolean shouldObserve ){
 		// technology specific initialization
 		this.coapConnector = coapConnector;
 		this.busAddress = busAddress;
 		this.isObserved = false;
+		this.shouldObserve = shouldObserve;
 	}
 	
 	@Override
