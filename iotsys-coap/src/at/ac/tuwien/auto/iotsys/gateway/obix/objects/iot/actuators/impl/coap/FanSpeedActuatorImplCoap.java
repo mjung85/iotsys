@@ -48,20 +48,23 @@ public class FanSpeedActuatorImplCoap extends FanSpeedActuatorImpl implements Ad
 	private String busAddress;
 	private boolean enableObserved;
 	private boolean speedObserved;
+	private boolean shouldObserve;
 
-	public FanSpeedActuatorImplCoap(CoapConnector coapConnector, String busAddress) {
+	public FanSpeedActuatorImplCoap(CoapConnector coapConnector, String busAddress, boolean shouldObserve) {
 		// technology specific initialization
 		this.coapConnector = coapConnector;
 		this.busAddress = busAddress;
 		this.enableObserved = false;
 		this.speedObserved = false;
+		this.shouldObserve = shouldObserve;
 	}
 
 	@Override
 	public void initialize(){
 		super.initialize();
 		// But stuff here that should be executed after object creation
-		addWatchDog();
+		if(shouldObserve)
+			addWatchDog();
 	}
 	
 	public void addWatchDog(){

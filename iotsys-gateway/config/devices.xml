@@ -16,7 +16,7 @@
   <coap>
        <connector>
             <name>CoapDevices</name>
-            <enabled>true</enabled>
+            <enabled>false</enabled>
 
                 <!--<device>
                                 <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.coap.PushButtonImplCoap
@@ -387,7 +387,7 @@
 	
 	<connector>
 		<name>IoT Suitcase</name>
-		<enabled>true</enabled>
+		<enabled>false</enabled>
 		<knx-proj>knx-config/projects/Koffer_IoT_intern.knxproj</knx-proj>
 		<forceRefresh>false</forceRefresh>
 		<router>
@@ -796,7 +796,7 @@
 
     <connector>
       <name>KNX A-Lab</name>
-      <enabled>true</enabled>
+      <enabled>false</enabled>
       <router>
         <ip>128.130.56.51</ip>
         <port>3671</port>

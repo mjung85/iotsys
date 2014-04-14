@@ -48,12 +48,14 @@ public class IndoorBrightnessSensorImplCoap extends IndoorBrightnessSensorImpl i
 	private CoapConnector coapConnector;
 	private String busAddress; 
 	private boolean isObserved;
+	private boolean shouldObserve;
 	
-	public IndoorBrightnessSensorImplCoap(CoapConnector coapConnector, String busAddress){
+	public IndoorBrightnessSensorImplCoap(CoapConnector coapConnector, String busAddress, boolean shouldObserve){
 		// technology specific initialization
 		this.coapConnector = coapConnector;
 		this.busAddress = busAddress;
 		this.isObserved = false;
+		this.shouldObserve = shouldObserve;
 	}
 	
 	@Override

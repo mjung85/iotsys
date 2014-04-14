@@ -51,21 +51,24 @@ public class LedsActuatorImplCoap extends LedsActuatorImpl implements Addressabl
 	private boolean redObserved;
 	private boolean blueObserved;
 	private boolean greenObserved;
+	private boolean shouldObserve;
 
-	public LedsActuatorImplCoap(CoapConnector coapConnector, String busAddress) {
+	public LedsActuatorImplCoap(CoapConnector coapConnector, String busAddress, boolean shouldObserve) {
 		// technology specific initialization
 		this.coapConnector = coapConnector;
 		this.busAddress = busAddress;
 		this.redObserved = false;
 		this.blueObserved = false;
 		this.greenObserved = false;
+		this.shouldObserve = shouldObserve;
 	}
 
 	@Override
 	public void initialize(){
 		super.initialize();
 		// But stuff here that should be executed after object creation
-		//addWatchDog();
+		if(shouldObserve)
+			addWatchDog();
 	}
 	
 	public void addWatchDog(){

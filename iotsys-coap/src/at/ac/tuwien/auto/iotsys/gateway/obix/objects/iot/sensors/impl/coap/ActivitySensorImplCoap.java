@@ -48,12 +48,14 @@ public class ActivitySensorImplCoap extends ActivitySensorImpl implements Addres
 	private CoapConnector coapConnector;
 	private String busAddress; 
 	private boolean isObserved;
+	private boolean shouldObserve;
 	
-	public ActivitySensorImplCoap(CoapConnector coapConnector, String busAddress){
+	public ActivitySensorImplCoap(CoapConnector coapConnector, String busAddress, boolean shouldObserve){
 		// technology specific initialization
 		this.coapConnector = coapConnector;
 		this.busAddress = busAddress;
 		this.isObserved = false;
+		this.shouldObserve = shouldObserve;
 	}
 	
 	@Override

@@ -48,19 +48,22 @@ public class SwitchingSensorImplCoap extends SwitchingSensorImpl implements Addr
 	private CoapConnector coapConnector;
 	private String busAddress; 
 	private boolean isObserved;
+	private boolean shouldObserve;
 	
-	public SwitchingSensorImplCoap(CoapConnector coapConnector, String busAddress){
+	public SwitchingSensorImplCoap(CoapConnector coapConnector, String busAddress, boolean shouldObserve){
 		// technology specific initialization
 		this.coapConnector = coapConnector;
 		this.busAddress = busAddress;
 		this.isObserved = false;
+		this.shouldObserve = shouldObserve;
 	}
 	
 	@Override
 	public void initialize(){
 		super.initialize();
 		// But stuff here that should be executed after object creation
-		addWatchDog();
+		if(shouldObserve)
+			addWatchDog();
 	}
 	
 	public void addWatchDog(){
