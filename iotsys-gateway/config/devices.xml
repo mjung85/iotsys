@@ -15,7 +15,7 @@
   
   <coap>
        <connector>
-            <name>CoapDevicesCooja</name>
+            <name>CoapDevices</name>
             <enabled>true</enabled>
 
                 <!--<device>
@@ -28,7 +28,7 @@
                                 <groupCommEnabled>true</groupCommEnabled>
                 </device>
                 
-                      <device>
+                <device>
                                 <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.coap.LedsActuatorImplCoap
                                 </type>
                                 <address>coap://[aaaa::c30c:0:0:525]:5683/leds</address>
@@ -68,6 +68,15 @@
                                 <groupCommEnabled>true</groupCommEnabled>
                 </device>-->
                 
+                <device>
+                                <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.coap.ActivitySensorImplCoap</type>
+                                <address>coap://[aaaa::c30c:0:0:524]:5683/acc</address>
+                                <href>dev3/acc</href>
+                                <historyEnabled>true</historyEnabled>
+                                <refreshEnabled>true</refreshEnabled>
+                                <groupCommEnabled>true</groupCommEnabled>
+                </device>
+                
                 <!--<device>
                                 <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.coap.PushButtonImplCoap
                                 </type>
@@ -77,15 +86,17 @@
                                 <refreshEnabled>true</refreshEnabled>
                                 <groupCommEnabled>true</groupCommEnabled>
                 </device>-->
+                			
                 
-				<device>
-                                <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.coap.ActivitySensorImplCoap</type>
-                                <address>coap://[aaaa::c30c:0:0:523]:5683/acc</address>
-                                <href>dev3/acc</href>
+                <!--<device>
+                                <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.coap.PushButtonImplCoap
+                                </type>
+                                <address>coap://[aaaa::c30c:0:0:524]:5683/button</address>
+                                <href>dev2/button</href>
                                 <historyEnabled>true</historyEnabled>
                                 <refreshEnabled>true</refreshEnabled>
                                 <groupCommEnabled>true</groupCommEnabled>
-                </device>
+                </device>-->
                                   
          </connector>
          <connector>
@@ -355,19 +366,32 @@
         <!-- forces unpacking of zip and transformation -->
         <forceRefresh>false</forceRefresh>              
         <router>
-            <ip>128.130.56.140</ip>
+            <ip>128.130.56.103</ip>
             <port>3671</port>
         </router>
         <localIP>auto</localIP>
         <groupCommEnabled>true</groupCommEnabled>
     </connector>
 	<connector>
-		<name>IoT Suitcase</name>
+		<name>IoT Suitcase2</name>
 		<enabled>false</enabled>
 		<knx-proj>knx-config/projects/IoT_Koffer_09_01_2014_with_data_point_types.knxproj</knx-proj>
 		<forceRefresh>false</forceRefresh>
 		<router>
 			<ip>192.168.1.14</ip>
+			<port>3671</port>
+		</router>
+		  <localIP>auto</localIP>
+        <groupCommEnabled>true</groupCommEnabled>
+	</connector>
+	
+	<connector>
+		<name>IoT Suitcase</name>
+		<enabled>true</enabled>
+		<knx-proj>knx-config/projects/Koffer_IoT_intern.knxproj</knx-proj>
+		<forceRefresh>false</forceRefresh>
+		<router>
+			<ip>128.130.56.103</ip>
 			<port>3671</port>
 		</router>
 		  <localIP>auto</localIP>
@@ -772,9 +796,9 @@
 
     <connector>
       <name>KNX A-Lab</name>
-      <enabled>false</enabled>
+      <enabled>true</enabled>
       <router>
-        <ip>128.130.56.140</ip>
+        <ip>128.130.56.51</ip>
         <port>3671</port>
       </router>
       <localIP>auto</localIP>
