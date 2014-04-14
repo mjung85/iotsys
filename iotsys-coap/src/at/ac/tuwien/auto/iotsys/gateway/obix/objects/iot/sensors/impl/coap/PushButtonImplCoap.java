@@ -38,31 +38,34 @@ import ch.ethz.inf.vs.californium.coap.Response;
 import ch.ethz.inf.vs.californium.coap.ResponseHandler;
 
 import obix.Obj;
-import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.Addressable;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.IoTSySDevice;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.sensors.impl.PushButtonImpl;
 import at.ac.tuwien.auto.iotsys.gateway.connectors.coap.CoapConnector;
 
-public class PushButtonImplCoap extends PushButtonImpl implements Addressable {
+public class PushButtonImplCoap extends PushButtonImpl implements IoTSySDevice {
 	//private static final Logger log = Logger.getLogger(PushButtonImplCoap.class.getName());
 	
 	private CoapConnector coapConnector;
 	private String busAddress; 
 	private boolean isObserved;
 	private boolean shouldObserve;
+	private boolean forwardGroupAddress;
 	
-	public PushButtonImplCoap(CoapConnector coapConnector, String busAddress, boolean shouldObserve ){
+	public PushButtonImplCoap(CoapConnector coapConnector, String busAddress, boolean shouldObserve, boolean forwardGroupAddress){
 		// technology specific initialization
 		this.coapConnector = coapConnector;
 		this.busAddress = busAddress;
 		this.isObserved = false;
 		this.shouldObserve = shouldObserve;
+		this.forwardGroupAddress = forwardGroupAddress;
 	}
 	
 	@Override
 	public void initialize(){
 		super.initialize();
 		// But stuff here that should be executed after object creation
-		//addWatchDog();
+		if(shouldObserve)
+			addWatchDog();
 	}
 	
 	public void addWatchDog(){
@@ -102,5 +105,10 @@ public class PushButtonImplCoap extends PushButtonImpl implements Addressable {
 	@Override
 	public String getBusAddress() {
 		return busAddress;
+	}
+
+	@Override
+	public boolean forwardGroupAddress() {
+		return forwardGroupAddress;
 	}
 }

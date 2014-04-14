@@ -16,7 +16,7 @@
   <coap>
        <connector>
             <name>IoTSyS Devices</name>
-            <enabled>true</enabled>
+            <enabled>false</enabled>
 
                 <device>
                                 <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.coap.TemperatureSensorImplCoap
@@ -26,6 +26,17 @@
                                 <historyEnabled>true</historyEnabled>
                                 <refreshEnabled>true</refreshEnabled>
                                 <observe>true</observe>
+                                <groupCommEnabled>true</groupCommEnabled>
+                                <forwardGroupAddress>false</forwardGroupAddress>
+                </device>
+                
+                <device>
+                                <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.coap.LedsActuatorImplCoap
+                                </type>
+                                <address>coap://[aaaa::c30c:0:0:523]:5683/leds</address>
+                                <href>dev1/leds</href>
+                                <historyEnabled>true</historyEnabled>
+                                <refreshEnabled>true</refreshEnabled>
                                 <groupCommEnabled>true</groupCommEnabled>
                 </device>
                 <!--
@@ -70,14 +81,14 @@
                                 <groupCommEnabled>true</groupCommEnabled>
                 </device>-->
                 
-                <device>
+                <!--<device>
                                 <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.coap.ActivitySensorImplCoap</type>
                                 <address>coap://[aaaa::c30c:0:0:524]:5683/acc</address>
                                 <href>dev3/acc</href>
                                 <historyEnabled>true</historyEnabled>
                                 <refreshEnabled>true</refreshEnabled>
                                 <groupCommEnabled>true</groupCommEnabled>
-                </device>
+                </device>-->
                 
                 <!--<device>
                                 <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.coap.PushButtonImplCoap
@@ -1387,7 +1398,7 @@
 
     <connector>
       <name>IoTSyS Logic</name>
-      <enabled>false</enabled>
+      <enabled>true</enabled>
 
       <!-- Logic components -->      
       <device>

@@ -38,24 +38,27 @@ import ch.ethz.inf.vs.californium.coap.Response;
 import ch.ethz.inf.vs.californium.coap.ResponseHandler;
 
 import obix.Obj;
-import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.Addressable;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.IoTSySDevice;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators.impl.LightSwitchActuatorImpl;
 import at.ac.tuwien.auto.iotsys.gateway.connectors.coap.CoapConnector;
 
-public class LightSwitchActuatorImplCoap extends LightSwitchActuatorImpl implements Addressable{
+public class LightSwitchActuatorImplCoap extends LightSwitchActuatorImpl implements IoTSySDevice{
 	//private static final Logger log = Logger.getLogger(LightSwitchActuatorImplCoap.class.getName());
 	
 	private CoapConnector coapConnector;
 	private String busAddress;
 	private boolean isObserved;
 	private boolean shouldObserve;
+	private boolean forwardGroupAddress;
 	
-	public LightSwitchActuatorImplCoap(CoapConnector coapConnector, String busAddress, boolean shouldObserve){
+	public LightSwitchActuatorImplCoap(CoapConnector coapConnector, String busAddress, boolean shouldObserve, boolean forwardGroupAddress){
 		// technology specific initialization
 		this.coapConnector = coapConnector;
 		this.busAddress = busAddress;
 		this.isObserved = false;
 		this.shouldObserve = shouldObserve;
+		this.forwardGroupAddress = forwardGroupAddress;
+		
 	}
 	
 	@Override
@@ -111,5 +114,10 @@ public class LightSwitchActuatorImplCoap extends LightSwitchActuatorImpl impleme
 	@Override
 	public String getBusAddress() {
 		return busAddress;
+	}
+
+	@Override
+	public boolean forwardGroupAddress() {
+		return forwardGroupAddress;
 	}
 }
