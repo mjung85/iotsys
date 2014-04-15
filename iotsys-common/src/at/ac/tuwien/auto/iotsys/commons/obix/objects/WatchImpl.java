@@ -242,6 +242,7 @@ public class WatchImpl extends Obj implements Watch {
 								outItem = (Obj) observedObject.clone();
 								outItem.setName(null, true);
 								outItem.setHref(new Uri(uri));
+								outItem.setHidden(false);
 								out.values().add(outItem, false);
 							} catch (CloneNotSupportedException e) {
 								log.info("Obj not clonable" + e.getMessage());
@@ -284,6 +285,8 @@ public class WatchImpl extends Obj implements Watch {
 							outItem = (Obj) beingObservedObject.clone();
 							outItem.setName(null, true);
 							outItem.setHref(new Uri(uri));
+							// the clone should not be hidden
+							outItem.setHidden(false);
 							out.values().add(outItem, false);
 						} catch (CloneNotSupportedException e) {
 							log.info("Obj not clonable" + e.getMessage());
