@@ -294,13 +294,22 @@
     
     <connector>
       <name>EnOcean</name>
-      <enabled>false</enabled>
-      <serialPort>/dev/ttyS80</serialPort>
+      <enabled>true</enabled>
+      <serialPort>/dev/ttyUSB0</serialPort>
       <device>
         <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.enocean.WindowSensorImplEnocean
         </type>
-        <address>0x01820AE7</address>
+        <address>0x008AF207</address>
         <href>window</href>
+        <historyEnabled>false</historyEnabled>
+        <groupCommEnabled>true</groupCommEnabled>
+      </device>
+      
+       <device>
+        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.enocean.PushButtonImplEnocean
+        </type>
+        <address>0x0010202B</address>
+        <href>buttonEnocean</href>
         <historyEnabled>false</historyEnabled>
         <groupCommEnabled>true</groupCommEnabled>
       </device>
@@ -409,9 +418,9 @@
 	
 	<connector>
 		<name>IoT Suitcase</name>
-		<enabled>false</enabled>
+		<enabled>true</enabled>
 		<knx-proj>knx-config/projects/Koffer_IoT_intern.knxproj</knx-proj>
-		<forceRefresh>false</forceRefresh>
+		<forceRefresh>true</forceRefresh>
 		<router>
 			<ip>128.130.56.103</ip>
 			<port>3671</port>
@@ -1046,9 +1055,9 @@
 
     <connector>
       <name>BACnet A-Lab (Auto)</name>
-      <enabled>false</enabled>
+      <enabled>true</enabled>
       <discovery-enabled>true</discovery-enabled>
-      <localDeviceID>343434</localDeviceID>
+      <localDeviceID>12345</localDeviceID>
       <broadcastAddress>128.130.56.255</broadcastAddress>
       <localPort>47808</localPort>
       <groupCommEnabled>true</groupCommEnabled>
@@ -1057,9 +1066,9 @@
     
     <connector>
       <name>BACnet IoT Suitcase</name>
-      <enabled>true</enabled>
+      <enabled>false</enabled>
       <discovery-enabled>true</discovery-enabled>
-      <localDeviceID>1234</localDeviceID>
+      <localDeviceID>12345</localDeviceID>
       <broadcastAddress>192.168.1.255</broadcastAddress>
       <localPort>47808</localPort>
       <groupCommEnabled>true</groupCommEnabled>
@@ -1072,8 +1081,8 @@
   <wmbus>
     <connector>
       <name>W-MBus Smart Meter Linux</name>
-      <enabled>false</enabled>
-      <serialPort>/dev/ttyUSB0</serialPort>
+      <enabled>true</enabled>
+      <serialPort>/dev/ttyUSB1</serialPort>
       <device>
         <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.wmbus.SmartMeterImplWMBus
         </type>
