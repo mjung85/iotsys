@@ -49,6 +49,7 @@ public class TemperatureControllerImpl extends Obj implements
 	protected Real tolerance = new Real();
 	protected Bool saveEnergyEnabled = new Bool();
 	protected Real saveEnergyFactor = new Real();
+	protected Real setpointAdjustment = new Real();
 
 	private ControllerState controllerState = ControllerState.INACTIVE;
 
@@ -59,6 +60,12 @@ public class TemperatureControllerImpl extends Obj implements
 		setpoint.setHref(new Uri("setpoint"));
 		setpoint.setUnit(new Uri("obix:units/celsius"));
 		setpoint.setWritable(true);
+		
+		setpointAdjustment.setName("setpointAdjustment");
+		setpointAdjustment.setDisplayName("Setpoint Adjustment");
+		setpointAdjustment.setHref(new Uri("setpointAdjustment"));
+		setpointAdjustment.setUnit(new Uri("obix:units/celsius"));
+		setpointAdjustment.setWritable(true);
 
 		temperature.setName("temperature");
 		temperature.setDisplayName("Temperature");
@@ -100,6 +107,7 @@ public class TemperatureControllerImpl extends Obj implements
 		this.add(enabled);
 		this.add(saveEnergyEnabled);
 		this.add(saveEnergyFactor);		
+		this.add(setpointAdjustment);
 	}
 
 	@Override
@@ -158,6 +166,8 @@ public class TemperatureControllerImpl extends Obj implements
 				saveEnergyEnabled.set(((Real) input).get());
 			} else if ("saveEnergyFactor".equals(resourceUriPath)) {
 				saveEnergyFactor.set(((Real) input).get());
+			} else if ("setpointAdjustment".equals(resourceUriPath)){
+				setpointAdjustment.set(((Real) input).get());
 			}
 
 		} else if (input instanceof Bool) {
@@ -175,7 +185,10 @@ public class TemperatureControllerImpl extends Obj implements
 			}
 			else if ("saveEnergyFactor".equals(resourceUriPath)) {
 				saveEnergyFactor.set(((Bool) input).get());
+			} else if("setpointAdjustment".equals(resourceUriPath)){
+				setpointAdjustment.set(((Real) input).get());
 			}
+			
 
 		} else if (input instanceof Int) {
 
@@ -191,13 +204,13 @@ public class TemperatureControllerImpl extends Obj implements
 				saveEnergyEnabled.set(((Int) input).get());
 			}else if ("saveEnergyFactor".equals(resourceUriPath)) {
 				saveEnergyFactor.set(((Int) input).get());
+			} else if("setpointAdjustment".equals(resourceUriPath)){
+				setpointAdjustment.set(((Real) input).get());
 			}
 
 		}
 		
 		doControl();
-
-	
 	}
 
 	@Override
@@ -213,21 +226,21 @@ public class TemperatureControllerImpl extends Obj implements
 	public void doControl(){
 		// perform control logic
 		if (enabled.get()) {
-			if (temperature.get() < setpoint.get() - tolerance.get()
+			if (temperature.get() < setpoint.get() - tolerance.get() + setpointAdjustment.get()
 					&& controllerState != ControllerState.HEATING) {
 				// we need to heat!
 				controlValue.set(100);
 				controllerState = ControllerState.HEATING;
-			} else if (temperature.get() > setpoint.get() + tolerance.get()
+			} else if (temperature.get() > setpoint.get() + tolerance.get() + setpointAdjustment.get()
 					&& controllerState != ControllerState.COOLING) {
 				controlValue.set(-100);
 				controllerState = ControllerState.COOLING;
-			} else if (temperature.get() > setpoint.get()
+			} else if (temperature.get() > setpoint.get() + setpointAdjustment.get()
 					&& controllerState == ControllerState.HEATING) {
 				// we have reached the target heating temp
 				controlValue.set(0);
 				controllerState = ControllerState.INACTIVE;
-			} else if (temperature.get() < setpoint.get()
+			} else if (temperature.get() < setpoint.get() + setpointAdjustment.get()
 					&& controllerState == ControllerState.COOLING) {
 				// we have reached the target cooling temp
 				controlValue.set(0);
@@ -243,6 +256,11 @@ public class TemperatureControllerImpl extends Obj implements
 		if((controlValue.get() == 100 || controlValue.get() == -100) && saveEnergyEnabled().get()){
 			this.controlValue.set(controlValue.get() / (100 / saveEnergyFactor().get()));
 		}
+	}
+
+	@Override
+	public Real setpointAdjustment() {
+		return setpointAdjustment;
 	}
 }
 

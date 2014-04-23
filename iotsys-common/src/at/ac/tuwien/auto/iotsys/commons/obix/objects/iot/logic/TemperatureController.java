@@ -54,6 +54,9 @@ public interface TemperatureController extends IObj {
 	public static final String toleranceContract = "<real name='tolerance' href='tolerance' val='0'/>";
 	public Real tolerance();
 	
+	public static final String setpointAdjustmentContract = "<real name='setpointAdjustment' href='setpointAdjustment' val='0'/>";
+	public Real setpointAdjustment();
+	
 	public static final String saveEnergyFactor = "<real name='saveEnergy' href='tolercance' val='0'/>";
 	public Real saveEnergyFactor();
 	
