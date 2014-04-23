@@ -16,7 +16,7 @@
   <coap>
        <connector>
             <name>IoTSyS Devices</name>
-            <enabled>false</enabled>
+            <enabled>true</enabled>
 
                 <!--<device>
                                 <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.coap.TemperatureSensorImplCoap
@@ -40,14 +40,14 @@
                                 <groupCommEnabled>true</groupCommEnabled>
                 </device>-->
                 
-                <device>
+                <!--<device>
                                 <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.coap.ActivitySensorImplCoap</type>
                                 <address>coap://[aaaa::c30c:0:0:daf]:5683/acc</address>
                                 <href>dev3/acc</href>
                                 <historyEnabled>true</historyEnabled>
                                 <refreshEnabled>true</refreshEnabled>
                                 <groupCommEnabled>true</groupCommEnabled>
-                </device>
+                </device>-->
                 <!--
                 
                 <device>
@@ -119,6 +119,18 @@
                                 <refreshEnabled>true</refreshEnabled>
                                 <groupCommEnabled>true</groupCommEnabled>
                 </device>-->
+                
+                <device>
+                                <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.coap.ActivitySensorImplCoap
+                                </type>
+                                <address>coap://[aaaa::c30c:0:0:daf]:5683/acc</address>
+                                <href>acc</href>
+                                <historyEnabled>true</historyEnabled>
+                                <refreshEnabled>true</refreshEnabled>                              
+                                <observe>true</observe>
+                                <groupCommEnabled>true</groupCommEnabled>
+                                <forwardGroupAddress>true</forwardGroupAddress>
+                </device>
                                   
          </connector>
          <connector>
@@ -294,8 +306,8 @@
     
     <connector>
       <name>EnOcean</name>
-      <enabled>true</enabled>
-      <serialPort>/dev/ttyUSB0</serialPort>
+      <enabled>false</enabled>
+      <serialPort>/dev/ttyUSB2</serialPort>
       <device>
         <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.enocean.WindowSensorImplEnocean
         </type>
@@ -420,7 +432,7 @@
 		<name>IoT Suitcase</name>
 		<enabled>true</enabled>
 		<knx-proj>knx-config/projects/Koffer_IoT_intern.knxproj</knx-proj>
-		<forceRefresh>true</forceRefresh>
+		<forceRefresh>false	</forceRefresh>
 		<router>
 			<ip>128.130.56.103</ip>
 			<port>3671</port>
@@ -1081,8 +1093,8 @@
   <wmbus>
     <connector>
       <name>W-MBus Smart Meter Linux</name>
-      <enabled>true</enabled>
-      <serialPort>/dev/ttyUSB1</serialPort>
+      <enabled>false</enabled>
+      <serialPort>/dev/ttyUSB3</serialPort>
       <device>
         <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.wmbus.SmartMeterImplWMBus
         </type>
