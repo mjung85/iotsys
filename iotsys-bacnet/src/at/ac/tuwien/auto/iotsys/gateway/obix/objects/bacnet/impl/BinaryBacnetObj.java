@@ -25,7 +25,9 @@ package at.ac.tuwien.auto.iotsys.gateway.obix.objects.bacnet.impl;
 import java.util.logging.Logger;
 
 import obix.Bool;
+import obix.Int;
 import obix.Obj;
+import obix.Real;
 import obix.Uri;
 import at.ac.tuwien.auto.iotsys.gateway.connectors.bacnet.BACnetConnector;
 import at.ac.tuwien.auto.iotsys.gateway.connectors.bacnet.BacnetDataPointInfo;
@@ -61,7 +63,16 @@ public abstract class BinaryBacnetObj extends BacnetObj {
 			int active = input.getBool() ? 1 : 0;
 			val = new BinaryPV(active);
 			value.setBool(input.getBool());
-		} else {
+		} else if (input instanceof Real){
+			int active = input.getReal() > 0 ? 1 : 0;
+			val = new BinaryPV(active);
+			value.set(active >0);
+		} else if (input instanceof Int){
+			int active = input.getInt() > 0 ? 1 : 0;
+			val = new BinaryPV(active);
+			value.set(active >0);
+		} 
+		else {
 			return;
 		}
 		

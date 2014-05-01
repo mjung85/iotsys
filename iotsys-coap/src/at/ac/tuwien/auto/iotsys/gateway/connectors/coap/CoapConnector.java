@@ -101,6 +101,7 @@ public class CoapConnector implements Connector {
 		}
 		
 		request.setType(messageType.NON);
+		
 		request.setOption(new Option(MediaTypeRegistry.APPLICATION_XML,OptionNumberRegistry.ACCEPT));
 	
 		// specify URI of target endpoint
@@ -112,6 +113,7 @@ public class CoapConnector implements Connector {
 		// request.setAccept(MediaTypeRegistry.APPLICATION_XML);
 		
 		try {
+			log.info("Requesting tempUri: " + tempUri);
 			request.execute();
 			
 		} catch (IOException e) {

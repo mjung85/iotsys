@@ -120,17 +120,90 @@
                                 <groupCommEnabled>true</groupCommEnabled>
                 </device>-->
                 
-                <device>
+                <!--<device>
                                 <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.coap.ActivitySensorImplCoap
                                 </type>
                                 <address>coap://[aaaa::c30c:0:0:daf]:5683/acc</address>
                                 <href>acc</href>
                                 <historyEnabled>true</historyEnabled>
                                 <refreshEnabled>true</refreshEnabled>                              
-                                <observe>true</observe>
+                                <observe>false</observe>
                                 <groupCommEnabled>true</groupCommEnabled>
                                 <forwardGroupAddress>true</forwardGroupAddress>
+                </device>-->
+                
+                <!-- LEDS demo -->
+                
+                <device>
+                                <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.coap.LedsActuatorImplCoap
+                                </type>
+                                <address>coap://[aaaa::c30c:0:0:51d]:5683/leds</address>
+                                <href>dev1/leds</href>
+                                <historyEnabled>true</historyEnabled>
+                                <refreshEnabled>true</refreshEnabled>
+                                <groupCommEnabled>true</groupCommEnabled>
+                                <forwardGroupAddress>false</forwardGroupAddress>
+                                <observe>false</observe>
                 </device>
+                
+                <device>
+                                <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.coap.LedsActuatorImplCoap
+                                </type>
+                                <address>coap://[aaaa::c30c:0:0:523]:5683/leds</address>
+                                <href>dev2/leds</href>
+                                <historyEnabled>true</historyEnabled>
+                                <refreshEnabled>true</refreshEnabled>
+                                <groupCommEnabled>true</groupCommEnabled>
+                                <forwardGroupAddress>false</forwardGroupAddress>
+                                <observe>false</observe>
+                </device>
+                
+                <device>
+                                <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.coap.LedsActuatorImplCoap
+                                </type>
+                                <address>coap://[aaaa::c30c:0:0:51f]:5683/leds</address>
+                                <href>dev3/leds</href>
+                                <historyEnabled>true</historyEnabled>
+                                <refreshEnabled>true</refreshEnabled>
+                                <groupCommEnabled>true</groupCommEnabled>
+                                <forwardGroupAddress>false</forwardGroupAddress>
+                                <observe>false</observe>
+                </device>
+                
+                <device>
+                                <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.coap.LedsActuatorImplCoap
+                                </type>
+                                <address>coap://[aaaa::c30c:0:0:51c]:5683/leds</address>
+                                <href>dev4/leds</href>
+                                <historyEnabled>true</historyEnabled>
+                                <refreshEnabled>true</refreshEnabled>
+                                <groupCommEnabled>true</groupCommEnabled>
+                                <forwardGroupAddress>false</forwardGroupAddress>
+                                <observe>false</observe>
+                </device>
+                
+                <device>
+                                <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.coap.PushButtonImplCoap
+                                </type>
+                                <address>coap://[aaaa::c30c:0:0:daf]:5683/button</address>
+                                <href>dev5/button</href>
+                                <historyEnabled>true</historyEnabled>
+                                <refreshEnabled>true</refreshEnabled>
+                                <groupCommEnabled>true</groupCommEnabled>
+                                <forwardGroupAddress>false</forwardGroupAddress>
+                                <observe>false</observe>
+                </device>
+                
+                <!--<device>
+                                <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.coap.TemperatureSensorImplCoap
+                                </type>
+                                <address>coap://[aaaa::c30c:0:0:daf]:5683/temp</address>
+                                <href>temp</href>
+                                <historyEnabled>true</historyEnabled>
+                                <observe>true</observe>
+                                <groupCommEnabled>true</groupCommEnabled>
+                                <forwardGroupAddress>false</forwardGroupAddress>
+                </device>-->
                                   
          </connector>
          <connector>
@@ -307,7 +380,7 @@
     <connector>
       <name>EnOcean</name>
       <enabled>false</enabled>
-      <serialPort>/dev/ttyUSB2</serialPort>
+      <serialPort>/dev/ttyUSB1</serialPort>
       <device>
         <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.enocean.WindowSensorImplEnocean
         </type>
@@ -430,7 +503,7 @@
 	
 	<connector>
 		<name>IoT Suitcase</name>
-		<enabled>true</enabled>
+		<enabled>false</enabled>
 		<knx-proj>knx-config/projects/Koffer_IoT_intern.knxproj</knx-proj>
 		<forceRefresh>false	</forceRefresh>
 		<router>
@@ -1067,7 +1140,7 @@
 
     <connector>
       <name>BACnet A-Lab (Auto)</name>
-      <enabled>true</enabled>
+      <enabled>false</enabled>
       <discovery-enabled>true</discovery-enabled>
       <localDeviceID>12345</localDeviceID>
       <broadcastAddress>128.130.56.255</broadcastAddress>
@@ -1094,7 +1167,7 @@
     <connector>
       <name>W-MBus Smart Meter Linux</name>
       <enabled>false</enabled>
-      <serialPort>/dev/ttyUSB3</serialPort>
+      <serialPort>/dev/ttyUSB2</serialPort>
       <device>
         <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.wmbus.SmartMeterImplWMBus
         </type>

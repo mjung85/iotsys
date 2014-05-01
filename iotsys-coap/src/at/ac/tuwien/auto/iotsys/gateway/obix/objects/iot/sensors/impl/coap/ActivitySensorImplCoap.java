@@ -108,21 +108,21 @@ public class ActivitySensorImplCoap extends ActivitySensorImpl implements IoTSyS
 
 	@Override
 	public void refreshObject(){
-		//value is the protected instance variable of the base class (ActivitySensorImpl)
-		if(active != null && !isObserved){
-			Boolean value = coapConnector.readBoolean(busAddress, ACTIVE_CONTRACT_HREF);
-			// this calls the implementation of the base class, which triggers also
-			// oBIX services (e.g. watches, history) and CoAP observe!			
-			this.activeValue().set(value); 
-		}	
-		
-		//value is the protected instance variable of the base class (ActivitySensorImpl)
-		if(freefall != null && !isObserved){
-			Boolean value = coapConnector.readBoolean(busAddress, FREEFALL_CONTRACT_HREF);
-			// this calls the implementation of the base class, which triggers also
-			// oBIX services (e.g. watches, history) and CoAP observe!			
-			this.freefallValue().set(value); 
-		}
+//		//value is the protected instance variable of the base class (ActivitySensorImpl)
+//		if(active != null && !isObserved){
+//			Boolean value = coapConnector.readBoolean(busAddress, ACTIVE_CONTRACT_HREF);
+//			// this calls the implementation of the base class, which triggers also
+//			// oBIX services (e.g. watches, history) and CoAP observe!			
+//			this.activeValue().set(value); 
+//		}	
+//		
+//		//value is the protected instance variable of the base class (ActivitySensorImpl)
+//		if(freefall != null && !isObserved){
+//			Boolean value = coapConnector.readBoolean(busAddress, FREEFALL_CONTRACT_HREF);
+//			// this calls the implementation of the base class, which triggers also
+//			// oBIX services (e.g. watches, history) and CoAP observe!			
+//			this.freefallValue().set(value); 
+//		}
 	}
 
 	@Override
