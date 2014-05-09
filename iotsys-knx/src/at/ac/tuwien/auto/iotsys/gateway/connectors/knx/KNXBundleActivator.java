@@ -51,7 +51,7 @@ public class KNXBundleActivator implements BundleActivator, ServiceListener {
 		ServiceReference serviceReference = context
 				.getServiceReference(ObjectBroker.class.getName());
 		if (serviceReference == null) {
-			log.severe("Could not find a running object broker to register devices!");
+			log.info("Could not find a running object broker to register devices! Waiting for service announcement.");
 
 		} else {
 			synchronized (this) {
