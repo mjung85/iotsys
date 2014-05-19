@@ -27,7 +27,7 @@ app.service('Lobby', ['$http', 'Device', 'Directory', function($http, Device, Di
         callback(root);
       });
     }
-  }
+  };
 }]);
 
 app.factory('Storage', function() {
@@ -364,7 +364,7 @@ app.factory('Connection', ['Storage', function(Storage) {
           connectionRestoredCallback(new Connection(fromProperty, toProperty, c.ipv6));
         });
       }
-    }
+    };
   })();
 
   return Connection;
@@ -554,7 +554,7 @@ app.controller('MainCtrl', ['$scope','$q','$timeout','Lobby','Watch','Connection
 
   $scope.clear = function() {
     // TODO: clear all connections, then devices!
-  }
+  };
 
   jsPlumb.bind("connection", function(info) {
     console.log("Connection event", info);
@@ -664,7 +664,7 @@ app.directive('droppable', ['$parse',function($parse) {
         }
       });
     }
-  }
+  };
 }]);
 
 app.directive('ngModelOnblur', function() {
@@ -717,7 +717,7 @@ app.directive('jsplumbContainer', function() {
         jsPlumb.Defaults.Container = el;
       });
     }
-  }
+  };
 });
 
 app.directive('jsplumbEndpoint', ['$timeout', function($timeout) {
@@ -742,5 +742,5 @@ app.directive('jsplumbEndpoint', ['$timeout', function($timeout) {
         property.jsPlumbEndpoints.push(ep);
       },0);  
     }
-  }
+  };
 }]);
