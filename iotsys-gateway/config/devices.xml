@@ -204,7 +204,16 @@
                                 <groupCommEnabled>true</groupCommEnabled>
                                 <forwardGroupAddress>false</forwardGroupAddress>
                 </device>-->
-                                  
+                
+                <device>
+                	<type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.coap.TemperatureSensorImplCoap</type>
+                    <address>coap://[aaaa::c30c:0:0:3]:5683/temp</address>
+                    <href>temp</href>
+                    <historyEnabled>true</historyEnabled>
+                    <observe>true</observe>
+                    <groupCommEnabled>true</groupCommEnabled>
+                    <forwardGroupAddress>true</forwardGroupAddress>                
+                </device>                                 
          </connector>
          <connector>
             <name>CoAP Cooja</name>
