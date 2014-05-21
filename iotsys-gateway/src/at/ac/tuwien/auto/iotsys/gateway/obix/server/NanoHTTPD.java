@@ -6,6 +6,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -27,6 +28,8 @@ import java.util.Properties;
 import java.util.StringTokenizer;
 import java.util.TimeZone;
 import java.util.Vector;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.logging.Logger;
 
 import obix.Obj;
@@ -38,6 +41,8 @@ import obix.io.RelativeObixEncoder;
 
 import org.json.JSONException;
 
+import com.csvreader.CsvWriter;
+
 import at.ac.tuwien.auto.iotsys.commons.PropertiesLoader;
 import at.ac.tuwien.auto.iotsys.commons.interceptor.InterceptorBroker;
 import at.ac.tuwien.auto.iotsys.commons.interceptor.InterceptorRequest;
@@ -46,6 +51,7 @@ import at.ac.tuwien.auto.iotsys.commons.interceptor.InterceptorResponse;
 import at.ac.tuwien.auto.iotsys.commons.interceptor.InterceptorResponse.StatusCode;
 import at.ac.tuwien.auto.iotsys.commons.interceptor.Parameter;
 import at.ac.tuwien.auto.iotsys.gateway.interceptor.InterceptorBrokerImpl;
+import at.ac.tuwien.auto.iotsys.gateway.util.EvaluationUtil;
 import at.ac.tuwien.auto.iotsys.gateway.util.ExiUtil;
 import at.ac.tuwien.auto.iotsys.gateway.util.JsonUtil;
 
@@ -108,6 +114,8 @@ public class NanoHTTPD {
 
 	private static final Logger log = Logger.getLogger(NanoHTTPD.class
 			.getName());
+	
+	private CsvWriter perfLog = new CsvWriter(new FileWriter("./http_perf_log.csv", false), ';');	
 
 	/**
 	 * Standard XML header
@@ -124,6 +132,9 @@ public class NanoHTTPD {
 	private InterceptorBroker interceptorBroker = InterceptorBrokerImpl
 			.getInstance();
 
+	
+	// limit to 5 concurrent requests
+	private ExecutorService executor = Executors.newFixedThreadPool(5);
 	/**
 	 * Override this to customize the server.
 	 * <p>
@@ -615,8 +626,11 @@ public class NanoHTTPD {
 	 */
 	public void stop() {
 		try {
+			System.out.println("Shutdown called!");
 			myServerSocket.close();
 			myThread.join();
+			
+			executor.shutdown();
 		} catch (IOException ioe) {
 		} catch (InterruptedException e) {
 		}
@@ -627,6 +641,9 @@ public class NanoHTTPD {
 	 * response.
 	 */
 	private class HTTPSession implements Runnable {
+		private long startTime = 0;
+		private long endTime = 0;
+		
 		public HTTPSession(Socket s) {
 			mySocket = s;
 			// socketHostname = mySocket.getLocalAddress().getHostName();
@@ -635,11 +652,12 @@ public class NanoHTTPD {
 			hostAddress = "127.0.0.1";
 			Thread t = new Thread(this);
 			t.setDaemon(true);
-			t.start();
+			executor.execute(t);
 		}
 
 		public void run() {
 			try {
+				startTime = EvaluationUtil.getCpuTime();
 				InputStream is = mySocket.getInputStream();
 
 				if (is == null)
@@ -857,6 +875,10 @@ public class NanoHTTPD {
 
 				in.close();
 				is.close();
+				
+				endTime = EvaluationUtil.getCpuTime();
+				System.out.println("#### Request time is: " + (endTime - startTime));
+				System.out.println("### end time: " + endTime);
 			} catch (IOException ioe) {
 				try {
 					sendError(
