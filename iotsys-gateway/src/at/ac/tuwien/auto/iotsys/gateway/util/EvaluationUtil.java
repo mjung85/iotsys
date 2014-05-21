@@ -34,6 +34,8 @@ package at.ac.tuwien.auto.iotsys.gateway.util;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import java.lang.management.ManagementFactory;
+import java.lang.management.ThreadMXBean;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -79,5 +81,22 @@ public class EvaluationUtil {
 			for (Entry<String, String> entry : ipv6ContractList.entrySet()) {
 
 	        }		
+	}
+	
+	public static long getCpuTime( ) {
+	    ThreadMXBean bean = ManagementFactory.getThreadMXBean( );
+	    return bean.getCurrentThreadCpuTime();
+	}
+	 
+	/** Get user time in nanoseconds. */
+	public static long getUserTime( ) {
+	    ThreadMXBean bean = ManagementFactory.getThreadMXBean();
+	    return bean.getCurrentThreadUserTime();
+	}
+
+	/** Get system time in nanoseconds. */
+	public static long getSystemTime( ) {
+	    ThreadMXBean bean = ManagementFactory.getThreadMXBean( );
+	    return (bean.getCurrentThreadCpuTime() - bean.getCurrentThreadUserTime( ));
 	}
 }

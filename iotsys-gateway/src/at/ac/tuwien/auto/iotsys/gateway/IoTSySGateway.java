@@ -82,6 +82,8 @@ public class IoTSySGateway
 
 	private MdnsResolver mdnsResolver;
 	
+	private NanoHTTPD nanoHttpd = null;
+	
 	public IoTSySGateway()
 	{
 
@@ -241,7 +243,7 @@ public class IoTSySGateway
 		try
 		{
 			new CoAPServer(obixServer);
-			new NanoHTTPD(Integer.parseInt(httpPort), obixServer);
+			nanoHttpd = new NanoHTTPD(Integer.parseInt(httpPort), obixServer);
 		} catch (IOException ioe)
 		{
 			ioe.printStackTrace();
@@ -251,6 +253,7 @@ public class IoTSySGateway
 	public void stopGateway()
 	{
 		objectBroker.shutdown();
+		nanoHttpd.stop();
 		// CsvCreator.instance.close();
 		closeConnectors();
 	}
