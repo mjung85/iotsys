@@ -8,6 +8,7 @@
 $accentColor: #33ffff;
 $sidebarWidth: 300px;
 $sidebarColor: #ddd;
+$deviceHeaderPadding: 10px;
 
 body {
   font-family: Helvetica, Arial;
@@ -178,8 +179,11 @@ body > label {
     color: #ffff00;
     margin-left: -4px;
     margin-right: -4px;
+    padding-left: $deviceHeaderPadding;
+    padding-right: $deviceHeaderPadding;
     padding-bottom: 2px;
     text-align: center;
+    word-break: break-all;
 
     input {
       font-weight: bold;
