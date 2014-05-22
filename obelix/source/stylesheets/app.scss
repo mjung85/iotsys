@@ -61,6 +61,7 @@ body {
     top: 10px;
     left: $sidebarWidth;
     @include border-left-radius(0px);
+    @include sidebar-shadow;
   }
 
   .content {
