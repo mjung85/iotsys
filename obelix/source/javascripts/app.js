@@ -394,7 +394,7 @@ app.factory('Device', ['$http', '$q', 'Storage', 'Property', 'Watch', function($
           return String.fromCharCode(num);
     });
     this.originalName = name;
-
+    
     return this;
   };
 
@@ -556,7 +556,6 @@ app.controller('MainCtrl', ['$scope','$q','$timeout','Lobby','Watch','Connection
       // Initial placement, add to watch
       $scope.watch.add(device.href);
     }
-    $scope.sidebarExpanded = true;
     device.place(position);
   };
 
