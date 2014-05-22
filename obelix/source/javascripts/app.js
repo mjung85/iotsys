@@ -556,7 +556,7 @@ app.controller('MainCtrl', ['$scope','$q','$timeout','Lobby','Watch','Connection
       // Initial placement, add to watch
       $scope.watch.add(device.href);
     }
-    $scope.sidebarExpanded = false;
+    $scope.sidebarExpanded = true;
     device.place(position);
   };
 
