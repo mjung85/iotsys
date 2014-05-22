@@ -125,6 +125,9 @@ app.factory('Watch', ['$http', '$timeout', '$q', 'Storage', function($http, $tim
   var Watch = function(href) {
     this.intervalStorage = new Storage('watch_interval');
     this.interval = this.intervalStorage.get();
+    this.interval = (	null == this.interval || 
+    					undefined == this.interval || 
+    					isNaN(this.interval)) ? this.intervalMinimum : this.interval;
     this.updateInterval();
     this.href = href;
   };
@@ -164,9 +167,9 @@ app.factory('Watch', ['$http', '$timeout', '$q', 'Storage', function($http, $tim
 
   Watch.prototype = {
     updateInterval: function() {
-      this.interval = parseInt(this.interval) || 0; 
-      if (this.interval < 1000) this.interval = 1000;
-      if (this.interval > 10000) this.interval = 10000;
+      this.interval = isNaN(this.interval) ? this.intervalStorage.get() : parseInt(this.interval, 10);
+      if (this.interval < this.intervalMinimum) this.interval = this.intervalMinimum;
+      if (this.interval > this.intervalMaximum) this.interval = this.intervalMaximum;
       console.log("Watch interval is", this.interval);
       this.intervalStorage.set(this.interval);
     },
@@ -210,13 +213,18 @@ app.factory('Watch', ['$http', '$timeout', '$q', 'Storage', function($http, $tim
     tick: function() {
       if (this.polling) {
         this.poll(this.polling);
-        $timeout(this.tick.bind(this), this.interval);
+        if (! this.intervalStorage.get()) {
+        	this.intervalStorage.set(this.interval = this.intervalMinimum);
+        }
+        $timeout(this.tick.bind(this), this.intervalStorage.get());
       }
     },
     startPolling: function(callback) {
       this.polling = callback;
       this.tick();
-    }
+    },
+    intervalMinimum: 1000,
+    intervalMaximum: 10000
   };
 
   return Watch;
