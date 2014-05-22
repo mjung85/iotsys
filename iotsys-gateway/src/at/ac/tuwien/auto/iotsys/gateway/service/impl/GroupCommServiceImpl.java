@@ -63,6 +63,7 @@ public class GroupCommServiceImpl implements GroupCommService {
 	private final static GroupCommServiceImpl instance = new GroupCommServiceImpl();
 
 	private static final Hashtable<Inet6Address, Hashtable<String, Obj>> groupObjectPerAddress = new Hashtable<Inet6Address, Hashtable<String, Obj>>();
+	private static final Hashtable<Inet6Address, Hashtable<String, Obj>> receiverObjectPerAddress = new Hashtable<Inet6Address, Hashtable<String, Obj>>();
 
 	private boolean MCAST_ENABLED = true;
 	private boolean INTERNAL_NOTFICATION = true;
@@ -95,6 +96,22 @@ public class GroupCommServiceImpl implements GroupCommService {
 				}
 			} else {
 				log.info("No group objects found!");
+			}
+		}
+		
+		// for coap proxy objects the values should be updated if a write on the group address is seen
+		synchronized (receiverObjectPerAddress) {
+			Hashtable<String, Obj> groupObjects = receiverObjectPerAddress
+					.get(group);
+
+			if (groupObjects != null) {
+				for (Obj obj : groupObjects.values()) {
+					payload.setHref(obj.getHref());
+					log.finest("Writing on " + obj.getHref());
+					obj.writeObject(payload);
+				}
+			} else {
+				log.info("No group objects found as receiver!");
 			}
 		}
 	}
@@ -230,5 +247,55 @@ public class GroupCommServiceImpl implements GroupCommService {
 			}
 		}
 
+	}
+
+	@Override
+	public void registerAsReceiver(Inet6Address group, Obj obj) {
+		synchronized (receiverObjectPerAddress) {
+			Hashtable<String, Obj> groupObjects = receiverObjectPerAddress
+					.get(group);
+
+			if (groupObjects != null) {
+				groupObjects.put(obj.getFullContextPath(), obj);
+			} else {
+				// we need to create a multicast socket for the specified port
+				try {
+					CommunicatorFactory.getInstance().getCommunicator().getMultiInterfaceUDPLayer()
+							.openMulticastSocket(group);
+					Hashtable<String, Obj> newGroupObjects = new Hashtable<String, Obj>();
+					receiverObjectPerAddress.put(group, newGroupObjects);
+					newGroupObjects.put(obj.getFullContextPath(), obj);
+				} catch (SocketException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+		
+	}
+	
+	@Override
+	public void unregisterReceiverObject(Inet6Address group, Obj obj) {
+		synchronized (receiverObjectPerAddress) {
+			Hashtable<String, Obj> groupObjects = receiverObjectPerAddress
+					.get(group);
+
+			if (groupObjects != null) {
+				groupObjects.remove(obj.getFullContextPath());
+
+				if (groupObjects.size() == 0) {
+					// close group comm socket
+					try {
+						CommunicatorFactory.getInstance().getCommunicator().getMultiInterfaceUDPLayer()
+								.closeMulticastSocket(group);
+					} catch (SocketException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					receiverObjectPerAddress.remove(group);
+				}
+			}
+		}
+		
 	}
 }
