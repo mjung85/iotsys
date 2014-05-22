@@ -167,7 +167,7 @@ body > label {
   @include box-sizing(border-box);
 
   width: 7 * 25px;
-  background: $sidebarColor;
+  background: #21546a;
   padding: 4px;
   position: absolute;
 
@@ -175,6 +175,7 @@ body > label {
 
   header {
     font-weight: bold;
+    color: #ffff00;
     margin-left: -4px;
     margin-right: -4px;
     padding-bottom: 2px;
@@ -197,6 +198,7 @@ body > label {
       display: inline-block;
       width: 4 * 25px;
       overflow: hidden;
+      color: #ffffff;
     }
     input {
       width: 2 * 25px;
