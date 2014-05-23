@@ -213,7 +213,9 @@ body > label {
       width: 2 * $gridWidth;
     }
     .slider input[type="range"] {
-      width: inherit;
+      width: 95%;
+      margin: 0;
+      padding: 0;
     }
   }
 }
