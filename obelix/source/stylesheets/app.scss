@@ -10,6 +10,7 @@ $sidebarWidth: 300px;
 $sidebarColor: #ddd;
 $sidebarToggleButtonWidth: 36px;
 $deviceHeaderPadding: 10px;
+$gridWidth: 25px;
 
 body {
   font-family: Helvetica, Arial;
@@ -171,7 +172,7 @@ body > label {
 #canvas .device {
   @include box-sizing(border-box);
 
-  width: 7 * 25px;
+  width: 7 * $gridWidth;
   background: #21546a;
   padding: 4px;
   position: absolute;
@@ -204,23 +205,18 @@ body > label {
     color: #333;
     label {
       display: inline-block;
-      width: 4 * 25px;
+      width: 4 * $gridWidth;
       overflow: hidden;
       color: #ffffff;
     }
     input {
-      width: 2 * 25px;
+      width: 2 * $gridWidth;
+    }
+    .slider input[type="range"] {
+      width: inherit;
     }
   }
 }
-
-.slider {
-  width: 100%;
-  input {
-    width: 100% !important;
-  }
-}
-
 
 .connected svg rect {
   fill: #5b9ada !important;
