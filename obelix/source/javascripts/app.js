@@ -125,6 +125,8 @@ app.factory('Watch', ['$http', '$timeout', '$q', 'Storage', function($http, $tim
   var Watch = function(href) {
     this.intervalStorage = new Storage('watch_interval');
     this.interval = this.intervalStorage.get();
+    this.intervalMinimum = 1000;
+    this.intervalMaximum = 10000;
     this.interval = (	null == this.interval || 
     					undefined == this.interval || 
     					isNaN(this.interval)) ? this.intervalMinimum : this.interval;
@@ -222,9 +224,7 @@ app.factory('Watch', ['$http', '$timeout', '$q', 'Storage', function($http, $tim
     startPolling: function(callback) {
       this.polling = callback;
       this.tick();
-    },
-    intervalMinimum: 1000,
-    intervalMaximum: 10000
+    }
   };
 
   return Watch;
