@@ -8,6 +8,7 @@
 $accentColor: #33ffff;
 $sidebarWidth: 300px;
 $sidebarColor: #ddd;
+$sidebarToggleButtonWidth: 36px;
 $deviceHeaderPadding: 10px;
 
 body {
@@ -41,29 +42,32 @@ body {
   @include box-shadow(rgba(0,0,0,0.5) 2px 2px 2px);
 }
 
+.btn#toggle {
+    position: absolute;
+    display: block;
+    width: $sidebarToggleButtonWidth;
+    height: 100%;
+    background-color: #FFFF00;
+    background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAVCAYAAABc6S4mAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA/FpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNS1jMDE0IDc5LjE1MTQ4MSwgMjAxMy8wMy8xMy0xMjowOToxNSAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtbG5zOmRjPSJodHRwOi8vcHVybC5vcmcvZGMvZWxlbWVudHMvMS4xLyIgeG1wTU06T3JpZ2luYWxEb2N1bWVudElEPSJ1dWlkOjY1RTYzOTA2ODZDRjExREJBNkUyRDg4N0NFQUNCNDA3IiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOkJEMzkxMDQ5REI2QzExRTI4NzQwRDYwMzM5MTI3NkRGIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOkJEMzkxMDQ4REI2QzExRTI4NzQwRDYwMzM5MTI3NkRGIiB4bXA6Q3JlYXRvclRvb2w9IkFkb2JlIFBob3Rvc2hvcCBDQyAoTWFjaW50b3NoKSI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOjM4ZWRmZThjLWZhZTMtNDQyMi1iOThkLTg1NjQyMmU4ZWQ5MiIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDowMjgwMTE3NDA3MjA2ODExODA4Mzg2RTU3M0Y3MUMzNiIvPiA8ZGM6dGl0bGU+IDxyZGY6QWx0PiA8cmRmOmxpIHhtbDpsYW5nPSJ4LWRlZmF1bHQiPmdseXBoaWNvbnM8L3JkZjpsaT4gPC9yZGY6QWx0PiA8L2RjOnRpdGxlPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PkymFBMAAABVSURBVHja7JJBCgAxCAOT/v+x9QWuFim9dz0UEghqDgoyADDDntXdkT6yW09WsxTLcwbJnd1qhK16O3L7ab+xXtKmgWa1H4AoEkWiSBSJohco+gQYABT3mr8hAma6AAAAAElFTkSuQmCC");
+    top: 0;
+    left: 0;
+    @include border-left-radius(0px);
+    @include sidebar-shadow;
+    @include transition(left 0.35s);
+}
+
+  
 #sidebar {
   position: absolute;
   top: 0;
-  bottom: 0;
-  left: -$sidebarWidth;
+  height: 100%;
+  left: -$sidebarWidth + $sidebarToggleButtonWidth;
 
   &.expanded {
-    left: 0px;
+    left: $sidebarToggleButtonWidth;
   }
 
   @include transition(left 0.35s);
-
-  .btn#toggle {
-    display: block;
-    width: 36px;
-    height: 32px;
-    background-color: $sidebarColor;
-    background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAQCAYAAAAMJL+VAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAALEgAACxIB0t1+/AAAABx0RVh0U29mdHdhcmUAQWRvYmUgRmlyZXdvcmtzIENTNXG14zYAAAAYdEVYdENyZWF0aW9uIFRpbWUAMDMuMDkuMjAxMyaG+lIAAAA4SURBVDiNY2RgYDjDQEPAREvDh4cFjP///6epBTT3AQsyh5GRkeopauhH8mgqIggYGUbLooG2AADEkwiAZzXf8gAAAABJRU5ErkJggg==");
-    top: 10px;
-    left: $sidebarWidth;
-    @include border-left-radius(0px);
-    @include sidebar-shadow;
-  }
 
   .content {
     position: absolute;
@@ -230,6 +234,7 @@ body > label {
 }
 
 // Z-Indices
+.btn#toggle { z-index: 111; }
 #sidebar { z-index: 110; }
 #canvas .device { z-index: 103; }
 ._jsPlumb_connector { z-index: 102; }
@@ -239,7 +244,6 @@ body > label {
 // Segmented control
 
 #sidebar .header {
-  text-align: center;
   margin: 2px 10px 12px 10px;
 }
 
