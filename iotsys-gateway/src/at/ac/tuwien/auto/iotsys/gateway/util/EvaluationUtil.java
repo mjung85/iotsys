@@ -83,7 +83,7 @@ public class EvaluationUtil {
 	        }		
 	}
 	
-	public static long getCpuTime( ) {
+	public static long getCpuTime() {
 	    ThreadMXBean bean = ManagementFactory.getThreadMXBean( );
 	    return bean.getCurrentThreadCpuTime();
 	}
@@ -98,5 +98,22 @@ public class EvaluationUtil {
 	public static long getSystemTime( ) {
 	    ThreadMXBean bean = ManagementFactory.getThreadMXBean( );
 	    return (bean.getCurrentThreadCpuTime() - bean.getCurrentThreadUserTime( ));
+	}
+	
+	public static long getCpuTime(long threadId) {
+	    ThreadMXBean bean = ManagementFactory.getThreadMXBean( );
+	    return bean.getThreadCpuTime(threadId);
+	}
+	 
+	/** Get user time in nanoseconds. */
+	public static long getUserTime(long threadId ) {
+	    ThreadMXBean bean = ManagementFactory.getThreadMXBean();
+	    return bean.getThreadUserTime(threadId);
+	}
+
+	/** Get system time in nanoseconds. */
+	public static long getSystemTime(long threadId) {
+	    ThreadMXBean bean = ManagementFactory.getThreadMXBean( );
+	    return (bean.getThreadCpuTime(threadId) - bean.getThreadUserTime(threadId));
 	}
 }
