@@ -19,10 +19,13 @@ import java.net.Socket;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
 import java.util.StringTokenizer;
@@ -135,6 +138,10 @@ public class NanoHTTPD {
 	
 	// limit to 5 concurrent requests
 	private ExecutorService executor = Executors.newFixedThreadPool(5);
+	
+	private final HashSet<Thread> workerThreads = new HashSet<Thread>();
+	
+	private volatile int numRequest = 0;
 	/**
 	 * Override this to customize the server.
 	 * <p>
@@ -626,11 +633,25 @@ public class NanoHTTPD {
 	 */
 	public void stop() {
 		try {
+			long totalCPUTime = 0;
 			System.out.println("Shutdown called!");
+			synchronized(workerThreads){
+				System.out.println("There are " + workerThreads.size() + " worker threads.");
+				for(Thread thread : workerThreads){				
+					System.out.println("Thread ID: " + thread.getId() + ", " + 	EvaluationUtil.getCpuTime(thread.getId()));
+					totalCPUTime += EvaluationUtil.getCpuTime(thread.getId());
+				}
+			}
+			
+			System.out.println("total CPU Time: " + totalCPUTime);
+			double cpuTimePerRequest = ((double) totalCPUTime / numRequest) / 1000000; // nanoseconds to milliseconds 
+			System.out.println("cpu time per request: " + cpuTimePerRequest + ", " + totalCPUTime / numRequest);
 			myServerSocket.close();
 			myThread.join();
-			
+
+			perfLog.writeRecord(new String[]{"" + totalCPUTime, "" + numRequest, "" + cpuTimePerRequest});
 			executor.shutdown();
+			perfLog.close();
 		} catch (IOException ioe) {
 		} catch (InterruptedException e) {
 		}
@@ -653,11 +674,17 @@ public class NanoHTTPD {
 			Thread t = new Thread(this);
 			t.setDaemon(true);
 			executor.execute(t);
+			numRequest++;
 		}
 
 		public void run() {
 			try {
-				startTime = EvaluationUtil.getCpuTime();
+				synchronized(workerThreads){
+					workerThreads.add(Thread.currentThread());
+				}
+			 
+			    //System.out.println(primeFactors(1015274274145L));
+			
 				InputStream is = mySocket.getInputStream();
 
 				if (is == null)
@@ -876,9 +903,7 @@ public class NanoHTTPD {
 				in.close();
 				is.close();
 				
-				endTime = EvaluationUtil.getCpuTime();
-				System.out.println("#### Request time is: " + (endTime - startTime));
-				System.out.println("### end time: " + endTime);
+				
 			} catch (IOException ioe) {
 				try {
 					sendError(
@@ -1498,7 +1523,26 @@ public class NanoHTTPD {
 				"E, d MMM yyyy HH:mm:ss 'GMT'", Locale.US);
 		gmtFrmt.setTimeZone(TimeZone.getTimeZone("GMT"));
 	}
-
+	
+	static double factorial(int n) {
+	    double result = 1;
+	    for(double i = 2; i<=n; ++i) {
+	        result *= i;
+	    }
+	    return result;
+	}
+	
+	 public static List<Long> primeFactors(long number) {
+	    long n = number;
+	    List<Long> factors = new ArrayList<Long>();
+	    for (long i = 2; i <= n; i++) {
+	      while (n % i == 0) {
+	        factors.add(i);
+	        n /= i;
+	      }
+	    }
+	    return factors;
+	  }
 	/**
 	 * The distribution licence
 	 */

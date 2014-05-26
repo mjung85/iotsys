@@ -40,11 +40,12 @@ public class JsonUtil {
 	public static void main(String[] args){
 //		String xml = "<str val=\"DB08::2\"/>";
 //		String xml = "<obj href=\"/humidity\" is=\"iot:HumiditySensor\"><real name=\"value\" href=\"value\" val=\"50.0\" unit=\"obix:units/percent\"/></obj>";
-		String xml = "<obj href=\"/lightIntensity1\" is=\"iot:LightIntensitySensor\"><real name=\"value\" href=\"value\" val=\"1000.0\" unit=\"obix:units/lumen\"/></obj>";
-
-		
+		//String xml = "<obj href=\"/lightIntensity1\" is=\"iot:LightIntensitySensor\"><real name=\"value\" href=\"value\" val=\"1000.0\" unit=\"obix:units/lumen\"/></obj>";
+		//String xml = "<obj is=\"obix:WatchIn\">\n  <list name=\"hrefs\">\n   <uri val=\"/VirtualDevices/virtualLight\" />\n  </list>\n</obj>";
+		//String xml = "<obj is=\"obix:WatchIn\">\n  <list name=\"hrefs\">\n   <uri val=\"/VirtualDevices/virtualLight\" />\n   <uri val=\"/VirtualDevices/virtualTemperatureSensor\" />\n   <uri val=\"/VirtualDevices/smartmeter\" />\n   <uri val=\"/VirtualDevices/virtualPushButton\" />\n  </list>\n</obj>";
 //		String xml = "<obj is=\"obix:WatchIn\"><list name=\"hrefs\"><uri val=\"/VirtualDevices/virtualLight/value\" /></list></obj>";
 		//String xml = "<obj is=\"obix:WatchOut\"><list><obj href=\"/testDevices/switch3\" is=\"iot:LightSwitchActuator\"><bool name=\"value\" href=\"/testDevices/switch3/value\" val=\"false\" writable=\"true\"/></obj></list></obj>";
+		String xml = "<str val=\"FF15::1\"/>";
 		String json = "{\"is\":\"obix:WatchIn\",\"nodes\":[{\"nodes\":[{\"val\":\"/testDevices/switch3/value\",\"tag\":\"uri\"}],\"tag\":\"list\",\"name\":\"hrefs\"}],\"tag\":\"obj\"}";
 		try {
 			System.out.println(fromXMLtoJSON(xml));			
