@@ -1,0 +1,42 @@
+<obj href="iot:WeatherForecastRecord">
+	<abstime name="timestamp" null="true">
+	<enum name="probability-code" range="#ProbabilityCodeRange" null="true">
+		<list href="#ProbabilityCodeRange" is="obix:Range">
+			<int name="unknown" val="-1"/>
+			<int name="highly-probable" val="0"/>
+			<int name="probable" val="1"/>
+			<int name="uncertain" val="2"/>
+		</list>
+	</enum>
+	<real name="temperature" unit="obix:units/celsius" null="true"/>
+	<real name="humidity" unit="obix:units/" min="0" max="100" null="true"/>
+	<real name="pressure" unit="obix:units/" min="0" null="true"/>
+	<real name="precipitation" unit="obix:units/" min="0" null="true"/>
+	<real name="cloudiness" unit="obix:units/" min="0" max="100" null="true"/>
+	<real name="fog" unit="obix:units/" min="0" max="100" null="true"/>
+	<int name="wind-speed" unit="obix:units/" min="0" max="12"  null="true"/>
+	<enum name="symbol" range="#SymbolRange" null="true">
+		<list href="#SymbolRange" is="obix:Range">
+			<!-- refer to http://om.yr.no/forklaring/symbol/ -->
+			<int name="sun" val="1"/>
+			<int name="fair" val="2"/>
+			<int name="partly-cloudy" val="3"/>
+			<int name="cloudy" val="4"/>
+			<int name="rain-showers" val="5"/>
+			<int name="rain-showers-with-thunder" val="6"/>
+			<int name="sleet-showers" val="7"/>
+			<int name="snow-showers" val="8"/>
+			<int name="rain" val="9"/>
+			<int name="heavy-rain" val="10"/>
+			<int name="heavy-rain-and-thunder" val="11"/>
+			<int name="sleet" val="12"/>
+			<int name="snow" val="13"/>
+			<int name="snow-and-thunder" val="14"/>
+			<int name="fog" val="15"/>
+			<int name="sleet-showers-and-thunder" val="20"/>
+			<int name="snow-showers-and-thunder" val="21"/>
+			<int name="rain-and-thunder" val="22"/>
+			<int name="sleet-and-thunder" val="23"/>
+		</list>
+	</enum>
+</obj>
