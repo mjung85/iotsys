@@ -1,0 +1,25 @@
+<?xml version='1.0' encoding='utf-8'?>
+<web-app web-app version="2.4" xmlns=" http://java.sun.com/xml/ns/j2ee"
+	xmlns:xsi=" http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation=" http://java.sun.com/xml/ns/j2ee
+http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
+
+	<servlet>
+		<servlet-name>obix</servlet-name>
+		<servlet-class>at.ac.tuwien.auto.iotsys.gateway.obix.server.ObixServlet</servlet-class>
+		<init-param>
+			<param-name>debug</param-name>
+			<param-value>0</param-value>
+		</init-param>
+		<init-param>
+			<param-name>listings</param-name>
+			<param-value>false</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>obix</servlet-name>
+		<url-pattern></url-pattern>
+	</servlet-mapping>
+</web-app>

@@ -33,23 +33,14 @@
 package at.ac.tuwien.auto.iotsys.gateway;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.Writer;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.logging.Logger;
 
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.catalina.Context;
-import org.apache.catalina.LifecycleException;
-import org.apache.catalina.startup.Tomcat;
 
 import at.ac.tuwien.auto.iotsys.commons.Connector;
 import at.ac.tuwien.auto.iotsys.commons.DeviceLoader;
@@ -65,6 +56,7 @@ import at.ac.tuwien.auto.iotsys.commons.obix.objects.ContractInit;
 import at.ac.tuwien.auto.iotsys.gateway.interceptor.InterceptorBrokerImpl;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objectbroker.ObjectBrokerImpl;
 import at.ac.tuwien.auto.iotsys.gateway.obix.server.CoAPServer;
+import at.ac.tuwien.auto.iotsys.gateway.obix.server.NanoHTTPD;
 import at.ac.tuwien.auto.iotsys.gateway.obix.server.ObixObservingManager;
 import at.ac.tuwien.auto.iotsys.gateway.obix.server.ObixServer;
 import at.ac.tuwien.auto.iotsys.gateway.obix.server.ObixServerImpl;
@@ -243,17 +235,25 @@ public class IoTSySGateway {
 
 		ObixObservingManager.getInstance().setObixServer(obixServer);
 
-		// try
-		// {
 		new CoAPServer(obixServer);
 
-		new TomcatServer(Integer.parseInt(httpPort), obixServer);
+		try {
+			new TomcatServer(Integer.parseInt(httpPort), obixServer);
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (ServletException e) {
+			e.printStackTrace();
+		}
 
-		// new NanoHTTPD(Integer.parseInt(httpPort), obixServer);
-		// } catch (IOException ioe)
-		// {
-		// ioe.printStackTrace();
-		// }
+//		 try
+//		 {
+//		 new NanoHTTPD(Integer.parseInt(httpPort), obixServer);
+//		 } catch (IOException ioe)
+//		 {
+//		 ioe.printStackTrace();
+//		 }
 	}
 
 	public void stopGateway() {
