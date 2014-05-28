@@ -44,13 +44,15 @@ public abstract class DatapointImpl extends Obj implements DataPoint
 	protected Str function = new Str();
 	protected Str unit = new Str();
 
-	public DatapointImpl(String name, String displayName, String display)
+	public DatapointImpl(String name, String displayName, String display, boolean writable, boolean readable)
 	{
 		// attributes
 		this.setName(name);
 		this.setDisplay(display);
 		this.setDisplayName(displayName);
 		this.setHidden(true);
+		this.setReadable(writable);
+		this.setWritable(readable);
 
 		if (displayName != null)
 			this.setHref(new Uri(UriEncoder.getEscapedUri(displayName)));
