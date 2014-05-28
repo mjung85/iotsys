@@ -3,7 +3,6 @@ package at.ac.tuwien.auto.iotsys.gateway.obix.server;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.io.Writer;
 import java.net.InetAddress;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -153,7 +152,7 @@ public class TomcatServer {
 		@Override
 		protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 				throws ServletException, IOException {
-			Writer w = resp.getWriter();
+			PrintWriter w = resp.getWriter();
 
 			try {
 				responseObj = obixServer.readObj(new URI(resourcePath), true);
@@ -163,9 +162,7 @@ public class TomcatServer {
 				e.printStackTrace();
 			}
 
-			((PrintWriter) w).println(obixResponse.toString());
-
-			super.doGet(req, resp);
+			w.println(obixResponse.toString());
 		}
 
 		@Override
@@ -181,9 +178,7 @@ public class TomcatServer {
 				e.printStackTrace();
 			}
 			
-			//w.println(obixResponse.toString());
-
-			super.doPost(req, resp);
+			w.println(obixResponse.toString());
 		}
 
 		@Override
@@ -199,9 +194,7 @@ public class TomcatServer {
 				e.printStackTrace();
 			}
 			
-			//w.println(obixResponse.toString());
-
-			super.doPut(req, resp);
+			w.println(obixResponse.toString());
 		}
 
 		private StringBuffer getObixResponse(String ipv6Address, String data,
