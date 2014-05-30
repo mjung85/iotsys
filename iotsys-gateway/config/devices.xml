@@ -365,16 +365,24 @@
     
     <connector>
       <name>EnOcean</name>
-      <enabled>false</enabled>
-      <serialPort>COM6</serialPort>
+      <enabled>true</enabled>
+      <serialPort>COM5</serialPort>
       <device>
         <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.enocean.WindowSensorImplEnocean
         </type>
-        <address>0x01820AE7</address>
+        <address>0x0181DCDD</address>
         <href>window</href>
         <historyEnabled>false</historyEnabled>
         <groupCommEnabled>true</groupCommEnabled>
       </device>
+	  <device>
+        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.enocean.LightSwitchActuatorImplEnocean
+        </type>
+        <address>0x0025A2DC</address>
+        <href>ligthSwitchEnocean1</href>
+        <historyEnabled>false</historyEnabled>
+        <groupCommEnabled>true</groupCommEnabled>
+      </device>      
     </connector>
     
     <connector>
