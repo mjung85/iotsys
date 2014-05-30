@@ -16,11 +16,6 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>com.neuronrobotics</groupId>
-			<artifactId>nrjavaserial</artifactId>
-			<version>${nrjavaserial.version}</version>
-		</dependency>
-		<dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-jdk14</artifactId>
 			<version>${slf4j.version}</version>
