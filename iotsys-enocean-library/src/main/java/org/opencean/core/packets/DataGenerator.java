@@ -1,5 +1,6 @@
 package org.opencean.core.packets;
 
+import org.opencean.core.address.EnoceanId;
 import org.opencean.core.address.EnoceanParameterAddress;
 import org.opencean.core.utils.ByteArray;
 
@@ -10,6 +11,13 @@ public class DataGenerator {
 		data.addByte(type);
 		data.addByte(state);
 		data.addBytes(deviceID.getEnoceanDeviceId().toBytes());
+		data.addByte(status);
+	}
+	
+	public DataGenerator(byte type, byte state, EnoceanId deviceID, byte status){
+		data.addByte(type);
+		data.addByte(state);
+		data.addBytes(deviceID.toBytes());
 		data.addByte(status);
 	}
 	

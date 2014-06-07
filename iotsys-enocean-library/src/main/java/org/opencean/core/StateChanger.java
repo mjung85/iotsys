@@ -1,5 +1,6 @@
 package org.opencean.core;
 
+import org.opencean.core.address.EnoceanId;
 import org.opencean.core.address.EnoceanParameterAddress;
 import org.opencean.core.common.EEPId;
 import org.opencean.core.common.ParameterAddress;
@@ -28,6 +29,24 @@ public class StateChanger {
                 packet = new RadioPacket(data, (byte) 0x03, 0xFFFFFFFF, (byte) 0xFF, (byte) 0x00);
             }
             return packet.toBytes();
+        }
+        return null;
+    }
+    
+    public RadioPacket changeState(String newState, EnoceanId parameterAddress, String eep) {
+
+        if (eep.equals(EEPId.EEP_F6_02_02.toString()) || eep.equals(EEPId.EEP_F6_02_01.toString())) {
+            RadioPacket packet = new RadioPacket();
+            DataGenerator dataGen;
+            byte[] data;
+
+            if (ByteStateAndStatus.getByteFor(newState) != ByteStateAndStatus.ERROR) {
+                dataGen = new DataGenerator(RadioPacketRPS.RADIO_TYPE, ByteStateAndStatus.getByteFor(newState),
+                        parameterAddress, ByteStateAndStatus.PRESSED);
+                data = dataGen.getData();
+                packet = new RadioPacket(data, (byte) 0x03, 0xFFFFFFFF, (byte) 0xFF, (byte) 0x00);
+            }
+            return packet;
         }
         return null;
     }
