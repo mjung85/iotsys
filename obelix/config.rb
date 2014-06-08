@@ -1,5 +1,9 @@
 require 'closure-compiler'
 
+after_configuration do
+    sprockets.append_path "assets/vendor/css" 
+end
+
 set :images_dir, 'images'
 set :debug_assets, true
 

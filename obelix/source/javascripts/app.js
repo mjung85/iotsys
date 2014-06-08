@@ -5,6 +5,7 @@
 //= require 'jquery.jsPlumb-1.5.2'
 //= require 'sugar'
 //= require 'URI'
+//= require 'backbone'
 //= require_self
 
 var app = angular.module('Obelix', []);
@@ -15,6 +16,7 @@ app.service('Lobby', ['$http', 'Device', 'Directory', function($http, Device, Di
       var root = new Directory('');
       root.expanded = true;
       $http.get('/obix').success(function(response) {
+    	  console.log(response);
         response['nodes'].each(function(node) {
           var href = node['href'];
           if (!href.startsWith('/')) href = '/' + href;
