@@ -32,25 +32,30 @@
 
 package at.ac.tuwien.auto.iotsys.gateway.connectors.weatherforecast;
 
-import org.apache.commons.configuration.HierarchicalConfiguration;
-import org.apache.commons.configuration.XMLConfiguration;
-
 import java.lang.reflect.Constructor;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import obix.Obj;
 import obix.Uri;
 
+import org.apache.commons.configuration.HierarchicalConfiguration;
+import org.apache.commons.configuration.XMLConfiguration;
+
 import at.ac.tuwien.auto.iotsys.commons.Connector;
+import at.ac.tuwien.auto.iotsys.commons.Device;
 import at.ac.tuwien.auto.iotsys.commons.DeviceLoader;
 import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.weatherforecast.impl.WeatherForecastLocationImpl;
+import at.ac.tuwien.auto.iotsys.commons.persistent.DeviceConfigs;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.weatherforecast.objects.WeatherControlImpl;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.weatherforecast.objects.WeatherObjectImplYR_NO;
+
+import com.fasterxml.jackson.databind.JsonNode;
 
 public class WeatherForecastDeviceLoaderImpl implements DeviceLoader {
 
@@ -91,7 +96,10 @@ public class WeatherForecastDeviceLoaderImpl implements DeviceLoader {
 				try {
 					log.info("Creating weather forecast connector.");
 					WeatherForecastConnector forecastConnector = new WeatherForecastConnector();
-
+					forecastConnector.setName(connectorName);
+					forecastConnector.setTechnology("weather-forecast");
+					forecastConnector.setEnabled(enabled);
+					
 					connectors.add(forecastConnector);
 
 					int numberOfDevices = 0;
@@ -107,6 +115,7 @@ public class WeatherForecastDeviceLoaderImpl implements DeviceLoader {
 							+ " weather forecast devices found in configuration for connector "
 							+ connectorName);
 
+					List<Device> ds = new ArrayList<Device>();
 					// add devices
 					for (int i = 0; i < numberOfDevices; i++) {
 						String type = subConfig.getString("device(" + i + ").type");
@@ -123,6 +132,14 @@ public class WeatherForecastDeviceLoaderImpl implements DeviceLoader {
 								"device(" + i + ").groupCommEnabled", false);
 						Integer historyCount = subConfig.getInt("device("
 								+ i + ").historyCount", 0);
+						
+						// Transition step: comment when done
+						JsonNode thisConnector = DeviceConfigs.getInstance()
+								.getConnectors("weather-forecast")
+								.get(connector);
+						Device d = new Device(type, null, null, href, name, null, historyCount, historyEnabled, groupCommEnabled, refreshEnabled);
+						d.setConnectorId(thisConnector.get("_id").asText());
+						ds.add(d);
 						
 						if (type != null && name != null) {
 							try {
@@ -191,7 +208,7 @@ public class WeatherForecastDeviceLoaderImpl implements DeviceLoader {
 							}
 						}
 					}
-					
+					DeviceConfigs.getInstance().addDevices(ds);
 					// add weather control for manual overwriting of weather
 					WeatherControlImpl weatherControl = new WeatherControlImpl("weatherControl",forecastConnector);
 					weatherControl.setHref(new Uri(URLEncoder.encode(connectorName, "UTF-8") + "/weatherControl"));

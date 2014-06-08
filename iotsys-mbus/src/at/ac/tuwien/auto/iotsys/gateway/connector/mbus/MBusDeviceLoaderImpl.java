@@ -47,8 +47,12 @@ import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.commons.configuration.XMLConfiguration;
 
 import at.ac.tuwien.auto.iotsys.commons.Connector;
+import at.ac.tuwien.auto.iotsys.commons.Device;
 import at.ac.tuwien.auto.iotsys.commons.DeviceLoader;
 import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
+import at.ac.tuwien.auto.iotsys.commons.persistent.DeviceConfigs;
+
+import com.fasterxml.jackson.databind.JsonNode;
 
 public class MBusDeviceLoaderImpl implements DeviceLoader {
 	
@@ -93,7 +97,12 @@ public class MBusDeviceLoaderImpl implements DeviceLoader {
 				try {
 					MBusConnector mbusConnector = new MBusConnector(
 							serialPort);
-					mbusConnector.connect();
+					mbusConnector.setEnabled(enabled);
+					mbusConnector.setName(connectorName);
+					mbusConnector.setTechnology("mbus");
+					mbusConnector.setSerialPort(serialPort);
+					
+					//mbusConnector.connect();
 					connectors.add(mbusConnector);
 
 					int mbusDevicesCount = 0;
@@ -109,11 +118,14 @@ public class MBusDeviceLoaderImpl implements DeviceLoader {
 							+ " MBus devices found in configuration for connector "
 							+ connectorName);
 
+					List<Device> ds = new ArrayList<Device>();
 					for (int i = 0; i < mbusDevicesCount; i++) {
 						String type = subConfig.getString("device(" + i
 								+ ").type");
 						Integer address = subConfig.getInteger("device(" + i
 								+ ").address",0);
+						String addressString = subConfig.getString("device("
+								+ i + ").address");
 						Integer interval = subConfig.getInteger("device(" + i
 								+ ").interval", 0);
 						String serialnr = subConfig.getString("device(" + i
@@ -133,6 +145,14 @@ public class MBusDeviceLoaderImpl implements DeviceLoader {
 
 						Integer historyCount = subConfig.getInt("device(" + i
 								+ ").historyCount", 0);						
+						
+						// Transition step: comment when done
+						JsonNode thisConnector = DeviceConfigs.getInstance()
+								.getConnectors("mbus")
+								.get(connector);
+						Device d = new Device(type, ipv6, addressString, href, name, null, historyCount, historyEnabled, groupCommEnabled, null);
+						d.setConnectorId(thisConnector.get("_id").asText());
+						ds.add(d);
 						
 						if(interval > 0){
 							mbusConnector.setInterval(interval);
@@ -222,7 +242,7 @@ public class MBusDeviceLoaderImpl implements DeviceLoader {
 							}
 						}
 					}
-
+					DeviceConfigs.getInstance().addDevices(ds);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}

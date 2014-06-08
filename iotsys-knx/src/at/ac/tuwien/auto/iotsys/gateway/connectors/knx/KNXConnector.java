@@ -21,10 +21,10 @@
 package at.ac.tuwien.auto.iotsys.gateway.connectors.knx;
 
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.net.UnknownHostException;
-import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Hashtable;
@@ -42,10 +42,36 @@ import at.ac.tuwien.auto.calimero.process.ProcessCommunicator;
 import at.ac.tuwien.auto.calimero.process.ProcessCommunicatorImpl;
 import at.ac.tuwien.auto.iotsys.commons.Connector;
 
-public class KNXConnector implements Connector {
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+public class KNXConnector extends Connector {
 	private String routerHostname;
 	private int routerPort;
 	private String localIP;
+
+	public String getRouterHostname() {
+		return routerHostname;
+	}
+
+	public void setRouterHostname(String routerHostname) {
+		this.routerHostname = routerHostname;
+	}
+
+	public int getRouterPort() {
+		return routerPort;
+	}
+
+	public void setRouterPort(int routerPort) {
+		this.routerPort = routerPort;
+	}
+
+	public String getLocalIP() {
+		return localIP;
+	}
+
+	public void setLocalIP(String localIP) {
+		this.localIP = localIP;
+	}
 
 	// Calimero NG
 	private KNXNetworkLinkIP nl;
@@ -126,6 +152,7 @@ public class KNXConnector implements Connector {
 		return pc;
 	}
 
+	@JsonIgnore
 	public boolean isConnected() {
 		synchronized (this) {
 			return connected;

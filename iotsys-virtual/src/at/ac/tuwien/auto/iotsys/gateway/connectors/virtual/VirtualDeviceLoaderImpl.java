@@ -40,20 +40,21 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import obix.Bool;
-import obix.Int;
 import obix.Obj;
-import obix.Real;
 import obix.Uri;
 
 import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.commons.configuration.XMLConfiguration;
 
 import at.ac.tuwien.auto.iotsys.commons.Connector;
+import at.ac.tuwien.auto.iotsys.commons.Device;
 import at.ac.tuwien.auto.iotsys.commons.DeviceLoader;
 import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.weatherforecast.WeatherObject;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.weatherforecast.impl.WeatherForecastLocationImpl;
+import at.ac.tuwien.auto.iotsys.commons.persistent.DeviceConfigs;
+
+import com.fasterxml.jackson.databind.JsonNode;
 
 public class VirtualDeviceLoaderImpl implements DeviceLoader {
 	private final ArrayList<Obj> myObjects = new ArrayList<Obj>();
@@ -71,12 +72,12 @@ public class VirtualDeviceLoaderImpl implements DeviceLoader {
 
 		// store all created connectors, will be used by the gateway for closing
 		ArrayList<Connector> connectors = new ArrayList<Connector>();
-		// Open connection
-		VirtualConnector virtualConnector = new VirtualConnector();
+		// Open connection ???
+		//VirtualConnector virtualConnector = new VirtualConnector();
 		try {
-			virtualConnector.connect();
+			//virtualConnector.connect();
 
-			connectors.add(virtualConnector);
+			//connectors.add(virtualConnector);
 			
 		
 
@@ -124,6 +125,7 @@ public class VirtualDeviceLoaderImpl implements DeviceLoader {
 		// parse XML configuration for connections and objects
 		// NOTE: this loader allow to directly instantiate the base oBIX objects
 		// for testing purposes
+		
 		int connectorsSize = 0;
 		// virtual
 		Object virtualConnectors = devicesConfig
@@ -156,7 +158,12 @@ public class VirtualDeviceLoaderImpl implements DeviceLoader {
 			if (enabled) {
 				try {
 					VirtualConnector vConn = new VirtualConnector();
-
+					vConn.setName(connectorName);
+					vConn.setEnabled(enabled);
+					vConn.setTechnology("virtual");
+					
+					connectors.add(vConn);
+					
 					int numberOfDevices = 0;
 					if (virtualConfiguredDevices != null) {
 						numberOfDevices = 1; // there is at least one device.
@@ -166,131 +173,135 @@ public class VirtualDeviceLoaderImpl implements DeviceLoader {
 						numberOfDevices = virtualDevices.size();
 					}
 					
-					if (numberOfDevices > 0) {
-						log.info(numberOfDevices
-								+ " virtual devices found in configuration for connector "
-								+ connectorName);
+					log.info(numberOfDevices
+							+ " virtual devices found in configuration for connector "
+							+ connectorName);
+					List<Device> ds = new ArrayList<Device>();
+					for (int i = 0; i < numberOfDevices; i++) {
+						String type = subConfig.getString("device(" + i
+								+ ").type");
+						List<Object> address = subConfig.getList("device("
+								+ i + ").address");
+						String addressString = subConfig.getString("device("
+								+ i + ").address");
+						String ipv6 = subConfig.getString("device(" + i
+								+ ").ipv6");
+						String href = subConfig.getString("device(" + i
+								+ ").href");
+						
+						String name = subConfig.getString("device(" + i
+								+ ").name");
+						
+						String displayName = subConfig.getString("device(" + i + ").displayName");
 
-						for (int i = 0; i < numberOfDevices; i++) {
-							String type = subConfig.getString("device(" + i
-									+ ").type");
-							List<Object> address = subConfig.getList("device("
-									+ i + ").address");
-							String ipv6 = subConfig.getString("device(" + i
-									+ ").ipv6");
-							String href = subConfig.getString("device(" + i
-									+ ").href");
-							
-							String name = subConfig.getString("device(" + i
-									+ ").name");
-							
-							String displayName = subConfig.getString("device(" + i + ").displayName");
+						Boolean historyEnabled = subConfig.getBoolean(
+								"device(" + i + ").historyEnabled", false);
+						
+						Boolean groupCommEnabled = subConfig.getBoolean(
+								"device(" + i + ").groupCommEnabled", false);
+						
+						Boolean refreshEnabled = subConfig.getBoolean("device(" + i + ").refreshEnabled", false);
 
-							Boolean historyEnabled = subConfig.getBoolean(
-									"device(" + i + ").historyEnabled", false);
-							
-							Boolean groupCommEnabled = subConfig.getBoolean(
-									"device(" + i + ").groupCommEnabled", false);
-							
-							Boolean refreshEnabled = subConfig.getBoolean("device(" + i + ").refreshEnabled", false);
+						Integer historyCount = subConfig.getInt("device("
+								+ i + ").historyCount", 0);
+						
+						// Transition step: comment when done
+						JsonNode thisConnector = DeviceConfigs.getInstance()
+								.getConnectors("virtual")
+								.get(connector);
+						Device d = new Device(type, ipv6, addressString, href, name, displayName, historyCount, historyEnabled, groupCommEnabled, refreshEnabled);
+						d.setConnectorId(thisConnector.get("_id").asText());
+						ds.add(d);
+						
+						// for weather forcast services only
+						String description = subConfig.getString("device(" + i + ").location.description", "");
+						Double latitude = subConfig.getDouble("device(" + i + ").location.latitude", 0);
+						Double longitude = subConfig.getDouble("device(" + i + ").location.longitude", 0);
+						Long height = subConfig.getLong("device(" + i + ").location.height", 0);
 
-							Integer historyCount = subConfig.getInt("device("
-									+ i + ").historyCount", 0);
-							
-							
-							
-							// for weather forcast services only
-							String description = subConfig.getString("device(" + i + ").location.description", "");
-							Double latitude = subConfig.getDouble("device(" + i + ").location.latitude", 0);
-							Double longitude = subConfig.getDouble("device(" + i + ").location.longitude", 0);
-							Long height = subConfig.getLong("device(" + i + ").location.height", 0);
+						if (type != null && address != null) {
+							try {
 
-							if (type != null && address != null) {
-								try {
-
-									Constructor<?>[] declaredConstructors = Class
-											.forName(type)
-											.getDeclaredConstructors();
-									
-									Object[] args = new Object[1];
-									args[0] = vConn;
-									Obj virtualObj = null;
-									for (int k = 0; k < declaredConstructors.length; k++) {
-										if (declaredConstructors[k]
-												.getParameterTypes().length == 0) { 
-											virtualObj = (Obj) Class.forName(type)
-													.newInstance();
-										}
-										else if(declaredConstructors[k].getParameterTypes().length == 1){
-											virtualObj = (Obj) declaredConstructors[k].newInstance(args);
-										}
-										// for weather forcast services only
-										else if (WeatherObject.class.isAssignableFrom(Class.forName(type)) &&
-													declaredConstructors[k].getParameterTypes().length == 3) {
-											// constructor that takes name, location, and connector as argument
-											args = new Object[3];
-
-											args[0] = name;
-											args[1] = new WeatherForecastLocationImpl(description, latitude, longitude, height);
-											args[2] = null;
-											
-											virtualObj = (Obj) declaredConstructors[k].newInstance(args);
-										}
+								Constructor<?>[] declaredConstructors = Class
+										.forName(type)
+										.getDeclaredConstructors();
+								
+								Object[] args = new Object[1];
+								args[0] = vConn;
+								Obj virtualObj = null;
+								for (int k = 0; k < declaredConstructors.length; k++) {
+									if (declaredConstructors[k]
+											.getParameterTypes().length == 0) { 
+										virtualObj = (Obj) Class.forName(type)
+												.newInstance();
 									}
-									
-									virtualObj.setHref(new Uri(URLEncoder.encode(connectorName, "UTF-8") + "/" + href));
-									
-									if(name != null && name.length() > 0 && virtualObj.getName() == null){
-										virtualObj.setName(name);
+									else if(declaredConstructors[k].getParameterTypes().length == 1){
+										virtualObj = (Obj) declaredConstructors[k].newInstance(args);
 									}
-									
-									if(displayName != null && displayName.length() > 0){
-										virtualObj.setDisplayName(displayName);
-									}
-									
-									if (ipv6 != null) {
-										objectBroker.addObj(virtualObj, ipv6);
-									} else {
-										objectBroker.addObj(virtualObj);
-									}
-									
-									myObjects.add(virtualObj);
-									
-									virtualObj.initialize();
+									// for weather forcast services only
+									else if (WeatherObject.class.isAssignableFrom(Class.forName(type)) &&
+												declaredConstructors[k].getParameterTypes().length == 3) {
+										// constructor that takes name, location, and connector as argument
+										args = new Object[3];
 
-									if (historyEnabled != null
-											&& historyEnabled) {
-										if (historyCount != null
-												&& historyCount != 0) {
-											objectBroker
-													.addHistoryToDatapoints(
-															virtualObj,
-															historyCount);
-										} else {
-											objectBroker
-													.addHistoryToDatapoints(virtualObj);
-										}
+										args[0] = name;
+										args[1] = new WeatherForecastLocationImpl(description, latitude, longitude, height);
+										args[2] = null;
+										
+										virtualObj = (Obj) declaredConstructors[k].newInstance(args);
 									}
-									
-									if(groupCommEnabled){
-										objectBroker.enableGroupComm(virtualObj);
-									}
-									
-									if(refreshEnabled != null && refreshEnabled){
-										objectBroker.enableObjectRefresh(virtualObj);
-									}
-
-								} catch (SecurityException e) {
-									e.printStackTrace();
-								} catch (ClassNotFoundException e) {
-									e.printStackTrace();
 								}
+								
+								virtualObj.setHref(new Uri(URLEncoder.encode(connectorName, "UTF-8") + "/" + href));
+								
+								if(name != null && name.length() > 0 && virtualObj.getName() == null){
+									virtualObj.setName(name);
+								}
+								
+								if(displayName != null && displayName.length() > 0){
+									virtualObj.setDisplayName(displayName);
+								}
+								
+								if (ipv6 != null) {
+									objectBroker.addObj(virtualObj, ipv6);
+								} else {
+									objectBroker.addObj(virtualObj);
+								}
+								
+								myObjects.add(virtualObj);
+								
+								virtualObj.initialize();
+
+								if (historyEnabled != null
+										&& historyEnabled) {
+									if (historyCount != null
+											&& historyCount != 0) {
+										objectBroker
+												.addHistoryToDatapoints(
+														virtualObj,
+														historyCount);
+									} else {
+										objectBroker
+												.addHistoryToDatapoints(virtualObj);
+									}
+								}
+								
+								if(groupCommEnabled){
+									objectBroker.enableGroupComm(virtualObj);
+								}
+								
+								if(refreshEnabled != null && refreshEnabled){
+									objectBroker.enableObjectRefresh(virtualObj);
+								}
+
+							} catch (SecurityException e) {
+								e.printStackTrace();
+							} catch (ClassNotFoundException e) {
+								e.printStackTrace();
 							}
 						}
-					} else {
-						log.info("No virtual devices configured for connector "
-								+ connectorName);
 					}
+					DeviceConfigs.getInstance().addDevices(ds);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}

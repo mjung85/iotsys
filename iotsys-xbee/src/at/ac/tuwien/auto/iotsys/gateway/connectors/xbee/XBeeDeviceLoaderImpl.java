@@ -15,8 +15,12 @@ import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.commons.configuration.XMLConfiguration;
 
 import at.ac.tuwien.auto.iotsys.commons.Connector;
+import at.ac.tuwien.auto.iotsys.commons.Device;
 import at.ac.tuwien.auto.iotsys.commons.DeviceLoader;
 import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
+import at.ac.tuwien.auto.iotsys.commons.persistent.DeviceConfigs;
+
+import com.fasterxml.jackson.databind.JsonNode;
 
 public class XBeeDeviceLoaderImpl implements DeviceLoader {
 
@@ -73,7 +77,12 @@ public class XBeeDeviceLoaderImpl implements DeviceLoader {
 							+ serialPort);
 					XBeeConnector xBeeConnector = new XBeeConnector(serialPort,
 							9600);
-					xBeeConnector.connect();
+					xBeeConnector.setName(connectorName);
+					xBeeConnector.setPort(serialPort);
+					xBeeConnector.setBaudRate(9600);
+					xBeeConnector.setEnabled(enabled);
+					xBeeConnector.setTechnology("xbee");
+					//xBeeConnector.connect();
 
 					connectors.add(xBeeConnector);
 					
@@ -94,12 +103,15 @@ public class XBeeDeviceLoaderImpl implements DeviceLoader {
 							+ " XBee devices found in configuration for connector "
 							+ connectorName);
 
+					List<Device> ds = new ArrayList<Device>();
 					// add devices
 					for (int i = 0; i < numberOfDevices; i++) {
 						String type = subConfig.getString("device(" + i
 								+ ").type");
 						List<Object> address = subConfig.getList("device(" + i
 								+ ").address");
+						String addressString = subConfig.getString("device("
+								+ i + ").address");
 						String ipv6 = subConfig.getString("device(" + i
 								+ ").ipv6");
 						String href = subConfig.getString("device(" + i
@@ -120,6 +132,14 @@ public class XBeeDeviceLoaderImpl implements DeviceLoader {
 						Boolean refreshEnabled = subConfig.getBoolean("device("
 								+ i + ").refreshEnabled", false);
 
+						// Transition step: comment when done
+						JsonNode thisConnector = DeviceConfigs.getInstance()
+								.getConnectors("xbee")
+								.get(connector);
+						Device d = new Device(type, ipv6, addressString, href, name, null, historyCount, historyEnabled, groupCommEnabled, refreshEnabled);
+						d.setConnectorId(thisConnector.get("_id").asText());
+						ds.add(d);
+						
 						if (type != null && address != null) {
 							//int addressCount = address.size();
 							
@@ -243,7 +263,7 @@ public class XBeeDeviceLoaderImpl implements DeviceLoader {
 							}
 						}
 					}
-
+					DeviceConfigs.getInstance().addDevices(ds);
 //					TemperatureSensorImplXBee xBeeTemperatureSensor = new TemperatureSensorImplXBee(
 //							xBeeConnector, "0013a200407c1715");
 //					xBeeTemperatureSensor.setHref(new Uri("temperature"));

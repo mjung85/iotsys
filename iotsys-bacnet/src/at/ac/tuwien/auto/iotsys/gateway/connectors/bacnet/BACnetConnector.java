@@ -34,6 +34,7 @@ import obix.Ref;
 import obix.Uri;
 import at.ac.tuwien.auto.iotsys.commons.Connector;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.serotonin.bacnet4j.LocalDevice;
 import com.serotonin.bacnet4j.RemoteDevice;
 import com.serotonin.bacnet4j.RemoteObject;
@@ -53,7 +54,7 @@ import com.serotonin.bacnet4j.type.primitive.UnsignedInteger;
 import com.serotonin.bacnet4j.util.PropertyReferences;
 import com.serotonin.bacnet4j.util.PropertyValues;
 
-public class BACnetConnector implements Connector{
+public class BACnetConnector extends Connector{
 	private static final Logger log = Logger.getLogger(BACnetConnector.class.getName());
 	public static void main(String[] args) {
 		new BACnetConnector();
@@ -260,6 +261,7 @@ public class BACnetConnector implements Connector{
 		}
 	}
 
+	@JsonIgnore
 	public Obj getRootObj() {
 		return root;
 	}
@@ -268,5 +270,40 @@ public class BACnetConnector implements Connector{
 	public boolean isCoap() {
 		return false;
 	}
+
+	@JsonIgnore
+	public LocalDevice getLocalDevice() {
+		return localDevice;
+	}
+
+	public void setLocalDevice(LocalDevice localDevice) {
+		this.localDevice = localDevice;
+	}
+
+	public int getLocalDeviceID() {
+		return localDeviceID;
+	}
+
+	public void setLocalDeviceID(int localDeviceID) {
+		this.localDeviceID = localDeviceID;
+	}
+
+	public String getBroadCastIP() {
+		return broadCastIP;
+	}
+
+	public void setBroadCastIP(String broadCastIP) {
+		this.broadCastIP = broadCastIP;
+	}
+
+	public int getLocalDevicePort() {
+		return localDevicePort;
+	}
+
+	public void setLocalDevicePort(int localDevicePort) {
+		this.localDevicePort = localDevicePort;
+	}
+	
+	
 
 }

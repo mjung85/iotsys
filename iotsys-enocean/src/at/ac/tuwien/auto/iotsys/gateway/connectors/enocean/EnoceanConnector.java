@@ -12,7 +12,6 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
@@ -25,7 +24,7 @@ import at.ac.tuwien.auto.iotsys.gateway.connectors.enocean.util.ESP3PacketHeader
 import at.ac.tuwien.auto.iotsys.gateway.connectors.enocean.util.ESP3Response;
 import at.ac.tuwien.auto.iotsys.gateway.connectors.enocean.util.ESP3Telegram;
 
-public class EnoceanConnector implements Connector, SerialPortEventListener {
+public class EnoceanConnector extends Connector implements SerialPortEventListener {
 	private static final Logger log = Logger.getLogger(EnoceanConnector.class.getName());
 
 	private String port;
@@ -256,5 +255,15 @@ public class EnoceanConnector implements Connector, SerialPortEventListener {
 	public boolean isCoap() {
 		return false;
 	}
+
+	public String getPort() {
+		return port;
+	}
+
+	public void setPort(String port) {
+		this.port = port;
+	}
+	
+	
 
 }

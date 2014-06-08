@@ -37,9 +37,12 @@ import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.commons.configuration.XMLConfiguration;
 
 import at.ac.tuwien.auto.iotsys.commons.Connector;
+import at.ac.tuwien.auto.iotsys.commons.Device;
 import at.ac.tuwien.auto.iotsys.commons.DeviceLoader;
 import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
+import at.ac.tuwien.auto.iotsys.commons.persistent.DeviceConfigs;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.serotonin.bacnet4j.type.enumerated.ObjectType;
 import com.serotonin.bacnet4j.type.enumerated.PropertyIdentifier;
 import com.serotonin.bacnet4j.type.primitive.ObjectIdentifier;
@@ -83,7 +86,7 @@ public class BacnetDeviceLoaderImpl implements DeviceLoader {
 			String broadcastAddress = subConfig.getString("broadcastAddress");
 			int localPort = subConfig.getInteger("localPort", 3671);
 			int localDeviceID = subConfig.getInteger("localDeviceID", 12345);
-			Boolean enabled = subConfig.getBoolean("enabled", false);
+			boolean enabled = subConfig.getBoolean("enabled", false);
 			Boolean groupCommEnabled = subConfig.getBoolean("groupCommEnabled", null);
 			Boolean historyEnabled = subConfig.getBoolean("historyEnabled", null);
 
@@ -91,11 +94,17 @@ public class BacnetDeviceLoaderImpl implements DeviceLoader {
 				try {
 					BACnetConnector bacnetConnector = new BACnetConnector(
 							localDeviceID, broadcastAddress, localPort);
+					bacnetConnector.setName(connectorName);
+					bacnetConnector.setTechnology("bacnet");
+					bacnetConnector.setEnabled(enabled);
+					
 					Obj bacRoot = bacnetConnector.getRootObj();
 					bacRoot.setName(connectorName);
 					bacRoot.setHref(new Uri(connectorName.replaceAll("[^a-zA-Z0-9-~\\(\\)]", "")));
 					objectBroker.addObj(bacRoot, true);
-					bacnetConnector.connect();
+					
+					// Transition step: Moving configs to DB: all connector enabled, uncomment when done
+					//bacnetConnector.connect();
 					
 					Boolean discoveryEnabled = subConfig.getBoolean("discovery-enabled", false);
 					if (discoveryEnabled) bacnetConnector.discover(new DeviceDiscoveryListener(objectBroker, groupCommEnabled, historyEnabled));
@@ -111,171 +120,180 @@ public class BacnetDeviceLoaderImpl implements DeviceLoader {
 						numberOfDevices = bacnetDevices.size();
 					}
 					
-					if (numberOfDevices > 0) {
-						log.info(numberOfDevices
-								+ " BACnet devices found in configuration for connector "
-								+ connectorName);
+					log.info(numberOfDevices
+							+ " BACnet devices found in configuration for connector "
+							+ connectorName);
 
-						for (int i = 0; i < numberOfDevices; i++) {
-							String type = subConfig.getString("device(" + i
-									+ ").type");
-							List<Object> address = subConfig.getList("device("
-									+ i + ").address");
-							String ipv6 = subConfig.getString("device(" + i
-									+ ").ipv6");
-							String href = subConfig.getString("device(" + i
-									+ ").href");
+					// Transition step: comment when done
+					List<Device> ds = new ArrayList<Device>();
+					
+					for (int i = 0; i < numberOfDevices; i++) {
+						String type = subConfig.getString("device(" + i
+								+ ").type");
+						List<Object> address = subConfig.getList("device("
+								+ i + ").address");
+						String addressString = subConfig.getString("device("
+								+ i + ").address");
+						String ipv6 = subConfig.getString("device(" + i
+								+ ").ipv6");
+						String href = subConfig.getString("device(" + i
+								+ ").href");
 
-							// device specific setting
-							Boolean historyEnabledDevice = subConfig.getBoolean(
-									"device(" + i + ").historyEnabled", null);
+						// device specific setting
+						Boolean historyEnabledDevice = subConfig.getBoolean(
+								"device(" + i + ").historyEnabled", null);
+						
+						if(historyEnabledDevice != null){
+							historyEnabled = historyEnabledDevice;
+						}
+						
+						// device specific setting
+						Boolean groupCommEnabledDevice = subConfig.getBoolean(
+								"device(" + i + ").groupCommEnabled", null);
+						
+						if(groupCommEnabledDevice != null){
+							// overwrite general settings
+							groupCommEnabled = groupCommEnabledDevice;
+						}
+						
+						String name = subConfig.getString("device(" + i
+								+ ").name");
+						
+						String displayName = subConfig.getString("device(" + i
+								+ ").displayName");
+
+						
+						Boolean refreshEnabled = subConfig.getBoolean("device(" + i + ").refreshEnabled", false);
+
+						Integer historyCount = subConfig.getInt("device("
+								+ i + ").historyCount", 0);
+
+						// Transition step: comment when done
+						JsonNode thisConnector = DeviceConfigs.getInstance()
+								.getConnectors("bacnet")
+								.get(connector);
+						Device d = new Device(type, ipv6, addressString, href, name, displayName, historyCount, historyEnabled, groupCommEnabled, refreshEnabled);
+						d.setConnectorId(thisConnector.get("_id").asText());
+						ds.add(d);
+						
+						if (type != null && address != null) {
 							
-							if(historyEnabledDevice != null){
-								historyEnabled = historyEnabledDevice;
+							// now follow possible multiple data points
+							// identified through
+							// the device Id, object type, the instance number and the
+							// property identifier, which shall be packaged into an BacnetDatapointInfo object
+							
+							ObjectIdentifier[] objectIdentifier = new ObjectIdentifier[(address
+									.size() ) / 4];
+							PropertyIdentifier[] propertyIdentifier = new PropertyIdentifier[(address
+									.size() ) / 4];
+							
+							BacnetDataPointInfo[] bacnetDataPointInfo = new BacnetDataPointInfo[(address
+									.size() ) / 4];
+
+							int q = 0;
+							for (int p = 0; p <= address.size() - 4; p += 4) {
+								int remoteDeviceID = Integer.parseInt((String)address.get(p));
+								ObjectIdentifier objIdentifier = new ObjectIdentifier(
+										new ObjectType(
+												Integer.parseInt((String) address
+														.get(p+1))),
+										Integer.parseInt((String) address
+												.get(p + 2)));
+								PropertyIdentifier propIdentifier = new PropertyIdentifier(
+										Integer.parseInt((String) address
+												.get(p + 3)));
+								objectIdentifier[q] = objIdentifier;
+								propertyIdentifier[q] = propIdentifier;
+								bacnetDataPointInfo[q] = new BacnetDataPointInfo(remoteDeviceID, objIdentifier, propIdentifier);
+								q = q + 1;
 							}
-							
-							// device specific setting
-							Boolean groupCommEnabledDevice = subConfig.getBoolean(
-									"device(" + i + ").groupCommEnabled", null);
-							
-							if(groupCommEnabledDevice != null){
-								// overwrite general settings
-								groupCommEnabled = groupCommEnabledDevice;
-							}
-							
-							String name = subConfig.getString("device(" + i
-									+ ").name");
-							
-							String displayName = subConfig.getString("device(" + i
-									+ ").displayName");
-
-							
-							Boolean refreshEnabled = subConfig.getBoolean("device(" + i + ").refreshEnabled", false);
-
-							Integer historyCount = subConfig.getInt("device("
-									+ i + ").historyCount", 0);
-
-							if (type != null && address != null) {
-								
-								// now follow possible multiple data points
-								// identified through
-								// the device Id, object type, the instance number and the
-								// property identifier, which shall be packaged into an BacnetDatapointInfo object
-								
-								ObjectIdentifier[] objectIdentifier = new ObjectIdentifier[(address
-										.size() ) / 4];
-								PropertyIdentifier[] propertyIdentifier = new PropertyIdentifier[(address
-										.size() ) / 4];
-								
-								BacnetDataPointInfo[] bacnetDataPointInfo = new BacnetDataPointInfo[(address
-										.size() ) / 4];
-
-								int q = 0;
-								for (int p = 0; p <= address.size() - 4; p += 4) {
-									int remoteDeviceID = Integer.parseInt((String)address.get(p));
-									ObjectIdentifier objIdentifier = new ObjectIdentifier(
-											new ObjectType(
-													Integer.parseInt((String) address
-															.get(p+1))),
-											Integer.parseInt((String) address
-													.get(p + 2)));
-									PropertyIdentifier propIdentifier = new PropertyIdentifier(
-											Integer.parseInt((String) address
-													.get(p + 3)));
-									objectIdentifier[q] = objIdentifier;
-									propertyIdentifier[q] = propIdentifier;
-									bacnetDataPointInfo[q] = new BacnetDataPointInfo(remoteDeviceID, objIdentifier, propIdentifier);
-									q = q + 1;
-								}
-								Object[] args = new Object[q  + 1];
-								args[0] = bacnetConnector;
+							Object[] args = new Object[q  + 1];
+							args[0] = bacnetConnector;
 //								args[1] = Integer.parseInt(remoteDeviceID);
-								for (int p = 0; p < bacnetDataPointInfo.length; p++) {
-									args[1 + p] = bacnetDataPointInfo[p];		
-								}
+							for (int p = 0; p < bacnetDataPointInfo.length; p++) {
+								args[1 + p] = bacnetDataPointInfo[p];		
+							}
 
-								try {
+							try {
 
-									Constructor<?>[] declaredConstructors = Class
-											.forName(type)
-											.getDeclaredConstructors();
-									for (int k = 0; k < declaredConstructors.length; k++) {
-										if (declaredConstructors[k]
-												.getParameterTypes().length == args.length) { // constructor
-																								// that
-																								// takes
-																								// the
-																								// KNX
-																								// connector
-																								// and
-																								// group
-																								// address
-																								// as
-																								// argument
-											Obj bacnetDevice = (Obj) declaredConstructors[k]
-													.newInstance(args); // create
-																		// a
-																		// instance
-																		// of
-																		// the
-																		// specified
-																		// KNX
-																		// device
-											bacnetDevice.setHref(new Uri(URLEncoder.encode(connectorName, "UTF-8") + "/" + href));
-											
-											if(name != null && name.length() > 0){
-												bacnetDevice.setName(name);
-											}
-											
-											if(displayName != null && displayName.length() > 0){
-												bacnetDevice.setDisplayName(displayName);
-											}
-											
+								Constructor<?>[] declaredConstructors = Class
+										.forName(type)
+										.getDeclaredConstructors();
+								for (int k = 0; k < declaredConstructors.length; k++) {
+									if (declaredConstructors[k]
+											.getParameterTypes().length == args.length) { // constructor
+																							// that
+																							// takes
+																							// the
+																							// KNX
+																							// connector
+																							// and
+																							// group
+																							// address
+																							// as
+																							// argument
+										Obj bacnetDevice = (Obj) declaredConstructors[k]
+												.newInstance(args); // create
+																	// a
+																	// instance
+																	// of
+																	// the
+																	// specified
+																	// KNX
+																	// device
+										bacnetDevice.setHref(new Uri(URLEncoder.encode(connectorName, "UTF-8") + "/" + href));
+										
+										if(name != null && name.length() > 0){
+											bacnetDevice.setName(name);
+										}
+										
+										if(displayName != null && displayName.length() > 0){
+											bacnetDevice.setDisplayName(displayName);
+										}
+										
 
-											if (ipv6 != null) {
-												objectBroker.addObj(bacnetDevice, ipv6);
+										if (ipv6 != null) {
+											objectBroker.addObj(bacnetDevice, ipv6);
+										} else {
+											objectBroker.addObj(bacnetDevice);
+										}
+										
+										myObjects.add(bacnetDevice);
+										
+										bacnetDevice.initialize();
+
+										if (historyEnabled != null
+												&& historyEnabled) {
+											if (historyCount != null
+													&& historyCount != 0) {
+												objectBroker
+														.addHistoryToDatapoints(
+																bacnetDevice,
+																historyCount);
 											} else {
-												objectBroker.addObj(bacnetDevice);
-											}
-											
-											myObjects.add(bacnetDevice);
-											
-											bacnetDevice.initialize();
-
-											if (historyEnabled != null
-													&& historyEnabled) {
-												if (historyCount != null
-														&& historyCount != 0) {
-													objectBroker
-															.addHistoryToDatapoints(
-																	bacnetDevice,
-																	historyCount);
-												} else {
-													objectBroker
-															.addHistoryToDatapoints(bacnetDevice);
-												}
-											}
-											
-											if(refreshEnabled != null && refreshEnabled){
-												objectBroker.enableObjectRefresh(bacnetDevice);
-											}
-											
-											if(groupCommEnabled != null && groupCommEnabled){
-												objectBroker.enableGroupComm(bacnetDevice);
+												objectBroker
+														.addHistoryToDatapoints(bacnetDevice);
 											}
 										}
+										
+										if(refreshEnabled != null && refreshEnabled){
+											objectBroker.enableObjectRefresh(bacnetDevice);
+										}
+										
+										if(groupCommEnabled != null && groupCommEnabled){
+											objectBroker.enableGroupComm(bacnetDevice);
+										}
 									}
-								} catch (SecurityException e) {
-									e.printStackTrace();
-								} catch (ClassNotFoundException e) {
-									e.printStackTrace();
 								}
+							} catch (SecurityException e) {
+								e.printStackTrace();
+							} catch (ClassNotFoundException e) {
+								e.printStackTrace();
 							}
 						}
-					} else {
-						log.info("No BACnet devices configured for connector "
-								+ connectorName);
 					}
+					DeviceConfigs.getInstance().addDevices(ds);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}

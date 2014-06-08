@@ -51,8 +51,12 @@ import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.commons.configuration.XMLConfiguration;
 
 import at.ac.tuwien.auto.iotsys.commons.Connector;
+import at.ac.tuwien.auto.iotsys.commons.Device;
 import at.ac.tuwien.auto.iotsys.commons.DeviceLoader;
 import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
+import at.ac.tuwien.auto.iotsys.commons.persistent.DeviceConfigs;
+
+import com.fasterxml.jackson.databind.JsonNode;
 
 public class CoapDeviceLoaderImpl implements DeviceLoader {
 	private final ArrayList<Obj> myObjects = new ArrayList<Obj>();
@@ -96,7 +100,11 @@ public class CoapDeviceLoaderImpl implements DeviceLoader {
 			if (enabled) {
 				try {
 					CoapConnector coapConnector = new CoapConnector();
-					coapConnector.connect();
+					coapConnector.setEnabled(enabled);
+					coapConnector.setTechnology("coap");
+					coapConnector.setName(connectorName);
+					
+					//coapConnector.connect();
 					connectors.add(coapConnector);
 
 					int numberOfDevices = 0;
@@ -108,134 +116,142 @@ public class CoapDeviceLoaderImpl implements DeviceLoader {
 						numberOfDevices = coapDevices.size();
 					}
 
-					if (numberOfDevices > 0) {
-						log.info(numberOfDevices
-								+ " CoAP devices found in configuration for connector "
-								+ connectorName);
+					log.info(numberOfDevices
+							+ " CoAP devices found in configuration for connector "
+							+ connectorName);
 
-						for (int i = 0; i < numberOfDevices; i++) {
-							String type = subConfig.getString("device(" + i
-									+ ").type");
-							List<Object> address = subConfig.getList("device("
-									+ i + ").address");
-							String href = subConfig.getString("device(" + i
-									+ ").href");
+					List<Device> ds = new ArrayList<Device>();
+					for (int i = 0; i < numberOfDevices; i++) {
+						String type = subConfig.getString("device(" + i
+								+ ").type");
+						List<Object> address = subConfig.getList("device("
+								+ i + ").address");
+						String addressString = subConfig.getString("device("
+								+ i + ").address");
+						String href = subConfig.getString("device(" + i
+								+ ").href");
 
-							String name = subConfig.getString("device(" + i
-									+ ").name");
+						String name = subConfig.getString("device(" + i
+								+ ").name");
 
-							String displayName = subConfig.getString("device("
-									+ i + ").displayName");
+						String displayName = subConfig.getString("device("
+								+ i + ").displayName");
 
-							Boolean historyEnabled = subConfig.getBoolean(
-									"device(" + i + ").historyEnabled", false);
+						Boolean historyEnabled = subConfig.getBoolean(
+								"device(" + i + ").historyEnabled", false);
 
-							Boolean groupCommEnabled = subConfig
-									.getBoolean("device(" + i
-											+ ").groupCommEnabled", false);
-							Boolean shouldObserve = subConfig
-									.getBoolean("device(" + i
-											+ ").observe", false);
+						Boolean groupCommEnabled = subConfig
+								.getBoolean("device(" + i
+										+ ").groupCommEnabled", false);
+						Boolean shouldObserve = subConfig
+								.getBoolean("device(" + i
+										+ ").observe", false);
+						
+						Boolean forwardGroupAddress = subConfig
+								.getBoolean("device(" + i
+										+ ").forwardGroupAddress", true);
+
+						Integer historyCount = subConfig.getInt("device("
+								+ i + ").historyCount", 0);
+
+						Boolean refreshEnabled = subConfig.getBoolean(
+								"device(" + i + ").refreshEnabled", false);
+
+						// Transition step: comment when done
+						JsonNode thisConnector = DeviceConfigs.getInstance()
+								.getConnectors("coap")
+								.get(connector);
+						Device d = new Device(type, null, addressString, href, name, displayName, historyCount, historyEnabled, groupCommEnabled, refreshEnabled);
+						d.setConnectorId(thisConnector.get("_id").asText());
+						ds.add(d);
+						
+						if (type != null && address != null) {
+							try {
+								Constructor<?>[] declaredConstructors = Class
+										.forName(type)
+										.getDeclaredConstructors();
+
+								//constructor that takes connector and IPv6 coap URI as argument
+								Object[] args = new Object[4];
+
+								// first arg is Coap connector
+								args[0] = coapConnector;
+								args[2] = shouldObserve;
+								args[3] = forwardGroupAddress;
+
+								Obj coapDevice = null;
+								String adr = "";
+
+								for (int k = 0; k < declaredConstructors.length; k++) {
+									if (declaredConstructors[k]
+											.getParameterTypes().length == 4) {
+
+										if(!address.isEmpty()) {
+											adr = (String) address.get(0);
+										}
 							
-							Boolean forwardGroupAddress = subConfig
-									.getBoolean("device(" + i
-											+ ").forwardGroupAddress", true);
+										args[1] = adr;
 
-							Integer historyCount = subConfig.getInt("device("
-									+ i + ").historyCount", 0);
+										log.info("Added Device with URI " + adr);
 
-							Boolean refreshEnabled = subConfig.getBoolean(
-									"device(" + i + ").refreshEnabled", false);
-
-							if (type != null && address != null) {
-								try {
-									Constructor<?>[] declaredConstructors = Class
-											.forName(type)
-											.getDeclaredConstructors();
-
-									//constructor that takes connector and IPv6 coap URI as argument
-									Object[] args = new Object[4];
-
-									// first arg is Coap connector
-									args[0] = coapConnector;
-									args[2] = shouldObserve;
-									args[3] = forwardGroupAddress;
-
-									Obj coapDevice = null;
-									String adr = "";
-
-									for (int k = 0; k < declaredConstructors.length; k++) {
-										if (declaredConstructors[k]
-												.getParameterTypes().length == 4) {
-
-											if(!address.isEmpty()) {
-												adr = (String) address.get(0);
-											}
-								
-											args[1] = adr;
-
-											log.info("Added Device with URI " + adr);
-
-											coapDevice = (Obj) declaredConstructors[k].newInstance(args);
-											
-										} else if (declaredConstructors[k].getParameterTypes().length == 0) {
-											//TODO: no constructor with 4 arguments - throw exception?
-											coapDevice = (Obj) declaredConstructors[k].newInstance();
-										}
+										coapDevice = (Obj) declaredConstructors[k].newInstance(args);
+										
+									} else if (declaredConstructors[k].getParameterTypes().length == 0) {
+										//TODO: no constructor with 4 arguments - throw exception?
+										coapDevice = (Obj) declaredConstructors[k].newInstance();
 									}
-
-									// create a instance of the specified CoAP device
-									coapDevice.setHref(new Uri(URLEncoder
-											.encode(connectorName, "UTF-8")
-											+ "/" + href));
-
-									if (name != null && name.length() > 0) {
-										coapDevice.setName(name);
-									}
-
-									if (displayName != null
-											&& displayName.length() > 0) {
-										coapDevice.setDisplayName(displayName);
-									}
-									
-									objectBroker.addObj(coapDevice);
-									myObjects.add(coapDevice);
-									coapDevice.initialize();
-
-									if (historyEnabled != null && historyEnabled) {
-										if (historyCount != null
-												&& historyCount != 0) {
-											objectBroker.addHistoryToDatapoints(coapDevice,historyCount);
-										} else {
-											objectBroker.addHistoryToDatapoints(coapDevice);
-										}
-									}
-
-									if (groupCommEnabled) {
-										objectBroker.enableGroupComm(coapDevice, coapConnector, adr);
-									}
-
-									if (refreshEnabled != null && refreshEnabled) {
-										objectBroker.enableObjectRefresh(coapDevice);
-									}
-								} catch (SecurityException e) {
-									e.printStackTrace();
-								} catch (ClassNotFoundException e) {
-									e.printStackTrace();
-								} catch (IllegalArgumentException e) {
-									e.printStackTrace();
-								} catch (InstantiationException e) {
-									e.printStackTrace();
-								} catch (IllegalAccessException e) {
-									e.printStackTrace();
-								} catch (InvocationTargetException e) {
-									e.printStackTrace();
 								}
+
+								// create a instance of the specified CoAP device
+								coapDevice.setHref(new Uri(URLEncoder
+										.encode(connectorName, "UTF-8")
+										+ "/" + href));
+
+								if (name != null && name.length() > 0) {
+									coapDevice.setName(name);
+								}
+
+								if (displayName != null
+										&& displayName.length() > 0) {
+									coapDevice.setDisplayName(displayName);
+								}
+								
+								objectBroker.addObj(coapDevice);
+								myObjects.add(coapDevice);
+								coapDevice.initialize();
+
+								if (historyEnabled != null && historyEnabled) {
+									if (historyCount != null
+											&& historyCount != 0) {
+										objectBroker.addHistoryToDatapoints(coapDevice,historyCount);
+									} else {
+										objectBroker.addHistoryToDatapoints(coapDevice);
+									}
+								}
+
+								if (groupCommEnabled) {
+									objectBroker.enableGroupComm(coapDevice, coapConnector, adr);
+								}
+
+								if (refreshEnabled != null && refreshEnabled) {
+									objectBroker.enableObjectRefresh(coapDevice);
+								}
+							} catch (SecurityException e) {
+								e.printStackTrace();
+							} catch (ClassNotFoundException e) {
+								e.printStackTrace();
+							} catch (IllegalArgumentException e) {
+								e.printStackTrace();
+							} catch (InstantiationException e) {
+								e.printStackTrace();
+							} catch (IllegalAccessException e) {
+								e.printStackTrace();
+							} catch (InvocationTargetException e) {
+								e.printStackTrace();
 							}
 						}
-					} else {
-						log.info("No CoAP devices configured for connector " + connectorName);
 					}
+					DeviceConfigs.getInstance().addDevices(ds);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}

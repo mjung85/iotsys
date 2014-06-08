@@ -37,7 +37,8 @@ import java.util.logging.Logger;
 
 import at.ac.tuwien.auto.iotsys.commons.Connector;
 
-public class VirtualConnector implements Connector {
+public class VirtualConnector extends Connector {
+
 	private static final Logger log = Logger.getLogger(VirtualConnector.class
 			.getName());
 

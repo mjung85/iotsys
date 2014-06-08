@@ -15,7 +15,7 @@ import java.util.logging.Logger;
 import at.ac.tuwien.auto.iotsys.commons.Connector;
 import at.ac.tuwien.auto.iotsys.gateway.connectors.rfid.util.RfidFrame;
 
-public class RfidConnector implements Connector, SerialPortEventListener 
+public class RfidConnector extends Connector implements SerialPortEventListener 
 {
 
 	private static final Logger log = Logger.getLogger(RfidConnector.class.getName());
@@ -223,4 +223,15 @@ public class RfidConnector implements Connector, SerialPortEventListener
 	public boolean isCoap() {
 		return false;
 	}
+
+	public String getPort() {
+		return port;
+	}
+
+	public void setPort(String port) {
+		this.port = port;
+	}
+	
+	
+	
 }
