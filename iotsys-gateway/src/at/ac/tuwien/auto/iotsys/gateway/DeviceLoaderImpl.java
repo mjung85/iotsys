@@ -34,6 +34,7 @@ package at.ac.tuwien.auto.iotsys.gateway;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -42,6 +43,7 @@ import org.apache.commons.configuration.XMLConfiguration;
 import at.ac.tuwien.auto.iotsys.commons.Connector;
 import at.ac.tuwien.auto.iotsys.commons.DeviceLoader;
 import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
+import at.ac.tuwien.auto.iotsys.commons.persistent.DeviceConfigs;
 
 public class DeviceLoaderImpl implements DeviceLoader {
 	private static Logger log = Logger.getLogger(DeviceLoaderImpl.class.getName());
@@ -76,10 +78,23 @@ public class DeviceLoaderImpl implements DeviceLoader {
 			deviceLoadersSize = ((Collection<?>) deviceLoaders).size();
 		}
 		
+		// Read configs from DB
+		String[] deviceLoadersFromDb = DeviceConfigs.getInstance().getAllDeviceLoader();
+		
+		// Transition step: moving configs from device.xml to DB, comment out when done
+		List<String> ds = new ArrayList<String>();
+		
+		// Transition step: replace deviceLoadersSize with deviceLoadersFromDb.length when done
 		for(int i = 0; i< deviceLoadersSize; i++){
 		
+			// Transition step: flip comments on these two line when done
 			String deviceLoaderName = devicesConfig.getString("deviceloaders.device-loader(" + i + ")");
+			//String deviceLoaderName = deviceLoadersFromDb[i];
+
 			log.info("Found device loader: " + deviceLoaderName);
+			
+			// Transition step: uncomment when done
+			ds.add(deviceLoaderName);
 			
 			try {
 				DeviceLoader devLoader = (DeviceLoader) Class.forName(deviceLoaderName).newInstance();
@@ -96,6 +111,8 @@ public class DeviceLoaderImpl implements DeviceLoader {
 				log.severe(" Debug Info:" + e.getMessage());
 			}
 		}
+		// Transition step: uncomment when done
+		DeviceConfigs.getInstance().addDeviceLoaders(ds);
 	
 		return connectors;
 	}

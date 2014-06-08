@@ -51,6 +51,7 @@ import at.ac.tuwien.auto.iotsys.commons.interceptor.ClassAlreadyRegisteredExcept
 import at.ac.tuwien.auto.iotsys.commons.interceptor.Interceptor;
 import at.ac.tuwien.auto.iotsys.commons.interceptor.InterceptorBroker;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.ContractInit;
+import at.ac.tuwien.auto.iotsys.commons.persistent.DeviceConfigs;
 import at.ac.tuwien.auto.iotsys.gateway.interceptor.InterceptorBrokerImpl;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objectbroker.ObjectBrokerImpl;
 import at.ac.tuwien.auto.iotsys.gateway.obix.server.CoAPServer;
@@ -131,6 +132,9 @@ public class IoTSySGateway
 		}
 		connectors = deviceLoader.initDevices(objectBroker);
 
+		// Transition step: moving configs from devices.xml to DB, remove when done
+		DeviceConfigs.getInstance().addConnectors(connectors);
+		
 		if (objectBroker.getMDnsResolver() != null)
 		{
 			log.info("No of records built: " + objectBroker.getMDnsResolver().getNumberOfRecord());

@@ -16,8 +16,12 @@ import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.commons.configuration.XMLConfiguration;
 
 import at.ac.tuwien.auto.iotsys.commons.Connector;
+import at.ac.tuwien.auto.iotsys.commons.Device;
 import at.ac.tuwien.auto.iotsys.commons.DeviceLoader;
 import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
+import at.ac.tuwien.auto.iotsys.commons.persistent.DeviceConfigs;
+
+import com.fasterxml.jackson.databind.JsonNode;
 
 public class EnoceanDeviceLoaderImpl implements DeviceLoader {
 
@@ -71,7 +75,11 @@ public class EnoceanDeviceLoaderImpl implements DeviceLoader {
 				try {
 					log.info("Connecting EnOcean connector to COM Port: "+ serialPort);
 					EnoceanConnector enoceanConnector = new EnoceanConnector(serialPort);
-					enoceanConnector.connect();
+					enoceanConnector.setName(connectorName);
+					enoceanConnector.setTechnology("enocean");
+					enoceanConnector.setEnabled(enabled);
+					
+					//enoceanConnector.connect();
 
 					connectors.add(enoceanConnector);
 
@@ -88,10 +96,12 @@ public class EnoceanDeviceLoaderImpl implements DeviceLoader {
 							+ " EnOcean devices found in configuration for connector "
 							+ connectorName);
 					
+					List<Device> ds = new ArrayList<Device>();
 					// add devices
 					for (int i = 0; i < numberOfDevices; i++) {
 						String type = subConfig.getString("device(" + i + ").type");
 						List<Object> address = subConfig.getList("device(" + i + ").address");
+						String addressString = subConfig.getString("device(" + i + ").address");
 						String ipv6 = subConfig.getString("device(" + i + ").ipv6");
 						String href = subConfig.getString("device(" + i + ").href");
 
@@ -101,6 +111,14 @@ public class EnoceanDeviceLoaderImpl implements DeviceLoader {
 						Integer historyCount = subConfig.getInt("device(" + i + ").historyCount", 0);
 
 						Boolean refreshEnabled = subConfig.getBoolean("device(" + i + ").refreshEnabled", false);
+						
+						// Transition step: comment when done
+						JsonNode thisConnector = DeviceConfigs.getInstance()
+								.getConnectors("enocean")
+								.get(connector);
+						Device d = new Device(type, ipv6, addressString, href, name, null, historyCount, historyEnabled, groupCommEnabled, refreshEnabled);
+						d.setConnectorId(thisConnector.get("_id").asText());
+						ds.add(d);
 						
 						log.info("type: " + type);
 						
@@ -185,6 +203,7 @@ public class EnoceanDeviceLoaderImpl implements DeviceLoader {
 							}
 						}
 					}
+					DeviceConfigs.getInstance().addDevices(ds);
 
 					//					TemperatureSensorImplXBee xBeeTemperatureSensor = new TemperatureSensorImplXBee(
 					//							xBeeConnector, "0013a200407c1715");

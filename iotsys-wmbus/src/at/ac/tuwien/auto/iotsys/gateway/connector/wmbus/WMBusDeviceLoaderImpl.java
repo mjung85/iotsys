@@ -47,8 +47,12 @@ import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.commons.configuration.XMLConfiguration;
 
 import at.ac.tuwien.auto.iotsys.commons.Connector;
+import at.ac.tuwien.auto.iotsys.commons.Device;
 import at.ac.tuwien.auto.iotsys.commons.DeviceLoader;
 import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
+import at.ac.tuwien.auto.iotsys.commons.persistent.DeviceConfigs;
+
+import com.fasterxml.jackson.databind.JsonNode;
 
 public class WMBusDeviceLoaderImpl implements DeviceLoader {
 	
@@ -93,7 +97,11 @@ public class WMBusDeviceLoaderImpl implements DeviceLoader {
 				try {
 					WMBusConnector wmbusConnector = new WMBusConnector(
 							serialPort);
-					wmbusConnector.connect();
+					wmbusConnector.setName(connectorName);
+					wmbusConnector.setEnabled(enabled);
+					wmbusConnector.setTechnology("wmbus");
+					
+					//wmbusConnector.connect();
 					connectors.add(wmbusConnector);
 
 					int wmbusDevicesCount = 0;
@@ -109,11 +117,14 @@ public class WMBusDeviceLoaderImpl implements DeviceLoader {
 							+ " WMBus devices found in configuration for connector "
 							+ connectorName);
 
+					List<Device> ds = new ArrayList<Device>();
 					for (int i = 0; i < wmbusDevicesCount; i++) {
 						String type = subConfig.getString("device(" + i
 								+ ").type");
 						List<Object> address = subConfig.getList("device(" + i
 								+ ").address");
+						String addressString = subConfig.getString("device("
+								+ i + ").address");
 						String ipv6 = subConfig.getString("device(" + i
 								+ ").ipv6");
 						String href = subConfig.getString("device(" + i
@@ -131,6 +142,14 @@ public class WMBusDeviceLoaderImpl implements DeviceLoader {
 						Integer historyCount = subConfig.getInt("device(" + i
 								+ ").historyCount", 0);
 
+						// Transition step: comment when done
+						JsonNode thisConnector = DeviceConfigs.getInstance()
+								.getConnectors("wmbus")
+								.get(connector);
+						Device d = new Device(type, ipv6, addressString, href, name, null, historyCount, historyEnabled, groupCommEnabled, null);
+						d.setConnectorId(thisConnector.get("_id").asText());
+						ds.add(d);
+						
 						if (type != null && address != null) {
 							String serialNr = (String) address.get(0);
 							String aesKey = (String) address.get(1);
@@ -210,7 +229,7 @@ public class WMBusDeviceLoaderImpl implements DeviceLoader {
 							}
 						}
 					}
-
+					DeviceConfigs.getInstance().addDevices(ds);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}

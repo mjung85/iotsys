@@ -39,15 +39,13 @@ import java.util.Hashtable;
 import java.util.logging.Logger;
 
 import at.ac.tuwien.auto.iotsys.commons.Connector;
-import at.ac.tuwien.auto.iotsys.gateway.connector.mbus.TelegramManagerInterface;
-import at.ac.tuwien.auto.iotsys.gateway.connector.mbus.MBusWatchDog;
 import at.ac.tuwien.auto.iotsys.gateway.connector.mbus.reader.ComPortReader;
 import at.ac.tuwien.auto.iotsys.gateway.connector.mbus.telegrams.SimpleTelegram;
 import at.ac.tuwien.auto.iotsys.gateway.connector.mbus.telegrams.Telegram;
 import at.ac.tuwien.auto.iotsys.gateway.connector.mbus.telegrams.util.Measure_Unit;
 import at.ac.tuwien.auto.iotsys.gateway.connector.mbus.test.SmartMeterTestTelegrams;
 
-public class MBusConnector implements TelegramManagerInterface, Connector{
+public class MBusConnector extends Connector implements TelegramManagerInterface {
 	private static final Logger log = Logger.getLogger(MBusConnector.class.getName());
 	
 	private final Hashtable<String, ArrayList<MBusWatchDog>> watchDogs = new Hashtable<String, ArrayList<MBusWatchDog>>();	
@@ -188,4 +186,13 @@ public class MBusConnector implements TelegramManagerInterface, Connector{
 	public boolean isCoap() {
 		return false;
 	}
+
+	public String getSerialPort() {
+		return serialPort;
+	}
+
+	public void setSerialPort(String serialPort) {
+		this.serialPort = serialPort;
+	}
+    
 }

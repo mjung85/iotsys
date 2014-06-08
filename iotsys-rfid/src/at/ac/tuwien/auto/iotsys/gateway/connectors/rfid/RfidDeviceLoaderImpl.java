@@ -16,8 +16,12 @@ import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.commons.configuration.XMLConfiguration;
 
 import at.ac.tuwien.auto.iotsys.commons.Connector;
+import at.ac.tuwien.auto.iotsys.commons.Device;
 import at.ac.tuwien.auto.iotsys.commons.DeviceLoader;
 import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
+import at.ac.tuwien.auto.iotsys.commons.persistent.DeviceConfigs;
+
+import com.fasterxml.jackson.databind.JsonNode;
 
 public class RfidDeviceLoaderImpl implements DeviceLoader {
 	
@@ -80,7 +84,11 @@ public class RfidDeviceLoaderImpl implements DeviceLoader {
 					log.info("Connecting RFID connector to COM Port: "
 							+ serialPort);
 					RfidConnector rfidConnector = new RfidConnector(serialPort);
-					rfidConnector.connect();
+					rfidConnector.setName(connectorName);
+					rfidConnector.setEnabled(enabled);
+					rfidConnector.setTechnology("rfid");
+					
+					//rfidConnector.connect();
 
 					connectors.add(rfidConnector);
 
@@ -97,6 +105,7 @@ public class RfidDeviceLoaderImpl implements DeviceLoader {
 							+ " RFID devices found in configuration for connector "
 							+ connectorName);
 
+					List<Device> ds = new ArrayList<Device>();
 					// add devices
 					for (int i = 0; i < numberOfDevices; i++) {
 						String type = subConfig.getString("device(" + i
@@ -122,6 +131,14 @@ public class RfidDeviceLoaderImpl implements DeviceLoader {
 						Boolean refreshEnabled = subConfig.getBoolean("device("
 								+ i + ").refreshEnabled", false);
 
+						// Transition step: comment when done
+						JsonNode thisConnector = DeviceConfigs.getInstance()
+								.getConnectors("rfid")
+								.get(connector);
+						Device d = new Device(type, ipv6, null, href, name, null, historyCount, historyEnabled, groupCommEnabled, refreshEnabled);
+						d.setConnectorId(thisConnector.get("_id").asText());
+						ds.add(d);
+						
 						if (type != null) {
 							
 							try {
@@ -213,7 +230,7 @@ public class RfidDeviceLoaderImpl implements DeviceLoader {
 							}
 						}
 					}
-
+					DeviceConfigs.getInstance().addDevices(ds);
 //					TemperatureSensorImplXBee xBeeTemperatureSensor = new TemperatureSensorImplXBee(
 //							xBeeConnector, "0013a200407c1715");
 //					xBeeTemperatureSensor.setHref(new Uri("temperature"));
