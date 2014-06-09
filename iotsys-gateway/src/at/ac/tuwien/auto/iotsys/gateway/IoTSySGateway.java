@@ -61,6 +61,7 @@ import at.ac.tuwien.auto.iotsys.gateway.obix.server.ObixObservingManager;
 import at.ac.tuwien.auto.iotsys.gateway.obix.server.ObixServer;
 import at.ac.tuwien.auto.iotsys.gateway.obix.server.ObixServerImpl;
 import at.ac.tuwien.auto.iotsys.gateway.obix.server.TomcatServer;
+import at.ac.tuwien.auto.iotsys.gateway.obix.server.TomcatServer1;
 import at.ac.tuwien.auto.iotsys.gateway.util.ExiUtil;
 import at.ac.tuwien.auto.iotsys.xacml.pdp.PDPInterceptorSettings;
 

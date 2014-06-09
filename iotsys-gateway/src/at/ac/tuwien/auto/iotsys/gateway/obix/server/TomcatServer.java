@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.net.InetAddress;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -22,6 +23,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import obix.Obj;
 import obix.io.BinObixDecoder;
+import obix.io.BinObixEncoder;
+import obix.io.ObixDecoder;
 import obix.io.ObixEncoder;
 import obix.io.RelativeObixEncoder;
 
@@ -100,6 +103,12 @@ public class TomcatServer {
 
 		String hostAddress = "127.0.0.1";
 
+		String subject;
+
+		String hostName;
+
+		String requestUri;
+
 		public ObixServlet(ObixServer obixServer) throws IOException {
 			try {
 				this.exiUtil = ExiUtil.getInstance();
@@ -115,36 +124,20 @@ public class TomcatServer {
 				throws ServletException, IOException {
 
 			// Get request uri
-			String requestUri = req.getRequestURI();
-			log.info("requestUri : " + requestUri);
+			requestUri = req.getRequestURI();
 
 			// Get remote inetAddress
 			String remoteAddress = req.getRemoteAddr();
 			InetAddress inetAddress = InetAddress.getByName(remoteAddress);
 
 			// Get subject host address
-			String subject = inetAddress.getHostAddress();
+			subject = inetAddress.getHostAddress();
 
 			// Get host name
-			String hostName = inetAddress.getHostName();
+			hostName = inetAddress.getHostName();
 
 			// Get IPv6 address
-			ipv6Address = "/" + getIPv6Address(req);
-
-			// serve static files
-			String response = serveStatic(req, requestUri, ipv6Address);
-			if (response != null) {
-				PrintWriter w = resp.getWriter();
-				w.println(response);
-			}
-
-			// call interceptors
-			response = intercept(req, requestUri, subject, hostName,
-					hostAddress);
-			if (response != null) {
-				PrintWriter w = resp.getWriter();
-				w.println(response);
-			}
+			ipv6Address = "/" + req.getLocalAddr();
 
 			// Get data
 			data = getData(req);
@@ -156,20 +149,21 @@ public class TomcatServer {
 
 			// Get resource path
 			resourcePath = getResourcePath(requestUri, ipv6Address);
-			
+
 			if (requestUri.endsWith("soap")) {
 				log.finest("Forward to SOAP handler!");
 
 				obixResponse = new StringBuffer(soapHandler.process(data,
 						req.getHeader("soapaction")));
 				log.finest("oBIX Response: " + obixResponse);
-				
+
 				PrintWriter w = resp.getWriter();
 				w.println(obixResponse.toString());
 
+			} else {
+				super.service(req, resp);
 			}
 
-			super.service(req, resp);
 			log.info("Serving: " + requestUri + " for " + subject + " done.");
 
 		}
@@ -179,15 +173,38 @@ public class TomcatServer {
 				throws ServletException, IOException {
 			PrintWriter w = resp.getWriter();
 
+			String response = getDoGetResponse(req);
+
+			w.println(response);
+			
+			w.flush();  
+	        w.close();
+		}
+
+		public String getDoGetResponse(HttpServletRequest req) {
+			String response = serveStatic(req, requestUri, ipv6Address);
+			if (response != null) {
+				return response;
+			}
+
+			// call interceptors
+			response = intercept(req, requestUri, subject, hostName,
+					hostAddress);
+			if (response != null) {
+				return response;
+			}
+
 			try {
 				responseObj = obixServer.readObj(new URI(resourcePath), true);
 				obixResponse = getObixResponse(req, ipv6Address, data,
 						responseObj);
+				response = encodeResponse(req, requestUri, obixResponse);
+				obixResponse.toString();
 			} catch (URISyntaxException e) {
 				e.printStackTrace();
 			}
 
-			w.println(obixResponse.toString());
+			return response;
 		}
 
 		@Override
@@ -204,6 +221,9 @@ public class TomcatServer {
 			}
 
 			w.println(obixResponse.toString());
+			
+			w.flush();  
+	        w.close();
 		}
 
 		@Override
@@ -220,11 +240,82 @@ public class TomcatServer {
 			}
 
 			w.println(obixResponse.toString());
+			
+			w.flush();  
+	        w.close();
+		}
+		
+		private String encodeResponse(HttpServletRequest req, String uri,
+				StringBuffer obixResponse) {
+			String response = null;
+
+			boolean exiRequested = exiUtil != null
+					&& contains(req.getHeader("Accept"), MIME_EXI);
+			boolean exiSchemaRequested = contains(req.getHeader("Accept"),
+					MIME_DEFAULT_BINARY);
+			boolean obixBinaryRequested = contains(req.getHeader("Accept"),
+					MIME_X_OBIX_BINARY);
+			boolean jsonRequested = contains(req.getHeader("Accept"),
+					MIME_JSON);
+			
+			if (exiRequested || exiSchemaRequested) {
+				try {
+					byte[] exiData = ExiUtil.getInstance().encodeEXI(
+							XML_HEADER + obixResponse, exiSchemaRequested);
+					// try to decode it immediately
+					response = new String(exiData, "UTF-8");
+				} catch (Exception e1) {
+					e1.printStackTrace();
+					// fall back
+					response = obixResponse.toString();
+				}
+			} else if (obixBinaryRequested) {
+				byte[] obixBinaryData = BinObixEncoder.toBytes(
+						ObixDecoder.fromString(obixResponse.toString()),
+						req.getHeader("accept-language"));
+				try {
+					response = new String(obixBinaryData, "UTF-8");
+				} catch (UnsupportedEncodingException e) {
+					e.printStackTrace();
+				}
+			} else if (jsonRequested) {
+				try {
+					String jsonData = JsonUtil.fromXMLtoJSON(obixResponse
+							.toString());
+
+					response = XML_HEADER + jsonData;
+				} catch (JSONException e1) {
+					e1.printStackTrace();
+				}
+			} else {
+				if (uri.endsWith(".well-known/core")) {
+					response = obixResponse.toString();
+				} else {
+					// response with content-length
+					response = XML_HEADER + obixResponse.toString();
+				}
+			}
+			return response;
+		}
+
+		public boolean contains(String hearder, String element) {
+			
+			StringTokenizer st = new StringTokenizer(hearder, ",");
+
+			while (st.hasMoreTokens()) {
+				String s = st.nextToken();
+
+				if (s.equalsIgnoreCase(element)) {
+					return true;
+				}
+			}
+
+			return false;
 		}
 
 		private String serveStatic(HttpServletRequest req, String uri,
 				String ipv6Address) {
-			String host = ("host");
+			String host = req.getHeader("host");
 			String path = getResourcePath(uri, ipv6Address);
 
 			if (path.endsWith("soap") && req.getParameter("wsdl") != null) {
@@ -250,6 +341,8 @@ public class TomcatServer {
 					|| path.endsWith(".js") || path.endsWith(".css")) {
 				if (path.isEmpty())
 					path = "/index.html";
+
+				log.info("[serveStatic] path : " + path);
 
 				return serveFile(req, path, new File("res/obelix"), false);
 			}
@@ -547,33 +640,13 @@ public class TomcatServer {
 			return response;
 		}
 
-		private String getIPv6Address(HttpServletRequest req) {
-			String localAddress = req.getLocalAddr().toString();
-			int lastIndex = localAddress.lastIndexOf(":");
-			String localSocketSplitted = "";
-
-			if (lastIndex > 0) {
-				localSocketSplitted = localAddress.substring(0, lastIndex);
-			}
-
-			lastIndex = localSocketSplitted.lastIndexOf("%");
-
-			if (lastIndex > 0) {
-				localSocketSplitted = localSocketSplitted.substring(0,
-						lastIndex);
-			}
-
-			String ipv6Address = localSocketSplitted.substring(1);
-			return ipv6Address;
-		}
-
 		private String getResourcePath(String uri, String ipv6Address) {
 			return new CoAPHelper(obixServer).getResourcePath(uri, ipv6Address);
 		}
 
 		private String getData(HttpServletRequest req) {
 			String payload = null;
-			
+
 			if (req.getHeader("content-type") != null) {
 				// check for EXI content
 
@@ -587,7 +660,7 @@ public class TomcatServer {
 							sb.append(line).append("\n");
 						}
 						payload = sb.toString();
-						
+
 						reader.reset();
 					} catch (IOException e) {
 						e.printStackTrace();
@@ -595,7 +668,7 @@ public class TomcatServer {
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
-				
+
 				if (req.getHeader("content-type").contains(MIME_EXI)) {
 
 					try {
