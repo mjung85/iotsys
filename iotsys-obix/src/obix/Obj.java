@@ -45,11 +45,11 @@ public class Obj implements IObj, Subject, AlarmSource, Cloneable
 	{
 		attribute = attribute.toLowerCase().trim();
 
-		if (attribute.equals("name"))
+		if (attribute.equals("name") || attribute.equals("dispalyname"))
 		{
 			addTranslation(language, TranslationAttribute.displayName, value);
 		}
-		else if (attribute.equals("description"))
+		else if (attribute.equals("description") || attribute.equals("display"))
 		{
 			addTranslation(language, TranslationAttribute.display, value);
 		}
@@ -74,6 +74,11 @@ public class Obj implements IObj, Subject, AlarmSource, Cloneable
 			if (language.indexOf("-") > 0)
 			{
 				language = language.substring(0, language.indexOf("-"));
+			}
+			
+			if (language.indexOf("_") > 0)
+			{
+				language = language.substring(0, language.indexOf("_"));
 			}
 
 			// get map

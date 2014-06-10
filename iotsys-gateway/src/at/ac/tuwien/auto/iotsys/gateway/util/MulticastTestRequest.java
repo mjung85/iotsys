@@ -12,75 +12,40 @@ import ch.ethz.inf.vs.californium.coap.PUTRequest;
 import ch.ethz.inf.vs.californium.coap.Message.messageType;
 
 public class MulticastTestRequest {
-	public static void main(String[] args){
-		
+	public static void main(String[] args) {
+
 		Inet6Address group = null;
 		try {
-			group = (Inet6Address) Inet6Address.getByName("FF02::0FF");
+			group = (Inet6Address) Inet6Address.getByName("FF15::1");
 		} catch (UnknownHostException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
-		}
-		Object state = new Bool(true);
-		PUTRequest putRequest = new PUTRequest();
-		putRequest.setType(messageType.NON);
-		putRequest
-				.setURI("coap://[" + group.getHostAddress() + "]:5684/");
+		}		
+		for (int l = 0; l < 1002; l++) {
+			System.out.println("Current request: " + l);
+			PUTRequest putRequest = new PUTRequest();
+			putRequest.setType(messageType.NON);
+			putRequest.setURI("coap://[" + group.getHostAddress() + "]:5683/");
+			putRequest.setSize(128);			
 		
-		if(state instanceof Bool){
-			Bool bool = (Bool) state;
-			Bool b = new Bool();
-			b.set(bool.get());
+			String payload = "<bool val=\"true\"/>";
+			// work around application octet stream
+			putRequest
+			.setContentType(ch.ethz.inf.vs.californium.coap.registries.MediaTypeRegistry.APPLICATION_XML);
+			putRequest.setPayload(payload);
+				
+			putRequest.enableResponseQueue(false);
 			try {
-				byte[] payload =  EXIEncoder.getInstance().toBytes(b, true);
-				// work around application octet stream
-				putRequest.setContentType(ch.ethz.inf.vs.californium.coap.registries.MediaTypeRegistry.APPLICATION_OCTET_STREAM);
-				putRequest.setPayload(payload);
-			} catch (Exception e){
-				// fall back to XML encoding
+				putRequest.execute();
+			} catch (IOException e) {
 				e.printStackTrace();
-				String payload = ObixEncoder.toString(b);
-				putRequest.setPayload(payload);
 			}
-						
-		}
-		else if(state instanceof Real){
-			Real real = (Real) state;
-			Real r = new Real();
-			r.set(real.get());
 			try {
-				byte[] payload =  EXIEncoder.getInstance().toBytes(r, true);
-				// work around application octet stream
-				putRequest.setContentType(ch.ethz.inf.vs.californium.coap.registries.MediaTypeRegistry.APPLICATION_OCTET_STREAM);
-				putRequest.setPayload(payload);
-			} catch (Exception e){
-				// fall back to XML encoding
+				Thread.sleep(500);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
 				e.printStackTrace();
-				String payload = ObixEncoder.toString(r);
-				putRequest.setPayload(payload);
 			}
-		} else if(state instanceof Int){
-			Int intObj = (Int) state;
-			Int i = new Int();
-			i.set(intObj.get());
-			try {
-				byte[] payload =  EXIEncoder.getInstance().toBytes(i, true);
-				// work around application octet stream
-				putRequest.setContentType(ch.ethz.inf.vs.californium.coap.registries.MediaTypeRegistry.APPLICATION_OCTET_STREAM);
-				putRequest.setPayload(payload);
-			} catch (Exception e){
-				// fall back to XML encoding
-				e.printStackTrace();
-				String payload = ObixEncoder.toString(i);
-				putRequest.setPayload(payload);
-			}
-		} 
-	
-		putRequest.enableResponseQueue(false);
-		try {
-			putRequest.execute();
-		} catch (IOException e) {
-			e.printStackTrace();
 		}
 	}
 }

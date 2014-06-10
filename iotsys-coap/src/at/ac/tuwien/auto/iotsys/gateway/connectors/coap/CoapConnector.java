@@ -127,7 +127,7 @@ public class CoapConnector implements Connector {
 		try {
 			Response response = request.receiveResponse();
 			if(response != null && response.getPayloadString() != null){
-				
+				System.out.println("response: " + response.getPayloadString());
 				return response.getPayloadString().trim();
 			}
 			

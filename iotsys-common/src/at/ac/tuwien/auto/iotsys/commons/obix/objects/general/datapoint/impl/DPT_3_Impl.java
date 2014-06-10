@@ -39,7 +39,7 @@ public abstract class DPT_3_Impl extends DatapointImpl implements DPT_3
 {
 	public DPT_3_Impl(String name, String displayName, String display)
 	{
-		super(name, displayName, display);
+		super(name, displayName, display, false, false);
 
 		this.addIs(new Contract(DPT_3.CONTRACT));
 	}
