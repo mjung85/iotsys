@@ -1,5 +1,0 @@
-<?xml version='1.0' encoding='utf-8'?>
-<tomcat-users>
-	<user name="system" password="system" roles="SecurityUsers" />
-	<user name="sysadm" password="sysadm" roles="SecurityUsers" />
-</tomcat-users>
