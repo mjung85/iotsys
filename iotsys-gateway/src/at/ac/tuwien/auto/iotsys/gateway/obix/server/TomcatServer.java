@@ -3,10 +3,10 @@ package at.ac.tuwien.auto.iotsys.gateway.obix.server;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
-import java.net.InetAddress;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLEncoder;
@@ -31,6 +31,7 @@ import obix.io.RelativeObixEncoder;
 import org.apache.catalina.Context;
 import org.apache.catalina.LifecycleException;
 import org.apache.catalina.startup.Tomcat;
+import org.apache.http.HttpStatus;
 import org.json.JSONException;
 
 import at.ac.tuwien.auto.iotsys.commons.PropertiesLoader;
@@ -91,23 +92,8 @@ public class TomcatServer {
 		private InterceptorBroker interceptorBroker = InterceptorBrokerImpl
 				.getInstance();
 
-		StringBuffer obixResponse;
-
-		Obj responseObj = null;
-
-		String resourcePath;
-
-		String data;
-
-		String ipv6Address;
-
 		String hostAddress = "127.0.0.1";
-
-		String subject;
-
-		String hostName;
-
-		String requestUri;
+		String hostName = "localhost";
 
 		public ObixServlet(ObixServer obixServer) throws IOException {
 			try {
@@ -124,82 +110,55 @@ public class TomcatServer {
 				throws ServletException, IOException {
 
 			// Get request uri
-			requestUri = req.getRequestURI();
-
-			// Get remote inetAddress
-			String remoteAddress = req.getRemoteAddr();
-			InetAddress inetAddress = InetAddress.getByName(remoteAddress);
+			String uri = req.getRequestURI();
 
 			// Get subject host address
-			subject = inetAddress.getHostAddress();
+			String subject = req.getRemoteAddr();
 
-			// Get host name
-			hostName = inetAddress.getHostName();
+			super.service(req, resp);
 
-			// Get IPv6 address
-			ipv6Address = "/" + req.getLocalAddr();
-
-			// Get data
-			data = getData(req);
-
-			if (data != null)
-				log.finest("serve: " + requestUri + ", method: "
-						+ req.getMethod() + ", data.length(): " + data.length());
-			log.finest("Data: " + data);
-
-			// Get resource path
-			resourcePath = getResourcePath(requestUri, ipv6Address);
-
-			if (requestUri.endsWith("soap")) {
-				log.finest("Forward to SOAP handler!");
-
-				obixResponse = new StringBuffer(soapHandler.process(data,
-						req.getHeader("soapaction")));
-				log.finest("oBIX Response: " + obixResponse);
-
-				PrintWriter w = resp.getWriter();
-				w.println(obixResponse.toString());
-
-			} else {
-				super.service(req, resp);
-			}
-
-			log.info("Serving: " + requestUri + " for " + subject + " done.");
+			log.info("Serving: " + uri + " for " + subject + " done.");
 
 		}
 
 		@Override
 		protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 				throws ServletException, IOException {
+
+			String ipv6Address = "/" + getIPv6Address(req);
+			String uri = req.getRequestURI();
+
+			String response = getDoGetResponse(req, resp, uri, ipv6Address);
+
 			PrintWriter w = resp.getWriter();
-
-			String response = getDoGetResponse(req);
-
 			w.println(response);
-			
-			w.flush();  
-	        w.close();
+
+			w.flush();
+			w.close();
 		}
 
-		public String getDoGetResponse(HttpServletRequest req) {
-			String response = serveStatic(req, requestUri, ipv6Address);
+		public String getDoGetResponse(HttpServletRequest req,
+				HttpServletResponse resp, String uri, String ipv6Address) {
+			StringBuffer obixResponse = null;
+			Obj responseObj = null;
+			String resourcePath = getResourcePath(uri, ipv6Address);
+
+			String response = serveStatic(req, resp, ipv6Address);
 			if (response != null) {
 				return response;
 			}
 
 			// call interceptors
-			response = intercept(req, requestUri, subject, hostName,
-					hostAddress);
+			response = intercept(req, resp, hostName, hostAddress);
 			if (response != null) {
 				return response;
 			}
 
 			try {
 				responseObj = obixServer.readObj(new URI(resourcePath), true);
-				obixResponse = getObixResponse(req, ipv6Address, data,
-						responseObj);
-				response = encodeResponse(req, requestUri, obixResponse);
-				obixResponse.toString();
+				obixResponse = getObixResponse(req, ipv6Address, responseObj,
+						resourcePath);
+				response = encodeResponse(req, resp, uri, obixResponse);
 			} catch (URISyntaxException e) {
 				e.printStackTrace();
 			}
@@ -210,43 +169,71 @@ public class TomcatServer {
 		@Override
 		protected void doPost(HttpServletRequest req, HttpServletResponse resp)
 				throws ServletException, IOException {
-			PrintWriter w = resp.getWriter();
 
-			try {
-				responseObj = obixServer.invokeOp(new URI(resourcePath), data);
-				obixResponse = getObixResponse(req, ipv6Address, data,
-						responseObj);
-			} catch (URISyntaxException e) {
-				e.printStackTrace();
+			StringBuffer obixResponse = null;
+			Obj responseObj = null;
+			String ipv6Address = "/" + getIPv6Address(req);
+			String uri = req.getRequestURI();
+			String data = getData(req);
+			String resourcePath = getResourcePath(uri, ipv6Address);
+
+			if (uri.endsWith("soap")) {
+				log.finest("Forward to SOAP handler!");
+
+				obixResponse = new StringBuffer(soapHandler.process(data,
+						req.getHeader("soapaction")));
+				log.finest("oBIX Response: " + obixResponse);
+
+			} else {
+				try {
+					responseObj = obixServer.invokeOp(new URI(resourcePath),
+							data);
+					obixResponse = getObixResponse(req, ipv6Address,
+							responseObj, resourcePath);
+				} catch (URISyntaxException e) {
+					e.printStackTrace();
+				}
 			}
 
-			w.println(obixResponse.toString());
-			
-			w.flush();  
-	        w.close();
+			String response = encodeResponse(req, resp, uri, obixResponse);
+
+			PrintWriter w = resp.getWriter();
+			w.println(response);
+
+			w.flush();
+			w.close();
 		}
 
 		@Override
 		protected void doPut(HttpServletRequest req, HttpServletResponse resp)
 				throws ServletException, IOException {
-			PrintWriter w = resp.getWriter();
+
+			StringBuffer obixResponse = null;
+			Obj responseObj = null;
+			String ipv6Address = "/" + getIPv6Address(req);
+			String uri = req.getRequestURI();
+			String data = getData(req);
+			String resourcePath = getResourcePath(uri, ipv6Address);
 
 			try {
 				responseObj = obixServer.writeObj(new URI(resourcePath), data);
-				obixResponse = getObixResponse(req, ipv6Address, data,
-						responseObj);
+				obixResponse = getObixResponse(req, ipv6Address, responseObj,
+						resourcePath);
 			} catch (URISyntaxException e) {
 				e.printStackTrace();
 			}
 
-			w.println(obixResponse.toString());
-			
-			w.flush();  
-	        w.close();
+			String response = encodeResponse(req, resp, uri, obixResponse);
+
+			PrintWriter w = resp.getWriter();
+			w.println(response);
+
+			w.flush();
+			w.close();
 		}
-		
-		private String encodeResponse(HttpServletRequest req, String uri,
-				StringBuffer obixResponse) {
+
+		private String encodeResponse(HttpServletRequest req,
+				HttpServletResponse resp, String uri, StringBuffer obixResponse) {
 			String response = null;
 
 			boolean exiRequested = exiUtil != null
@@ -255,18 +242,21 @@ public class TomcatServer {
 					MIME_DEFAULT_BINARY);
 			boolean obixBinaryRequested = contains(req.getHeader("Accept"),
 					MIME_X_OBIX_BINARY);
-			boolean jsonRequested = contains(req.getHeader("Accept"),
-					MIME_JSON);
-			
+			boolean jsonRequested = contains(req.getHeader("Accept"), MIME_JSON);
+
 			if (exiRequested || exiSchemaRequested) {
 				try {
 					byte[] exiData = ExiUtil.getInstance().encodeEXI(
 							XML_HEADER + obixResponse, exiSchemaRequested);
 					// try to decode it immediately
+					resp.setStatus(HttpStatus.SC_OK);
+					resp.setContentType(MIME_EXI);
 					response = new String(exiData, "UTF-8");
 				} catch (Exception e1) {
 					e1.printStackTrace();
 					// fall back
+					resp.setStatus(HttpStatus.SC_OK);
+					resp.setContentType(MIME_XML);
 					response = obixResponse.toString();
 				}
 			} else if (obixBinaryRequested) {
@@ -274,6 +264,8 @@ public class TomcatServer {
 						ObixDecoder.fromString(obixResponse.toString()),
 						req.getHeader("accept-language"));
 				try {
+					resp.setStatus(HttpStatus.SC_OK);
+					resp.setContentType(MIME_X_OBIX_BINARY);
 					response = new String(obixBinaryData, "UTF-8");
 				} catch (UnsupportedEncodingException e) {
 					e.printStackTrace();
@@ -283,15 +275,25 @@ public class TomcatServer {
 					String jsonData = JsonUtil.fromXMLtoJSON(obixResponse
 							.toString());
 
+					resp.setStatus(HttpStatus.SC_OK);
+					resp.setContentType(MIME_JSON);
+					resp.addHeader("Content-Length",
+							"" + String.valueOf(jsonData).length());
 					response = XML_HEADER + jsonData;
 				} catch (JSONException e1) {
 					e1.printStackTrace();
 				}
 			} else {
 				if (uri.endsWith(".well-known/core")) {
+					resp.setStatus(HttpStatus.SC_OK);
+					resp.setContentType(MIME_XML);
 					response = obixResponse.toString();
 				} else {
 					// response with content-length
+					resp.setStatus(HttpStatus.SC_OK);
+					resp.setContentType(MIME_XML);
+					resp.addHeader("Content-Length",
+							"" + String.valueOf(obixResponse).length());
 					response = XML_HEADER + obixResponse.toString();
 				}
 			}
@@ -299,7 +301,7 @@ public class TomcatServer {
 		}
 
 		public boolean contains(String hearder, String element) {
-			
+
 			StringTokenizer st = new StringTokenizer(hearder, ",");
 
 			while (st.hasMoreTokens()) {
@@ -313,13 +315,38 @@ public class TomcatServer {
 			return false;
 		}
 
-		private String serveStatic(HttpServletRequest req, String uri,
-				String ipv6Address) {
+		private String getIPv6Address(HttpServletRequest req) {
+			String localSocket = req.getLocalAddr().toString();
+			int lastIndex = localSocket.lastIndexOf(":");
+			String localSocketSplitted = "";
+
+			if (lastIndex > 0) {
+				localSocketSplitted = localSocket.substring(0, lastIndex);
+			}
+
+			lastIndex = localSocketSplitted.lastIndexOf("%");
+
+			if (lastIndex > 0) {
+				localSocketSplitted = localSocketSplitted.substring(0,
+						lastIndex);
+			}
+
+			String splittedString = localSocketSplitted.substring(1);
+			return splittedString;
+		}
+
+		private String serveStatic(HttpServletRequest req,
+				HttpServletResponse resp, String ipv6Address) {
+
+			String uri = req.getRequestURI();
+
 			String host = req.getHeader("host");
 			String path = getResourcePath(uri, ipv6Address);
 
 			if (path.endsWith("soap") && req.getParameter("wsdl") != null) {
 				// serve wsdl file
+				resp.setStatus(HttpStatus.SC_OK);
+				resp.setContentType(MIME_XML);
 				return soapHandler
 						.getWSDLFileContent()
 						.replaceAll("localhost", host)
@@ -328,6 +355,8 @@ public class TomcatServer {
 
 			} else if (path.endsWith("soap") && req.getParameter("xsd") != null) {
 				// serve schema file
+				resp.setStatus(HttpStatus.SC_OK);
+				resp.setContentType(MIME_XML);
 				return soapHandler.getSchemaFileContent();
 			}
 
@@ -335,6 +364,8 @@ public class TomcatServer {
 				return null;
 
 			if (path.endsWith(".well-known/core")) {
+				resp.setStatus(HttpStatus.SC_OK);
+				resp.setContentType(MIME_PLAINTEXT);
 				return obixServer.getCoRELinks();
 
 			} else if (path.equalsIgnoreCase("/") || path.isEmpty()
@@ -344,7 +375,7 @@ public class TomcatServer {
 
 				log.info("[serveStatic] path : " + path);
 
-				return serveFile(req, path, new File("res/obelix"), false);
+				return serveFile(req, resp, path, new File("res/obelix"), false);
 			}
 
 			return null;
@@ -354,15 +385,21 @@ public class TomcatServer {
 		 * Serves file from homeDir and its' subdirectories (only). Uses only
 		 * URI, ignores all headers and HTTP parameters.
 		 */
-		public String serveFile(HttpServletRequest req, String uri,
-				File homeDir, boolean allowDirectoryListing) {
-			String res = null;
+		public String serveFile(HttpServletRequest req,
+				HttpServletResponse resp, String uri, File homeDir,
+				boolean allowDirectoryListing) {
+			String response = null;
+
+			log.info("Serve file : " + uri);
 
 			// Make sure we won't die of an exception later
-			if (!homeDir.isDirectory())
-				res = "INTERNAL ERRROR: serveFile(): given homeDir is not a directory.";
+			if (!homeDir.isDirectory()) {
+				resp.setStatus(HttpStatus.SC_INTERNAL_SERVER_ERROR);
+				resp.setContentType(MIME_PLAINTEXT);
+				return response = "INTERNAL ERRROR: serveFile(): given homeDir is not a directory.";
+			}
 
-			if (res == null) {
+			if (response == null) {
 				// Remove URL arguments
 				uri = uri.trim().replace(File.separatorChar, '/');
 				if (uri.indexOf('?') >= 0)
@@ -370,25 +407,35 @@ public class TomcatServer {
 
 				// Prohibit getting out of current directory
 				if (uri.startsWith("..") || uri.endsWith("..")
-						|| uri.indexOf("../") >= 0)
-					res = "FORBIDDEN: Won't serve ../ for security reasons.";
+						|| uri.indexOf("../") >= 0) {
+
+					resp.setStatus(HttpStatus.SC_FORBIDDEN);
+					resp.setContentType(MIME_PLAINTEXT);
+					return response = "FORBIDDEN: Won't serve ../ for security reasons.";
+				}
 			}
 
 			File f = new File(homeDir, uri);
-			if (res == null && !f.exists())
-				res = "Error 404, file not found.";
+			if (response == null && !f.exists()) {
+				resp.setStatus(HttpStatus.SC_NOT_FOUND);
+				resp.setContentType(MIME_PLAINTEXT);
+				return response = "Error 404, file not found.";
+			}
 
 			// List the directory, if necessary
-			if (res == null && f.isDirectory()) {
+			if (response == null && f.isDirectory()) {
 				// Browsers get confused without '/' after the
 				// directory, send a redirect.
 				if (!uri.endsWith("/")) {
 					uri += "/";
-					res = "<html><body>Redirected: <a href=\"" + uri + "\">"
-							+ uri + "</a></body></html>";
+					resp.setStatus(HttpStatus.SC_MOVED_PERMANENTLY);
+					resp.setContentType(MIME_HTML);
+					resp.addHeader("Location", uri);
+					return response = "<html><body>Redirected: <a href=\""
+							+ uri + "\">" + uri + "</a></body></html>";
 				}
 
-				if (res == null) {
+				if (response == null) {
 					// First try index.html and index.htm
 					if (new File(f, "index.html").exists())
 						f = new File(homeDir, uri + "/index.html");
@@ -444,96 +491,131 @@ public class TomcatServer {
 							}
 						}
 						msg += "</body></html>";
-						res = msg;
+						resp.setStatus(HttpStatus.SC_OK);
+						resp.setContentType(MIME_HTML);
+						return response = msg;
 					} else {
-						res = "FORBIDDEN: No directory listing.";
+						resp.setStatus(HttpStatus.SC_FORBIDDEN);
+						resp.setContentType(MIME_PLAINTEXT);
+						return response = "FORBIDDEN: No directory listing.";
 					}
 				}
 			}
 
-			try {
-				if (res == null) {
-					// Get MIME type from file name extension, if possible
-					String mime = null;
-					int dot = f.getCanonicalPath().lastIndexOf('.');
+			if (response == null) {
+				// Get MIME type from file name extension, if possible
+				String mime = null;
+				int dot;
+				try {
+					dot = f.getCanonicalPath().lastIndexOf('.');
 					if (dot >= 0)
 						mime = (String) theMimeTypes.get(f.getCanonicalPath()
 								.substring(dot + 1).toLowerCase());
 					if (mime == null)
 						mime = MIME_DEFAULT_BINARY;
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
 
-					// Calculate etag
-					String etag = Integer.toHexString((f.getAbsolutePath()
-							+ f.lastModified() + "" + f.length()).hashCode());
+				// Calculate etag
+				String etag = Integer.toHexString((f.getAbsolutePath()
+						+ f.lastModified() + "" + f.length()).hashCode());
 
-					// Support (simple) skipping:
-					long startFrom = 0;
-					long endAt = -1;
-					String range = req.getHeader("range");
-					if (range != null) {
-						if (range.startsWith("bytes=")) {
-							range = range.substring("bytes=".length());
-							int minus = range.indexOf('-');
-							try {
-								if (minus > 0) {
-									startFrom = Long.parseLong(range.substring(
-											0, minus));
-									endAt = Long.parseLong(range
-											.substring(minus + 1));
-								}
-							} catch (NumberFormatException nfe) {
+				// Support (simple) skipping:
+				long startFrom = 0;
+				long endAt = -1;
+				String range = req.getHeader("range");
+				if (range != null) {
+					if (range.startsWith("bytes=")) {
+						range = range.substring("bytes=".length());
+						int minus = range.indexOf('-');
+						try {
+							if (minus > 0) {
+								startFrom = Long.parseLong(range.substring(0,
+										minus));
+								endAt = Long.parseLong(range
+										.substring(minus + 1));
 							}
+						} catch (NumberFormatException nfe) {
 						}
 					}
+				}
 
-					long fileLen = f.length();
-					if (range != null && startFrom >= 0) {
-						if (startFrom >= fileLen) {
-							res = "";
-						} else {
-							if (endAt < 0)
-								endAt = fileLen - 1;
-							long newLen = endAt - startFrom + 1;
-							if (newLen < 0)
-								newLen = 0;
+				long fileLen = f.length();
+				if (range != null && startFrom >= 0) {
+					if (startFrom >= fileLen) {
+						resp.setStatus(HttpStatus.SC_REQUESTED_RANGE_NOT_SATISFIABLE);
+						resp.setContentType(MIME_PLAINTEXT);
+						resp.addHeader("Content-Range", "bytes 0-0/" + fileLen);
+						resp.addHeader("ETag", etag);
+						return response = "";
+					} else {
+						if (endAt < 0)
+							endAt = fileLen - 1;
+						long newLen = endAt - startFrom + 1;
+						if (newLen < 0)
+							newLen = 0;
 
-							final long dataLen = newLen;
-							FileInputStream fis = new FileInputStream(f) {
+						final long dataLen = newLen;
+						FileInputStream fis = null;
+						try {
+							fis = new FileInputStream(f) {
 								public int available() throws IOException {
 									return (int) dataLen;
 								}
 							};
 							fis.skip(startFrom);
-
-							StringBuilder builder = new StringBuilder();
-							int ch;
-							while ((ch = fis.read()) != -1) {
-								builder.append((char) ch);
-							}
-
-							res = builder.toString();
+						} catch (FileNotFoundException e) {
+							e.printStackTrace();
+						} catch (IOException e) {
+							e.printStackTrace();
 						}
-					} else {
-						if (etag.equals(req.getHeader("if-none-match")))
-							res = "";
-						else {
-							@SuppressWarnings("resource")
-							FileInputStream fis1 = new FileInputStream(f);
-							StringBuilder builder = new StringBuilder();
-							int ch;
-							while ((ch = fis1.read()) != -1) {
-								builder.append((char) ch);
-							}
 
-							res = builder.toString();
+						resp.setStatus(HttpStatus.SC_PARTIAL_CONTENT);
+						resp.setContentType(mime);
+						resp.addHeader("Content-Length", "" + dataLen);
+						resp.addHeader("Content-Range", "bytes " + startFrom
+								+ "-" + endAt + "/" + fileLen);
+						resp.addHeader("ETag", etag);
+						try {
+							return fisToString(fis);
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+					}
+				} else {
+					if (etag.equals(req.getHeader("if-none-match"))) {
+						resp.setStatus(HttpStatus.SC_NOT_MODIFIED);
+						resp.setContentType(mime);
+						return response = "";
+					} else {
+						resp.setStatus(HttpStatus.SC_OK);
+						resp.setContentType(mime);
+						resp.addHeader("Content-Length", "" + fileLen);
+						resp.addHeader("ETag", etag);
+
+						try {
+							return response = fisToString(new FileInputStream(f));
+						} catch (IOException e) {
+							e.printStackTrace();
 						}
 					}
 				}
-			} catch (IOException ioe) {
-				res = "FORBIDDEN: Reading file failed.";
 			}
 
-			return res;
+			resp.addHeader("Accept-Ranges", "bytes");
+
+			return response;
+		}
+
+		public String fisToString(FileInputStream fis) throws IOException {
+			StringBuilder builder = new StringBuilder();
+			int ch;
+			while ((ch = fis.read()) != -1) {
+				builder.append((char) ch);
+			}
+
+			return builder.toString();
 		}
 
 		/**
@@ -561,8 +643,8 @@ public class TomcatServer {
 			return newUri;
 		}
 
-		private String intercept(HttpServletRequest req, String uri,
-				String subject, String hostName, String hostAddress) {
+		private String intercept(HttpServletRequest req,
+				HttpServletResponse resp, String hostName, String hostAddress) {
 
 			boolean interceptorsActive = Boolean.parseBoolean(PropertiesLoader
 					.getInstance().getProperties()
@@ -577,6 +659,8 @@ public class TomcatServer {
 			InterceptorRequest interceptorRequest = new InterceptorRequestImpl();
 			HashMap<Parameter, String> interceptorParams = new HashMap<Parameter, String>();
 
+			String uri = req.getRequestURI();
+			String subject = req.getRemoteAddr();
 			String host = req.getHeader("host");
 			String resource = "http://" + host + uri;
 
@@ -607,12 +691,14 @@ public class TomcatServer {
 
 			log.info("Calling interceptions ...");
 
-			InterceptorResponse resp = interceptorBroker
+			InterceptorResponse interceptorResp = interceptorBroker
 					.handleRequest(interceptorRequest);
 
-			if (!resp.getStatus().equals(StatusCode.OK)) {
-				if (resp.forward()) {
-					return resp.getMessage();
+			if (!interceptorResp.getStatus().equals(StatusCode.OK)) {
+				if (interceptorResp.forward()) {
+					resp.setStatus(HttpStatus.SC_FORBIDDEN);
+					resp.setContentType(MIME_PLAINTEXT);
+					return interceptorResp.getMessage();
 				}
 			}
 
@@ -620,7 +706,7 @@ public class TomcatServer {
 		}
 
 		private StringBuffer getObixResponse(HttpServletRequest req,
-				String ipv6Address, String data, Obj obj)
+				String ipv6Address, Obj obj, String resourcePath)
 				throws URISyntaxException {
 
 			StringBuffer response = null;
@@ -644,32 +730,33 @@ public class TomcatServer {
 			return new CoAPHelper(obixServer).getResourcePath(uri, ipv6Address);
 		}
 
-		private String getData(HttpServletRequest req) {
+		private String getData(HttpServletRequest req) throws IOException {
 			String payload = null;
+
+			int contentLen = req.getContentLength();
+
+			if (contentLen >= 1) {
+
+				StringBuilder sb = new StringBuilder();
+				BufferedReader reader = req.getReader();
+
+				String line;
+				do {
+					line = reader.readLine();
+					if (line != null) {
+						sb.append(line);
+					}
+				} while (line != null);
+				reader.reset();
+
+				payload = sb.toString();
+
+			}
 
 			if (req.getHeader("content-type") != null) {
 				// check for EXI content
 
-				BufferedReader reader;
-				try {
-					reader = req.getReader();
-					String line;
-					StringBuilder sb = new StringBuilder();
-					try {
-						while ((line = reader.readLine()) != null) {
-							sb.append(line).append("\n");
-						}
-						payload = sb.toString();
-
-						reader.reset();
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-
-				if (req.getHeader("content-type").contains(MIME_EXI)) {
+				if (contains(req.getHeader("content-type"), MIME_EXI)) {
 
 					try {
 						return ExiUtil.getInstance().decodeEXI(unbox(payload));
@@ -677,7 +764,7 @@ public class TomcatServer {
 						e1.printStackTrace();
 					}
 
-				} else if (req.getHeader("content-type").contains(
+				} else if (contains(req.getHeader("content-type"),
 						MIME_DEFAULT_BINARY)) {
 
 					try {
@@ -687,7 +774,7 @@ public class TomcatServer {
 						e1.printStackTrace();
 					}
 
-				} else if (req.getHeader("content-type").contains(
+				} else if (contains(req.getHeader("content-type"),
 						MIME_X_OBIX_BINARY)) {
 
 					try {
@@ -698,7 +785,7 @@ public class TomcatServer {
 						e1.printStackTrace();
 					}
 
-				} else if (req.getHeader("content-type").contains(MIME_JSON)) {
+				} else if (contains(req.getHeader("content-type"), MIME_JSON)) {
 					String jsonData = payload;
 					try {
 						return JsonUtil.fromJSONtoXML(jsonData);

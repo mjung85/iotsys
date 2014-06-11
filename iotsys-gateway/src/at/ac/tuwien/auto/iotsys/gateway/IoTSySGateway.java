@@ -56,12 +56,10 @@ import at.ac.tuwien.auto.iotsys.commons.obix.objects.ContractInit;
 import at.ac.tuwien.auto.iotsys.gateway.interceptor.InterceptorBrokerImpl;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objectbroker.ObjectBrokerImpl;
 import at.ac.tuwien.auto.iotsys.gateway.obix.server.CoAPServer;
-import at.ac.tuwien.auto.iotsys.gateway.obix.server.NanoHTTPD;
 import at.ac.tuwien.auto.iotsys.gateway.obix.server.ObixObservingManager;
 import at.ac.tuwien.auto.iotsys.gateway.obix.server.ObixServer;
 import at.ac.tuwien.auto.iotsys.gateway.obix.server.ObixServerImpl;
 import at.ac.tuwien.auto.iotsys.gateway.obix.server.TomcatServer;
-import at.ac.tuwien.auto.iotsys.gateway.obix.server.TomcatServer1;
 import at.ac.tuwien.auto.iotsys.gateway.util.ExiUtil;
 import at.ac.tuwien.auto.iotsys.xacml.pdp.PDPInterceptorSettings;
 

@@ -31,7 +31,7 @@ eclipse{
 
 repositories {	
 	flatDir { dirs "lib/exi"}
-	flatDir { dirs "WEB-INF/lib"}
+	flatDir { dirs "lib/tomcat"}
 }
 
 configurations {
