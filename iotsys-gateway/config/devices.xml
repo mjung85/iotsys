@@ -520,7 +520,7 @@
    <weather-forecast>
     <connector>
       <name>weather-forecast</name>
-      <enabled>true</enabled>
+      <enabled>false</enabled>
       <device>
         <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.weatherforecast.objects.WeatherObjectImplYR_NO
         </type>
