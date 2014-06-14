@@ -17,7 +17,7 @@
     along with this program; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
-package at.ac.tuwien.auto.iotsys.commons;
+package at.ac.tuwien.auto.iotsys.commons.persistent.models;
 
 import org.ektorp.support.CouchDbDocument;
 
@@ -29,6 +29,10 @@ public class DeviceLoaders extends CouchDbDocument {
 
 	private String[] deviceLoaders;
 
+	public DeviceLoaders(){
+		this.deviceLoaders = new String[0];
+	}
+	
 	public String[] getDeviceLoaders() {
 		return deviceLoaders;
 	}

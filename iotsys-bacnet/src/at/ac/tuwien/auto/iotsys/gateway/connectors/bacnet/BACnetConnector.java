@@ -32,7 +32,7 @@ import java.util.logging.Logger;
 import obix.Obj;
 import obix.Ref;
 import obix.Uri;
-import at.ac.tuwien.auto.iotsys.commons.Connector;
+import at.ac.tuwien.auto.iotsys.commons.persistent.models.Connector;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.serotonin.bacnet4j.LocalDevice;

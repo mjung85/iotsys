@@ -2,6 +2,7 @@ package at.ac.tuwien.auto.iotsys.commons;
 
 import java.util.HashMap;
 
+import at.ac.tuwien.auto.iotsys.commons.persistent.models.Connector;
 import obix.Obj;
 import obix.Uri;
 

@@ -35,7 +35,7 @@ package at.ac.tuwien.auto.iotsys.gateway.connectors.virtual;
 
 import java.util.logging.Logger;
 
-import at.ac.tuwien.auto.iotsys.commons.Connector;
+import at.ac.tuwien.auto.iotsys.commons.persistent.models.Connector;
 
 public class VirtualConnector extends Connector {
 

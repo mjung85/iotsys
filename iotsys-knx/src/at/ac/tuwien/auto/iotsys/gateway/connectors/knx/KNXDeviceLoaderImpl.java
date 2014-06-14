@@ -24,6 +24,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.logging.Level;
@@ -34,16 +35,20 @@ import obix.Uri;
 
 import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.commons.configuration.XMLConfiguration;
+import org.apache.commons.lang.ArrayUtils;
 
 import at.ac.tuwien.auto.calimero.GroupAddress;
 import at.ac.tuwien.auto.calimero.exception.KNXFormatException;
-import at.ac.tuwien.auto.iotsys.commons.Connector;
-import at.ac.tuwien.auto.iotsys.commons.Device;
 import at.ac.tuwien.auto.iotsys.commons.DeviceLoader;
 import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
+import at.ac.tuwien.auto.iotsys.commons.persistent.ConfigsDb;
 import at.ac.tuwien.auto.iotsys.commons.persistent.DeviceConfigs;
+import at.ac.tuwien.auto.iotsys.commons.persistent.models.Connector;
+import at.ac.tuwien.auto.iotsys.commons.persistent.models.Device;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class KNXDeviceLoaderImpl implements DeviceLoader {
 	private static Logger log = Logger.getLogger(KNXDeviceLoaderImpl.class
@@ -58,17 +63,22 @@ public class KNXDeviceLoaderImpl implements DeviceLoader {
 		
 		ArrayList<Connector> connectors = new ArrayList<Connector>();
 
-		Object knxConnectors = devicesConfig.getProperty("knx.connector.name");
-		
+		List<JsonNode> connectorsFromDb = DeviceConfigs.getInstance().getConnectors("knx");
 		int connectorsSize = 0;
 
-		if (knxConnectors != null) {
-			connectorsSize = 1;
-		}
+		if (connectorsFromDb.size() <= 0) {
+			Object knxConnectors = devicesConfig
+					.getProperty("knx.connector.name");
 
-		if (knxConnectors instanceof Collection<?>) {
-			connectorsSize = ((Collection<?>) knxConnectors).size();
-		}
+			if (knxConnectors != null) {
+				connectorsSize = 1;
+			}
+
+			if (knxConnectors instanceof Collection<?>) {
+				connectorsSize = ((Collection<?>) knxConnectors).size();
+			}
+		} else 
+			connectorsSize = connectorsFromDb.size();
 		
 		for (int connector = 0; connector < connectorsSize; connector++) {
 
@@ -76,11 +86,21 @@ public class KNXDeviceLoaderImpl implements DeviceLoader {
 					.configurationAt("knx.connector(" + connector + ")");
 			
 			Object knxConfiguredDevices = subConfig.getProperty("device.type");// just to get the number of devices
+			String connectorId = "";
 			String connectorName = subConfig.getString("name");
 			String routerIP = subConfig.getString("router.ip");
 			int routerPort = subConfig.getInteger("router.port", 3671);
 			String localIP = subConfig.getString("localIP");
 			Boolean enabled = subConfig.getBoolean("enabled", false);
+
+			try {
+				connectorId = connectorsFromDb.get(connector).get("_id").asText();
+				connectorName = connectorsFromDb.get(connector).get("name").asText();
+				enabled =  connectorsFromDb.get(connector).get("enabled").asBoolean();
+				routerIP =  connectorsFromDb.get(connector).get("routerHostname").asText();
+				routerPort = connectorsFromDb.get(connector).get("routerPort").asInt();
+				localIP = connectorsFromDb.get(connector).get("localIP").asText();
+			} catch (Exception e){}
 			
 			if (enabled) {
 				try {
@@ -93,26 +113,31 @@ public class KNXDeviceLoaderImpl implements DeviceLoader {
 					connectors.add(knxConnector);
 					
 					int numberOfDevices = 0;
-					if (knxConfiguredDevices != null) {
-						numberOfDevices = 1; // there is at least one device.
-					}
-					if (knxConfiguredDevices instanceof Collection<?>) {
-						Collection<?> knxDevices = (Collection<?>) knxConfiguredDevices;
-						numberOfDevices = knxDevices.size();
-					}
+					List<Device> devicesFromDb = DeviceConfigs.getInstance().getDevices(connectorId);
+					
+					if (devicesFromDb.size() <= 0){
+						if (knxConfiguredDevices != null) {
+							numberOfDevices = 1; // there is at least one
+													// device.
+						}
+						if (knxConfiguredDevices instanceof Collection<?>) {
+							Collection<?> knxDevices = (Collection<?>) knxConfiguredDevices;
+							numberOfDevices = knxDevices.size();
+						}
+					} else
+						numberOfDevices = devicesFromDb.size();
 					
 					log.info(numberOfDevices
 							+ " KNX devices found in configuration for connector "
 							+ connectorName);
-					List<Device> ds = new ArrayList<Device>();
 					for (int i = 0; i < numberOfDevices; i++) {
 						
 						String type = subConfig.getString("device(" + i
 								+ ").type");
 						List<Object> address = subConfig.getList("device("
 								+ i + ").address");
-						String addressString = subConfig.getString("device("
-								+ i + ").address");
+						String addressString = address.toString();
+						
 						String ipv6 = subConfig.getString("device(" + i
 								+ ").ipv6");
 						String href = subConfig.getString("device(" + i
@@ -133,14 +158,30 @@ public class KNXDeviceLoaderImpl implements DeviceLoader {
 								+ i + ").historyCount", 0);
 						
 						Boolean refreshEnabled = subConfig.getBoolean("device(" + i + ").refreshEnabled", false);
+
+						Device deviceFromDb;
+						try {
+							deviceFromDb = devicesFromDb.get(i);
+							type = deviceFromDb.getType();
+							addressString = deviceFromDb.getAddress();
+							String subAddr[] = addressString.substring(1, addressString.length() - 1).split(", ");
+							address = Arrays.asList((Object[])subAddr);
+							ipv6 = deviceFromDb.getIpv6();
+							href = deviceFromDb.getHref();
+							name = deviceFromDb.getName();
+							displayName = deviceFromDb.getDisplayName();
+							historyEnabled = deviceFromDb.isHistoryEnabled();
+							groupCommEnabled = deviceFromDb.isGroupcommEnabled();
+							refreshEnabled = deviceFromDb.isRefreshEnabled();
+							historyCount = deviceFromDb.getHistoryCount();
+						} 
+						catch (Exception e) {
+							e.printStackTrace();
+						}
 						
 						// Transition step: comment when done
-						JsonNode thisConnector = DeviceConfigs.getInstance()
-								.getConnectors("knx")
-								.get(connector);
 						Device d = new Device(type, ipv6, addressString, href, name, displayName, historyCount, historyEnabled, groupCommEnabled, refreshEnabled);
-						d.setConnectorId(thisConnector.get("_id").asText());
-						ds.add(d);
+						DeviceConfigs.getInstance().prepareDevice(connectorName, d);
 						
 						if (type != null && address != null) {
 							int addressCount = address.size();
@@ -248,7 +289,6 @@ public class KNXDeviceLoaderImpl implements DeviceLoader {
 							}
 						}
 					}
-					DeviceConfigs.getInstance().addDevices(ds);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}

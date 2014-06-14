@@ -26,9 +26,9 @@ import junit.framework.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import at.ac.tuwien.auto.iotsys.commons.Device;
 import at.ac.tuwien.auto.iotsys.commons.persistent.ConfigsDb;
 import at.ac.tuwien.auto.iotsys.commons.persistent.DeviceConfigs;
+import at.ac.tuwien.auto.iotsys.commons.persistent.models.Device;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
@@ -55,7 +55,7 @@ public class ConfigsDbTest {
 	
 	@Test
 	public void testGetConnector(){
-		JsonNode j = cd.getConnector("BACnet A-Lab");
+		JsonNode j = cd.getConnectorByName("BACnet A-Lab");
 		Assert.assertNotNull(j);
 	}
 	

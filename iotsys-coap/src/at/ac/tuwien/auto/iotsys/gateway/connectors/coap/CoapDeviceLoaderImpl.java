@@ -41,6 +41,10 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+
+
+
+
 //import obix.Bool;
 //import obix.Int;
 import obix.Obj;
@@ -50,11 +54,11 @@ import obix.Uri;
 import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.commons.configuration.XMLConfiguration;
 
-import at.ac.tuwien.auto.iotsys.commons.Connector;
-import at.ac.tuwien.auto.iotsys.commons.Device;
 import at.ac.tuwien.auto.iotsys.commons.DeviceLoader;
 import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
 import at.ac.tuwien.auto.iotsys.commons.persistent.DeviceConfigs;
+import at.ac.tuwien.auto.iotsys.commons.persistent.models.Connector;
+import at.ac.tuwien.auto.iotsys.commons.persistent.models.Device;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
@@ -71,32 +75,44 @@ public class CoapDeviceLoaderImpl implements DeviceLoader {
 
 		ArrayList<Connector> connectors = new ArrayList<Connector>();
 
-		Object coapConnectors = devicesConfig
-				.getProperty("coap.connector.name");
+		List<JsonNode> connectorsFromDb = DeviceConfigs.getInstance().getConnectors("coap");
 		int connectorsSize = 0;
+		
+		if (connectorsFromDb.size() <= 0) {
+			Object coapConnectors = devicesConfig
+					.getProperty("coap.connector.name");
 
-		if (coapConnectors != null) {
-			if (coapConnectors instanceof String) {
-				connectorsSize = 1;
+			if (coapConnectors != null) {
+				if (coapConnectors instanceof String) {
+					connectorsSize = 1;
+				} else {
+					connectorsSize = ((Collection<?>) coapConnectors).size();
+				}
 			} else {
-				connectorsSize = ((Collection<?>) coapConnectors).size();
+				connectorsSize = 0;
 			}
-		} else {
-			connectorsSize = 0;
-		}
-
-		if (coapConnectors instanceof Collection<?>) {
-			coapConnectors = ((Collection<?>) coapConnectors).size();
-		}
-
+			if (coapConnectors instanceof Collection<?>) {
+				coapConnectors = ((Collection<?>) coapConnectors).size();
+			}
+		} else
+			connectorsSize = connectorsFromDb.size();
+		
 		for (int connector = 0; connector < connectorsSize; connector++) {
 			HierarchicalConfiguration subConfig = devicesConfig
 					.configurationAt("coap.connector(" + connector + ")");
 
 			Object coapConfiguredDevices = subConfig.getProperty("device.type");
+			String connectorId = "";
 			String connectorName = subConfig.getString("name");
 			Boolean enabled = subConfig.getBoolean("enabled", false);
 
+			try {
+				connectorId = connectorsFromDb.get(connector).get("_id").asText();
+				connectorName = connectorsFromDb.get(connector).get("name").asText();
+				enabled =  connectorsFromDb.get(connector).get("enabled").asBoolean();
+			} catch (Exception e){}
+			
+			
 			if (enabled) {
 				try {
 					CoapConnector coapConnector = new CoapConnector();
@@ -108,26 +124,30 @@ public class CoapDeviceLoaderImpl implements DeviceLoader {
 					connectors.add(coapConnector);
 
 					int numberOfDevices = 0;
-					if (coapConfiguredDevices != null) {
-						numberOfDevices = 1; // there is at least one device.
-					}
-					if (coapConfiguredDevices instanceof Collection<?>) {
-						Collection<?> coapDevices = (Collection<?>) coapConfiguredDevices;
-						numberOfDevices = coapDevices.size();
-					}
+					List<Device> devicesFromDb = DeviceConfigs.getInstance().getDevices(connectorId);
+
+					if (devicesFromDb.size() <= 0) {
+						if (coapConfiguredDevices != null) {
+							numberOfDevices = 1; // there is at least one
+													// device.
+						}
+						if (coapConfiguredDevices instanceof Collection<?>) {
+							Collection<?> coapDevices = (Collection<?>) coapConfiguredDevices;
+							numberOfDevices = coapDevices.size();
+						}
+					} else
+						numberOfDevices = devicesFromDb.size();
 
 					log.info(numberOfDevices
 							+ " CoAP devices found in configuration for connector "
 							+ connectorName);
 
-					List<Device> ds = new ArrayList<Device>();
 					for (int i = 0; i < numberOfDevices; i++) {
 						String type = subConfig.getString("device(" + i
 								+ ").type");
 						List<Object> address = subConfig.getList("device("
 								+ i + ").address");
-						String addressString = subConfig.getString("device("
-								+ i + ").address");
+						String addressString = address.toString();
 						String href = subConfig.getString("device(" + i
 								+ ").href");
 
@@ -157,14 +177,25 @@ public class CoapDeviceLoaderImpl implements DeviceLoader {
 						Boolean refreshEnabled = subConfig.getBoolean(
 								"device(" + i + ").refreshEnabled", false);
 
-						// Transition step: comment when done
-						JsonNode thisConnector = DeviceConfigs.getInstance()
-								.getConnectors("coap")
-								.get(connector);
-						Device d = new Device(type, null, addressString, href, name, displayName, historyCount, historyEnabled, groupCommEnabled, refreshEnabled);
-						d.setConnectorId(thisConnector.get("_id").asText());
-						ds.add(d);
+						Device deviceFromDb;
+						try {
+							deviceFromDb = devicesFromDb.get(i);
+							type = deviceFromDb.getType();
+							addressString = deviceFromDb.getAddress();
+							href = deviceFromDb.getHref();
+							name = deviceFromDb.getName();
+							displayName = deviceFromDb.getDisplayName();
+							historyEnabled = deviceFromDb.isHistoryEnabled();
+							groupCommEnabled = deviceFromDb.isGroupcommEnabled();
+							refreshEnabled = deviceFromDb.isRefreshEnabled();
+							historyCount = deviceFromDb.getHistoryCount();
+						} 
+						catch (Exception e) {
+						}
 						
+						// Transition step: comment when done
+						Device d = new Device(type, null, addressString, href, name, displayName, historyCount, historyEnabled, groupCommEnabled, refreshEnabled);
+						DeviceConfigs.getInstance().prepareDevice(connectorName, d);						
 						if (type != null && address != null) {
 							try {
 								Constructor<?>[] declaredConstructors = Class
@@ -251,7 +282,6 @@ public class CoapDeviceLoaderImpl implements DeviceLoader {
 							}
 						}
 					}
-					DeviceConfigs.getInstance().addDevices(ds);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}

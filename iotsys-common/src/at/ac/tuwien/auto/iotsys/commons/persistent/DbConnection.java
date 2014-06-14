@@ -44,7 +44,6 @@ public class DbConnection {
 		try {
 			INSTANCE = new DbConnection();
 		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

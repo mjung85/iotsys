@@ -40,7 +40,6 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.logging.Logger;
 
-import at.ac.tuwien.auto.iotsys.commons.Connector;
 import at.ac.tuwien.auto.iotsys.commons.DeviceLoader;
 import at.ac.tuwien.auto.iotsys.commons.MdnsResolver;
 import at.ac.tuwien.auto.iotsys.commons.Named;
@@ -52,6 +51,7 @@ import at.ac.tuwien.auto.iotsys.commons.interceptor.Interceptor;
 import at.ac.tuwien.auto.iotsys.commons.interceptor.InterceptorBroker;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.ContractInit;
 import at.ac.tuwien.auto.iotsys.commons.persistent.DeviceConfigs;
+import at.ac.tuwien.auto.iotsys.commons.persistent.models.Connector;
 import at.ac.tuwien.auto.iotsys.gateway.interceptor.InterceptorBrokerImpl;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objectbroker.ObjectBrokerImpl;
 import at.ac.tuwien.auto.iotsys.gateway.obix.server.CoAPServer;
@@ -132,8 +132,8 @@ public class IoTSySGateway
 		}
 		connectors = deviceLoader.initDevices(objectBroker);
 
-		// Transition step: moving configs from devices.xml to DB, remove when done
-		DeviceConfigs.getInstance().addConnectors(connectors);
+		// Transition step: migrate configs from devices.xml to DB, remove when done
+		DeviceConfigs.getInstance().migrate(connectors);
 		
 		if (objectBroker.getMDnsResolver() != null)
 		{

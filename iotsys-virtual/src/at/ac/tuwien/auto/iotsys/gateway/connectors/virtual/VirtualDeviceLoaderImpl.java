@@ -46,13 +46,13 @@ import obix.Uri;
 import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.commons.configuration.XMLConfiguration;
 
-import at.ac.tuwien.auto.iotsys.commons.Connector;
-import at.ac.tuwien.auto.iotsys.commons.Device;
 import at.ac.tuwien.auto.iotsys.commons.DeviceLoader;
 import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.weatherforecast.WeatherObject;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.weatherforecast.impl.WeatherForecastLocationImpl;
 import at.ac.tuwien.auto.iotsys.commons.persistent.DeviceConfigs;
+import at.ac.tuwien.auto.iotsys.commons.persistent.models.Connector;
+import at.ac.tuwien.auto.iotsys.commons.persistent.models.Device;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
@@ -126,24 +126,27 @@ public class VirtualDeviceLoaderImpl implements DeviceLoader {
 		// NOTE: this loader allow to directly instantiate the base oBIX objects
 		// for testing purposes
 		
+		List<JsonNode> connectorsFromDb = DeviceConfigs.getInstance().getConnectors("virtual");
 		int connectorsSize = 0;
 		// virtual
-		Object virtualConnectors = devicesConfig
-				.getProperty("virtual.connector.name");
-		if (virtualConnectors != null) {
-			if(virtualConnectors instanceof String){
-				connectorsSize = 1;
+		if (connectorsFromDb.size() <= 0) {
+			Object virtualConnectors = devicesConfig
+					.getProperty("virtual.connector.name");
+			if (virtualConnectors != null) {
+				if (virtualConnectors instanceof String) {
+					connectorsSize = 1;
+				} else {
+					connectorsSize = ((Collection<?>) virtualConnectors).size();
+				}
+			} else {
+				connectorsSize = 0;
 			}
-			else{
-				connectorsSize = ((Collection<?>) virtualConnectors).size();
-			}
-		} else {
-			connectorsSize = 0;
-		}
 
-		if (virtualConnectors instanceof Collection<?>) {
-			virtualConnectors = ((Collection<?>) virtualConnectors).size();
-		}
+			if (virtualConnectors instanceof Collection<?>) {
+				virtualConnectors = ((Collection<?>) virtualConnectors).size();
+			}
+		} else
+			connectorsSize = connectorsFromDb.size();
 
 		for (int connector = 0; connector < connectorsSize; connector++) {
 			HierarchicalConfiguration subConfig = devicesConfig
@@ -151,8 +154,15 @@ public class VirtualDeviceLoaderImpl implements DeviceLoader {
 
 			Object virtualConfiguredDevices = subConfig
 					.getProperty("device.type");
+			String connectorId = "";
 			String connectorName = subConfig.getString("name");
 			Boolean enabled = subConfig.getBoolean("enabled", false);
+			
+			try {
+				connectorId = connectorsFromDb.get(connector).get("_id").asText();
+				connectorName = connectorsFromDb.get(connector).get("name").asText();
+				enabled =  connectorsFromDb.get(connector).get("enabled").asBoolean();
+			} catch (Exception e){}
 			
 			
 			if (enabled) {
@@ -165,25 +175,29 @@ public class VirtualDeviceLoaderImpl implements DeviceLoader {
 					connectors.add(vConn);
 					
 					int numberOfDevices = 0;
-					if (virtualConfiguredDevices != null) {
-						numberOfDevices = 1; // there is at least one device.
-					}
-					if (virtualConfiguredDevices instanceof Collection<?>) {
-						Collection<?> virtualDevices = (Collection<?>) virtualConfiguredDevices;
-						numberOfDevices = virtualDevices.size();
-					}
+					List<Device> devicesFromDb = DeviceConfigs.getInstance().getDevices(connectorId);
+
+					if (devicesFromDb.size() <= 0) {
+						if (virtualConfiguredDevices != null) {
+							numberOfDevices = 1; // there is at least one
+													// device.
+						}
+						if (virtualConfiguredDevices instanceof Collection<?>) {
+							Collection<?> virtualDevices = (Collection<?>) virtualConfiguredDevices;
+							numberOfDevices = virtualDevices.size();
+						}
+					} else
+						numberOfDevices = devicesFromDb.size();
 					
 					log.info(numberOfDevices
 							+ " virtual devices found in configuration for connector "
 							+ connectorName);
-					List<Device> ds = new ArrayList<Device>();
 					for (int i = 0; i < numberOfDevices; i++) {
 						String type = subConfig.getString("device(" + i
 								+ ").type");
 						List<Object> address = subConfig.getList("device("
 								+ i + ").address");
-						String addressString = subConfig.getString("device("
-								+ i + ").address");
+						String addressString = address.toString();
 						String ipv6 = subConfig.getString("device(" + i
 								+ ").ipv6");
 						String href = subConfig.getString("device(" + i
@@ -205,14 +219,26 @@ public class VirtualDeviceLoaderImpl implements DeviceLoader {
 						Integer historyCount = subConfig.getInt("device("
 								+ i + ").historyCount", 0);
 						
-						// Transition step: comment when done
-						JsonNode thisConnector = DeviceConfigs.getInstance()
-								.getConnectors("virtual")
-								.get(connector);
-						Device d = new Device(type, ipv6, addressString, href, name, displayName, historyCount, historyEnabled, groupCommEnabled, refreshEnabled);
-						d.setConnectorId(thisConnector.get("_id").asText());
-						ds.add(d);
+						Device deviceFromDb;
+						try {
+							deviceFromDb = devicesFromDb.get(i);
+							type = deviceFromDb.getType();
+							addressString = deviceFromDb.getAddress();
+							ipv6 = deviceFromDb.getIpv6();
+							href = deviceFromDb.getHref();
+							name = deviceFromDb.getName();
+							displayName = deviceFromDb.getDisplayName();
+							historyEnabled = deviceFromDb.isHistoryEnabled();
+							groupCommEnabled = deviceFromDb.isGroupcommEnabled();
+							refreshEnabled = deviceFromDb.isRefreshEnabled();
+							historyCount = deviceFromDb.getHistoryCount();
+						} 
+						catch (Exception e) {
+						}
 						
+						// Transition step: comment when done
+						Device d = new Device(type, ipv6, addressString, href, name, displayName, historyCount, historyEnabled, groupCommEnabled, refreshEnabled);
+						DeviceConfigs.getInstance().prepareDevice(connectorName, d);						
 						// for weather forcast services only
 						String description = subConfig.getString("device(" + i + ").location.description", "");
 						Double latitude = subConfig.getDouble("device(" + i + ").location.latitude", 0);
@@ -301,7 +327,6 @@ public class VirtualDeviceLoaderImpl implements DeviceLoader {
 							}
 						}
 					}
-					DeviceConfigs.getInstance().addDevices(ds);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}

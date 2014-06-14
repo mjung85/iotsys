@@ -46,13 +46,13 @@ import obix.Uri;
 import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.commons.configuration.XMLConfiguration;
 
-import at.ac.tuwien.auto.iotsys.commons.Connector;
-import at.ac.tuwien.auto.iotsys.commons.Device;
+import com.fasterxml.jackson.databind.JsonNode;
+
 import at.ac.tuwien.auto.iotsys.commons.DeviceLoader;
 import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
 import at.ac.tuwien.auto.iotsys.commons.persistent.DeviceConfigs;
-
-import com.fasterxml.jackson.databind.JsonNode;
+import at.ac.tuwien.auto.iotsys.commons.persistent.models.Connector;
+import at.ac.tuwien.auto.iotsys.commons.persistent.models.Device;
 
 public class WMBusDeviceLoaderImpl implements DeviceLoader {
 	
@@ -69,19 +69,24 @@ public class WMBusDeviceLoaderImpl implements DeviceLoader {
 		
 		ArrayList<Connector> connectors = new ArrayList<Connector>();
 
+		List<JsonNode> connectorsFromDb = DeviceConfigs.getInstance()
+				.getConnectors("wmbus");
 		int connectorsSize = 0;
 		// WMBus
-		Object wmbusConnectors = devicesConfig
-				.getProperty("wmbus.connector.name");
-		if (wmbusConnectors != null) {
-			connectorsSize = 1;
-		} else {
-			connectorsSize = 0;
-		}
+		if (connectorsFromDb.size() <= 0) {
+			Object wmbusConnectors = devicesConfig
+					.getProperty("wmbus.connector.name");
+			if (wmbusConnectors != null) {
+				connectorsSize = 1;
+			} else {
+				connectorsSize = 0;
+			}
 
-		if (wmbusConnectors instanceof Collection<?>) {
-			connectorsSize = ((Collection<?>) wmbusConnectors).size();
-		}
+			if (wmbusConnectors instanceof Collection<?>) {
+				connectorsSize = ((Collection<?>) wmbusConnectors).size();
+			}
+		} else
+			connectorsSize = connectorsFromDb.size();
 
 		for (int connector = 0; connector < connectorsSize; connector++) {
 			HierarchicalConfiguration subConfig = devicesConfig
@@ -89,10 +94,17 @@ public class WMBusDeviceLoaderImpl implements DeviceLoader {
 
 			Object wmbusConfiguredDevices = subConfig
 					.getProperty("device.type");
+			String connectorId = "";
 			String connectorName = subConfig.getString("name");
 			String serialPort = subConfig.getString("serialPort");
 			Boolean enabled = subConfig.getBoolean("enabled", false);
 
+			try {
+				connectorId = connectorsFromDb.get(connector).get("_id").asText();
+				connectorName = connectorsFromDb.get(connector).get("name").asText();
+				enabled =  connectorsFromDb.get(connector).get("enabled").asBoolean();
+			} catch (Exception e){}
+			
 			if (enabled) {
 				try {
 					WMBusConnector wmbusConnector = new WMBusConnector(
@@ -105,26 +117,29 @@ public class WMBusDeviceLoaderImpl implements DeviceLoader {
 					connectors.add(wmbusConnector);
 
 					int wmbusDevicesCount = 0;
-					if (wmbusConfiguredDevices instanceof Collection<?>) {
-						Collection<?> wmbusDevice = (Collection<?>) wmbusConfiguredDevices;
-						wmbusDevicesCount = wmbusDevice.size();
+					List<Device> devicesFromDb = DeviceConfigs.getInstance().getDevices(connectorId);
 
-					} else if (wmbusConfiguredDevices != null) {
-						wmbusDevicesCount = 1;
-					}
+					if (devicesFromDb.size() <= 0) {
+						if (wmbusConfiguredDevices instanceof Collection<?>) {
+							Collection<?> wmbusDevice = (Collection<?>) wmbusConfiguredDevices;
+							wmbusDevicesCount = wmbusDevice.size();
+
+						} else if (wmbusConfiguredDevices != null) {
+							wmbusDevicesCount = 1;
+						}
+					} else
+						wmbusDevicesCount = devicesFromDb.size();
 
 					log.info(wmbusDevicesCount
 							+ " WMBus devices found in configuration for connector "
 							+ connectorName);
 
-					List<Device> ds = new ArrayList<Device>();
 					for (int i = 0; i < wmbusDevicesCount; i++) {
 						String type = subConfig.getString("device(" + i
 								+ ").type");
 						List<Object> address = subConfig.getList("device(" + i
 								+ ").address");
-						String addressString = subConfig.getString("device("
-								+ i + ").address");
+						String addressString = address.toString();
 						String ipv6 = subConfig.getString("device(" + i
 								+ ").ipv6");
 						String href = subConfig.getString("device(" + i
@@ -133,22 +148,33 @@ public class WMBusDeviceLoaderImpl implements DeviceLoader {
 						String name = subConfig.getString("device(" + i
 								+ ").name");
 
-						Boolean historyEnabled = subConfig.getBoolean("device("
+						boolean historyEnabled = subConfig.getBoolean("device("
 								+ i + ").historyEnabled", false);
 						
-						Boolean groupCommEnabled = subConfig.getBoolean("device("
+						boolean groupCommEnabled = subConfig.getBoolean("device("
 								+ i + ").groupCommEnabled", false);
 
 						Integer historyCount = subConfig.getInt("device(" + i
 								+ ").historyCount", 0);
 
+						Device deviceFromDb;
+						try {
+							deviceFromDb = devicesFromDb.get(i);
+							type = deviceFromDb.getType();
+							addressString = deviceFromDb.getAddress();
+							ipv6 = deviceFromDb.getIpv6();
+							href = deviceFromDb.getHref();
+							name = deviceFromDb.getName();
+							historyEnabled = deviceFromDb.isHistoryEnabled();
+							groupCommEnabled = deviceFromDb.isGroupcommEnabled();
+							historyCount = deviceFromDb.getHistoryCount();
+						} 
+						catch (Exception e) {
+						}
+						
 						// Transition step: comment when done
-						JsonNode thisConnector = DeviceConfigs.getInstance()
-								.getConnectors("wmbus")
-								.get(connector);
-						Device d = new Device(type, ipv6, addressString, href, name, null, historyCount, historyEnabled, groupCommEnabled, null);
-						d.setConnectorId(thisConnector.get("_id").asText());
-						ds.add(d);
+						Device d = new Device(type, ipv6, addressString, href, name, historyCount, historyEnabled, groupCommEnabled);
+						DeviceConfigs.getInstance().prepareDevice(connectorName, d);
 						
 						if (type != null && address != null) {
 							String serialNr = (String) address.get(0);
@@ -203,8 +229,7 @@ public class WMBusDeviceLoaderImpl implements DeviceLoader {
 										}
 										smartMeter.initialize();
 									
-										if (historyEnabled != null
-												&& historyEnabled) {
+										if (historyEnabled) {
 											if (historyCount != null
 													&& historyCount != 0) {
 												objectBroker
@@ -217,7 +242,7 @@ public class WMBusDeviceLoaderImpl implements DeviceLoader {
 											}
 										}
 										
-										if(groupCommEnabled != null && groupCommEnabled){
+										if(groupCommEnabled){
 											objectBroker.enableGroupComm(smartMeter);
 										}
 									}
@@ -229,7 +254,6 @@ public class WMBusDeviceLoaderImpl implements DeviceLoader {
 							}
 						}
 					}
-					DeviceConfigs.getInstance().addDevices(ds);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
