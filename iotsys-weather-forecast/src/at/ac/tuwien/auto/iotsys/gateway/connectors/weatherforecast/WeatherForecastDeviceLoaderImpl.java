@@ -46,12 +46,12 @@ import obix.Uri;
 import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.commons.configuration.XMLConfiguration;
 
-import at.ac.tuwien.auto.iotsys.commons.Connector;
-import at.ac.tuwien.auto.iotsys.commons.Device;
 import at.ac.tuwien.auto.iotsys.commons.DeviceLoader;
 import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.weatherforecast.impl.WeatherForecastLocationImpl;
 import at.ac.tuwien.auto.iotsys.commons.persistent.DeviceConfigs;
+import at.ac.tuwien.auto.iotsys.commons.persistent.models.Connector;
+import at.ac.tuwien.auto.iotsys.commons.persistent.models.Device;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.weatherforecast.objects.WeatherControlImpl;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.weatherforecast.objects.WeatherObjectImplYR_NO;
 
@@ -72,26 +72,39 @@ public class WeatherForecastDeviceLoaderImpl implements DeviceLoader {
 		// Hard-coded connections and object creation
 		ArrayList<Connector> connectors = new ArrayList<Connector>();
 
+		List<JsonNode> connectorsFromDb = DeviceConfigs.getInstance().getConnectors("weather-forecast");
 		int connectorsSize = 0;
-		Object configuredConnectors = devicesConfig.getProperty("weather-forecast.connector.name");
-		if (configuredConnectors != null) {
-			connectorsSize = 1;
-		} else {
-			connectorsSize = 0;
-		}
-
-		if (configuredConnectors instanceof Collection<?>) {
-			connectorsSize = ((Collection<?>) configuredConnectors).size();
-		}
 		
+		if (connectorsFromDb.size() <= 0) {
+			Object configuredConnectors = devicesConfig
+					.getProperty("weather-forecast.connector.name");
+			if (configuredConnectors != null) {
+				connectorsSize = 1;
+			} else {
+				connectorsSize = 0;
+			}
+
+			if (configuredConnectors instanceof Collection<?>) {
+				connectorsSize = ((Collection<?>) configuredConnectors).size();
+			}
+		} else
+			connectorsSize = connectorsFromDb.size();
 		log.info("Found " + connectorsSize + " weather forecast connectors.");
 		for (int connector = 0; connector < connectorsSize; connector++) {
 			HierarchicalConfiguration subConfig = devicesConfig.configurationAt("weather-forecast.connector(" + connector + ")");
 
 			Object configuredDevices = subConfig.getProperty("device.type");
+			String connectorId = "";
 			String connectorName = subConfig.getString("name");
 			Boolean enabled = subConfig.getBoolean("enabled", false);
 
+			try {
+				connectorId = connectorsFromDb.get(connector).get("_id").asText();
+				connectorName = connectorsFromDb.get(connector).get("name").asText();
+				enabled =  connectorsFromDb.get(connector).get("enabled").asBoolean();
+			} catch (Exception e){}
+			
+			
 			if (enabled) {
 				try {
 					log.info("Creating weather forecast connector.");
@@ -103,19 +116,24 @@ public class WeatherForecastDeviceLoaderImpl implements DeviceLoader {
 					connectors.add(forecastConnector);
 
 					int numberOfDevices = 0;
-					if (configuredDevices != null) {
-						numberOfDevices = 1; // there is at least one device.
-						if (configuredDevices instanceof Collection<?>) {
-							Collection<?> devices = (Collection<?>) configuredDevices;
-							numberOfDevices = devices.size();
+					List<Device> devicesFromDb = DeviceConfigs.getInstance().getDevices(connectorId);
+
+					if (devicesFromDb.size() <= 0) {
+						if (configuredDevices != null) {
+							numberOfDevices = 1; // there is at least one
+													// device.
+							if (configuredDevices instanceof Collection<?>) {
+								Collection<?> devices = (Collection<?>) configuredDevices;
+								numberOfDevices = devices.size();
+							}
 						}
-					}
+					} else
+						numberOfDevices = devicesFromDb.size();
 
 					log.info(numberOfDevices
 							+ " weather forecast devices found in configuration for connector "
 							+ connectorName);
 
-					List<Device> ds = new ArrayList<Device>();
 					// add devices
 					for (int i = 0; i < numberOfDevices; i++) {
 						String type = subConfig.getString("device(" + i + ").type");
@@ -133,13 +151,23 @@ public class WeatherForecastDeviceLoaderImpl implements DeviceLoader {
 						Integer historyCount = subConfig.getInt("device("
 								+ i + ").historyCount", 0);
 						
+						Device deviceFromDb;
+						try {
+							deviceFromDb = devicesFromDb.get(i);
+							type = deviceFromDb.getType();
+							href = deviceFromDb.getHref();
+							name = deviceFromDb.getName();
+							historyEnabled = deviceFromDb.isHistoryEnabled();
+							groupCommEnabled = deviceFromDb.isGroupcommEnabled();
+							refreshEnabled = deviceFromDb.isRefreshEnabled();
+							historyCount = deviceFromDb.getHistoryCount();
+						} 
+						catch (Exception e) {
+						}
+						
 						// Transition step: comment when done
-						JsonNode thisConnector = DeviceConfigs.getInstance()
-								.getConnectors("weather-forecast")
-								.get(connector);
 						Device d = new Device(type, null, null, href, name, null, historyCount, historyEnabled, groupCommEnabled, refreshEnabled);
-						d.setConnectorId(thisConnector.get("_id").asText());
-						ds.add(d);
+						DeviceConfigs.getInstance().prepareDevice(connectorName, d);
 						
 						if (type != null && name != null) {
 							try {
@@ -208,7 +236,6 @@ public class WeatherForecastDeviceLoaderImpl implements DeviceLoader {
 							}
 						}
 					}
-					DeviceConfigs.getInstance().addDevices(ds);
 					// add weather control for manual overwriting of weather
 					WeatherControlImpl weatherControl = new WeatherControlImpl("weatherControl",forecastConnector);
 					weatherControl.setHref(new Uri(URLEncoder.encode(connectorName, "UTF-8") + "/weatherControl"));

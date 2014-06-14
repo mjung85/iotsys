@@ -17,7 +17,7 @@
     along with this program; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
-package at.ac.tuwien.auto.iotsys.commons;
+package at.ac.tuwien.auto.iotsys.commons.persistent.models;
 
 import org.ektorp.support.CouchDbDocument;
 
@@ -43,8 +43,8 @@ public class Device extends CouchDbDocument {
 	
 	public Device(String type2, String ipv62, String address2, String href2,
 			String name2, String displayName2, Integer historyCount2,
-			Boolean historyEnabled2, Boolean groupCommEnabled2,
-			Boolean refreshEnabled2) {
+			boolean historyEnabled2, boolean groupCommEnabled2,
+			boolean refreshEnabled2) {
 		this.type = type2;
 		this.ipv6 = ipv62;
 		this.address = address2;
@@ -56,6 +56,12 @@ public class Device extends CouchDbDocument {
 		this.groupcommEnabled = groupCommEnabled2;
 		this.refreshEnabled = refreshEnabled2;
 	}
+	public Device(String type2, String ipv62, String addressString,
+			String href2, String name2, Integer historyCount2,
+			boolean historyEnabled2, boolean groupCommEnabled2) {
+		this(type2, ipv62, addressString, href2, name2, "", historyCount2, historyEnabled2, groupCommEnabled2, false);
+	}
+
 	public String getConnectorId() {
 		return connectorId;
 	}

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.logging.Logger;
 
-import at.ac.tuwien.auto.iotsys.commons.Connector;
+import at.ac.tuwien.auto.iotsys.commons.persistent.models.Connector;
 
 import com.rapplogic.xbee.api.ApiId;
 import com.rapplogic.xbee.api.PacketListener;

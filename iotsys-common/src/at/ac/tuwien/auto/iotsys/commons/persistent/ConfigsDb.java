@@ -19,10 +19,13 @@
 */
 package at.ac.tuwien.auto.iotsys.commons.persistent;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import at.ac.tuwien.auto.iotsys.commons.Connector;
-import at.ac.tuwien.auto.iotsys.commons.Device;
+import org.ektorp.DocumentOperationResult;
+
+import at.ac.tuwien.auto.iotsys.commons.persistent.models.Connector;
+import at.ac.tuwien.auto.iotsys.commons.persistent.models.Device;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
@@ -34,23 +37,24 @@ public interface ConfigsDb {
 
 	public List<JsonNode> getAllConnectors();
 	public List<JsonNode> getConnectors(String technology);
-	public JsonNode getConnector(String connectorName);
+	public JsonNode getConnector(String connectorId);
+	public JsonNode getConnectorByName(String connectorName);
 	public int countConnectors();
 	public int countConnectorsByTechnology(String technology);
 	public void addConnector(Connector c);
-	public void addConnectors(List<Connector> cs);
+	public List<DocumentOperationResult> addBulkConnectors(List<Connector> cs);
 	public void updateConnector(Connector c);
 	public void deleteConnector(Connector c);
 	public void deleteConnector(String connectorName);
 	public void deleteAllConnectors(String technology);
 	
 	public List<Device> getAllDevices();
-	public List<Device> getDevices(String technology);
+	public List<Device> getDevices(String connectorId);
 	public Device getDevice(String id);
 	public int countDevices();
 	public int countDevicesByTechnology(String technology);
 	public void addDevice(Device d);
-	public void addDevices(List<Device> ds);
+	public void addBulkDevices(List<Device> ds);
 	public void updateDevice(Device d);
 	public void deleteDevice(Device d);
 	public void deleteDevice(String id);
@@ -59,7 +63,7 @@ public interface ConfigsDb {
 	public String getDeviceLoader(int no);
 	public String[] getAllDeviceLoader();
 	public void addDeviceLoader(String deviceLoader);
-	public void addDeviceLoaders(List<String> ds);
+	public void addBulkDeviceLoaders(List<String> ds);
 	public void deleteDeviceLoader(int no);
 	public void deleteDeviceLoader(String deviceLoader);
 	public void deleteAllDeviceLoader();
@@ -67,4 +71,7 @@ public interface ConfigsDb {
 	public void updateDeviceLoader(String oldDeviceLoader, String newDeviceLoader);
 	
 	public void clear();
+	public void prepareDevice(String connectorName, Device d);
+	public void prepareDeviceLoader(String deviceLoaderName);
+	public void migrate(ArrayList<Connector> connectors);
 }

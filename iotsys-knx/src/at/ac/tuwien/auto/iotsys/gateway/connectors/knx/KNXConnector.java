@@ -40,7 +40,7 @@ import at.ac.tuwien.auto.calimero.link.event.NetworkLinkListener;
 import at.ac.tuwien.auto.calimero.link.medium.TPSettings;
 import at.ac.tuwien.auto.calimero.process.ProcessCommunicator;
 import at.ac.tuwien.auto.calimero.process.ProcessCommunicatorImpl;
-import at.ac.tuwien.auto.iotsys.commons.Connector;
+import at.ac.tuwien.auto.iotsys.commons.persistent.models.Connector;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 

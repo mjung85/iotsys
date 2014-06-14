@@ -14,11 +14,11 @@ import obix.Uri;
 import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.commons.configuration.XMLConfiguration;
 
-import at.ac.tuwien.auto.iotsys.commons.Connector;
-import at.ac.tuwien.auto.iotsys.commons.Device;
 import at.ac.tuwien.auto.iotsys.commons.DeviceLoader;
 import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
 import at.ac.tuwien.auto.iotsys.commons.persistent.DeviceConfigs;
+import at.ac.tuwien.auto.iotsys.commons.persistent.models.Connector;
+import at.ac.tuwien.auto.iotsys.commons.persistent.models.Device;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
@@ -47,29 +47,40 @@ public class XBeeDeviceLoaderImpl implements DeviceLoader {
 
 		ArrayList<Connector> connectors = new ArrayList<Connector>();
 
+		List<JsonNode> connectorsFromDb = DeviceConfigs.getInstance().getConnectors("xbee");
 		int connectorsSize = 0;
-	
-		Object xbeeConnectors = devicesConfig
-				.getProperty("xbee.connector.name");
-		if (xbeeConnectors != null) {
-			connectorsSize = 1;
-		} else {
-			connectorsSize = 0;
-		}
 
-		if (xbeeConnectors instanceof Collection<?>) {
-			connectorsSize = ((Collection<?>) xbeeConnectors).size();
-		}
+		if (connectorsFromDb.size() <= 0) {
+			Object xbeeConnectors = devicesConfig
+					.getProperty("xbee.connector.name");
+			if (xbeeConnectors != null) {
+				connectorsSize = 1;
+			} else {
+				connectorsSize = 0;
+			}
+
+			if (xbeeConnectors instanceof Collection<?>) {
+				connectorsSize = ((Collection<?>) xbeeConnectors).size();
+			}
+		} else
+			connectorsSize = connectorsFromDb.size();
 		log.info("Found " + connectorsSize + " XBee connectors.");
 		for (int connector = 0; connector < connectorsSize; connector++) {
 			HierarchicalConfiguration subConfig = devicesConfig
 					.configurationAt("xbee.connector(" + connector + ")");
 
 			Object xbeeConfiguredDevices = subConfig.getProperty("device.type");
+			String connectorId = "";
 			String connectorName = subConfig.getString("name");
 			String serialPort = subConfig.getString("serialPort");
 			Boolean enabled = subConfig.getBoolean("enabled", false);
 
+			try {
+				connectorId = connectorsFromDb.get(connector).get("_id").asText();
+				connectorName = connectorsFromDb.get(connector).get("name").asText();
+				enabled =  connectorsFromDb.get(connector).get("enabled").asBoolean();
+			} catch (Exception e){}
+			
 			// PropertyConfigurator.configure("log4j.properties");
 			if (enabled) {
 				try {
@@ -89,29 +100,33 @@ public class XBeeDeviceLoaderImpl implements DeviceLoader {
 					log.info(xbeeConfiguredDevices.getClass().getName());
 					
 					int numberOfDevices = 0;
-					if (xbeeConfiguredDevices != null) {
-						numberOfDevices = 1; // there is at least one device.
-					} 
+					List<Device> devicesFromDb = DeviceConfigs.getInstance().getDevices(connectorId);
 
-					if (xbeeConfiguredDevices instanceof Collection<?>) {
-						Collection<?> xbeeDevices = (Collection<?>) xbeeConfiguredDevices;
-						numberOfDevices = xbeeDevices.size();
-						log.info("device size: " + numberOfDevices);
-					}
+					if (devicesFromDb.size() <= 0) {
+						if (xbeeConfiguredDevices != null) {
+							numberOfDevices = 1; // there is at least one
+													// device.
+						}
+
+						if (xbeeConfiguredDevices instanceof Collection<?>) {
+							Collection<?> xbeeDevices = (Collection<?>) xbeeConfiguredDevices;
+							numberOfDevices = xbeeDevices.size();
+							log.info("device size: " + numberOfDevices);
+						}
+					} else
+						numberOfDevices = devicesFromDb.size();
 
 					log.info(numberOfDevices
 							+ " XBee devices found in configuration for connector "
 							+ connectorName);
 
-					List<Device> ds = new ArrayList<Device>();
 					// add devices
 					for (int i = 0; i < numberOfDevices; i++) {
 						String type = subConfig.getString("device(" + i
 								+ ").type");
 						List<Object> address = subConfig.getList("device(" + i
 								+ ").address");
-						String addressString = subConfig.getString("device("
-								+ i + ").address");
+						String addressString = address.toString();
 						String ipv6 = subConfig.getString("device(" + i
 								+ ").ipv6");
 						String href = subConfig.getString("device(" + i
@@ -132,13 +147,25 @@ public class XBeeDeviceLoaderImpl implements DeviceLoader {
 						Boolean refreshEnabled = subConfig.getBoolean("device("
 								+ i + ").refreshEnabled", false);
 
+						Device deviceFromDb;
+						try {
+							deviceFromDb = devicesFromDb.get(i);
+							type = deviceFromDb.getType();
+							addressString = deviceFromDb.getAddress();
+							ipv6 = deviceFromDb.getIpv6();
+							href = deviceFromDb.getHref();
+							name = deviceFromDb.getName();
+							historyEnabled = deviceFromDb.isHistoryEnabled();
+							groupCommEnabled = deviceFromDb.isGroupcommEnabled();
+							refreshEnabled = deviceFromDb.isRefreshEnabled();
+							historyCount = deviceFromDb.getHistoryCount();
+						} 
+						catch (Exception e) {
+						}
+						
 						// Transition step: comment when done
-						JsonNode thisConnector = DeviceConfigs.getInstance()
-								.getConnectors("xbee")
-								.get(connector);
 						Device d = new Device(type, ipv6, addressString, href, name, null, historyCount, historyEnabled, groupCommEnabled, refreshEnabled);
-						d.setConnectorId(thisConnector.get("_id").asText());
-						ds.add(d);
+						DeviceConfigs.getInstance().prepareDevice(connectorName, d);
 						
 						if (type != null && address != null) {
 							//int addressCount = address.size();
@@ -263,7 +290,6 @@ public class XBeeDeviceLoaderImpl implements DeviceLoader {
 							}
 						}
 					}
-					DeviceConfigs.getInstance().addDevices(ds);
 //					TemperatureSensorImplXBee xBeeTemperatureSensor = new TemperatureSensorImplXBee(
 //							xBeeConnector, "0013a200407c1715");
 //					xBeeTemperatureSensor.setHref(new Uri("temperature"));

@@ -15,7 +15,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
-import at.ac.tuwien.auto.iotsys.commons.Connector;
+import at.ac.tuwien.auto.iotsys.commons.persistent.models.Connector;
 import at.ac.tuwien.auto.iotsys.gateway.connectors.enocean.util.CRC8Hash;
 import at.ac.tuwien.auto.iotsys.gateway.connectors.enocean.util.DeviceID;
 import at.ac.tuwien.auto.iotsys.gateway.connectors.enocean.util.ESP3Frame;

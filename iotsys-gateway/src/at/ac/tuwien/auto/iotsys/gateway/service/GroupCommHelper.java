@@ -1,8 +1,8 @@
 package at.ac.tuwien.auto.iotsys.gateway.service;
 
 import obix.Obj;
-import at.ac.tuwien.auto.iotsys.commons.Connector;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.IoTSySDevice;
+import at.ac.tuwien.auto.iotsys.commons.persistent.models.Connector;
 import at.ac.tuwien.auto.iotsys.gateway.connectors.coap.CoapConnector;
 import at.ac.tuwien.auto.iotsys.gateway.obix.groupcomm.CoapGroupCommImpl;
 import at.ac.tuwien.auto.iotsys.gateway.obix.groupcomm.GroupCommImpl;

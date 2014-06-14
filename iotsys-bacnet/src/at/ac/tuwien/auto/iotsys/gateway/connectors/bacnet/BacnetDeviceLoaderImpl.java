@@ -25,6 +25,7 @@ package at.ac.tuwien.auto.iotsys.gateway.connectors.bacnet;
 import java.lang.reflect.Constructor;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.logging.Level;
@@ -36,11 +37,11 @@ import obix.Uri;
 import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.commons.configuration.XMLConfiguration;
 
-import at.ac.tuwien.auto.iotsys.commons.Connector;
-import at.ac.tuwien.auto.iotsys.commons.Device;
 import at.ac.tuwien.auto.iotsys.commons.DeviceLoader;
 import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
 import at.ac.tuwien.auto.iotsys.commons.persistent.DeviceConfigs;
+import at.ac.tuwien.auto.iotsys.commons.persistent.models.Connector;
+import at.ac.tuwien.auto.iotsys.commons.persistent.models.Device;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.serotonin.bacnet4j.type.enumerated.ObjectType;
@@ -61,20 +62,24 @@ public class BacnetDeviceLoaderImpl implements DeviceLoader {
 		
 		ArrayList<Connector> connectors = new ArrayList<Connector>();
 
+		List<JsonNode> connectorsFromDb = DeviceConfigs.getInstance().getConnectors("bacnet");
 		int connectorsSize = 0;
 		// bacnet
-		Object bacnetConnectors = devicesConfig
-				.getProperty("bacnet.connector.name");
+		if (connectorsFromDb.size() <= 0) {
+			Object bacnetConnectors = devicesConfig
+					.getProperty("bacnet.connector.name");
 
-		if (bacnetConnectors != null) {
-			connectorsSize = 1;
-		} else {
-			connectorsSize = 0;
-		}
+			if (bacnetConnectors != null) {
+				connectorsSize = 1;
+			} else {
+				connectorsSize = 0;
+			}
 
-		if (bacnetConnectors instanceof Collection<?>) {
-			connectorsSize = ((Collection<?>) bacnetConnectors).size();
-		}
+			if (bacnetConnectors instanceof Collection<?>) {
+				connectorsSize = ((Collection<?>) bacnetConnectors).size();
+			}
+		} else
+			connectorsSize = connectorsFromDb.size();
 
 		for (int connector = 0; connector < connectorsSize; connector++) {
 			HierarchicalConfiguration subConfig = devicesConfig
@@ -82,6 +87,7 @@ public class BacnetDeviceLoaderImpl implements DeviceLoader {
 
 			Object bacnetConfiguredDevices = subConfig
 					.getProperty("device.type");
+			String connectorId = "";
 			String connectorName = subConfig.getString("name");
 			String broadcastAddress = subConfig.getString("broadcastAddress");
 			int localPort = subConfig.getInteger("localPort", 3671);
@@ -90,6 +96,17 @@ public class BacnetDeviceLoaderImpl implements DeviceLoader {
 			Boolean groupCommEnabled = subConfig.getBoolean("groupCommEnabled", null);
 			Boolean historyEnabled = subConfig.getBoolean("historyEnabled", null);
 
+			try {
+				connectorId = connectorsFromDb.get(connector).get("_id").asText();
+				connectorName = connectorsFromDb.get(connector).get("name").asText();
+				enabled =  connectorsFromDb.get(connector).get("enabled").asBoolean();
+				groupCommEnabled =  connectorsFromDb.get(connector).get("groupCommEnabled").asBoolean();
+				historyEnabled =  connectorsFromDb.get(connector).get("historyEnabled").asBoolean();
+				broadcastAddress = connectorsFromDb.get(connector).get("broadcastAddress").asText();
+				localPort = connectorsFromDb.get(connector).get("localPort").asInt();
+				localDeviceID = connectorsFromDb.get(connector).get("localDeviceID").asInt();
+			} catch (Exception e){}
+			
 			if (enabled) {
 				try {
 					BACnetConnector bacnetConnector = new BACnetConnector(
@@ -112,12 +129,21 @@ public class BacnetDeviceLoaderImpl implements DeviceLoader {
 					connectors.add(bacnetConnector);
 					
 					int numberOfDevices = 0;
-					if (bacnetConfiguredDevices != null) {
-						numberOfDevices = 1; // there is at least one device.
-					}
-					if (bacnetConfiguredDevices instanceof Collection<?>) {
-						Collection<?> bacnetDevices = (Collection<?>) bacnetConfiguredDevices;
-						numberOfDevices = bacnetDevices.size();
+					List<Device> devicesFromDb = null;
+					try {
+						devicesFromDb = DeviceConfigs.getInstance().getDevices(connectorId);
+						numberOfDevices = devicesFromDb.size();
+					} catch (Exception e){
+						// TODO: bacnetConfiguredDevices is from devices.xml --> mismatch when a connector does not have any device associated,
+						// e.g., bacnet a-lab (auto) connector
+						// do like this for other device loaders!
+						if (bacnetConfiguredDevices != null) {
+							numberOfDevices = 1; // there is at least one device.
+						}
+						if (bacnetConfiguredDevices instanceof Collection<?>) {
+							Collection<?> bacnetDevices = (Collection<?>) bacnetConfiguredDevices;
+							numberOfDevices = bacnetDevices.size();
+						}
 					}
 					
 					log.info(numberOfDevices
@@ -125,15 +151,12 @@ public class BacnetDeviceLoaderImpl implements DeviceLoader {
 							+ connectorName);
 
 					// Transition step: comment when done
-					List<Device> ds = new ArrayList<Device>();
-					
 					for (int i = 0; i < numberOfDevices; i++) {
 						String type = subConfig.getString("device(" + i
 								+ ").type");
 						List<Object> address = subConfig.getList("device("
 								+ i + ").address");
-						String addressString = subConfig.getString("device("
-								+ i + ").address");
+						String addressString = address.toString();
 						String ipv6 = subConfig.getString("device(" + i
 								+ ").ipv6");
 						String href = subConfig.getString("device(" + i
@@ -168,13 +191,27 @@ public class BacnetDeviceLoaderImpl implements DeviceLoader {
 						Integer historyCount = subConfig.getInt("device("
 								+ i + ").historyCount", 0);
 
+						Device deviceFromDb;
+						try {
+							deviceFromDb = devicesFromDb.get(i);
+							type = deviceFromDb.getType();
+							addressString = deviceFromDb.getAddress();
+							String subAddr[] = addressString.substring(1, addressString.length() - 1).split(", ");
+							address = Arrays.asList((Object[])subAddr);
+							ipv6 = deviceFromDb.getIpv6();
+							href = deviceFromDb.getHref();
+							name = deviceFromDb.getName();
+							displayName = deviceFromDb.getDisplayName();
+							historyEnabled = deviceFromDb.isHistoryEnabled();
+							groupCommEnabled = deviceFromDb.isGroupcommEnabled();
+							refreshEnabled = deviceFromDb.isRefreshEnabled();
+							historyCount = deviceFromDb.getHistoryCount();
+						} 
+						catch (Exception e) {
+						}
 						// Transition step: comment when done
-						JsonNode thisConnector = DeviceConfigs.getInstance()
-								.getConnectors("bacnet")
-								.get(connector);
 						Device d = new Device(type, ipv6, addressString, href, name, displayName, historyCount, historyEnabled, groupCommEnabled, refreshEnabled);
-						d.setConnectorId(thisConnector.get("_id").asText());
-						ds.add(d);
+						DeviceConfigs.getInstance().prepareDevice(connectorName, d);
 						
 						if (type != null && address != null) {
 							
@@ -293,7 +330,6 @@ public class BacnetDeviceLoaderImpl implements DeviceLoader {
 							}
 						}
 					}
-					DeviceConfigs.getInstance().addDevices(ds);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}

@@ -30,7 +30,7 @@
  * This file is part of the IoTSyS project.
  ******************************************************************************/
 
-package at.ac.tuwien.auto.iotsys.commons;
+package at.ac.tuwien.auto.iotsys.commons.persistent.models;
 
 import java.util.Set;
 
