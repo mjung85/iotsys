@@ -219,6 +219,7 @@ app.factory('Watch', ['$http', '$timeout', '$q', 'Storage', function($http, $tim
     }
   };
 
+
   return Watch;
 }]);
 
@@ -317,7 +318,15 @@ app.factory('Connection', ['Storage', function(Storage) {
       console.log("Restored connection",ipv6,"with",fromProperty,toProperty);
       this.ipv6 = ipv6;
     } else {
-      this.ipv6 = "FF15::"+Connection.incrementCounter();
+	  if(fromProperty.connections.length > 0){
+		this.ipv6 = fromProperty.connections[0].ipv6;
+	  }
+	  else if(toProperty.connections.length > 0){
+	    this.ipv6 = toProperty.connections[0].ipv6;
+	  }
+	  else{
+        this.ipv6 = "FF15::"+Connection.incrementCounter();
+	  }
     }
     this.fromProperty.connect(this, true);
     this.toProperty.connect(this, true);
@@ -572,7 +581,8 @@ app.controller('MainCtrl', ['$scope','$q','$timeout','Lobby','Watch','Connection
     Connection.Freezer.add(info.connection.obelixConnection);
   });
 
-  jsPlumb.bind("connectionDetached", function(info) {
+  jsPlumb.bind("connectionDetached", function(info) 
+  {
     [info.sourceEndpoint, info.targetEndpoint].each(function(ep) {
       if (ep.connections.length == 0) ep.removeClass('connected');
     });

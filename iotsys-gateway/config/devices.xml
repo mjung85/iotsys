@@ -410,8 +410,6 @@
     </connector>
   </enocean>
 
-
-
   <xbee>
     <connector>
       <name>XBee</name>
@@ -472,7 +470,7 @@
   <knx-ets>
     <connector>
         <name>KNX TP1 Suitcase</name>
-        <enabled>false</enabled>
+        <enabled>true</enabled>
         <knx-proj>knx-config/projects/Suitcase_2013_10_18.knxproj</knx-proj>
         <!-- forces unpacking of zip and transformation -->
         <forceRefresh>false</forceRefresh>              
