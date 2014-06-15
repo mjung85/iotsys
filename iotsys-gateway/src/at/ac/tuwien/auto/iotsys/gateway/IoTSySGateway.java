@@ -246,13 +246,13 @@ public class IoTSySGateway {
 			e.printStackTrace();
 		}
 
-//		 try
-//		 {
-//		 new NanoHTTPD(Integer.parseInt(httpPort), obixServer);
-//		 } catch (IOException ioe)
-//		 {
-//		 ioe.printStackTrace();
-//		 }
+		// try
+		// {
+		// new NanoHTTPD(Integer.parseInt(httpPort), obixServer);
+		// } catch (IOException ioe)
+		// {
+		// ioe.printStackTrace();
+		// }
 	}
 
 	public void stopGateway() {
