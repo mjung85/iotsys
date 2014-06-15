@@ -1,0 +1,39 @@
+.child1 {
+	padding-left: 50px;
+}
+
+.child2 {
+	padding-left: 100px;
+}
+
+.child3 {
+	padding-left: 150px;
+}
+
+.child4 {
+	padding-left: 200px;
+}
+
+.hidden {
+	display: none;
+}
+
+html body div#form-wrapper form#reqform input {
+	width: 100%;
+}
+
+html body div#history-plot {
+	width: 100%;
+	height: 400px;
+	display: none;
+}
+
+html body div#history-plot canvas {
+	display: block;
+}
+
+div.center {
+	float: none; 
+	margin-left: auto; 
+	margin-right: auto;
+}
