@@ -1,0 +1,6 @@
+<obj href="sunblindMiddleA/" is="iot:SunblindActuator">
+	<bool name="moveDownValue" href="sunblindMiddleA/moveDownValue"
+		val="false" writable="true" />
+	<bool name="moveUpValue" href="sunblindMiddleA/moveUpValue" val="false"
+		writable="true" />
+</obj>

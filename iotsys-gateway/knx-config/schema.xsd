@@ -1,0 +1,304 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xsd:schema version="1.0"
+			xmlns="http://auto.tuwien.ac.at"
+			xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+			xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+			targetNamespace="http://auto.tuwien.ac.at"
+			attributeFormDefault="unqualified" elementFormDefault="qualified">
+
+  <xsd:annotation>
+    <xsd:documentation xml:lang="DE">XML Schema für plattformunabhängige Transformation</xsd:documentation>
+    <xsd:documentation xml:lang="EN">XML schema for platform independent transformation</xsd:documentation>
+  </xsd:annotation>
+
+  <!-- **************************************************************************** -->
+  <!-- NETWORK (ROOT ELEMENT)                                                       -->
+  <!-- **************************************************************************** -->
+
+  <xsd:element name="network">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="entities" type="typeEntities" minOccurs="1" maxOccurs="1"/>
+        <xsd:element name="views" type="typeViews" minOccurs="1" maxOccurs="1"/>
+        <xsd:element name="references" type="typeReferences" minOccurs="1" maxOccurs="1"/>
+      </xsd:sequence>
+      <xsd:attribute name="id" type="xsd:ID" use="required"/>
+      <xsd:attribute name="name" type="xsd:string" use="required"/>
+      <xsd:attribute name="description" type="xsd:string"/>
+      <xsd:attribute name="standard" type="enumStandard" use="required"/>
+    </xsd:complexType>
+  </xsd:element>
+
+  <!-- **************************************************************************** -->
+  <!-- ENTITIES                                                                     -->
+  <!-- **************************************************************************** -->
+
+  <xsd:complexType name="typeEntities">
+    <xsd:sequence>
+      <xsd:element name="entity" type="typeEntity" minOccurs="0" maxOccurs="unbounded"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="typeEntity">
+    <xsd:complexContent>
+      <xsd:extension base="typeMultilingual">
+        <xsd:sequence>
+          <xsd:element name="datapoints" type="typeDatapoints" minOccurs="0" maxOccurs="1"/>
+        </xsd:sequence>
+        <xsd:attribute name="id" type="xsd:ID" use="required"/>
+        <xsd:attribute name="name" type="xsd:string" use="required"/>
+        <xsd:attribute name="description" type="xsd:string"/>
+        <xsd:attribute name="orderNumber" type="xsd:string"/>
+        <xsd:attribute name="manufacturerId" type="xsd:IDREF"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+
+  <xsd:complexType name="typeDatapoints">
+    <xsd:sequence>
+      <xsd:element name="datapoint" type="typeDatapoint" minOccurs="0" maxOccurs="unbounded"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="typeDatapoint">
+    <xsd:complexContent>
+      <xsd:extension base="typeMultilingual">
+        <xsd:attribute name="id" type="xsd:ID" use="required"/>
+        <xsd:attribute name="name" type="xsd:string" use="required"/>
+        <xsd:attribute name="description" type="xsd:string"/>
+        <xsd:attribute name="datapointTypeIds" type="xsd:IDREFS" use="required"/>
+        <xsd:attribute name="priority" type="enumPriority" use="required"/>
+        <xsd:attribute name="writeFlag" type="enumEnabled" use="required"/>
+        <xsd:attribute name="communicationFlag" type="enumEnabled"/>
+        <xsd:attribute name="readFlag" type="enumEnabled"/>
+        <xsd:attribute name="readOnInitFlag" type="enumEnabled"/>
+        <xsd:attribute name="transmitFlag" type="enumEnabled"/>
+        <xsd:attribute name="updateFlag" type="enumEnabled"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+
+  <!-- **************************************************************************** -->
+  <!-- VIEWS                                                                        -->
+  <!-- **************************************************************************** -->
+
+  <xsd:complexType name="typeViews">
+    <xsd:sequence>
+      <xsd:element name="functional" minOccurs="0" maxOccurs="1" type="typeFunctional"/>
+      <xsd:element name="topology" minOccurs="0" maxOccurs="1" type="typeTopology"/>
+      <xsd:element name="building" minOccurs="0" maxOccurs="1" type="typeBuilding"/>
+      <xsd:element name="domains" minOccurs="0" maxOccurs="1" type="typeDomains"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="typeFunctional">
+    <xsd:sequence>
+      <xsd:element name="group" minOccurs="0" maxOccurs="unbounded" type="typeGroup"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="typeGroup">
+    <xsd:sequence>
+      <xsd:element name="instance" type="typeInstanceGroup" minOccurs="0" maxOccurs="unbounded"/>
+      <xsd:element name="group" type="typeGroup" minOccurs="0" maxOccurs="unbounded"/>
+    </xsd:sequence>
+    <xsd:attribute name="id" type="xsd:ID" use="required"/>
+    <xsd:attribute name="name" type="xsd:string" use="required"/>
+    <xsd:attribute name="description" type="xsd:string"/>
+    <xsd:attribute name="address" type="xsd:unsignedInt" use="required"/>
+  </xsd:complexType>
+
+  <xsd:complexType name="typeTopology">
+    <xsd:sequence>
+      <xsd:element name="area" type="typeArea" minOccurs="0" maxOccurs="unbounded"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="typeArea">
+    <xsd:sequence>
+      <xsd:element name="instance" type="typeInstanceArea" minOccurs="0" maxOccurs="unbounded"/>
+      <xsd:element name="area" type="typeArea" minOccurs="0" maxOccurs="unbounded"/>
+    </xsd:sequence>
+    <xsd:attribute name="id" type="xsd:ID" use="required"/>
+    <xsd:attribute name="name" type="xsd:string" use="required"/>
+    <xsd:attribute name="description" type="xsd:string"/>
+    <xsd:attribute name="address" type="xsd:unsignedInt" use="required"/>
+    <xsd:attribute name="mediaTypeId" type="xsd:IDREF"/>
+  </xsd:complexType>
+
+  <xsd:complexType name="typeBuilding">
+    <xsd:sequence>
+      <xsd:element name="part" type="typePart" minOccurs="0" maxOccurs="unbounded"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="typePart">
+    <xsd:sequence>
+      <xsd:element name="instance" type="typeInstancePart" minOccurs="0" maxOccurs="unbounded"/>
+      <xsd:element name="part" type="typePart" minOccurs="0" maxOccurs="unbounded"/>
+    </xsd:sequence>
+    <xsd:attribute name="id" type="xsd:ID" use="required"/>
+    <xsd:attribute name="name" type="xsd:string" use="required"/>
+    <xsd:attribute name="description" type="xsd:string"/>
+    <xsd:attribute name="type" type="enumPart" use="required"/>
+  </xsd:complexType>
+
+  <xsd:complexType name="typeDomains">
+    <xsd:sequence>
+      <xsd:element name="domain" minOccurs="0" maxOccurs="unbounded" type="typeDomain"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="typeDomain">
+    <xsd:sequence>
+      <xsd:element name="instance" type="typeInstanceDomain" minOccurs="0" maxOccurs="unbounded"/>
+      <xsd:element name="domain" type="typeDomain" minOccurs="0" maxOccurs="unbounded"/>
+    </xsd:sequence>
+    <xsd:attribute name="id" type="xsd:ID" use="required"/>
+    <xsd:attribute name="name" type="xsd:string" use="required"/>
+    <xsd:attribute name="description" type="xsd:string"/>
+  </xsd:complexType>
+
+  <xsd:complexType name="typeInstance">
+    <xsd:attribute name="id" type="xsd:IDREF" use="required"/>
+  </xsd:complexType>
+
+  <xsd:complexType name="typeInstancePart">
+    <xsd:complexContent>
+      <xsd:extension base="typeInstance"/>
+    </xsd:complexContent>
+  </xsd:complexType>
+
+  <xsd:complexType name="typeInstanceArea">
+    <xsd:complexContent>
+      <xsd:extension base="typeInstance">
+        <xsd:attribute name="address" type="xsd:unsignedInt" use="required"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+
+  <xsd:complexType name="typeInstanceGroup">
+    <xsd:complexContent>
+      <xsd:extension base="typeInstance">
+        <xsd:attribute name="connector" type="enumConnector" use="required"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+
+  <xsd:complexType name="typeInstanceDomain">
+    <xsd:complexContent>
+      <xsd:extension base="typeInstance"/>
+    </xsd:complexContent>
+  </xsd:complexType>
+
+  <!-- **************************************************************************** -->
+  <!-- REFERENCES                                                                   -->
+  <!-- **************************************************************************** -->
+
+  <xsd:complexType name="typeReferences">
+    <xsd:sequence>
+      <xsd:element name="reference" type="typeReference" minOccurs="0" maxOccurs="unbounded"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="typeReference">
+    <xsd:attribute name="id" type="xsd:ID" use="required"/>
+    <xsd:attribute name="name" type="xsd:string" use="required"/>
+    <xsd:attribute name="description" type="xsd:string" use="optional"/>
+  </xsd:complexType>
+
+  <!-- **************************************************************************** -->
+  <!-- LANGUAGES                                                                    -->
+  <!-- **************************************************************************** -->
+
+  <xsd:complexType name="typeMultilingual">
+    <xsd:sequence>
+      <xsd:element name="translations" type="typeTranslations" minOccurs="0" maxOccurs="1"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="typeTranslations">
+    <xsd:sequence>
+      <xsd:element name="translation" type="typeTranslation" minOccurs="0" maxOccurs="unbounded"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="typeTranslation">
+    <xsd:attribute name="language" type="enumLanguage" use="required"/>
+    <xsd:attribute name="attribute" type="enumTranslation" use="required"/>
+    <xsd:attribute name="value" type="xsd:string" use="required"/>
+  </xsd:complexType>
+
+  <!-- **************************************************************************** -->
+  <!-- ENUMERATIONS                                                                 -->
+  <!-- **************************************************************************** -->
+
+  <xsd:simpleType name="enumConnector">
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="send"/>
+      <xsd:enumeration value="receive"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+
+  <xsd:simpleType name="enumTranslation">
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="name"/>
+      <xsd:enumeration value="description"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+
+  <xsd:simpleType name="enumLanguage">
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="en-EN"/>
+      <xsd:enumeration value="en-US"/>
+      <xsd:enumeration value="de-DE"/>
+      <xsd:enumeration value="it-IT"/>
+      <xsd:enumeration value="es-ES"/>
+      <xsd:enumeration value="fr-FR"/>
+      <xsd:enumeration value="id-ID"/>
+      <xsd:enumeration value="nb-NO"/>
+      <xsd:enumeration value="sv-SE"/>
+      <xsd:enumeration value="da-DK"/>
+      <xsd:enumeration value="nl-NL"/>
+      <xsd:enumeration value="el-GR"/>
+      <xsd:enumeration value="ru-RU"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+
+  <xsd:simpleType name="enumPart">
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="Building"/>
+      <xsd:enumeration value="BuildingPart"/>
+      <xsd:enumeration value="Floor"/>
+      <xsd:enumeration value="Stairway"/>
+      <xsd:enumeration value="Room"/>
+      <xsd:enumeration value="Corridor"/>
+      <xsd:enumeration value="DistributionBoard"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+
+  <xsd:simpleType name="enumStandard">
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="KNX"/>
+      <xsd:enumeration value="BACnet"/>
+      <xsd:enumeration value="LonWorks"/>
+      <xsd:enumeration value="Undefined"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+
+  <xsd:simpleType name="enumPriority">
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="Low"/>
+      <xsd:enumeration value="High"/>
+      <xsd:enumeration value="Alert"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+
+  <xsd:simpleType name="enumEnabled">
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="Enabled"/>
+      <xsd:enumeration value="Disabled"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+
+</xsd:schema>
