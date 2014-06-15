@@ -90,6 +90,7 @@ GEM
     uglifier (2.1.2)
       execjs (>= 0.3.0)
       multi_json (~> 1.0, >= 1.0.2)
+    wdm (0.1.0)
 
 PLATFORMS
   ruby
@@ -103,3 +104,4 @@ DEPENDENCIES
   middleman-minify-html
   middleman-sprockets
   rack-reverse-proxy
+  wdm (>= 0.1.0)

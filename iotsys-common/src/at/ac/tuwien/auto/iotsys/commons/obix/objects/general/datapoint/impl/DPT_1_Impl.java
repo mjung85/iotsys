@@ -52,7 +52,7 @@ public abstract class DPT_1_Impl extends DatapointImpl implements DPT_1
 
 	public DPT_1_Impl(String name, String displayName, String display, boolean writable, boolean readable)
 	{
-		super(name, displayName, display);
+		super(name, displayName, display, writable, readable);
 
 		this.addIs(new Contract(DPT_1.CONTRACT));
 
