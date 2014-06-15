@@ -25,7 +25,7 @@ public class MulticastTestRequest {
 		PUTRequest putRequest = new PUTRequest();
 		putRequest.setType(messageType.NON);
 		putRequest
-				.setURI("coap://[" + group.getHostAddress() + "]:5684/");
+				.setURI("coap://[" + group.getHostAddress() + "]:5683/");
 		
 		if(state instanceof Bool){
 			Bool bool = (Bool) state;

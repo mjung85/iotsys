@@ -160,7 +160,9 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader
 		networks.setName("networks");
 		networks.setOf(new Contract(Network.CONTRACT));
 		networks.setHref(new Uri("/networks"));
-		objectBroker.addObj(networks, true);
+				
+		boolean networkEnabled = false;
+		
 		for (int connector = 0; connector < connectorsSize; connector++)
 		{
 			HierarchicalConfiguration subConfig = connectorsConfig.configurationAt("knx-ets.connector(" + connector + ")");
@@ -179,6 +181,11 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader
 
 			if (enabled)
 			{
+				if (!networkEnabled)
+				{
+					objectBroker.addObj(networks, true);
+					networkEnabled = true;
+				}
 				File file = new File(knxProj);
 
 				if (!file.exists() || file.isDirectory() || !file.getName().endsWith(".knxproj") || file.getName().length() < 8)

@@ -22,7 +22,7 @@ public class DPT_16_Impl extends DatapointImpl implements DPT_16 {
 
 	public DPT_16_Impl(String name, String displayName, String display, boolean writable, boolean readable)
 	{
-		super(name, displayName, display);
+		super(name, displayName, display, writable, readable);
 
 		this.addIs(new Contract(DPT_16.CONTRACT));
 
