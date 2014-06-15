@@ -30,7 +30,10 @@ import obix.io.RelativeObixEncoder;
 
 import org.apache.catalina.Context;
 import org.apache.catalina.LifecycleException;
+import org.apache.catalina.Service;
+import org.apache.catalina.connector.Connector;
 import org.apache.catalina.startup.Tomcat;
+import org.apache.coyote.http11.Http11NioProtocol;
 import org.apache.http.HttpStatus;
 import org.json.JSONException;
 
@@ -52,6 +55,11 @@ public class TomcatServer {
 	private static final Logger log = Logger.getLogger(TomcatServer.class
 			.getName());
 
+	private String password = "123456";
+	private String alias = "tomcat";
+	private String certificatePath = "ssl/certs/tomcatcert.cer";
+	private String keyStorePath = "ssl/certs/tomcatkey.jks";
+
 	public TomcatServer(int port, ObixServer obixServer) throws IOException,
 			ServletException {
 
@@ -59,7 +67,26 @@ public class TomcatServer {
 
 		tomcat.setPort(port);
 
+		tomcat.setBaseDir(".");
+
 		Context ctx = tomcat.addContext("/", new File(".").getAbsolutePath());
+
+		Connector connector = new Connector();
+		connector.setPort(8443);
+		connector.setSecure(true);
+		connector.setScheme("https");
+		connector.setAttribute("clientAuth", "false");
+		connector.setAttribute("keyAlias", alias);
+		connector.setAttribute("keystorePass", password);
+		connector.setAttribute("keystoreFile", keyStorePath);
+		connector.setAttribute("sslProtocol", "TLS");
+		connector.setAttribute("SSLEnabled", true);
+
+		Service service = tomcat.getService();
+		service.addConnector(connector);
+
+		Connector defaultConnector = tomcat.getConnector();
+		defaultConnector.setRedirectPort(8443);
 
 		Tomcat.addServlet(ctx, "obix", new ObixServlet(obixServer));
 		ctx.addServletMapping("/*", "obix");
@@ -316,9 +343,11 @@ public class TomcatServer {
 		}
 
 		private String getIPv6Address(HttpServletRequest req) {
+
 			String localSocket = req.getLocalAddr().toString();
-			int lastIndex = localSocket.lastIndexOf(":");
 			String localSocketSplitted = "";
+
+			int lastIndex = localSocket.lastIndexOf(":");
 
 			if (lastIndex > 0) {
 				localSocketSplitted = localSocket.substring(0, lastIndex);
@@ -331,8 +360,12 @@ public class TomcatServer {
 						lastIndex);
 			}
 
-			String splittedString = localSocketSplitted.substring(1);
-			return splittedString;
+			if (localSocketSplitted != "") {
+				String splittedString = localSocketSplitted.substring(1);
+				return splittedString;
+			} else {
+				return localSocketSplitted;
+			}
 		}
 
 		private String serveStatic(HttpServletRequest req,
