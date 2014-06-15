@@ -27,10 +27,10 @@ public class CoapGroupCommImpl extends GroupCommImpl{
 	}
 	
 	public synchronized Obj joinGroup(Obj in){
-		System.out.println("CoAP join group.");
+		log.info("CoAP join group.");
 		
 		if(datapoint.getParent() instanceof IoTSySDevice){
-			final String tempUri = ((IoTSySDevice) datapoint.getParent()).getBusAddress() + "/" + datapoint.getHref() + "/groupComm/joinGroup";
+			final String busUri = ((IoTSySDevice) datapoint.getParent()).getBusAddress() + "/" + datapoint.getHref() + "/groupComm/joinGroup";
 			
 			Str str = (Str) in;
 			try {
@@ -42,13 +42,13 @@ public class CoapGroupCommImpl extends GroupCommImpl{
 				String payload = "<str val=\"" + formatted + "\">";
 				
 				Request request = new POSTRequest();
-				System.out.println("Adresse: " + tempUri + "\nPayload: " + payload);
+				System.out.println("Adresse: " + busUri + "\nPayload: " + payload);
 				request.setPayload(payload);
-				request.setType(messageType.NON);
+				request.setType(messageType.CON);
 				request.setOption(new Option(MediaTypeRegistry.APPLICATION_XML,OptionNumberRegistry.ACCEPT));
 			
 				// specify URI of target endpoint
-				request.setURI(tempUri);
+				request.setURI(busUri);
 				// enable response queue for blocking I/O
 				request.enableResponseQueue(true);
 				
@@ -80,7 +80,7 @@ public class CoapGroupCommImpl extends GroupCommImpl{
 	}
 	
 	public synchronized Obj leaveGroup(Obj in){
-System.out.println("CoAP join group.");
+		log.info("CoAP leave group.");
 		
 		if(datapoint.getParent() instanceof IoTSySDevice){
 			final String tempUri = ((IoTSySDevice) datapoint.getParent()).getBusAddress() + "/" + datapoint.getHref() + "/groupComm/leaveGroup";
@@ -97,7 +97,7 @@ System.out.println("CoAP join group.");
 				Request request = new POSTRequest();
 				System.out.println("Adresse: " + tempUri + "\nPayload: " + payload);
 			
-				request.setType(messageType.NON);
+				request.setType(messageType.CON);
 				request.setOption(new Option(MediaTypeRegistry.APPLICATION_XML,OptionNumberRegistry.ACCEPT));
 			
 				// specify URI of target endpoint
