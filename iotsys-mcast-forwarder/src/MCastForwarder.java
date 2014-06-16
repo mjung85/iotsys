@@ -173,8 +173,8 @@ public class MCastForwarder {
 									0x00,
 									// payload length + add udp header (4
 									// octects)
-									(byte) ((payload.length + 4) & 0xFF00 >> 8),
-									(byte) ((payload.length + 4) & 0xFF),
+									(byte) ( ((udpLength + 4) & 0xFF00) >> 8),
+									(byte) ((udpLength + 4) & 0xFF),
 									// nextHeaderHopLimit
 									0x11,
 									0x01,
@@ -258,8 +258,8 @@ public class MCastForwarder {
 								0x00,
 								0x00,
 								// payload length + add udp header (4 octects)
-								(byte) ((payload.length + 4) & 0xFF00 >> 8),
-								(byte) ((payload.length + 4) & 0xFF),
+								(byte) ( ((udpLength) & 0xFF00) >> 8),
+								(byte) ((udpLength) & 0xFF),
 								// nextHeaderHopLimit
 								0x11,
 								0x01,
@@ -302,19 +302,23 @@ public class MCastForwarder {
 						System.arraycopy(payload, 0, packet,
 								packetHeader.length, payload.length);
 
-						JPacket jpacket = new JMemoryPacket(
-								JProtocol.ETHERNET_ID, packet);
-						jpacket.scan(Ethernet.ID);
-						Ethernet ethHeader = jpacket.getHeader(new Ethernet());
-						// calculate checksum
-						ethHeader.checksum(ethHeader.calculateChecksum());
-						System.out
-								.println("#####################################");
-						System.out
-								.println("#####################################");
-						System.out.println("TUN: " + jpacket);
+//						JPacket jpacket = new JMemoryPacket(
+//								JProtocol.ETHERNET_ID, packet);
+//						jpacket.scan(Ethernet.ID);
+//						Ethernet ethHeader = jpacket.getHeader(new Ethernet());
+//						Udp udpHeader = jpacket.getHeader(new Udp());
+//						// calculate checksum
+//						ethHeader.checksum(ethHeader.calculateChecksum());
+//						
+//						udpHeader.checksum(udpHeader.calculateChecksum());
+					
+//						System.out
+//								.println("#####################################");
+//						System.out
+//								.println("#####################################");
+//						System.out.println("TUN: " + jpacket);
 						if (pcap.isSendPacketSupported()) {
-							pcap.sendPacket(jpacket);
+							pcap.sendPacket(packet);
 						} else {
 							System.err
 									.println("Cannot forward packet. PCAP interface "
@@ -473,10 +477,8 @@ class MCastHandler<String> implements PcapPacketHandler<String> {
 			if (udp.destination() == this.port && dest.isMulticastAddress()) {
 				if (packet.hasHeader(Ethernet.ID)) {
 					Ethernet ethernet = packet.getHeader(new Ethernet());
-					System.out.println(packet);
-					java.lang.String hexdump = packet.toHexdump(packet.size(),
-							false, false, true);
-					System.out.println(hexdump);
+					System.out.println("Captured at ethernet: " + packet);
+					
 				}
 				log.info("Received multicast message through PCAP.");
 				mcastForwarder.forward(dest, src, udp.source(),
