@@ -20,10 +20,32 @@
              <device>  
            		<type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.coap.LedsActuatorImplCoap
           		</type>
-	            <address>coap://[aaaa::c30c:0:0:3]:5683/leds</address>
-	            <href>dev3/leds</href>
+	            <address>coap://[aaaa::c30c:0:0:51d]:5683/leds</address>
+	            <href>dev1/leds</href>
 	            <historyEnabled>true</historyEnabled>
-	            <refreshEnabled>true</refreshEnabled>
+	            <refreshEnabled>false</refreshEnabled>
+	            <groupCommEnabled>true</groupCommEnabled>
+	            <forwardGroupAddress>true</forwardGroupAddress>
+	            <observe>false</observe>
+	        </device>
+	        <device>  
+           		<type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.coap.LedsActuatorImplCoap
+          		</type>
+	            <address>coap://[aaaa::c30c:0:0:51f]:5683/leds</address>
+	            <href>dev2/leds</href>
+	            <historyEnabled>true</historyEnabled>
+	            <refreshEnabled>false</refreshEnabled>
+	            <groupCommEnabled>true</groupCommEnabled>
+	            <forwardGroupAddress>true</forwardGroupAddress>
+	            <observe>false</observe>
+	        </device>
+	        <device>  
+           		<type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.coap.PushButtonImplCoap
+          		</type>
+	            <address>coap://[aaaa::c30c:0:0:519]:5683/button</address>
+	            <href>dev3/button</href>
+	            <historyEnabled>true</historyEnabled>
+	            <refreshEnabled>false</refreshEnabled>
 	            <groupCommEnabled>true</groupCommEnabled>
 	            <forwardGroupAddress>true</forwardGroupAddress>
 	            <observe>false</observe>

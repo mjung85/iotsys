@@ -100,6 +100,7 @@ public class GroupCommServiceImpl implements GroupCommService {
 		}
 		
 		// for coap proxy objects the values should be updated if a write on the group address is seen
+		// this is only executed for bas
 		synchronized (receiverObjectPerAddress) {
 			Hashtable<String, Obj> groupObjects = receiverObjectPerAddress
 					.get(group);
@@ -107,8 +108,18 @@ public class GroupCommServiceImpl implements GroupCommService {
 			if (groupObjects != null) {
 				for (Obj obj : groupObjects.values()) {
 					payload.setHref(obj.getHref());
-					log.finest("Writing on " + obj.getHref());
-					obj.writeObject(payload);
+					log.finest("Setting on " + obj.getHref());
+					if(payload instanceof Bool){
+						obj.setBool( ((Bool) payload).getBool());
+					}
+					else if(payload instanceof Real){
+						obj.setReal(((Real) payload).getReal());
+					}				
+					else if(payload instanceof Int){
+						obj.setInt(((Int) payload).getInt());
+					}
+						
+				
 				}
 			} else {
 				log.info("No group objects found as receiver!");
@@ -186,7 +197,7 @@ public class GroupCommServiceImpl implements GroupCommService {
 		if (MCAST_ENABLED) {
 			PUTRequest putRequest = new PUTRequest();
 			putRequest.setType(messageType.NON);
-			putRequest.setURI("coap://[" + group.getHostAddress() + "]:5684/");
+			putRequest.setURI("coap://[" + group.getHostAddress() + "]:5683/");
 
 			if (state instanceof Bool) {
 				Bool bool = (Bool) state;
