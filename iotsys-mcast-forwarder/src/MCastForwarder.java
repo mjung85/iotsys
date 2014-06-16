@@ -177,8 +177,8 @@ public class MCastForwarder {
 								0x00,
 								// payload length + add udp header (4
 								// octects)
-								(byte) ( ((udpLength + 4) & 0xFF00) >> 8),
-								(byte) ((udpLength + 4) & 0xFF),
+								(byte) ( ((udpLength) & 0xFF00) >> 8),
+								(byte) ((udpLength) & 0xFF),
 								// nextHeaderHopLimit
 								0x11,
 								0x01,
