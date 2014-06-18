@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Request xmlns="urn:oasis:names:tc:xacml:2.0:context:schema:os"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="urn:oasis:names:tc:xacml:2.0:context:schema:os xacml-2.0-context.xsd">
+	<Subject>
+		<Attribute AttributeId="urn:oasis:names:tc:xacml:1.0:subject:subject-id"
+			DataType="http://www.w3.org/2001/XMLSchema#string">
+			<AttributeValue>{$SUBJECT}</AttributeValue>
+		</Attribute>
+		<Attribute AttributeId="urn:oasis:names:tc:xacml:1.0:subject:ip-address"
+			DataType="http://www.w3.org/2001/XMLSchema#string">
+			<AttributeValue>{$SUBJECT_IP_ADDRESS}</AttributeValue>
+		</Attribute>
+	</Subject>
+	<Resource>
+		<Attribute AttributeId="urn:oasis:names:tc:xacml:1.0:resource:resource-id"
+			DataType="http://www.w3.org/2001/XMLSchema#string">
+			<AttributeValue>{$RESOURCE}</AttributeValue>
+		</Attribute>
+
+		<Attribute AttributeId="urn:oasis:names:tc:xacml:1.0:resource:protocol"
+			DataType="http://www.w3.org/2001/XMLSchema#string">
+			<AttributeValue>{$RESOURCE_PROTOCOL}</AttributeValue>
+		</Attribute>
+
+		<Attribute AttributeId="urn:oasis:names:tc:xacml:1.0:resource:ip-address"
+			DataType="http://www.w3.org/2001/XMLSchema#string">
+			<AttributeValue>{$RESOURCE_IP_ADDRESS}</AttributeValue>
+		</Attribute>
+
+		<Attribute AttributeId="urn:oasis:names:tc:xacml:1.0:resource:hostname"
+			DataType="http://www.w3.org/2001/XMLSchema#string">
+			<AttributeValue>{$RESOURCE_HOSTNAME}</AttributeValue>
+		</Attribute>
+
+		<Attribute AttributeId="urn:oasis:names:tc:xacml:1.0:resource:path"
+			DataType="http://www.w3.org/2001/XMLSchema#string">
+			<AttributeValue>{$RESOURCE_PATH}</AttributeValue>
+		</Attribute>
+	</Resource>
+	<Action>
+		<Attribute AttributeId="urn:oasis:names:tc:xacml:1.0:action:action-id"
+			DataType="http://www.w3.org/2001/XMLSchema#string">
+			<AttributeValue>{$ACTION}</AttributeValue>
+		</Attribute>
+	</Action>
+	<Environment />
+</Request>

@@ -1,0 +1,39 @@
+.child1 {
+	padding-left: 50px;
+}
+
+.child2 {
+	padding-left: 100px;
+}
+
+.child3 {
+	padding-left: 150px;
+}
+
+.child4 {
+	padding-left: 200px;
+}
+
+.child5 {
+	padding-left: 250px;
+}
+
+.hidden {
+	display: none;
+}
+
+.numpoint {
+	width: 200px;
+}
+
+html body div#form-wrapper {
+	width: 100%;
+}
+
+html body div#form-wrapper form#reqform {
+	width: 100%;
+}
+
+html body div#form-wrapper form#reqform input {
+	width: 100%;
+}

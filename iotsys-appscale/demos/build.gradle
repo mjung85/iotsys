@@ -1,0 +1,33 @@
+allprojects {
+	apply plugin: 'java'
+	apply plugin: 'maven-publish'
+	apply plugin: 'maven'
+
+	version = '0.1'
+	
+	repositories(){
+		mavenCentral()
+	}
+}
+
+subprojects{
+	apply plugin: 'eclipse'
+	apply plugin: 'war'
+	
+	eclipse {
+		classpath {        
+        	defaultOutputDir = new File('war/WEB-INF/classes');
+        }
+    }
+	
+	sourceSets {
+    	main {
+        	java {
+            	srcDir 'src'
+        	}
+        	output.classesDir = 'war/WEB-INF/classes'
+    	}
+	}
+			
+}
+			

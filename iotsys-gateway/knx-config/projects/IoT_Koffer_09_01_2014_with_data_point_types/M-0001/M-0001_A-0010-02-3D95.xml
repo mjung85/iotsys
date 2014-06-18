@@ -1,0 +1,599 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<KNX xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" CreatedBy="ETS4" ToolVersion="ETS 4.1.5 (Build 3246)" xmlns="http://knx.org/xml/project/11">
+  <ManufacturerData>
+    <Manufacturer RefId="M-0001">
+      <ApplicationPrograms>
+        <ApplicationProgram Id="M-0001_A-0010-02-3D95" Name="IP-Router 001002" ApplicationNumber="16" ApplicationVersion="2" ProgramType="ApplicationProgram" MaskVersion="MV-091A" VisibleDescription="Description - see file:  001002_apb_e.pdf" LoadProcedureStyle="DefaultProcedure" PeiType="0" HelpFile="" DefaultLanguage="en-US" DynamicTableManagement="0" Linkable="0" PreEts4Style="1" NonRegRelevantDataVersion="0" Hash="Pdhc+rxU1Hq75gizuZLZlQ==" ConvertedFromPreEts4Data="1" Broken="0" IPConfig="Custom" AdditionalAddressesCount="0" DownloadInfoIncomplete="0" CreatedFromLegacySchemaVersion="1">
+          <Static>
+            <Code>
+              <AbsoluteSegment Id="M-0001_A-0010-02-3D95_AS-0100" Address="256" Size="256" UserMemory="0" />
+            </Code>
+            <ParameterTypes>
+              <ParameterType Id="M-0001_A-0010-02-3D95_PT-ip.5Fmode" Name="ip_mode" Plugin="">
+                <TypeRestriction Base="Value" SizeInBit="8">
+                  <Enumeration Id="M-0001_A-0010-02-3D95_PT-ip.5Fmode_EN-4" DisplayOrder="0" Text="by DHCP Server" Value="4" />
+                  <Enumeration Id="M-0001_A-0010-02-3D95_PT-ip.5Fmode_EN-1" DisplayOrder="1" Text="manual input" Value="1" />
+                </TypeRestriction>
+              </ParameterType>
+              <ParameterType Id="M-0001_A-0010-02-3D95_PT-LK.20Ack" Name="LK Ack" Plugin="" InternalDescription="Wiederholungen bei Übertragungsfehler">
+                <TypeRestriction Base="Value" SizeInBit="1">
+                  <Enumeration Id="M-0001_A-0010-02-3D95_PT-LK.20Ack_EN-0" DisplayOrder="1" Text="always" Value="0" />
+                  <Enumeration Id="M-0001_A-0010-02-3D95_PT-LK.20Ack_EN-1" DisplayOrder="2" Text="only if routed" Value="1" />
+                </TypeRestriction>
+              </ParameterType>
+              <ParameterType Id="M-0001_A-0010-02-3D95_PT-LKgroup" Name="LKgroup" Plugin="">
+                <TypeRestriction Base="Value" SizeInBit="2">
+                  <Enumeration Id="M-0001_A-0010-02-3D95_PT-LKgroup_EN-1" DisplayOrder="1" Text="transmit all (for testing only)" Value="1" />
+                  <Enumeration Id="M-0001_A-0010-02-3D95_PT-LKgroup_EN-2" DisplayOrder="2" Text="block" Value="2" />
+                  <Enumeration Id="M-0001_A-0010-02-3D95_PT-LKgroup_EN-3" DisplayOrder="3" Text="filter (normal)" Value="3" />
+                </TypeRestriction>
+              </ParameterType>
+              <ParameterType Id="M-0001_A-0010-02-3D95_PT-t.5Fenable" Name="t_enable" Plugin="">
+                <TypeRestriction Base="Value" SizeInBit="1">
+                  <Enumeration Id="M-0001_A-0010-02-3D95_PT-t.5Fenable_EN-0" DisplayOrder="1" Text="disabled" Value="0" />
+                  <Enumeration Id="M-0001_A-0010-02-3D95_PT-t.5Fenable_EN-1" DisplayOrder="2" Text="enabled" Value="1" />
+                </TypeRestriction>
+              </ParameterType>
+              <ParameterType Id="M-0001_A-0010-02-3D95_PT-t.5FLKgrpDef" Name="t_LKgrpDef" Plugin="">
+                <TypeRestriction Base="Value" SizeInBit="2">
+                  <Enumeration Id="M-0001_A-0010-02-3D95_PT-t.5FLKgrpDef_EN-1" DisplayOrder="1" Text="transmit all (for testing only)" Value="1" />
+                  <Enumeration Id="M-0001_A-0010-02-3D95_PT-t.5FLKgrpDef_EN-2" DisplayOrder="2" Text="block" Value="2" />
+                  <Enumeration Id="M-0001_A-0010-02-3D95_PT-t.5FLKgrpDef_EN-3" DisplayOrder="3" Text="filter (normal)" Value="3" />
+                </TypeRestriction>
+              </ParameterType>
+              <ParameterType Id="M-0001_A-0010-02-3D95_PT-t.5FLKhiGrpDef" Name="t_LKhiGrpDef" Plugin="">
+                <TypeRestriction Base="Value" SizeInBit="2">
+                  <Enumeration Id="M-0001_A-0010-02-3D95_PT-t.5FLKhiGrpDef_EN-2" DisplayOrder="1" Text="block" Value="2" />
+                  <Enumeration Id="M-0001_A-0010-02-3D95_PT-t.5FLKhiGrpDef_EN-1" DisplayOrder="2" Text="transmit all" Value="1" />
+                </TypeRestriction>
+              </ParameterType>
+              <ParameterType Id="M-0001_A-0010-02-3D95_PT-page" Name="page" Plugin="">
+                <TypeNone />
+              </ParameterType>
+              <ParameterType Id="M-0001_A-0010-02-3D95_PT-Text" Name="Text" Plugin="">
+                <TypeNone />
+              </ParameterType>
+              <ParameterType Id="M-0001_A-0010-02-3D95_PT-IP.5FByte" Name="IP_Byte" Plugin="">
+                <TypeNumber maxInclusive="255" minInclusive="0" SizeInBit="8" Type="unsignedInt" />
+              </ParameterType>
+              <ParameterType Id="M-0001_A-0010-02-3D95_PT-IP.5FByte.20.28224.2D239.29" Name="IP_Byte (224-239)" Plugin="">
+                <TypeNumber maxInclusive="239" minInclusive="224" SizeInBit="8" Type="unsignedInt" />
+              </ParameterType>
+              <ParameterType Id="M-0001_A-0010-02-3D95_PT-name" Name="name" Plugin="">
+                <TypeText SizeInBit="240" />
+              </ParameterType>
+            </ParameterTypes>
+            <Parameters>
+              <Parameter Id="M-0001_A-0010-02-3D95_P-10" Name="LKgrpAck.SM" Text="Telegram confirmation of group oriented&#xD;&#xA;telegrams" ParameterType="M-0001_A-0010-02-3D95_PT-LK.20Ack" Access="ReadWrite" Value="1" LegacyPatchAlways="0" SuffixText="">
+                <Memory CodeSegment="M-0001_A-0010-02-3D95_AS-0100" BitOffset="2" Offset="83" />
+              </Parameter>
+              <Parameter Id="M-0001_A-0010-02-3D95_P-11" Name="Support of umparametrised" Text="Support of unconfigured interfaces" ParameterType="M-0001_A-0010-02-3D95_PT-t.5Fenable" Access="ReadWrite" Value="1" LegacyPatchAlways="0" SuffixText="">
+                <Memory CodeSegment="M-0001_A-0010-02-3D95_AS-0100" BitOffset="7" Offset="34" />
+              </Parameter>
+              <Parameter Id="M-0001_A-0010-02-3D95_P-13" Name="Voltage Monitor" Text="Monitoring of bus voltage failure" ParameterType="M-0001_A-0010-02-3D95_PT-t.5Fenable" Access="ReadWrite" Value="1" LegacyPatchAlways="0" SuffixText="">
+                <Memory CodeSegment="M-0001_A-0010-02-3D95_AS-0100" BitOffset="7" Offset="35" />
+              </Parameter>
+              <Parameter Id="M-0001_A-0010-02-3D95_P-17" Name="IP Addressmode" Text="IP Address Assignment" ParameterType="M-0001_A-0010-02-3D95_PT-ip.5Fmode" Access="ReadWrite" Value="4" LegacyPatchAlways="0" SuffixText="">
+                <Memory CodeSegment="M-0001_A-0010-02-3D95_AS-0100" BitOffset="0" Offset="66" />
+              </Parameter>
+              <Parameter Id="M-0001_A-0010-02-3D95_P-18" Name="IP Route 1" Text="Byte 1 [224 ... 239]" ParameterType="M-0001_A-0010-02-3D95_PT-IP.5FByte.20.28224.2D239.29" Access="ReadWrite" Value="224" LegacyPatchAlways="0" SuffixText="">
+                <Memory CodeSegment="M-0001_A-0010-02-3D95_AS-0100" BitOffset="0" Offset="67" />
+              </Parameter>
+              <Parameter Id="M-0001_A-0010-02-3D95_P-19" Name="IP Route 3" Text="Byte 3 [0 ... 255]" ParameterType="M-0001_A-0010-02-3D95_PT-IP.5FByte" Access="ReadWrite" Value="23" LegacyPatchAlways="0" SuffixText="">
+                <Memory CodeSegment="M-0001_A-0010-02-3D95_AS-0100" BitOffset="0" Offset="69" />
+              </Parameter>
+              <Parameter Id="M-0001_A-0010-02-3D95_P-2" Name="LKgrpConfLow.SM" Text="Group telegrams of main groups 0 to 13" ParameterType="M-0001_A-0010-02-3D95_PT-LKgroup" Access="ReadWrite" Value="3" LegacyPatchAlways="0" SuffixText="">
+                <Memory CodeSegment="M-0001_A-0010-02-3D95_AS-0100" BitOffset="6" Offset="84" />
+              </Parameter>
+              <Parameter Id="M-0001_A-0010-02-3D95_P-20" Name="IP Route 2" Text="Byte 2 [0 ... 255]" ParameterType="M-0001_A-0010-02-3D95_PT-IP.5FByte" Access="ReadWrite" Value="0" LegacyPatchAlways="0" SuffixText="">
+                <Memory CodeSegment="M-0001_A-0010-02-3D95_AS-0100" BitOffset="0" Offset="68" />
+              </Parameter>
+              <Parameter Id="M-0001_A-0010-02-3D95_P-21" Name="IP Route 4" Text="Byte 4 [0 ... 255]" ParameterType="M-0001_A-0010-02-3D95_PT-IP.5FByte" Access="ReadWrite" Value="12" LegacyPatchAlways="0" SuffixText="">
+                <Memory CodeSegment="M-0001_A-0010-02-3D95_AS-0100" BitOffset="0" Offset="70" />
+              </Parameter>
+              <Parameter Id="M-0001_A-0010-02-3D95_P-22" Name="IP Adr 4" Text="Byte 4" ParameterType="M-0001_A-0010-02-3D95_PT-IP.5FByte" Access="ReadWrite" Value="0" LegacyPatchAlways="0" SuffixText="">
+                <Memory CodeSegment="M-0001_A-0010-02-3D95_AS-0100" BitOffset="0" Offset="74" />
+              </Parameter>
+              <Parameter Id="M-0001_A-0010-02-3D95_P-23" Name="IP Adr 3" Text="Byte 3" ParameterType="M-0001_A-0010-02-3D95_PT-IP.5FByte" Access="ReadWrite" Value="0" LegacyPatchAlways="0" SuffixText="">
+                <Memory CodeSegment="M-0001_A-0010-02-3D95_AS-0100" BitOffset="0" Offset="73" />
+              </Parameter>
+              <Parameter Id="M-0001_A-0010-02-3D95_P-24" Name="IP Adr 2" Text="Byte 2" ParameterType="M-0001_A-0010-02-3D95_PT-IP.5FByte" Access="ReadWrite" Value="0" LegacyPatchAlways="0" SuffixText="">
+                <Memory CodeSegment="M-0001_A-0010-02-3D95_AS-0100" BitOffset="0" Offset="72" />
+              </Parameter>
+              <Parameter Id="M-0001_A-0010-02-3D95_P-25" Name="IP Adr 1" Text="Byte 1" ParameterType="M-0001_A-0010-02-3D95_PT-IP.5FByte" Access="ReadWrite" Value="0" LegacyPatchAlways="0" SuffixText="">
+                <Memory CodeSegment="M-0001_A-0010-02-3D95_AS-0100" BitOffset="0" Offset="71" />
+              </Parameter>
+              <Parameter Id="M-0001_A-0010-02-3D95_P-26" Name="IP Sub 4" Text="Byte 4" ParameterType="M-0001_A-0010-02-3D95_PT-IP.5FByte" Access="ReadWrite" Value="0" LegacyPatchAlways="0" SuffixText="">
+                <Memory CodeSegment="M-0001_A-0010-02-3D95_AS-0100" BitOffset="0" Offset="78" />
+              </Parameter>
+              <Parameter Id="M-0001_A-0010-02-3D95_P-27" Name="IP Sub 3" Text="Byte 3" ParameterType="M-0001_A-0010-02-3D95_PT-IP.5FByte" Access="ReadWrite" Value="0" LegacyPatchAlways="0" SuffixText="">
+                <Memory CodeSegment="M-0001_A-0010-02-3D95_AS-0100" BitOffset="0" Offset="77" />
+              </Parameter>
+              <Parameter Id="M-0001_A-0010-02-3D95_P-28" Name="IP Sub 2" Text="Byte 2" ParameterType="M-0001_A-0010-02-3D95_PT-IP.5FByte" Access="ReadWrite" Value="0" LegacyPatchAlways="0" SuffixText="">
+                <Memory CodeSegment="M-0001_A-0010-02-3D95_AS-0100" BitOffset="0" Offset="76" />
+              </Parameter>
+              <Parameter Id="M-0001_A-0010-02-3D95_P-29" Name="IP Sub 1" Text="Byte 1" ParameterType="M-0001_A-0010-02-3D95_PT-IP.5FByte" Access="ReadWrite" Value="0" LegacyPatchAlways="0" SuffixText="">
+                <Memory CodeSegment="M-0001_A-0010-02-3D95_AS-0100" BitOffset="0" Offset="75" />
+              </Parameter>
+              <Parameter Id="M-0001_A-0010-02-3D95_P-3" Name="LKConf.SM" Text="Individually addressed and broadcast&#xD;&#xA;telegrams" ParameterType="M-0001_A-0010-02-3D95_PT-LKgroup" Access="ReadWrite" Value="3" LegacyPatchAlways="0" SuffixText="">
+                <Memory CodeSegment="M-0001_A-0010-02-3D95_AS-0100" BitOffset="6" Offset="83" />
+              </Parameter>
+              <Parameter Id="M-0001_A-0010-02-3D95_P-30" Name="IP Def 4" Text="Byte 4" ParameterType="M-0001_A-0010-02-3D95_PT-IP.5FByte" Access="ReadWrite" Value="0" LegacyPatchAlways="0" SuffixText="">
+                <Memory CodeSegment="M-0001_A-0010-02-3D95_AS-0100" BitOffset="0" Offset="82" />
+              </Parameter>
+              <Parameter Id="M-0001_A-0010-02-3D95_P-31" Name="IP Def 3" Text="Byte 3" ParameterType="M-0001_A-0010-02-3D95_PT-IP.5FByte" Access="ReadWrite" Value="0" LegacyPatchAlways="0" SuffixText="">
+                <Memory CodeSegment="M-0001_A-0010-02-3D95_AS-0100" BitOffset="0" Offset="81" />
+              </Parameter>
+              <Parameter Id="M-0001_A-0010-02-3D95_P-32" Name="IP Def 1" Text="Byte 1" ParameterType="M-0001_A-0010-02-3D95_PT-IP.5FByte" Access="ReadWrite" Value="0" LegacyPatchAlways="0" SuffixText="">
+                <Memory CodeSegment="M-0001_A-0010-02-3D95_AS-0100" BitOffset="0" Offset="79" />
+              </Parameter>
+              <Parameter Id="M-0001_A-0010-02-3D95_P-33" Name="IP Def 2" Text="Byte 2" ParameterType="M-0001_A-0010-02-3D95_PT-IP.5FByte" Access="ReadWrite" Value="0" LegacyPatchAlways="0" SuffixText="">
+                <Memory CodeSegment="M-0001_A-0010-02-3D95_AS-0100" BitOffset="0" Offset="80" />
+              </Parameter>
+              <Parameter Id="M-0001_A-0010-02-3D95_P-42" Name="LKgrpConfLow.MS" Text="Group telegrams of main groups 0 to 13" ParameterType="M-0001_A-0010-02-3D95_PT-LKgroup" Access="ReadWrite" Value="3" LegacyPatchAlways="0" SuffixText="">
+                <Memory CodeSegment="M-0001_A-0010-02-3D95_AS-0100" BitOffset="6" Offset="86" />
+              </Parameter>
+              <Parameter Id="M-0001_A-0010-02-3D95_P-43" Name="LKgrpConfHigh.MS" Text="Group telegrams of main group 14 and 15" ParameterType="M-0001_A-0010-02-3D95_PT-t.5FLKhiGrpDef" Access="ReadWrite" Value="1" LegacyPatchAlways="0" SuffixText="">
+                <Memory CodeSegment="M-0001_A-0010-02-3D95_AS-0100" BitOffset="4" Offset="86" />
+              </Parameter>
+              <Parameter Id="M-0001_A-0010-02-3D95_P-44" Name="LKConf.MS" Text="Individually addressed and broadcast&#xD;&#xA;telegrams" ParameterType="M-0001_A-0010-02-3D95_PT-LKgroup" Access="ReadWrite" Value="3" LegacyPatchAlways="0" SuffixText="">
+                <Memory CodeSegment="M-0001_A-0010-02-3D95_AS-0100" BitOffset="6" Offset="85" />
+              </Parameter>
+              <Parameter Id="M-0001_A-0010-02-3D95_P-7" Name="LKgrpConfHigh.SM" Text="Group telegrams of main group 14 and 15" ParameterType="M-0001_A-0010-02-3D95_PT-t.5FLKhiGrpDef" Access="ReadWrite" Value="1" LegacyPatchAlways="0" SuffixText="">
+                <Memory CodeSegment="M-0001_A-0010-02-3D95_AS-0100" BitOffset="4" Offset="84" />
+              </Parameter>
+              <Parameter Id="M-0001_A-0010-02-3D95_P-8" Name="Device name" Text="Device name (max. 30 char)" ParameterType="M-0001_A-0010-02-3D95_PT-name" Access="ReadWrite" Value="IP Router N146" LegacyPatchAlways="0" SuffixText="">
+                <Memory CodeSegment="M-0001_A-0010-02-3D95_AS-0100" BitOffset="0" Offset="36" />
+              </Parameter>
+              <Parameter Id="M-0001_A-0010-02-3D95_P-1" Name="IP CFG 1" Text="IP Config 1" ParameterType="M-0001_A-0010-02-3D95_PT-t.5FLKgrpDef" Access="Read" Value="1" LegacyPatchAlways="0" SuffixText="" />
+              <Parameter Id="M-0001_A-0010-02-3D95_P-14" Name="Allgemein" Text="General" ParameterType="M-0001_A-0010-02-3D95_PT-page" Access="Read" Value="" LegacyPatchAlways="0" SuffixText="" />
+              <Parameter Id="M-0001_A-0010-02-3D95_P-15" Name="IP CFG 2" Text="IP Config 2" ParameterType="M-0001_A-0010-02-3D95_PT-t.5FLKgrpDef" Access="Read" Value="1" LegacyPatchAlways="0" SuffixText="" />
+              <Parameter Id="M-0001_A-0010-02-3D95_P-16" Name="IP CFG 3" Text="IP Config 3" ParameterType="M-0001_A-0010-02-3D95_PT-t.5FLKgrpDef" Access="Read" Value="1" LegacyPatchAlways="0" SuffixText="" />
+              <Parameter Id="M-0001_A-0010-02-3D95_P-34" Name="Routing (Bus &gt; IP)" Text="Routing (Bus &gt; IP)" ParameterType="M-0001_A-0010-02-3D95_PT-page" Access="ReadWrite" Value="" LegacyPatchAlways="0" SuffixText="" />
+              <Parameter Id="M-0001_A-0010-02-3D95_P-35" Name="Routing (IP &gt; Bus)" Text="Routing (IP &gt; Bus)" ParameterType="M-0001_A-0010-02-3D95_PT-page" Access="ReadWrite" Value="" LegacyPatchAlways="0" SuffixText="" />
+              <Parameter Id="M-0001_A-0010-02-3D95_P-39" Name="text" Text="IP Routing Multicast Address" ParameterType="M-0001_A-0010-02-3D95_PT-Text" Access="ReadWrite" Value="" LegacyPatchAlways="0" SuffixText="" />
+              <Parameter Id="M-0001_A-0010-02-3D95_P-40" Name="text" Text="IP Address" ParameterType="M-0001_A-0010-02-3D95_PT-Text" Access="ReadWrite" Value="" LegacyPatchAlways="0" SuffixText="" />
+              <Parameter Id="M-0001_A-0010-02-3D95_P-41" Name="text" Text="IP Standard Gateway" ParameterType="M-0001_A-0010-02-3D95_PT-Text" Access="ReadWrite" Value="" LegacyPatchAlways="0" SuffixText="" />
+              <Parameter Id="M-0001_A-0010-02-3D95_P-45" Name="text" Text="IP Subnet Mask" ParameterType="M-0001_A-0010-02-3D95_PT-Text" Access="ReadWrite" Value="" LegacyPatchAlways="0" SuffixText="" />
+            </Parameters>
+            <ParameterRefs>
+              <ParameterRef Id="M-0001_A-0010-02-3D95_P-14_R-14" DisplayOrder="10" RefId="M-0001_A-0010-02-3D95_P-14" Tag="14" />
+              <ParameterRef Id="M-0001_A-0010-02-3D95_P-11_R-11" DisplayOrder="12" RefId="M-0001_A-0010-02-3D95_P-11" Tag="11" />
+              <ParameterRef Id="M-0001_A-0010-02-3D95_P-13_R-13" DisplayOrder="15" RefId="M-0001_A-0010-02-3D95_P-13" Tag="13" />
+              <ParameterRef Id="M-0001_A-0010-02-3D95_P-8_R-8" DisplayOrder="17" RefId="M-0001_A-0010-02-3D95_P-8" Tag="8" />
+              <ParameterRef Id="M-0001_A-0010-02-3D95_P-34_R-34" DisplayOrder="20" RefId="M-0001_A-0010-02-3D95_P-34" Tag="34" />
+              <ParameterRef Id="M-0001_A-0010-02-3D95_P-2_R-2" DisplayOrder="22" RefId="M-0001_A-0010-02-3D95_P-2" Tag="2" />
+              <ParameterRef Id="M-0001_A-0010-02-3D95_P-7_R-7" DisplayOrder="24" RefId="M-0001_A-0010-02-3D95_P-7" Tag="7" />
+              <ParameterRef Id="M-0001_A-0010-02-3D95_P-3_R-3" DisplayOrder="26" RefId="M-0001_A-0010-02-3D95_P-3" Tag="3" />
+              <ParameterRef Id="M-0001_A-0010-02-3D95_P-10_R-10" DisplayOrder="28" RefId="M-0001_A-0010-02-3D95_P-10" Tag="10" />
+              <ParameterRef Id="M-0001_A-0010-02-3D95_P-35_R-35" DisplayOrder="30" RefId="M-0001_A-0010-02-3D95_P-35" Tag="35" />
+              <ParameterRef Id="M-0001_A-0010-02-3D95_P-42_R-42" DisplayOrder="32" RefId="M-0001_A-0010-02-3D95_P-42" Tag="42" />
+              <ParameterRef Id="M-0001_A-0010-02-3D95_P-43_R-43" DisplayOrder="34" RefId="M-0001_A-0010-02-3D95_P-43" Tag="43" />
+              <ParameterRef Id="M-0001_A-0010-02-3D95_P-44_R-44" DisplayOrder="36" RefId="M-0001_A-0010-02-3D95_P-44" Tag="44" />
+              <ParameterRef Id="M-0001_A-0010-02-3D95_P-1_R-1" DisplayOrder="1000" RefId="M-0001_A-0010-02-3D95_P-1" Tag="1" />
+              <ParameterRef Id="M-0001_A-0010-02-3D95_P-17_R-17" DisplayOrder="1005" RefId="M-0001_A-0010-02-3D95_P-17" Tag="17" />
+              <ParameterRef Id="M-0001_A-0010-02-3D95_P-39_R-39" DisplayOrder="1007" RefId="M-0001_A-0010-02-3D95_P-39" Tag="39" />
+              <ParameterRef Id="M-0001_A-0010-02-3D95_P-18_R-18" DisplayOrder="1010" RefId="M-0001_A-0010-02-3D95_P-18" Tag="18" />
+              <ParameterRef Id="M-0001_A-0010-02-3D95_P-20_R-20" DisplayOrder="1020" RefId="M-0001_A-0010-02-3D95_P-20" Tag="20" />
+              <ParameterRef Id="M-0001_A-0010-02-3D95_P-19_R-19" DisplayOrder="1030" RefId="M-0001_A-0010-02-3D95_P-19" Tag="19" />
+              <ParameterRef Id="M-0001_A-0010-02-3D95_P-21_R-21" DisplayOrder="1040" RefId="M-0001_A-0010-02-3D95_P-21" Tag="21" />
+              <ParameterRef Id="M-0001_A-0010-02-3D95_P-15_R-15" DisplayOrder="2000" RefId="M-0001_A-0010-02-3D95_P-15" Tag="15" />
+              <ParameterRef Id="M-0001_A-0010-02-3D95_P-40_R-40" DisplayOrder="2005" RefId="M-0001_A-0010-02-3D95_P-40" Tag="40" />
+              <ParameterRef Id="M-0001_A-0010-02-3D95_P-25_R-25" DisplayOrder="2010" RefId="M-0001_A-0010-02-3D95_P-25" Tag="25" />
+              <ParameterRef Id="M-0001_A-0010-02-3D95_P-24_R-24" DisplayOrder="2020" RefId="M-0001_A-0010-02-3D95_P-24" Tag="24" />
+              <ParameterRef Id="M-0001_A-0010-02-3D95_P-23_R-23" DisplayOrder="2030" RefId="M-0001_A-0010-02-3D95_P-23" Tag="23" />
+              <ParameterRef Id="M-0001_A-0010-02-3D95_P-22_R-22" DisplayOrder="2040" RefId="M-0001_A-0010-02-3D95_P-22" Tag="22" />
+              <ParameterRef Id="M-0001_A-0010-02-3D95_P-45_R-45" DisplayOrder="2105" RefId="M-0001_A-0010-02-3D95_P-45" Tag="45" />
+              <ParameterRef Id="M-0001_A-0010-02-3D95_P-29_R-29" DisplayOrder="2110" RefId="M-0001_A-0010-02-3D95_P-29" Tag="29" />
+              <ParameterRef Id="M-0001_A-0010-02-3D95_P-28_R-28" DisplayOrder="2120" RefId="M-0001_A-0010-02-3D95_P-28" Tag="28" />
+              <ParameterRef Id="M-0001_A-0010-02-3D95_P-27_R-27" DisplayOrder="2130" RefId="M-0001_A-0010-02-3D95_P-27" Tag="27" />
+              <ParameterRef Id="M-0001_A-0010-02-3D95_P-26_R-26" DisplayOrder="2140" RefId="M-0001_A-0010-02-3D95_P-26" Tag="26" />
+              <ParameterRef Id="M-0001_A-0010-02-3D95_P-16_R-16" DisplayOrder="3000" RefId="M-0001_A-0010-02-3D95_P-16" Tag="16" />
+              <ParameterRef Id="M-0001_A-0010-02-3D95_P-41_R-41" DisplayOrder="3005" RefId="M-0001_A-0010-02-3D95_P-41" Tag="41" />
+              <ParameterRef Id="M-0001_A-0010-02-3D95_P-32_R-32" DisplayOrder="3010" RefId="M-0001_A-0010-02-3D95_P-32" Tag="32" />
+              <ParameterRef Id="M-0001_A-0010-02-3D95_P-33_R-33" DisplayOrder="3020" RefId="M-0001_A-0010-02-3D95_P-33" Tag="33" />
+              <ParameterRef Id="M-0001_A-0010-02-3D95_P-31_R-31" DisplayOrder="3030" RefId="M-0001_A-0010-02-3D95_P-31" Tag="31" />
+              <ParameterRef Id="M-0001_A-0010-02-3D95_P-30_R-30" DisplayOrder="3040" RefId="M-0001_A-0010-02-3D95_P-30" Tag="30" />
+            </ParameterRefs>
+            <Extension RequiresExternalSoftware="0" />
+            <Options PreferPartialDownloadIfApplicationLoaded="0" EasyCtrlModeModeStyleEmptyGroupComTables="0" SetObjectTableLengthAlwaysToOne="0" TextParameterEncoding="iso-8859-1" TextParameterZeroTerminate="0" ParameterByteOrder="BigEndian" LegacyNoPartialDownload="0" LegacyNoMemoryVerifyMode="0" LegacyNoOptimisticWrite="0" LegacyDoNotReportPropertyWriteErrors="0" LegacyNoBackgroundDownload="0" LegacyDoNotCheckManufacturerId="0" LegacyAlwaysReloadAppIfCoVisibilityChanged="0" LegacyNeverReloadAppIfCoVisibilityChanged="0" LegacyDoNotSupportUndoDelete="0" LegacyAllowPartialDownloadIfAp2Mismatch="0" LegacyKeepObjectTableGaps="0" PartialDownloadOnlyVisibleParameters="0" LegacyProxyCommunicationObjects="0" DeviceInfoIgnoreRunState="0" DeviceInfoIgnoreLoadedState="0" DeviceCompareAllowCompatibleManufacturerId="0" LineCoupler0912NewProgrammingStyle="0" Comparable="0" Reconstructable="0" />
+          </Static>
+          <Dynamic>
+            <Channel Name="Generic" Text="" Number="0" Id="M-0001_A-0010-02-3D95_CH-0">
+              <ParameterBlock Id="M-0001_A-0010-02-3D95_PB-14" Name="Allgemein" Access="Read" ParamRefId="M-0001_A-0010-02-3D95_P-14_R-14">
+                <choose ParamRefId="M-0001_A-0010-02-3D95_P-14_R-14">
+                  <when default="true">
+                    <ParameterRefRef RefId="M-0001_A-0010-02-3D95_P-11_R-11" />
+                    <ParameterRefRef RefId="M-0001_A-0010-02-3D95_P-13_R-13" />
+                    <ParameterRefRef RefId="M-0001_A-0010-02-3D95_P-8_R-8" />
+                  </when>
+                </choose>
+              </ParameterBlock>
+              <ParameterBlock Id="M-0001_A-0010-02-3D95_PB-34" Name="Routing (Bus &gt; IP)" ParamRefId="M-0001_A-0010-02-3D95_P-34_R-34" Access="ReadWrite">
+                <choose ParamRefId="M-0001_A-0010-02-3D95_P-34_R-34">
+                  <when default="true">
+                    <ParameterRefRef RefId="M-0001_A-0010-02-3D95_P-2_R-2" />
+                    <ParameterRefRef RefId="M-0001_A-0010-02-3D95_P-7_R-7" />
+                    <ParameterRefRef RefId="M-0001_A-0010-02-3D95_P-3_R-3" />
+                    <ParameterRefRef RefId="M-0001_A-0010-02-3D95_P-10_R-10" />
+                  </when>
+                </choose>
+              </ParameterBlock>
+              <ParameterBlock Id="M-0001_A-0010-02-3D95_PB-35" Name="Routing (IP &gt; Bus)" ParamRefId="M-0001_A-0010-02-3D95_P-35_R-35" Access="ReadWrite">
+                <choose ParamRefId="M-0001_A-0010-02-3D95_P-35_R-35">
+                  <when default="true">
+                    <ParameterRefRef RefId="M-0001_A-0010-02-3D95_P-42_R-42" />
+                    <ParameterRefRef RefId="M-0001_A-0010-02-3D95_P-43_R-43" />
+                    <ParameterRefRef RefId="M-0001_A-0010-02-3D95_P-44_R-44" />
+                  </when>
+                </choose>
+              </ParameterBlock>
+              <ParameterBlock Id="M-0001_A-0010-02-3D95_PB-1" Name="IP CFG 1" Access="Read" ParamRefId="M-0001_A-0010-02-3D95_P-1_R-1">
+                <choose ParamRefId="M-0001_A-0010-02-3D95_P-1_R-1">
+                  <when default="true">
+                    <ParameterRefRef RefId="M-0001_A-0010-02-3D95_P-17_R-17" />
+                    <ParameterRefRef RefId="M-0001_A-0010-02-3D95_P-39_R-39" />
+                    <ParameterRefRef RefId="M-0001_A-0010-02-3D95_P-18_R-18" />
+                    <ParameterRefRef RefId="M-0001_A-0010-02-3D95_P-20_R-20" />
+                    <ParameterRefRef RefId="M-0001_A-0010-02-3D95_P-19_R-19" />
+                    <ParameterRefRef RefId="M-0001_A-0010-02-3D95_P-21_R-21" />
+                  </when>
+                </choose>
+              </ParameterBlock>
+              <choose ParamRefId="M-0001_A-0010-02-3D95_P-1_R-1">
+                <when default="true">
+                  <choose ParamRefId="M-0001_A-0010-02-3D95_P-17_R-17">
+                    <when test="1" default="false">
+                      <ParameterBlock Id="M-0001_A-0010-02-3D95_PB-15" Name="IP CFG 2" Access="Read" ParamRefId="M-0001_A-0010-02-3D95_P-15_R-15">
+                        <ParameterRefRef RefId="M-0001_A-0010-02-3D95_P-40_R-40" />
+                        <ParameterRefRef RefId="M-0001_A-0010-02-3D95_P-25_R-25" />
+                        <ParameterRefRef RefId="M-0001_A-0010-02-3D95_P-24_R-24" />
+                        <ParameterRefRef RefId="M-0001_A-0010-02-3D95_P-23_R-23" />
+                        <ParameterRefRef RefId="M-0001_A-0010-02-3D95_P-22_R-22" />
+                        <ParameterRefRef RefId="M-0001_A-0010-02-3D95_P-45_R-45" />
+                        <ParameterRefRef RefId="M-0001_A-0010-02-3D95_P-29_R-29" />
+                        <ParameterRefRef RefId="M-0001_A-0010-02-3D95_P-28_R-28" />
+                        <ParameterRefRef RefId="M-0001_A-0010-02-3D95_P-27_R-27" />
+                        <ParameterRefRef RefId="M-0001_A-0010-02-3D95_P-26_R-26" />
+                      </ParameterBlock>
+                      <ParameterBlock Id="M-0001_A-0010-02-3D95_PB-16" Name="IP CFG 3" Access="Read" ParamRefId="M-0001_A-0010-02-3D95_P-16_R-16">
+                        <ParameterRefRef RefId="M-0001_A-0010-02-3D95_P-41_R-41" />
+                        <ParameterRefRef RefId="M-0001_A-0010-02-3D95_P-32_R-32" />
+                        <ParameterRefRef RefId="M-0001_A-0010-02-3D95_P-33_R-33" />
+                        <ParameterRefRef RefId="M-0001_A-0010-02-3D95_P-31_R-31" />
+                        <ParameterRefRef RefId="M-0001_A-0010-02-3D95_P-30_R-30" />
+                      </ParameterBlock>
+                    </when>
+                  </choose>
+                </when>
+              </choose>
+            </Channel>
+          </Dynamic>
+        </ApplicationProgram>
+      </ApplicationPrograms>
+      <Languages>
+        <Language Identifier="de-DE">
+          <TranslationUnit RefId="M-0001_A-0010-02-3D95">
+            <TranslationElement RefId="M-0001_A-0010-02-3D95">
+              <Translation AttributeName="Name" Text="IP-Router 001002" />
+              <Translation AttributeName="VisibleDescription" Text="Beschreibung  - siehe Datei: 001002_apb.pdf" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-0010-02-3D95_P-1">
+              <Translation AttributeName="Text" Text="IP Konfig 1" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-0010-02-3D95_P-14">
+              <Translation AttributeName="Text" Text="Allgemein" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-0010-02-3D95_P-15">
+              <Translation AttributeName="Text" Text="IP Konfig 2" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-0010-02-3D95_P-16">
+              <Translation AttributeName="Text" Text="IP Konfig 3" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-0010-02-3D95_P-34">
+              <Translation AttributeName="Text" Text="Routing (Bus &gt; IP)" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-0010-02-3D95_P-35">
+              <Translation AttributeName="Text" Text="Routing (IP &gt; Bus)" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-0010-02-3D95_P-39">
+              <Translation AttributeName="Text" Text="IP Routing Multicast Adresse" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-0010-02-3D95_P-40">
+              <Translation AttributeName="Text" Text="IP Adresse" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-0010-02-3D95_P-41">
+              <Translation AttributeName="Text" Text="IP Standard Gateway" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-0010-02-3D95_P-45">
+              <Translation AttributeName="Text" Text="IP Subnetz Maske" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-0010-02-3D95_P-11">
+              <Translation AttributeName="Text" Text="Unterstüzung unparametrierter&#xD;&#xA;Schnittstellen" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-0010-02-3D95_P-13">
+              <Translation AttributeName="Text" Text="Überwachung auf Busspannungsausfall" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-0010-02-3D95_P-8">
+              <Translation AttributeName="Text" Text="Gerätename (max. 30 Zeichen)" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-0010-02-3D95_P-17">
+              <Translation AttributeName="Text" Text="IP Adresszuweisung" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-0010-02-3D95_P-18">
+              <Translation AttributeName="Text" Text="Byte 1 [224 ... 239]" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-0010-02-3D95_P-20">
+              <Translation AttributeName="Text" Text="Byte 2 [0 ... 255]" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-0010-02-3D95_P-19">
+              <Translation AttributeName="Text" Text="Byte 3 [0 ... 255]" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-0010-02-3D95_P-21">
+              <Translation AttributeName="Text" Text="Byte 4 [0 ... 255]" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-0010-02-3D95_P-25">
+              <Translation AttributeName="Text" Text="Byte 1" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-0010-02-3D95_P-24">
+              <Translation AttributeName="Text" Text="Byte 2" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-0010-02-3D95_P-23">
+              <Translation AttributeName="Text" Text="Byte 3" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-0010-02-3D95_P-22">
+              <Translation AttributeName="Text" Text="Byte 4" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-0010-02-3D95_P-29">
+              <Translation AttributeName="Text" Text="Byte 1" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-0010-02-3D95_P-28">
+              <Translation AttributeName="Text" Text="Byte 2" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-0010-02-3D95_P-27">
+              <Translation AttributeName="Text" Text="Byte 3" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-0010-02-3D95_P-26">
+              <Translation AttributeName="Text" Text="Byte 4" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-0010-02-3D95_P-32">
+              <Translation AttributeName="Text" Text="Byte 1" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-0010-02-3D95_P-33">
+              <Translation AttributeName="Text" Text="Byte 2" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-0010-02-3D95_P-31">
+              <Translation AttributeName="Text" Text="Byte 3" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-0010-02-3D95_P-30">
+              <Translation AttributeName="Text" Text="Byte 4" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-0010-02-3D95_P-10">
+              <Translation AttributeName="Text" Text="Telegrammbestätigung gruppenorientierter&#xD;&#xA;Telegramme" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-0010-02-3D95_P-3">
+              <Translation AttributeName="Text" Text="Physikalisch adressierte Telegramme und&#xD;&#xA;Broadcast-Telegramme" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-0010-02-3D95_P-7">
+              <Translation AttributeName="Text" Text="Gruppentelegramme der&#xD;&#xA;Hauptgruppen 14 und 15" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-0010-02-3D95_P-2">
+              <Translation AttributeName="Text" Text="Gruppentelegramme der&#xD;&#xA;Hauptgruppen 0 bis 13" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-0010-02-3D95_P-44">
+              <Translation AttributeName="Text" Text="Physikalisch adressierte Telegramme und&#xD;&#xA;Broadcast-Telegramme" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-0010-02-3D95_P-43">
+              <Translation AttributeName="Text" Text="Gruppentelegramme der&#xD;&#xA;Hauptgruppen 14 und 15" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-0010-02-3D95_P-42">
+              <Translation AttributeName="Text" Text="Gruppentelegramme der&#xD;&#xA;Hauptgruppen 0 bis 13" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-0010-02-3D95_PT-ip.5Fmode_EN-4">
+              <Translation AttributeName="Text" Text="von DHCP-Dienst" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-0010-02-3D95_PT-ip.5Fmode_EN-1">
+              <Translation AttributeName="Text" Text="manuelle Eingabe" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-0010-02-3D95_PT-LK.20Ack_EN-0">
+              <Translation AttributeName="Text" Text="immer" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-0010-02-3D95_PT-LK.20Ack_EN-1">
+              <Translation AttributeName="Text" Text="nur bei Weiterleitung" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-0010-02-3D95_PT-LKgroup_EN-1">
+              <Translation AttributeName="Text" Text="nur für Testbetrieb: weiterleiten" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-0010-02-3D95_PT-LKgroup_EN-2">
+              <Translation AttributeName="Text" Text="sperren" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-0010-02-3D95_PT-LKgroup_EN-3">
+              <Translation AttributeName="Text" Text="filtern (normal)" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-0010-02-3D95_PT-t.5Fenable_EN-0">
+              <Translation AttributeName="Text" Text="gesperrt" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-0010-02-3D95_PT-t.5Fenable_EN-1">
+              <Translation AttributeName="Text" Text="freigegeben" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-0010-02-3D95_PT-t.5FLKgrpDef_EN-1">
+              <Translation AttributeName="Text" Text="nur für Testbetrieb: weiterleiten" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-0010-02-3D95_PT-t.5FLKgrpDef_EN-2">
+              <Translation AttributeName="Text" Text="sperren" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-0010-02-3D95_PT-t.5FLKgrpDef_EN-3">
+              <Translation AttributeName="Text" Text="filtern (normal)" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-0010-02-3D95_PT-t.5FLKhiGrpDef_EN-2">
+              <Translation AttributeName="Text" Text="sperren" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-0010-02-3D95_PT-t.5FLKhiGrpDef_EN-1">
+              <Translation AttributeName="Text" Text="weiterleiten" />
+            </TranslationElement>
+          </TranslationUnit>
+        </Language>
+        <Language Identifier="en-US">
+          <TranslationUnit RefId="M-0001_A-0010-02-3D95">
+            <TranslationElement RefId="M-0001_A-0010-02-3D95">
+              <Translation AttributeName="Name" Text="IP-Router 001002" />
+              <Translation AttributeName="VisibleDescription" Text="Description - see file:  001002_apb_e.pdf" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-0010-02-3D95_P-1">
+              <Translation AttributeName="Text" Text="IP Config 1" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-0010-02-3D95_P-14">
+              <Translation AttributeName="Text" Text="General" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-0010-02-3D95_P-15">
+              <Translation AttributeName="Text" Text="IP Config 2" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-0010-02-3D95_P-16">
+              <Translation AttributeName="Text" Text="IP Config 3" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-0010-02-3D95_P-34">
+              <Translation AttributeName="Text" Text="Routing (Bus &gt; IP)" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-0010-02-3D95_P-35">
+              <Translation AttributeName="Text" Text="Routing (IP &gt; Bus)" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-0010-02-3D95_P-39">
+              <Translation AttributeName="Text" Text="IP Routing Multicast Address" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-0010-02-3D95_P-40">
+              <Translation AttributeName="Text" Text="IP Address" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-0010-02-3D95_P-41">
+              <Translation AttributeName="Text" Text="IP Standard Gateway" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-0010-02-3D95_P-45">
+              <Translation AttributeName="Text" Text="IP Subnet Mask" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-0010-02-3D95_P-11">
+              <Translation AttributeName="Text" Text="Support of unconfigured interfaces" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-0010-02-3D95_P-13">
+              <Translation AttributeName="Text" Text="Monitoring of bus voltage failure" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-0010-02-3D95_P-8">
+              <Translation AttributeName="Text" Text="Device name (max. 30 char)" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-0010-02-3D95_P-17">
+              <Translation AttributeName="Text" Text="IP Address Assignment" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-0010-02-3D95_P-18">
+              <Translation AttributeName="Text" Text="Byte 1 [224 ... 239]" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-0010-02-3D95_P-20">
+              <Translation AttributeName="Text" Text="Byte 2 [0 ... 255]" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-0010-02-3D95_P-19">
+              <Translation AttributeName="Text" Text="Byte 3 [0 ... 255]" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-0010-02-3D95_P-21">
+              <Translation AttributeName="Text" Text="Byte 4 [0 ... 255]" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-0010-02-3D95_P-25">
+              <Translation AttributeName="Text" Text="Byte 1" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-0010-02-3D95_P-24">
+              <Translation AttributeName="Text" Text="Byte 2" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-0010-02-3D95_P-23">
+              <Translation AttributeName="Text" Text="Byte 3" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-0010-02-3D95_P-22">
+              <Translation AttributeName="Text" Text="Byte 4" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-0010-02-3D95_P-29">
+              <Translation AttributeName="Text" Text="Byte 1" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-0010-02-3D95_P-28">
+              <Translation AttributeName="Text" Text="Byte 2" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-0010-02-3D95_P-27">
+              <Translation AttributeName="Text" Text="Byte 3" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-0010-02-3D95_P-26">
+              <Translation AttributeName="Text" Text="Byte 4" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-0010-02-3D95_P-32">
+              <Translation AttributeName="Text" Text="Byte 1" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-0010-02-3D95_P-33">
+              <Translation AttributeName="Text" Text="Byte 2" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-0010-02-3D95_P-31">
+              <Translation AttributeName="Text" Text="Byte 3" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-0010-02-3D95_P-30">
+              <Translation AttributeName="Text" Text="Byte 4" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-0010-02-3D95_P-10">
+              <Translation AttributeName="Text" Text="Telegram confirmation of group oriented&#xD;&#xA;telegrams" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-0010-02-3D95_P-3">
+              <Translation AttributeName="Text" Text="Individually addressed and broadcast&#xD;&#xA;telegrams" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-0010-02-3D95_P-7">
+              <Translation AttributeName="Text" Text="Group telegrams of main group 14 and 15" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-0010-02-3D95_P-2">
+              <Translation AttributeName="Text" Text="Group telegrams of main groups 0 to 13" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-0010-02-3D95_P-44">
+              <Translation AttributeName="Text" Text="Individually addressed and broadcast&#xD;&#xA;telegrams" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-0010-02-3D95_P-43">
+              <Translation AttributeName="Text" Text="Group telegrams of main group 14 and 15" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-0010-02-3D95_P-42">
+              <Translation AttributeName="Text" Text="Group telegrams of main groups 0 to 13" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-0010-02-3D95_PT-ip.5Fmode_EN-4">
+              <Translation AttributeName="Text" Text="by DHCP Server" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-0010-02-3D95_PT-ip.5Fmode_EN-1">
+              <Translation AttributeName="Text" Text="manual input" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-0010-02-3D95_PT-LK.20Ack_EN-0">
+              <Translation AttributeName="Text" Text="always" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-0010-02-3D95_PT-LK.20Ack_EN-1">
+              <Translation AttributeName="Text" Text="only if routed" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-0010-02-3D95_PT-LKgroup_EN-1">
+              <Translation AttributeName="Text" Text="transmit all (for testing only)" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-0010-02-3D95_PT-LKgroup_EN-2">
+              <Translation AttributeName="Text" Text="block" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-0010-02-3D95_PT-LKgroup_EN-3">
+              <Translation AttributeName="Text" Text="filter (normal)" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-0010-02-3D95_PT-t.5Fenable_EN-0">
+              <Translation AttributeName="Text" Text="disabled" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-0010-02-3D95_PT-t.5Fenable_EN-1">
+              <Translation AttributeName="Text" Text="enabled" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-0010-02-3D95_PT-t.5FLKgrpDef_EN-1">
+              <Translation AttributeName="Text" Text="transmit all (for testing only)" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-0010-02-3D95_PT-t.5FLKgrpDef_EN-2">
+              <Translation AttributeName="Text" Text="block" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-0010-02-3D95_PT-t.5FLKgrpDef_EN-3">
+              <Translation AttributeName="Text" Text="filter (normal)" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-0010-02-3D95_PT-t.5FLKhiGrpDef_EN-2">
+              <Translation AttributeName="Text" Text="block" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-0010-02-3D95_PT-t.5FLKhiGrpDef_EN-1">
+              <Translation AttributeName="Text" Text="transmit all" />
+            </TranslationElement>
+          </TranslationUnit>
+        </Language>
+      </Languages></Manufacturer>
+  </ManufacturerData>
+</KNX>
