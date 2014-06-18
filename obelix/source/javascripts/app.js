@@ -5,7 +5,10 @@
 //= require 'jquery.jsPlumb-1.5.2'
 //= require 'sugar'
 //= require 'URI'
+//= require 'underscore'
 //= require 'backbone'
+//= require 'jquery.qtip.min'
+//= require 'tourist'
 //= require_self
 
 var app = angular.module('Obelix', []);
@@ -17,7 +20,7 @@ app.service('Lobby', ['$http', 'Device', 'Directory', function($http, Device, Di
       root.expanded = true;
       $http.get('/obix').success(function(response) {
     	  console.log(response);
-        response['nodes'].each(function(node) {
+    	  response['nodes'].each(function(node) {
           var href = node['href'];
           if (!href.startsWith('/')) href = '/' + href;
           var href_components = href.split('/').compact(true);
@@ -331,7 +334,6 @@ app.factory('Connection', ['Storage', function(Storage) {
     }
     this.fromProperty.connect(this, true);
     this.toProperty.connect(this, true);
-
     return this;
   };
 
@@ -431,7 +433,7 @@ app.factory('Device', ['$http', '$q', 'Storage', 'Property', 'Watch', function($
       var propertiesWithGroupCommEnabled = [];
       this.properties = response['nodes'].map(function(node) {
         if (node['tag'] == 'ref') {
-          var names = node['name'].split(' ');
+          var names = node['name'] ? node['name'].split(' ') : '';
           var gcIndex = names.indexOf('groupComm');
           if (gcIndex != -1) {
             names.splice(gcIndex,1);
@@ -471,11 +473,13 @@ app.factory('Device', ['$http', '$q', 'Storage', 'Property', 'Watch', function($
       Watch.getInstance(function(w) { w.remove(href); });
 
       // Disconnect connected properties
-      this.properties.each(function(p) {
-        p.connections.each(function(c) { c.destroy(); });
-        // Remove endpoints
-        p.jsPlumbEndpoints.each(function(e) { jsPlumb.deleteEndpoint(e); });
-      });
+      if (this.properties) {
+    	  this.properties.each(function(p) {
+    		  p.connections.each(function(c) { c.destroy(); });
+    		  // Remove endpoints
+    		  p.jsPlumbEndpoints.each(function(e) { jsPlumb.deleteEndpoint(e); });
+	      });
+      }
 
       // Unplace
       this.placement = null;
@@ -527,7 +531,7 @@ app.controller('MainCtrl', ['$scope','$q','$timeout','Lobby','Watch','Connection
   Lobby.getDeviceTree(function(root) {
     $scope.directory = root;
     $scope.allDevices = root.globDevices();
-
+    
     var placedDevices = $scope.allDevices.filter(function(device) {
       return !!device.placement;
     });
@@ -550,8 +554,32 @@ app.controller('MainCtrl', ['$scope','$q','$timeout','Lobby','Watch','Connection
       }
     });
   });
-
-  $scope.sidebarExpanded = false;
+  
+  $scope.sidebar = {
+	  _expanded: false,
+	  _locked: false,
+	  get expanded() {
+		  return this._expanded;
+	  },
+	  set expanded(newValue) {
+		  if (! this._locked) {
+			  this._expanded = newValue;
+		  }
+	  },
+	  toggle: function() {
+		  if (! this._locked) {
+			  this._expanded = !this._expanded;			  
+		  }
+	  },
+	  get locked() {
+		  return this._locked;
+	  }, 
+	  set locked(newValue) {
+		  this._locked = newValue;
+	  }
+  };
+  
+  $scope.tourInProgress = false;
   
   $scope.placeDevice = function(device, position) {
     if (!device.placement) {
@@ -560,6 +588,10 @@ app.controller('MainCtrl', ['$scope','$q','$timeout','Lobby','Watch','Connection
     }
     device.place(position);
   };
+  
+  $scope.destroyDevice = function(device) {
+	  $scope.tourInProgress || device.destroy();
+  }
 
   $scope.clear = function() {
     // TODO: clear all connections, then devices!
@@ -744,12 +776,307 @@ app.directive('jsplumbEndpoint', ['$timeout', function($timeout) {
           connector:[ "Bezier", { stub: 30, curviness:50 }], 
           endpoint: ["Rectangle", { width: 8, height: 8}],
           anchors: [[1, 0.5, 1, 0, 8,0], [0, 0.5, -1, 0, -8, 0]],
-          paintStyle:{ fillStyle:"#666"}, 
-          connectorStyle: { lineWidth: 4, strokeStyle: "#5b9ada"},
+          paintStyle:{ fillStyle:"#fff"}, 
+          connectorStyle: { lineWidth: 4, strokeStyle: "#fff"},
           parameters: {property: property}
         });
         property.jsPlumbEndpoints.push(ep);
       },0);  
     }
   };
+}]);
+
+app.directive('tourDevice', function() {
+  return {
+    restrict: 'A',
+    link: function(scope, el, attrs) {
+      var deviceName = scope.$eval(attrs['tourDevice']).name.toLowerCase();
+      if (deviceName === 'virtualpushbutton') {
+    	  jQuery(el).attr('id', 'tourDeviceButton');
+      } else if (deviceName === 'virtuallight') {
+    	  jQuery(el).attr('id', 'tourDeviceLight');
+      }
+    }
+  };
+});
+
+app.directive('obelixTourStarter', ['$timeout', function($timeout) {
+	return {
+		restrict: 'A',
+		link: function(scope, elem, attr) {
+
+			function toggleTourStarter(toggle) {
+				if (toggle) {
+					jQuery(elem)
+						.off()
+						.on('click', obelixTour.start)
+						.attr('title', 'Start the UI tour!')
+						.addClass('enabled')
+						.removeClass('disabled')
+				} else {
+					jQuery(elem)
+						.off()
+						.attr('title', 'UI tour has started')
+						.addClass('disabled')
+						.removeClass('enabled');
+				}
+			}
+			
+			function toggleSidebarButton(enableToggle) {
+				$timeout(function() {
+					scope.sidebar.locked = !enableToggle;
+				}, 0);
+				if (!enableToggle) {
+					jQuery('#toggleSidebar').addClass('disabled');
+				} else {
+					jQuery('#toggleSidebar').removeClass('disabled');
+				}
+			}
+			
+			function tourInProgress(started) {
+				$timeout(function() {
+					scope.tourInProgress = started;
+				}, 0);
+			}
+			
+			var obelixTour = {};
+			
+			var tourSteps = [{
+				title: 'Menu Button',
+				content: '<p>This is the menu toggle button. Click it to open/close the menu.</p>',
+				closeButton: true,
+				highlightTarget: true,
+				target: jQuery('div#toggleSidebar'),
+				my: 'left center',
+				at: 'right center',
+				bind: ['onToggleButtonClick'],
+				onToggleButtonClick: function(tour, options, view, element) {
+					tour.next();
+				},
+				setup: function(tour, options) {
+					obelixTour.step = this;
+					this.target.bind('click', this.onToggleButtonClick);
+				},
+				teardown: function(tour, options) {
+					this.target.unbind('click', this.onToggleButtonClick);
+					toggleSidebarButton(false);
+				}
+			  }, {
+				title: 'Menu', 
+				content: '<p>The menu contains two main sections: "Devices" and "Settings".</p>',
+				closeButton:true,
+				highlightTarget: false,
+				nextButton: true,
+				target: jQuery('div#sidebar-sublayer'),
+				my: 'left top',
+				at: 'right top',
+				setup: function(tour, options) {
+					obelixTour.step = this;
+					jQuery('#sidebar')
+						.addClass('tour-highlight')
+						.children('.content:first')
+							.scrollTop(0);
+				},
+				teardown: function(tour, options) {
+					jQuery('#sidebar').removeClass('tour-highlight');
+				}
+			  }, {
+				title: 'Section "Settings"', 
+				content: '<p>This section provides the possibility to control some aspects of this client. </p>',
+				closeButton:true,
+				highlightTarget: true,
+				nextButton: true,
+				target: jQuery('div#segmentSettings'),
+				my: 'top left',
+				at: 'bottom right',
+				setup: function(tour, options) {
+					obelixTour.step = this;
+					jQuery('#sidebar > .content:first')
+						.scrollTop(0);
+					$timeout(function() {
+						 scope.segment=1;
+					}, 0);
+				},
+				teardown: function(tour, options) {
+					$timeout(function() {
+						 scope.segment=0;
+					}, 0);
+				}
+			  }, {
+				title: 'Section "Devices"', 
+				content: '<p>This section contains the list of all known devices (represented as blocks), which are organized in lists (a list may contain sublists). A list can be opened/closed by clicking on it.</p>',
+				closeButton:true,
+				highlightTarget: true,
+				nextButton: true,
+				target: jQuery('div#segmentDevices'),
+				my: 'top left',
+				at: 'bottom right',
+				setup: function(tour, options) {
+					obelixTour.step = this;
+					$timeout(function() {
+						scope.segment=0;
+						scope.directory.subdirectories[1].expanded=true;
+					}, 0);
+				},
+				teardown: function(tour, options) {
+				}
+			  }, {
+				 title: 'Virtual Push Button',
+				 content: '<p>Drag and drop the virtual push button device block onto the grid.</p>',
+				 closeButton: true,
+				 highlightTarget: true,
+				 nextButton: false,
+				 my: 'bottom center',
+				 at: 'top center',
+				 setup: function(tour, options) {
+					 obelixTour.step = this;
+					 document.getElementById('tourDeviceButton').scrollIntoView(false);
+					 options.tourDeviceDropZone
+					 	.css({'top': '30px'})
+					 	.addClass('tour-highlight')
+					 	.droppable()
+					 	.droppable({
+					 		accept: 'label#tourDeviceButton',
+					 		drop: function( event, ui ) {
+					 			options.droppedDeviceButton = jQuery(event.target);
+					 			options.droppedDeviceButton
+					 				.droppable()
+					 				.droppable('destroy');
+					 			tour.next();
+					 		}
+				 		});
+					 return {
+						 target: jQuery('label#tourDeviceButton')
+					 }
+				 },
+				 teardown: function(tour, options) {
+					 options.tourDeviceDropZone
+					 	.removeClass('tour-highlight');
+					 options.droppedDevices.push(jQuery('#canvas #virtualpushbutton').draggable('disable'));
+				 }
+			  }, {
+				 title: 'Virtual Light',
+				 content: '<p>Drag and drop the virtual light device block onto the grid.</p>',
+				 closeButton: true,
+				 highlightTarget: true,
+				 nextButton: false,
+				 my: 'bottom left',
+				 at: 'top right',
+				 setup: function(tour, options) {
+					 obelixTour.step = this;
+					 document.getElementById('tourDeviceLight').scrollIntoView(false);
+					 options.tourDeviceDropZone
+					 	.css({'top': '280px'})
+					 	.addClass('tour-highlight')
+					 	.droppable()
+					 	.droppable({
+					 		accept: 'label#tourDeviceLight',
+					 		drop: function( event, ui ) {
+					 			options.droppedDeviceLight = jQuery(event.target)
+					 			options.droppedDeviceLight
+					 				.droppable()
+					 				.droppable('destroy');
+					 			tour.next();
+					 		}
+				 		});
+					 return {
+						 target: jQuery('label#tourDeviceLight')
+					 }
+				 },
+				 teardown: function(tour, options) {
+					 options.tourDeviceDropZone
+					 	.removeClass('tour-highlight')
+					 options.droppedDevices.push(jQuery('#canvas #virtuallight').draggable('disable'));
+				 }
+			  }, {
+				 title: 'Device Box',
+				 content: '<p>A device box can be deleted from the configuration by clicking on the button "x" (during the tour the button\'s functionality has been disabled). A device box contains interactive elements to modify its behaviour. It can also be  moved around using the mouse (but during the tour it is not possible to move around the device boxes of the virtual push button and virtual light).</p>',
+				 closeButton: true,
+				 highlightTarget: true,
+				 nextButton: true,
+				 my: 'top left',
+				 at: 'bottom center',
+				 setup: function(tour, options) {
+					 obelixTour.step = this;
+					 return {
+						 target: options.droppedDevices[0]
+					 }
+				 },
+				 teardown: function(tour, options) {
+				 }
+			  }];
+			
+			var tourStarterRebindStep = {
+				title: 'End Of Tour',
+				content: '<p>This is the end of the tour. Thanks!',
+				closeButton: true,
+				target: elem,
+				nextButton: true,
+				my: 'top right',
+				at: 'bottom left',
+				setup: function(tour, options) {
+					obelixTour.step = this;
+				},
+				teardown: function(tour, options) {
+					options.setDragOnDroppedDevices(true);
+					options.droppedDevices = [];
+					toggleSidebarButton(true);
+					tourInProgress(false);
+					toggleTourStarter(true);
+				}
+			};
+			
+			var tour = new Tourist.Tour({
+			  tipClass: 'QTip',
+			  tipOptions: {
+				  style: {
+					  classes: 'qtip-light qtip-shadow obelix-tour obelix-qtip'
+				  },
+				  overwrite: false,
+				  content: {
+					  title: 'Obelix Tour'
+				  },
+				  events: {
+					  show: function(event, api) {
+						  var qtip = jQuery(event.target);
+						  var closeButton = qtip.find('.tour-close');
+						  var qtipTitleBar = qtip.find('.qtip-titlebar');
+						  
+						  closeButton.each(function() {
+							  if (! jQuery(this).hasClass('qtip-close')) {
+								  jQuery(this)
+								  	.addClass('qtip-close')
+								  	.html('<span class="icon icon-remove">x</span>')
+								  	.appendTo(qtipTitleBar);
+							  } else {
+								  jQuery(this).detach();
+							  }
+						  });
+						  jQuery('.qtip-title', qtipTitleBar).html(obelixTour.step.title);  
+					  }	
+				  }
+			  },
+			  steps: tourSteps,
+			  stepOptions: {
+				  tourDeviceDropZone: jQuery('#canvas #tourDeviceDropZone'),
+				  droppedDevices: [],
+				  setDragOnDroppedDevices: function (boolDrag) {
+					  var stringDrag = boolDrag ? 'enable' : 'disable';
+					  this.droppedDevices.map(function(device) {
+						  device.draggable(stringDrag);
+					  });
+				  }
+			  },
+			  successStep: tourStarterRebindStep,
+			  cancelStep: tourStarterRebindStep
+			});
+			
+			obelixTour.start = function (event) {
+				toggleTourStarter(false);
+				tourInProgress(true);
+				tour.start();
+			}
+			toggleTourStarter(true);
+		}
+	}
 }]);
