@@ -18,6 +18,7 @@ ext{
 	configDir = file('iotsys-gateway/config')
 	resDir = file('iotsys-gateway/res')
 	knxConfigDir = file('iotsys-gateway/knx-config')
+	californiumProperties = file('iotsys-gateway/Californium.properties')
 	distLib = file('dist')
 	distLibRunFile = file('dist/rungateway.bat')
 	distLibRunFileSh = file('dist/rungateway.sh')
@@ -61,15 +62,16 @@ subprojects{
 description = 'IoTSyS - Integration middleware for the Internet of Things'
 
 task deploy << {
-	ant.echo(message:'java -cp "iotsys-rfid-0.1.jar;iotsys-bacnet-0.1.jar;iotsys-bacnet4j-0.1.jar;iotsys-calimero-0.1.jar;iotsys-common-0.1.jar;iotsys-control-0.1.jar;iotsys-encoding-json-0.1.jar;iotsys-gateway-0.1.jar;iotsys-knx-0.1.jar;iotsys-obix-0.1.jar;iotsys-virtual-0.1.jar;iotsys-wmbus-0.1.jar;iotsys-enocean-0.1.jar;iotsys-xacml-0.1.jar;res;iotsys-demoapp-0.1.jar;iotsys-xbee-0.1.jar;iotsys-mdnssd-0.1.jar" at.ac.tuwien.auto.iotsys.gateway.IoTSySGateway', file:distLibRunFile)	
+	ant.echo(message:'java -cp "iotsys-coap-0.1.jar;iotsys-rfid-0.1.jar;iotsys-bacnet-0.1.jar;iotsys-bacnet4j-0.1.jar;iotsys-calimero-0.1.jar;iotsys-common-0.1.jar;iotsys-control-0.1.jar;iotsys-encoding-json-0.1.jar;iotsys-gateway-0.1.jar;iotsys-knx-0.1.jar;iotsys-obix-0.1.jar;iotsys-virtual-0.1.jar;iotsys-wmbus-0.1.jar;iotsys-enocean-0.1.jar;iotsys-xacml-0.1.jar;res;iotsys-demoapp-0.1.jar;iotsys-xbee-0.1.jar;iotsys-mdnssd-0.1.jar" at.ac.tuwien.auto.iotsys.gateway.IoTSySGateway', file:distLibRunFile)	
 
-	ant.echo(message:'IOTSYS_PATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )${line.separator}"', file:distLibRunFileSh)
+	ant.echo(message:'IOTSYS_PATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )${file.separator}"${line.separator}', file:distLibRunFileSh)
 	ant.echo(message:'cd $IOTSYS_PATH${line.separator}', file:distLibRunFileSh, append:true)
-	ant.echo(message:'java -cp "${IOTSYS_PATH}iotsys-rfid-0.1.jar:${IOTSYS_PATH}iotsys-bacnet-0.1.jar:${IOTSYS_PATH}iotsys-bacnet4j-0.1.jar:${IOTSYS_PATH}iotsys-calimero-0.1.jar:${IOTSYS_PATH}iotsys-common-0.1.jar:${IOTSYS_PATH}iotsys-control-0.1.jar:${IOTSYS_PATH}iotsys-encoding-json-0.1.jar:${IOTSYS_PATH}iotsys-gateway-0.1.jar:${IOTSYS_PATH}iotsys-knx-0.1.jar:${IOTSYS_PATH}iotsys-obix-0.1.jar:${IOTSYS_PATH}iotsys-virtual-0.1.jar:${IOTSYS_PATH}iotsys-wmbus-0.1.jar:${IOTSYS_PATH}iotsys-enocean-0.1.jar:${IOTSYS_PATH}iotsys-xacml-0.1.jar:${IOTSYS_PATH}res:${IOTSYS_PATH}iotsys-demoapp-0.1.jar:${IOTSYS_PATH}iotsys-xbee-0.1.jar;${IOTSYS_PATH}iotsys-mdnssd-0.1.jar" at.ac.tuwien.auto.iotsys.gateway.IoTSySGateway', file:distLibRunFileSh, append:true)			
+	ant.echo(message:'sudo java -cp "${IOTSYS_PATH}iotsys-coap-0.1.jar:${IOTSYS_PATH}iotsys-rfid-0.1.jar:${IOTSYS_PATH}iotsys-bacnet-0.1.jar:${IOTSYS_PATH}iotsys-bacnet4j-0.1.jar:${IOTSYS_PATH}iotsys-calimero-0.1.jar:${IOTSYS_PATH}iotsys-common-0.1.jar:${IOTSYS_PATH}iotsys-control-0.1.jar:${IOTSYS_PATH}iotsys-encoding-json-0.1.jar:${IOTSYS_PATH}iotsys-gateway-0.1.jar:${IOTSYS_PATH}iotsys-knx-0.1.jar:${IOTSYS_PATH}iotsys-obix-0.1.jar:${IOTSYS_PATH}iotsys-virtual-0.1.jar:${IOTSYS_PATH}iotsys-wmbus-0.1.jar:${IOTSYS_PATH}iotsys-enocean-0.1.jar:${IOTSYS_PATH}iotsys-xacml-0.1.jar:${IOTSYS_PATH}res:${IOTSYS_PATH}iotsys-demoapp-0.1.jar:${IOTSYS_PATH}iotsys-xbee-0.1.jar;${IOTSYS_PATH}iotsys-mdnssd-0.1.jar" at.ac.tuwien.auto.iotsys.gateway.IoTSySGateway', file:distLibRunFileSh, append:true)			
 		
 	File deployResDir = new File(distLib.absolutePath + '/res')
 	File deployConfDir = new File(distLib.absolutePath + '/config')
 	File deployKnxConfDir = new File(distLib.absolutePath + '/knx-config')
+	File deployCaliforniumProperties = new File(distLib.absolutePath + '/Californium.properties')
 	
 	ant.copy(todir:deployConfDir){
 			fileset(dir:configDir)
@@ -82,6 +84,14 @@ task deploy << {
 	ant.copy(todir:deployKnxConfDir){
 		fileset(dir:knxConfigDir)
 	}
+
+	if(californiumProperties.exists()){
+		ant.copy(file:californiumProperties, tofile:deployCaliforniumProperties)
+	}
+	else{
+		println "Californium properties does not exist."
+	}
+	
 } 
 
 task deployOsgi << {
