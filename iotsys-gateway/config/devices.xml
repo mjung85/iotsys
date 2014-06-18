@@ -17,7 +17,7 @@
     	<connector>
             <name>IoTSyS Devices2</name>
             <enabled>true</enabled>
-             <device>  
+            <!--<device>  
            		<type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.coap.LedsActuatorImplCoap
           		</type>
 	            <address>coap://[aaaa::c30c:0:0:51d]:5683/leds</address>
@@ -27,12 +27,23 @@
 	            <groupCommEnabled>true</groupCommEnabled>
 	            <forwardGroupAddress>true</forwardGroupAddress>
 	            <observe>false</observe>
-	        </device>
+	        </device>-->
 	        <device>  
            		<type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.coap.LedsActuatorImplCoap
           		</type>
 	            <address>coap://[aaaa::c30c:0:0:51f]:5683/leds</address>
 	            <href>dev2/leds</href>
+	            <historyEnabled>true</historyEnabled>
+	            <refreshEnabled>false</refreshEnabled>
+	            <groupCommEnabled>true</groupCommEnabled>
+	            <forwardGroupAddress>true</forwardGroupAddress>
+	            <observe>false</observe>
+	        </device>
+	        <device>  
+           		<type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.coap.ActivitySensorImplCoap
+          		</type>
+	            <address>coap://[aaaa::c30c:0:0:51f]:5683/acc</address>
+	            <href>dev3/acc</href>
 	            <historyEnabled>true</historyEnabled>
 	            <refreshEnabled>false</refreshEnabled>
 	            <groupCommEnabled>true</groupCommEnabled>
@@ -50,6 +61,7 @@
 	            <forwardGroupAddress>true</forwardGroupAddress>
 	            <observe>false</observe>
 	        </device>
+	        
         </connector>
        <connector>
             <name>IoTSyS Devices</name>

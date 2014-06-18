@@ -41,11 +41,11 @@ import obix.Str;
 public interface ActivitySensor extends Sensor{
 	public static final String CONTRACT="iot:ActivitySensor";
 	
-	public static final String ACTIVE_CONTRACT_NAME="active";
-	public static final String ACTIVE_CONTRACT_HREF="active";
-	public static final String ACTIVE_CONTRACT = "<bool name='"+ ACTIVE_CONTRACT_NAME +"' href='"+ ACTIVE_CONTRACT_HREF +"' val='false'/>";	
-	
-	public Bool activeValue();
+//	public static final String ACTIVE_CONTRACT_NAME="active";
+//	public static final String ACTIVE_CONTRACT_HREF="active";
+//	public static final String ACTIVE_CONTRACT = "<bool name='"+ ACTIVE_CONTRACT_NAME +"' href='"+ ACTIVE_CONTRACT_HREF +"' val='false'/>";	
+//	
+//	public Bool activeValue();
 	
 	public static final String FREEFALL_CONTRACT_NAME="freefall";
 	public static final String FREEFALL_CONTRACT_HREF="freefall";
