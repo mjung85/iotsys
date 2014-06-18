@@ -20,7 +20,7 @@
             <!--<device>  
            		<type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.coap.LedsActuatorImplCoap
           		</type>
-	            <address>coap://[aaaa::c30c:0:0:51d]:5683/leds</address>
+	            <address>coap://[aaaa::c30c:0:0:3]:5683/leds</address>
 	            <href>dev1/leds</href>
 	            <historyEnabled>true</historyEnabled>
 	            <refreshEnabled>false</refreshEnabled>
@@ -28,7 +28,7 @@
 	            <forwardGroupAddress>true</forwardGroupAddress>
 	            <observe>false</observe>
 	        </device>-->
-	        <device>  
+	        <!--<device>  
            		<type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.coap.LedsActuatorImplCoap
           		</type>
 	            <address>coap://[aaaa::c30c:0:0:51f]:5683/leds</address>
@@ -60,7 +60,7 @@
 	            <groupCommEnabled>true</groupCommEnabled>
 	            <forwardGroupAddress>true</forwardGroupAddress>
 	            <observe>false</observe>
-	        </device>
+	        </device>-->
 	        
         </connector>
        <connector>
