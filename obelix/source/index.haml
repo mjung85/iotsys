@@ -9,9 +9,10 @@
     = javascript_include_tag "app.js"
   %body(ng-controller="MainCtrl")
     %script(type="text/ng-template" id="directory_template")
-      .icon(ng-click="directory.toggle()")
-      %label(ng-click="directory.toggle()")
-        {{directory.name}}
+      .icon-label
+        .icon(ng-click="directory.toggle()" ng-class="{expanded:directory.expanded}")
+        .label(ng-click="directory.toggle()") {{directory.name}}
+        .clear
       %ul.devices(ng-show="directory.expanded")
         %li.device(ng-repeat="device in directory.devices")
           %label(draggable="device" tour-device="device") {{device.name}}
@@ -27,10 +28,18 @@
             .segment#segmentSettings(ng-class="{active: segment==1}" ng-click="segment=1") Settings
           %div#settings(ng-show="segment==1")
             .section
-              %label Poll interval (ms)
-              %input(type="text" ng-model="watch.interval" inline-editor="watch.updateInterval()")
+              .section-title
+                %label Watch Poll Interval
+              .section-content
+                %input(type="text" size="5" maxlength="5" ng-model="watch.interval" inline-editor="watch.updateInterval()")
+                %span msec
+              .clear
             .section
-              %a(href="#" ng-click="clear()") Clear
+              .section-title 
+                %span Clear Canvas
+              .section-content
+                %a(href="#" ng-click="clear()") Clear
+              .clear
           %div(ng-show="segment!=1" ng-if="directory" include-directory-template="directory")
     #canvas(ng-click="sidebar.expanded = false" droppable="placeDevice" jsplumb-container)
       #tourStarter(obelix-tour-starter)
