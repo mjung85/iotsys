@@ -53,7 +53,7 @@ public class EnoceanBundleActivator implements BundleActivator, ServiceListener 
 		if (serviceReference == null) {
 			log.severe("Could not find a running object broker to unregister devices!");
 		} else {
-			log.info("Removing KNX Devices.");
+			log.info("Removing EnOcean Devices.");
 			ObjectBroker objectBroker = (ObjectBroker) context
 					.getService(serviceReference);
 			deviceLoader.removeDevices(objectBroker);

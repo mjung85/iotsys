@@ -1,4 +1,4 @@
-package at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.enocean;
+package at.ac.tuwien.auto.iotsys.commons.obix.objects.enocean.actuators;
 
 import obix.Bool;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators.Actuator;
