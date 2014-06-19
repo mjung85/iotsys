@@ -62,22 +62,13 @@ public class MCastForwarder {
 	// specify interfaces between which multicasts should be forwarded through
 	// command line args, e.g. eth0, tun0, ...
 	public static void main(String[] args) {
-		HashSet<String> interfaces = new HashSet<String>();
+		final HashSet<String> interfaces = new HashSet<String>();
 		for (int i = 0; i < args.length; i++) {
 			interfaces.add(args[i]);
 		}
+				
 		MCastForwarder mcastForwarder = new MCastForwarder(interfaces);
 		mcastForwarder.startForwarding();
-
-		BufferedReader reader = new BufferedReader(new InputStreamReader(
-				System.in));
-		try {
-			reader.read();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		// test();
 	}
 
 	public static void test() {
@@ -364,7 +355,7 @@ public class MCastForwarder {
 
 		};
 
-		packetlistener.setDaemon(true);
+		packetlistener.setDaemon(false);
 		packetlistener.start();
 		return pcap;
 	}
