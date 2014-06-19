@@ -1,4 +1,4 @@
-package at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.enocean;
+package at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.enocean;
 
 import java.util.logging.Logger;
 
@@ -6,15 +6,17 @@ import obix.Bool;
 import obix.Contract;
 import obix.Obj;
 import obix.Uri;
-
 import at.ac.tuwien.auto.iotsys.gateway.connectors.enocean.EnoceanConnector;
 import at.ac.tuwien.auto.iotsys.gateway.connectors.enocean.util.CRC8Hash;
 import at.ac.tuwien.auto.iotsys.gateway.connectors.enocean.util.DeviceID;
 import at.ac.tuwien.auto.iotsys.gateway.connectors.enocean.util.ESP3PacketHeader;
 import at.ac.tuwien.auto.iotsys.gateway.connectors.enocean.util.ESP3PacketHeader.PacketType;
+import at.ac.tuwien.auto.iotsys.gateway.connectors.enocean.util.ESP3Response;
 import at.ac.tuwien.auto.iotsys.gateway.connectors.enocean.util.ESP3TelegramInterface.RORG;
 import at.ac.tuwien.auto.iotsys.gateway.connectors.enocean.util.ESP3TelegramOneBS;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.ActuatorImpl;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.enocean.PushButtonImplEnocean;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.enocean.actuators.LightSwitchActuatorEnocean;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators.impl.ActuatorImpl;
 
 
 public class LightSwitchActuatorImplEnocean extends ActuatorImpl implements LightSwitchActuatorEnocean {
@@ -26,10 +28,13 @@ public class LightSwitchActuatorImplEnocean extends ActuatorImpl implements Ligh
 	protected Bool value = new Bool(false);
 	protected Bool lrn = new Bool(false);
 
+	ESP3Response response = new ESP3Response();
+	
 	public LightSwitchActuatorImplEnocean(EnoceanConnector connector, final String hexAddress) {
 		this.connector = connector;
-		this.hexAddress = hexAddress;
-
+//		this.hexAddress = hexAddress;
+		this.hexAddress = DeviceID.toString(connector.getBaseID().getDeviceID() + Long.decode(hexAddress));
+		
 		setIs(new Contract(LightSwitchActuatorEnocean.CONTRACT));
 		value.setWritable(true);
 		Uri valueUri = new Uri(LightSwitchActuatorEnocean.VALUE_CONTRACT_HERF);
@@ -55,6 +60,7 @@ public class LightSwitchActuatorImplEnocean extends ActuatorImpl implements Ligh
 
 	@Override
 	public void writeObject(Obj input){
+		super.writeObject(input);
 		String resourceUriPath = "";
 		if (input.getHref() == null) {
 			resourceUriPath = input.getInvokedHref().substring(
@@ -101,7 +107,7 @@ public class LightSwitchActuatorImplEnocean extends ActuatorImpl implements Ligh
 
 			if(this.value().get() == true)
 			{
-				/*
+				
 				if (this.lrn().get() == true)
 				{
 					telegram.setTelegramData((byte)0x00);
@@ -110,8 +116,8 @@ public class LightSwitchActuatorImplEnocean extends ActuatorImpl implements Ligh
 				{
 					telegram.setTelegramData((byte)0x08);
 				}
-				*/
-				telegram.setTelegramData((byte)0x08);
+				
+				//telegram.setTelegramData((byte)0x08);
 				byte[] telegramByte = telegram.toByteArray();
 				ESP3PacketHeader header = new ESP3PacketHeader(telegram.getDataLen(), telegram.getOptDataLen(), PacketType.RADIO);
 				byte[] headerByte = header.toByteArray();
@@ -124,11 +130,20 @@ public class LightSwitchActuatorImplEnocean extends ActuatorImpl implements Ligh
 				frame[headerByte.length + 1] = CRC8H;
 				System.arraycopy(telegramByte, 0, frame, headerByte.length + 2, telegramByte.length);
 				frame[frame.length - 1] = CRC8D;
-				connector.enoceanSend(frame);
+				// connector.serialSend(frame);
+				
+				response = connector.send(frame);
+				if (response == null)
+				{
+					log.info("Response = NULL!");
+				} else {
+					log.info("Response: " + response.getPayloadAsString());
+				}
+		//		log.info("LightSwitchActuator Response: " + connector.getResponse().getPayloadAsString());
 			}
 			else
 			{
-				/*
+				
 				if (this.lrn().get() == true)
 				{
 					telegram.setTelegramData((byte)0x00);
@@ -137,8 +152,8 @@ public class LightSwitchActuatorImplEnocean extends ActuatorImpl implements Ligh
 				{
 					telegram.setTelegramData((byte)0x09);
 				}
-				*/
-				telegram.setTelegramData((byte)0x09);
+				
+				//telegram.setTelegramData((byte)0x09);
 				byte[] telegramByte = telegram.toByteArray();
 				ESP3PacketHeader header = new ESP3PacketHeader(telegram.getDataLen(), telegram.getOptDataLen(), PacketType.RADIO);
 				byte[] headerByte = header.toByteArray();
@@ -152,8 +167,15 @@ public class LightSwitchActuatorImplEnocean extends ActuatorImpl implements Ligh
 				System.arraycopy(telegramByte, 0, frame, headerByte.length + 2, telegramByte.length);
 				frame[frame.length - 1] = CRC8D;
 
-				connector.enoceanSend(frame);
-
+				//connector.serialSend(frame);
+		//		log.info("LightSwitchActuator Response: " + connector.getResponse().getPayloadAsString());
+				response = connector.send(frame);
+				if (response == null)
+				{
+					log.info("Response = NULL!");
+				} else {
+					log.info("Response: " + response.getPayloadAsString());
+				}
 			}
 
 		}
@@ -169,6 +191,7 @@ public class LightSwitchActuatorImplEnocean extends ActuatorImpl implements Ligh
 			// oBIX services (e.g. watches, history) and CoAP observe!
 
 			// this.value().set(value);
+			// this.value().set(value.get());
 			log.info("value is: " + value + " lrn is: " + lrn);
 		}	
 	}

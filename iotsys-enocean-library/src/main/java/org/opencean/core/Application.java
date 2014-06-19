@@ -75,16 +75,16 @@ public class Application {
 // ++++++++++ TEST End light actuator ++++++++++++++
         
 // ++++++++++ TEST Start heating actuator ++++++++++++++
-//      RadioPacket4BS radio4BS;
-//      
-//      byte data[] = {(byte) 0x00, (byte) 0x00, (byte) 0x80, (byte) 0x50};
-//      
-//      // address of actuator 0x00857A08
-//      radio4BS = new RadioPacket4BS(data, 0x0025A2DC, (byte) 0x00, (byte) 0x03, 0x00857A08, (byte) 0xFF, (byte) 0x00);
-//        
-//      BasicPacket packet = radio4BS;
-//      logger.info("Send packet: " + packet.toString());
-//      esp3Host.sendRadio(packet);      
+      RadioPacket4BS radio4BS;
+      
+      byte data[] = {(byte) 0x00, (byte) 0x00, (byte) 0x80, (byte) 0x10};
+      
+      // address of actuator 0x00857A08
+      radio4BS = new RadioPacket4BS(data, 0xAA25A2DC, (byte) 0x00, (byte) 0x03, 0x00857A08, (byte) 0xFF, (byte) 0x00);
+        
+       packet = radio4BS;
+      logger.info("Send packet: " + packet.toString());
+      esp3Host.sendRadio(packet);      
 //++++++++++ TEST End heating actuator ++++++++++++++
       
    // ++++++++++ TEST Start general packet ++++++++++++++
