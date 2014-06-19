@@ -29,16 +29,24 @@
           %div#settings(ng-show="segment==1")
             .section
               .section-title
-                %label Watch Poll Interval
+                %h3 Watch
               .section-content
-                %input(type="text" size="5" maxlength="5" ng-model="watch.interval" inline-editor="watch.updateInterval()")
+                %label(for="watchPollInterval") Poll interval:
+                %input(id="watchPollInterval" type="text" size="5" maxlength="5" ng-model="watch.interval" inline-editor="watch.updateInterval()")
                 %span msec
               .clear
             .section
               .section-title 
-                %span Clear Canvas
+                %h3 Sidebar
               .section-content
-                %a(href="#" ng-click="clear()") Clear
+                %label(for="sidebarLock") Always Open:
+                %input(id="sidebarLock" type="checkbox" ng-model="sidebar.locked")
+              .clear
+            .section
+              .section-title 
+                %h3 Canvas
+              .section-content
+                %a(href="#" ng-click="clear()") Clear Canvas
               .clear
           %div(ng-show="segment!=1" ng-if="directory" include-directory-template="directory")
     #canvas(ng-click="sidebar.expanded = false" droppable="placeDevice" jsplumb-container)

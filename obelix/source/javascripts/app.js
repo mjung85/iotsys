@@ -556,6 +556,7 @@ app.controller('MainCtrl', ['$scope','$q','$timeout','Lobby','Watch','Connection
   });
   
   $scope.sidebar = {
+	  _toggleButton: jQuery('#toggleSidebar'),
 	  _expanded: false,
 	  _locked: false,
 	  get expanded() {
@@ -576,6 +577,11 @@ app.controller('MainCtrl', ['$scope','$q','$timeout','Lobby','Watch','Connection
 	  }, 
 	  set locked(newValue) {
 		  this._locked = newValue;
+		  if (newValue) {
+			  this._toggleButton.addClass('disabled');
+		  } else {
+			  this._toggleButton.removeClass('disabled');
+		  }
 	  }
   };
   
@@ -826,12 +832,14 @@ app.directive('obelixTourStarter', ['$timeout', function($timeout) {
 				$timeout(function() {
 					scope.sidebar.locked = !enableToggle;
 				}, 0);
-				if (!enableToggle) {
-					jQuery('#toggleSidebar').addClass('disabled');
-				} else {
-					jQuery('#toggleSidebar').removeClass('disabled');
-				}
 			}
+			
+			function showSidebar(showSidebar) {
+				$timeout(function() {
+					scope.sidebar.expanded = showSidebar;
+				}, 0);
+			}
+			
 			
 			function tourInProgress(started) {
 				$timeout(function() {
@@ -855,6 +863,8 @@ app.directive('obelixTourStarter', ['$timeout', function($timeout) {
 				},
 				setup: function(tour, options) {
 					obelixTour.step = this;
+					toggleSidebarButton(true);
+					showSidebar(false);
 					this.target.bind('click', this.onToggleButtonClick);
 				},
 				teardown: function(tour, options) {
