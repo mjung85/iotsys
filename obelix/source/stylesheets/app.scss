@@ -25,6 +25,8 @@ $gridWidth: 25px;
     background: #67B185; //6490A3
     width: 100%;
     height: 100%;
+    background-position: 12px 12px;
+    background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABkAAAAZCAYAAADE6YVjAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAALEgAACxIB0t1+/AAAABh0RVh0Q3JlYXRpb24gVGltZQAwMi4wOS4yMDEzMf3uEQAAABx0RVh0U29mdHdhcmUAQWRvYmUgRmlyZXdvcmtzIENTNXG14zYAAAA1SURBVEiJY2AgEfz//5+XRPUMTKRaQg4YtWTUklFLRpIljKSWRXQBowXkqCWjloxaMggsAQAAYg9G881fEwAAAABJRU5ErkJggg==");
     @include user-select(none);
   }
   
@@ -36,6 +38,7 @@ $gridWidth: 25px;
     position: absolute;
     background-color: rgba(255,255,255,0.25);
     cursor: pointer;
+    overflow: hidden;
   
     @include border-radius(4px);
   }
@@ -216,8 +219,7 @@ $gridWidth: 25px;
     top: 0;
     bottom: 0;
     right: 0;
-    background-position: 12px 12px;
-    background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABkAAAAZCAYAAADE6YVjAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAALEgAACxIB0t1+/AAAABh0RVh0Q3JlYXRpb24gVGltZQAwMi4wOS4yMDEzMf3uEQAAABx0RVh0U29mdHdhcmUAQWRvYmUgRmlyZXdvcmtzIENTNXG14zYAAAA1SURBVEiJY2AgEfz//5+XRPUMTKRaQg4YtWTUklFLRpIljKSWRXQBowXkqCWjloxaMggsAQAAYg9G881fEwAAAABJRU5ErkJggg==");
+    overflow: hidden;
   }
   
   body > label {
@@ -244,13 +246,13 @@ $gridWidth: 25px;
     padding: 4px;
     position: absolute;
     cursor: move;
-    border: 1px solid transparent;
+    border: 2px solid transparent;
   
     @include border-radius(4px);
   
     &:hover {
       z-index: 10000;
-      border: 1px solid white;
+      border: 2px solid white;
     }
     
     header {
@@ -292,6 +294,13 @@ $gridWidth: 25px;
     .property {
       font-size: 12px;
       color: #333;
+      padding-left: 2px;
+      
+      &._jsPlumb_target_hover, &._jsPlumb_source_hover {
+        @include box-shadow(rgba(0,255,255,1) 0px 0px 15px 10px);
+        @include border-radius(2px);
+      }
+      
       label {
         display: inline-block;
         width: 4 * $gridWidth;
@@ -312,14 +321,18 @@ $gridWidth: 25px;
   }
   
   .connected svg rect {
-    fill: #5b9ada !important;
+    fill: #000 !important;
   }
   
   ._jsPlumb_dragging svg rect {
     display: none;
   }
   ._jsPlumb_endpoint_drop_allowed svg rect {
-    fill: #5b9ada !important;
+    fill: #000 !important;
+  }
+  
+  ._jsPlumb_hover rect {
+    fill: #000;
   }
   
   // Z-Indices
@@ -355,6 +368,11 @@ $gridWidth: 25px;
       padding-top: 4px;
       padding-bottom: 4px;
       border: 1px solid #fff;
+      width: 50%;
+      
+      &:hover {
+        text-decoration: underline;
+      }
       
       &.active {
         background: #fff;
