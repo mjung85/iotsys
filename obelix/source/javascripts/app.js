@@ -1,9 +1,9 @@
+//= require 'sugar'
 //= require 'jquery'
 //= require 'jquery-ui'
 //= require 'angular'
 //= require 'html5slider'
 //= require 'jquery.jsPlumb-1.5.2'
-//= require 'sugar'
 //= require 'URI'
 //= require 'underscore'
 //= require 'backbone'
@@ -585,6 +585,35 @@ app.controller('MainCtrl', ['$scope','$q','$timeout','Lobby','Watch','Connection
 	  }
   };
   
+  jsPlumb.bind("connection", function(info) {
+      console.log("Connection event", info);
+
+      info.sourceEndpoint.addClass('connected');
+      info.targetEndpoint.addClass('connected');
+      
+      if (info.connection.getParameter('restored')) return; // Ignore connect events for restored connections
+
+      var sourceProperty = info.sourceEndpoint.getParameters().property;
+      var targetProperty = info.targetEndpoint.getParameters().property;
+      
+      info.connection.obelixConnection = new Connection(sourceProperty, targetProperty);
+      info.connection.obelixConnection.jsPlumbConnection = info.connection;
+      Connection.Freezer.add(info.connection.obelixConnection);
+      console.log("the first connection event listener;")
+  });
+  
+  jsPlumb.bind("connectionDetached", function(info) {
+    [info.sourceEndpoint, info.targetEndpoint].each(function(ep) {
+      if (ep.connections.length == 0) ep.removeClass('connected');
+    });
+  });
+
+  jsPlumb.bind("dblclick", function(connection, e) {
+    connection.obelixConnection.destroy();
+    Connection.Freezer.remove(connection.obelixConnection);
+    connection.obelixConnection = null;
+  });
+  
   $scope.tourInProgress = false;
   
   $scope.placeDevice = function(device, position) {
@@ -602,34 +631,6 @@ app.controller('MainCtrl', ['$scope','$q','$timeout','Lobby','Watch','Connection
   $scope.clear = function() {
     // TODO: clear all connections, then devices!
   };
-
-  jsPlumb.bind("connection", function(info) {
-    console.log("Connection event", info);
-
-    info.sourceEndpoint.addClass('connected');
-    info.targetEndpoint.addClass('connected');
-
-    if (info.connection.getParameter('restored')) return; // Ignore connect events for restored connections
-
-    var sourceProperty = info.sourceEndpoint.getParameters().property;
-    var targetProperty = info.targetEndpoint.getParameters().property;
-    
-    info.connection.obelixConnection = new Connection(sourceProperty, targetProperty);
-    info.connection.obelixConnection.jsPlumbConnection = info.connection;
-    Connection.Freezer.add(info.connection.obelixConnection);
-  });
-
-  jsPlumb.bind("connectionDetached", function(info) {
-    [info.sourceEndpoint, info.targetEndpoint].each(function(ep) {
-      if (ep.connections.length == 0) ep.removeClass('connected');
-    });
-  });
-
-  jsPlumb.bind("dblclick", function(connection, e) {
-    connection.obelixConnection.destroy();
-    Connection.Freezer.remove(connection.obelixConnection);
-    connection.obelixConnection = null;
-  });
 
 }]);
 
@@ -652,7 +653,8 @@ app.directive('draggable', function() {
         },
         stop: function() {
           $(this).removeClass('disabled');
-        }
+        },
+        containment: jQuery('#canvas')
       };
 
       if (attrs['draggableDistance']) options.distance = attrs['draggableDistance'];
@@ -760,9 +762,11 @@ app.directive('jsplumbContainer', function() {
   return {
     restrict: 'A',
     link: function(scope, el, attrs) {
-      jsPlumb.ready(function() {
-        jsPlumb.Defaults.Container = el;
-      });
+		jsPlumb.ready(function() {
+	        jsPlumb.Defaults.Container = el;
+	        jsPlumb.Defaults.Connector = [ "Bezier", { stub: 30, curviness:50 }];
+	        jsPlumb.Defaults.Endpoint = ["Rectangle", { width: 12, height: 15}];
+	      });
     }
   };
 });
@@ -773,17 +777,20 @@ app.directive('jsplumbEndpoint', ['$timeout', function($timeout) {
     link: function(scope, el, attrs) {
       var property = scope.$eval(attrs['jsplumbEndpoint']);
       if (!property.groupCommEnabled) return;
-
+      var device = scope.$eval(attrs['device']);
+      
       $timeout(function() {
+
         var ep = jsPlumb.addEndpoint(el, {
           isSource: true, 
           isTarget: true,
+          cssClass: device.name.toLowerCase(),
+          parent: el.parent(),
           maxConnections: -1,
-          connector:[ "Bezier", { stub: 30, curviness:50 }], 
-          endpoint: ["Rectangle", { width: 8, height: 8}],
-          anchors: [[1, 0.5, 1, 0, 8,0], [0, 0.5, -1, 0, -8, 0]],
-          paintStyle:{ fillStyle:"#fff"}, 
-          connectorStyle: { lineWidth: 4, strokeStyle: "#fff"},
+          anchors: [[1, 0.5, 1, 0, 12,0], [0, 0.5, -1, 0, -12, 0]],
+          paintStyle:{ fillStyle:"#ff0"}, 
+          connectorStyle: { lineWidth: 7, strokeStyle: "#fff"},
+          connectorHoverStyle: { strokeStyle:"#ff0000" },
           parameters: {property: property}
         });
         property.jsPlumbEndpoints.push(ep);
@@ -926,6 +933,7 @@ app.directive('obelixTourStarter', ['$timeout', function($timeout) {
 					$timeout(function() {
 						scope.segment=0;
 						scope.directory.subdirectories[1].expanded=true;
+//						document.getElementById('#canvas .content').scrollIntoView(false);
 					}, 0);
 				},
 				teardown: function(tour, options) {
@@ -942,7 +950,7 @@ app.directive('obelixTourStarter', ['$timeout', function($timeout) {
 					 obelixTour.step = this;
 					 document.getElementById('tourDeviceButton').scrollIntoView(false);
 					 options.tourDeviceDropZone
-					 	.css({'top': '30px'})
+					 	.css({'top': '30px', 'left': '50%'})
 					 	.addClass('tour-highlight')
 					 	.droppable()
 					 	.droppable({
@@ -962,7 +970,7 @@ app.directive('obelixTourStarter', ['$timeout', function($timeout) {
 				 teardown: function(tour, options) {
 					 options.tourDeviceDropZone
 					 	.removeClass('tour-highlight');
-					 options.droppedDevices.push(jQuery('#canvas #virtualpushbutton').draggable('disable'));
+					 options.droppedDevices.push(jQuery('#canvas .device.virtualpushbutton').draggable('disable'));
 				 }
 			  }, {
 				 title: 'Virtual Light',
@@ -976,7 +984,7 @@ app.directive('obelixTourStarter', ['$timeout', function($timeout) {
 					 obelixTour.step = this;
 					 document.getElementById('tourDeviceLight').scrollIntoView(false);
 					 options.tourDeviceDropZone
-					 	.css({'top': '280px'})
+					 	.css({'top': '280px', 'left': '30%'})
 					 	.addClass('tour-highlight')
 					 	.droppable()
 					 	.droppable({
@@ -996,7 +1004,7 @@ app.directive('obelixTourStarter', ['$timeout', function($timeout) {
 				 teardown: function(tour, options) {
 					 options.tourDeviceDropZone
 					 	.removeClass('tour-highlight')
-					 options.droppedDevices.push(jQuery('#canvas #virtuallight').draggable('disable'));
+					 options.droppedDevices.push(jQuery('#canvas .device.virtuallight').draggable('disable'));
 				 }
 			  }, {
 				 title: 'Device Box',
@@ -1013,6 +1021,49 @@ app.directive('obelixTourStarter', ['$timeout', function($timeout) {
 					 }
 				 },
 				 teardown: function(tour, options) {
+				 }
+			  }, {
+				 title: 'Endpoint',
+				 content: '<p>A device box may have endpoints like this one, which can be connected to other endpoints.</p>',
+				 closeButton: true,
+				 highlightTarget: true,
+				 nextButton: true,
+				 my: 'left top',
+				 at: 'right center',
+				 setup: function(tour, options) {
+					 obelixTour.step = this;
+					 return {
+						 target: jQuery('#canvas ._jsPlumb_endpoint.virtualpushbutton')
+					 }
+				 },
+				 teardown: function(tour, options) {
+				 }
+			  }, {
+				 title: 'Connect Endpoints',
+				 content: '<p>Connect the endpoint of the virtual push button with the endpoint of the virtual light by drawing a line. Click with the primary mouse button on a endpoint and keep the mouse button pressed. Move the mouse pointer over to the other endpoint and release the mouse button afterwards.</p><p>A connection can be deleted by double-clicking on the connection line. All connections of a device are delete when the device is deleted.</p>',
+				 closeButton: true,
+				 highlightTarget: true,
+				 nextButton: false,
+				 my: 'left top',
+				 at: 'right center',
+				 bind: ['onConnectionTourDevices'],
+				 onConnectionTourDevices: function(tour, options, view, element) {
+					 tour.next();
+				 },
+				 setup: function(tour, options) {
+					 obelixTour.step = this;
+					 jQuery('#canvas ._jsPlumb_endpoint.virtuallight, #canvas ._jsPlumb_endpoint.virtualpushbutton')
+							 .addClass('tour-highlight');
+					 jsPlumb.bind("connection", this.onConnectionTourDevices);
+					  
+					 return {
+						 target: jQuery('#canvas ._jsPlumb_endpoint.virtualpushbutton')
+					 }
+				 },
+				 teardown: function(tour, options) {
+					 jQuery('#canvas ._jsPlumb_endpoint.virtuallight, #canvas ._jsPlumb_endpoint.virtualpushbutton')
+					 	.removeClass('tour-highlight');
+					 jsPlumb.unbind("connection", this.onConnectionTourDevices);
 				 }
 			  }];
 			
