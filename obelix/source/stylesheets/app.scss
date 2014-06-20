@@ -331,7 +331,12 @@ $gridWidth: 25px;
     fill: #000 !important;
   }
   
+  svg._jsPlumb_hover {
+    cursor: crosshair;
+  }
+  
   ._jsPlumb_hover rect {
+    cursor: crosshair;
     fill: #000;
   }
   
@@ -344,7 +349,7 @@ $gridWidth: 25px;
   #canvas { z-index: 100; }
   
   ._jsPlumb_endpoint rect {
-    cursor: crosshair;
+    //cursor: crosshair;
   }
   // Segmented control
   
