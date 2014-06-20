@@ -916,6 +916,7 @@ app.directive('obelixTourStarter', ['$timeout', function($timeout) {
 				teardown: function(tour, options) {
 					$timeout(function() {
 						 scope.segment=0;
+						 scope.directory.subdirectories[1].expanded=true;
 					}, 0);
 				}
 			  }, {
@@ -931,7 +932,6 @@ app.directive('obelixTourStarter', ['$timeout', function($timeout) {
 					obelixTour.step = this;
 					$timeout(function() {
 						scope.segment=0;
-						scope.directory.subdirectories[1].expanded=true;
 //						document.getElementById('#canvas .content').scrollIntoView(false);
 					}, 0);
 				},
