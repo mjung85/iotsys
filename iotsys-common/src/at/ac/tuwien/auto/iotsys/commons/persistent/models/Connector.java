@@ -40,7 +40,7 @@ import org.ektorp.support.CouchDbDocument;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-public abstract class Connector extends CouchDbDocument{
+public class Connector extends CouchDbDocument{
     
     private String name;
     private String technology;
@@ -70,8 +70,8 @@ public abstract class Connector extends CouchDbDocument{
 		this.enabled = enabled;
 	}
 	
-	public abstract void connect() throws Exception;
-	public abstract void disconnect() throws Exception;
+	public void connect() throws Exception{}
+	public void disconnect() throws Exception{}
 	@JsonIgnore
-	public abstract boolean isCoap();
+	public boolean isCoap(){return false;}
 }

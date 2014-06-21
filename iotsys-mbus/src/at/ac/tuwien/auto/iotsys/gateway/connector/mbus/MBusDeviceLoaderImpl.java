@@ -50,7 +50,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 
 import at.ac.tuwien.auto.iotsys.commons.DeviceLoader;
 import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
-import at.ac.tuwien.auto.iotsys.commons.persistent.DeviceConfigs;
+import at.ac.tuwien.auto.iotsys.commons.persistent.ConfigsDbImpl;
 import at.ac.tuwien.auto.iotsys.commons.persistent.models.Connector;
 import at.ac.tuwien.auto.iotsys.commons.persistent.models.Device;
 
@@ -69,7 +69,7 @@ public class MBusDeviceLoaderImpl implements DeviceLoader {
 		
 		ArrayList<Connector> connectors = new ArrayList<Connector>();
 
-		List<JsonNode> connectorsFromDb = DeviceConfigs.getInstance()
+		List<JsonNode> connectorsFromDb = ConfigsDbImpl.getInstance()
 				.getConnectors("mbus");
 		int connectorsSize = 0;
 		// WMBus
@@ -118,7 +118,7 @@ public class MBusDeviceLoaderImpl implements DeviceLoader {
 					connectors.add(mbusConnector);
 
 					int mbusDevicesCount = 0;
-					List<Device> devicesFromDb = DeviceConfigs.getInstance().getDevices(connectorId);
+					List<Device> devicesFromDb = ConfigsDbImpl.getInstance().getDevices(connectorId);
 
 					if (devicesFromDb.size() <= 0) {
 						if (mbusConfiguredDevices instanceof Collection<?>) {
@@ -178,7 +178,7 @@ public class MBusDeviceLoaderImpl implements DeviceLoader {
 						
 						// Transition step: comment when done
 						Device d = new Device(type, ipv6, addressString, href, name, historyCount, historyEnabled, groupCommEnabled);
-						DeviceConfigs.getInstance().prepareDevice(connectorName, d);	
+						ConfigsDbImpl.getInstance().prepareDevice(connectorName, d);	
 						
 						if(interval > 0){
 							mbusConnector.setInterval(interval);

@@ -37,11 +37,18 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import org.ektorp.Page;
+
+import at.ac.tuwien.auto.iotsys.commons.persistent.HistoryDbImpl;
+import at.ac.tuwien.auto.iotsys.commons.persistent.models.DbHistoryFeed;
 import at.ac.tuwien.auto.iotsys.obix.FeedFilter;
 import obix.Abstime;
+import obix.Bool;
 import obix.Feed;
 import obix.Int;
 import obix.Obj;
+import obix.Real;
+import obix.Str;
 import obix.contracts.HistoryFilter;
 
 public class HistoryFilterImpl extends Obj implements HistoryFilter, FeedFilter {
@@ -111,7 +118,7 @@ public class HistoryFilterImpl extends Obj implements HistoryFilter, FeedFilter 
 	private ArrayList<HistoryRecordImpl> filterRecords(List<Obj> events) {
 		ArrayList<HistoryRecordImpl> filteredRecords = new ArrayList<HistoryRecordImpl>();
 
-		// sort records
+		// sort records by time stamp
 		Collections.sort(events, new Comparator<Obj>() {
 			public int compare(Obj obj1, Obj obj2) {
 				HistoryRecordImpl r1 = (HistoryRecordImpl) obj1;

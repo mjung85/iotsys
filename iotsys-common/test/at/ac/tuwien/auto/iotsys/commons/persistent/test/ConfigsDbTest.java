@@ -27,7 +27,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import at.ac.tuwien.auto.iotsys.commons.persistent.ConfigsDb;
-import at.ac.tuwien.auto.iotsys.commons.persistent.DeviceConfigs;
+import at.ac.tuwien.auto.iotsys.commons.persistent.ConfigsDbImpl;
 import at.ac.tuwien.auto.iotsys.commons.persistent.models.Device;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -42,7 +42,7 @@ public class ConfigsDbTest {
 	
 	@BeforeClass
 	public static void setUp() {
-		cd = DeviceConfigs.getInstance();
+		cd = ConfigsDbImpl.getInstance();
 	}
 	
 	@Test

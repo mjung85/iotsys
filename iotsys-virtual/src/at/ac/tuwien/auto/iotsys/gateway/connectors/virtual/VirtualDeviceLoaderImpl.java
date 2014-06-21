@@ -50,7 +50,7 @@ import at.ac.tuwien.auto.iotsys.commons.DeviceLoader;
 import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.weatherforecast.WeatherObject;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.weatherforecast.impl.WeatherForecastLocationImpl;
-import at.ac.tuwien.auto.iotsys.commons.persistent.DeviceConfigs;
+import at.ac.tuwien.auto.iotsys.commons.persistent.ConfigsDbImpl;
 import at.ac.tuwien.auto.iotsys.commons.persistent.models.Connector;
 import at.ac.tuwien.auto.iotsys.commons.persistent.models.Device;
 
@@ -126,7 +126,7 @@ public class VirtualDeviceLoaderImpl implements DeviceLoader {
 		// NOTE: this loader allow to directly instantiate the base oBIX objects
 		// for testing purposes
 		
-		List<JsonNode> connectorsFromDb = DeviceConfigs.getInstance().getConnectors("virtual");
+		List<JsonNode> connectorsFromDb = ConfigsDbImpl.getInstance().getConnectors("virtual");
 		int connectorsSize = 0;
 		// virtual
 		if (connectorsFromDb.size() <= 0) {
@@ -175,7 +175,7 @@ public class VirtualDeviceLoaderImpl implements DeviceLoader {
 					connectors.add(vConn);
 					
 					int numberOfDevices = 0;
-					List<Device> devicesFromDb = DeviceConfigs.getInstance().getDevices(connectorId);
+					List<Device> devicesFromDb = ConfigsDbImpl.getInstance().getDevices(connectorId);
 
 					if (devicesFromDb.size() <= 0) {
 						if (virtualConfiguredDevices != null) {
@@ -238,7 +238,7 @@ public class VirtualDeviceLoaderImpl implements DeviceLoader {
 						
 						// Transition step: comment when done
 						Device d = new Device(type, ipv6, addressString, href, name, displayName, historyCount, historyEnabled, groupCommEnabled, refreshEnabled);
-						DeviceConfigs.getInstance().prepareDevice(connectorName, d);						
+						ConfigsDbImpl.getInstance().prepareDevice(connectorName, d);						
 						// for weather forcast services only
 						String description = subConfig.getString("device(" + i + ").location.description", "");
 						Double latitude = subConfig.getDouble("device(" + i + ").location.latitude", 0);
@@ -317,6 +317,7 @@ public class VirtualDeviceLoaderImpl implements DeviceLoader {
 								}
 								
 								if(refreshEnabled != null && refreshEnabled){
+									virtualObj.setRefreshInterval(5000);
 									objectBroker.enableObjectRefresh(virtualObj);
 								}
 

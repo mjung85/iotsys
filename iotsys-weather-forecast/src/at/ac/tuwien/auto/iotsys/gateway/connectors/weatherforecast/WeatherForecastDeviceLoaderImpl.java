@@ -49,7 +49,7 @@ import org.apache.commons.configuration.XMLConfiguration;
 import at.ac.tuwien.auto.iotsys.commons.DeviceLoader;
 import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.weatherforecast.impl.WeatherForecastLocationImpl;
-import at.ac.tuwien.auto.iotsys.commons.persistent.DeviceConfigs;
+import at.ac.tuwien.auto.iotsys.commons.persistent.ConfigsDbImpl;
 import at.ac.tuwien.auto.iotsys.commons.persistent.models.Connector;
 import at.ac.tuwien.auto.iotsys.commons.persistent.models.Device;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.weatherforecast.objects.WeatherControlImpl;
@@ -72,7 +72,7 @@ public class WeatherForecastDeviceLoaderImpl implements DeviceLoader {
 		// Hard-coded connections and object creation
 		ArrayList<Connector> connectors = new ArrayList<Connector>();
 
-		List<JsonNode> connectorsFromDb = DeviceConfigs.getInstance().getConnectors("weather-forecast");
+		List<JsonNode> connectorsFromDb = ConfigsDbImpl.getInstance().getConnectors("weather-forecast");
 		int connectorsSize = 0;
 		
 		if (connectorsFromDb.size() <= 0) {
@@ -116,7 +116,7 @@ public class WeatherForecastDeviceLoaderImpl implements DeviceLoader {
 					connectors.add(forecastConnector);
 
 					int numberOfDevices = 0;
-					List<Device> devicesFromDb = DeviceConfigs.getInstance().getDevices(connectorId);
+					List<Device> devicesFromDb = ConfigsDbImpl.getInstance().getDevices(connectorId);
 
 					if (devicesFromDb.size() <= 0) {
 						if (configuredDevices != null) {
@@ -167,7 +167,7 @@ public class WeatherForecastDeviceLoaderImpl implements DeviceLoader {
 						
 						// Transition step: comment when done
 						Device d = new Device(type, null, null, href, name, null, historyCount, historyEnabled, groupCommEnabled, refreshEnabled);
-						DeviceConfigs.getInstance().prepareDevice(connectorName, d);
+						ConfigsDbImpl.getInstance().prepareDevice(connectorName, d);
 						
 						if (type != null && name != null) {
 							try {
