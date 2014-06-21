@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import obix.contracts.HistoryRecord;
 import at.ac.tuwien.auto.iotsys.obix.DefaultFeedFilter;
 import at.ac.tuwien.auto.iotsys.obix.FeedFilter;
 
@@ -149,6 +150,10 @@ public class Feed extends Obj
 	public void setMaxEvents(int maxEvents)
 	{
 		this.maxEvents = maxEvents;
+	}
+	
+	public int getMaxEvents() {
+		return maxEvents;
 	}
 
 	/**

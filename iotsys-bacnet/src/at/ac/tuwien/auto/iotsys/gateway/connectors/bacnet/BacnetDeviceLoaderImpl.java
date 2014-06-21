@@ -39,7 +39,7 @@ import org.apache.commons.configuration.XMLConfiguration;
 
 import at.ac.tuwien.auto.iotsys.commons.DeviceLoader;
 import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
-import at.ac.tuwien.auto.iotsys.commons.persistent.DeviceConfigs;
+import at.ac.tuwien.auto.iotsys.commons.persistent.ConfigsDbImpl;
 import at.ac.tuwien.auto.iotsys.commons.persistent.models.Connector;
 import at.ac.tuwien.auto.iotsys.commons.persistent.models.Device;
 
@@ -62,7 +62,7 @@ public class BacnetDeviceLoaderImpl implements DeviceLoader {
 		
 		ArrayList<Connector> connectors = new ArrayList<Connector>();
 
-		List<JsonNode> connectorsFromDb = DeviceConfigs.getInstance().getConnectors("bacnet");
+		List<JsonNode> connectorsFromDb = ConfigsDbImpl.getInstance().getConnectors("bacnet");
 		int connectorsSize = 0;
 		// bacnet
 		if (connectorsFromDb.size() <= 0) {
@@ -131,7 +131,7 @@ public class BacnetDeviceLoaderImpl implements DeviceLoader {
 					int numberOfDevices = 0;
 					List<Device> devicesFromDb = null;
 					try {
-						devicesFromDb = DeviceConfigs.getInstance().getDevices(connectorId);
+						devicesFromDb = ConfigsDbImpl.getInstance().getDevices(connectorId);
 						numberOfDevices = devicesFromDb.size();
 					} catch (Exception e){
 						// TODO: bacnetConfiguredDevices is from devices.xml --> mismatch when a connector does not have any device associated,
@@ -211,7 +211,7 @@ public class BacnetDeviceLoaderImpl implements DeviceLoader {
 						}
 						// Transition step: comment when done
 						Device d = new Device(type, ipv6, addressString, href, name, displayName, historyCount, historyEnabled, groupCommEnabled, refreshEnabled);
-						DeviceConfigs.getInstance().prepareDevice(connectorName, d);
+						ConfigsDbImpl.getInstance().prepareDevice(connectorName, d);
 						
 						if (type != null && address != null) {
 							

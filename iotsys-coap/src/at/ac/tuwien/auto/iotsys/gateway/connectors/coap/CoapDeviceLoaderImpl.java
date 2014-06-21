@@ -56,7 +56,7 @@ import org.apache.commons.configuration.XMLConfiguration;
 
 import at.ac.tuwien.auto.iotsys.commons.DeviceLoader;
 import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
-import at.ac.tuwien.auto.iotsys.commons.persistent.DeviceConfigs;
+import at.ac.tuwien.auto.iotsys.commons.persistent.ConfigsDbImpl;
 import at.ac.tuwien.auto.iotsys.commons.persistent.models.Connector;
 import at.ac.tuwien.auto.iotsys.commons.persistent.models.Device;
 
@@ -75,7 +75,7 @@ public class CoapDeviceLoaderImpl implements DeviceLoader {
 
 		ArrayList<Connector> connectors = new ArrayList<Connector>();
 
-		List<JsonNode> connectorsFromDb = DeviceConfigs.getInstance().getConnectors("coap");
+		List<JsonNode> connectorsFromDb = ConfigsDbImpl.getInstance().getConnectors("coap");
 		int connectorsSize = 0;
 		
 		if (connectorsFromDb.size() <= 0) {
@@ -124,7 +124,7 @@ public class CoapDeviceLoaderImpl implements DeviceLoader {
 					connectors.add(coapConnector);
 
 					int numberOfDevices = 0;
-					List<Device> devicesFromDb = DeviceConfigs.getInstance().getDevices(connectorId);
+					List<Device> devicesFromDb = ConfigsDbImpl.getInstance().getDevices(connectorId);
 
 					if (devicesFromDb.size() <= 0) {
 						if (coapConfiguredDevices != null) {
@@ -195,7 +195,7 @@ public class CoapDeviceLoaderImpl implements DeviceLoader {
 						
 						// Transition step: comment when done
 						Device d = new Device(type, null, addressString, href, name, displayName, historyCount, historyEnabled, groupCommEnabled, refreshEnabled);
-						DeviceConfigs.getInstance().prepareDevice(connectorName, d);						
+						ConfigsDbImpl.getInstance().prepareDevice(connectorName, d);						
 						if (type != null && address != null) {
 							try {
 								Constructor<?>[] declaredConstructors = Class

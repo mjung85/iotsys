@@ -17,7 +17,7 @@ import org.apache.commons.configuration.XMLConfiguration;
 
 import at.ac.tuwien.auto.iotsys.commons.DeviceLoader;
 import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
-import at.ac.tuwien.auto.iotsys.commons.persistent.DeviceConfigs;
+import at.ac.tuwien.auto.iotsys.commons.persistent.ConfigsDbImpl;
 import at.ac.tuwien.auto.iotsys.commons.persistent.models.Connector;
 import at.ac.tuwien.auto.iotsys.commons.persistent.models.Device;
 
@@ -48,7 +48,7 @@ public class EnoceanDeviceLoaderImpl implements DeviceLoader {
 
 		ArrayList<Connector> connectors = new ArrayList<Connector>();
 
-		List<JsonNode> connectorsFromDb = DeviceConfigs.getInstance().getConnectors("enocean");
+		List<JsonNode> connectorsFromDb = ConfigsDbImpl.getInstance().getConnectors("enocean");
 		int connectorsSize = 0;
 		// WMBus
 		if (connectorsFromDb.size() <= 0) {
@@ -97,7 +97,7 @@ public class EnoceanDeviceLoaderImpl implements DeviceLoader {
 					connectors.add(enoceanConnector);
 
 					int numberOfDevices = 0;
-					List<Device> devicesFromDb = DeviceConfigs.getInstance().getDevices(connectorId);
+					List<Device> devicesFromDb = ConfigsDbImpl.getInstance().getDevices(connectorId);
 
 					if (devicesFromDb.size() <= 0) {
 						if (enoceanConfiguredDevices instanceof Collection<?>) {
@@ -146,7 +146,7 @@ public class EnoceanDeviceLoaderImpl implements DeviceLoader {
 						
 						// Transition step: comment when done
 						Device d = new Device(type, ipv6, addressString, href, name, null, historyCount, historyEnabled, groupCommEnabled, refreshEnabled);
-						DeviceConfigs.getInstance().prepareDevice(connectorName, d);		
+						ConfigsDbImpl.getInstance().prepareDevice(connectorName, d);		
 						
 						log.info("type: " + type);
 						

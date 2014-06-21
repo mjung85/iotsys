@@ -41,7 +41,7 @@ import org.apache.commons.configuration.XMLConfiguration;
 
 import at.ac.tuwien.auto.iotsys.commons.DeviceLoader;
 import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
-import at.ac.tuwien.auto.iotsys.commons.persistent.DeviceConfigs;
+import at.ac.tuwien.auto.iotsys.commons.persistent.ConfigsDbImpl;
 import at.ac.tuwien.auto.iotsys.commons.persistent.models.Connector;
 
 public class DeviceLoaderImpl implements DeviceLoader {
@@ -86,7 +86,7 @@ public class DeviceLoaderImpl implements DeviceLoader {
 			log.info("Found device loader: " + deviceLoaderName);
 			
 			// Transition step: comment when done
-			DeviceConfigs.getInstance().prepareDeviceLoader(deviceLoaderName);
+			ConfigsDbImpl.getInstance().prepareDeviceLoader(deviceLoaderName);
 			
 			try {
 				DeviceLoader devLoader = (DeviceLoader) Class.forName(deviceLoaderName).newInstance();

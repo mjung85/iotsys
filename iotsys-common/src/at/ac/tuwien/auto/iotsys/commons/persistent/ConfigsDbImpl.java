@@ -43,6 +43,7 @@ import at.ac.tuwien.auto.iotsys.commons.persistent.models.DeviceLoaders;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 /**
  * @author Nam Giang - zang at kaist dot ac dot kr
@@ -54,29 +55,30 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 	@View(name = "deviceLoaders", map = "function(doc) {if (doc.deviceLoaders) emit(null, doc);}"),
 	@View(name = "devicesByConnectorId", map = "function(doc) {if (doc.href) emit(doc.connectorId, doc);}"),
 })
-public class DeviceConfigs extends CouchDbRepositorySupport<Connector> implements ConfigsDb{
+public class ConfigsDbImpl extends CouchDbRepositorySupport<Connector> implements ConfigsDb{
 
-	private static DeviceConfigs INSTANCE;
+	private static ConfigsDbImpl INSTANCE;
+	private ObjectMapper om = new ObjectMapper();
 	private List<JsonNode> allConnectors;
 	private List<Device> allDevices;
 	private DeviceLoaders deviceLoaders;
-	private ObjectMapper om = new ObjectMapper();
 	
 	// Transition step
-	private final boolean migrating = true;
+	private final boolean migrating = false;
 	private boolean connectorsMigrated = false;
 	private List<String> allDeviceLoadersFromXML = new ArrayList<String>();
 	private List<Device> allDevicesFromXML = new ArrayList<Device>();
 	
-	private static final Logger log = Logger.getLogger(DeviceConfigs.class.getName());
+	private static final Logger log = Logger.getLogger(ConfigsDbImpl.class.getName());
 	
-	private DeviceConfigs(CouchDbConnector db) {
+	private ConfigsDbImpl(CouchDbConnector db) {
 		super(Connector.class, db);
 		initStandardDesignDocument();
 		allConnectors = findAllConnectors();// Fetch all connectors from database into memory
 		allDevices = findAllDevices();// Fetch all devices from database into memory
 		deviceLoaders = findAllDeviceLoaders().size() != 0 ? findAllDeviceLoaders().get(0) : new DeviceLoaders();
-
+		
+		//enableConnector("Virtual Devices 2");
 //		allConnectors.clear();
 //		allDevices.clear();
 	}
@@ -85,7 +87,7 @@ public class DeviceConfigs extends CouchDbRepositorySupport<Connector> implement
 		if (INSTANCE == null){ 
 			CouchDbConnector db = new StdCouchDbConnector("deviceConfiguration", DbConnection.getCouchInstance());
 			try {
-				INSTANCE = new DeviceConfigs(db);
+				INSTANCE = new ConfigsDbImpl(db);
 			} catch (Exception e) {
 				log.severe("FATAL: Config DB not connected!");
 			}
@@ -149,7 +151,7 @@ public class DeviceConfigs extends CouchDbRepositorySupport<Connector> implement
 		if (!connectorsMigrated) return;
 		
 		for (Device d : ds){
-			JsonNode thisConnector = DeviceConfigs.getInstance().getConnectorByName(d.getConnectorId());
+			JsonNode thisConnector = ConfigsDbImpl.getInstance().getConnectorByName(d.getConnectorId());
 			d.setConnectorId(thisConnector.get("_id").asText());
 		}
 		db.executeAllOrNothing(ds);
@@ -223,7 +225,7 @@ public class DeviceConfigs extends CouchDbRepositorySupport<Connector> implement
 		allConnectors.remove(toUpdate);
 		allConnectors.add(om.valueToTree(c));
 	}
-
+	
 	@Override
 	public void deleteConnector(Connector c) {
 		Assert.hasText(c.getId(), "deleting connector must have an id field");
@@ -417,6 +419,22 @@ public class DeviceConfigs extends CouchDbRepositorySupport<Connector> implement
 			connectorsMigrated = true;
 			addBulkDevices(allDevicesFromXML);
 		}
+	}
+	
+	public void disableAllConnectors(){
+		for(JsonNode j : allConnectors){
+			((ObjectNode)j).put("enabled", false);
+			db.update(j);
+		}
+	}
+	
+	public void enableConnector(String name){
+		for(JsonNode j : allConnectors)
+			if (j.get("name").asText().equals(name)){
+				((ObjectNode)j).put("enabled", true);
+				db.update(j);
+				return;
+			}
 	}
 
 }

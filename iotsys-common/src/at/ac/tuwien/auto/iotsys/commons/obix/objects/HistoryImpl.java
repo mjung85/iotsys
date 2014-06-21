@@ -51,10 +51,13 @@ import obix.Ref;
 import obix.Reltime;
 import obix.Str;
 import obix.Uri;
+import obix.Val;
 import obix.contracts.History;
 import obix.contracts.HistoryAppendIn;
 import obix.contracts.HistoryRecord;
 import obix.contracts.HistoryRollupIn;
+import at.ac.tuwien.auto.iotsys.commons.persistent.HistoryDbImpl;
+import at.ac.tuwien.auto.iotsys.commons.persistent.models.DbHistoryFeed;
 import at.ac.tuwien.auto.iotsys.obix.OperationHandler;
 import at.ac.tuwien.auto.iotsys.obix.observer.Observer;
 import at.ac.tuwien.auto.iotsys.obix.observer.Subject;
@@ -181,6 +184,8 @@ public class HistoryImpl extends Obj implements History, Observer {
 
 	private Obj query(Obj in) {
 		HistoryFilterImpl filter = new HistoryFilterImpl(in);
+		//int noOfEvents = feed.getEvents().size();
+		// Database.getEvents(feed);
 		return new HistoryQueryOutImpl(filter.query(feed));
 	}
 
@@ -430,8 +435,27 @@ public class HistoryImpl extends Obj implements History, Observer {
 			historyRecordImpl = new HistoryRecordImpl(new Str(
 					((Str) obj).get()), timestamp);
 		}
-		feed.addEvent(historyRecordImpl);
 
+		if (feed.getEvents().size() >= feed.getMaxEvents()) {
+			// flush the feed to database
+			List<DbHistoryFeed> dhfs = new ArrayList<DbHistoryFeed>();
+			for (Obj o : feed.getEvents()) {
+				historyRecordImpl = (HistoryRecordImpl) o;
+				if (historyRecordImpl.value() instanceof Val) {
+					DbHistoryFeed hf = new DbHistoryFeed(
+							feed.getFullContextPath(), 
+							historyRecordImpl.timestamp().getMillis(), 
+							historyRecordImpl.value().getElement(),
+							((Val) historyRecordImpl.value()).toString());
+					dhfs.add(hf);
+					feed.removeEvent(o);
+				}
+			}
+			HistoryDbImpl.getInstance().addBulkObject(dhfs);
+		}
+
+		feed.addEvent(historyRecordImpl);
+		//System.out.println(feed.getFullContextPath() + ": " + historyRecordImpl.value().toString());
 		updateKids();
 	}
 	
