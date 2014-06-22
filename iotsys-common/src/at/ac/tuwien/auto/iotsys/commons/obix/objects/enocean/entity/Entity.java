@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2014, Automation Systems Group, TU Wien.
+ * Copyright (c) 2013, Automation Systems Group, TU Wien.
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -29,13 +29,11 @@
  * This file is part of the IoTSyS project.
  ******************************************************************************/
 
-package at.ac.tuwien.auto.iotsys.commons.obix.objects.enocean.datapoint;
+package at.ac.tuwien.auto.iotsys.commons.obix.objects.enocean.entity;
 
-import obix.Real;
+import obix.IObj;
 
-public interface EnoceanDPTReal extends EnoceanDPT
+public interface Entity extends IObj
 {
-	public static final String CONTRACT = "enocean:DPTReal";
-	
-	public Real value();
+	public static final String CONTRACT = "enocean:Entity";
 }
