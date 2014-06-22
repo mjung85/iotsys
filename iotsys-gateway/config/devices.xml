@@ -17,6 +17,17 @@
     	<connector>
             <name>IoTSyS Devices2</name>
             <enabled>true</enabled>
+            <device>  
+           		<type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.coap.TemperatureSensorImplCoap
+          		</type>
+	            <address>coap://[aaaa::c30c:0:0:daf]:5683/temp</address>
+	            <href>dev1/leds</href>
+	            <historyEnabled>true</historyEnabled>
+	            <refreshEnabled>false</refreshEnabled>
+	            <groupCommEnabled>true</groupCommEnabled>
+	            <forwardGroupAddress>true</forwardGroupAddress>
+	            <observe>false</observe>
+	        </device>
             <!--<device>  
            		<type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.coap.LedsActuatorImplCoap
           		</type>
@@ -65,7 +76,7 @@
         </connector>
        <connector>
             <name>IoTSyS Devices</name>
-            <enabled>true</enabled>
+            <enabled>false</enabled>
 
                 <!--<device>
                                 <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.coap.TemperatureSensorImplCoap
