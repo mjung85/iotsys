@@ -29,13 +29,9 @@
  * This file is part of the IoTSyS project.
  ******************************************************************************/
 
-package at.ac.tuwien.auto.iotsys.commons.obix.objects.enocean.datapoint;
+package at.ac.tuwien.auto.iotsys.commons.obix.objects.enocean.entity;
 
-import obix.Real;
-
-public interface EnoceanDPTReal extends EnoceanDPT
+public interface EntityEEP_A52001 extends Entity
 {
-	public static final String CONTRACT = "enocean:DPTReal";
-	
-	public Real value();
+	public static final String CONTRACT = "enocean:EntityEEP_A52001";
 }

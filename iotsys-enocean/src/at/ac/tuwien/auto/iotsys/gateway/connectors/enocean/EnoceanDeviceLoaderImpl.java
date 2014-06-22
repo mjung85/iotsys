@@ -11,6 +11,7 @@ import java.util.logging.Logger;
 
 import obix.Obj;
 import obix.Uri;
+import obix.Obj.TranslationAttribute;
 
 import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.commons.configuration.XMLConfiguration;
@@ -18,6 +19,9 @@ import org.apache.commons.configuration.XMLConfiguration;
 import at.ac.tuwien.auto.iotsys.commons.Connector;
 import at.ac.tuwien.auto.iotsys.commons.DeviceLoader;
 import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.enocean.entity.EntityEEP_F60201;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.entity.impl.EntityImpl;
+import at.ac.tuwien.auto.iotsys.gateway.obix.objects.enocean.entity.impl.EntityEEP_F60201Impl;
 
 public class EnoceanDeviceLoaderImpl implements DeviceLoader {
 
@@ -70,7 +74,7 @@ public class EnoceanDeviceLoaderImpl implements DeviceLoader {
 			if (enabled) {
 				try {
 					log.info("Connecting EnOcean connector to COM Port: "+ serialPort);
-					EnoceanConnector enoceanConnector = new EnoceanConnector(serialPort);
+					EnoceanConnector enoceanConnector = new EnoceanConnector(serialPort);	// TODO add new API connector here
 					enoceanConnector.connect();
 
 					connectors.add(enoceanConnector);
@@ -177,6 +181,27 @@ public class EnoceanDeviceLoaderImpl implements DeviceLoader {
 											e.printStackTrace();
 										}
 									}
+// ++++++++++ TEST add device manually +++++++++++++++++++++
+									EntityEEP_F60201Impl entity = new EntityEEP_F60201Impl(enoceanConnector, "00:25:A2:DC", "EasyClickWallTransmitter", "Switching actuator", null, "PEHA");
+									entity.addTranslation("de-DE", TranslationAttribute.displayName, "Schaltaktor");
+								
+									// add virtual devices to object broker and remember all
+									// assigned
+									// URIs, due to child objects there could be one or many
+//									synchronized (myObjects) {
+//										// myObjects.addAll(objectBroker.addObj(xBeeBrightness));
+//										myObjects.addAll(objectBroker.addObj(entity,true));
+//									}
+									objectBroker.addObj(entity,true);
+
+									// enable history yes/no?
+									// objectBroker.addHistoryToDatapoints(xBeeBrightness, 100);
+									objectBroker.addHistoryToDatapoints(entity, 100);
+
+									objectBroker.enableGroupComm(entity);
+
+									
+// ++++++++++ TEST add device manually +++++++++++++++++++++									
 								}
 							} catch (SecurityException e) {
 								e.printStackTrace();

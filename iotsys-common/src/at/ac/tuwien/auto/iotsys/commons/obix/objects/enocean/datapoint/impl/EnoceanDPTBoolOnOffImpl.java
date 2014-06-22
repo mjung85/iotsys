@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013
+ * Copyright (c) 2014
  * Institute of Computer Aided Automation, Automation Systems Group, TU Wien.
  * All rights reserved.
  * 
@@ -40,7 +40,7 @@ import at.ac.tuwien.auto.iotsys.commons.obix.objects.enocean.datapoint.EnoceanDP
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.encoding.EncodingOnOff;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.encoding.impl.EncodingsImpl;
 
-public abstract class EnoceanDPTBoolOnOffImpl extends EnoceanDPTBoolImpl implements EnoceanDPTBoolOnOff
+public class EnoceanDPTBoolOnOffImpl extends EnoceanDPTBoolImpl implements EnoceanDPTBoolOnOff
 {
 	private Enum encoding = new Enum();
 

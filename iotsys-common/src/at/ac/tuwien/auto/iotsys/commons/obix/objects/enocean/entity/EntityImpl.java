@@ -1,5 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2014, Automation Systems Group, TU Wien.
+ * Copyright (c) 2014
+ * Institute of Computer Aided Automation, Automation Systems Group, TU Wien.
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -29,13 +30,56 @@
  * This file is part of the IoTSyS project.
  ******************************************************************************/
 
-package at.ac.tuwien.auto.iotsys.commons.obix.objects.enocean.datapoint;
+package at.ac.tuwien.auto.iotsys.commons.obix.objects.enocean.entity;
 
-import obix.Real;
+import java.util.ArrayList;
 
-public interface EnoceanDPTReal extends EnoceanDPT
+import obix.Contract;
+import obix.List;
+import obix.Obj;
+import obix.Str;
+import obix.Uri;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.enocean.datapoint.EnoceanDPT;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.enocean.datapoint.impl.EnoceanDPTImpl;
+
+public class EntityImpl extends Obj implements Entity
 {
-	public static final String CONTRACT = "enocean:DPTReal";
-	
-	public Real value();
+	protected List list;
+	protected ArrayList<EnoceanDPT> datapoints;
+
+	public EntityImpl(String name, String displayName, String display, String manufacturer)
+	{
+		super();
+
+		this.setName(name);
+		this.setDisplay(display);
+		this.setDisplayName(displayName);
+		this.setIs(new Contract(Entity.CONTRACT));
+		this.setHidden(true);
+
+		if (manufacturer != null)
+		{
+			Str man = new Str();
+			man.setName("manufacturer");
+			man.setHref(new Uri("manufacturer"));
+			man.set(manufacturer);
+			this.add(man);
+		}		
+	}
+
+	public void addDatapoint(EnoceanDPTImpl datapoint)
+	{
+		if (this.datapoints == null)
+		{
+			this.list = new List("datapoints", new Contract(new String[] { "obix:ref", EnoceanDPT.CONTRACT }));
+			this.list.setHref(new Uri("datapoints"));
+			this.add(this.list);
+
+			this.datapoints = new ArrayList<EnoceanDPT>();
+		}
+
+		this.list.add(datapoint);
+		this.list.add(datapoint.getReference());
+		this.datapoints.add(datapoint);
+	}
 }
