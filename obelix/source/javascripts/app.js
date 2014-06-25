@@ -19,8 +19,8 @@ app.service('Lobby', ['$http', 'Device', 'Directory', function($http, Device, Di
       var root = new Directory('');
       root.expanded = true;
       $http.get('/obix').success(function(response) {
-    	  console.log(response);
-    	  response['nodes'].each(function(node) {
+        console.log(response);
+        response['nodes'].each(function(node) {
           var href = node['href'];
           if (!href.startsWith('/')) href = '/' + href;
           var href_components = href.split('/').compact(true);
@@ -40,7 +40,7 @@ app.factory('Storage', function() {
     this.key = key;
     return this;
   };
-
+  
   Storage.get = function(key) {
       var result = localStorage.getItem(key);
       if (!result) {
@@ -58,7 +58,7 @@ app.factory('Storage', function() {
       }
       localStorage.setItem(key, value);
   };
-
+  
   Storage.remove = function(key) {
     localStorage.removeItem(key);
   };
@@ -80,7 +80,7 @@ app.factory('Directory', function() {
     this.expanded = false;
     return this;
   };
-
+  
   Directory.prototype = {
     make: function(components) {
       if (components.isEmpty()) return this;
@@ -100,21 +100,21 @@ app.factory('Directory', function() {
         return subdirectory.make(components);
       }
     },
-
     toggle: function() {
       this.expanded = !this.expanded;
       // if (this.expanded) this.expand();
     },
 
-    //expand: function() {
-    //   this.expanded = true;
-    //   if (this.subdirectories.count() == 1) {
-    //     // only one subdirectory, expand it
-    //     this.subdirectories[0].expand();
-    //   }
-    //},
+    // expand: function() {
+    // this.expanded = true;
+    // if (this.subdirectories.count() == 1) {
+    // // only one subdirectory, expand it
+    // this.subdirectories[0].expand();
+    // }
+    // },
 
-    // Recursively return all devices under this directory and its subdirectories
+    // Recursively return all devices under this directory and its
+    // subdirectories
     globDevices: function() {
       var result = [];
       result = result.concat(this.devices);
@@ -132,14 +132,15 @@ app.factory('Watch', ['$http', '$timeout', '$q', 'Storage', function($http, $tim
     this.interval = this.intervalStorage.get();
     this.intervalMinimum = 1000;
     this.intervalMaximum = 10000;
-    this.interval = (	null == this.interval || 
-    					undefined == this.interval || 
-    					isNaN(this.interval)) ? this.intervalMinimum : this.interval;
+    this.interval = (  null == this.interval || 
+                      undefined == this.interval || 
+                      isNaN(this.interval)) ? this.intervalMinimum : this.interval;
     this.updateInterval();
     this.href = href;
   };
 
-  // A promise that will get resolved only when an old watch that we have in localStorage is dead and we've created a new one
+  // A promise that will get resolved only when an old watch that we have in
+  // localStorage is dead and we've created a new one
   Watch.watchRecreatedDefer = $q.defer();
 
   Watch.getInstance = function(callback) {
@@ -180,17 +181,23 @@ app.factory('Watch', ['$http', '$timeout', '$q', 'Storage', function($http, $tim
       console.log("Watch interval is", this.interval);
       this.intervalStorage.set(this.interval);
     },
+    
     hrefForOperation: function(opName) {
-      return URI(this.href).segment(opName).toString(); // For now, operation href is same as name
+      return URI(this.href).segment(opName).toString(); // For now, operation
+                                                        // href is same as name
     },
+    
     add: function(href) {
       return this.op('add', href);
     },
+    
     remove: function(href) {
       return this.op('remove', href);
     },
+    
     op: function(op, href) {
-      // var payload = {"is" : "obix:WatchIn", "tag" : "obj", "nodes" : [{"tag" : "list", "name": "hrefs", "nodes":[{"tag": "uri", "val": href}]}]};
+      // var payload = {"is" : "obix:WatchIn", "tag" : "obj", "nodes" : [{"tag"
+      // : "list", "name": "hrefs", "nodes":[{"tag": "uri", "val": href}]}]};
       var payload = '<obj is="obix:WatchIn"><list name="hrefs"><uri val="'+href+'" /></list></obj>';
 
       $http({
@@ -209,6 +216,7 @@ app.factory('Watch', ['$http', '$timeout', '$q', 'Storage', function($http, $tim
         }
       });
     },
+    
     poll: function(callback) {
       $http.post(this.hrefForOperation('pollChanges')).success(function(response) {
         var devices = response['nodes'][0]['nodes'];
@@ -217,15 +225,17 @@ app.factory('Watch', ['$http', '$timeout', '$q', 'Storage', function($http, $tim
         }
       });
     },
+    
     tick: function() {
       if (this.polling) {
         this.poll(this.polling);
         if (! this.intervalStorage.get()) {
-        	this.intervalStorage.set(this.interval = this.intervalMinimum);
+          this.intervalStorage.set(this.interval = this.intervalMinimum);
         }
         $timeout(this.tick.bind(this), this.intervalStorage.get());
       }
     },
+    
     startPolling: function(callback) {
       this.polling = callback;
       this.tick();
@@ -267,7 +277,6 @@ app.factory('Property', ['$http', function($http) {
       if (this.type == 'enum') {
         this.range = Property.Enum.range(node['range']);
       }
-
       // Display class
       if (this.numeric) {
         this.klass = 'numeric';
@@ -300,6 +309,7 @@ app.factory('Property', ['$http', function($http) {
         }
       }.bind(this));
     },
+    
     connect: function(connection, join) {
       var action = join ? 'joinGroup' : 'leaveGroup';
       var url = URI(this.href).segment('groupComm').segment(action).toString();
@@ -355,7 +365,8 @@ app.factory('Connection', ['Storage', function(Storage) {
     return result;
   };
 
-  // Small utility "module" to de/serialize connections to localstorage, as they aren't enumerable in the lobby
+  // Small utility "module" to de/serialize connections to localstorage, as they
+  // aren't enumerable in the lobby
   Connection.Freezer = (function(){
     var storage = new Storage('connections');
     var list = storage.get() || [];
@@ -474,11 +485,11 @@ app.factory('Device', ['$http', '$q', 'Storage', 'Property', 'Watch', function($
 
       // Disconnect connected properties
       if (this.properties) {
-    	  this.properties.each(function(p) {
-    		  p.connections.each(function(c) { c.destroy(); });
-    		  // Remove endpoints
-    		  p.jsPlumbEndpoints.each(function(e) { jsPlumb.deleteEndpoint(e); });
-	      });
+        this.properties.each(function(p) {
+          p.connections.each(function(c) { c.destroy(); });
+          // Remove endpoints
+          p.jsPlumbEndpoints.each(function(e) { jsPlumb.deleteEndpoint(e); });
+        });
       }
 
       // Unplace
@@ -493,19 +504,30 @@ app.factory('Device', ['$http', '$q', 'Storage', 'Property', 'Watch', function($
   return Device;
 }]);
 
-app.controller('MainCtrl', ['$scope','$q','$timeout','Lobby','Watch','Connection',function($scope, $q, $timeout, Lobby, Watch, Connection) {
+app.controller('MainCtrl', ['$scope','$q','$timeout', '$interval', 'Lobby','Watch','Connection',function($scope, $q, $timeout, $interval, Lobby, Watch, Connection) {
   $scope.directory = null;
   $scope.allDevices = [];
   $scope.watch = null;
 
   var devicesInstantiatedDefer = $q.defer();
   var devicesInstantiatedWithPropertiesDefer = $q.defer();
-
+  var jsPlumbEndpointRectsRendereredDefer = $q.defer();
+  
+  var expectedJsPlumbEndpointRects = null;
+  var jsPlumbEndpointRectsVisibleCheckIntervalTimerPromise = $interval(function() {
+    var rectsVisible = jQuery('rect:visible').length;
+    if (rectsVisible === expectedJsPlumbEndpointRects) {
+      $interval.cancel(jsPlumbEndpointRectsVisibleCheckIntervalTimerPromise);
+      jsPlumbEndpointRectsRendereredDefer.resolve();
+    }
+  }, 250);
+  
   $q.all([
     Watch.watchRecreatedDefer.promise,
     devicesInstantiatedDefer.promise
   ]).then(function(values) {
-    // Promises resolved. We now have both watch and devices and can re-add them to the new watch
+    // Promises resolved. We now have both watch and devices and can re-add them
+    // to the new watch
     console.log("Re-adding placed devices to new watch");
     var watch = values[0];
     var placedDevices = values[1];
@@ -514,17 +536,26 @@ app.controller('MainCtrl', ['$scope','$q','$timeout','Lobby','Watch','Connection
 
   // When devices are known, we want to restore connections
   devicesInstantiatedWithPropertiesDefer.promise.then(function(placedDevices) {
+    placedDevices.map(function(device){
+      device.properties.map(function(property){
+        if (property.groupCommEnabled) {
+          expectedJsPlumbEndpointRects++;
+        }
+      });
+    });
     Connection.Freezer.restore(function(propertyHref) {
       return placedDevices.map('properties').flatten().find({href:propertyHref});
     }, function(connection) {
-      $timeout(function(){
+      jsPlumbEndpointRectsRendereredDefer.promise.then(function() {
         console.log(connection);
         connection.jsPlumbConnection = jsPlumb.connect({
-          source:connection.fromProperty.jsPlumbEndpoints[0],
-          target:connection.toProperty.jsPlumbEndpoints[0]
-        }, {parameters: {restored: true}});
+              source:  connection.fromProperty.jsPlumbEndpoints[0],
+              target:  connection.toProperty.jsPlumbEndpoints[0]
+            }, {
+              parameters: {restored: true}
+            });
         connection.jsPlumbConnection.obelixConnection = connection;
-      },100); // TODO: fix timeout and connect when endpoints get available
+      });
     });
   });
 
@@ -556,33 +587,33 @@ app.controller('MainCtrl', ['$scope','$q','$timeout','Lobby','Watch','Connection
   });
   
   $scope.sidebar = {
-	  _toggleButton: jQuery('#toggleSidebar'),
-	  _expanded: false,
-	  _locked: false,
-	  get expanded() {
-		  return this._expanded;
-	  },
-	  set expanded(newValue) {
-		  if (! this._locked) {
-			  this._expanded = newValue;
-		  }
-	  },
-	  toggle: function() {
-		  if (! this._locked) {
-			  this._expanded = !this._expanded;			  
-		  }
-	  },
-	  get locked() {
-		  return this._locked;
-	  }, 
-	  set locked(newValue) {
-		  this._locked = newValue;
-		  if (newValue) {
-			  this._toggleButton.addClass('disabled');
-		  } else {
-			  this._toggleButton.removeClass('disabled');
-		  }
-	  }
+    _toggleButton: jQuery('#toggleSidebar'),
+    _expanded: false,
+    _locked: false,
+    get expanded() {
+      return this._expanded;
+    },
+    set expanded(newValue) {
+      if (! this._locked) {
+        this._expanded = newValue;
+      }
+    },
+    toggle: function() {
+      if (! this._locked) {
+        this._expanded = !this._expanded;        
+      }
+    },
+    get locked() {
+      return this._locked;
+    }, 
+    set locked(newValue) {
+      this._locked = newValue;
+      if (newValue) {
+        this._toggleButton.addClass('disabled');
+      } else {
+        this._toggleButton.removeClass('disabled');
+      }
+    }
   };
   
   jsPlumb.bind("connection", function(info) {
@@ -591,8 +622,11 @@ app.controller('MainCtrl', ['$scope','$q','$timeout','Lobby','Watch','Connection
       info.sourceEndpoint.addClass('connected');
       info.targetEndpoint.addClass('connected');
       
-      if (info.connection.getParameter('restored')) return; // Ignore connect events for restored connections
-
+      if (info.connection.getParameter('restored')) {
+        // Ignore connect events for restoredvconnections
+        return; 
+      }
+                                                            
       var sourceProperty = info.sourceEndpoint.getParameters().property;
       var targetProperty = info.targetEndpoint.getParameters().property;
       
@@ -625,7 +659,7 @@ app.controller('MainCtrl', ['$scope','$q','$timeout','Lobby','Watch','Connection
   };
   
   $scope.destroyDevice = function(device) {
-	  $scope.tourInProgress || device.destroy();
+    $scope.tourInProgress || device.destroy();
   }
 
   $scope.clear = function() {
@@ -670,17 +704,17 @@ app.directive('draggable', function() {
 });
 
 // app.directive('notDroppable', function() {
-//   return {
-//     restrict: 'A',
-//     link: function(scope, el, attrs) {
-//       el.droppable({
-//         greedy: true,
-//         drop: function(event,ui) {
-//           console.log('swallow');
-//         }
-//       });
-//     }
-//   }
+// return {
+// restrict: 'A',
+// link: function(scope, el, attrs) {
+// el.droppable({
+// greedy: true,
+// drop: function(event,ui) {
+// console.log('swallow');
+// }
+// });
+// }
+// }
 // });
 
 
@@ -717,56 +751,58 @@ app.directive('droppable', ['$parse',function($parse) {
 }]);
 
 app.directive('ngModelOnblur', function() {
-    return {
-        restrict: 'A',
-        require: 'ngModel',
-        link: function(scope, elm, attr, ngModelCtrl) {
-            if (attr.type === 'radio' || attr.type === 'checkbox') return;
-            elm.unbind('input').unbind('keydown').unbind('change');
-            elm.bind('blur', function() {
-                scope.$apply(function() {
-                    ngModelCtrl.$setViewValue(elm.val());
-                });
-            });
-        }
-    };
+  return {
+    restrict: 'A',
+    require: 'ngModel',
+    link: function(scope, elm, attr, ngModelCtrl) {
+      if (attr.type === 'radio' || attr.type === 'checkbox') {
+        return;
+      }
+      elm.unbind('input').unbind('keydown').unbind('change');
+      elm.bind('blur', function() {
+      scope.$apply(function() {
+          ngModelCtrl.$setViewValue(elm.val());
+          });
+      });
+    }
+  };
 });
 
 app.directive('inlineEditor', ['$parse', function($parse) {
-    return {
-        restrict: 'A',
-        require: 'ngModel',
-        link: function(scope, el, attrs, ngModelCtrl) {
-          var fn = $parse(attrs['inlineEditor']);
-
-          el.bind("keydown keypress", function(event) {
-            if (event.which === 13 || event.which === 27) {
-              el.blur();
-              event.preventDefault();
-            }
-          });
-
-          el.bind('blur', function() {
-            scope.$apply(function() {
-              fn(scope);
-              ngModelCtrl.$setViewValue(el.val());
-            });
-          });
-
-          el.focus();
+  return {
+    restrict: 'A',
+    require: 'ngModel',
+    link: function(scope, el, attrs, ngModelCtrl) {
+      var fn = $parse(attrs['inlineEditor']);
+      
+      el.bind("keydown keypress", function(event) {
+        if (event.which === 13 || event.which === 27) {
+          el.blur();
+          event.preventDefault();
         }
-    };
+      });
+
+      el.bind('blur', function() {
+        scope.$apply(function() {
+          fn(scope);
+          ngModelCtrl.$setViewValue(el.val());
+        });
+      });
+      
+      el.focus();
+    }
+  };
 }]);
 
 app.directive('jsplumbContainer', function() {
   return {
     restrict: 'A',
     link: function(scope, el, attrs) {
-		jsPlumb.ready(function() {
-	        jsPlumb.Defaults.Container = el;
-	        jsPlumb.Defaults.Connector = [ "Bezier", { stub: 30, curviness:50 }];
-	        jsPlumb.Defaults.Endpoint = ["Rectangle", { width: 12, height: 15}];
-	      });
+    jsPlumb.ready(function() {
+          jsPlumb.Defaults.Container = el;
+          jsPlumb.Defaults.Connector = [ "Bezier", { stub: 30, curviness:50 }];
+          jsPlumb.Defaults.Endpoint = ["Rectangle", { width: 12, height: 15}];
+        });
     }
   };
 });
@@ -780,7 +816,6 @@ app.directive('jsplumbEndpoint', ['$timeout', function($timeout) {
       var device = scope.$eval(attrs['device']);
       
       $timeout(function() {
-
         var ep = jsPlumb.addEndpoint(el, {
           isSource: true, 
           isTarget: true,
@@ -805,331 +840,332 @@ app.directive('tourDevice', function() {
     link: function(scope, el, attrs) {
       var deviceName = scope.$eval(attrs['tourDevice']).name.toLowerCase();
       if (deviceName === 'virtualpushbutton') {
-    	  jQuery(el).attr('id', 'tourDeviceButton');
+        jQuery(el).attr('id', 'tourDeviceButton');
       } else if (deviceName === 'virtuallight') {
-    	  jQuery(el).attr('id', 'tourDeviceLight');
+        jQuery(el).attr('id', 'tourDeviceLight');
       }
     }
   };
 });
 
 app.directive('obelixTourStarter', ['$timeout', function($timeout) {
-	return {
-		restrict: 'A',
-		link: function(scope, elem, attr) {
+  return {
+    restrict: 'A',
+    link: function(scope, elem, attr) {
 
-			function toggleTourStarter(toggle) {
-				if (toggle) {
-					jQuery(elem)
-						.off()
-						.on('click', obelixTour.start)
-						.attr('title', 'Start the UI tour!')
-						.addClass('enabled')
-						.removeClass('disabled')
-				} else {
-					jQuery(elem)
-						.off()
-						.attr('title', 'UI tour has started')
-						.addClass('disabled')
-						.removeClass('enabled');
-				}
-			}
-			
-			function toggleSidebarButton(enableToggle) {
-				$timeout(function() {
-					scope.sidebar.locked = !enableToggle;
-				}, 0);
-			}
-			
-			function showSidebar(showSidebar) {
-				$timeout(function() {
-					scope.sidebar.expanded = showSidebar;
-				}, 0);
-			}
-			
-			function tourInProgress(started) {
-				$timeout(function() {
-					scope.tourInProgress = started;
-				}, 0);
-			}
-			
-			var obelixTour = {};
-			
-			var tourSteps = [{
-				title: 'Menu Button',
-				content: '<p>This is the menu toggle button. Click it to open/close the menu.</p>',
-				closeButton: true,
-				highlightTarget: true,
-				target: jQuery('div#toggleSidebar'),
-				my: 'left center',
-				at: 'right center',
-				bind: ['onToggleButtonClick'],
-				onToggleButtonClick: function(tour, options, view, element) {
-					tour.next();
-				},
-				setup: function(tour, options) {
-					obelixTour.step = this;
-					toggleSidebarButton(true);
-					showSidebar(false);
-					this.target.bind('click', this.onToggleButtonClick);
-				},
-				teardown: function(tour, options) {
-					this.target.unbind('click', this.onToggleButtonClick);
-					toggleSidebarButton(false);
-				}
-			  }, {
-				title: 'Menu', 
-				content: '<p>The menu contains two main sections: "Devices" and "Settings".</p>',
-				closeButton:true,
-				highlightTarget: false,
-				nextButton: true,
-				target: jQuery('div#sidebar-sublayer'),
-				my: 'left center',
-				at: 'right center',
-				setup: function(tour, options) {
-					obelixTour.step = this;
-					jQuery('#sidebar')
-						.addClass('tour-highlight')
-						.children('.content:first')
-							.scrollTop(0);
-				},
-				teardown: function(tour, options) {
-					jQuery('#sidebar').removeClass('tour-highlight');
-				}
-			  }, {
-				title: 'Section "Settings"', 
-				content: '<p>This section provides the possibility to control some aspects of this client. </p>',
-				closeButton:true,
-				highlightTarget: true,
-				nextButton: true,
-				target: jQuery('div#segmentSettings'),
-				my: 'top left',
-				at: 'bottom right',
-				setup: function(tour, options) {
-					obelixTour.step = this;
-					jQuery('#sidebar > .content:first')
-						.scrollTop(0);
-					$timeout(function() {
-						 scope.segment=1;
-					}, 0);
-				},
-				teardown: function(tour, options) {
-					$timeout(function() {
-						 scope.segment=0;
-						 scope.directory.subdirectories[1].expanded=true;
-					}, 0);
-				}
-			  }, {
-				title: 'Section "Devices"', 
-				content: '<p>This section contains the list of all known devices (represented as blocks), which are organized in lists (a list may contain sublists). A list can be opened/closed by clicking on it.</p>',
-				closeButton:true,
-				highlightTarget: true,
-				nextButton: true,
-				target: jQuery('div#segmentDevices'),
-				my: 'top left',
-				at: 'bottom right',
-				setup: function(tour, options) {
-					obelixTour.step = this;
-					$timeout(function() {
-						scope.segment=0;
-//						document.getElementById('#canvas .content').scrollIntoView(false);
-					}, 0);
-				},
-				teardown: function(tour, options) {
-				}
-			  }, {
-				 title: 'Virtual Push Button',
-				 content: '<p>Drag and drop the virtual push button device block onto the grid.</p>',
-				 closeButton: true,
-				 highlightTarget: true,
-				 nextButton: false,
-				 my: 'bottom center',
-				 at: 'top center',
-				 setup: function(tour, options) {
-					 obelixTour.step = this;
-					 document.getElementById('tourDeviceButton').scrollIntoView(false);
-					 options.tourDeviceDropZone
-					 	.css({'top': '30px', 'left': '50%'})
-					 	.addClass('tour-highlight')
-					 	.droppable()
-					 	.droppable({
-					 		accept: 'label#tourDeviceButton',
-					 		drop: function( event, ui ) {
-					 			options.droppedDeviceButton = jQuery(event.target);
-					 			options.droppedDeviceButton
-					 				.droppable()
-					 				.droppable('destroy');
-					 			tour.next();
-					 		}
-				 		});
-					 return {
-						 target: jQuery('label#tourDeviceButton')
-					 }
-				 },
-				 teardown: function(tour, options) {
-					 options.tourDeviceDropZone
-					 	.removeClass('tour-highlight');
-					 options.droppedDevices.push(jQuery('#canvas .device.virtualpushbutton').draggable('disable'));
-				 }
-			  }, {
-				 title: 'Virtual Light',
-				 content: '<p>Drag and drop the virtual light device block onto the grid.</p>',
-				 closeButton: true,
-				 highlightTarget: true,
-				 nextButton: false,
-				 my: 'bottom left',
-				 at: 'top right',
-				 setup: function(tour, options) {
-					 obelixTour.step = this;
-					 document.getElementById('tourDeviceLight').scrollIntoView(false);
-					 options.tourDeviceDropZone
-					 	.css({'top': '280px', 'left': '30%'})
-					 	.addClass('tour-highlight')
-					 	.droppable()
-					 	.droppable({
-					 		accept: 'label#tourDeviceLight',
-					 		drop: function( event, ui ) {
-					 			options.droppedDeviceLight = jQuery(event.target)
-					 			options.droppedDeviceLight
-					 				.droppable()
-					 				.droppable('destroy');
-					 			tour.next();
-					 		}
-				 		});
-					 return {
-						 target: jQuery('label#tourDeviceLight')
-					 }
-				 },
-				 teardown: function(tour, options) {
-					 options.tourDeviceDropZone
-					 	.removeClass('tour-highlight')
-					 options.droppedDevices.push(jQuery('#canvas .device.virtuallight').draggable('disable'));
-				 }
-			  }, {
-				 title: 'Device Box',
-				 content: '<p>A device box can be deleted from the configuration by clicking on the button "x" (during the tour the button\'s functionality has been disabled). A device box contains interactive elements to modify its behaviour. It can also be  moved around using the mouse (but during the tour it is not possible to move around the device boxes of the virtual push button and virtual light).</p>',
-				 closeButton: true,
-				 highlightTarget: true,
-				 nextButton: true,
-				 my: 'top left',
-				 at: 'bottom center',
-				 setup: function(tour, options) {
-					 obelixTour.step = this;
-					 return {
-						 target: options.droppedDevices[0]
-					 }
-				 },
-				 teardown: function(tour, options) {
-				 }
-			  }, {
-				 title: 'Endpoint',
-				 content: '<p>A device box may have endpoints like this one, which can be connected to other endpoints.</p>',
-				 closeButton: true,
-				 highlightTarget: true,
-				 nextButton: true,
-				 my: 'left top',
-				 at: 'right center',
-				 setup: function(tour, options) {
-					 obelixTour.step = this;
-					 return {
-						 target: jQuery('#canvas ._jsPlumb_endpoint.virtualpushbutton')
-					 }
-				 },
-				 teardown: function(tour, options) {
-				 }
-			  }, {
-				 title: 'Connect Endpoints',
-				 content: '<p>Connect the endpoint of the virtual push button with the endpoint of the virtual light by drawing a line. Click with the primary mouse button on a endpoint and keep the mouse button pressed. Move the mouse pointer over to the other endpoint and release the mouse button afterwards.</p><p>A connection can be deleted by double-clicking on the connection line. All connections of a device are delete when the device is deleted.</p>',
-				 nextButton: true,
-				 closeButton: true,
-				 highlightTarget: true,
-				 my: 'left top',
-				 at: 'right center',
-				 setup: function(tour, options) {
-					 obelixTour.step = this;
-					 jQuery('#canvas ._jsPlumb_endpoint.virtuallight, #canvas ._jsPlumb_endpoint.virtualpushbutton')
-							 .addClass('tour-highlight');
-					 return {
-						 target: jQuery('#canvas ._jsPlumb_endpoint.virtualpushbutton')
-					 }
-				 },
-				 teardown: function(tour, options) {
-					 jQuery('#canvas ._jsPlumb_endpoint.virtuallight, #canvas ._jsPlumb_endpoint.virtualpushbutton')
-					 	.removeClass('tour-highlight');
-				 }
-			  }];
-			
-			var tourStarterRebindStep = {
-				title: 'End Of Tour',
-				content: '<p>This is the end of the tour. Thanks!',
-				closeButton: true,
-				target: elem,
-				nextButton: true,
-				my: 'top right',
-				at: 'bottom left',
-				setup: function(tour, options) {
-					obelixTour.step = this;
-				},
-				teardown: function(tour, options) {
-					options.setDragOnDroppedDevices(true);
-					options.droppedDevices = [];
-					toggleSidebarButton(true);
-					tourInProgress(false);
-					toggleTourStarter(true);
-				}
-			};
-			
-			var tour = new Tourist.Tour({
-			  tipClass: 'QTip',
-			  tipOptions: {
-				  style: {
-					  classes: 'qtip-light qtip-shadow obelix-tour obelix-qtip'
-				  },
-				  overwrite: false,
-				  content: {
-					  title: 'Obelix Tour'
-				  },
-				  events: {
-					  show: function(event, api) {
-						  var qtip = jQuery(event.target);
-						  var closeButton = qtip.find('.tour-close');
-						  var qtipTitleBar = qtip.find('.qtip-titlebar');
-						  
-						  closeButton.each(function() {
-							  if (! jQuery(this).hasClass('qtip-close')) {
-								  jQuery(this)
-								  	.addClass('qtip-close')
-								  	.html('<span class="icon icon-remove">x</span>')
-								  	.appendTo(qtipTitleBar);
-							  } else {
-								  jQuery(this).detach();
-							  }
-						  });
-						  jQuery('.qtip-title', qtipTitleBar).html(obelixTour.step.title);  
-					  }	
-				  }
-			  },
-			  steps: tourSteps,
-			  stepOptions: {
-				  tourDeviceDropZone: jQuery('#canvas #tourDeviceDropZone'),
-				  droppedDevices: [],
-				  setDragOnDroppedDevices: function (boolDrag) {
-					  var stringDrag = boolDrag ? 'enable' : 'disable';
-					  this.droppedDevices.map(function(device) {
-						  device.draggable(stringDrag);
-					  });
-				  }
-			  },
-			  successStep: tourStarterRebindStep,
-			  cancelStep: tourStarterRebindStep
-			});
-			
-			obelixTour.start = function (event) {
-				toggleTourStarter(false);
-				tourInProgress(true);
-				tour.start();
-			}
-			toggleTourStarter(true);
-		}
-	}
+      function toggleTourStarter(toggle) {
+        if (toggle) {
+          jQuery(elem)
+            .off()
+            .on('click', obelixTour.start)
+            .attr('title', 'Start the UI tour!')
+            .addClass('enabled')
+            .removeClass('disabled')
+        } else {
+          jQuery(elem)
+            .off()
+            .attr('title', 'UI tour has started')
+            .addClass('disabled')
+            .removeClass('enabled');
+        }
+      }
+      
+      function toggleSidebarButton(enableToggle) {
+        $timeout(function() {
+          scope.sidebar.locked = !enableToggle;
+        }, 0);
+      }
+      
+      function showSidebar(showSidebar) {
+        $timeout(function() {
+          scope.sidebar.expanded = showSidebar;
+        }, 0);
+      }
+      
+      function tourInProgress(started) {
+        $timeout(function() {
+          scope.tourInProgress = started;
+        }, 0);
+      }
+      
+      var obelixTour = {};
+      
+      var tourSteps = [{
+        title: 'Menu Button',
+        content: '<p>This is the menu toggle button. Click it to open/close the menu.</p>',
+        closeButton: true,
+        highlightTarget: true,
+        target: jQuery('div#toggleSidebar'),
+        my: 'left center',
+        at: 'right center',
+        bind: ['onToggleButtonClick'],
+        onToggleButtonClick: function(tour, options, view, element) {
+          tour.next();
+        },
+        setup: function(tour, options) {
+          obelixTour.step = this;
+          toggleSidebarButton(true);
+          showSidebar(false);
+          this.target.bind('click', this.onToggleButtonClick);
+        },
+        teardown: function(tour, options) {
+          this.target.unbind('click', this.onToggleButtonClick);
+          toggleSidebarButton(false);
+        }
+        }, {
+        title: 'Menu', 
+        content: '<p>The menu contains two main sections: "Devices" and "Settings".</p>',
+        closeButton:true,
+        highlightTarget: false,
+        nextButton: true,
+        target: jQuery('div#sidebar-sublayer'),
+        my: 'left center',
+        at: 'right center',
+        setup: function(tour, options) {
+          obelixTour.step = this;
+          jQuery('#sidebar')
+            .addClass('tour-highlight')
+            .children('.content:first')
+              .scrollTop(0);
+        },
+        teardown: function(tour, options) {
+          jQuery('#sidebar').removeClass('tour-highlight');
+        }
+        }, {
+        title: 'Section "Settings"', 
+        content: '<p>This section provides the possibility to control some aspects of this client. </p>',
+        closeButton:true,
+        highlightTarget: true,
+        nextButton: true,
+        target: jQuery('div#segmentSettings'),
+        my: 'top left',
+        at: 'bottom right',
+        setup: function(tour, options) {
+          obelixTour.step = this;
+          jQuery('#sidebar > .content:first')
+            .scrollTop(0);
+          $timeout(function() {
+             scope.segment=1;
+          }, 0);
+        },
+        teardown: function(tour, options) {
+          $timeout(function() {
+             scope.segment=0;
+             scope.directory.subdirectories[1].expanded=true;
+          }, 0);
+        }
+        }, {
+        title: 'Section "Devices"', 
+        content: '<p>This section contains the list of all known devices (represented as blocks), which are organized in lists (a list may contain sublists). A list can be opened/closed by clicking on it.</p>',
+        closeButton:true,
+        highlightTarget: true,
+        nextButton: true,
+        target: jQuery('div#segmentDevices'),
+        my: 'top left',
+        at: 'bottom right',
+        setup: function(tour, options) {
+          obelixTour.step = this;
+          $timeout(function() {
+            scope.segment=0;
+            // document.getElementById('#canvas
+            // .content').scrollIntoView(false);
+          }, 0);
+        },
+        teardown: function(tour, options) {
+        }
+        }, {
+         title: 'Virtual Push Button',
+         content: '<p>Drag and drop the virtual push button device block onto the grid.</p>',
+         closeButton: true,
+         highlightTarget: true,
+         nextButton: false,
+         my: 'bottom center',
+         at: 'top center',
+         setup: function(tour, options) {
+           obelixTour.step = this;
+           document.getElementById('tourDeviceButton').scrollIntoView(false);
+           options.tourDeviceDropZone
+             .css({'top': '30px', 'left': '50%'})
+             .addClass('tour-highlight')
+             .droppable()
+             .droppable({
+               accept: 'label#tourDeviceButton',
+               drop: function( event, ui ) {
+                 options.droppedDeviceButton = jQuery(event.target);
+                 options.droppedDeviceButton
+                   .droppable()
+                   .droppable('destroy');
+                 tour.next();
+               }
+             });
+           return {
+             target: jQuery('label#tourDeviceButton')
+           }
+         },
+         teardown: function(tour, options) {
+           options.tourDeviceDropZone
+             .removeClass('tour-highlight');
+           options.droppedDevices.push(jQuery('#canvas .device.virtualpushbutton').draggable('disable'));
+         }
+        }, {
+         title: 'Virtual Light',
+         content: '<p>Drag and drop the virtual light device block onto the grid.</p>',
+         closeButton: true,
+         highlightTarget: true,
+         nextButton: false,
+         my: 'bottom left',
+         at: 'top right',
+         setup: function(tour, options) {
+           obelixTour.step = this;
+           document.getElementById('tourDeviceLight').scrollIntoView(false);
+           options.tourDeviceDropZone
+             .css({'top': '280px', 'left': '30%'})
+             .addClass('tour-highlight')
+             .droppable()
+             .droppable({
+               accept: 'label#tourDeviceLight',
+               drop: function( event, ui ) {
+                 options.droppedDeviceLight = jQuery(event.target)
+                 options.droppedDeviceLight
+                   .droppable()
+                   .droppable('destroy');
+                 tour.next();
+               }
+             });
+           return {
+             target: jQuery('label#tourDeviceLight')
+           }
+         },
+         teardown: function(tour, options) {
+           options.tourDeviceDropZone
+             .removeClass('tour-highlight')
+           options.droppedDevices.push(jQuery('#canvas .device.virtuallight').draggable('disable'));
+         }
+        }, {
+         title: 'Device Box',
+         content: '<p>A device box can be deleted from the configuration by clicking on the button "x" (during the tour the button\'s functionality has been disabled). A device box contains interactive elements to modify its behaviour. It can also be  moved around using the mouse (but during the tour it is not possible to move around the device boxes of the virtual push button and virtual light).</p>',
+         closeButton: true,
+         highlightTarget: true,
+         nextButton: true,
+         my: 'top left',
+         at: 'bottom center',
+         setup: function(tour, options) {
+           obelixTour.step = this;
+           return {
+             target: options.droppedDevices[0]
+           }
+         },
+         teardown: function(tour, options) {
+         }
+        }, {
+         title: 'Endpoint',
+         content: '<p>A device box may have endpoints like this one, which can be connected to other endpoints.</p>',
+         closeButton: true,
+         highlightTarget: true,
+         nextButton: true,
+         my: 'left top',
+         at: 'right center',
+         setup: function(tour, options) {
+           obelixTour.step = this;
+           return {
+             target: jQuery('#canvas ._jsPlumb_endpoint.virtualpushbutton')
+           }
+         },
+         teardown: function(tour, options) {
+         }
+        }, {
+         title: 'Connect Endpoints',
+         content: '<p>Connect the endpoint of the virtual push button with the endpoint of the virtual light by drawing a line. Click with the primary mouse button on a endpoint and keep the mouse button pressed. Move the mouse pointer over to the other endpoint and release the mouse button afterwards.</p><p>A connection can be deleted by double-clicking on the connection line. All connections of a device are delete when the device is deleted.</p>',
+         nextButton: true,
+         closeButton: true,
+         highlightTarget: true,
+         my: 'left top',
+         at: 'right center',
+         setup: function(tour, options) {
+           obelixTour.step = this;
+           jQuery('#canvas ._jsPlumb_endpoint.virtuallight, #canvas ._jsPlumb_endpoint.virtualpushbutton')
+               .addClass('tour-highlight');
+           return {
+             target: jQuery('#canvas ._jsPlumb_endpoint.virtualpushbutton')
+           }
+         },
+         teardown: function(tour, options) {
+           jQuery('#canvas ._jsPlumb_endpoint.virtuallight, #canvas ._jsPlumb_endpoint.virtualpushbutton')
+             .removeClass('tour-highlight');
+         }
+        }];
+      
+      var tourStarterRebindStep = {
+        title: 'End Of Tour',
+        content: '<p>This is the end of the tour. Thanks!',
+        closeButton: true,
+        target: elem,
+        nextButton: true,
+        my: 'top right',
+        at: 'bottom left',
+        setup: function(tour, options) {
+          obelixTour.step = this;
+        },
+        teardown: function(tour, options) {
+          options.setDragOnDroppedDevices(true);
+          options.droppedDevices = [];
+          toggleSidebarButton(true);
+          tourInProgress(false);
+          toggleTourStarter(true);
+        }
+      };
+      
+      var tour = new Tourist.Tour({
+        tipClass: 'QTip',
+        tipOptions: {
+          style: {
+            classes: 'qtip-light qtip-shadow obelix-tour obelix-qtip'
+          },
+          overwrite: false,
+          content: {
+            title: 'Obelix Tour'
+          },
+          events: {
+            show: function(event, api) {
+              var qtip = jQuery(event.target);
+              var closeButton = qtip.find('.tour-close');
+              var qtipTitleBar = qtip.find('.qtip-titlebar');
+              
+              closeButton.each(function() {
+                if (! jQuery(this).hasClass('qtip-close')) {
+                  jQuery(this)
+                    .addClass('qtip-close')
+                    .html('<span class="icon icon-remove">x</span>')
+                    .appendTo(qtipTitleBar);
+                } else {
+                  jQuery(this).detach();
+                }
+              });
+              jQuery('.qtip-title', qtipTitleBar).html(obelixTour.step.title);  
+            }  
+          }
+        },
+        steps: tourSteps,
+        stepOptions: {
+          tourDeviceDropZone: jQuery('#canvas #tourDeviceDropZone'),
+          droppedDevices: [],
+          setDragOnDroppedDevices: function (boolDrag) {
+            var stringDrag = boolDrag ? 'enable' : 'disable';
+            this.droppedDevices.map(function(device) {
+              device.draggable(stringDrag);
+            });
+          }
+        },
+        successStep: tourStarterRebindStep,
+        cancelStep: tourStarterRebindStep
+      });
+      
+      obelixTour.start = function (event) {
+        toggleTourStarter(false);
+        tourInProgress(true);
+        tour.start();
+      }
+      toggleTourStarter(true);
+    }
+  }
 }]);
