@@ -21,22 +21,18 @@ package at.ac.tuwien.auto.iotsys.commons.persistent;
 
 import java.util.List;
 
-import at.ac.tuwien.auto.iotsys.commons.persistent.models.DbHistoryFeedRecord;
+import at.ac.tuwien.auto.iotsys.commons.persistent.models.WritableObject;
 
 /**
  * @author Nam Giang - zang at kaist dot ac dot kr
  *
  */
-public interface HistoryDb {
+public interface WritableObjectDb {
 	
-	public DbHistoryFeedRecord getObject(String href);
-	public List<DbHistoryFeedRecord> getLatestHistoryFeed(String href, int number);
-	
-	public void addObject(DbHistoryFeedRecord dhf);
-	public void addBulkFeedRecords(List<DbHistoryFeedRecord> dhfs);
-	public void deleteObject(String href);
-	public List<DbHistoryFeedRecord> getHistoryFeed(String href, long start, long end, int limit);
-//	public void updateObject(DbHistoryFeed dhf);
+	public void persistWritingObject(String href, String dataStream);
+	public String getObjectDataStream(String href);
+	public List<WritableObject> getPersistedObjects();
+	public WritableObject getPersistedObject(String href);
 	
 	public void compactDb();
 }

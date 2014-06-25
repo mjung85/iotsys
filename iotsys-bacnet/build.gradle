@@ -39,7 +39,7 @@ jar {
 				   "Bundle-Version": "0.1",
 				   "Bundle-Classpath": ".",
 				   "Bundle-Activator": "at.ac.tuwien.auto.iotsys.gateway.connectors.bacnet.BACnetBundleActivator",
-				   "Import-Package": "at.ac.tuwien.auto.iotsys.commons, com.serotonin.bacnet4j, com.serotonin.bacnet4j.apdu, com.serotonin.bacnet4j.base, com.serotonin.bacnet4j.enums," + 
+				   "Import-Package": "at.ac.tuwien.auto.iotsys.commons, com.fasterxml.jackson.databind, com.fasterxml.jackson.databind.node, at.ac.tuwien.auto.iotsys.commons.persistent, at.ac.tuwien.auto.iotsys.commons.persistent.models, com.serotonin.bacnet4j, com.serotonin.bacnet4j.apdu, com.serotonin.bacnet4j.base, com.serotonin.bacnet4j.enums," + 
 										"com.serotonin.bacnet4j.event, com.serotonin.bacnet4j.exception, com.serotonin.bacnet4j.npdu," +
 										"com.serotonin.bacnet4j.npdu.ip, com.serotonin.bacnet4j.obj, com.serotonin.bacnet4j.service," + 
 										"com.serotonin.bacnet4j.service.acknowledgement, com.serotonin.bacnet4j.service.confirmed," + 

@@ -24,19 +24,14 @@ import java.util.logging.Logger;
 
 import org.ektorp.ComplexKey;
 import org.ektorp.CouchDbConnector;
-import org.ektorp.Page;
-import org.ektorp.PageRequest;
 import org.ektorp.ViewQuery;
 import org.ektorp.impl.StdCouchDbConnector;
 import org.ektorp.support.CouchDbRepositorySupport;
-import org.ektorp.support.GenerateView;
 import org.ektorp.support.View;
 import org.ektorp.support.Views;
 import org.ektorp.util.Assert;
 
-import at.ac.tuwien.auto.iotsys.commons.persistent.models.DbHistoryFeed;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
+import at.ac.tuwien.auto.iotsys.commons.persistent.models.DbHistoryFeedRecord;
 
 /**
  * @author Nam Giang - zang at kaist dot ac dot kr
@@ -46,15 +41,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 	@View(name = "by_href", map = "function(doc) {emit(doc.href, doc.val);}"),
 	@View(name = "by_time_href", map = "function(doc) {emit([doc.href, doc.time], doc.val);}")
 })
-public class HistoryDbImpl extends CouchDbRepositorySupport<DbHistoryFeed> implements HistoryDb {
+public class HistoryDbImpl extends CouchDbRepositorySupport<DbHistoryFeedRecord> implements HistoryDb {
 
 	private static HistoryDbImpl INSTANCE;
-	private ObjectMapper om = new ObjectMapper();
-
 	private static final Logger log = Logger.getLogger(HistoryDbImpl.class.getName());
 
 	protected HistoryDbImpl(CouchDbConnector db) {
-		super(DbHistoryFeed.class, db);
+		super(DbHistoryFeedRecord.class, db);
 		initStandardDesignDocument();
 	}
 	
@@ -64,30 +57,30 @@ public class HistoryDbImpl extends CouchDbRepositorySupport<DbHistoryFeed> imple
 			try {
 				INSTANCE = new HistoryDbImpl(db);
 			} catch (Exception e) {
-				log.severe("FATAL: Objects DB not connected!");
+				log.severe("FATAL: History feed DB not connected!");
 			}
 		}
 		return INSTANCE;
 	}
 
-	public List<DbHistoryFeed> findByHref(String href) {
+	public List<DbHistoryFeedRecord> findByHref(String href) {
 		return queryView("by_href", href);
 	}
 	
 	@Override
-	public DbHistoryFeed getObject(String href) {
+	public DbHistoryFeedRecord getObject(String href) {
 		return get(href);
 	}
 
 	@Override
-	public void addObject(DbHistoryFeed hf) {
+	public void addObject(DbHistoryFeedRecord hf) {
 		Assert.hasText(hf.getHref(), "A datapoint must have a href");
 		add(hf);
 	}
 
 	@Override
 	public void deleteObject(String href) {
-		DbHistoryFeed p = getObject(href);
+		DbHistoryFeedRecord p = getObject(href);
 		remove(p);
 	}
 
@@ -98,17 +91,33 @@ public class HistoryDbImpl extends CouchDbRepositorySupport<DbHistoryFeed> imple
 //	}
 
 	@Override
-	public Page<DbHistoryFeed> getLatestHistoryFeed(String href, long number) {
+	public List<DbHistoryFeedRecord> getLatestHistoryFeed(String href, int number) {
 		ComplexKey startKey = ComplexKey.of(href);
 		ComplexKey endKey = ComplexKey.of(href, ComplexKey.emptyObject());
-		ViewQuery q = createQuery("by_time_href").includeDocs(true).startKey(startKey).endKey(endKey);
-		System.out.println(q.buildQuery());
-		PageRequest pr = org.ektorp.PageRequest.firstPage((int) number);
-		return db.queryForPage(q, pr, DbHistoryFeed.class);
+		ViewQuery q = createQuery("by_time_href").includeDocs(true).startKey(endKey).endKey(startKey).descending(true).limit(number);
+		return db.queryView(q, DbHistoryFeedRecord.class);
 	}
 
 	@Override
-	public void addBulkObject(List<DbHistoryFeed> dhfs) {
-		db.executeAllOrNothing(dhfs);
+	public List<DbHistoryFeedRecord> getHistoryFeed(String href, long start, long end, int limit) {
+		ComplexKey startKey = ComplexKey.of(href, start);
+		ComplexKey endKey = ComplexKey.of(href, end);
+		ViewQuery q = createQuery("by_time_href").includeDocs(true).startKey(endKey).endKey(startKey).descending(true).limit(limit);
+		log.info("Querying database for history feed: " + href);
+		log.info("Couchdb query: " + q.buildQuery());
+		return db.queryView(q, DbHistoryFeedRecord.class);
+	}
+	
+	@Override
+	public void addBulkFeedRecords(List<DbHistoryFeedRecord> dhfs) {
+		if (dhfs.size() > 0){
+			db.executeAllOrNothing(dhfs);
+			log.info("flushing history feed sizes " + dhfs.size() + " to database");
+		}
+	}
+	
+	@Override
+	public void compactDb() {
+		db.compact();
 	}
 }

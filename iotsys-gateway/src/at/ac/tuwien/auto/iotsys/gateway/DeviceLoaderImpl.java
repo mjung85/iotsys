@@ -99,6 +99,7 @@ public class DeviceLoaderImpl implements DeviceLoader {
 			} catch (IllegalAccessException e) {
 				e.printStackTrace();
 			} catch (ClassNotFoundException e) {
+				// Be caught on OSGi deployment, connectors be empty
 				log.severe("Could not instantiate device loader " + deviceLoaderName + " - not found on classpath!");
 				log.severe(" Debug Info:" + e.getMessage());
 			}

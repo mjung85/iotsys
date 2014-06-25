@@ -437,4 +437,9 @@ public class ConfigsDbImpl extends CouchDbRepositorySupport<Connector> implement
 			}
 	}
 
+	@Override
+	public void compactDb() {
+		db.compact();
+	}
+
 }
