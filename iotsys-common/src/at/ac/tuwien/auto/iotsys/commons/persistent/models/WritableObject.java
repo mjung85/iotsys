@@ -21,63 +21,40 @@ package at.ac.tuwien.auto.iotsys.commons.persistent.models;
 
 import org.ektorp.support.CouchDbDocument;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * @author Nam Giang - zang at kaist dot ac dot kr
  *
  */
-public class DbHistoryFeed extends CouchDbDocument{
-	private String href;
-	private Object val;
-	private String type;
-	private long time;
-	
-	public DbHistoryFeed(){}
-	
-	public DbHistoryFeed(String href, long time, String type, String val) {
-		this.href = href;
-		this.type = type;
-		this.time = time;
+public class WritableObject extends CouchDbDocument {
 
-		switch (type) {
-		case "int":
-			this.val = new Integer(val);
-			break;
-		case "real":
-			this.val = new Double(val);
-			break;
-		case "str":
-			this.val = new String(val);
-			break;
-		case "bool":
-			this.val = new Boolean(val);
-			break;
-		default:
-			break;
-		}
-	}
+	String href;
+	String dataStream;
 	
+	public WritableObject(){}
+	public WritableObject(String href){
+		this.href = href;
+		setId(href);
+	}
+	public WritableObject(String href, String dataStream){
+		this(href);
+		this.dataStream = dataStream;
+	}
+
 	public String getHref() {
 		return href;
 	}
+
 	public void setHref(String href) {
 		this.href = href;
 	}
-	public Object getVal() {
-		return val;
+
+	public String getDataStream() {
+		return dataStream;
 	}
-	public void setVal(Object val) {
-		this.val = val;
-	}
-	public String getType() {
-		return type;
-	}
-	public void setType(String type) {
-		this.type = type;
-	}
-	public long getTime() {
-		return time;
-	}
-	public void setTime(long time) {
-		this.time = time;
+
+	public void setDataStream(String dataStream) {
+		this.dataStream = dataStream;
 	}
 }

@@ -36,6 +36,8 @@ import java.net.URI;
 import java.util.logging.Logger;
 
 import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
+import at.ac.tuwien.auto.iotsys.commons.persistent.WritableObjectDb;
+import at.ac.tuwien.auto.iotsys.commons.persistent.WriteableObjectDbImpl;
 import obix.Err;
 import obix.Obj;
 import obix.Uri;
@@ -69,11 +71,17 @@ public class ObixServerImpl implements ObixServer {
 	public String getCoRELinks() {
 		return objectBroker.getCoRELinks();
 	}
-
+	
 	public Obj writeObj(URI href, String xmlStream) {
 		log.info("Writing on object " + href);
 		log.finer("Writing on object: " + href + " xmlStream: " + xmlStream);
+		// persisting the write
+		WriteableObjectDbImpl.getInstance().persistWritingObject(href.toASCIIString(), xmlStream);
 		
+		return applyObj(href, xmlStream);
+	}
+	
+	public Obj applyObj(URI href, String xmlStream){
 		try {
 			Obj input = ObixDecoder.fromString(xmlStream);
 			objectBroker.pushObj(new Uri(href.toASCIIString()), input, false);
@@ -85,10 +93,7 @@ public class ObixServerImpl implements ObixServer {
 			return e;
 		}
 
-		Obj o = new Obj();
-		o = objectBroker.pullObj(new Uri(href.toASCIIString()), false);
-
-		return o;
+		return objectBroker.pullObj(new Uri(href.toASCIIString()), false);
 	}
 
 	public Obj invokeOp(URI href, String xmlStream) {

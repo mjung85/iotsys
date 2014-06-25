@@ -37,7 +37,10 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 
 import at.ac.tuwien.auto.iotsys.commons.DeviceLoader;
@@ -51,7 +54,10 @@ import at.ac.tuwien.auto.iotsys.commons.interceptor.Interceptor;
 import at.ac.tuwien.auto.iotsys.commons.interceptor.InterceptorBroker;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.ContractInit;
 import at.ac.tuwien.auto.iotsys.commons.persistent.ConfigsDbImpl;
+import at.ac.tuwien.auto.iotsys.commons.persistent.WritableObjectDb;
+import at.ac.tuwien.auto.iotsys.commons.persistent.WriteableObjectDbImpl;
 import at.ac.tuwien.auto.iotsys.commons.persistent.models.Connector;
+import at.ac.tuwien.auto.iotsys.commons.persistent.models.WritableObject;
 import at.ac.tuwien.auto.iotsys.gateway.interceptor.InterceptorBrokerImpl;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objectbroker.ObjectBrokerImpl;
 import at.ac.tuwien.auto.iotsys.gateway.obix.server.CoAPServer;
@@ -112,7 +118,6 @@ public class IoTSySGateway
 		// initialize object broker
 		objectBroker = ObjectBrokerImpl.getInstance();
 		obixServer = new ObixServerImpl(objectBroker);
-		
 
 		boolean enableServiceDiscovery = Boolean.parseBoolean(PropertiesLoader.getInstance().getProperties().getProperty("iotsys.gateway.servicediscovery.enabled", "false"));
 		// set object broker to a shared global variable
@@ -131,9 +136,19 @@ public class IoTSySGateway
 			deviceLoader = new DeviceLoaderImpl(devicesConfigFile);
 		}
 		connectors = deviceLoader.initDevices(objectBroker);
-
+		
 		// Transition step: migrate configs from devices.xml to DB, remove when done
 		ConfigsDbImpl.getInstance().migrate(connectors);
+		
+		// Re-apply written object from database, not work in osgi bundle
+		List<WritableObject> wos = WriteableObjectDbImpl.getInstance().getPersistedObjects();
+		for (WritableObject o : wos){
+			try {
+				obixServer.applyObj(new URI(o.getHref()), o.getDataStream());
+			} catch (URISyntaxException e) {
+				e.printStackTrace();
+			}
+		}
 		
 		if (objectBroker.getMDnsResolver() != null)
 		{
@@ -168,7 +183,6 @@ public class IoTSySGateway
 					log.info("Class found: " + pdpSettingsClazz.getName());
 				} catch (ClassNotFoundException e2)
 				{
-					// TODO Auto-generated catch block
 					e2.printStackTrace();
 				}
 
@@ -184,23 +198,18 @@ public class IoTSySGateway
 						settings.setRemotePdp(remotePdp);
 					} catch (NoSuchMethodException e)
 					{
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					} catch (SecurityException e)
 					{
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					} catch (IllegalAccessException e)
 					{
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					} catch (IllegalArgumentException e)
 					{
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					} catch (InvocationTargetException e)
 					{
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 
@@ -212,7 +221,6 @@ public class IoTSySGateway
 					clazz = Class.forName("at.ac.tuwien.auto.iotsys.xacml.pdp.PDPInterceptor");
 				} catch (ClassNotFoundException e1)
 				{
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 
@@ -225,11 +233,9 @@ public class IoTSySGateway
 						interceptorBroker.register(interceptor);
 					} catch (InstantiationException e)
 					{
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					} catch (IllegalAccessException e)
 					{
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 
@@ -273,24 +279,18 @@ public class IoTSySGateway
 				n.startNamedService();
 				iotsys.setMdnsResolver(m);
 			} catch (InstantiationException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (IllegalAccessException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (ClassNotFoundException e) {
 				log.info("Mdnssd service not found");
 			} catch (IllegalArgumentException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (InvocationTargetException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (NoSuchMethodException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (SecurityException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}

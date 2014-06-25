@@ -44,6 +44,8 @@ import obix.Obj;
 import obix.Op;
 import obix.Ref;
 import obix.Uri;
+import obix.io.ObixDecoder;
+import obix.xml.XException;
 import at.ac.tuwien.auto.iotsys.commons.MdnsResolver;
 import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.AboutImpl;
@@ -53,7 +55,9 @@ import at.ac.tuwien.auto.iotsys.commons.obix.objects.WatchImpl;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.WatchServiceImpl;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.internals.impl.InternalsImpl;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.general.impl.LobbyImpl;
+import at.ac.tuwien.auto.iotsys.commons.persistent.WriteableObjectDbImpl;
 import at.ac.tuwien.auto.iotsys.commons.persistent.models.Connector;
+import at.ac.tuwien.auto.iotsys.commons.persistent.models.WritableObject;
 import at.ac.tuwien.auto.iotsys.gateway.service.GroupCommHelper;
 
 public class ObjectBrokerImpl implements ObjectBroker
@@ -215,6 +219,19 @@ public class ObjectBrokerImpl implements ObjectBroker
 			ref.setDisplayName(o.getDisplayName());
 			iotLobby.addReference(o.getFullContextPath(), ref);
 		}
+		
+		// TODO: Re-apply written object from database
+//		WritableObject wo = WriteableObjectDbImpl.getInstance().getPersistedObject(o.getFullContextPath());
+//		if (wo != null){
+//			try {
+//				Obj input = ObixDecoder.fromString(wo.getDataStream());
+//				pushObj(new Uri(wo.getHref()), input, false);
+//			} catch (XException ex) {
+//				ex.printStackTrace();
+//			} catch (Exception ex) {
+//				ex.printStackTrace();
+//			}
+//		}
 	}
 
 	@Override

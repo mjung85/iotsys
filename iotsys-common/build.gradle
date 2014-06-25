@@ -23,7 +23,7 @@ jar {
 				   "Bundle-Vendor": "Vienna University of Technology, Automation Systems Group, www.auto.tuwien.ac.at",
 				   "Bundle-Version": "0.1",
 				   "Bundle-Classpath": ".",
-				   "Export-Package": "at.ac.tuwien.auto.iotsys.commons.obix.objects.weatherforecast, at.ac.tuwien.auto.iotsys.commons, at.ac.tuwien.auto.iotsys.commons.interceptor, at.ac.tuwien.auto.iotsys.commons.obix.objects, at.ac.tuwien.auto.iotsys.commons.obix.objects.bacnet, at.ac.tuwien.auto.iotsys.commons.obix.objects.iot, at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators," +
+				   "Export-Package": "at.ac.tuwien.auto.iotsys.commons.persistent, at.ac.tuwien.auto.iotsys.commons.persistent.models, at.ac.tuwien.auto.iotsys.commons.obix.objects.weatherforecast, at.ac.tuwien.auto.iotsys.commons, com.fasterxml.jackson.databind, com.fasterxml.jackson.databind.node, at.ac.tuwien.auto.iotsys.commons.interceptor, at.ac.tuwien.auto.iotsys.commons.obix.objects, at.ac.tuwien.auto.iotsys.commons.obix.objects.bacnet, at.ac.tuwien.auto.iotsys.commons.obix.objects.iot, at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators," +
 									 "at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators.impl, at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.sensors, at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.logic,at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.logic.impl," +
 									 "at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.sensors.impl,at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.sim,at.ac.tuwien.auto.iotsys.commons.obix.objects.knx.datapoint," +
 									 "org.apache.commons.beanutils, org.apache.commons.beanutils.converters,org.apache.commons.beanutils.expression, org.apache.commons.beanutils.locale,org.apache.commons.beanutils.locale.converters,org.apache.commons.collections," +
@@ -44,7 +44,7 @@ jar {
 									 "org.ektorp.support.CouchDbDocument," +
 									 "ch.ethz.inf.vs.californium.coap, ch.ethz.inf.vs.californium.coap.registries, ch.ethz.inf.vs.californium.dtls, ch.ethz.inf.vs.californium.endpoint, ch.ethz.inf.vs.californium.endpoint.resources, ch.ethz.inf.vs.californium.layers, ch.ethz.inf.vs.californium.util,at.ac.tuwien.auto.iotsys.commons.obix.objects.iot",
 				   "Import-Package": "obix, obix.asm, obix.contracts,  obix.contracts.impl, obix.io, obix.net, obix.test, obix.toos, obix.ui, obix.ui.fields, obix.ui.views, obix.xml,at.ac.tuwien.auto.iotsys.obix, at.ac.tuwien.auto.iotsys.obix.observer," +
-				   					 "org.xml.sax, org.xml.sax.helpers, org.xml.sax.ext,  com.sun.org.apache.xalan.internal, com.sun.org.apache.xalan.internal.res, org.w3c.dom, org.w3c.dom.traversal, org.w3c.dom.ls, javax.xml.parsers,  javax.xml.xpath, javax.xml.transform.sax, javax.xml.transform.dom, javax.xml.namespace, javax.xml.transform, javax.xml.transform.stream, javax.xml.validation, javax.xml.datatype"
+				   					 "org.xml.sax, org.xml.sax.helpers, org.xml.sax.ext,  com.sun.org.apache.xalan.internal, com.sun.org.apache.xalan.internal.res, org.w3c.dom, org.w3c.dom.traversal, org.w3c.dom.ls, javax.xml.parsers,  javax.xml.xpath, javax.xml.transform.sax, javax.xml.transform.dom, javax.xml.namespace, javax.xml.transform, javax.xml.transform.stream, javax.xml.validation, javax.xml.datatype, javax.net.ssl"
 				)
 	}
 	

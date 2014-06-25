@@ -21,22 +21,21 @@ package at.ac.tuwien.auto.iotsys.commons.persistent;
 
 import java.util.List;
 
-import at.ac.tuwien.auto.iotsys.commons.persistent.models.DbHistoryFeedRecord;
+import at.ac.tuwien.auto.iotsys.commons.persistent.models.GroupCommunication;
 
 /**
  * @author Nam Giang - zang at kaist dot ac dot kr
  *
  */
-public interface HistoryDb {
+public interface GroupCommDb {
+
+	public GroupCommunication getGroupComm(String href);
+	public void addGroupComm(GroupCommunication gc);
+	public void deleteGroupComm(String href);
+	public void updateGroupComm(GroupCommunication gc);
 	
-	public DbHistoryFeedRecord getObject(String href);
-	public List<DbHistoryFeedRecord> getLatestHistoryFeed(String href, int number);
-	
-	public void addObject(DbHistoryFeedRecord dhf);
-	public void addBulkFeedRecords(List<DbHistoryFeedRecord> dhfs);
-	public void deleteObject(String href);
-	public List<DbHistoryFeedRecord> getHistoryFeed(String href, long start, long end, int limit);
-//	public void updateObject(DbHistoryFeed dhf);
-	
-	public void compactDb();
+	public List<String> getGroupCommAddress(String href);
+	public void addGroupCommAddress(String href, String address);
+	public void deleteGroupCommAddress(String href, String address);
+	public void updateGroupCommAddress(String href, String oldAddress, String newAddress);
 }

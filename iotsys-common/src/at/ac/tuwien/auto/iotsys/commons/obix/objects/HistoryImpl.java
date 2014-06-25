@@ -57,7 +57,7 @@ import obix.contracts.HistoryAppendIn;
 import obix.contracts.HistoryRecord;
 import obix.contracts.HistoryRollupIn;
 import at.ac.tuwien.auto.iotsys.commons.persistent.HistoryDbImpl;
-import at.ac.tuwien.auto.iotsys.commons.persistent.models.DbHistoryFeed;
+import at.ac.tuwien.auto.iotsys.commons.persistent.models.DbHistoryFeedRecord;
 import at.ac.tuwien.auto.iotsys.obix.OperationHandler;
 import at.ac.tuwien.auto.iotsys.obix.observer.Observer;
 import at.ac.tuwien.auto.iotsys.obix.observer.Subject;
@@ -79,6 +79,7 @@ public class HistoryImpl extends Obj implements History, Observer {
 	private Op append = new Op();
 
 	private Obj observedDatapoint;
+	private int cachedRecordsCount = 0;
 	
 	public HistoryImpl(Obj observedDatapoint, int historyCountMax){
 		this("history", observedDatapoint, historyCountMax, true, true);
@@ -184,8 +185,6 @@ public class HistoryImpl extends Obj implements History, Observer {
 
 	private Obj query(Obj in) {
 		HistoryFilterImpl filter = new HistoryFilterImpl(in);
-		//int noOfEvents = feed.getEvents().size();
-		// Database.getEvents(feed);
 		return new HistoryQueryOutImpl(filter.query(feed));
 	}
 
@@ -436,26 +435,27 @@ public class HistoryImpl extends Obj implements History, Observer {
 					((Str) obj).get()), timestamp);
 		}
 
-		if (feed.getEvents().size() >= feed.getMaxEvents()) {
+		cachedRecordsCount++;
+		if (cachedRecordsCount == feed.getMaxEvents()) {
 			// flush the feed to database
-			List<DbHistoryFeed> dhfs = new ArrayList<DbHistoryFeed>();
+			List<DbHistoryFeedRecord> dhfs = new ArrayList<DbHistoryFeedRecord>();
 			for (Obj o : feed.getEvents()) {
 				historyRecordImpl = (HistoryRecordImpl) o;
+				// Only persisting the value
 				if (historyRecordImpl.value() instanceof Val) {
-					DbHistoryFeed hf = new DbHistoryFeed(
+					DbHistoryFeedRecord hf = new DbHistoryFeedRecord(
 							feed.getFullContextPath(), 
 							historyRecordImpl.timestamp().getMillis(), 
 							historyRecordImpl.value().getElement(),
 							((Val) historyRecordImpl.value()).toString());
 					dhfs.add(hf);
-					feed.removeEvent(o);
 				}
 			}
-			HistoryDbImpl.getInstance().addBulkObject(dhfs);
+			HistoryDbImpl.getInstance().addBulkFeedRecords(dhfs);
+			cachedRecordsCount = 0;
 		}
 
 		feed.addEvent(historyRecordImpl);
-		//System.out.println(feed.getFullContextPath() + ": " + historyRecordImpl.value().toString());
 		updateKids();
 	}
 	

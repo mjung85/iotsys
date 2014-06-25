@@ -74,4 +74,6 @@ public interface ConfigsDb {
 	public void prepareDevice(String connectorName, Device d);
 	public void prepareDeviceLoader(String deviceLoaderName);
 	public void migrate(ArrayList<Connector> connectors);
+	
+	public void compactDb();
 }

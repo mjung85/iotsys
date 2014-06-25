@@ -147,7 +147,7 @@ public class VirtualDeviceLoaderImpl implements DeviceLoader {
 			}
 		} else
 			connectorsSize = connectorsFromDb.size();
-
+		
 		for (int connector = 0; connector < connectorsSize; connector++) {
 			HierarchicalConfiguration subConfig = devicesConfig
 					.configurationAt("virtual.connector(" + connector + ")");
@@ -162,8 +162,9 @@ public class VirtualDeviceLoaderImpl implements DeviceLoader {
 				connectorId = connectorsFromDb.get(connector).get("_id").asText();
 				connectorName = connectorsFromDb.get(connector).get("name").asText();
 				enabled =  connectorsFromDb.get(connector).get("enabled").asBoolean();
-			} catch (Exception e){}
-			
+			} catch (Exception e){
+				e.printStackTrace();
+			}
 			
 			if (enabled) {
 				try {
