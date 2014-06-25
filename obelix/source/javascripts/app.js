@@ -504,7 +504,47 @@ app.factory('Device', ['$http', '$q', 'Storage', 'Property', 'Watch', function($
   return Device;
 }]);
 
-app.controller('MainCtrl', ['$scope','$q','$timeout', '$interval', 'Lobby','Watch','Connection',function($scope, $q, $timeout, $interval, Lobby, Watch, Connection) {
+app.factory('Sidebar', function() {
+  var _toggleButton = jQuery('#toggleSidebar');
+  var _expanded = false;
+  var _locked = false;
+  var _segment = 0;
+  
+  return {
+    get expanded() {
+      return _expanded;
+    },
+    set expanded(newValue) {
+      if (! _locked) {
+        _expanded = newValue;
+      }
+    },
+    toggle: function() {
+      if (! _locked) {
+        _expanded = !_expanded;        
+      }
+    },
+    get locked() {
+      return _locked;
+    }, 
+    set locked(newValue) {
+      _locked = newValue;
+      if (newValue) {
+        _toggleButton.addClass('disabled');
+      } else {
+        _toggleButton.removeClass('disabled');
+      }
+    },
+    get segment() {
+      return _segment;
+    }, 
+    set segment(newValue) {
+      _segment = newValue;
+    }
+  };
+});
+
+app.controller('MainCtrl', ['$scope','$q','$timeout', '$interval', 'Lobby','Watch','Connection', 'Sidebar', function($scope, $q, $timeout, $interval, Lobby, Watch, Connection, Sidebar) {
   $scope.directory = null;
   $scope.allDevices = [];
   $scope.watch = null;
@@ -586,35 +626,7 @@ app.controller('MainCtrl', ['$scope','$q','$timeout', '$interval', 'Lobby','Watc
     });
   });
   
-  $scope.sidebar = {
-    _toggleButton: jQuery('#toggleSidebar'),
-    _expanded: false,
-    _locked: false,
-    get expanded() {
-      return this._expanded;
-    },
-    set expanded(newValue) {
-      if (! this._locked) {
-        this._expanded = newValue;
-      }
-    },
-    toggle: function() {
-      if (! this._locked) {
-        this._expanded = !this._expanded;        
-      }
-    },
-    get locked() {
-      return this._locked;
-    }, 
-    set locked(newValue) {
-      this._locked = newValue;
-      if (newValue) {
-        this._toggleButton.addClass('disabled');
-      } else {
-        this._toggleButton.removeClass('disabled');
-      }
-    }
-  };
+  $scope.sidebar = Sidebar;
   
   jsPlumb.bind("connection", function(info) {
       console.log("Connection event", info);
@@ -848,11 +860,34 @@ app.directive('tourDevice', function() {
   };
 });
 
-app.directive('obelixTourStarter', ['$timeout', function($timeout) {
+app.directive('obelixTourStarter', ['$timeout', 'Sidebar', function($timeout, Sidebar) {
+  
+  function toggleSidebarButton(enableToggle) {
+    Sidebar.locked = !enableToggle;
+  }
+  
+  function showSidebar(showSidebar) {
+    Sidebar.expanded = showSidebar;
+  }
+  
+  function showSidebarSegmentDevices() {
+    Sidebar.segment = 0;
+  }
+  
+  function showSidebarSegmentSettings() {
+    Sidebar.segment = 1;
+  }
+  
+  function tourInProgress(started) {
+    $timeout(function() {
+      scope.tourInProgress = started;
+    }, 0);
+  }
+  
   return {
     restrict: 'A',
     link: function(scope, elem, attr) {
-
+      
       function toggleTourStarter(toggle) {
         if (toggle) {
           jQuery(elem)
@@ -868,24 +903,6 @@ app.directive('obelixTourStarter', ['$timeout', function($timeout) {
             .addClass('disabled')
             .removeClass('enabled');
         }
-      }
-      
-      function toggleSidebarButton(enableToggle) {
-        $timeout(function() {
-          scope.sidebar.locked = !enableToggle;
-        }, 0);
-      }
-      
-      function showSidebar(showSidebar) {
-        $timeout(function() {
-          scope.sidebar.expanded = showSidebar;
-        }, 0);
-      }
-      
-      function tourInProgress(started) {
-        $timeout(function() {
-          scope.tourInProgress = started;
-        }, 0);
       }
       
       var obelixTour = {};
@@ -944,14 +961,12 @@ app.directive('obelixTourStarter', ['$timeout', function($timeout) {
           obelixTour.step = this;
           jQuery('#sidebar > .content:first')
             .scrollTop(0);
-          $timeout(function() {
-             scope.segment=1;
-          }, 0);
+          showSidebarSegmentSettings();
         },
         teardown: function(tour, options) {
+          showSidebarSegmentDevices();
           $timeout(function() {
-             scope.segment=0;
-             scope.directory.subdirectories[1].expanded=true;
+            scope.directory.subdirectories[1].expanded=true;
           }, 0);
         }
         }, {
@@ -965,11 +980,9 @@ app.directive('obelixTourStarter', ['$timeout', function($timeout) {
         at: 'bottom right',
         setup: function(tour, options) {
           obelixTour.step = this;
-          $timeout(function() {
-            scope.segment=0;
-            // document.getElementById('#canvas
-            // .content').scrollIntoView(false);
-          }, 0);
+          showSidebarSegmentDevices();
+          // document.getElementById('#canvas
+          // .content').scrollIntoView(false);
         },
         teardown: function(tour, options) {
         }
