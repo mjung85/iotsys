@@ -393,7 +393,7 @@ app.factory('Connection', ['Storage', function(Storage) {
   return Connection;
 }]);
 
-app.factory('Device', ['$http', '$q', 'Storage', 'Property', 'Watch', function($http, $q, Storage, Property, Watch) {
+app.factory('Device', ['$http', '$q', 'Storage', 'Property', 'Watch', 'Connection',function($http, $q, Storage, Property, Watch, Connection) {
   var Device = function(href, name) {
     this.loadedDefer = $q.defer();
     this.href = href;
@@ -486,7 +486,7 @@ app.factory('Device', ['$http', '$q', 'Storage', 'Property', 'Watch', function($
       // Disconnect connected properties
       if (this.properties) {
         this.properties.each(function(p) {
-          p.connections.each(function(c) { c.destroy(); });
+          p.connections.each(function(c) { c.destroy(); Connection.Freezer.remove(c); });
           // Remove endpoints
           p.jsPlumbEndpoints.each(function(e) { jsPlumb.deleteEndpoint(e); });
         });
@@ -629,23 +629,23 @@ app.controller('MainCtrl', ['$scope','$q','$timeout', '$interval', 'Lobby','Watc
   $scope.sidebar = Sidebar;
   
   jsPlumb.bind("connection", function(info) {
-      console.log("Connection event", info);
+    console.log("Connection event", info);
 
-      info.sourceEndpoint.addClass('connected');
-      info.targetEndpoint.addClass('connected');
-      
-      if (info.connection.getParameter('restored')) {
-        // Ignore connect events for restoredvconnections
-        return; 
-      }
-                                                            
-      var sourceProperty = info.sourceEndpoint.getParameters().property;
-      var targetProperty = info.targetEndpoint.getParameters().property;
-      
-      info.connection.obelixConnection = new Connection(sourceProperty, targetProperty);
-      info.connection.obelixConnection.jsPlumbConnection = info.connection;
-      Connection.Freezer.add(info.connection.obelixConnection);
-      console.log("the first connection event listener;")
+    info.sourceEndpoint.addClass('connected');
+    info.targetEndpoint.addClass('connected');
+    
+    if (info.connection.getParameter('restored')) {
+      // Ignore connect events for restoredvconnections
+      return; 
+    }
+                                                          
+    var sourceProperty = info.sourceEndpoint.getParameters().property;
+    var targetProperty = info.targetEndpoint.getParameters().property;
+    
+    info.connection.obelixConnection = new Connection(sourceProperty, targetProperty);
+    info.connection.obelixConnection.jsPlumbConnection = info.connection;
+    Connection.Freezer.add(info.connection.obelixConnection);
+    console.log("the first connection event listener;")
   });
   
   jsPlumb.bind("connectionDetached", function(info) {
