@@ -482,20 +482,20 @@ app.factory('Device', ['$http', '$q', 'Storage', 'Property', 'Watch', 'Connectio
       // Remove from watch
       var href = this.href;
       Watch.getInstance(function(w) { w.remove(href); });
-
+      
       // Disconnect connected properties
       if (this.properties) {
         this.properties.each(function(p) {
-          p.connections.each(function(c) { c.destroy(); Connection.Freezer.remove(c); });
+          p.connections.each(function(c) { Connection.Freezer.remove(c); });
           // Remove endpoints
           p.jsPlumbEndpoints.each(function(e) { jsPlumb.deleteEndpoint(e); });
         });
       }
-
+      
       // Unplace
       this.placement = null;
       this.placementStorage.remove();
-
+      
       // Remove alias
       this.nameStorage.remove();
     }
