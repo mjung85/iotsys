@@ -488,7 +488,7 @@ app.factory('Device', ['$http', '$q', 'Storage', 'Property', 'Watch', 'Connectio
         this.properties.each(function(p) {
           p.connections.each(function(c) { Connection.Freezer.remove(c); });
           // Remove endpoints
-          p.jsPlumbEndpoints.each(function(e) { jsPlumb.deleteEndpoint(e); });
+          p.jsPlumbEndpoints.each(function(e) { jsPlumb.removeAllEndpoints(e.element); });
         });
       }
       
@@ -675,7 +675,11 @@ app.controller('MainCtrl', ['$scope','$q','$timeout', '$interval', 'Lobby','Watc
   }
 
   $scope.clear = function() {
-    // TODO: clear all connections, then devices!
+    $scope.allDevices.filter(function(device) {
+      if(!!device.placement) {
+        device.destroy();
+      }
+    });
   };
 
 }]);
