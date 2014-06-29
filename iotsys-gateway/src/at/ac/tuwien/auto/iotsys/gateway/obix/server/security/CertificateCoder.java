@@ -107,7 +107,7 @@ public class CertificateCoder {
 	private static KeyStore getKeyStore(String keyStorePath, String password)
 			throws Exception {
 
-		KeyStore ks = KeyStore.getInstance(KeyStore.getDefaultType()); 
+		KeyStore ks = KeyStore.getInstance("JKS"); 
 		FileInputStream is = new FileInputStream(keyStorePath);
 
 		ks.load(is, password.toCharArray());
@@ -245,7 +245,7 @@ public class CertificateCoder {
 	public static boolean verify(byte[] data, byte[] sign,
 			String certificatePath) throws Exception {
 
-		X509Certificate x509Certificate = (X509Certificate) getCertificate(certificatePath); // 由证书构建签名
+		X509Certificate x509Certificate = (X509Certificate) getCertificate(certificatePath); 
 		Signature signature = Signature.getInstance(x509Certificate
 				.getSigAlgName()); 
 
