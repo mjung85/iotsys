@@ -31,9 +31,13 @@ import obix.io.RelativeObixEncoder;
 import org.apache.catalina.Context;
 import org.apache.catalina.LifecycleException;
 import org.apache.catalina.Service;
+import org.apache.catalina.authenticator.AuthenticatorBase;
+import org.apache.catalina.authenticator.BasicAuthenticator;
 import org.apache.catalina.connector.Connector;
+import org.apache.catalina.deploy.LoginConfig;
+import org.apache.catalina.deploy.SecurityCollection;
+import org.apache.catalina.deploy.SecurityConstraint;
 import org.apache.catalina.startup.Tomcat;
-import org.apache.coyote.http11.Http11NioProtocol;
 import org.apache.http.HttpStatus;
 import org.json.JSONException;
 
@@ -57,8 +61,9 @@ public class TomcatServer {
 
 	private String password = "123456";
 	private String alias = "tomcat";
-	private String certificatePath = "ssl/certs/tomcatcert.cer";
+	// private String certificatePath = "ssl/certs/tomcatcert.cer";
 	private String keyStorePath = "ssl/certs/tomcatkey.jks";
+	private String keyStoreType = "JKS";
 
 	public TomcatServer(int port, ObixServer obixServer) throws IOException,
 			ServletException {
@@ -75,10 +80,13 @@ public class TomcatServer {
 		connector.setPort(8443);
 		connector.setSecure(true);
 		connector.setScheme("https");
-		connector.setAttribute("clientAuth", "false");
+		connector.setAttribute("clientAuth", "true");
 		connector.setAttribute("keyAlias", alias);
 		connector.setAttribute("keystorePass", password);
 		connector.setAttribute("keystoreFile", keyStorePath);
+		connector.setAttribute("keystoreType", keyStoreType);
+		connector.setAttribute("truststorePass", password);
+		connector.setAttribute("truststoreFile", keyStorePath);
 		connector.setAttribute("sslProtocol", "TLS");
 		connector.setAttribute("SSLEnabled", true);
 
@@ -90,6 +98,33 @@ public class TomcatServer {
 
 		Tomcat.addServlet(ctx, "obix", new ObixServlet(obixServer));
 		ctx.addServletMapping("/*", "obix");
+		//ctx.addServletMapping("", "obix");
+		
+		/* Login Configuration */
+		tomcat.addUser("user", "pass");
+		tomcat.addRole("user", "admin");
+
+		LoginConfig config = new LoginConfig();
+		config.setAuthMethod("BASIC");
+//		config.setAuthMethod("FORM");
+//		config.setLoginPage("/res/login.html");
+//		config.setErrorPage("/res/login-failed.html");
+		
+		ctx.setLoginConfig(config);
+		ctx.addSecurityRole("admin");
+		SecurityConstraint constraint = new SecurityConstraint();
+		constraint.addAuthRole("admin");
+		SecurityCollection collection = new SecurityCollection();
+		collection.addPattern("/*");
+		constraint.addCollection(collection);
+		ctx.addConstraint(constraint);
+		
+		AuthenticatorBase authenticator = new BasicAuthenticator();
+		//AuthenticatorBase authenticator = new FormAuthenticator();
+		ctx.getPipeline().addValve(authenticator);
+		
+		//RequestDispatcher disp = ctx.getServletContext().getRequestDispatcher("/login.html");
+
 
 		try {
 			tomcat.start();
@@ -141,7 +176,7 @@ public class TomcatServer {
 
 			// Get subject host address
 			String subject = req.getRemoteAddr();
-
+			
 			super.service(req, resp);
 
 			log.info("Serving: " + uri + " for " + subject + " done.");
@@ -159,7 +194,7 @@ public class TomcatServer {
 
 			PrintWriter w = resp.getWriter();
 			w.println(response);
-
+			
 			w.flush();
 			w.close();
 		}
