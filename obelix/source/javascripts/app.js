@@ -409,6 +409,14 @@ app.factory('Device', ['$http', '$q', 'Storage', 'Property', 'Watch', 'Connectio
           return String.fromCharCode(num);
     });
     this.originalName = name;
+    this.obix = {
+        contractList: {
+          'is': null,
+          'of': null,
+          'in': null,
+          'out': null
+        }
+    };
     
     return this;
   };
@@ -440,6 +448,19 @@ app.factory('Device', ['$http', '$q', 'Storage', 'Property', 'Watch', 'Connectio
     },
 
     parse: function(response) {
+      if (response['is']) {
+        this.obix.contractList['is'] = response['is'];
+      }
+      if (response['of']) {
+        this.obix.contractList['of'] = response['of'];
+      }
+      if (response['in']) {
+        this.obix.contractList['in'] = response['in'];
+      }
+      if (response['out']) {
+        this.obix.contractList['out'] = response['out'];
+      }
+      
       // Parse properties
       var propertiesWithGroupCommEnabled = [];
       this.properties = response['nodes'].map(function(node) {
@@ -1186,3 +1207,33 @@ app.directive('obelixTourStarter', ['$timeout', 'Sidebar', function($timeout, Si
     }
   }
 }]);
+
+app.filter('comparatorOpEnc', function() {
+  return function(operation, device) {
+    if (angular.isString(operation)) {
+      var encodedOp;
+      
+      if ('iot:StringComparator' == device.obix.contractList.is) {
+        switch(operation) {
+        case 'eq': encodedOp = 'eq'; break;
+        case 'startsWith': encodedOp = '^x*'; break;
+        case 'endsWith': encodedOp = '*x$'; break;
+        case 'contains': encodedOp = '*x*'; break;
+        default: encodedOp = operation; break;
+        }
+      } else if ('iot:Comparator' == device.obix.contractList.is) {
+        switch(operation) {
+        case 'lt': encodedOp = '<'; break;
+        case 'lte': encodedOp =  '\u2264'; break;
+        case 'eq': encodedOp = '='; break;
+        case 'gte': encodedOp = '\u2265'; break;
+        case 'gt': encodedOp = '>'; break;
+        default: encodedOp = operation; break;
+        }
+      }
+      return encodedOp;
+    } else {
+      return operation;
+    }
+  }
+});
