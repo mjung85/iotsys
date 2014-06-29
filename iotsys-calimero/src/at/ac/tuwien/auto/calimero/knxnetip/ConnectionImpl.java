@@ -19,6 +19,7 @@
 
 package at.ac.tuwien.auto.calimero.knxnetip;
 
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InterruptedIOException;
 import java.net.DatagramPacket;
@@ -27,8 +28,13 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+import com.csvreader.CsvWriter;
 
 import at.ac.tuwien.auto.calimero.FrameEvent;
 import at.ac.tuwien.auto.calimero.KNXListener;
@@ -58,6 +64,7 @@ import at.ac.tuwien.auto.calimero.knxnetip.util.HPAI;
 import at.ac.tuwien.auto.calimero.log.LogLevel;
 import at.ac.tuwien.auto.calimero.log.LogManager;
 import at.ac.tuwien.auto.calimero.log.LogService;
+import at.ac.tuwien.auto.iotsys.gateway.util.EvaluationUtil;
 
 
 /**
@@ -152,6 +159,15 @@ abstract class ConnectionImpl implements KNXnetIPConnection
 	private final List listeners = new ArrayList();
 	private List listenersCopy = new ArrayList();
 	private final Semaphore sendWaitQueue = new Semaphore();
+	
+	// limit to 5 concurrent requests
+	private ExecutorService executor = Executors.newFixedThreadPool(5);
+	
+	private final HashSet<Thread> workerThreads = new HashSet<Thread>();
+	
+	public static volatile int numRequest = 0;
+	
+	private CsvWriter perfLog = new CsvWriter(new FileWriter("./http_perf_log.csv", false), ';');	
 
 	ConnectionImpl()
 	{}
@@ -473,8 +489,9 @@ abstract class ConnectionImpl implements KNXnetIPConnection
 
 	final void startReceiver()
 	{
-		if (receiver == null)
-			(receiver = new Receiver()).start();
+		if (receiver == null){
+			executor.execute(receiver);
+		}
 	}
 
 	final void setState(int newState)
@@ -555,10 +572,34 @@ abstract class ConnectionImpl implements KNXnetIPConnection
 		setState(CLOSED);
 		fireConnectionClosed(initiator, reason);
 		synchronized (listeners) {
-			listeners.clear();
+			listeners.clear();	
 			listenersCopy = Collections.EMPTY_LIST;
 		}
 		LogManager.getManager().removeLogService(getName());
+		try {
+			if(numRequest > 0){
+				long totalCPUTime = 0;
+				System.out.println("Shutdown called!");
+				synchronized(workerThreads){
+					System.out.println("There are " + workerThreads.size() + " worker threads.");
+					for(Thread thread : workerThreads){				
+						System.out.println("Thread ID: " + thread.getId() + ", " + 	at.ac.tuwien.auto.calimero.knxnetip.util.EvaluationUtil.getCpuTime(thread.getId()));
+						totalCPUTime += at.ac.tuwien.auto.calimero.knxnetip.util.EvaluationUtil.getCpuTime(thread.getId());
+					}
+				}
+				
+				System.out.println("total CPU Time: " + totalCPUTime);
+				
+				double cpuTimePerRequest = ((double) totalCPUTime / numRequest) / 1000000; // nanoseconds to milliseconds 
+				System.out.println("cpu time per request: " + cpuTimePerRequest + ", " + totalCPUTime / numRequest);
+
+				perfLog.writeRecord(new String[]{"" + totalCPUTime, "" + numRequest, "" + cpuTimePerRequest});
+				executor.shutdown();
+				perfLog.close();
+			}
+		} catch (IOException ioe) {
+		} catch (InterruptedException e) {
+		}
 	}
 
 	private boolean waitForStateChange(int initialState, int timeout)

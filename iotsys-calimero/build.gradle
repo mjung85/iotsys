@@ -1,8 +1,29 @@
 // Variables
 description = 'Modified Calimero NG stack for the IoTSyS gateway project'
 
+eclipse{
+	classpath{
+		file {
+			withXml {
+				def node = it.asNode()
+				node.appendNode('classpathentry', [kind: 'src', path: '/iotsys-common', exported:'true'])
+			}
+		}
+	}
+}
+
+configurations {
+	provided
+}
+
 dependencies {
+
+	provided project(':iotsys-common')
+	
 	testCompile group: "junit", name: "junit", version: "4.10" 
+	provided group: 'net.sourceforge.javacsv', name: 'javacsv', version: '2.0'
+	
+	
 }
 
 jar {
