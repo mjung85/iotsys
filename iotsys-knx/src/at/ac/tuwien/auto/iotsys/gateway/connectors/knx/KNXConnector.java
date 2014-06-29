@@ -27,7 +27,10 @@ import java.net.UnknownHostException;
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.HashSet;
 import java.util.Hashtable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.logging.Logger;
 
 import at.ac.tuwien.auto.calimero.CloseEvent;
@@ -59,6 +62,13 @@ public class KNXConnector implements Connector {
 
 	private static final Logger log = Logger.getLogger(KNXConnector.class
 			.getName());
+	
+	// limit to 5 concurrent requests
+	private ExecutorService executor = Executors.newFixedThreadPool(5);
+	
+	private final HashSet<Thread> workerThreads = new HashSet<Thread>();
+	
+	private volatile int numRequest = 0;
 
 	public KNXConnector(String routerHostname, int routerPort, String localIP) {
 		this.routerHostname = routerHostname;
