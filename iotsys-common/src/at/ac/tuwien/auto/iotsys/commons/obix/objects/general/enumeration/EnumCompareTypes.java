@@ -39,7 +39,7 @@ public interface EnumCompareTypes extends Range
 
 	public static final String KEY_EQ = "eq";
 	public static final String KEY_GTE = "gte";
-	public static final String KEY_GT = "gte";
+	public static final String KEY_GT = "gt";
 	public static final String KEY_LT = "lt";
 	public static final String KEY_LTE = "lte";
 }
