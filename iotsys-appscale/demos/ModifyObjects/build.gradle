@@ -1,0 +1,14 @@
+// Variables
+description = 'Demo Application for the Iotsys - Appscale API'
+
+clean {
+	doLast {
+		project.delete("war/WEB-INF/classes")
+		project.delete("war/WEB-INF/lib")	
+	}
+}
+
+dependencies {	
+	compile fileTree(dir: "war/WEB-INF/lib", include: "**/*.jar")
+}
+

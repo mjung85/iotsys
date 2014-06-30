@@ -1,0 +1,6 @@
+<obj href="iotWeatherForecastQueryResult">
+	<int name="count" min="0" val="0"/>
+	<abstime name="start" null="true"/>
+	<abstime name="end" null="true"/>
+	<list name="data" of="iotWeatherForecastRecord"/>
+</obj>
