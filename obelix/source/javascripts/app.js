@@ -698,7 +698,7 @@ app.controller('MainCtrl', ['$scope','$q','$timeout', '$interval', 'Lobby','Watc
   $scope.clear = function() {
     $scope.allDevices.filter(function(device) {
       if(!!device.placement) {
-        device.destroy();
+        $scope.destroyDevice(device);
       }
     });
   };
@@ -903,15 +903,15 @@ app.directive('obelixTourStarter', ['$timeout', 'Sidebar', function($timeout, Si
     Sidebar.segment = 1;
   }
   
-  function tourInProgress(started) {
-    $timeout(function() {
-      scope.tourInProgress = started;
-    }, 0);
-  }
-  
   return {
     restrict: 'A',
     link: function(scope, elem, attr) {
+      
+      function tourInProgress(started) {
+        $timeout(function() {
+          scope.tourInProgress = started;
+        }, 0);
+      }
       
       function toggleTourStarter(toggle) {
         if (toggle) {
