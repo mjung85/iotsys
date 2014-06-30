@@ -7,7 +7,7 @@
 //= require 'URI'
 //= require 'underscore'
 //= require 'backbone'
-//= require 'jquery.qtip.min'
+//= require 'jquery.qtip'
 //= require 'tourist'
 //= require_self
 
