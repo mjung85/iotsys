@@ -64,7 +64,7 @@ import at.ac.tuwien.auto.calimero.knxnetip.util.HPAI;
 import at.ac.tuwien.auto.calimero.log.LogLevel;
 import at.ac.tuwien.auto.calimero.log.LogManager;
 import at.ac.tuwien.auto.calimero.log.LogService;
-import at.ac.tuwien.auto.iotsys.gateway.util.EvaluationUtil;
+
 
 
 /**
@@ -167,10 +167,17 @@ abstract class ConnectionImpl implements KNXnetIPConnection
 	
 	public static volatile int numRequest = 0;
 	
-	private CsvWriter perfLog = new CsvWriter(new FileWriter("./http_perf_log.csv", false), ';');	
+	private CsvWriter perfLog;	
 
 	ConnectionImpl()
-	{}
+	{
+		 try {
+			perfLog = new CsvWriter(new FileWriter("./knx_perf_log.csv", false), ';');
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}	
+	}
 
 	/* (non-Javadoc)
 	 * @see tuwien.auto.calimero.knxnetip.KNXnetIPConnection#addConnectionListener
@@ -490,6 +497,7 @@ abstract class ConnectionImpl implements KNXnetIPConnection
 	final void startReceiver()
 	{
 		if (receiver == null){
+			receiver = new Receiver();
 			executor.execute(receiver);
 		}
 	}
@@ -598,8 +606,7 @@ abstract class ConnectionImpl implements KNXnetIPConnection
 				perfLog.close();
 			}
 		} catch (IOException ioe) {
-		} catch (InterruptedException e) {
-		}
+		} 
 	}
 
 	private boolean waitForStateChange(int initialState, int timeout)
