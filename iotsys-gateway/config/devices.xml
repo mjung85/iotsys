@@ -16,7 +16,7 @@
   <coap>
        <connector>
             <name>IoTSyS Devices</name>
-            <enabled>false</enabled>
+            <enabled>true</enabled>
 
                 <!--<device>
                                 <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.coap.TemperatureSensorImplCoap
@@ -208,7 +208,7 @@
          </connector>
          <connector>
             <name>CoAP Cooja</name>
-            <enabled>false</enabled>
+            <enabled>true</enabled>
 
 			<device>
 					<type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.coap.TemperatureSensorImplCoap
@@ -223,7 +223,7 @@
         
         <connector>
             <name>CoapDevices</name>
-            <enabled>false</enabled>
+            <enabled>true</enabled>
 
 			<device>
 					<type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.coap.TemperatureSensorImplCoap
@@ -258,7 +258,7 @@
         
         <connector>
             <name>CoAP</name>
-            <enabled>false</enabled>
+            <enabled>true</enabled>
 			
 			<device>
 					<type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.coap.TemperatureSensorImplCoap
@@ -285,7 +285,7 @@
   <rfid>
     <connector>
       <name>RFID</name>
-      <enabled>false</enabled>
+      <enabled>true</enabled>
       <serialPort>/dev/ttyUSB0</serialPort>
        <device>
         <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.rfid.CommandImplRFID</type>      
@@ -303,7 +303,7 @@
     
     <connector>
       <name>RFID-Windows</name>
-      <enabled>false</enabled>
+      <enabled>true</enabled>
       <serialPort>COM1</serialPort>
        <device>
         <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.rfid.CommandImplRFID
@@ -327,7 +327,7 @@
   <enocean>
     <connector>
       <name>EnOcean Linux</name>
-      <enabled>false</enabled>
+      <enabled>true</enabled>
       <serialPort>/dev/ttyS80</serialPort>
       <device>
         <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.enocean.PushButtonImplEnocean
@@ -365,7 +365,7 @@
     
     <connector>
       <name>EnOcean</name>
-      <enabled>false</enabled>
+      <enabled>true</enabled>
       <serialPort>COM6</serialPort>
       <device>
         <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.enocean.WindowSensorImplEnocean
@@ -379,7 +379,7 @@
     
     <connector>
       <name>EnOcean2</name>
-      <enabled>false</enabled>
+      <enabled>true</enabled>
       <serialPort>/dev/ttyUSB1</serialPort>
       <device>
         <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.enocean.WindowSensorImplEnocean
@@ -406,7 +406,7 @@
   <xbee>
     <connector>
       <name>XBee</name>
-      <enabled>false</enabled>
+      <enabled>true</enabled>
       <serialPort>COM9</serialPort>
       <device>
         <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.xbee.TemperatureSensorImplXBee
@@ -421,7 +421,7 @@
 
     <connector>
       <name>XBee2</name>
-      <enabled>false</enabled>
+      <enabled>true</enabled>
       <serialPort>COM3</serialPort>
       <device>
         <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.xbee.TemperatureSensorImplXBee
@@ -447,7 +447,7 @@
   <!-- <enocean>
     <connector>
       <name>EnOcean</name>
-      <enabled>false</enabled>
+      <enabled>true</enabled>
       <serialPort>COM13</serialPort>
       <device>
         <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.enocean.PushButtonImplEnocean
@@ -520,7 +520,7 @@
    <weather-forecast>
     <connector>
       <name>weather-forecast</name>
-      <enabled>false</enabled>
+      <enabled>true</enabled>
       <device>
         <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.weatherforecast.objects.WeatherObjectImplYR_NO
         </type>
@@ -544,7 +544,7 @@
   <knx>
       <connector>
       	<name>KNX IoT Suitcase</name>
-      	<enabled>false</enabled>
+      	<enabled>true</enabled>
       	<router>
         	<ip>192.168.1.14</ip>
         	<port>3671</port>
@@ -564,7 +564,7 @@
       
     <connector>
       <name>KNX TP1 Suitcase</name>
-      <enabled>false</enabled>
+      <enabled>true</enabled>
       <router>
         <ip>192.168.1.101</ip>
         <port>3671</port>
@@ -610,7 +610,7 @@
 
     <connector>
       <name>IPSO Challenge</name>
-      <enabled>false</enabled>
+      <enabled>true</enabled>
       <router>
         <ip>192.168.1.13</ip>
         <port>3671</port>
@@ -698,7 +698,7 @@
     </connector>
     <connector>
       <name>KNX EIBD</name>
-      <enabled>false</enabled>
+      <enabled>true</enabled>
       <router>
         <ip>128.130.56.77</ip>
         <port>3671</port>
@@ -771,7 +771,7 @@
     </connector>
     <connector>
       <name>KNX E-Lab</name>
-      <enabled>false</enabled>
+      <enabled>true</enabled>
       <router>
         <ip>192.168.161.53</ip>
         <port>3671</port>
@@ -912,7 +912,7 @@
 
     <connector>
       <name>KNX A-Lab</name>
-      <enabled>false</enabled>
+      <enabled>true</enabled>
       <router>
         <ip>128.130.56.51</ip>
         <port>3671</port>
@@ -1031,7 +1031,7 @@
   <bacnet>
     <connector>
       <name>BACnet E-Lab</name>
-      <enabled>false</enabled>
+      <enabled>true</enabled>
       <discovery-enabled>true</discovery-enabled>
       <localDeviceID>23345</localDeviceID>
       <broadcastAddress>192.168.161.255</broadcastAddress>
@@ -1065,7 +1065,7 @@
 
     <connector>
       <name>BACnet A-Lab</name>
-      <enabled>false</enabled>
+      <enabled>true</enabled>
       <discovery-enabled>true</discovery-enabled>
       <localDeviceID>12346</localDeviceID>
       <broadcastAddress>128.130.56.255</broadcastAddress>
@@ -1140,7 +1140,7 @@
 
     <connector>
       <name>BACnet A-Lab (Auto)</name>
-      <enabled>false</enabled>
+      <enabled>true</enabled>
       <discovery-enabled>true</discovery-enabled>
       <localDeviceID>12345</localDeviceID>
       <broadcastAddress>128.130.56.255</broadcastAddress>
@@ -1151,7 +1151,7 @@
     
     <connector>
       <name>BACnet IoT Suitcase</name>
-      <enabled>false</enabled>
+      <enabled>true</enabled>
       <discovery-enabled>true</discovery-enabled>
       <localDeviceID>12345</localDeviceID>
       <broadcastAddress>192.168.1.255</broadcastAddress>
@@ -1166,7 +1166,7 @@
   <wmbus>
     <connector>
       <name>W-MBus Smart Meter Linux</name>
-      <enabled>false</enabled>
+      <enabled>true</enabled>
       <serialPort>/dev/ttyUSB2</serialPort>
       <device>
         <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.wmbus.SmartMeterImplWMBus
@@ -1182,7 +1182,7 @@
 
     <connector>
       <name>W-MBus Smart Meter Windows</name>
-      <enabled>false</enabled>
+      <enabled>true</enabled>
       <serialPort>COM6</serialPort>
       <device>
         <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.wmbus.SmartMeterImplWMBus
@@ -1200,7 +1200,7 @@
  <mbus>
  <connector>
   <name>MBus Smart Meter Linux</name>
-  <enabled>false</enabled>
+  <enabled>true</enabled>
   <serialPort>/dev/ttyAMA0</serialPort>
   <device>
      <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.mbus.SmartMeterImplMBus</type>
@@ -1215,7 +1215,7 @@
 
 <connector>
   <name>MBus Smart Meter Windows</name>
-  <enabled>false</enabled>
+  <enabled>true</enabled>
   <serialPort>COM17</serialPort>
   <device>
         <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.mbus.SmartMeterImplMBus</type>
@@ -1232,7 +1232,7 @@
   <virtual>
     <connector>
       <name>VirtualDevices</name>
-      <enabled>false</enabled>
+      <enabled>true</enabled>
      
 
 
@@ -1442,7 +1442,7 @@
     </connector>
     <connector>
       <name>Virtual Devices 2</name>
-      <enabled>false</enabled>
+      <enabled>true</enabled>
 
       <!-- SENSOREN -->
       <device>
@@ -1484,7 +1484,7 @@
     </connector>
     <connector>
       <name>HVAC Simulation</name>
-      <enabled>false</enabled>
+      <enabled>true</enabled>
 
       <!-- SENSOREN -->
      
@@ -1501,7 +1501,7 @@
 
     <connector>
       <name>IoTSyS Logic</name>
-      <enabled>false</enabled>
+      <enabled>true</enabled>
 
       <!-- Logic components -->      
       <device>

@@ -102,7 +102,9 @@ public class MBusDeviceLoaderImpl implements DeviceLoader {
 				connectorId = connectorsFromDb.get(connector).get("_id").asText();
 				connectorName = connectorsFromDb.get(connector).get("name").asText();
 				enabled =  connectorsFromDb.get(connector).get("enabled").asBoolean();
-			} catch (Exception e){}
+			} catch (Exception e){
+				log.info("Cannot fetch configuration from Database, using devices.xml");
+			}
 			
 			
 			if (enabled) {

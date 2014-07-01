@@ -19,7 +19,6 @@
 */
 package at.ac.tuwien.auto.iotsys.commons.persistent;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.ektorp.DocumentOperationResult;
@@ -73,7 +72,9 @@ public interface ConfigsDb {
 	public void clear();
 	public void prepareDevice(String connectorName, Device d);
 	public void prepareDeviceLoader(String deviceLoaderName);
-	public void migrate(ArrayList<Connector> connectors);
+	public void prepareConnectors(List<Connector> connectors);
+	public void migrate(List<Connector> connectors);
+	public void migrate();
 	
 	public void compactDb();
 }

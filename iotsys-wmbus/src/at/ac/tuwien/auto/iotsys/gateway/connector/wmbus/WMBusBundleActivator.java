@@ -43,6 +43,7 @@ import org.osgi.framework.ServiceReference;
 
 import at.ac.tuwien.auto.iotsys.commons.DeviceLoader;
 import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
+import at.ac.tuwien.auto.iotsys.commons.persistent.ConfigsDbImpl;
 import at.ac.tuwien.auto.iotsys.commons.persistent.models.Connector;
 
 public class WMBusBundleActivator implements BundleActivator, ServiceListener{
@@ -70,6 +71,8 @@ public class WMBusBundleActivator implements BundleActivator, ServiceListener{
 				ObjectBroker objectBroker = (ObjectBroker) context
 						.getService(serviceReference);
 				connectors = deviceLoader.initDevices(objectBroker);
+				objectBroker.addConnectors(connectors);
+				ConfigsDbImpl.getInstance().prepareDeviceLoader(deviceLoader.getClass().getName());
 				registered = true;
 			}
 
@@ -90,6 +93,7 @@ public class WMBusBundleActivator implements BundleActivator, ServiceListener{
 					.getService(serviceReference);
 			deviceLoader.removeDevices(objectBroker);
 			if (connectors != null) {
+				objectBroker.removeConnectors(connectors);
 				for (Connector connector : connectors) {
 					try {
 						connector.disconnect();
@@ -117,6 +121,8 @@ public class WMBusBundleActivator implements BundleActivator, ServiceListener{
 								.getService(event.getServiceReference());
 						try {
 							connectors = deviceLoader.initDevices(objectBroker);
+							objectBroker.addConnectors(connectors);
+							ConfigsDbImpl.getInstance().prepareDeviceLoader(deviceLoader.getClass().getName());
 							registered = true;
 						} catch (Exception e) {
 							e.printStackTrace();

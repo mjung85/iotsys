@@ -163,7 +163,7 @@ public class VirtualDeviceLoaderImpl implements DeviceLoader {
 				connectorName = connectorsFromDb.get(connector).get("name").asText();
 				enabled =  connectorsFromDb.get(connector).get("enabled").asBoolean();
 			} catch (Exception e){
-				e.printStackTrace();
+				log.info("Cannot fetch configuration from Database, using devices.xml");//e.printStackTrace();
 			}
 			
 			if (enabled) {

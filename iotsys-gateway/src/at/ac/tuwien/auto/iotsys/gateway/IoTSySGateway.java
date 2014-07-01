@@ -54,7 +54,6 @@ import at.ac.tuwien.auto.iotsys.commons.interceptor.Interceptor;
 import at.ac.tuwien.auto.iotsys.commons.interceptor.InterceptorBroker;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.ContractInit;
 import at.ac.tuwien.auto.iotsys.commons.persistent.ConfigsDbImpl;
-import at.ac.tuwien.auto.iotsys.commons.persistent.WritableObjectDb;
 import at.ac.tuwien.auto.iotsys.commons.persistent.WriteableObjectDbImpl;
 import at.ac.tuwien.auto.iotsys.commons.persistent.models.Connector;
 import at.ac.tuwien.auto.iotsys.commons.persistent.models.WritableObject;
@@ -76,12 +75,10 @@ import at.ac.tuwien.auto.iotsys.xacml.pdp.PDPInterceptorSettings;
 public class IoTSySGateway
 {
 	private ObjectBroker objectBroker;
-	private DeviceLoaderImpl deviceLoader;
+	
 	private InterceptorBroker interceptorBroker;
 
 	private boolean osgiEnvironment = false;
-
-	private ArrayList<Connector> connectors = new ArrayList<Connector>();
 
 	private static final Logger log = Logger.getLogger(IoTSySGateway.class.getName());
 
@@ -127,18 +124,22 @@ public class IoTSySGateway
 			objectBroker.setMdnsResolver(mdnsResolver);
 		}
 
-		// add initial objects to the database
-		if (devicesConfigFile == null)
-		{
-			deviceLoader = new DeviceLoaderImpl();
-		} else
-		{
-			deviceLoader = new DeviceLoaderImpl(devicesConfigFile);
-		}
-		connectors = deviceLoader.initDevices(objectBroker);
+		if (!osgiEnvironment)
+			objectBroker.initDevices(devicesConfigFile);
+		// the following commented code block does not have any effect if running in OSGi environment
+		// --> suggestion is to move to objectBroker and replace by the two lines above
 		
+		// add initial objects to the database
+//		if (devicesConfigFile == null)
+//		{
+//			deviceLoader = new DeviceLoaderImpl();
+//		} else
+//		{
+//			deviceLoader = new DeviceLoaderImpl(devicesConfigFile);
+//		}
+//		connectors = deviceLoader.initDevices(objectBroker);
 		// Transition step: migrate configs from devices.xml to DB, remove when done
-		ConfigsDbImpl.getInstance().migrate(connectors);
+//		ConfigsDbImpl.getInstance().migrate(connectors);
 		
 		// Re-apply written object from database, not work in osgi bundle
 		List<WritableObject> wos = WriteableObjectDbImpl.getInstance().getPersistedObjects();
@@ -262,7 +263,7 @@ public class IoTSySGateway
 	{
 		objectBroker.shutdown();
 		// CsvCreator.instance.close();
-		closeConnectors();
+//		closeConnectors();
 	}
 
 	public static void main(String[] args)
@@ -311,20 +312,7 @@ public class IoTSySGateway
 		System.exit(0);
 	}
 
-	private void closeConnectors()
-	{
-		for (Connector connector : connectors)
-		{
-			try
-			{
-				connector.disconnect();
-				log.info("Shutting down connector " + connector.toString());
-			} catch (Exception e)
-			{
-				e.printStackTrace();
-			}
-		}
-	}
+	
 
 	public boolean isOsgiEnvironment()
 	{
