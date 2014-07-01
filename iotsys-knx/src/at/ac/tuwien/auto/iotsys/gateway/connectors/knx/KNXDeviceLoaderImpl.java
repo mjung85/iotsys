@@ -96,7 +96,9 @@ public class KNXDeviceLoaderImpl implements DeviceLoader {
 				routerIP =  connectorsFromDb.get(connector).get("routerHostname").asText();
 				routerPort = connectorsFromDb.get(connector).get("routerPort").asInt();
 				localIP = connectorsFromDb.get(connector).get("localIP").asText();
-			} catch (Exception e){}
+			} catch (Exception e){
+				log.info("Cannot fetch configuration from Database, using devices.xml");
+			}
 			
 			if (enabled) {
 				try {
@@ -172,7 +174,6 @@ public class KNXDeviceLoaderImpl implements DeviceLoader {
 							historyCount = deviceFromDb.getHistoryCount();
 						} 
 						catch (Exception e) {
-							e.printStackTrace();
 						}
 						
 						// Transition step: comment when done

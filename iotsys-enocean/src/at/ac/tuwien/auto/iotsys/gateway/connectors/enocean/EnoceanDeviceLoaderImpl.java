@@ -80,7 +80,9 @@ public class EnoceanDeviceLoaderImpl implements DeviceLoader {
 				connectorId = connectorsFromDb.get(connector).get("_id").asText();
 				connectorName = connectorsFromDb.get(connector).get("name").asText();
 				enabled =  connectorsFromDb.get(connector).get("enabled").asBoolean();
-			} catch (Exception e){}
+			} catch (Exception e){
+				log.info("Cannot fetch configuration from Database, using devices.xml");
+			}
 			
 			
 			// PropertyConfigurator.configure("log4j.properties");
@@ -141,8 +143,7 @@ public class EnoceanDeviceLoaderImpl implements DeviceLoader {
 							refreshEnabled = deviceFromDb.isRefreshEnabled();
 							historyCount = deviceFromDb.getHistoryCount();
 						} 
-						catch (Exception e) {
-						}
+						catch (Exception e) {}
 						
 						// Transition step: comment when done
 						Device d = new Device(type, ipv6, addressString, href, name, null, historyCount, historyEnabled, groupCommEnabled, refreshEnabled);
@@ -225,9 +226,9 @@ public class EnoceanDeviceLoaderImpl implements DeviceLoader {
 									}
 								}
 							} catch (SecurityException e) {
-								e.printStackTrace();
+								e.getMessage();//.printStackTrace();
 							} catch (ClassNotFoundException e) {
-								e.printStackTrace();
+								e.getMessage();//.printStackTrace();
 							}
 						}
 					}
@@ -261,7 +262,6 @@ public class EnoceanDeviceLoaderImpl implements DeviceLoader {
 			}
 
 		}
-
 		return connectors;
 	}
 

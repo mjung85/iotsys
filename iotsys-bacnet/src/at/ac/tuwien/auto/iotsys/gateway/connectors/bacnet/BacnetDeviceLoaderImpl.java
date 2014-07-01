@@ -105,7 +105,9 @@ public class BacnetDeviceLoaderImpl implements DeviceLoader {
 				broadcastAddress = connectorsFromDb.get(connector).get("broadcastAddress").asText();
 				localPort = connectorsFromDb.get(connector).get("localPort").asInt();
 				localDeviceID = connectorsFromDb.get(connector).get("localDeviceID").asInt();
-			} catch (Exception e){}
+			} catch (Exception e){
+				log.info("Cannot fetch configuration from Database, using devices.xml");
+			}
 			
 			if (enabled) {
 				try {
