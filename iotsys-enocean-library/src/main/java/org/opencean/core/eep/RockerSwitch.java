@@ -29,7 +29,7 @@ public class RockerSwitch extends RadioPacketRPSParser {
 
     @Override
     protected void parsePacket(Map<EnoceanParameterAddress, Value> values, RadioPacketRPS radioPacket) {
-        byte statusByte = radioPacket.getStatus();
+    	byte statusByte = radioPacket.getStatus();
         byte dataByte = radioPacket.getDataByte();
         energyBow = EnergyBowState.values()[(dataByte & 0x10) >> 4];
         nu = NUState.values()[(statusByte & 0x10) >> 4];
@@ -54,9 +54,9 @@ public class RockerSwitch extends RadioPacketRPSParser {
                 parseButtonStates(rocker2);
                 addButtonStateToParameters(values, radioPacket);
             }
-        }
+        }       
         logger.info("Current State: " + this);
-    }
+    }  
 
     private void addButtonStateToParameters(Map<EnoceanParameterAddress, Value> map, RadioPacketRPS radioPacketRPS) {
         if (buttonAO != null) {
