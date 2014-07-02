@@ -40,7 +40,7 @@ import at.ac.tuwien.auto.iotsys.commons.obix.objects.enocean.datapoint.EnoceanDP
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.encoding.EncodingOpenClosed;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.encoding.impl.EncodingsImpl;
 
-public abstract class EnoceanDPTBoolOpenClosedImpl extends EnoceanDPTBoolImpl implements EnoceanDPTBoolOpenClosed
+public class EnoceanDPTBoolOpenClosedImpl extends EnoceanDPTBoolImpl implements EnoceanDPTBoolOpenClosed
 {
 	private Enum encoding = new Enum();
 

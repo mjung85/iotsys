@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, Automation Systems Group, TU Wien.
+ * Copyright (c) 2014, Automation Systems Group, TU Wien.
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -29,15 +29,13 @@
  * This file is part of the IoTSyS project.
  ******************************************************************************/
 
-package at.ac.tuwien.auto.iotsys.commons.obix.objects.general.encoding;
+package at.ac.tuwien.auto.iotsys.commons.obix.objects.enocean.datapoint;
 
-import obix.contracts.Range;
+import obix.Enum;
 
-public interface EncodingOpenClosed extends Range
+public interface EnoceanDPTBoolPressedReleased extends EnoceanDPTBool
 {
-	public static final String HREF = "/encodings/openclosed";
+	public static final String CONTRACT = "enocean:DPTBoolPressedReleased";
 
-	public static final String KEY_OPEN = "open";
-	public static final String KEY_CLOSED = "closed";
-
+	public Enum encoding();
 }

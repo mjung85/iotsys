@@ -46,13 +46,13 @@ public class EncodingOpenClosedImpl extends EncodingImpl implements EncodingOpen
 
 	protected void initValues()
 	{
-		BoolElement on = new BoolElement(EncodingOpenClosed.KEY_ON, "On", true);
-		BoolElement off = new BoolElement(EncodingOpenClosed.KEY_OFF, "Off", false);
+		BoolElement open = new BoolElement(EncodingOpenClosed.KEY_OPEN, "Open", false);
+		BoolElement closed = new BoolElement(EncodingOpenClosed.KEY_CLOSED, "Closed", true);
 
-		on.addTranslation("de", TranslationAttribute.displayName, "Offen");
-		off.addTranslation("de", TranslationAttribute.displayName, "Geschlossen");
+		open.addTranslation("de", TranslationAttribute.displayName, "Offen");
+		closed.addTranslation("de", TranslationAttribute.displayName, "Geschlossen");
 
-		addElement(on);
-		addElement(off);
+		addElement(open);
+		addElement(closed);
 	}
 }

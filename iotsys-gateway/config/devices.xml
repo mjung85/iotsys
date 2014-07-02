@@ -358,6 +358,17 @@
         <historyEnabled>false</historyEnabled>
 		<groupCommEnabled>true</groupCommEnabled>
       </device>	  
+	 <device>        
+        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.enocean.entity.impl.EntityEEP_D50001Impl
+        </type>
+        <address>01:81:DC:DD</address>
+		<deviceName>EasyclickWindowContact</deviceName>
+		<displayName>Window contact</displayName>
+		<display>null</display>
+		<manufacturer>PEHA</manufacturer>
+        <href>EasyclickWindowContact</href>
+        <historyEnabled>false</historyEnabled>
+      </device> 
     </connector>   
   </enocean>
 
