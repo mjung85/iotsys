@@ -56,10 +56,11 @@ public class KNXDeviceLoaderImpl implements DeviceLoader {
 
 	public ArrayList<Connector> initDevices(ObjectBroker objectBroker) {
 		setConfiguration(devicesConfig);
+		objectBroker.getConfigDb().prepareDeviceLoader(getClass().getName());
 		
 		ArrayList<Connector> connectors = new ArrayList<Connector>();
 
-		List<JsonNode> connectorsFromDb = ConfigsDbImpl.getInstance().getConnectors("knx");
+		List<JsonNode> connectorsFromDb = objectBroker.getConfigDb().getConnectors("knx");
 		int connectorsSize = 0;
 
 		if (connectorsFromDb.size() <= 0) {
@@ -111,9 +112,9 @@ public class KNXDeviceLoaderImpl implements DeviceLoader {
 					connectors.add(knxConnector);
 					
 					int numberOfDevices = 0;
-					List<Device> devicesFromDb = ConfigsDbImpl.getInstance().getDevices(connectorId);
+					List<Device> devicesFromDb = objectBroker.getConfigDb().getDevices(connectorId);
 					
-					if (devicesFromDb.size() <= 0){
+					if (connectorsFromDb.size() <= 0){
 						if (knxConfiguredDevices != null) {
 							numberOfDevices = 1; // there is at least one
 													// device.
@@ -178,7 +179,7 @@ public class KNXDeviceLoaderImpl implements DeviceLoader {
 						
 						// Transition step: comment when done
 						Device d = new Device(type, ipv6, addressString, href, name, displayName, historyCount, historyEnabled, groupCommEnabled, refreshEnabled);
-						ConfigsDbImpl.getInstance().prepareDevice(connectorName, d);
+						objectBroker.getConfigDb().prepareDevice(connectorName, d);
 						
 						if (type != null && address != null) {
 							int addressCount = address.size();

@@ -64,7 +64,6 @@ public class CoapBundleActivator implements ServiceListener, BundleActivator {
 				.getServiceReference(ObjectBroker.class.getName());
 		if (serviceReference == null) {
 			log.severe("Could not find a running object broker to register devices!");
-
 		} else {
 			synchronized (this) {
 				log.info("Initiating Coap devices.");
@@ -72,7 +71,6 @@ public class CoapBundleActivator implements ServiceListener, BundleActivator {
 						.getService(serviceReference);
 				connectors = deviceLoader.initDevices(objectBroker);
 				objectBroker.addConnectors(connectors);
-				ConfigsDbImpl.getInstance().prepareDeviceLoader(deviceLoader.getClass().getName());
 				registered = true;
 			}
 
@@ -122,7 +120,6 @@ public class CoapBundleActivator implements ServiceListener, BundleActivator {
 						try {
 							connectors = deviceLoader.initDevices(objectBroker);
 							objectBroker.addConnectors(connectors);
-							ConfigsDbImpl.getInstance().prepareDeviceLoader(deviceLoader.getClass().getName());
 							registered = true;
 						} catch (Exception e) {
 							e.printStackTrace();

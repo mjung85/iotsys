@@ -47,11 +47,13 @@ public class RfidDeviceLoaderImpl implements DeviceLoader {
 
 	@Override
 	public ArrayList<Connector> initDevices(ObjectBroker objectBroker) {
+        setConfiguration(devicesConfig);
+		objectBroker.getConfigDb().prepareDeviceLoader(getClass().getName());
 		// Hard-coded connections and object creation
 
 		ArrayList<Connector> connectors = new ArrayList<Connector>();
 
-		List<JsonNode> connectorsFromDb = ConfigsDbImpl.getInstance().getConnectors("rfid");
+		List<JsonNode> connectorsFromDb = objectBroker.getConfigDb().getConnectors("rfid");
 		int connectorsSize = 0;
 
 		if (connectorsFromDb.size() <= 0) {
@@ -102,9 +104,9 @@ public class RfidDeviceLoaderImpl implements DeviceLoader {
 					connectors.add(rfidConnector);
 
 					int numberOfDevices = 0;
-					List<Device> devicesFromDb = ConfigsDbImpl.getInstance().getDevices(connectorId);
+					List<Device> devicesFromDb = objectBroker.getConfigDb().getDevices(connectorId);
 
-					if (devicesFromDb.size() <= 0) {
+					if (connectorsFromDb.size() <= 0) {
 						if (rfidConfiguredDevices instanceof Collection<?>) {
 							Collection<?> rfidDevices = (Collection<?>) rfidConfiguredDevices;
 							numberOfDevices = rfidDevices.size();
@@ -162,7 +164,7 @@ public class RfidDeviceLoaderImpl implements DeviceLoader {
 						
 						// Transition step: comment when done
 						Device d = new Device(type, ipv6, null, href, name, null, historyCount, historyEnabled, groupCommEnabled, refreshEnabled);
-						ConfigsDbImpl.getInstance().prepareDevice(connectorName, d);
+						objectBroker.getConfigDb().prepareDevice(connectorName, d);
 						
 						if (type != null) {
 							

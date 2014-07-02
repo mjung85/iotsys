@@ -59,10 +59,11 @@ public class BacnetDeviceLoaderImpl implements DeviceLoader {
 
 	public ArrayList<Connector> initDevices(ObjectBroker objectBroker) {
 		setConfiguration(devicesConfig);
+		objectBroker.getConfigDb().prepareDeviceLoader(getClass().getName());
 		
 		ArrayList<Connector> connectors = new ArrayList<Connector>();
 
-		List<JsonNode> connectorsFromDb = ConfigsDbImpl.getInstance().getConnectors("bacnet");
+		List<JsonNode> connectorsFromDb = objectBroker.getConfigDb().getConnectors("bacnet");
 		int connectorsSize = 0;
 		// bacnet
 		if (connectorsFromDb.size() <= 0) {
@@ -131,11 +132,9 @@ public class BacnetDeviceLoaderImpl implements DeviceLoader {
 					connectors.add(bacnetConnector);
 					
 					int numberOfDevices = 0;
-					List<Device> devicesFromDb = null;
-					try {
-						devicesFromDb = ConfigsDbImpl.getInstance().getDevices(connectorId);
-						numberOfDevices = devicesFromDb.size();
-					} catch (Exception e){
+					List<Device> devicesFromDb = objectBroker.getConfigDb().getDevices(connectorId);
+					
+					if (connectorsFromDb.size() <= 0){
 						// TODO: bacnetConfiguredDevices is from devices.xml --> mismatch when a connector does not have any device associated,
 						// e.g., bacnet a-lab (auto) connector
 						// do like this for other device loaders!
@@ -146,7 +145,8 @@ public class BacnetDeviceLoaderImpl implements DeviceLoader {
 							Collection<?> bacnetDevices = (Collection<?>) bacnetConfiguredDevices;
 							numberOfDevices = bacnetDevices.size();
 						}
-					}
+					} else
+						numberOfDevices = devicesFromDb.size();
 					
 					log.info(numberOfDevices
 							+ " BACnet devices found in configuration for connector "
@@ -213,7 +213,7 @@ public class BacnetDeviceLoaderImpl implements DeviceLoader {
 						}
 						// Transition step: comment when done
 						Device d = new Device(type, ipv6, addressString, href, name, displayName, historyCount, historyEnabled, groupCommEnabled, refreshEnabled);
-						ConfigsDbImpl.getInstance().prepareDevice(connectorName, d);
+						objectBroker.getConfigDb().prepareDevice(connectorName, d);
 						
 						if (type != null && address != null) {
 							

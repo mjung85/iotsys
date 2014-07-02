@@ -44,11 +44,13 @@ public class EnoceanDeviceLoaderImpl implements DeviceLoader {
 
 	@Override
 	public ArrayList<Connector> initDevices(ObjectBroker objectBroker) {
+        setConfiguration(devicesConfig);
+		objectBroker.getConfigDb().prepareDeviceLoader(getClass().getName());
 		// Hard-coded connections and object creation
 
 		ArrayList<Connector> connectors = new ArrayList<Connector>();
 
-		List<JsonNode> connectorsFromDb = ConfigsDbImpl.getInstance().getConnectors("enocean");
+		List<JsonNode> connectorsFromDb = objectBroker.getConfigDb().getConnectors("enocean");
 		int connectorsSize = 0;
 		// WMBus
 		if (connectorsFromDb.size() <= 0) {
@@ -99,9 +101,9 @@ public class EnoceanDeviceLoaderImpl implements DeviceLoader {
 					connectors.add(enoceanConnector);
 
 					int numberOfDevices = 0;
-					List<Device> devicesFromDb = ConfigsDbImpl.getInstance().getDevices(connectorId);
+					List<Device> devicesFromDb = objectBroker.getConfigDb().getDevices(connectorId);
 
-					if (devicesFromDb.size() <= 0) {
+					if (connectorsFromDb.size() <= 0) {
 						if (enoceanConfiguredDevices instanceof Collection<?>) {
 							Collection<?> enoceanDevices = (Collection<?>) enoceanConfiguredDevices;
 							numberOfDevices = enoceanDevices.size();
@@ -147,7 +149,7 @@ public class EnoceanDeviceLoaderImpl implements DeviceLoader {
 						
 						// Transition step: comment when done
 						Device d = new Device(type, ipv6, addressString, href, name, null, historyCount, historyEnabled, groupCommEnabled, refreshEnabled);
-						ConfigsDbImpl.getInstance().prepareDevice(connectorName, d);		
+						objectBroker.getConfigDb().prepareDevice(connectorName, d);		
 						
 						log.info("type: " + type);
 						

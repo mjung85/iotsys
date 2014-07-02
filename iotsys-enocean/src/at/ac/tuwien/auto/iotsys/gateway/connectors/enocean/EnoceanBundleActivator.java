@@ -40,7 +40,7 @@ public class EnoceanBundleActivator implements BundleActivator, ServiceListener 
 						.getService(serviceReference);
 				connectors = deviceLoader.initDevices(objectBroker);
 				objectBroker.addConnectors(connectors);
-				ConfigsDbImpl.getInstance().prepareDeviceLoader(deviceLoader.getClass().getName());
+				
 				registered = true;
 			}
 
@@ -90,7 +90,7 @@ public class EnoceanBundleActivator implements BundleActivator, ServiceListener 
 						try {
 							connectors = deviceLoader.initDevices(objectBroker);
 							objectBroker.addConnectors(connectors);
-							ConfigsDbImpl.getInstance().prepareDeviceLoader(deviceLoader.getClass().getName());
+							
 							registered = true;
 						} catch (Exception e) {
 							e.printStackTrace();

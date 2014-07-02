@@ -43,11 +43,13 @@ public class XBeeDeviceLoaderImpl implements DeviceLoader {
 
 	@Override
 	public ArrayList<Connector> initDevices(ObjectBroker objectBroker) {
+        setConfiguration(devicesConfig);
+		objectBroker.getConfigDb().prepareDeviceLoader(getClass().getName());
 		// Hard-coded connections and object creation
 
 		ArrayList<Connector> connectors = new ArrayList<Connector>();
 
-		List<JsonNode> connectorsFromDb = ConfigsDbImpl.getInstance().getConnectors("xbee");
+		List<JsonNode> connectorsFromDb = objectBroker.getConfigDb().getConnectors("xbee");
 		int connectorsSize = 0;
 
 		if (connectorsFromDb.size() <= 0) {
@@ -102,9 +104,9 @@ public class XBeeDeviceLoaderImpl implements DeviceLoader {
 					log.info(xbeeConfiguredDevices.getClass().getName());
 					
 					int numberOfDevices = 0;
-					List<Device> devicesFromDb = ConfigsDbImpl.getInstance().getDevices(connectorId);
+					List<Device> devicesFromDb = objectBroker.getConfigDb().getDevices(connectorId);
 
-					if (devicesFromDb.size() <= 0) {
+					if (connectorsFromDb.size() <= 0) {
 						if (xbeeConfiguredDevices != null) {
 							numberOfDevices = 1; // there is at least one
 													// device.
@@ -167,7 +169,7 @@ public class XBeeDeviceLoaderImpl implements DeviceLoader {
 						
 						// Transition step: comment when done
 						Device d = new Device(type, ipv6, addressString, href, name, null, historyCount, historyEnabled, groupCommEnabled, refreshEnabled);
-						ConfigsDbImpl.getInstance().prepareDevice(connectorName, d);
+						objectBroker.getConfigDb().prepareDevice(connectorName, d);
 						
 						if (type != null && address != null) {
 							//int addressCount = address.size();

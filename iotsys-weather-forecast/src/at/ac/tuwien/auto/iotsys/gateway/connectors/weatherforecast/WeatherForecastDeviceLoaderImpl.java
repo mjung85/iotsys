@@ -68,11 +68,12 @@ public class WeatherForecastDeviceLoaderImpl implements DeviceLoader {
 	@Override
 	public ArrayList<Connector> initDevices(ObjectBroker objectBroker) {
 		setConfiguration(devicesConfig);
+		objectBroker.getConfigDb().prepareDeviceLoader(getClass().getName());
 		
 		// Hard-coded connections and object creation
 		ArrayList<Connector> connectors = new ArrayList<Connector>();
 
-		List<JsonNode> connectorsFromDb = ConfigsDbImpl.getInstance().getConnectors("weather-forecast");
+		List<JsonNode> connectorsFromDb = objectBroker.getConfigDb().getConnectors("weather-forecast");
 		int connectorsSize = 0;
 		
 		if (connectorsFromDb.size() <= 0) {
@@ -118,9 +119,9 @@ public class WeatherForecastDeviceLoaderImpl implements DeviceLoader {
 					connectors.add(forecastConnector);
 
 					int numberOfDevices = 0;
-					List<Device> devicesFromDb = ConfigsDbImpl.getInstance().getDevices(connectorId);
+					List<Device> devicesFromDb = objectBroker.getConfigDb().getDevices(connectorId);
 
-					if (devicesFromDb.size() <= 0) {
+					if (connectorsFromDb.size() <= 0) {
 						if (configuredDevices != null) {
 							numberOfDevices = 1; // there is at least one
 													// device.
@@ -169,7 +170,7 @@ public class WeatherForecastDeviceLoaderImpl implements DeviceLoader {
 						
 						// Transition step: comment when done
 						Device d = new Device(type, null, null, href, name, null, historyCount, historyEnabled, groupCommEnabled, refreshEnabled);
-						ConfigsDbImpl.getInstance().prepareDevice(connectorName, d);
+						objectBroker.getConfigDb().prepareDevice(connectorName, d);
 						
 						if (type != null && name != null) {
 							try {

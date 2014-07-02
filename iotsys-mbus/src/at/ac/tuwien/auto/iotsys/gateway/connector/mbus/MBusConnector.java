@@ -38,6 +38,8 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.logging.Logger;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import at.ac.tuwien.auto.iotsys.commons.persistent.models.Connector;
 import at.ac.tuwien.auto.iotsys.gateway.connector.mbus.reader.ComPortReader;
 import at.ac.tuwien.auto.iotsys.gateway.connector.mbus.telegrams.SimpleTelegram;
@@ -169,7 +171,7 @@ public class MBusConnector extends Connector implements TelegramManagerInterface
 	public void setAdress(byte address){
     	comPortReader.setAdress(address);
     }
-    
+    @JsonIgnore
     public byte getAddress(){
     	return comPortReader.getAddress();
     }
@@ -177,7 +179,7 @@ public class MBusConnector extends Connector implements TelegramManagerInterface
     public void setInterval(int interval){
     	comPortReader.setInterval(interval);
     }
-    
+    @JsonIgnore
     public int getInterval(){
     	return comPortReader.getInterval();
     }

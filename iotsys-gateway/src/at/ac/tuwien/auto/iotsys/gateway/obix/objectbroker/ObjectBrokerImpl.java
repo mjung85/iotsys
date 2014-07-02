@@ -55,6 +55,7 @@ import at.ac.tuwien.auto.iotsys.commons.obix.objects.WatchImpl;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.WatchServiceImpl;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.internals.impl.InternalsImpl;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.general.impl.LobbyImpl;
+import at.ac.tuwien.auto.iotsys.commons.persistent.ConfigsDb;
 import at.ac.tuwien.auto.iotsys.commons.persistent.ConfigsDbImpl;
 import at.ac.tuwien.auto.iotsys.commons.persistent.models.Connector;
 import at.ac.tuwien.auto.iotsys.gateway.DeviceLoaderImpl;
@@ -81,6 +82,8 @@ public class ObjectBrokerImpl implements ObjectBroker
 	private ObjectRefresher objectRefresher = new ObjectRefresher();
 
 	private MdnsResolver resolver;
+	
+	private ConfigsDb configsDb;
 	
 	private DeviceLoaderImpl deviceLoader;
 	
@@ -124,6 +127,8 @@ public class ObjectBrokerImpl implements ObjectBroker
 
 		Thread t = new Thread(objectRefresher);
 		t.start();
+		
+		setConfigDb(ConfigsDbImpl.getInstance());
 	}
 
 	@Override
@@ -351,6 +356,16 @@ public class ObjectBrokerImpl implements ObjectBroker
 	}
 
 	@Override
+	public ConfigsDb getConfigDb() {
+		return configsDb;
+	}
+
+	@Override
+	public void setConfigDb(ConfigsDb configDb) {
+		this.configsDb = configDb;
+	}
+
+	@Override
 	public synchronized void enableObjectRefresh(Obj obj, long interval)
 	{
 		obj.setRefreshInterval(interval);
@@ -371,14 +386,14 @@ public class ObjectBrokerImpl implements ObjectBroker
 		connectors = deviceLoader.initDevices(this); // will be empty if run in OSGi!
 		
 		// Transition step: migrate configs from devices.xml to DB, remove when done
-		ConfigsDbImpl.getInstance().migrate(connectors);
+		configsDb.migrate(connectors);
 	}
 	
 	@Override
 	public void addConnectors(List<Connector> connectors){
 		this.connectors.addAll(connectors);
 		// Transition step: migrate configs from devices.xml to DB, remove when done
-		ConfigsDbImpl.getInstance().prepareConnectors(connectors);
+		configsDb.prepareConnectors(connectors);
 	}
 
 	@Override

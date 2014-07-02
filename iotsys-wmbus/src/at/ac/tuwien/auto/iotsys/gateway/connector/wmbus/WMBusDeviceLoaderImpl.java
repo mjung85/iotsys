@@ -66,10 +66,11 @@ public class WMBusDeviceLoaderImpl implements DeviceLoader {
 	@Override
 	public ArrayList<Connector> initDevices(ObjectBroker objectBroker) {
 		setConfiguration(devicesConfig);
+		objectBroker.getConfigDb().prepareDeviceLoader(getClass().getName());
 		
 		ArrayList<Connector> connectors = new ArrayList<Connector>();
 
-		List<JsonNode> connectorsFromDb = ConfigsDbImpl.getInstance()
+		List<JsonNode> connectorsFromDb = objectBroker.getConfigDb()
 				.getConnectors("wmbus");
 		int connectorsSize = 0;
 		// WMBus
@@ -119,9 +120,9 @@ public class WMBusDeviceLoaderImpl implements DeviceLoader {
 					connectors.add(wmbusConnector);
 
 					int wmbusDevicesCount = 0;
-					List<Device> devicesFromDb = ConfigsDbImpl.getInstance().getDevices(connectorId);
+					List<Device> devicesFromDb = objectBroker.getConfigDb().getDevices(connectorId);
 
-					if (devicesFromDb.size() <= 0) {
+					if (connectorsFromDb.size() <= 0) {
 						if (wmbusConfiguredDevices instanceof Collection<?>) {
 							Collection<?> wmbusDevice = (Collection<?>) wmbusConfiguredDevices;
 							wmbusDevicesCount = wmbusDevice.size();
@@ -176,7 +177,7 @@ public class WMBusDeviceLoaderImpl implements DeviceLoader {
 						
 						// Transition step: comment when done
 						Device d = new Device(type, ipv6, addressString, href, name, historyCount, historyEnabled, groupCommEnabled);
-						ConfigsDbImpl.getInstance().prepareDevice(connectorName, d);
+						objectBroker.getConfigDb().prepareDevice(connectorName, d);
 						
 						if (type != null && address != null) {
 							String serialNr = (String) address.get(0);

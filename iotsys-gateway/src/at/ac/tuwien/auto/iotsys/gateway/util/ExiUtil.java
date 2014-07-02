@@ -81,10 +81,10 @@ public class ExiUtil {
 		saxParserFactory.setNamespaceAware(true);
 
 		EXISchema schema = null;
-		FileInputStream fis;
+//		FileInputStream fis;
 		try {
-			fis = new FileInputStream("res/obix.esd");
-			DataInputStream dis = new DataInputStream(fis);
+//			fis = new FileInputStream("res/obix.esd");
+			DataInputStream dis = new DataInputStream(getClass().getClassLoader().getResourceAsStream("obix.esd"));
 			schema = (EXISchema) EXISchema.readIn(dis);
 			schemaGrammarCache = new GrammarCache(schema, options);
 		} catch (IOException e) {

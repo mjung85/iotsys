@@ -47,6 +47,7 @@ import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.commons.configuration.XMLConfiguration;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import at.ac.tuwien.auto.iotsys.commons.DeviceLoader;
 import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
@@ -66,10 +67,11 @@ public class MBusDeviceLoaderImpl implements DeviceLoader {
 	@Override
 	public ArrayList<Connector> initDevices(ObjectBroker objectBroker) {
 		setConfiguration(devicesConfig);
+		objectBroker.getConfigDb().prepareDeviceLoader(getClass().getName());
 		
 		ArrayList<Connector> connectors = new ArrayList<Connector>();
 
-		List<JsonNode> connectorsFromDb = ConfigsDbImpl.getInstance()
+		List<JsonNode> connectorsFromDb = objectBroker.getConfigDb()
 				.getConnectors("mbus");
 		int connectorsSize = 0;
 		// WMBus
@@ -115,14 +117,13 @@ public class MBusDeviceLoaderImpl implements DeviceLoader {
 					mbusConnector.setName(connectorName);
 					mbusConnector.setTechnology("mbus");
 					mbusConnector.setSerialPort(serialPort);
-					
 					//mbusConnector.connect();
 					connectors.add(mbusConnector);
 
 					int mbusDevicesCount = 0;
-					List<Device> devicesFromDb = ConfigsDbImpl.getInstance().getDevices(connectorId);
+					List<Device> devicesFromDb = objectBroker.getConfigDb().getDevices(connectorId);
 
-					if (devicesFromDb.size() <= 0) {
+					if (connectorsFromDb.size() <= 0) {
 						if (mbusConfiguredDevices instanceof Collection<?>) {
 							Collection<?> mbusDevice = (Collection<?>) mbusConfiguredDevices;
 							mbusDevicesCount = mbusDevice.size();
@@ -180,7 +181,7 @@ public class MBusDeviceLoaderImpl implements DeviceLoader {
 						
 						// Transition step: comment when done
 						Device d = new Device(type, ipv6, addressString, href, name, historyCount, historyEnabled, groupCommEnabled);
-						ConfigsDbImpl.getInstance().prepareDevice(connectorName, d);	
+						objectBroker.getConfigDb().prepareDevice(connectorName, d);	
 						
 						if(interval > 0){
 							mbusConnector.setInterval(interval);
