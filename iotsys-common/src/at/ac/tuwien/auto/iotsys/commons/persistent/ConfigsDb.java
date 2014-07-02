@@ -75,6 +75,7 @@ public interface ConfigsDb {
 	public void prepareConnectors(List<Connector> connectors);
 	public void migrate(List<Connector> connectors);
 	public void migrate();
+	public boolean isMigrating();
 	
 	public void compactDb();
 }

@@ -35,11 +35,14 @@ package at.ac.tuwien.auto.iotsys.gateway.obix.server;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.StringWriter;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.charset.Charset;
+
+import org.apache.commons.io.IOUtils;
 
 import obix.io.ObixEncoder;
 
@@ -54,8 +57,8 @@ public class SOAPHandler {
 	public SOAPHandler(ObixServer obixServer) {
 		this.obixServer = obixServer;
 		try {
-			schemaFileContent = readFile("res/obix.xsd");
-			wsdlFileContent = readFile("res/obix.wsdl");
+			schemaFileContent = readFile("obix.xsd");
+			wsdlFileContent = readFile("obix.wsdl");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -213,15 +216,18 @@ public class SOAPHandler {
 	}
 
 	private static String readFile(String path) throws IOException {
-		FileInputStream stream = new FileInputStream(new File(path));
-		try {
-			FileChannel fc = stream.getChannel();
-			MappedByteBuffer bb = fc.map(FileChannel.MapMode.READ_ONLY, 0,
-					fc.size());
-			return Charset.defaultCharset().decode(bb).toString();
-		} finally {
-			stream.close();
-		}
+		StringWriter writer = new StringWriter();
+		IOUtils.copy(SOAPHandler.class.getClassLoader().getResourceAsStream(path), writer);
+		return writer.toString();
+//		FileInputStream stream = new FileInputStream(new File(path));
+//		try {
+//			FileChannel fc = stream.getChannel();
+//			MappedByteBuffer bb = fc.map(FileChannel.MapMode.READ_ONLY, 0,
+//					fc.size());
+//			return Charset.defaultCharset().decode(bb).toString();
+//		} finally {
+//			stream.close();
+//		}
 	}
 
 }

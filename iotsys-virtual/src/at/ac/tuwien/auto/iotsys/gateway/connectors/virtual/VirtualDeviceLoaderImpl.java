@@ -67,6 +67,7 @@ public class VirtualDeviceLoaderImpl implements DeviceLoader {
 	@Override
 	public ArrayList<Connector> initDevices(ObjectBroker objectBroker) {
 		setConfiguration(devicesConfig);
+		objectBroker.getConfigDb().prepareDeviceLoader(getClass().getName());
 		
 		// Hard-coded connections and object creation
 
@@ -126,7 +127,7 @@ public class VirtualDeviceLoaderImpl implements DeviceLoader {
 		// NOTE: this loader allow to directly instantiate the base oBIX objects
 		// for testing purposes
 		
-		List<JsonNode> connectorsFromDb = ConfigsDbImpl.getInstance().getConnectors("virtual");
+		List<JsonNode> connectorsFromDb = objectBroker.getConfigDb().getConnectors("virtual");
 		int connectorsSize = 0;
 		// virtual
 		if (connectorsFromDb.size() <= 0) {
@@ -176,9 +177,9 @@ public class VirtualDeviceLoaderImpl implements DeviceLoader {
 					connectors.add(vConn);
 					
 					int numberOfDevices = 0;
-					List<Device> devicesFromDb = ConfigsDbImpl.getInstance().getDevices(connectorId);
+					List<Device> devicesFromDb = objectBroker.getConfigDb().getDevices(connectorId);
 
-					if (devicesFromDb.size() <= 0) {
+					if (connectorsFromDb.size() <= 0) {
 						if (virtualConfiguredDevices != null) {
 							numberOfDevices = 1; // there is at least one
 													// device.
@@ -239,7 +240,7 @@ public class VirtualDeviceLoaderImpl implements DeviceLoader {
 						
 						// Transition step: comment when done
 						Device d = new Device(type, ipv6, addressString, href, name, displayName, historyCount, historyEnabled, groupCommEnabled, refreshEnabled);
-						ConfigsDbImpl.getInstance().prepareDevice(connectorName, d);						
+						objectBroker.getConfigDb().prepareDevice(connectorName, d);						
 						// for weather forcast services only
 						String description = subConfig.getString("device(" + i + ").location.description", "");
 						Double latitude = subConfig.getDouble("device(" + i + ").location.latitude", 0);

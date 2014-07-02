@@ -64,12 +64,7 @@ public class PropertiesLoader {
 //				.getResourceAsStream(filename);	
 		
 		InputStream propIn = null;
-		try {
-			propIn = new FileInputStream(new File(CONFIG_PROPERTIES_LOCATION));
-		} catch (FileNotFoundException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
+		propIn = getClass().getClassLoader().getResourceAsStream(CONFIG_PROPERTIES_LOCATION);
 		
 		try {	
 			synchronized(this){

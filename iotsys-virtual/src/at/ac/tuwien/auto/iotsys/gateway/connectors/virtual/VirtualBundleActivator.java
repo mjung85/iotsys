@@ -73,7 +73,7 @@ public class VirtualBundleActivator implements ServiceListener, BundleActivator 
 						.getService(serviceReference);
 				connectors = deviceLoader.initDevices(objectBroker);
 				objectBroker.addConnectors(connectors);
-				ConfigsDbImpl.getInstance().prepareDeviceLoader(deviceLoader.getClass().getName());
+				
 				registered = true;
 			}
 
@@ -123,7 +123,7 @@ public class VirtualBundleActivator implements ServiceListener, BundleActivator 
 						try {
 							connectors = deviceLoader.initDevices(objectBroker);
 							objectBroker.addConnectors(connectors);
-							ConfigsDbImpl.getInstance().prepareDeviceLoader(deviceLoader.getClass().getName());
+							
 							registered = true;
 						} catch (Exception e) {
 							e.printStackTrace();

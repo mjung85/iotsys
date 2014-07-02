@@ -62,7 +62,7 @@ public class KNXBundleActivator implements BundleActivator, ServiceListener {
 				connectors = deviceLoader.initDevices(objectBroker);
 				connectors.addAll(knxETSLoader.initDevices(objectBroker));
 				objectBroker.addConnectors(connectors);
-				ConfigsDbImpl.getInstance().prepareDeviceLoader(deviceLoader.getClass().getName());
+				
 				registered = true;
 			}
 
@@ -114,7 +114,7 @@ public class KNXBundleActivator implements BundleActivator, ServiceListener {
 							connectors = deviceLoader.initDevices(objectBroker);
 							connectors.addAll(knxETSLoader.initDevices(objectBroker));
 							objectBroker.addConnectors(connectors);
-							ConfigsDbImpl.getInstance().prepareDeviceLoader(deviceLoader.getClass().getName());
+							
 							registered = true;
 						} catch (Exception e) {
 							e.printStackTrace();

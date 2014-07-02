@@ -34,7 +34,7 @@ public class DeviceLoaders extends CouchDbDocument {
 	}
 	
 	public String[] getDeviceLoaders() {
-		return deviceLoaders;
+		return deviceLoaders != null ? deviceLoaders : new String[0];
 	}
 
 	public void setDeviceLoaders(String[] deviceLoaders) {
