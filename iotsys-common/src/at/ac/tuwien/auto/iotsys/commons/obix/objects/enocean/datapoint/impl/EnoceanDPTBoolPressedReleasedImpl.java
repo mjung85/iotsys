@@ -1,5 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2013, Automation Systems Group, TU Wien.
+ * Copyright (c) 2014
+ * Institute of Computer Aided Automation, Automation Systems Group, TU Wien.
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -29,15 +30,55 @@
  * This file is part of the IoTSyS project.
  ******************************************************************************/
 
-package at.ac.tuwien.auto.iotsys.commons.obix.objects.general.encoding;
+package at.ac.tuwien.auto.iotsys.commons.obix.objects.enocean.datapoint.impl;
 
-import obix.contracts.Range;
+import obix.Contract;
+import obix.Enum;
+import obix.Obj;
+import obix.Uri;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.enocean.datapoint.EnoceanDPTBoolPressedReleased;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.encoding.EncodingOpenClosed;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.encoding.EncodingPressedReleased;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.encoding.impl.EncodingsImpl;
 
-public interface EncodingOpenClosed extends Range
+public class EnoceanDPTBoolPressedReleasedImpl extends EnoceanDPTBoolImpl implements EnoceanDPTBoolPressedReleased
 {
-	public static final String HREF = "/encodings/openclosed";
+	private Enum encoding = new Enum();
 
-	public static final String KEY_OPEN = "open";
-	public static final String KEY_CLOSED = "closed";
+	public EnoceanDPTBoolPressedReleasedImpl(String name, String displayName, String display, boolean writable, boolean readable)
+	{
+		// constructor
+		super(name, displayName, display, writable, readable);
 
+		// contract
+		this.addIs(new Contract(EnoceanDPTBoolPressedReleased.CONTRACT));
+
+		// encoding
+		this.encoding.setName("encoding");
+		this.encoding.setHref(new Uri("encoding"));
+		this.encoding.setRange(new Uri(EncodingOpenClosed.HREF));
+		this.encoding.setWritable(writable);
+		this.encoding.setReadable(readable);
+		this.encoding.setNull(true);
+		this.add(encoding);
+	}
+
+	@Override
+	public void writeObject(Obj input)
+	{
+		super.writeObject(input);
+		this.refreshObject();
+	}
+
+	@Override
+	public void refreshObject()
+	{
+		this.encoding.set(EncodingsImpl.getInstance().getEncoding(EncodingPressedReleased.HREF).getName(this.value()));
+	}
+
+	@Override
+	public obix.Enum encoding()
+	{
+		return encoding;
+	}
 }

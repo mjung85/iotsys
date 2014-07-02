@@ -74,7 +74,7 @@ public class ESP3Host extends Thread implements Connector{
     		receiver.receivePacket(receivedPacket);
     		
     		// check if received packet is a RadioPacket
-    		if (receivedPacket instanceof RadioPacketRPS) {
+    		if (receivedPacket instanceof RadioPacket) {
     			EnoceanId idNr = ((RadioPacket)receivedPacket).getSenderId();    			
 
     			synchronized(watchDogs){

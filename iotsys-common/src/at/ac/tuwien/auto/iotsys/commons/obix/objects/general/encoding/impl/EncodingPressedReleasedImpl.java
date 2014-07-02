@@ -29,15 +29,30 @@
  * This file is part of the IoTSyS project.
  ******************************************************************************/
 
-package at.ac.tuwien.auto.iotsys.commons.obix.objects.general.encoding;
+package at.ac.tuwien.auto.iotsys.commons.obix.objects.general.encoding.impl;
 
-import obix.contracts.Range;
+import obix.Contract;
+import obix.Uri;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.encoding.EncodingPressedReleased;
 
-public interface EncodingOpenClosed extends Range
+public class EncodingPressedReleasedImpl extends EncodingImpl implements EncodingPressedReleased
 {
-	public static final String HREF = "/encodings/openclosed";
+	public EncodingPressedReleasedImpl()
+	{
+		super(new Uri(EncodingPressedReleased.HREF));
 
-	public static final String KEY_OPEN = "open";
-	public static final String KEY_CLOSED = "closed";
+		this.setOf(new Contract("obix:bool"));
+	}
 
+	protected void initValues()
+	{
+		BoolElement pressed = new BoolElement(EncodingPressedReleased.KEY_PRESSED, "Pressed", true);
+		BoolElement released = new BoolElement(EncodingPressedReleased.KEY_RELEASED, "Released", false);
+
+		pressed.addTranslation("de", TranslationAttribute.displayName, "Gedrückt");
+		released.addTranslation("de", TranslationAttribute.displayName, "Nicht gedrückt");
+
+		addElement(pressed);
+		addElement(released);
+	}
 }

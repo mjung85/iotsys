@@ -36,69 +36,62 @@ import java.util.logging.Logger;
 
 import org.opencean.core.ESP3Host;
 import org.opencean.core.EnoceanWatchdog;
-import org.opencean.core.StateChanger;
 import org.opencean.core.address.EnoceanId;
-import org.opencean.core.common.EEPId;
 import org.opencean.core.packets.BasicPacket;
-import org.opencean.core.packets.RadioPacketRPS;
+import org.opencean.core.packets.RadioPacket1BS;
 import org.opencean.core.utils.Bits;
 
 import obix.Bool;
-import obix.Int;
 import obix.Obj;
-import obix.Str;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.enocean.datapoint.impl.EnoceanDPTBoolOnOffImpl;
-import at.ac.tuwien.auto.iotsys.commons.obix.objects.enocean.datapoint.impl.EnoceanDPTBoolPressedReleasedImpl;
-import at.ac.tuwien.auto.iotsys.commons.obix.objects.enocean.entity.EntityEEP_F60201;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.enocean.datapoint.impl.EnoceanDPTBoolOpenClosedImpl;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.enocean.entity.EntityEEP_D50001;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.enocean.entity.EntityImpl;
-import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.encoding.EncodingPressedReleased;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.encoding.EncodingOnOff;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.encoding.EncodingOpenClosed;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.encoding.impl.EncodingsImpl;
 
-public class EntityEEP_F60201Impl extends EntityImpl implements EntityEEP_F60201
+public class EntityEEP_D50001Impl extends EntityImpl implements EntityEEP_D50001
 {	
-	private static Logger log = Logger.getLogger(EntityEEP_F60201Impl.class.getName());
+	private static Logger log = Logger.getLogger(EntityEEP_D50001Impl.class.getName());
 		
 	protected final ESP3Host esp3Host;	
 	protected final EnoceanId id;			
-	EnoceanDPTBoolOnOffImpl datapoint_lightonoff;
-	EnoceanDPTBoolPressedReleasedImpl datapoint_energybow;
+	EnoceanDPTBoolOpenClosedImpl datapoint_openclosed;
+	EnoceanDPTBoolOnOffImpl datapoint_learnonoff;
 
-	public EntityEEP_F60201Impl(ESP3Host esp3Host, EnoceanId id, String name, String displayName, String display, String manufacturer)
+	public EntityEEP_D50001Impl(ESP3Host esp3Host, EnoceanId id, String name, String displayName, String display, String manufacturer)
 	{
 		super(name, displayName, display, manufacturer);
 		
 		this.esp3Host = esp3Host;		
 		this.id = id;	
 		
-		datapoint_lightonoff = new EnoceanDPTBoolOnOffImpl("WallTransmitterChB", "Switch, Channel B", "On/Off", true, false);
-		datapoint_lightonoff.addTranslation("de-DE", TranslationAttribute.displayName, "Schalter, Kanal B");
-		this.addDatapoint(datapoint_lightonoff);
+		datapoint_openclosed = new EnoceanDPTBoolOpenClosedImpl("SingleInputContact", "Single Input Contact", "Open/Closed", true, false);
+		datapoint_openclosed.addTranslation("de-DE", TranslationAttribute.displayName, "Kontaktsensor");
+		this.addDatapoint(datapoint_openclosed);		
 		
-		datapoint_energybow = new EnoceanDPTBoolPressedReleasedImpl("WallTransmitterEnergyBow", "Energy Bow", "Pressed/Released", true, false);
-		datapoint_energybow.addTranslation("de-DE", TranslationAttribute.displayName, "Energieart");
-		this.addDatapoint(datapoint_energybow);	
+		datapoint_learnonoff = new EnoceanDPTBoolOnOffImpl("TeachIn", "TeachIn mode", "On/Off", true, false);
+		datapoint_learnonoff.addTranslation("de-DE", TranslationAttribute.displayName, "Lernmodus");
+		this.addDatapoint(datapoint_learnonoff);		
 		
 		esp3Host.addWatchDog(id, new EnoceanWatchdog() {
 			
 			@Override
 			public void notifyWatchDog(BasicPacket packet) {
-				if (packet instanceof RadioPacketRPS) {
-		            RadioPacketRPS radioPacketRPS = (RadioPacketRPS) packet;
-		            Bool pressbit = new Bool(Bits.isBitSet(radioPacketRPS.getDataByte(), 4));
-		            if (radioPacketRPS.getDataByte() == (byte)0x50 ) { // TODO change to ByteStateAndStatus
-						log.info("EnOcean device with ID " +radioPacketRPS.getSenderId().toString() + ": switch on");
-		            	// set datapoint_lightonoff to ON 
-		            	datapoint_lightonoff.writeObject(new Bool(true));		            	
-					} else if (radioPacketRPS.getDataByte() == (byte)0x70 ) { // TODO change to ByteStateAndStatus
-						log.info("EnOcean device with ID " +radioPacketRPS.getSenderId().toString() + ": switch off");
-		            	// set datapoint_lightonoff to OFF 
-						datapoint_lightonoff.writeObject(new Bool(false));			            	
-					}
+				if (packet instanceof RadioPacket1BS) {
+					RadioPacket1BS radioPacket1BS = (RadioPacket1BS) packet;
+		            Bool contactbit = new Bool(Bits.isBitSet(radioPacket1BS.getDataByte(), 0));
+		            Bool learnbit = new Bool(!Bits.isBitSet(radioPacket1BS.getDataByte(), 3)); // TODO take care of inverse order of bit
+		            		            
+		            log.info("EnOcean device with ID " +radioPacket1BS.getSenderId().toString() + ": Contact " 
+		            		+EncodingsImpl.getInstance().getEncoding(EncodingOpenClosed.HREF).getName(contactbit));
+		            datapoint_openclosed.writeObject(contactbit);		            
 		            
-		            log.info("EnOcean device with ID " +radioPacketRPS.getSenderId().toString() + ": Energy bow: " 
-		            		+EncodingsImpl.getInstance().getEncoding(EncodingPressedReleased.HREF).getName(pressbit)); 
-		            datapoint_energybow.writeObject(pressbit);
-		            EntityEEP_F60201Impl.this.notifyObservers();
+		            log.info("EnOcean device with ID " +radioPacket1BS.getSenderId().toString() + ": TeachIn Mode " 
+		            		+EncodingsImpl.getInstance().getEncoding(EncodingOnOff.HREF).getName(learnbit)); 
+		            datapoint_learnonoff.writeObject(learnbit);
+		            EntityEEP_D50001Impl.this.notifyObservers();		            
 		        }					
 			}
 		});
@@ -114,27 +107,9 @@ public class EntityEEP_F60201Impl extends EntityImpl implements EntityEEP_F60201
 	public void writeObject(Obj input){
 		super.writeObject(input);			
 		
-		if (this.datapoint_lightonoff.isWritable())
+		if (this.datapoint_openclosed.isWritable())
 		{
-			String value="ON";		
-			
-			if (input instanceof Bool)
-			{
-				value = ((Bool)input).get()?"ON":"OFF";
-			}
-			else if (input instanceof Str)
-			{
-				value = ((Str)input).get().equalsIgnoreCase("ON")?"ON":"OFF";				
-			}
-			else if (input instanceof Int)
-			{
-				value = (((Int)input).get()!=0)?"ON":"OFF";				
-			}			
-			
-			StateChanger change = new StateChanger();
-			BasicPacket packet = change.changeState(value, id, EEPId.EEP_F6_02_01.toString());       
-		    log.info("Send packet: " + packet.toString());
-		    esp3Host.sendRadio(packet);
+//			value can not be read from a wall transmitter
 		}
       
 	}
@@ -142,7 +117,7 @@ public class EntityEEP_F60201Impl extends EntityImpl implements EntityEEP_F60201
 	@Override
 	public void refreshObject(){	
 		// here we need to read from the bus, only if the read flag is set at the data point
-		if(datapoint_lightonoff.value().isReadable())	
+		if(datapoint_openclosed.value().isReadable())	
 		{
 			//	value can not be read from a wall transmitter
 		}
