@@ -324,89 +324,41 @@
     </connector>
   </rfid>
   
-  <enocean>
-    <connector>
+  <enocean>    
+	<connector>
       <name>EnOcean Linux</name>
       <enabled>false</enabled>
       <serialPort>/dev/ttyS80</serialPort>
       <device>
-        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.enocean.PushButtonImplEnocean
+        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.enocean.entity.impl.EntityEEP_F60201Impl
         </type>
-        <address>0x0010202B</address>
-        <href>buttonEnocean</href>
+        <address>00:25:A2:DC</address>
+		<deviceName>EasyClickWallTransmitter</deviceName>
+		<displayName>Switching actuator</displayName>
+		<display>null</display>
+		<manufacturer>PEHA</manufacturer>
+        <href>EasyClickWallTransmitter</href>
         <historyEnabled>false</historyEnabled>
-        <groupCommEnabled>true</groupCommEnabled>
-      </device>
-      <device>
-        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.enocean.WindowSwitchImplEnocean
-        </type>
-        <address>0x00000E5C</address>
-        <href>buttonEnocean1</href>
-        <historyEnabled>false</historyEnabled>
-        <groupCommEnabled>true</groupCommEnabled>
-      </device>
-      <device>
-        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.enocean.LightSwitchActuatorImplEnocean
-        </type>
-        <address>0x01</address>
-        <href>ligthSwitchEnocean</href>
-        <historyEnabled>false</historyEnabled>
-        <groupCommEnabled>true</groupCommEnabled>
-      </device>
-      <device>
-        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.enocean.LightSwitchActuatorImplEnocean
-        </type>
-        <address>0x01807AEB</address>
-        <href>ligthSwitchEnocean1</href>
-        <historyEnabled>false</historyEnabled>
-        <groupCommEnabled>true</groupCommEnabled>
-      </device>      
-    </connector>
-    
+		<groupCommEnabled>true</groupCommEnabled>
+      </device>	  
+    </connector>     
     <connector>
       <name>EnOcean</name>
       <enabled>true</enabled>
       <serialPort>COM5</serialPort>
       <device>
-        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.enocean.WindowSensorImplEnocean
+        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.enocean.entity.impl.EntityEEP_F60201Impl
         </type>
-        <address>0x0181DCDD</address>
-        <href>window</href>
+        <address>00:25:A2:DC</address>
+		<deviceName>EasyClickWallTransmitter</deviceName>
+		<displayName>Switching actuator</displayName>
+		<display>null</display>
+		<manufacturer>PEHA</manufacturer>
+        <href>EasyClickWallTransmitter</href>
         <historyEnabled>false</historyEnabled>
-        <groupCommEnabled>true</groupCommEnabled>
-      </device>
-	  <device>
-        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.enocean.LightSwitchActuatorImplEnocean
-        </type>
-        <address>0x0025A2DC</address>
-        <href>ligthSwitchEnocean1</href>
-        <historyEnabled>false</historyEnabled>
-        <groupCommEnabled>true</groupCommEnabled>
-      </device>      
-    </connector>
-    
-    <connector>
-      <name>EnOcean</name>
-      <enabled>false</enabled>
-      <serialPort>/dev/ttyUSB1</serialPort>
-      <device>
-        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.enocean.WindowSensorImplEnocean
-        </type>
-        <address>0x008AF207</address>
-        <href>window</href>
-        <historyEnabled>false</historyEnabled>
-        <groupCommEnabled>true</groupCommEnabled>
-      </device>
-      
-       <device>
-        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.enocean.PushButtonImplEnocean
-        </type>
-        <address>0x0010202B</address>
-        <href>buttonEnocean</href>
-        <historyEnabled>false</historyEnabled>
-        <groupCommEnabled>true</groupCommEnabled>
-      </device>
-    </connector>
+		<groupCommEnabled>true</groupCommEnabled>
+      </device>	  
+    </connector>   
   </enocean>
 
 
@@ -528,7 +480,7 @@
    <weather-forecast>
     <connector>
       <name>weather-forecast</name>
-      <enabled>true</enabled>
+      <enabled>false</enabled>
       <device>
         <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.weatherforecast.objects.WeatherObjectImplYR_NO
         </type>
