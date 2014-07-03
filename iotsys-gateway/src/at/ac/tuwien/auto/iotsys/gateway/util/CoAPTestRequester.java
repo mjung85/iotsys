@@ -21,7 +21,17 @@ public class CoAPTestRequester {
 	private static final String objectPayload = "<obj href=\"virtualLight/\" is=\"iot:LightSwitchActuator\"><bool name=\"value\" href=\"virtualLight/value\" val=\"false\" displayName=\"On/Off\" writable=\"true\"/><ref name=\"value groupComm\" href=\"virtualLight/value/groupComm\" is=\"iot:GroupComm\"/></obj>";
 	
 	public static void main(String[] args){
+		if(args.length > 0){
+			host = args[0];
+			datapointURL = "coap://" + host + "/VirtualDevices/virtualLight/value";
+			objectURL = "coap://" + host + "/VirtualDevices/virtualLight";
+		}
+		
 		CoapTestMode coapTestMode = CoapTestMode.DATAPOINT_WRITE;
+		
+		if(args.length > 1){
+			coapTestMode = CoapTestMode.valueOf(args[1]);
+		}
 		CoapConnector coapConnector = new CoapConnector();
 		for(int i = 0 ; i< 1002; i++){
 			System.out.println("Current request: " + i);
