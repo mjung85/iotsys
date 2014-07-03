@@ -9,6 +9,7 @@ import java.util.Enumeration;
 
 import at.ac.tuwien.auto.calimero.GroupAddress;
 import at.ac.tuwien.auto.calimero.exception.KNXException;
+import at.ac.tuwien.auto.calimero.knxnetip.KNXnetIPTunnel;
 import at.ac.tuwien.auto.calimero.link.KNXNetworkLinkIP;
 import at.ac.tuwien.auto.calimero.link.event.NetworkLinkListener;
 import at.ac.tuwien.auto.calimero.link.medium.TPSettings;
@@ -64,20 +65,31 @@ public class KNXTestRequestor {
 					+ nl.getKNXMedium().getDeviceAddress());
 			pc = new ProcessCommunicatorImpl(nl);
 			
-			GroupAddress comfortMode = new GroupAddress("0/1/3");
-			pc.write(comfortMode, true);
-			
-			System.out.println("Val is now: " + pc.readBool(comfortMode));
-			
-			pc.write(comfortMode, false);
-			
-			System.out.println("Val is now: " + pc.readBool(comfortMode));
+			for(int i= 0 ; i< 250; i++){
+				GroupAddress comfortMode = new GroupAddress("0/1/3");
+				pc.write(comfortMode, true);
+				Thread.sleep(300);
+				KNXnetIPTunnel.numRequest++;
+				System.out.println("Val is now: " + pc.readBool(comfortMode) + " request: " + KNXnetIPTunnel.numRequest );
+				KNXnetIPTunnel.numRequest++;
+				Thread.sleep(300);
+				
+				pc.write(comfortMode, false);
+				KNXnetIPTunnel.numRequest++;
+				Thread.sleep(300);
+				System.out.println("Val is now: " + pc.readBool(comfortMode) + " request: " + KNXnetIPTunnel.numRequest );
+				KNXnetIPTunnel.numRequest++;
+				Thread.sleep(300);
+			}
 			
 //			pc.write(dp, value)	
 			nl.close();
 			System.exit(0);
 			//nl.addLinkListener(new NetworkLinkListener());
 		} catch (UnknownHostException | KNXException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
