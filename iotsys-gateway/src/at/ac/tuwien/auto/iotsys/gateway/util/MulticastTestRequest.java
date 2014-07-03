@@ -80,7 +80,7 @@ public class MulticastTestRequest {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}		
-		for (int l = 0; l < 10002; l++) {
+		for (int l = 0; l < 1002; l++) {
 			System.out.println("Current request: " + l);
 			PUTRequest putRequest = new PUTRequest();
 			putRequest.setType(messageType.NON);
