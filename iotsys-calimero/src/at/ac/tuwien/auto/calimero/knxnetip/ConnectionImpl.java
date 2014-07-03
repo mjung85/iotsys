@@ -585,7 +585,7 @@ abstract class ConnectionImpl implements KNXnetIPConnection
 		}
 		LogManager.getManager().removeLogService(getName());
 		try {
-			if(numRequest > 0){
+			if(KNXnetIPTunnel.numRequest > 0){
 				long totalCPUTime = 0;
 				System.out.println("Shutdown called!");
 				synchronized(workerThreads){
@@ -598,10 +598,10 @@ abstract class ConnectionImpl implements KNXnetIPConnection
 				
 				System.out.println("total CPU Time: " + totalCPUTime);
 				
-				double cpuTimePerRequest = ((double) totalCPUTime / numRequest) / 1000000; // nanoseconds to milliseconds 
-				System.out.println("cpu time per request: " + cpuTimePerRequest + ", " + totalCPUTime / numRequest);
+				double cpuTimePerRequest = ((double) totalCPUTime / KNXnetIPTunnel.numRequest) / 1000000; // nanoseconds to milliseconds 
+				System.out.println("cpu time per request: " + cpuTimePerRequest + ", " + totalCPUTime / KNXnetIPTunnel.numRequest);
 
-				perfLog.writeRecord(new String[]{"" + totalCPUTime, "" + numRequest, "" + cpuTimePerRequest});
+				perfLog.writeRecord(new String[]{"" + totalCPUTime, "" + KNXnetIPTunnel.numRequest, "" + cpuTimePerRequest});
 				executor.shutdown();
 				perfLog.close();
 			}
@@ -840,6 +840,9 @@ abstract class ConnectionImpl implements KNXnetIPConnection
 
 		public void run()
 		{
+			synchronized(workerThreads){
+				workerThreads.add(Thread.currentThread());
+			}
 			final byte[] buf = new byte[RCV_MAXBUF];
 			try {
 				while (!quit) {
