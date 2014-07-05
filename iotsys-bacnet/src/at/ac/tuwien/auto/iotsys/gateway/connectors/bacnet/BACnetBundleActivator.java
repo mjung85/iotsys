@@ -33,7 +33,6 @@ import org.osgi.framework.ServiceReference;
 
 import at.ac.tuwien.auto.iotsys.commons.DeviceLoader;
 import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
-import at.ac.tuwien.auto.iotsys.commons.persistent.ConfigsDbImpl;
 import at.ac.tuwien.auto.iotsys.commons.persistent.models.Connector;
 
 public class BACnetBundleActivator implements BundleActivator, ServiceListener{
@@ -55,7 +54,6 @@ public class BACnetBundleActivator implements BundleActivator, ServiceListener{
 				.getServiceReference(ObjectBroker.class.getName());
 		if (serviceReference == null) {
 			log.info("Could not find a running object broker to register devices! Waiting for service announcement.");
-
 		} else {
 			synchronized (this) {
 				log.info("Initiating BACnet devices.");
@@ -63,7 +61,6 @@ public class BACnetBundleActivator implements BundleActivator, ServiceListener{
 						.getService(serviceReference);
 				connectors = deviceLoader.initDevices(objectBroker);
 				objectBroker.addConnectors(connectors);
-				
 				registered = true;
 			}
 

@@ -267,6 +267,7 @@ public class BACnetConnector extends Connector{
 	}
 	
 	@Override
+	@JsonIgnore
 	public boolean isCoap() {
 		return false;
 	}
@@ -280,7 +281,6 @@ public class BACnetConnector extends Connector{
 		this.localDevice = localDevice;
 	}
 
-	@JsonIgnore
 	public int getLocalDeviceID() {
 		return localDeviceID;
 	}
@@ -289,7 +289,6 @@ public class BACnetConnector extends Connector{
 		this.localDeviceID = localDeviceID;
 	}
 
-	@JsonIgnore
 	public String getBroadCastIP() {
 		return broadCastIP;
 	}
@@ -298,7 +297,6 @@ public class BACnetConnector extends Connector{
 		this.broadCastIP = broadCastIP;
 	}
 
-	@JsonIgnore
 	public int getLocalDevicePort() {
 		return localDevicePort;
 	}

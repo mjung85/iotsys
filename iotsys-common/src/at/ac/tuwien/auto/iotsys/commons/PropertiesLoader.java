@@ -63,8 +63,7 @@ public class PropertiesLoader {
 //		InputStream propIn = Thread.currentThread().getContextClassLoader()
 //				.getResourceAsStream(filename);	
 		
-		InputStream propIn = null;
-		propIn = getClass().getClassLoader().getResourceAsStream(CONFIG_PROPERTIES_LOCATION);
+		InputStream propIn = getClass().getClassLoader().getResourceAsStream(CONFIG_PROPERTIES_LOCATION);
 		
 		try {	
 			synchronized(this){

@@ -39,6 +39,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.StringReader;
 import java.io.StringWriter;
@@ -81,18 +82,25 @@ public class ExiUtil {
 		saxParserFactory.setNamespaceAware(true);
 
 		EXISchema schema = null;
-//		FileInputStream fis;
+		InputStream is = getClass().getClassLoader().getResourceAsStream("res/obix.esd");
+		FileInputStream fis = null;
+		DataInputStream dis = null;
+
 		try {
-//			fis = new FileInputStream("res/obix.esd");
-			DataInputStream dis = new DataInputStream(getClass().getClassLoader().getResourceAsStream("obix.esd"));
+			if (is != null) {
+				dis = new DataInputStream(is);
+			} else {
+				fis = new FileInputStream("res/obix.esd");
+				dis = new DataInputStream(fis);
+			}
 			schema = (EXISchema) EXISchema.readIn(dis);
 			schemaGrammarCache = new GrammarCache(schema, options);
+			if (fis != null) fis.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 			// fall back to default grammar cache
 			schemaGrammarCache = defaultGrammarCache;
 		}
-
 	}
 
 	public byte[] encodeEXI(String source)
