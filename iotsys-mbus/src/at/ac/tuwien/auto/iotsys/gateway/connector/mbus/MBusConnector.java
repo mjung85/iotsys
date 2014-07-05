@@ -185,6 +185,7 @@ public class MBusConnector extends Connector implements TelegramManagerInterface
     }
     
     @Override
+	@JsonIgnore
 	public boolean isCoap() {
 		return false;
 	}

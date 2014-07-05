@@ -101,7 +101,7 @@ public class WeatherForecastConnector extends Connector implements Subject{
 	public ManualOverwrite getManualOverwrite(){
 		return this.overwrite;
 	}
-	
+	@JsonIgnore
 	public Document getWeatherForecastAsXML(String serviceURL) throws IOException, MalformedURLException, SAXException
 	{ 
         log.info("Retrieving weather forecast from " + serviceURL + ".");
@@ -119,7 +119,7 @@ public class WeatherForecastConnector extends Connector implements Subject{
         } 
         return result;
 	}
-	
+	@JsonIgnore
 	public List<WeatherForcastObject> getWeatherForecast(String serviceURL){
 		
 		
@@ -388,7 +388,7 @@ public class WeatherForecastConnector extends Connector implements Subject{
 		return resultWeatherList;
 	}
 	
-	
+	@JsonIgnore
 	public WeatherForcastObject getUpcomingWeather (String serviceURL){
 		
 		log.info("Retrieving upcoming weather forecast from " + serviceURL + ".");
@@ -447,12 +447,14 @@ public class WeatherForecastConnector extends Connector implements Subject{
 	}
 
 	@Override
+	@JsonIgnore
 	public Object getCurrentState() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 	
 	@Override
+	@JsonIgnore
 	public boolean isCoap() {
 		return false;
 	}

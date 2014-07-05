@@ -11,6 +11,7 @@
     <device-loader>at.ac.tuwien.auto.iotsys.gateway.connectors.knx.KNXDeviceLoaderETSImpl</device-loader>
     <device-loader>at.ac.tuwien.auto.iotsys.gateway.connectors.weatherforecast.WeatherForecastDeviceLoaderImpl</device-loader>
 	<device-loader>at.ac.tuwien.auto.iotsys.gateway.connectors.coap.CoapDeviceLoaderImpl</device-loader>
+	<device-loader>at.ac.tuwien.auto.iotsys.gateway.connectors.rfid.RfidDeviceLoaderImpl</device-loader>
   </deviceloaders>
   
   <coap>

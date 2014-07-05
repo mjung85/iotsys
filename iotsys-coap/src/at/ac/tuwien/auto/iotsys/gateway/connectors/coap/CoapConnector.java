@@ -45,6 +45,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import at.ac.tuwien.auto.iotsys.commons.persistent.models.Connector;
 import ch.ethz.inf.vs.californium.coap.GETRequest;
 import ch.ethz.inf.vs.californium.coap.Message.messageType;
@@ -231,6 +233,7 @@ public class CoapConnector extends Connector {
 	}
 
 	@Override
+	@JsonIgnore
 	public boolean isCoap() {
 		return true;
 	}

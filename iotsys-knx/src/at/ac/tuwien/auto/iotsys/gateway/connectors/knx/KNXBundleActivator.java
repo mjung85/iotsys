@@ -31,7 +31,6 @@ import org.osgi.framework.ServiceReference;
 
 import at.ac.tuwien.auto.iotsys.commons.DeviceLoader;
 import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
-import at.ac.tuwien.auto.iotsys.commons.persistent.ConfigsDbImpl;
 import at.ac.tuwien.auto.iotsys.commons.persistent.models.Connector;
 
 public class KNXBundleActivator implements BundleActivator, ServiceListener {

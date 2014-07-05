@@ -48,7 +48,7 @@ jar {
 				   "Bundle-Classpath": ".",
 				   "Bundle-Activator": "at.ac.tuwien.auto.iotsys.xacml.PDPBundleActivator",
 				   "Import-Package": "org.osgi.framework, at.ac.tuwien.auto.iotsys.commons, at.ac.tuwien.auto.iotsys.commons.interceptor, " +
-									   "org.xml.sax, org.xml.sax.helpers, org.xml.sax.ext,  com.sun.org.apache.xalan.internal, com.sun.org.apache.xalan.internal.res, " +
+									   "org.xml.sax, org.xml.sax.helpers, org.xml.sax.ext,  org.apache.xalan, org.apache.xalan.res, " +
 									   "org.w3c.dom, org.w3c.dom.traversal, org.w3c.dom.ls, javax.xml.parsers,  javax.xml.xpath, javax.xml.transform.sax, javax.xml.transform.dom, " +
 									   "javax.xml.namespace, javax.xml.transform, javax.xml.transform.stream, javax.xml.validation, javax.xml.datatype, "+
 									   "org.apache.commons.beanutils, org.apache.commons.beanutils.converters,org.apache.commons.beanutils.expression, org.apache.commons.beanutils.locale,org.apache.commons.beanutils.locale.converters,org.apache.commons.collections, " +

@@ -6,6 +6,7 @@ import java.util.logging.Logger;
 
 import at.ac.tuwien.auto.iotsys.commons.persistent.models.Connector;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.rapplogic.xbee.api.ApiId;
 import com.rapplogic.xbee.api.PacketListener;
 import com.rapplogic.xbee.api.XBee;
@@ -82,6 +83,7 @@ public class XBeeConnector extends Connector{
 	}
 	
 	@Override
+	@JsonIgnore
 	public boolean isCoap() {
 		return false;
 	}

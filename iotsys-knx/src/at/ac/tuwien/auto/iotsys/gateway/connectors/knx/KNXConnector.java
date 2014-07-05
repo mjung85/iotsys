@@ -148,6 +148,7 @@ public class KNXConnector extends Connector {
 		}
 	}
 	
+	@JsonIgnore
 	public ProcessCommunicator getProcessCommunicator(){
 		return pc;
 	}
@@ -367,6 +368,7 @@ public class KNXConnector extends Connector {
 	}
 	
 	@Override
+	@JsonIgnore
 	public boolean isCoap() {
 		return false;
 	}

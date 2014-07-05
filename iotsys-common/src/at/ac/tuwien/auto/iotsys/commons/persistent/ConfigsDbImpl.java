@@ -64,7 +64,7 @@ public class ConfigsDbImpl extends CouchDbRepositorySupport<Connector> implement
 	private DeviceLoaders deviceLoaders = new DeviceLoaders();
 	
 	// Transition step
-	private boolean migrating = false;
+	private boolean migrating = true;
 	private boolean connectorsMigrated = false;
 	private List<String> allDeviceLoadersFromXML = new ArrayList<String>();
 	private List<Connector> allConnectorsFromXML = new ArrayList<Connector>();
