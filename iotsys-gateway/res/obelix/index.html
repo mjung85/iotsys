@@ -21,6 +21,7 @@
         <li class='subdirectory' include-directory-template='subdirectory' ng-class='{expanded:subdirectory.expanded}' ng-repeat='subdirectory in directory.subdirectories'></li>
       </ul>
     </script>
+    <div class='btn' id='toggle' ng-click='sidebarExpanded = !sidebarExpanded; $event.stopPropagation()'></div>
     <div id='sidebar' ng-class='{expanded: sidebarExpanded}'>
       <div class='content' not-droppable>
         <div class='header'>
@@ -28,19 +29,18 @@
             <div class='segment' ng-class='{active: !segment}' ng-click='segment=0'>Devices</div>
             <div class='segment' ng-class='{active: segment==1}' ng-click='segment=1'>Settings</div>
           </div>
-        </div>
-        <div id='settings' ng-show='segment==1'>
-          <div class='section'>
-            <label>Poll interval (ms)</label>
-            <input inline-editor='watch.updateInterval()' ng-model='watch.interval' type='text'>
+          <div id='settings' ng-show='segment==1'>
+            <div class='section'>
+              <label>Poll interval (ms)</label>
+              <input inline-editor='watch.updateInterval()' ng-model='watch.interval' type='text'>
+            </div>
+            <div class='section'>
+              <a href='#' ng-click='clear()'>Clear</a>
+            </div>
           </div>
-          <div class='section'>
-            <a href='#' ng-click='clear()'>Clear</a>
-          </div>
+          <div include-directory-template='directory' ng-if='directory' ng-show='segment!=1'></div>
         </div>
-        <div include-directory-template='directory' ng-if='directory' ng-show='segment!=1'></div>
       </div>
-      <div class='btn' id='toggle' ng-click='sidebarExpanded = !sidebarExpanded; $event.stopPropagation()'></div>
     </div>
     <div droppable='placeDevice' id='canvas' jsplumb-container ng-click='sidebarExpanded = false'>
       <div ng-repeat="device in allDevices | filter:{placement:'!!'}">
