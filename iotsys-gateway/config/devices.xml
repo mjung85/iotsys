@@ -515,7 +515,7 @@
 	</connector>
 	<connector>
 		<name>IoT Suitcase</name>
-		<enabled>true</enabled>
+		<enabled>false</enabled>
 		<knx-proj>knx-config/projects/Koffer_IoT_intern_2014_04_22.knxproj</knx-proj>
 		<forceRefresh>false	</forceRefresh>
 		<router>
