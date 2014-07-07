@@ -22,10 +22,12 @@ import at.ac.tuwien.auto.iotsys.commons.Connector;
 
 public class ESP3Host extends Thread implements Connector{
     private static Logger logger = LoggerFactory.getLogger(ESP3Host.class);
+    private static byte[] DEFAULT_SENDERID = {0x00, 0x00, 0x00, 0x00};
 
     private List<EnoceanReceiver> receivers = new ArrayList<EnoceanReceiver>();
 
     final ProtocolConnector connector;
+    private EnoceanId senderId;
     private String serialPortName = null;
 
     private ParameterChangeNotifier parameterChangeNotifier;
@@ -37,6 +39,7 @@ public class ESP3Host extends Thread implements Connector{
         parameterChangeNotifier = new ParameterChangeNotifier();
         parameterChangeNotifier.addParameterValueChangeListener(new LoggingListener());
         receivers.add(parameterChangeNotifier);
+        senderId = new EnoceanId(DEFAULT_SENDERID);
     }    
     
     public void addWatchDog(EnoceanId id, EnoceanWatchdog enoceanWatchdog) {
@@ -124,6 +127,14 @@ public class ESP3Host extends Thread implements Connector{
     
     public String getSerialPortName(){
     	return serialPortName;
+    }
+    
+    public void setSenderId(String idString){
+    	this.senderId = EnoceanId.fromString(idString);
+    }
+    
+    public EnoceanId getSenderId(){
+    	return this.senderId;
     }
     
     @Override

@@ -42,7 +42,7 @@ import obix.Real;
 import obix.Uri;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.enocean.datapoint.EnoceanDPTReal;
 
-public abstract class EnoceanDPTRealImpl extends EnoceanDPTImpl implements EnoceanDPTReal
+public class EnoceanDPTRealImpl extends EnoceanDPTImpl implements EnoceanDPTReal
 {
 	private static final Logger log = Logger.getLogger(EnoceanDPTRealImpl.class.getName());
 

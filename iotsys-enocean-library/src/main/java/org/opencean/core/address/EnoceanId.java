@@ -1,5 +1,6 @@
 package org.opencean.core.address;
 
+import java.nio.ByteBuffer;
 import java.util.Arrays;
 
 import org.opencean.core.utils.ByteArray;
@@ -33,6 +34,11 @@ public class EnoceanId {
 
     public byte[] toBytes() {
         return id;
+    }
+    
+    public int toInt() {
+    	ByteBuffer bb = ByteBuffer.wrap(id);
+        return bb.getInt();
     }
 
     @Override
