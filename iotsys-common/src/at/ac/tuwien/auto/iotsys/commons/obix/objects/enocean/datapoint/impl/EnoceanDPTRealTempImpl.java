@@ -38,7 +38,7 @@ import obix.Uri;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.enocean.datapoint.EnoceanDPTRealTemp;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.unit.UnitCelsius;
 
-public abstract class EnoceanDPTRealTempImpl extends EnoceanDPTRealImpl implements EnoceanDPTRealTemp
+public class EnoceanDPTRealTempImpl extends EnoceanDPTRealImpl implements EnoceanDPTRealTemp
 {
 	public EnoceanDPTRealTempImpl(String name, String displayName, String display, boolean writable, boolean readable)
 	{

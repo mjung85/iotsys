@@ -344,7 +344,7 @@
     </connector>     
     <connector>
       <name>EnOcean</name>
-      <enabled>true</enabled>
+      <enabled>false</enabled>
       <serialPort>COM5</serialPort>
       <device>
         <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.enocean.entity.impl.EntityEEP_F60201Impl
@@ -367,6 +367,17 @@
 		<display>null</display>
 		<manufacturer>PEHA</manufacturer>
         <href>EasyclickWindowContact</href>
+        <historyEnabled>false</historyEnabled>
+      </device> 
+	  <device>        
+        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.enocean.entity.impl.EntityEEP_A52001Impl
+        </type>
+        <address>00:85:7A:08</address>
+		<deviceName>WirelessValveActuator</deviceName>
+		<displayName>Wireless Valve Actuator</displayName>
+		<display>null</display>
+		<manufacturer>Loxone</manufacturer>
+        <href>WirelessValveActuator</href>
         <historyEnabled>false</historyEnabled>
       </device> 
     </connector>   

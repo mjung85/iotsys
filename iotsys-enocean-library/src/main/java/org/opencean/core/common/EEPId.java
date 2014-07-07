@@ -9,6 +9,7 @@ public class EEPId {
     public static final EEPId EEP_A5_08_02 = new EEPId("A5:08:02");
     public static final EEPId EEP_A5_09_04_enoluz = new EEPId("A5:09:04", "enoluz");
     public static final EEPId EEP_A5_09_05 = new EEPId("A5:09:05");
+    public static final EEPId EEP_A5_20_01 = new EEPId("A5:20:01");
     /**
      * Electronic switches and Type dimmers 0x08 (description: with Energy
      * Measurement see table) and Local Control

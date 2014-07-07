@@ -38,7 +38,7 @@ import obix.Uri;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.enocean.datapoint.EnoceanDPTIntPerc;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.unit.UnitPercent;
 
-public abstract class EnoceanDPTIntPercImpl extends EnoceanDPTIntImpl implements EnoceanDPTIntPerc
+public class EnoceanDPTIntPercImpl extends EnoceanDPTIntImpl implements EnoceanDPTIntPerc
 {
 	public EnoceanDPTIntPercImpl(String name, String displayName, String display, boolean writable, boolean readable)
 	{
