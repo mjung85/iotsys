@@ -69,6 +69,8 @@ public class EntityEEP_F60201Impl extends EntityImpl implements EntityEEP_F60201
 		
 		this.esp3Host = esp3Host;		
 		this.id = id;	
+		this.setWritable(true);
+		this.setReadable(true);
 		
 		datapoint_lightonoff = new EnoceanDPTBoolOnOffImpl("WallTransmitterChB", "Switch, Channel B", "On/Off", true, false);
 		datapoint_lightonoff.addTranslation("de-DE", TranslationAttribute.displayName, "Schalter, Kanal B");
@@ -114,17 +116,17 @@ public class EntityEEP_F60201Impl extends EntityImpl implements EntityEEP_F60201
 	public void writeObject(Obj input){
 		super.writeObject(input);			
 		
-		if (this.datapoint_lightonoff.isWritable())
+		if (this.isWritable())
 		{
+			log.info("Start writing value " +input);
 			String value="ON";		
-			
-			if (input instanceof Bool)
-			{
-				value = ((Bool)input).get()?"ON":"OFF";
-			}
-			else if (input instanceof Str)
+						
+			if (input instanceof Str)
 			{
 				value = ((Str)input).get().equalsIgnoreCase("ON")?"ON":"OFF";				
+			} else if (input instanceof Bool)
+			{
+				value = ((Bool)input).get()?"ON":"OFF";
 			}
 			else if (input instanceof Int)
 			{
@@ -133,7 +135,7 @@ public class EntityEEP_F60201Impl extends EntityImpl implements EntityEEP_F60201
 			
 			StateChanger change = new StateChanger();
 			BasicPacket packet = change.changeState(value, id, EEPId.EEP_F6_02_01.toString());       
-		    log.info("Send packet: " + packet.toString());
+		    log.info("Write: Send packet: " + packet.toString());
 		    esp3Host.sendRadio(packet);
 		}
       
@@ -142,7 +144,7 @@ public class EntityEEP_F60201Impl extends EntityImpl implements EntityEEP_F60201
 	@Override
 	public void refreshObject(){	
 		// here we need to read from the bus, only if the read flag is set at the data point
-		if(datapoint_lightonoff.value().isReadable())	
+		if(this.isReadable())	
 		{
 			//	value can not be read from a wall transmitter
 		}

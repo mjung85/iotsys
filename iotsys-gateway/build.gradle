@@ -94,7 +94,7 @@ dependencies {
 	provided project(':iotsys-common')
 	provided project(':iotsys-encoding-json')
 	provided project(':iotsys-control')
-	provided project(':iotsys-coap')
+	provided project(':iotsys-coap')	
 
 	provided project(':iotsys-xacml')
 	provided project(':iotsys-mdnssd')

@@ -9,6 +9,7 @@ eclipse{
 				node.appendNode('classpathentry', [kind: 'src', path: '/iotsys-common', exported:'true'])
 				node.appendNode('classpathentry', [kind: 'src', path: '/iotsys-obix', exported:'true'])
 				node.appendNode('classpathentry', [kind: 'src', path: '/iotsys-osgi', exported:'true'])
+				node.appendNode('classpathentry', [kind: 'src', path: '/iotsys-enocean-library', exported:'true'])
 			}
 		}
 	}
@@ -65,6 +66,7 @@ dependencies {
 	provided project(':iotsys-obix')
 	provided project(':iotsys-common')
 	provided project(':iotsys-osgi')
+	provided project(':iotsys-enocean-library')
 	
 	//provided group: 'org.apache.felix', name: 'org.apache.felix.framework', version: '4.2.0'
 	provided group: 'org.apache.felix', name: 'org.osgi.core', version: '1.4.0'

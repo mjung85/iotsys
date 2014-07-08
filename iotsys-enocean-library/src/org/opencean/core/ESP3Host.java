@@ -22,8 +22,8 @@ import at.ac.tuwien.auto.iotsys.commons.Connector;
 
 public class ESP3Host extends Thread implements Connector{
     private static Logger logger = LoggerFactory.getLogger(ESP3Host.class);
-    private static byte[] DEFAULT_SENDERID = {0x00, 0x00, 0x00, 0x00};
-
+    private static byte[] DEFAULT_SENDERID = {(byte)0x00, (byte)0x25, (byte)0xA2, (byte)0xDC};
+    
     private List<EnoceanReceiver> receivers = new ArrayList<EnoceanReceiver>();
 
     final ProtocolConnector connector;
