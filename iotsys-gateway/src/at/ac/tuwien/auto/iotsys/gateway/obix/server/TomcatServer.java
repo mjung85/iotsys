@@ -16,6 +16,7 @@ import java.util.Hashtable;
 import java.util.StringTokenizer;
 import java.util.logging.Logger;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -32,7 +33,7 @@ import org.apache.catalina.Context;
 import org.apache.catalina.LifecycleException;
 import org.apache.catalina.Service;
 import org.apache.catalina.authenticator.AuthenticatorBase;
-import org.apache.catalina.authenticator.BasicAuthenticator;
+import org.apache.catalina.authenticator.FormAuthenticator;
 import org.apache.catalina.connector.Connector;
 import org.apache.catalina.deploy.LoginConfig;
 import org.apache.catalina.deploy.SecurityCollection;
@@ -97,18 +98,18 @@ public class TomcatServer {
 		defaultConnector.setRedirectPort(8443);
 
 		Tomcat.addServlet(ctx, "obix", new ObixServlet(obixServer));
-		ctx.addServletMapping("/*", "obix");
-		//ctx.addServletMapping("", "obix");
+		//ctx.addServletMapping("/*", "obix");
+		ctx.addServletMapping("", "obix");
 		
 		/* Login Configuration */
 		tomcat.addUser("user", "pass");
 		tomcat.addRole("user", "admin");
 
 		LoginConfig config = new LoginConfig();
-		config.setAuthMethod("BASIC");
-//		config.setAuthMethod("FORM");
-//		config.setLoginPage("/res/login.html");
-//		config.setErrorPage("/res/login-failed.html");
+//		config.setAuthMethod("BASIC");
+		config.setAuthMethod("FORM");
+		config.setLoginPage("/res/login.html");
+		config.setErrorPage("/res/login-failed.html");
 		
 		ctx.setLoginConfig(config);
 		ctx.addSecurityRole("admin");
@@ -119,13 +120,14 @@ public class TomcatServer {
 		constraint.addCollection(collection);
 		ctx.addConstraint(constraint);
 		
-		AuthenticatorBase authenticator = new BasicAuthenticator();
-		//AuthenticatorBase authenticator = new FormAuthenticator();
+//		AuthenticatorBase authenticator = new BasicAuthenticator();
+		AuthenticatorBase authenticator = new FormAuthenticator();
 		ctx.getPipeline().addValve(authenticator);
 		
-		//RequestDispatcher disp = ctx.getServletContext().getRequestDispatcher("/login.html");
-
-
+//		ServletContext cont = ctx.getServletContext();
+//		RequestDispatcher disp = cont.getRequestDispatcher("/login.html");
+//		log.info("Request diapatcher : " + disp);
+		
 		try {
 			tomcat.start();
 			log.info("Tomcat Server is started!");
@@ -170,7 +172,10 @@ public class TomcatServer {
 		@Override
 		public void service(HttpServletRequest req, HttpServletResponse resp)
 				throws ServletException, IOException {
-
+			
+			RequestDispatcher rd = getServletContext().getRequestDispatcher("/res/index.html");  
+			rd.forward(req, resp);
+			
 			// Get request uri
 			String uri = req.getRequestURI();
 
