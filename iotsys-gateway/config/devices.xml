@@ -16,7 +16,7 @@
   <coap>
     	<connector>
             <name>IoTSyS Devices2</name>
-            <enabled>true</enabled>
+            <enabled>false</enabled>
             <device>  
            		<type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.coap.TemperatureSensorImplCoap
           		</type>
@@ -1491,7 +1491,7 @@
         <href>virtualLight</href>
         <historyEnabled>false</historyEnabled>
         <historyCount>10</historyCount>
-          <groupCommEnabled>true</groupCommEnabled>
+        <groupCommEnabled>true</groupCommEnabled>
       </device>
 
       <device>
@@ -1499,24 +1499,28 @@
         </type>
         <href>virtualPumpActuatorImpl</href>
         <historyEnabled>false</historyEnabled>
+         <groupCommEnabled>true</groupCommEnabled>
       </device>
       <device>
         <type>at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators.impl.DimmingActuatorImpl
         </type>
         <href>virtualDimmingActuatorImpl</href>
         <historyEnabled>false</historyEnabled>
+        <groupCommEnabled>true</groupCommEnabled>
       </device>
       <device>
         <type>at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators.impl.CoolerActuatorImpl
         </type>
         <href>virtualCoolerActuatorImpl</href>
         <historyEnabled>false</historyEnabled>
+        <groupCommEnabled>true</groupCommEnabled>
       </device>
       <device>
         <type>at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators.impl.BoilerActuatorImpl
         </type>
         <href>virtualBoilerActuatorImpl</href>
         <historyEnabled>false</historyEnabled>
+        <groupCommEnabled>true</groupCommEnabled>
       </device>
     </connector>
     <connector>
