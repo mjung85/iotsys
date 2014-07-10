@@ -1211,8 +1211,7 @@ app.directive('obelixTourStarter', ['$timeout', 'Sidebar', function($timeout, Si
 app.filter('comparatorOpEnc', function() {
   return function(operation, device) {
     if (angular.isString(operation)) {
-      var encodedOp;
-      
+      var encodedOp = operation;
       if ('iot:StringComparator' == device.obix.contractList.is) {
         switch(operation) {
         case 'eq': encodedOp = 'eq'; break;
@@ -1224,7 +1223,7 @@ app.filter('comparatorOpEnc', function() {
       } else if ('iot:Comparator' == device.obix.contractList.is) {
         switch(operation) {
         case 'lt': encodedOp = '<'; break;
-        case 'lte': encodedOp =  '\u2264'; break;
+        case 'lte': encodedOp = '\u2264'; break;
         case 'eq': encodedOp = '='; break;
         case 'gte': encodedOp = '\u2265'; break;
         case 'gt': encodedOp = '>'; break;
