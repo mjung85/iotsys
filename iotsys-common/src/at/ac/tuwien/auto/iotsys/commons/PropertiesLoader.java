@@ -32,12 +32,10 @@
 
 package at.ac.tuwien.auto.iotsys.commons;
 
-import java.io.FileNotFoundException;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
-import java.io.FileInputStream;
-import java.io.File;
 
 public class PropertiesLoader {
 	
@@ -64,16 +62,21 @@ public class PropertiesLoader {
 //				.getResourceAsStream(filename);	
 		
 		InputStream propIn = getClass().getClassLoader().getResourceAsStream(CONFIG_PROPERTIES_LOCATION);
+		FileInputStream propFi = null;
 		
-		try {	
-			synchronized(this){
-				if(propIn != null)
-					properties.load(propIn);
+		try {
+			if (propIn != null){
+				synchronized(this){
+						properties.load(propIn);
+				}
+			} else {
+				propFi = new FileInputStream(CONFIG_PROPERTIES_LOCATION);
+				properties.load(propFi);
 			}
 		} catch (IOException e) {
+			e.printStackTrace();
 			throw new RuntimeException(e);
 		}
-		
 	}
 	
 	public Properties getProperties(){

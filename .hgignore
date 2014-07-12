@@ -18,6 +18,7 @@ iotsys-gateway/iotsys-log.*
 *.txt
 *.orig
 *.bin
+*.class
 **/build.properties
 .gradle/1.6/taskArtifacts/cache.properties
 .gradle/1.6/taskArtifacts/cache.properties.lock
