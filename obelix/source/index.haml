@@ -23,6 +23,7 @@
     #sidebar(ng-class="{expanded:sidebar.expanded}")
       .content(not-droppable)
         .header
+          #sidebar-logo
           .segmented_control
             .segment#segmentDevices(ng-class="{active: sidebar.segment==0}" ng-click="sidebar.segment=0") Devices
             .segment#segmentSettings(ng-class="{active: sidebar.segment==1}" ng-click="sidebar.segment=1") Settings
