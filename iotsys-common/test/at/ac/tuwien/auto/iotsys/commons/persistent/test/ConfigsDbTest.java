@@ -19,18 +19,13 @@
 */
 package at.ac.tuwien.auto.iotsys.commons.persistent.test;
 
-import java.util.List;
-
-import junit.framework.Assert;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import at.ac.tuwien.auto.iotsys.commons.persistent.ConfigsDb;
 import at.ac.tuwien.auto.iotsys.commons.persistent.ConfigsDbImpl;
-import at.ac.tuwien.auto.iotsys.commons.persistent.models.Device;
-
-import com.fasterxml.jackson.databind.JsonNode;
 
 /**
  * @author Nam Giang - zang at kaist dot ac dot kr
@@ -43,68 +38,30 @@ public class ConfigsDbTest {
 	@BeforeClass
 	public static void setUp() {
 		cd = ConfigsDbImpl.getInstance();
+		org.junit.Assume.assumeTrue(cd != null);
 	}
 	
 	@Test
-	public void testGetConnectorsByTechnology(){
-		List<JsonNode> result = cd.getConnectors("virtual"); 
-		for (JsonNode j : result)
-			System.out.println(j.get("name"));
-	}
-
-	
-	@Test
-	public void testGetConnector(){
-		JsonNode j = cd.getConnectorByName("BACnet A-Lab");
-		Assert.assertNotNull(j);
-	}
-	
-	@Test
-	public void testCountConnectorsByTechnology(){
-		int count = cd.countConnectorsByTechnology("virtual");
-		System.out.println(count);
-	}
-
-	@Test
-	public void testAddDevice(){
-		Device d = new Device();
-		d.setConnectorId("58f42eb853accab012314419c90b08e1");
-		d.setName("CouchDB Test Device");
-		d.setHref("CouchDbTestDeviceHref");
-		cd.addDevice(d);
-	}
-	
-	@Test
-	public void testUpdateDevice(){
-		Device d = new Device();
-		d.setId("58f42eb853accab012314419c90f261c");
-		d.setRevision("2-c8ad3c8399a43c0b6ce8bb55426430a0");
-		d.setName("CouchDB Test Device 2");
-		d.setHref("CouchDbTestDeviceHref2");
-		cd.updateDevice(d);
-	}
-
-	@Test
-	public void testDeleteDevice(){
-		Device d = new Device();
-		d.setId("58f42eb853accab012314419c90f261c");
-		cd.deleteDevice(d);
-	}
-
-	@Test
-	public void testAddDeviceLoader(){
+	public void testCrudDeviceLoader(){
+		
 		String dloader = "at.ac.tuwien.auto.iotsys.gateway.connector.ttttttttttt";
-		cd.addDeviceLoader(dloader);
+		String dloaderToUpdate = "at.ac.tuwien.auto.iotsys.gateway.connector.eeeeeeeeee";
+		
+		try {
+			cd.addDeviceLoader(dloader);
+		} catch (Exception e) {
+			System.out.println("Exception in adding device loader, probably overwriting the old one with an ADD");
+		}
+		
+		assertTrue(cd.getDeviceLoader(dloader) > -1);
+		
+		cd.updateDeviceLoader(dloader, dloaderToUpdate);
+		
+		assertTrue(cd.getDeviceLoader(dloaderToUpdate) > -1);
+		
+		cd.deleteDeviceLoader(dloaderToUpdate);
+		
+		assertTrue(cd.getDeviceLoader(dloaderToUpdate) == -1);
+		assertTrue(cd.getDeviceLoader(dloader) == -1);
 	}
-	
-	@Test
-	public void testUpdateDeviceLoader(){
-		cd.updateDeviceLoader("at.ac.tuwien.auto.iotsys.gateway.connector.ttttttttttt", "-------------");
-	}
-
-	@Test
-	public void testDeleteDeviceLoader(){
-		cd.deleteDeviceLoader("-------------");;
-	}
-	
 }

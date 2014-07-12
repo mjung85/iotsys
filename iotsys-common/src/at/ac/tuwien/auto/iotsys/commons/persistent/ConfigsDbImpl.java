@@ -37,6 +37,7 @@ import org.ektorp.support.View;
 import org.ektorp.support.Views;
 import org.ektorp.util.Assert;
 
+import at.ac.tuwien.auto.iotsys.commons.PropertiesLoader;
 import at.ac.tuwien.auto.iotsys.commons.persistent.models.Connector;
 import at.ac.tuwien.auto.iotsys.commons.persistent.models.Device;
 import at.ac.tuwien.auto.iotsys.commons.persistent.models.DeviceLoaders;
@@ -64,7 +65,7 @@ public class ConfigsDbImpl extends CouchDbRepositorySupport<Connector> implement
 	private DeviceLoaders deviceLoaders = new DeviceLoaders();
 	
 	// Transition step
-	private boolean migrating = true;
+	private boolean migrating = false;//PropertiesLoader.getInstance().getProperties().getProperty("iotsys.gateway.dbmigrating", "false").equals("true");
 	private boolean connectorsMigrated = false;
 	private List<String> allDeviceLoadersFromXML = new ArrayList<String>();
 	private List<Connector> allConnectorsFromXML = new ArrayList<Connector>();
@@ -74,6 +75,7 @@ public class ConfigsDbImpl extends CouchDbRepositorySupport<Connector> implement
 	
 	private ConfigsDbImpl(CouchDbConnector db) throws Exception {
 		super(Connector.class, db);
+		migrating = PropertiesLoader.getInstance().getProperties().getProperty("iotsys.gateway.dbmigrating", "false").equals("true");
 		if (!migrating){
 			// Loading device configs from db
 			loadAllConnectors();
@@ -172,7 +174,7 @@ public class ConfigsDbImpl extends CouchDbRepositorySupport<Connector> implement
 	}
 	
 	@Override
-	public List<DocumentOperationResult> addBulkConnectors(List<Connector> cs){
+	public List<DocumentOperationResult> addBulkConnectors(List<Connector> cs) throws Exception {
 		if (!migrating) return null;
 
 		List<DocumentOperationResult> res = db.executeAllOrNothing(cs);
@@ -226,7 +228,7 @@ public class ConfigsDbImpl extends CouchDbRepositorySupport<Connector> implement
 	}
 
 	@Override
-	public void addConnector(Connector c) {
+	public void addConnector(Connector c) throws Exception {
 		add(c);
 	}
 
@@ -328,6 +330,15 @@ public class ConfigsDbImpl extends CouchDbRepositorySupport<Connector> implement
 	public String getDeviceLoader(int no) {
 		return deviceLoaders.getDeviceLoaders().length > 0 ? deviceLoaders.getDeviceLoaders()[no] : null;
 	}
+	
+	@Override
+	public int getDeviceLoader(String name){
+		for (int i = 0; i < deviceLoaders.getDeviceLoaders().length; i++){
+			if (deviceLoaders.getDeviceLoaders()[i].equals(name))
+				return i;
+		}
+		return -1;
+	}
 
 	@Override
 	public String[] getAllDeviceLoader() {
@@ -335,18 +346,18 @@ public class ConfigsDbImpl extends CouchDbRepositorySupport<Connector> implement
 	}
 
 	@Override
-	public void addDeviceLoader(String deviceLoader) {
+	public void addDeviceLoader(String deviceLoader) throws Exception {
 		int noOfDeviceLoaders = deviceLoaders.getDeviceLoaders().length;
 		String[] newList = new String[noOfDeviceLoaders + 1];
 		System.arraycopy(deviceLoaders.getDeviceLoaders(), 0, newList, 0, noOfDeviceLoaders);
 		newList[noOfDeviceLoaders] = deviceLoader;	
 		
 		deviceLoaders.setDeviceLoaders(newList);
-		db.update(deviceLoaders);
+		db.create(deviceLoaders);
 	}
 	
 	@Override
-	public void addBulkDeviceLoaders(List<String> ds){
+	public void addBulkDeviceLoaders(List<String> ds) throws Exception{
 		if (!migrating) return;
 		
 		int noOfDeviceLoaders = deviceLoaders.getDeviceLoaders().length;
@@ -440,10 +451,19 @@ public class ConfigsDbImpl extends CouchDbRepositorySupport<Connector> implement
 		if (!migrating) return;
 		
 		System.out.println(">>>>>>>>>>>>>>>>>>>> migrating " + allDeviceLoadersFromXML.size() + " device loaders to DB");
-		addBulkDeviceLoaders(allDeviceLoadersFromXML);
+		try {
+			addBulkDeviceLoaders(allDeviceLoadersFromXML);
+		} catch (Exception e) {
+			log.severe("Exceptions in addBulkDeviceLoaders, probably overwriting the old ones by an add");
+		}
 		// addBulkConnectors involves re-fetching the allConnectors list from database so that 
 		// in addBulkDevices we can pair the generated connector ID with the device's connector ID
-		List<DocumentOperationResult> res = addBulkConnectors(connectors);
+		List<DocumentOperationResult> res = null;
+		try {
+			res = addBulkConnectors(connectors);
+		} catch (Exception e) {
+			log.severe("Exceptions in addBulkConnectors, probably overwriting the old ones by an add");
+		}
 		System.out.println(">>>>>>>>>>>>>>>>>>>> migrating " + connectors.size() + " connectors to DB");
 		if ((res != null) && (res.size() == 0)){
 			connectorsMigrated = true;
@@ -479,6 +499,7 @@ public class ConfigsDbImpl extends CouchDbRepositorySupport<Connector> implement
 		return migrating;
 	}
 
+	@Override
 	public void setMigrating(boolean migrating) {
 		this.migrating = migrating;
 	}

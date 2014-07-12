@@ -40,8 +40,8 @@ public interface ConfigsDb {
 	public JsonNode getConnectorByName(String connectorName);
 	public int countConnectors();
 	public int countConnectorsByTechnology(String technology);
-	public void addConnector(Connector c);
-	public List<DocumentOperationResult> addBulkConnectors(List<Connector> cs);
+	public void addConnector(Connector c) throws Exception;
+	public List<DocumentOperationResult> addBulkConnectors(List<Connector> cs) throws Exception;
 	public void updateConnector(Connector c);
 	public void deleteConnector(Connector c);
 	public void deleteConnector(String connectorName);
@@ -60,9 +60,10 @@ public interface ConfigsDb {
 	public void deleteAllDevices(String connectorName);
 	
 	public String getDeviceLoader(int no);
+	public int getDeviceLoader(String name);
 	public String[] getAllDeviceLoader();
-	public void addDeviceLoader(String deviceLoader);
-	public void addBulkDeviceLoaders(List<String> ds);
+	public void addDeviceLoader(String deviceLoader) throws Exception;
+	public void addBulkDeviceLoaders(List<String> ds) throws Exception;
 	public void deleteDeviceLoader(int no);
 	public void deleteDeviceLoader(String deviceLoader);
 	public void deleteAllDeviceLoader();
@@ -76,6 +77,7 @@ public interface ConfigsDb {
 	public void migrate(List<Connector> connectors);
 	public void migrate();
 	public boolean isMigrating();
+	public void setMigrating(boolean migrating);
 	
 	public void compactDb();
 }

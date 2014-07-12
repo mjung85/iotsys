@@ -252,6 +252,9 @@ dependencies {
 	testProvided project(':iotsys-mdnssd')
 	testProvided project(':iotsys-weather-forecast')
 	testCompile group: 'junit',name:'junit',version: '4.8+' 
-	testCompile group: 'com.jayway.restassured', name: 'rest-assured', version: '1.2.1'
+	testCompile ('com.jayway.restassured:rest-assured:1.2.1'){
+        exclude group: 'org.apache.httpcomponents', module:'httpclient'
+    }
 	testCompile "org.hamcrest:hamcrest-library:1.3"
+	
 }
