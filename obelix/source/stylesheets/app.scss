@@ -94,6 +94,8 @@ $gridWidth: 25px;
     left: -$sidebarWidth + $sidebarToggleButtonWidth;
     color: white;
     @include sidebar-shadow;
+    @include border-right-radius(4px);
+      
     
     &.expanded {
       left: $sidebarToggleButtonWidth;
@@ -122,6 +124,7 @@ $gridWidth: 25px;
       width: 100%;
       padding-top: 25px;
       border-bottom: 10px solid #ff7f00;
+      @include border-top-right-radius(4px);
     }
   }
   
