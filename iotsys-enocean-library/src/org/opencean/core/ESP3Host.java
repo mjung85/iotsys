@@ -130,7 +130,9 @@ public class ESP3Host extends Thread implements Connector{
     }
     
     public void setSenderId(String idString){
-    	this.senderId = EnoceanId.fromString(idString);
+    	if(idString!=null){
+    		this.senderId = EnoceanId.fromString(idString);
+    	}    	
     }
     
     public EnoceanId getSenderId(){

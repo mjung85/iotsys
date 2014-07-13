@@ -82,6 +82,8 @@ public class EntityEEP_A52001Impl extends EntityImpl implements EntityEEP_F60201
 		
 		this.esp3Host = esp3Host;		
 		this.id = id;	
+		this.setWritable(true);
+		this.setReadable(true);
 		
 		datapoint_percent = new EnoceanDPTIntPercImpl("BatteryPoweredActuatorSetPointPercentage", "Set Point Percantage", "0-100%", true, true);
 		datapoint_percent.addTranslation("de-DE", TranslationAttribute.displayName, "Sollwert Prozent");

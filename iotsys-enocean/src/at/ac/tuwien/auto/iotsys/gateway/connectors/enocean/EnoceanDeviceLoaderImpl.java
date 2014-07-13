@@ -102,6 +102,7 @@ public class EnoceanDeviceLoaderImpl implements DeviceLoader {
 
 			Object enoceanConfiguredDevices = subConfig.getProperty("device.type");
 			String connectorName = subConfig.getString("name");
+			String senderAddress = subConfig.getString("senderAddress");
 			String serialPort = subConfig.getString("serialPort");
 			Boolean enabled = subConfig.getBoolean("enabled", false);
 			ProtocolConnector protocolConnector = new EnoceanSerialConnector();			
@@ -111,6 +112,7 @@ public class EnoceanDeviceLoaderImpl implements DeviceLoader {
 					log.info("Connecting EnOcean connector to COM Port: "+ serialPort);
 			        ESP3Host esp3Host = new ESP3Host(protocolConnector);
 			        esp3Host.setSerialPortName(serialPort);
+			        esp3Host.setSenderId(senderAddress);
 			        esp3Host.connect();
 
 					connectors.add(esp3Host);
