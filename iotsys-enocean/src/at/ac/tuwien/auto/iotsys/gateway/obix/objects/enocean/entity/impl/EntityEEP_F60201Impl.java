@@ -72,6 +72,7 @@ public class EntityEEP_F60201Impl extends EntityImpl implements EntityEEP_F60201
 		this.setWritable(true);
 		this.setReadable(true);
 		
+		// add datapoints of the EEP
 		datapoint_lightonoff = new EnoceanDPTBoolOnOffImpl("WallTransmitterChB", "Switch, Channel B", "On/Off", true, false);
 		datapoint_lightonoff.addTranslation("de-DE", TranslationAttribute.displayName, "Schalter, Kanal B");
 		this.addDatapoint(datapoint_lightonoff);
@@ -116,11 +117,13 @@ public class EntityEEP_F60201Impl extends EntityImpl implements EntityEEP_F60201
 	public void writeObject(Obj input){
 		super.writeObject(input);			
 		
+		// check if it's possible to write a new value to the object
 		if (this.isWritable())
 		{
 			log.info("Start writing value " +input);
-			String value="ON";		
-						
+			String value="OFF";		
+			
+			// check the type the value of the new parameter			
 			if (input instanceof Str)
 			{
 				value = ((Str)input).get().equalsIgnoreCase("ON")?"ON":"OFF";				
@@ -133,6 +136,7 @@ public class EntityEEP_F60201Impl extends EntityImpl implements EntityEEP_F60201
 				value = (((Int)input).get()!=0)?"ON":"OFF";				
 			}			
 			
+			// create a new EnOcean packet with the new state 
 			StateChanger change = new StateChanger();
 			BasicPacket packet = change.changeState(value, id, EEPId.EEP_F6_02_01.toString());       
 		    log.info("Write: Send packet: " + packet.toString());

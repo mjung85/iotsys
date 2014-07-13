@@ -82,7 +82,7 @@ public class EntityImpl extends Obj implements Entity
 		if (this.datapoints == null)
 		{
 			this.list = new List("datapoints", new Contract(new String[] { "obix:ref", DataPoint.CONTRACT }));
-			this.list.setHref(new Uri("datapoints"));
+			this.list.setHref(new Uri("datapoints"));			
 			this.add(this.list);
 
 			this.datapoints = new ArrayList<DataPoint>();
@@ -90,6 +90,6 @@ public class EntityImpl extends Obj implements Entity
 
 		this.list.add(datapoint);
 		this.list.add(datapoint.getReference());
-		this.datapoints.add(datapoint);
+		this.datapoints.add(datapoint);		
 	}
 }

@@ -52,10 +52,13 @@ public abstract class EnoceanDPTBoolImpl extends EnoceanDPTImpl implements Enoce
 
 	public EnoceanDPTBoolImpl(String name, String displayName, String display, boolean writable, boolean readable)
 	{
+		// constructor
 		super(name, displayName, display);
 
+		// contract
 		this.addIs(new Contract(EnoceanDPTBool.CONTRACT));
 
+		// encoding
 		this.value.setName("value");
 		this.value.setHref(new Uri("value"));
 		this.value.setWritable(writable);

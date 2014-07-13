@@ -66,6 +66,8 @@ public class EntityEEP_D50001Impl extends EntityImpl implements EntityEEP_D50001
 		
 		this.esp3Host = esp3Host;		
 		this.id = id;	
+		this.setWritable(false);
+		this.setReadable(true);
 		
 		datapoint_openclosed = new EnoceanDPTBoolOpenClosedImpl("SingleInputContact", "Single Input Contact", "Open/Closed", true, false);
 		datapoint_openclosed.addTranslation("de-DE", TranslationAttribute.displayName, "Kontaktsensor");
