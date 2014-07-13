@@ -31,7 +31,10 @@
 
 package at.ac.tuwien.auto.iotsys.commons.obix.objects.enocean.entity;
 
-public interface EntityEEP_F60201 extends EnoceanEntity
+import obix.IObj;
+
+public interface EnoceanEntities extends IObj
 {
-	public static final String CONTRACT = "enocean:EntityEEP_F60201";
+	public static final String CONTRACT = "enocean:Entities";
+
 }

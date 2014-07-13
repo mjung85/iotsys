@@ -59,11 +59,11 @@ import at.ac.tuwien.auto.iotsys.commons.obix.objects.enocean.datapoint.impl.Enoc
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.enocean.datapoint.impl.EnoceanDPTIntPercImpl;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.enocean.datapoint.impl.EnoceanDPTRealTempImpl;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.enocean.entity.EntityEEP_F60201;
-import at.ac.tuwien.auto.iotsys.commons.obix.objects.enocean.entity.EntityImpl;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.enocean.entity.impl.EnoceanEntityImpl;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.encoding.EncodingPressedReleased;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.encoding.impl.EncodingsImpl;
 
-public class EntityEEP_A52001Impl extends EntityImpl implements EntityEEP_F60201
+public class EntityEEP_A52001Impl extends EnoceanEntityImpl implements EntityEEP_F60201
 {	
 	private static Logger log = Logger.getLogger(EntityEEP_A52001Impl.class.getName());
 		
