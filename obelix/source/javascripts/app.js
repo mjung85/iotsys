@@ -566,6 +566,35 @@ app.factory('Sidebar', function() {
 });
 
 app.controller('MainCtrl', ['$scope','$q','$timeout', '$interval', 'Lobby','Watch','Connection', 'Sidebar', function($scope, $q, $timeout, $interval, Lobby, Watch, Connection, Sidebar) {
+  jQuery('body').qtip({
+    prerender: true,
+    content: {
+      text: jQuery('#about')
+    },
+    show: {
+      event: 'doNotUseThisTriggerName',
+      delay: 0,
+      ready: true,
+      modal: {
+          on: true,
+          blur: false,
+          escape: false,
+          stealfocus: false
+      }
+    },
+    hide: {
+        event: 'hideModal'
+    },
+    position: {
+        my: 'center',
+        at: 'center'
+    }, 
+    style: {
+      classes: 'qtip-light obelix-qtip'
+    }
+  });
+  
+  
   $scope.directory = null;
   $scope.allDevices = [];
   $scope.watch = null;
@@ -618,6 +647,10 @@ app.controller('MainCtrl', ['$scope','$q','$timeout', '$interval', 'Lobby','Watc
         connection.jsPlumbConnection.obelixConnection = connection;
       });
     });
+    
+   $timeout(function(){
+      jQuery('body').trigger('hideModal');
+    }, 0);
   });
 
   Lobby.getDeviceTree(function(root) {
