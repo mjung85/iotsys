@@ -1,5 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2013, Automation Systems Group, TU Wien.
+ * Copyright (c) 2013
+ * Institute of Computer Aided Automation, Automation Systems Group, TU Wien.
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -29,11 +30,55 @@
  * This file is part of the IoTSyS project.
  ******************************************************************************/
 
-package at.ac.tuwien.auto.iotsys.commons.obix.objects.enocean.entity;
+package at.ac.tuwien.auto.iotsys.commons.obix.objects.enocean.entity.impl;
 
-import obix.IObj;
+import java.util.ArrayList;
 
-public interface Entity extends IObj
+import obix.Contract;
+import obix.List;
+import obix.Obj;
+import obix.Uri;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.enocean.entity.EnoceanEntities;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.enocean.entity.EnoceanEntity;
+import at.ac.tuwien.auto.iotsys.commons.util.UriEncoder;
+
+public class EnoceanEntitiesImpl extends List implements EnoceanEntities
 {
-	public static final String CONTRACT = "enocean:Entity";
+	private ArrayList<EnoceanEntity> entities;
+
+	public EnoceanEntitiesImpl()
+	{
+		this.setName("entities");
+		this.setIs(new Contract(EnoceanEntities.CONTRACT));
+		this.setOf(new Contract(new String[] { "obix:ref", EnoceanEntity.CONTRACT }));
+		this.setHref(new Uri("entities"));
+		this.setHidden(true);
+
+		this.entities = new ArrayList<EnoceanEntity>();
+	}
+
+	public void addEntity(EnoceanEntityImpl entity)
+	{
+		if (entity instanceof Obj)
+		{
+			entity.setHref(getHref(entity));
+			this.add((Obj) entity);
+			this.add(entity.getReference());
+		}
+	}
+
+	private Uri getHref(Obj entity)
+	{
+		int count = 1;
+		String uri = UriEncoder.getEscapedUri(entity.getDisplayName());
+
+		for (EnoceanEntity e : entities)
+		{
+			if (UriEncoder.getEscapedUri(e.getDisplayName()).equals(uri))
+			{
+				count++;
+			}
+		}
+		return new Uri(uri + "/" + count);
+	}
 }

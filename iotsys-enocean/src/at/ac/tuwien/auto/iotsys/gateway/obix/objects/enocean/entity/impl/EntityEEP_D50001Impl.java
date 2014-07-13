@@ -46,12 +46,12 @@ import obix.Obj;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.enocean.datapoint.impl.EnoceanDPTBoolOnOffImpl;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.enocean.datapoint.impl.EnoceanDPTBoolOpenClosedImpl;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.enocean.entity.EntityEEP_D50001;
-import at.ac.tuwien.auto.iotsys.commons.obix.objects.enocean.entity.EntityImpl;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.enocean.entity.impl.EnoceanEntityImpl;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.encoding.EncodingOnOff;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.encoding.EncodingOpenClosed;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.encoding.impl.EncodingsImpl;
 
-public class EntityEEP_D50001Impl extends EntityImpl implements EntityEEP_D50001
+public class EntityEEP_D50001Impl extends EnoceanEntityImpl implements EntityEEP_D50001
 {	
 	private static Logger log = Logger.getLogger(EntityEEP_D50001Impl.class.getName());
 		
