@@ -594,7 +594,6 @@ app.controller('MainCtrl', ['$scope','$q','$timeout', '$interval', 'Lobby','Watc
     }
   });
   
-  
   $scope.directory = null;
   $scope.allDevices = [];
   $scope.watch = null;
@@ -650,6 +649,7 @@ app.controller('MainCtrl', ['$scope','$q','$timeout', '$interval', 'Lobby','Watc
     
    $timeout(function(){
       jQuery('body').trigger('hideModal');
+      jQuery('#tourFirstTimeVisitor').trigger('showTourHelp');
     }, 0);
   });
 
@@ -918,7 +918,46 @@ app.directive('tourDevice', function() {
   };
 });
 
-app.directive('obelixTourStarter', ['$timeout', 'Sidebar', function($timeout, Sidebar) {
+app.directive('obelixTourFirstTimeVisitor', ['Storage', function(Storage) {
+  return {
+    restrict: 'A',
+    link: function(scope, elem, attrs) {
+
+      var tourTakenStorage = new Storage('tourTaken');
+      elem.qtip({
+        content: {
+          title: {
+            button: jQuery('<span>x</span>').addClass('icon icon-remove qtip-close'),
+            text: 'Need help?'
+          },            
+          text: 'Click on the "i" symbol to start the tour!'
+        },
+        show: {
+          event: 'showTourHelp'
+        },
+        hide: {
+          event: 'hideTourHelp'
+        },
+        position: {
+            my: 'right top',
+            at: 'left bottom'
+        }, 
+        style: {
+          classes: 'qtip-light obelix-qtip'
+        },
+        events: {
+          show: function(event, api) {
+            if ('tourTaken' === tourTakenStorage.get()) {
+              event.preventDefault();
+            }
+          }
+        }
+      });
+    }
+  };
+}]);
+
+app.directive('obelixTourStarter', ['$timeout', 'Sidebar', 'Storage', function($timeout, Sidebar, Storage) {
   
   function toggleSidebarButton(enableToggle) {
     Sidebar.locked = !enableToggle;
@@ -1196,6 +1235,9 @@ app.directive('obelixTourStarter', ['$timeout', 'Sidebar', function($timeout, Si
           content: {
             title: 'Obelix Tour'
           },
+          show: {
+            solo: true
+          },
           events: {
             show: function(event, api) {
               var qtip = jQuery(event.target);
@@ -1232,6 +1274,8 @@ app.directive('obelixTourStarter', ['$timeout', 'Sidebar', function($timeout, Si
       });
       
       obelixTour.start = function (event) {
+        var tourTakenStorage = new Storage('tourTaken');
+        tourTakenStorage.set('tourTaken');
         toggleTourStarter(false);
         tourInProgress(true);
         tour.start();
