@@ -229,7 +229,7 @@ public class ObjectBrokerImpl implements ObjectBroker
 			iotLobby.addReference(o.getFullContextPath(), ref);
 		}
 		
-		// TODO: Re-apply written object from database
+		// TODO: Re-apply written object from database, currently not work in OSGi model
 //		WritableObject wo = WriteableObjectDbImpl.getInstance().getPersistedObject(o.getFullContextPath());
 //		if (wo != null){
 //			try {

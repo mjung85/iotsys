@@ -53,7 +53,7 @@ import at.ac.tuwien.auto.iotsys.commons.interceptor.Interceptor;
 import at.ac.tuwien.auto.iotsys.commons.interceptor.InterceptorBroker;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.ContractInit;
 import at.ac.tuwien.auto.iotsys.commons.persistent.WriteableObjectDbImpl;
-import at.ac.tuwien.auto.iotsys.commons.persistent.models.WritableObject;
+import at.ac.tuwien.auto.iotsys.commons.persistent.models.WriteableObject;
 import at.ac.tuwien.auto.iotsys.gateway.interceptor.InterceptorBrokerImpl;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objectbroker.ObjectBrokerImpl;
 import at.ac.tuwien.auto.iotsys.gateway.obix.server.CoAPServer;
@@ -121,10 +121,8 @@ public class IoTSySGateway
 			objectBroker.setMdnsResolver(mdnsResolver);
 		}
 
-		if (!osgiEnvironment)
-			objectBroker.initDevices(devicesConfigFile);
 		// the following commented code block does not have any effect if running in OSGi environment
-		// --> suggestion is to move to objectBroker and replace by the two lines above
+		// --> suggestion is to move to objectBroker
 		
 		// add initial objects to the database
 //		if (devicesConfigFile == null)
@@ -138,14 +136,19 @@ public class IoTSySGateway
 		// Transition step: migrate configs from devices.xml to DB, remove when done
 //		ConfigsDbImpl.getInstance().migrate(connectors);
 		
-		// Re-apply written object from database, not work in osgi bundle
-		List<WritableObject> wos = WriteableObjectDbImpl.getInstance().getPersistedObjects();
-		for (WritableObject o : wos){
-			try {
-				obixServer.applyObj(new URI(o.getHref()), o.getDataStream());
-			} catch (URISyntaxException e) {
-				e.printStackTrace();
-			}
+		if (!osgiEnvironment){
+			objectBroker.initDevices(devicesConfigFile);
+			// TODO: Re-apply written object from database, not work yet in osgi bundle
+			// Be careful, this is causing some tests to fail due to object broker state is not fresh as 
+			// there are objects fetched from DB
+//			List<WritableObject> wos = WriteableObjectDbImpl.getInstance().getPersistedObjects();
+//			for (WritableObject o : wos){
+//				try {
+//					obixServer.applyObj(new URI(o.getHref()), o.getDataStream());
+//				} catch (URISyntaxException e) {
+//					e.printStackTrace();
+//				}
+//			}
 		}
 		
 		if (objectBroker.getMDnsResolver() != null)

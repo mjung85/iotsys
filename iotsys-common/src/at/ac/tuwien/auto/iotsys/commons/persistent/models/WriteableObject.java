@@ -27,17 +27,17 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * @author Nam Giang - zang at kaist dot ac dot kr
  *
  */
-public class WritableObject extends CouchDbDocument {
+public class WriteableObject extends CouchDbDocument {
 
 	String href;
 	String dataStream;
 	
-	public WritableObject(){}
-	public WritableObject(String href){
+	public WriteableObject(){}
+	public WriteableObject(String href){
 		this.href = href;
 		setId(href);
 	}
-	public WritableObject(String href, String dataStream){
+	public WriteableObject(String href, String dataStream){
 		this(href);
 		this.dataStream = dataStream;
 	}

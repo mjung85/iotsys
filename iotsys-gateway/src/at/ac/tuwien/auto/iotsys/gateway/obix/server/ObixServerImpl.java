@@ -36,7 +36,7 @@ import java.net.URI;
 import java.util.logging.Logger;
 
 import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
-import at.ac.tuwien.auto.iotsys.commons.persistent.WritableObjectDb;
+import at.ac.tuwien.auto.iotsys.commons.persistent.WriteableObjectDb;
 import at.ac.tuwien.auto.iotsys.commons.persistent.WriteableObjectDbImpl;
 import obix.Err;
 import obix.Obj;
