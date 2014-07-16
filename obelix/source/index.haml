@@ -52,6 +52,7 @@
             .clear
         %div(ng-show="sidebar.segment==0" ng-if="directory" include-directory-template="directory")
     #canvas(ng-click="sidebar.expanded = false" droppable="placeDevice" jsplumb-container)
+      #tourFirstTimeVisitor(obelix-tour-first-time-visitor)
       #tourStarter(obelix-tour-starter)
         .icon-color
       #tourDeviceDropZone
