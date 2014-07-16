@@ -21,18 +21,18 @@ package at.ac.tuwien.auto.iotsys.commons.persistent;
 
 import java.util.List;
 
-import at.ac.tuwien.auto.iotsys.commons.persistent.models.WritableObject;
+import at.ac.tuwien.auto.iotsys.commons.persistent.models.WriteableObject;
 
 /**
  * @author Nam Giang - zang at kaist dot ac dot kr
  *
  */
-public interface WritableObjectDb {
+public interface WriteableObjectDb {
 	
 	public void persistWritingObject(String href, String dataStream);
 	public String getObjectDataStream(String href);
-	public List<WritableObject> getPersistedObjects();
-	public WritableObject getPersistedObject(String href);
+	public List<WriteableObject> getPersistedObjects();
+	public WriteableObject getPersistedObject(String href);
 	
 	public void compactDb();
 }

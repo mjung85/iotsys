@@ -440,14 +440,14 @@ public class HistoryImpl extends Obj implements History, Observer {
 			// flush the feed to database
 			List<DbHistoryFeedRecord> dhfs = new ArrayList<DbHistoryFeedRecord>();
 			for (Obj o : feed.getEvents()) {
-				historyRecordImpl = (HistoryRecordImpl) o;
+				HistoryRecordImpl feedRecord = (HistoryRecordImpl) o;
 				// Only persisting the value
-				if (historyRecordImpl.value() instanceof Val) {
+				if (feedRecord.value() instanceof Val) {
 					DbHistoryFeedRecord hf = new DbHistoryFeedRecord(
 							feed.getFullContextPath(), 
-							historyRecordImpl.timestamp().getMillis(), 
-							historyRecordImpl.value().getElement(),
-							((Val) historyRecordImpl.value()).toString());
+							feedRecord.timestamp().getMillis(), 
+							feedRecord.value().getElement(),
+							((Val) feedRecord.value()).toString());
 					dhfs.add(hf);
 				}
 			}

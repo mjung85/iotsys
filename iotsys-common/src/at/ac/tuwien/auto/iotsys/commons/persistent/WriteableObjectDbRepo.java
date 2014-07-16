@@ -19,9 +19,13 @@
 */
 package at.ac.tuwien.auto.iotsys.commons.persistent;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
+
+import org.ektorp.CouchDbConnector;
+import org.ektorp.DocumentNotFoundException;
+import org.ektorp.impl.StdCouchDbConnector;
+import org.ektorp.support.CouchDbRepositorySupport;
 
 import at.ac.tuwien.auto.iotsys.commons.persistent.models.WriteableObject;
 
@@ -29,44 +33,67 @@ import at.ac.tuwien.auto.iotsys.commons.persistent.models.WriteableObject;
  * @author Nam Giang - zang at kaist dot ac dot kr
  *
  */
-public class WriteableObjectDbImpl implements WriteableObjectDb {
+public class WriteableObjectDbRepo extends CouchDbRepositorySupport<WriteableObject> implements
+		WriteableObjectDb {
 
-	private static final Logger log = Logger.getLogger(WriteableObjectDbImpl.class.getName());
-	private static WriteableObjectDb INSTANCE;
-	
-	public static WriteableObjectDb getInstance(){
-		INSTANCE = WriteableObjectDbRepo.getInstance(); 
-		if (INSTANCE == null)
-			INSTANCE = new WriteableObjectDbImpl();
-		return INSTANCE;
+	private static WriteableObjectDbRepo INSTANCE;
+	private List<WriteableObject> writtenObjects;
+	private static final Logger log = Logger.getLogger(WriteableObjectDbRepo.class.getName());
+
+	protected WriteableObjectDbRepo(CouchDbConnector db) {
+		super(WriteableObject.class, db);
+		initStandardDesignDocument();
+		writtenObjects = getPersistedObjects();
 	}
 	
+	public static WriteableObjectDb getInstance(){
+		if (INSTANCE == null){ 
+			CouchDbConnector db = new StdCouchDbConnector("writableObjects", DbConnection.getCouchInstance());
+			try {
+				INSTANCE = new WriteableObjectDbRepo(db);
+			} catch (Exception e) {
+				log.severe("FATAL: Writable objects DB not connected!");
+			}
+		}
+		return INSTANCE;
+	}
+
 	@Override
 	public void persistWritingObject(String href, String dataStream) {
-		log.severe("WRITEABLE OBJECT DB NOT CONNECTED");
+		WriteableObject wo;
+		try {
+			wo = get(href);
+		} catch (DocumentNotFoundException e){
+			wo = new WriteableObject(href);
+		}
+		wo.setDataStream(dataStream);
+		update(wo);
 	}
 
 	@Override
 	public String getObjectDataStream(String href) {
-		log.severe("WRITEABLE OBJECT DB NOT CONNECTED");
-		return null;
+		WriteableObject wo = get(href);
+		return wo.getDataStream();
 	}
 
 	@Override
 	public List<WriteableObject> getPersistedObjects() {
-		log.severe("WRITEABLE OBJECT DB NOT CONNECTED");
-		return new ArrayList<WriteableObject>();
+		List<WriteableObject> result = getAll();
+		return result;
 	}
+
 
 	@Override
 	public WriteableObject getPersistedObject(String href) {
-		log.severe("WRITEABLE OBJECT DB NOT CONNECTED");
+		for (WriteableObject wo : writtenObjects){
+			if (wo.getHref().equals(href))
+				return wo;
+		}
 		return null;
 	}
 
 	@Override
 	public void compactDb() {
-		log.severe("WRITEABLE OBJECT DB NOT CONNECTED");
+		db.compact();
 	}
-
 }

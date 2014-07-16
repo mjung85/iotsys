@@ -19,17 +19,9 @@
 */
 package at.ac.tuwien.auto.iotsys.commons.persistent;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
-
-import org.ektorp.ComplexKey;
-import org.ektorp.CouchDbConnector;
-import org.ektorp.ViewQuery;
-import org.ektorp.impl.StdCouchDbConnector;
-import org.ektorp.support.CouchDbRepositorySupport;
-import org.ektorp.support.View;
-import org.ektorp.support.Views;
-import org.ektorp.util.Assert;
 
 import at.ac.tuwien.auto.iotsys.commons.persistent.models.DbHistoryFeedRecord;
 
@@ -37,87 +29,53 @@ import at.ac.tuwien.auto.iotsys.commons.persistent.models.DbHistoryFeedRecord;
  * @author Nam Giang - zang at kaist dot ac dot kr
  *
  */
-@Views({
-	@View(name = "by_href", map = "function(doc) {emit(doc.href, doc.val);}"),
-	@View(name = "by_time_href", map = "function(doc) {emit([doc.href, doc.time], doc.val);}")
-})
-public class HistoryDbImpl extends CouchDbRepositorySupport<DbHistoryFeedRecord> implements HistoryDb {
+public class HistoryDbImpl implements HistoryDb {
 
-	private static HistoryDbImpl INSTANCE;
 	private static final Logger log = Logger.getLogger(HistoryDbImpl.class.getName());
-
-	protected HistoryDbImpl(CouchDbConnector db) {
-		super(DbHistoryFeedRecord.class, db);
-		initStandardDesignDocument();
-	}
+	private static HistoryDb INSTANCE;
 	
 	public static HistoryDb getInstance(){
-		if (INSTANCE == null){ 
-			CouchDbConnector db = new StdCouchDbConnector("historyFeeds", DbConnection.getCouchInstance());
-			try {
-				INSTANCE = new HistoryDbImpl(db);
-			} catch (Exception e) {
-				log.severe("FATAL: History feed DB not connected!");
-			}
-		}
+		INSTANCE = HistoryDbRepo.getInstance(); 
+		if (INSTANCE == null)
+			INSTANCE = new HistoryDbImpl();
 		return INSTANCE;
-	}
-
-	public List<DbHistoryFeedRecord> findByHref(String href) {
-		return queryView("by_href", href);
 	}
 	
 	@Override
 	public DbHistoryFeedRecord getObject(String href) {
-		return get(href);
+		return null;
 	}
 
 	@Override
-	public void addObject(DbHistoryFeedRecord hf) {
-		Assert.hasText(hf.getHref(), "A datapoint must have a href");
-		add(hf);
+	public List<DbHistoryFeedRecord> getLatestHistoryFeed(String href,
+			int number) {
+		return new ArrayList<DbHistoryFeedRecord>();
+	}
+
+	@Override
+	public void addObject(DbHistoryFeedRecord dhf) {
+		log.severe("HISTORY DB NOT CONNECTED");
+	}
+
+	@Override
+	public void addBulkFeedRecords(List<DbHistoryFeedRecord> dhfs) {
+		log.severe("HISTORY DB NOT CONNECTED");
 	}
 
 	@Override
 	public void deleteObject(String href) {
-		DbHistoryFeedRecord p = getObject(href);
-		remove(p);
-	}
-
-//	@Override
-//	public void updateObject(DbHistoryFeed newp) {
-//		Assert.hasText(newp.getId(), "A datapoint must have a id");
-//		update(newp);		
-//	}
-
-	@Override
-	public List<DbHistoryFeedRecord> getLatestHistoryFeed(String href, int number) {
-		ComplexKey startKey = ComplexKey.of(href);
-		ComplexKey endKey = ComplexKey.of(href, ComplexKey.emptyObject());
-		ViewQuery q = createQuery("by_time_href").includeDocs(true).startKey(endKey).endKey(startKey).descending(true).limit(number);
-		return db.queryView(q, DbHistoryFeedRecord.class);
+		log.severe("HISTORY DB NOT CONNECTED");
 	}
 
 	@Override
-	public List<DbHistoryFeedRecord> getHistoryFeed(String href, long start, long end, int limit) {
-		ComplexKey startKey = ComplexKey.of(href, start);
-		ComplexKey endKey = ComplexKey.of(href, end);
-		ViewQuery q = createQuery("by_time_href").includeDocs(true).startKey(endKey).endKey(startKey).descending(true).limit(limit);
-		log.info("Querying database for history feed: " + href);
-		log.info("Couchdb query: " + q.buildQuery());
-		return db.queryView(q, DbHistoryFeedRecord.class);
+	public List<DbHistoryFeedRecord> getHistoryFeed(String href, long start,
+			long end, int limit) {
+		return new ArrayList<DbHistoryFeedRecord>();
 	}
-	
-	@Override
-	public void addBulkFeedRecords(List<DbHistoryFeedRecord> dhfs) {
-		if (dhfs.size() > 0){
-			db.executeAllOrNothing(dhfs);
-			log.info("flushing history feed sizes " + dhfs.size() + " to database");
-		}
-	}
-	
+
 	@Override
 	public void compactDb() {
-		db.compact();
+		log.severe("HISTORY DB NOT CONNECTED");
 	}
+
 }

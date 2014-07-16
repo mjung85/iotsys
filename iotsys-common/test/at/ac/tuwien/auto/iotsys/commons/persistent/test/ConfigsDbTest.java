@@ -25,7 +25,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import at.ac.tuwien.auto.iotsys.commons.persistent.ConfigsDb;
-import at.ac.tuwien.auto.iotsys.commons.persistent.ConfigsDbImpl;
+import at.ac.tuwien.auto.iotsys.commons.persistent.ConfigsDbRepo;
 
 /**
  * @author Nam Giang - zang at kaist dot ac dot kr
@@ -37,7 +37,7 @@ public class ConfigsDbTest {
 	
 	@BeforeClass
 	public static void setUp() {
-		cd = ConfigsDbImpl.getInstance();
+		cd = ConfigsDbRepo.getInstance();
 		org.junit.Assume.assumeTrue(cd != null);
 	}
 	
