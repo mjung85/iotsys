@@ -54,9 +54,6 @@ import org.opencean.core.common.ProtocolConnector;
 import at.ac.tuwien.auto.iotsys.commons.Connector;
 import at.ac.tuwien.auto.iotsys.commons.DeviceLoader;
 import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
-import at.ac.tuwien.auto.iotsys.commons.obix.objects.enocean.entity.EntityEEP_F60201;
-import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.entity.impl.EntityImpl;
-import at.ac.tuwien.auto.iotsys.gateway.obix.objects.enocean.entity.impl.EntityEEP_F60201Impl;
 
 public class EnoceanDeviceLoaderImpl implements DeviceLoader {
 
@@ -112,7 +109,9 @@ public class EnoceanDeviceLoaderImpl implements DeviceLoader {
 					log.info("Connecting EnOcean connector to COM Port: "+ serialPort);
 			        ESP3Host esp3Host = new ESP3Host(protocolConnector);
 			        esp3Host.setSerialPortName(serialPort);
-			        esp3Host.setSenderId(senderAddress);
+			        if(senderAddress!=null){
+			        	esp3Host.setSenderId(senderAddress);
+			        }
 			        esp3Host.connect();
 
 					connectors.add(esp3Host);
