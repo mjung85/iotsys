@@ -328,6 +328,7 @@
 	<connector>
       <name>EnOcean Linux</name>
       <enabled>false</enabled>
+	  <senderAddress>01:23:45:67</senderAddress>
       <serialPort>/dev/ttyS80</serialPort>
       <device>
         <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.enocean.entity.impl.EntityEEP_F60201Impl
@@ -341,6 +342,28 @@
         <historyEnabled>false</historyEnabled>
 		<groupCommEnabled>true</groupCommEnabled>
       </device>	  
+	 <device>        
+        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.enocean.entity.impl.EntityEEP_D50001Impl
+        </type>
+        <address>01:81:DC:DD</address>
+		<deviceName>EasyclickWindowContact</deviceName>
+		<displayName>Window contact</displayName>
+		<display>null</display>
+		<manufacturer>PEHA</manufacturer>
+        <href>EasyclickWindowContact</href>
+        <historyEnabled>false</historyEnabled>
+      </device> 
+	  <device>        
+        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.enocean.entity.impl.EntityEEP_A52001Impl
+        </type>
+        <address>00:85:7A:08</address>
+		<deviceName>WirelessValveActuator</deviceName>
+		<displayName>Wireless Valve Actuator</displayName>
+		<display>null</display>
+		<manufacturer>Loxone</manufacturer>
+        <href>WirelessValveActuator</href>
+        <historyEnabled>false</historyEnabled>
+      </device>   
     </connector>     
     <connector>
       <name>EnOcean</name>
