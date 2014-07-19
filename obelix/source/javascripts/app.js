@@ -565,38 +565,39 @@ app.factory('Sidebar', function() {
   };
 });
 
-app.controller('MainCtrl', ['$scope','$q','$timeout', '$interval', 'Lobby','Watch','Connection', 'Sidebar', function($scope, $q, $timeout, $interval, Lobby, Watch, Connection, Sidebar) {
-  jQuery('body').qtip({
-    prerender: true,
-    content: {
-      text: jQuery('#about')
-    },
-    show: {
-      event: 'doNotUseThisTriggerName',
-      delay: 0,
-      ready: true,
-      modal: {
-          on: true,
-          blur: false,
-          escape: false,
-          stealfocus: false
-      }
-    },
-    hide: {
-        event: 'hideModal'
-    },
-    position: {
-        my: 'center',
-        at: 'center'
-    }, 
-    style: {
-      classes: 'qtip-light obelix-qtip'
-    }
-  });
+app.factory('ProjectMembers', [function() {
+  var ProjectMember = function(firstName, lastName, website) {
+    this.firstName = firstName;
+    this.lastName = lastName;
+    this.website = website;
+  };
+  
+  return {
+    leads: [new ProjectMember('Markus', 'J.', 'https://www.auto.tuwien.ac.at/people/view/Markus_Jung/')],
+    //In alphabetical order of the first name
+    contributors: [new ProjectMember('Clemens', 'P.'),
+                   new ProjectMember('Esad', 'H.'),
+                   new ProjectMember('Isolde', 'C.'),
+                   new ProjectMember('Jomy', 'C.'),
+                   new ProjectMember('Jürgen', 'S.'),
+                   new ProjectMember('Jürgen', 'W.', 'https://www.auto.tuwien.ac.at/people/view/Juergen_Weidinger/'),
+                   new ProjectMember('Luyu', 'Z.'),
+                   new ProjectMember('Nam', 'G.'),
+                   new ProjectMember('Ralph', 'H.'),
+                   new ProjectMember('Robert', 'H.'),
+                   new ProjectMember('Stefan', 'S.'),
+                   new ProjectMember('Thomas', 'H.')]
+  }
+}]);
+
+app.controller('MainCtrl', ['$scope','$q','$timeout', '$interval', 'Lobby','Watch','Connection', 'Sidebar', 'ProjectMembers', function($scope, $q, $timeout, $interval, Lobby, Watch, Connection, Sidebar, ProjectMembers) {
+  // Modal-specific z-index
+  jQuery.fn.qtip.modal_zindex = jQuery.fn.qtip.zindex + 1000;
   
   $scope.directory = null;
   $scope.allDevices = [];
   $scope.watch = null;
+  $scope.projectMembers = ProjectMembers;
 
   var devicesInstantiatedDefer = $q.defer();
   var devicesInstantiatedWithPropertiesDefer = $q.defer();
@@ -648,7 +649,7 @@ app.controller('MainCtrl', ['$scope','$q','$timeout', '$interval', 'Lobby','Watc
     });
     
    $timeout(function(){
-      jQuery('body').trigger('hideModal');
+      jQuery('body').trigger('hideSplashScreen');
       jQuery('#tourFirstTimeVisitor').trigger('showTourHelp');
     }, 0);
   });
@@ -904,6 +905,105 @@ app.directive('jsplumbEndpoint', ['$timeout', function($timeout) {
   };
 }]);
 
+app.directive('obelixSplashScreen', [function() {
+  return {
+    restrict: 'A',
+    link: function(scope, elem, attrs) {
+      jQuery(elem).qtip({
+        prerender: true,
+        content: {
+          text: function() {
+            var aboutClone = $('#about').clone();
+            aboutClone
+              .find('#about-content')
+              .append('<div class="row-2"><div class="loading"></div><div class="text">Loading ... Please Wait</div></div>');
+            return aboutClone;
+          }
+        },
+        position: {
+          my: 'center',
+          at: 'center'
+        }, 
+        show: {
+          delay: 0,
+          ready: true,
+          modal: {
+              on: true,
+              blur: false,
+              escape: false,
+              stealfocus: false
+          }
+        },
+        hide: {
+            event: 'hideSplashScreen'
+        },
+        style: {
+          classes: 'qtip-light obelix-qtip'
+        }, 
+        events:  {
+          hide: function(event, api) {
+            api.destroy();
+          }
+        }
+      });
+    }
+  };
+}]);
+
+app.directive('obelixAboutStarter', [function() {
+  var aboutClone;
+  return {
+    restrict: 'A',
+    link: function(scope, elem, attrs) {
+      elem
+        .addClass('enabled')
+        .click(function(){
+          jQuery('body').qtip({
+            content: {
+              text: function() {
+                aboutClone = jQuery('#about').clone();
+                aboutClone
+                  .css('height', 'auto')
+                  .find('#about-content')
+                  .append(jQuery('#project-members').clone());
+                aboutClone.find('button').click(function() {
+                  jQuery('body').trigger('hideAboutScreen');
+                });
+                return aboutClone;
+              },
+            },
+            position: {
+                my: 'center',
+                at: 'center'
+            }, 
+            show: {
+              event: 'showAboutScreen',
+              delay: 100,
+              ready: true,
+              modal: {
+                  on: true,
+                  blur: false,
+                  escape: true,
+                  stealfocus: false
+              }
+            },
+            hide: {
+                event: 'hideAboutScreen'
+            },
+            style: {
+              classes: 'qtip-light obelix-qtip'
+            }, 
+            events: {
+              visible: function(event, api) {
+                aboutClone.animate({'margin-top': aboutClone.height()/-2}, 1000);
+              }
+            }
+          });
+        });
+    }
+  };
+}]);
+
 app.directive('tourDevice', function() {
   return {
     restrict: 'A',
@@ -930,7 +1030,7 @@ app.directive('obelixTourFirstTimeVisitor', ['Storage', function(Storage) {
             button: jQuery('<span>x</span>').addClass('icon icon-remove qtip-close'),
             text: 'Need help?'
           },            
-          text: 'Click on the "i" symbol to start the tour!'
+          text: 'Click on the "?" symbol to start the tour!'
         },
         show: {
           event: 'showTourHelp'
