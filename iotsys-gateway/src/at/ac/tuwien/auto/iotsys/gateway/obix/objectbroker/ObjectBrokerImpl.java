@@ -120,7 +120,7 @@ public class ObjectBrokerImpl implements ObjectBroker
 
 	@Override
 	public synchronized Obj pullObj(Uri href, boolean refreshObject)
-	{
+	{		
 		Obj o = rootObject.getByHref(href);
 
 		// if the object could not be found, return an error
