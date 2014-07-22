@@ -8,7 +8,7 @@
     <link href="stylesheets/app.css" media="screen" rel="stylesheet" type="text/css" />
     <script src="javascripts/app.js" type="text/javascript"></script>
   </head>
-  <body ng-controller='MainCtrl'>
+  <body ng-controller='MainCtrl' obelix-splash-screen>
     <script id='directory_template' type='text/ng-template'>
       <div class='icon-label'>
         <div class='icon' ng-class='{expanded:directory.expanded}' ng-click='directory.toggle()'></div>
@@ -27,50 +27,59 @@
     <div class='btn' id='toggleSidebar' ng-click='sidebar.toggle(); $event.stopPropagation();'></div>
     <div id='sidebar-sublayer'></div>
     <div id='sidebar' ng-class='{expanded:sidebar.expanded}'>
-      <div class='content' not-droppable>
-        <div class='header'>
-          <div class='segmented_control'>
-            <div class='segment' id='segmentDevices' ng-class='{active: sidebar.segment==0}' ng-click='sidebar.segment=0'>Devices</div>
-            <div class='segment' id='segmentSettings' ng-class='{active: sidebar.segment==1}' ng-click='sidebar.segment=1'>Settings</div>
-          </div>
-          <div id='settings' ng-show='sidebar.segment==1'>
-            <div class='section'>
-              <div class='section-title'>
-                <h3>Watch</h3>
-              </div>
-              <div class='section-content'>
-                <label for='watchPollInterval'>Poll interval:</label>
-                <input id='watchPollInterval' inline-editor='watch.updateInterval()' maxlength='5' ng-model='watch.interval' size='5' type='text'>
-                <span>msec</span>
-              </div>
-              <div class='clear'></div>
-            </div>
-            <div class='section'>
-              <div class='section-title'>
-                <h3>Menu</h3>
-              </div>
-              <div class='section-content'>
-                <label for='sidebarLock'>Always Open:</label>
-                <input id='sidebarLock' ng-model='sidebar.locked' type='checkbox'>
-              </div>
-              <div class='clear'></div>
-            </div>
-            <div class='section'>
-              <div class='section-title'>
-                <h3>Canvas</h3>
-              </div>
-              <div class='section-content'>
-                <a href='#' ng-click='clear()'>Clear Canvas</a>
-              </div>
-              <div class='clear'></div>
-            </div>
-          </div>
-          <div include-directory-template='directory' ng-if='directory' ng-show='sidebar.segment==0'></div>
+      <div class='header'>
+        <a href='https://code.google.com/p/iotsys/' target='_blank'>
+          <div id='sidebar-logo' title='IoTSyS - Internet of Things System Stack'></div>
+        </a>
+        <div class='segmented_control'>
+          <div class='segment' id='segmentDevices' ng-class='{active: sidebar.segment==0}' ng-click='sidebar.segment=0'>Devices</div>
+          <div class='segment' id='segmentSettings' ng-class='{active: sidebar.segment==1}' ng-click='sidebar.segment=1'>Settings</div>
         </div>
+      </div>
+      <div class='content'>
+        <div id='settings' ng-show='sidebar.segment==1'>
+          <div class='section'>
+            <div class='section-title'>
+              <h3>Watch</h3>
+            </div>
+            <div class='section-content'>
+              <label for='watchPollInterval'>Poll interval:</label>
+              <input id='watchPollInterval' inline-editor='watch.updateInterval()' maxlength='5' ng-model='watch.interval' size='5' type='text'>
+              <span>msec</span>
+            </div>
+            <div class='clear'></div>
+          </div>
+          <div class='section'>
+            <div class='section-title'>
+              <h3>Menu</h3>
+            </div>
+            <div class='section-content'>
+              <label for='sidebarLock'>Always Open:</label>
+              <input id='sidebarLock' ng-model='sidebar.locked' type='checkbox'>
+            </div>
+            <div class='clear'></div>
+          </div>
+          <div class='section'>
+            <div class='section-title'>
+              <h3>Canvas</h3>
+            </div>
+            <div class='section-content'>
+              <a href='#' ng-click='clear()'>Clear Canvas</a>
+            </div>
+            <div class='clear'></div>
+          </div>
+        </div>
+        <div include-directory-template='directory' ng-if='directory' ng-show='sidebar.segment==0'></div>
       </div>
     </div>
     <div droppable='placeDevice' id='canvas' jsplumb-container ng-click='sidebar.expanded = false'>
-      <div id='tourStarter' obelix-tour-starter>
+      <div class='obelix-starter' id='aboutStarter' obelix-about-starter>
+        <div class='icon-color'></div>
+      </div>
+      <div id='tourFirstTimeVisitor' obelix-tour-first-time-visitor>
+        <div class='icon-color'></div>
+      </div>
+      <div class='obelix-starter' id='tourStarter' obelix-tour-starter>
         <div class='icon-color'></div>
       </div>
       <div id='tourDeviceDropZone'></div>
@@ -110,6 +119,72 @@
             </div>
           </div>
         </div>
+      </div>
+    </div>
+    <div class='qtip-light obelix-qtip' id='about'>
+      <div id='about-header'>
+        <div class='row-0'>
+          <div id='iotsys-logo' title='IoTSyS - Internet of Things System Stack'>
+            <a href='https://code.google.com/p/iotsys/' target='_blank'></a>
+          </div>
+        </div>
+        <div class='row-1'>
+          <div id='automation-systems-group-logo' title='Automation Systems Group - Institute of Computer Aided Automation'>
+            <a href='https://www.auto.tuwien.ac.at/' target='_blank'></a>
+          </div>
+          <div id='tu-vienna-logo' title='Vienna University of Technology'>
+            <a href='https://www.tuwien.ac.at/' target='_blank'></a>
+          </div>
+        </div>
+        <div class='clear'></div>
+      </div>
+      <div id='about-content'></div>
+    </div>
+    <div class='text' id='project-members'>
+      <div class='leads'>
+        <h2>Project Lead</h2>
+        <span class='lead' ng-repeat='lead in projectMembers.leads'>
+          <span ng-if='!$last'>
+            <a href='{{lead.website}}' ng-if='lead.website' target='_blank'>
+              <span class='name'>{{lead.firstName}} {{lead.lastName}},</span>
+            </a>
+            <span class='name' ng-if='!lead.website'>
+              {{lead.firstName}} {{lead.lastName}},
+            </span>
+          </span>
+          <span ng-if='$last'>
+            <a href='{{lead.website}}' ng-if='lead.website' target='_blank'>
+              <span class='name'>{{lead.firstName}} {{lead.lastName}}</span>
+            </a>
+            <span class='name' ng-if='!lead.website'>
+              {{lead.firstName}} {{lead.lastName}}
+            </span>
+          </span>
+        </span>
+      </div>
+      <div class='contributors'>
+        <h3>Project Contributors</h3>
+        <span class='contributor' ng-repeat='contributor in projectMembers.contributors'>
+          <span ng-if='$index &gt;= 0 &amp;&amp; !$last'>
+            <a href='{{contributor.website}}' ng-if='contributor.website' target='_blank'>
+              <span class='name'>{{contributor.firstName}} {{contributor.lastName}},</span>
+            </a>
+            <span class='name' ng-if='!contributor.website'>
+              {{contributor.firstName}} {{contributor.lastName}},
+            </span>
+          </span>
+          <span ng-if='$index &gt; 0 &amp;&amp; $last'>
+            <a href='{{contributor.website}}' ng-if='contributor.website' target='_blank'>
+              <span class='name'>{{contributor.firstName}} {{contributor.lastName}}</span>
+            </a>
+            <span class='name' ng-if='!contributor.website'>
+              {{contributor.firstName}} {{contributor.lastName}}
+            </span>
+          </span>
+        </span>
+      </div>
+      <div class='footer'>
+        <button name='button' ng-click="jQuery('body').trigger('hideAboutScreen')">OK</button>
       </div>
     </div>
   </body>
