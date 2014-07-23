@@ -7,6 +7,7 @@ import gnu.io.SerialPort;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Enumeration;
 
 import org.opencean.core.common.ProtocolConnector;
 import org.opencean.core.utils.CircularByteBuffer;
@@ -36,9 +37,10 @@ public class EnoceanSerialConnector implements ProtocolConnector {
     @Override
     public void connect(String device) {
         try {
-            CommPortIdentifier portIdentifier = CommPortIdentifier.getPortIdentifier(device);
+        	CommPortIdentifier portIdentifier = this.lookupPorts(device);
+            //CommPortIdentifier portIdentifier = CommPortIdentifier.getPortIdentifier(device);
 
-            CommPort commPort = portIdentifier.open(this.getClass().getName(), 2000);
+        	SerialPort commPort = (SerialPort) portIdentifier.open(this.getClass().getName(), 2000);
 
             serialPort = (SerialPort) commPort;
             serialPort.setSerialPortParams(57600, SerialPort.DATABITS_8, SerialPort.STOPBITS_1, SerialPort.PARITY_NONE);
@@ -63,6 +65,21 @@ public class EnoceanSerialConnector implements ProtocolConnector {
         } catch (Exception e) {
             throw new RuntimeException("Could not init comm port", e);
         }
+    }
+    
+    private CommPortIdentifier lookupPorts(String comPort) {
+    	Enumeration<?> portList = CommPortIdentifier.getPortIdentifiers();
+    	
+        while (portList.hasMoreElements()) {
+        	CommPortIdentifier portId = (CommPortIdentifier) portList.nextElement();        	    	
+            if (portId.getPortType() == CommPortIdentifier.PORT_SERIAL) {           
+                 if (portId.getName().equals(comPort)) {
+                	 logger.info("Found com port: " + comPort);
+                	 return portId;
+                }
+            }
+        }
+        return null;
     }
 
     @Override

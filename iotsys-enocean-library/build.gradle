@@ -39,16 +39,14 @@ jar {
 	manifest {
 		attributes("Manifest-Version": "1.0",
 				   "Bundle-Name": "IoTSyS-EnOcean-Library", 
-				   "Bundle-SymbolicName": "at.ac.tuwien.auto.iotsys.gateway",
+				   "Bundle-SymbolicName": "at.ac.tuwien.auto.iotsys.iotsys-enocean-library",
 				   "Bundle-Description": "Java EnOcean Library used by the EnOcean Connector",
 				   "Bundle-Vendor": "Vienna University of Technology, Automation Systems Group, www.auto.tuwien.ac.at",
 				   "Bundle-Version": "0.1", 
 				   "Bundle-Classpath": ".",
 				   "Export-Package": "org.opencean.core, org.opencean.core.address, org.opencean.core.common, org.opencean.core.common.values, org.opencean.core.eep, " +
 									"org.opencean.core.packets, org.opencean.core.utils",
-				   "Import-Package": "obix, obix.asm, obix.contracts, obix.io, obix.net, obix.test, obix.toos, obix.ui, obix.ui.fields, obix.ui.views, obix.xml," +
-									"at.ac.tuwien.auto.iotsys.commons, java.util, org.slf4j, gnu.io"	
-				   	
+				   "Import-Package": "at.ac.tuwien.auto.iotsys.commons, gnu.io"
 				   )
 	}
 }
