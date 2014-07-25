@@ -17,10 +17,12 @@ import java.util.StringTokenizer;
 import java.util.logging.Logger;
 
 import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import obix.Obj;
 import obix.io.BinObixDecoder;
@@ -98,36 +100,36 @@ public class TomcatServer {
 		defaultConnector.setRedirectPort(8443);
 
 		Tomcat.addServlet(ctx, "obix", new ObixServlet(obixServer));
-		//ctx.addServletMapping("/*", "obix");
-		ctx.addServletMapping("", "obix");
-		
-		/* Login Configuration */
-		tomcat.addUser("user", "pass");
-		tomcat.addRole("user", "admin");
+		ctx.addServletMapping("/*", "obix");
 
-		LoginConfig config = new LoginConfig();
-//		config.setAuthMethod("BASIC");
-		config.setAuthMethod("FORM");
-		config.setLoginPage("/res/login.html");
-		config.setErrorPage("/res/login-failed.html");
-		
-		ctx.setLoginConfig(config);
-		ctx.addSecurityRole("admin");
-		SecurityConstraint constraint = new SecurityConstraint();
-		constraint.addAuthRole("admin");
-		SecurityCollection collection = new SecurityCollection();
-		collection.addPattern("/*");
-		constraint.addCollection(collection);
-		ctx.addConstraint(constraint);
-		
-//		AuthenticatorBase authenticator = new BasicAuthenticator();
-		AuthenticatorBase authenticator = new FormAuthenticator();
-		ctx.getPipeline().addValve(authenticator);
-		
-//		ServletContext cont = ctx.getServletContext();
-//		RequestDispatcher disp = cont.getRequestDispatcher("/login.html");
-//		log.info("Request diapatcher : " + disp);
-		
+		/* Login Configuration */
+		// tomcat.addUser("user", "pass");
+		// tomcat.addRole("user", "admin");
+		//
+		// LoginConfig config = new LoginConfig();
+		// config.setAuthMethod("FORM");
+		// config.setLoginPage("/res/login.html");
+		// config.setErrorPage("/res/login-failed.html");
+		//
+		// ctx.setLoginConfig(config);
+		// ctx.addSecurityRole("admin");
+		// SecurityConstraint constraint = new SecurityConstraint();
+		// constraint.addAuthRole("admin");
+		// SecurityCollection collection = new SecurityCollection();
+		// collection.addPattern("/*");
+		// constraint.addCollection(collection);
+		// ctx.addConstraint(constraint);
+		//
+		// AuthenticatorBase authenticator = new FormAuthenticator();
+		// ctx.getPipeline().addValve(authenticator);
+
+		// ServletContext cont = ctx.getServletContext();
+		// String path = cont.getContextPath() + "authenticate";
+		// RequestDispatcher disp = cont.getRequestDispatcher(path);
+		// log.info("Path : " + path);
+		// log.info("Context : " + cont);
+		// log.info("Request diapatcher : " + disp);
+
 		try {
 			tomcat.start();
 			log.info("Tomcat Server is started!");
@@ -172,20 +174,38 @@ public class TomcatServer {
 		@Override
 		public void service(HttpServletRequest req, HttpServletResponse resp)
 				throws ServletException, IOException {
-			
-			RequestDispatcher rd = getServletContext().getRequestDispatcher("/res/index.html");  
-			rd.forward(req, resp);
-			
+
 			// Get request uri
 			String uri = req.getRequestURI();
 
 			// Get subject host address
 			String subject = req.getRemoteAddr();
-			
+
+			if (uri.endsWith("authenticate")) {
+				String username = req.getParameter("username");
+				String password = req.getParameter("password");
+
+				log.info("Service username : " + username);
+
+				if (username != null && password != null
+						&& username.equals("test") && password.equals("test")) {
+					HttpSession session = req.getSession(true);
+					session.setAttribute("authenticated", true);
+
+					resp.sendRedirect("/");
+				} else {
+					resp.sendRedirect("/login_error");
+				}
+			} else if (uri.endsWith("logout")) {
+				HttpSession session = req.getSession(true);
+				session.setAttribute("authenticated", false);
+				
+				resp.sendRedirect("/");
+			}
+
 			super.service(req, resp);
 
 			log.info("Serving: " + uri + " for " + subject + " done.");
-
 		}
 
 		@Override
@@ -195,11 +215,23 @@ public class TomcatServer {
 			String ipv6Address = "/" + getIPv6Address(req);
 			String uri = req.getRequestURI();
 
+			HttpSession session = req.getSession(true);
+			if ((session.getAttribute("authenticated") == null || Boolean
+					.parseBoolean(session.getAttribute("authenticated")
+							.toString()) != true)
+					&& !uri.endsWith("login_error")) {
+				if (uri.endsWith("/")) {
+					uri += "login";
+				} else {
+					uri += "/login";
+				}
+			}
+
 			String response = getDoGetResponse(req, resp, uri, ipv6Address);
 
 			PrintWriter w = resp.getWriter();
 			w.println(response);
-			
+
 			w.flush();
 			w.close();
 		}
@@ -210,7 +242,7 @@ public class TomcatServer {
 			Obj responseObj = null;
 			String resourcePath = getResourcePath(uri, ipv6Address);
 
-			String response = serveStatic(req, resp, ipv6Address);
+			String response = serveStatic(req, resp, uri, ipv6Address);
 			if (response != null) {
 				return response;
 			}
@@ -252,13 +284,22 @@ public class TomcatServer {
 				log.finest("oBIX Response: " + obixResponse);
 
 			} else {
-				try {
-					responseObj = obixServer.invokeOp(new URI(resourcePath),
-							data);
-					obixResponse = getObixResponse(req, ipv6Address,
-							responseObj, resourcePath);
-				} catch (URISyntaxException e) {
-					e.printStackTrace();
+				
+				HttpSession session = req.getSession(true);
+				if(session.getAttribute("authenticated") != null && Boolean
+					.parseBoolean(session.getAttribute("authenticated")
+							.toString()) == true) {
+					
+					try {
+						responseObj = obixServer.invokeOp(new URI(resourcePath),
+								data);
+						obixResponse = getObixResponse(req, ipv6Address,
+								responseObj, resourcePath);
+					} catch (URISyntaxException e) {
+						e.printStackTrace();
+					}
+				} else {
+					resp.sendRedirect("/");
 				}
 			}
 
@@ -409,9 +450,7 @@ public class TomcatServer {
 		}
 
 		private String serveStatic(HttpServletRequest req,
-				HttpServletResponse resp, String ipv6Address) {
-
-			String uri = req.getRequestURI();
+				HttpServletResponse resp, String uri, String ipv6Address) {
 
 			String host = req.getHeader("host");
 			String path = getResourcePath(uri, ipv6Address);
@@ -443,12 +482,20 @@ public class TomcatServer {
 
 			} else if (path.equalsIgnoreCase("/") || path.isEmpty()
 					|| path.endsWith(".js") || path.endsWith(".css")) {
-				if (path.isEmpty())
+				if (path.isEmpty()) {
 					path = "/index.html";
+				}
 
 				log.info("[serveStatic] path : " + path);
 
 				return serveFile(req, resp, path, new File("res/obelix"), false);
+			} else if (path.endsWith("login")) {
+				path = "/";
+				return serveFile(req, resp, path, new File("res/login"), false);
+			} else if (path.endsWith("login_error")) {
+				path = "/";
+				return serveFile(req, resp, path, new File("res/login_error"),
+						false);
 			}
 
 			return null;
@@ -509,11 +556,18 @@ public class TomcatServer {
 				}
 
 				if (response == null) {
-					// First try index.html and index.htm
-					if (new File(f, "index.html").exists())
+					// First try login.html
+					if (new File(f, "login.html").exists())
+						f = new File(homeDir, uri + "/login.html");
+					else if (new File(f, "login-failed.html").exists())
+						f = new File(homeDir, uri + "/login-failed.html");
+
+					// Then try index.html and index.htm
+					else if (new File(f, "index.html").exists())
 						f = new File(homeDir, uri + "/index.html");
 					else if (new File(f, "index.htm").exists())
 						f = new File(homeDir, uri + "/index.htm");
+
 					// No index file, list the directory if it is readable
 					else if (allowDirectoryListing && f.canRead()) {
 						String[] files = f.list();
