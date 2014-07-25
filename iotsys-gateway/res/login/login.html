@@ -5,21 +5,22 @@
 <title>Obix Login</title>
 </head>
 <body>
-	<form method="POST" action="j_security_check">
+	<form method="POST" action="authenticate">
 		<table>
 			<tr>
-				<td colspan="2">Login to the Tomcat-Demo application:</td>
+				<td colspan="2">Login to IoTSyS application:</td>
 			</tr>
 			<tr>
 				<td>Username:</td>
-				<td><input type="text" name="j_username" /></td>
+				<td><input type="text" name="username" /></td>
 			</tr>
 			<tr>
 				<td>Password:</td>
-				<td><input type="password" name="j_password"/ ></td>
+				<td><input type="password" name="password"/ ></td>
 			</tr>
 			<tr>
-				<td colspan="2"><input type="submit" value="Go" /></td>
+				<td><input type="submit" value="Login" /></td>
+				<td><input type="reset" value="Clear" /></td>
 			</tr>
 		</table>
 	</form>
