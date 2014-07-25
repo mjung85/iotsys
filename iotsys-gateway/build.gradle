@@ -119,7 +119,7 @@ dependencies {
 	provided group: 'net.sourceforge.javacsv', name: 'javacsv', version: '2.0'
 		
 	compile ":nagasena:"	
-	compile ":ecj:"
+	compile ":ecj-P20140317-1600:"
 	compile ":tomcat-dbcp:"
 	compile ":tomcat-embed-core:"
 	compile ":tomcat-embed-el:"
