@@ -16,8 +16,6 @@ import java.util.Hashtable;
 import java.util.StringTokenizer;
 import java.util.logging.Logger;
 
-import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -34,12 +32,7 @@ import obix.io.RelativeObixEncoder;
 import org.apache.catalina.Context;
 import org.apache.catalina.LifecycleException;
 import org.apache.catalina.Service;
-import org.apache.catalina.authenticator.AuthenticatorBase;
-import org.apache.catalina.authenticator.FormAuthenticator;
 import org.apache.catalina.connector.Connector;
-import org.apache.catalina.deploy.LoginConfig;
-import org.apache.catalina.deploy.SecurityCollection;
-import org.apache.catalina.deploy.SecurityConstraint;
 import org.apache.catalina.startup.Tomcat;
 import org.apache.http.HttpStatus;
 import org.json.JSONException;
@@ -193,14 +186,17 @@ public class TomcatServer {
 					session.setAttribute("authenticated", true);
 
 					resp.sendRedirect("/");
+					return;
 				} else {
 					resp.sendRedirect("/login_error");
+					return;
 				}
 			} else if (uri.endsWith("logout")) {
 				HttpSession session = req.getSession(true);
 				session.setAttribute("authenticated", false);
 				
 				resp.sendRedirect("/");
+				return;
 			}
 
 			super.service(req, resp);
@@ -298,8 +294,10 @@ public class TomcatServer {
 					} catch (URISyntaxException e) {
 						e.printStackTrace();
 					}
-				} else {
+				} 
+				else {
 					resp.sendRedirect("/");
+					return;
 				}
 			}
 
