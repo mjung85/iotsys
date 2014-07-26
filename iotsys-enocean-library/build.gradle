@@ -1,0 +1,61 @@
+// Variables
+description = 'IoTSyS EnOcean Library'
+
+eclipse{
+	classpath{
+		file {
+			withXml {
+				def node = it.asNode()
+				node.appendNode('classpathentry', [kind: 'src', path: '/iotsys-common', exported:'true'])
+			}
+		}
+	}
+}
+
+repositories {
+	flatDir { dirs "lib/" }
+}
+
+configurations {
+	provided
+	testProvided
+}
+
+sourceSets {
+	main { compileClasspath += configurations.provided }
+	
+	test {
+		java { srcDir 'test' }
+		compileClasspath += configurations.testProvided
+		runtimeClasspath += configurations.provided
+		runtimeClasspath += configurations.testProvided
+	}
+}
+
+
+jar {
+	from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+	
+	manifest {
+		attributes("Manifest-Version": "1.0",
+				   "Bundle-Name": "IoTSyS-EnOcean-Library", 
+				   "Bundle-SymbolicName": "at.ac.tuwien.auto.iotsys.iotsys-enocean-library",
+				   "Bundle-Description": "Java EnOcean Library used by the EnOcean Connector",
+				   "Bundle-Vendor": "Vienna University of Technology, Automation Systems Group, www.auto.tuwien.ac.at",
+				   "Bundle-Version": "0.1", 
+				   "Bundle-Classpath": ".",
+				   "Export-Package": "org.opencean.core, org.opencean.core.address, org.opencean.core.common, org.opencean.core.common.values, org.opencean.core.eep, " +
+									"org.opencean.core.packets, org.opencean.core.utils",
+				   "Import-Package": "at.ac.tuwien.auto.iotsys.commons, gnu.io"
+				   )
+	}
+}
+
+dependencies {
+    provided project(':iotsys-common')
+	compile group: 'org.slf4j', name: 'slf4j-jdk14', version: '1.6.2'	
+	compile group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.6.2'
+	testCompile group: 'junit',name:'junit',version: '4.8+' 
+	
+	provided group: 'org.bidib.jbidib.org.qbang.rxtx', name: 'rxtxcomm', version: '2.2'
+}

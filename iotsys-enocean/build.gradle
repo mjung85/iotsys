@@ -9,6 +9,7 @@ eclipse{
 				node.appendNode('classpathentry', [kind: 'src', path: '/iotsys-common', exported:'true'])
 				node.appendNode('classpathentry', [kind: 'src', path: '/iotsys-obix', exported:'true'])
 				node.appendNode('classpathentry', [kind: 'src', path: '/iotsys-osgi', exported:'true'])
+				node.appendNode('classpathentry', [kind: 'src', path: '/iotsys-enocean-library', exported:'true'])
 			}
 		}
 	}
@@ -32,13 +33,17 @@ jar {
 	manifest {
 		attributes("Manifest-Version": "1.0",
 				   "Bundle-Name": "IoTSyS-EnOcean",
+				   "Bundle-SymbolicName": "at.ac.tuwien.auto.iotsys.enocean",
 				   "Bundle-Description": "EnOcean connector for the IoTSyS Gateway projects",
 				   "Bundle-Vendor": "Vienna University of Technology, Automation Systems Group, www.auto.tuwien.ac.at",
 				   "Bundle-Version": "0.1",
 				   "Bundle-Classpath": ".",
 				   "Bundle-Activator": "at.ac.tuwien.auto.iotsys.gateway.connectors.enocean.EnoceanBundleActivator",
 				   "Import-Package": "obix, obix.asm, obix.contracts, obix.io, obix.net, obix.test, obix.toos, obix.ui, obix.ui.fields, obix.ui.views, obix.xml," +
-									 "at.ac.tuwien.auto.iotsys.commons, at.ac.tuwien.auto.iotsys.commons.obix.objects.iot, at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators," +
+									 "at.ac.tuwien.auto.iotsys.commons, at.ac.tuwien.auto.iotsys.commons.obix.objects.iot, " +
+									 "at.ac.tuwien.auto.iotsys.commons.obix.objects.enocean.datapoint, at.ac.tuwien.auto.iotsys.commons.obix.objects.enocean.datapoint.impl," +
+									 "at.ac.tuwien.auto.iotsys.commons.obix.objects.enocean.entity, at.ac.tuwien.auto.iotsys.commons.obix.objects.enocean.entity.impl,"+
+									 "at.ac.tuwien.auto.iotsys.commons.obix.objects, at.ac.tuwien.auto.iotsys.commons.obix.objects.general, at.ac.tuwien.auto.iotsys.commons.obix.objects.general.contracts.impl, at.ac.tuwien.auto.iotsys.commons.obix.objects.general.datapoint, at.ac.tuwien.auto.iotsys.commons.obix.objects.general.datapoint.impl, at.ac.tuwien.auto.iotsys.commons.obix.objects.general.encoding, at.ac.tuwien.auto.iotsys.commons.obix.objects.general.encoding.impl, at.ac.tuwien.auto.iotsys.commons.obix.objects.general.entity, at.ac.tuwien.auto.iotsys.commons.obix.objects.general.entity.impl, at.ac.tuwien.auto.iotsys.commons.obix.objects.general.enumeration, at.ac.tuwien.auto.iotsys.commons.obix.objects.general.enumeration.impl,"+
 									 "at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators.impl, at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.sensors," +
 									 "at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.sensors.impl, org.osgi.framework," +
 									 "javax.crypto, javax.crypto.interfaces, javax.crypto.spec," +
@@ -53,8 +58,8 @@ jar {
 									   "org.apache.commons.jexl2, org.apache.commons.jexl2.internal, org.apache.commons.jexl2.internal.introspection, org.apache.commons.jexl2.introspection, org.apache.commons.jexl2.parser, org.apache.commons.jexl2.scripting, " +
 									   "org.apache.commons.jxpath, org.apache.commons.jxpath.functions, org.apache.commons.jxpath.ri, org.apache.commons.jxpath.ri.axes, org.apache.commons.jxpath.ri.compiler, org.apache.commons.jxpath.ri.model, org.apache.commons.jxpath.ri.model.beans, org.apache.commons.jxpath.ri.model.container, org.apache.commons.jxpath.ri.model.dom, org.apache.commons.jxpath.ri.model.dynabeans, org.apache.commons.jxpath.ri.model.dynamic, org.apache.commons.jxpath.ri.model.jdom, org.apache.commons.jxpath.ri.parser,org.apache.commons.jxpath.servlet, org.apache.commons.jxpath.util, org.apache.commons.jxpath.xml, " +
 									   "org.apache.commons.lang, org.apache.commons.lang.builder, org.apache.commons.lang.enums, org.apache.commons.lang.exception, org.apache.commons.lang.math, org.apache.commons.lang.mutable, org.apache.commons.lang.text, org.apache.commons.lang.time, " +
-									   "org.apache.commons.logging, org.apache.commons.logging.impl, gnu.io"
-			 
+									   "org.apache.commons.logging, org.apache.commons.logging.impl, gnu.io, " +
+									   "org.opencean.core, org.opencean.core.address, org.opencean.core.common, org.opencean.core.common.values, org.opencean.core.eep," + "org.opencean.core.packets, org.opencean.core.utils"	
 				)
 	}
 }
@@ -65,6 +70,7 @@ dependencies {
 	provided project(':iotsys-obix')
 	provided project(':iotsys-common')
 	provided project(':iotsys-osgi')
+	provided project(':iotsys-enocean-library')
 	
 	//provided group: 'org.apache.felix', name: 'org.apache.felix.framework', version: '4.2.0'
 	provided group: 'org.apache.felix', name: 'org.osgi.core', version: '1.4.0'

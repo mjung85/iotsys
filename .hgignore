@@ -13,6 +13,7 @@ obelix/.sass-cache
 obelix/build
 iotsys-gateway/KNX.txt*
 iotsys-gateway/iotsys-log.*
+iotsys-enocean-library/target
 *.lck
 *.1
 *.txt

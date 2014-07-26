@@ -1,3 +1,34 @@
+/*******************************************************************************
+ * Copyright (c) 2014
+ * Institute of Computer Aided Automation, Automation Systems Group, TU Wien.
+ * All rights reserved.
+ * 
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the distribution.
+ * 3. Neither the name of the Institute nor the names of its contributors
+ *    may be used to endorse or promote products derived from this software
+ *    without specific prior written permission.
+ * 
+ * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS "AS IS" AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+ * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+ * SUCH DAMAGE.
+ * 
+ * This file is part of the IoTSyS project.
+ ******************************************************************************/
 package at.ac.tuwien.auto.iotsys.gateway.connectors.enocean;
 
 import java.lang.reflect.Constructor;
@@ -11,9 +42,14 @@ import java.util.logging.Logger;
 
 import obix.Obj;
 import obix.Uri;
+import obix.Obj.TranslationAttribute;
 
 import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.commons.configuration.XMLConfiguration;
+import org.opencean.core.ESP3Host;
+import org.opencean.core.EnoceanSerialConnector;
+import org.opencean.core.address.EnoceanId;
+import org.opencean.core.common.ProtocolConnector;
 
 import at.ac.tuwien.auto.iotsys.commons.Connector;
 import at.ac.tuwien.auto.iotsys.commons.DeviceLoader;
@@ -45,7 +81,7 @@ public class EnoceanDeviceLoaderImpl implements DeviceLoader {
 		ArrayList<Connector> connectors = new ArrayList<Connector>();
 
 		int connectorsSize = 0;
-		// WMBus
+		
 		Object enoceanConnectors = devicesConfig.getProperty("enocean.connector.name");
 		if (enoceanConnectors != null) {
 			connectorsSize = 1;
@@ -63,17 +99,25 @@ public class EnoceanDeviceLoaderImpl implements DeviceLoader {
 
 			Object enoceanConfiguredDevices = subConfig.getProperty("device.type");
 			String connectorName = subConfig.getString("name");
+			String senderAddress = subConfig.getString("senderAddress");
 			String serialPort = subConfig.getString("serialPort");
 			Boolean enabled = subConfig.getBoolean("enabled", false);
+			ProtocolConnector protocolConnector = new EnoceanSerialConnector();			
 
-			// PropertyConfigurator.configure("log4j.properties");
 			if (enabled) {
 				try {
 					log.info("Connecting EnOcean connector to COM Port: "+ serialPort);
-					EnoceanConnector enoceanConnector = new EnoceanConnector(serialPort);
-					enoceanConnector.connect();
+			        ESP3Host esp3Host = new ESP3Host(protocolConnector);
+			        esp3Host.setSerialPortName(serialPort);
+			        if(senderAddress!=null){
+			        	esp3Host.setSenderId(senderAddress);
+			        }
+			        esp3Host.connect();
 
-					connectors.add(enoceanConnector);
+					connectors.add(esp3Host);
+					
+					// start ESP3Host
+					esp3Host.start();
 
 					int numberOfDevices = 0;
 					
@@ -91,11 +135,17 @@ public class EnoceanDeviceLoaderImpl implements DeviceLoader {
 					// add devices
 					for (int i = 0; i < numberOfDevices; i++) {
 						String type = subConfig.getString("device(" + i + ").type");
-						List<Object> address = subConfig.getList("device(" + i + ").address");
+						//List<Object> address = subConfig.getList("device(" + i + ").address");
+						String address = subConfig.getString("device(" + i + ").address");
+						String name = subConfig.getString("device(" + i + ").name");
+						String deviceName = subConfig.getString("device(" + i + ").deviceName");
+						String displayName = subConfig.getString("device(" + i + ").displayName");
+						String display = subConfig.getString("device(" + i + ").display");
+						String manufacturer = subConfig.getString("device(" + i + ").manufacturer");
 						String ipv6 = subConfig.getString("device(" + i + ").ipv6");
 						String href = subConfig.getString("device(" + i + ").href");
 
-						String name = subConfig.getString("device(" + i + ").name");
+						
 						Boolean historyEnabled = subConfig.getBoolean("device(" + i + ").historyEnabled", false);
 						Boolean groupCommEnabled = subConfig.getBoolean( "device(" + i + ").groupCommEnabled", false);
 						Integer historyCount = subConfig.getInt("device(" + i + ").historyCount", 0);
@@ -105,29 +155,22 @@ public class EnoceanDeviceLoaderImpl implements DeviceLoader {
 						log.info("type: " + type);
 						
 						if (type != null && address != null) {
-							int addressCount = address.size();
 							try {
 								Constructor<?>[] declaredConstructors = Class.forName(type).getDeclaredConstructors();
 								for (int k = 0; k < declaredConstructors.length; k++) {
-									if (declaredConstructors[k].getParameterTypes().length == addressCount + 1) { 
+									if (declaredConstructors[k].getParameterTypes().length == 6) { 
+							
+										Object[] args = new Object[6];
+										// first arg is ESP3Host connector
+										args[0] = esp3Host;
+										args[1] = EnoceanId.fromString(address);
+										args[2] = deviceName;
+										args[3] = displayName;
+										args[4] = display;
+										args[5] = manufacturer;										
 										
-										Object[] args = new Object[address.size() + 1];
-										// first arg is KNX connector
-										
-										args[0] = enoceanConnector;
-										for (int l = 1; l <= address.size(); l++) {
-
-											String adr = (String) address.get(l - 1);
-											if (adr == null || adr.equals("null")) {
-												args[l] = null;
-											} else {
-												args[l] = new String(adr);
-											}
-
-										}
 										try {
-											// create a instance of the
-											// specified KNX device
+											// create a instance of the specified EnOcean device
 											Obj enoceanDevice = (Obj) declaredConstructors[k].newInstance(args);
 
 											enoceanDevice.setHref(new Uri(URLEncoder.encode(connectorName, "UTF-8") + "/" + href));
@@ -176,7 +219,7 @@ public class EnoceanDeviceLoaderImpl implements DeviceLoader {
 										} catch (InvocationTargetException e) {
 											e.printStackTrace();
 										}
-									}
+									}									
 								}
 							} catch (SecurityException e) {
 								e.printStackTrace();
@@ -185,37 +228,12 @@ public class EnoceanDeviceLoaderImpl implements DeviceLoader {
 							}
 						}
 					}
-
-					//					TemperatureSensorImplXBee xBeeTemperatureSensor = new TemperatureSensorImplXBee(
-					//							xBeeConnector, "0013a200407c1715");
-					//					xBeeTemperatureSensor.setHref(new Uri("temperature"));
-					//					xBeeTemperatureSensor.setName("temperature");
-					//
-					//					// add virtual devices to object broker and remember all
-					//					// assigned
-					//					// URIs, due to child objects there could be one or many
-					//					synchronized (myObjects) {
-					//						// myObjects.addAll(objectBroker.addObj(xBeeBrightness));
-					//						myObjects.addAll(objectBroker
-					//								.addObj(xBeeTemperatureSensor));
-					//					}
-					//
-					//					// enable history yes/no?
-					//					// objectBroker.addHistoryToDatapoints(xBeeBrightness, 100);
-					//					objectBroker.addHistoryToDatapoints(xBeeTemperatureSensor,
-					//							100);
-					//
-					//					objectBroker.enableGroupComm(xBeeTemperatureSensor);
-					//					// objectBroker.enableObjectRefresh(xBeeTemperatureSensor);
-
 				} catch (Exception e) {
 
 					e.printStackTrace();
 				}
 			}
-
 		}
-
 		return connectors;
 	}
 
@@ -226,8 +244,7 @@ public class EnoceanDeviceLoaderImpl implements DeviceLoader {
 				objectBroker.removeObj(obj.getFullContextPath());
 			}
 		}
-	}
-	
+	}	
 
 	@Override
 	public void setConfiguration(XMLConfiguration devicesConfiguration) {
