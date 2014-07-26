@@ -56,10 +56,12 @@ import at.ac.tuwien.auto.iotsys.commons.obix.objects.ContractInit;
 import at.ac.tuwien.auto.iotsys.gateway.interceptor.InterceptorBrokerImpl;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objectbroker.ObjectBrokerImpl;
 import at.ac.tuwien.auto.iotsys.gateway.obix.server.CoAPServer;
+import at.ac.tuwien.auto.iotsys.gateway.obix.server.NanoHTTPD;
 import at.ac.tuwien.auto.iotsys.gateway.obix.server.ObixObservingManager;
 import at.ac.tuwien.auto.iotsys.gateway.obix.server.ObixServer;
 import at.ac.tuwien.auto.iotsys.gateway.obix.server.ObixServerImpl;
 import at.ac.tuwien.auto.iotsys.gateway.obix.server.TomcatServer;
+import at.ac.tuwien.auto.iotsys.gateway.obix.server.TomcatServerNoSecurity;
 import at.ac.tuwien.auto.iotsys.gateway.util.ExiUtil;
 import at.ac.tuwien.auto.iotsys.xacml.pdp.PDPInterceptorSettings;
 
@@ -105,6 +107,9 @@ public class IoTSySGateway {
 
 		String httpPort = PropertiesLoader.getInstance().getProperties()
 				.getProperty("iotsys.gateway.http.port", "8080");
+		
+		String httpsPort = PropertiesLoader.getInstance().getProperties()
+				.getProperty("iotsys.gateway.https.port", "8443");
 
 		log.info("HTTP-Port: " + httpPort);
 
@@ -235,9 +240,17 @@ public class IoTSySGateway {
 		ObixObservingManager.getInstance().setObixServer(obixServer);
 
 		new CoAPServer(obixServer);
-
+		
+		boolean enableSecurity = Boolean.parseBoolean(PropertiesLoader
+				.getInstance().getProperties()
+				.getProperty("iotsys.gateway.security.enable", "false"));
+		
 		try {
-			new TomcatServer(Integer.parseInt(httpPort), obixServer);
+			if (enableSecurity) {
+				new TomcatServer(Integer.parseInt(httpsPort), obixServer);
+			} else {
+				new TomcatServerNoSecurity(Integer.parseInt(httpPort), obixServer);
+			}
 		} catch (NumberFormatException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -246,13 +259,13 @@ public class IoTSySGateway {
 			e.printStackTrace();
 		}
 
-		// try
-		// {
-		// new NanoHTTPD(Integer.parseInt(httpPort), obixServer);
-		// } catch (IOException ioe)
-		// {
-		// ioe.printStackTrace();
-		// }
+//		 try
+//		 {
+//		 new NanoHTTPD(Integer.parseInt(httpPort), obixServer);
+//		 } catch (IOException ioe)
+//		 {
+//		 ioe.printStackTrace();
+//		 }
 	}
 
 	public void stopGateway() {
