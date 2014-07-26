@@ -20,7 +20,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import obix.Obj;
 import obix.io.BinObixDecoder;
@@ -31,8 +30,6 @@ import obix.io.RelativeObixEncoder;
 
 import org.apache.catalina.Context;
 import org.apache.catalina.LifecycleException;
-import org.apache.catalina.Service;
-import org.apache.catalina.connector.Connector;
 import org.apache.catalina.startup.Tomcat;
 import org.apache.http.HttpStatus;
 import org.json.JSONException;
@@ -48,21 +45,15 @@ import at.ac.tuwien.auto.iotsys.gateway.interceptor.InterceptorBrokerImpl;
 import at.ac.tuwien.auto.iotsys.gateway.util.ExiUtil;
 import at.ac.tuwien.auto.iotsys.gateway.util.JsonUtil;
 
-public class TomcatServer {
+public class TomcatServerNoSecurity {
 
 	private Tomcat tomcat;
 
-	private static final Logger log = Logger.getLogger(TomcatServer.class
-			.getName());
+	private static final Logger log = Logger
+			.getLogger(TomcatServerNoSecurity.class.getName());
 
-	private String password = "123456";
-	private String alias = "tomcat";
-	// private String certificatePath = "ssl/certs/tomcatcert.cer";
-	private String keyStorePath = "ssl/certs/tomcatkey.jks";
-	private String keyStoreType = "JKS";
-
-	public TomcatServer(int port, ObixServer obixServer) throws IOException,
-			ServletException {
+	public TomcatServerNoSecurity(int port, ObixServer obixServer)
+			throws IOException, ServletException {
 
 		this.tomcat = new Tomcat();
 
@@ -71,26 +62,6 @@ public class TomcatServer {
 		tomcat.setBaseDir(".");
 
 		Context ctx = tomcat.addContext("/", new File(".").getAbsolutePath());
-
-		Connector connector = new Connector();
-		connector.setPort(8443);
-		connector.setSecure(true);
-		connector.setScheme("https");
-		connector.setAttribute("clientAuth", "true");
-		connector.setAttribute("keyAlias", alias);
-		connector.setAttribute("keystorePass", password);
-		connector.setAttribute("keystoreFile", keyStorePath);
-		connector.setAttribute("keystoreType", keyStoreType);
-		connector.setAttribute("truststorePass", password);
-		connector.setAttribute("truststoreFile", keyStorePath);
-		connector.setAttribute("sslProtocol", "TLS");
-		connector.setAttribute("SSLEnabled", true);
-
-		Service service = tomcat.getService();
-		service.addConnector(connector);
-
-		Connector defaultConnector = tomcat.getConnector();
-		defaultConnector.setRedirectPort(8443);
 
 		Tomcat.addServlet(ctx, "obix", new ObixServlet(obixServer));
 		ctx.addServletMapping("/*", "obix");
@@ -146,31 +117,6 @@ public class TomcatServer {
 			// Get subject host address
 			String subject = req.getRemoteAddr();
 
-			if (uri.endsWith("authenticate")) {
-				String username = req.getParameter("username");
-				String password = req.getParameter("password");
-
-				log.info("Service username : " + username);
-
-				if (username != null && password != null
-						&& username.equals("test") && password.equals("test")) {
-					HttpSession session = req.getSession(true);
-					session.setAttribute("authenticated", true);
-
-					resp.sendRedirect("/");
-					return;
-				} else {
-					resp.sendRedirect("/login_error");
-					return;
-				}
-			} else if (uri.endsWith("logout")) {
-				HttpSession session = req.getSession(true);
-				session.setAttribute("authenticated", false);
-
-				resp.sendRedirect("/");
-				return;
-			}
-
 			super.service(req, resp);
 
 			log.info("Serving: " + uri + " for " + subject + " done.");
@@ -182,18 +128,6 @@ public class TomcatServer {
 
 			String ipv6Address = "/" + getIPv6Address(req);
 			String uri = req.getRequestURI();
-
-			HttpSession session = req.getSession(true);
-			if ((session.getAttribute("authenticated") == null || Boolean
-					.parseBoolean(session.getAttribute("authenticated")
-							.toString()) != true)
-					&& !uri.endsWith("login_error")) {
-				if (uri.endsWith("/")) {
-					uri += "login";
-				} else {
-					uri += "/login";
-				}
-			}
 
 			String response = getDoGetResponse(req, resp, uri, ipv6Address);
 
@@ -253,22 +187,13 @@ public class TomcatServer {
 
 			} else {
 
-				HttpSession session = req.getSession(true);
-				if (session.getAttribute("authenticated") != null
-						&& Boolean.parseBoolean(session.getAttribute(
-								"authenticated").toString()) == true) {
-
-					try {
-						responseObj = obixServer.invokeOp(
-								new URI(resourcePath), data);
-						obixResponse = getObixResponse(req, ipv6Address,
-								responseObj, resourcePath);
-					} catch (URISyntaxException e) {
-						e.printStackTrace();
-					}
-				} else {
-					resp.sendRedirect("/");
-					return;
+				try {
+					responseObj = obixServer.invokeOp(new URI(resourcePath),
+							data);
+					obixResponse = getObixResponse(req, ipv6Address,
+							responseObj, resourcePath);
+				} catch (URISyntaxException e) {
+					e.printStackTrace();
 				}
 			}
 
@@ -458,14 +383,7 @@ public class TomcatServer {
 				log.info("[serveStatic] path : " + path);
 
 				return serveFile(req, resp, path, new File("res/obelix"), false);
-			} else if (path.endsWith("login")) {
-				path = "/";
-				return serveFile(req, resp, path, new File("res/login"), false);
-			} else if (path.endsWith("login_error")) {
-				path = "/";
-				return serveFile(req, resp, path, new File("res/login_error"),
-						false);
-			}
+			} 
 
 			return null;
 		}
@@ -525,14 +443,9 @@ public class TomcatServer {
 				}
 
 				if (response == null) {
-					// First try login.html
-					if (new File(f, "login.html").exists())
-						f = new File(homeDir, uri + "/login.html");
-					else if (new File(f, "login-failed.html").exists())
-						f = new File(homeDir, uri + "/login-failed.html");
 
 					// Then try index.html and index.htm
-					else if (new File(f, "index.html").exists())
+					if (new File(f, "index.html").exists())
 						f = new File(homeDir, uri + "/index.html");
 					else if (new File(f, "index.htm").exists())
 						f = new File(homeDir, uri + "/index.htm");
