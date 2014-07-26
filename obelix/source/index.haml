@@ -1,0 +1,127 @@
+!!!
+%html.obelix(ng-app="Obelix" lang="en")
+  %head
+    %meta(charset="utf-8")
+    %title Obelix
+    = stylesheet_link_tag "jquery.qtip.css"
+    = stylesheet_link_tag "tourist.css"
+    = stylesheet_link_tag "app.css"
+    = javascript_include_tag "app.js"
+  %body(ng-controller="MainCtrl" obelix-splash-screen)
+    %script(type="text/ng-template" id="directory_template")
+      .icon-label
+        .icon(ng-click="directory.toggle()" ng-class="{expanded:directory.expanded}")
+        .label(ng-click="directory.toggle()") {{directory.name}}
+        .clear
+      %ul.devices(ng-show="directory.expanded")
+        %li.device(ng-repeat="device in directory.devices")
+          %label(draggable="device" tour-device="device") {{device.name}}
+      %ul.subdirectories(ng-show="directory.expanded")
+        %li.subdirectory(ng-class="{expanded:subdirectory.expanded}" ng-repeat="subdirectory in directory.subdirectories" include-directory-template="subdirectory")
+    .btn#toggleSidebar(ng-click="sidebar.toggle(); $event.stopPropagation();")
+    #sidebar-sublayer
+    #sidebar(ng-class="{expanded:sidebar.expanded}")
+      .header
+        %a(href="https://code.google.com/p/iotsys/" target="_blank")
+          #sidebar-logo(title="IoTSyS - Internet of Things System Stack")
+        .segmented_control
+          .segment#segmentDevices(ng-class="{active: sidebar.segment==0}" ng-click="sidebar.segment=0") Devices
+          .segment#segmentSettings(ng-class="{active: sidebar.segment==1}" ng-click="sidebar.segment=1") Settings
+      .content
+        %div#settings(ng-show="sidebar.segment==1")
+          .section
+            .section-title
+              %h3 Watch
+            .section-content
+              %label(for="watchPollInterval") Poll interval:
+              %input(id="watchPollInterval" type="text" size="5" maxlength="5" ng-model="watch.interval" inline-editor="watch.updateInterval()")
+              %span msec
+            .clear
+          .section
+            .section-title 
+              %h3 Menu
+            .section-content
+              %label(for="sidebarLock") Always Open:
+              %input(id="sidebarLock" type="checkbox" ng-model="sidebar.locked")
+            .clear
+          .section
+            .section-title 
+              %h3 Canvas
+            .section-content
+              %a(href="#" ng-click="clear()") Clear Canvas
+            .clear
+        %div(ng-show="sidebar.segment==0" ng-if="directory" include-directory-template="directory")
+    #canvas(ng-click="sidebar.expanded = false" droppable="placeDevice" jsplumb-container)
+      #aboutStarter.obelix-starter(obelix-about-starter)
+        .icon-color
+      #tourFirstTimeVisitor(obelix-tour-first-time-visitor)
+        .icon-color
+      #tourStarter.obelix-starter(obelix-tour-starter)
+        .icon-color
+      #tourDeviceDropZone
+      %div(ng-repeat="device in allDevices | filter:{placement:'!!'}")
+        .device(ng-style="{left: device.placement.left, top: device.placement.top}" ng-class="device.name.toLowerCase()" draggable="device" draggable-distance="5" draggable-helper="original" draggable-via-jsplumb="true")
+          %header(ng-switch="device.editing")
+            %div.block_control 
+              %div.close(ng-click="destroyDevice(device)" title="Delete device from current configuration") x
+              %div.clear
+            %input(type="text" ng-switch-when="true" ng-model="device.name" inline-editor="device.rename(); device.editing = false")
+            %label.name(ng-switch-default ng-click="device.editing = true")
+              {{device.name}}
+          .properties
+            .property(ng-repeat="property in device.properties" ng-class="klass" ng-switch="property.klass" device="device" jsplumb-endpoint="property")
+              %label {{property.displayName}}
+              %span.bool(ng-switch-when="bool")
+                %input(type="checkbox" ng-checked="property.value" ng-disabled="property.readonly" ng-model="property.value" ng-change="property.write()")
+              %span.numeric(ng-switch-when="numeric")
+                %input(type="text" ng-model="property.value" ng-model-onblur ng-disabled="property.readonly" ng-change="property.write()")
+                .slider(ng-switch="property.range")
+                  %div(ng-switch-when="false")
+                  %div(ng-switch-default)
+                    %input(type="range" min="{{property.range.min}}" max="{{property.range.max}}" step="{{property.range.step}}" ng-model="property.value" ng-mouseup="property.write()")
+              %span.enum(ng-switch-when="enum")
+                %select(ng-model="property.value" ng-options="x | comparatorOpEnc:device for x in property.range" ng-change="property.write()")
+              %span.other(ng-switch-default)
+                %input(type="text" ng-model="property.value" ng-disabled="property.readonly" ng-change="property.write()" ng-model-onblur)
+    #about.qtip-light.obelix-qtip
+      #about-header
+        .row-0
+          #iotsys-logo(title="IoTSyS - Internet of Things System Stack")
+            %a(href="https://code.google.com/p/iotsys/" target="_blank")
+        .row-1
+          #automation-systems-group-logo(title="Automation Systems Group - Institute of Computer Aided Automation")
+            %a(href="https://www.auto.tuwien.ac.at/" target="_blank")
+          #tu-vienna-logo(title="Vienna University of Technology")
+            %a(href="https://www.tuwien.ac.at/" target="_blank")
+        .clear
+      #about-content
+    #project-members.text
+      .leads 
+        %h2 Project Lead
+        %span.lead(ng-repeat="lead in projectMembers.leads")
+          %span(ng-if="!$last")
+            %a(ng-if="lead.website" href="{{lead.website}}" target="_blank")
+              %span.name {{lead.firstName}} {{lead.lastName}},
+            %span.name(ng-if="!lead.website")
+              {{lead.firstName}} {{lead.lastName}},
+          %span(ng-if="$last")
+            %a(ng-if="lead.website" href="{{lead.website}}" target="_blank")
+              %span.name {{lead.firstName}} {{lead.lastName}}
+            %span.name(ng-if="!lead.website")
+              {{lead.firstName}} {{lead.lastName}}
+      .contributors
+        %h3 Project Contributors
+        %span.contributor(ng-repeat="contributor in projectMembers.contributors") 
+          %span(ng-if="$index >= 0 && !$last")
+            %a(ng-if="contributor.website" href="{{contributor.website}}" target="_blank")
+              %span.name {{contributor.firstName}} {{contributor.lastName}},
+            %span.name(ng-if="!contributor.website")
+              {{contributor.firstName}} {{contributor.lastName}},
+          %span(ng-if="$index > 0 && $last")
+            %a(ng-if="contributor.website" href="{{contributor.website}}" target="_blank")
+              %span.name {{contributor.firstName}} {{contributor.lastName}}
+            %span.name(ng-if="!contributor.website")
+              {{contributor.firstName}} {{contributor.lastName}}
+      .footer
+        %button(name="button" ng-click="jQuery('body').trigger('hideAboutScreen')") OK
+          

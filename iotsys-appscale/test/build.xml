@@ -1,0 +1,130 @@
+<!-- create repacked package from source -->
+<project name="AppServer_Java" default="update-testserver">
+  <property name="src" location="src" />
+  <property name="build" location="build" />
+  <property name="gae_version" value="1.8.0" />
+  <property name="gae_url" value="http://googleappengine.googlecode.com/files/appengine-java-sdk-${gae_version}.zip" />
+  <property name="gae_org" location="appengine-java-sdk-${gae_version}" />
+  <property name="gae_dist" location="appengine-java-sdk-repacked" />
+  <available property="sdk.exists" file="appengine-java-sdk-${gae_version}/README" />
+  
+  <property name="api_jar_name" value="iotsys-appscale-0.1.jar" />
+  <property name="api_factoryprovider_file" value="com.google.appengine.spi.FactoryProvider" />
+  <property name="api_localrpcservice_file" value="com.google.appengine.tools.development.LocalRpcService" />
+  <property name="api_extraxt_dir" value="tempapi" />
+
+  <path id="gae.classpath">
+    <fileset dir="${gae_dist}/lib">
+      <include name="**/*.jar" />
+      <exclude name="user/**/*.jar" />
+      <exclude name="tools/orm/*.jar" />
+      <exclude name="opt/**/*.jar" />
+    </fileset>
+  </path>
+
+  <target name="clean-all">
+    <delete dir="${build}" />
+    <delete dir="${gae_org}" />
+    <delete dir="${gae_dist}" />
+    <delete file="*.zip" />
+  </target>
+
+  <target name="clean-build">
+    <delete dir="${build}" />
+    <delete dir="${gae_org}" />
+  </target>
+
+  <target name="extract-sdk" unless="sdk.exists">
+    <get src="${gae_url}" dest="appengine-java-sdk.zip" verbose="true" />
+    <unzip src="appengine-java-sdk.zip" dest="." />
+    <delete file="appengine-java-sdk.zip" />
+  </target>
+
+  <target name="repack-sdk" depends="extract-sdk">
+    <mkdir dir="${gae_dist}" />
+    <copy todir="${gae_dist}" overwrite="true">
+      <fileset dir="${gae_org}">
+        <include name="**/*" />
+        <exclude name="demos/**" />
+        <exclude name="docs/**" />
+        <exclude name="src/**" />
+      </fileset>
+    </copy>
+    <chmod perm="a+x" verbose="true">
+      <fileset dir="${gae_dist}/bin">
+        <include name="*.sh" />
+      </fileset>
+    </chmod>
+  </target>
+
+
+  <target name="extract-api" depends="repack-sdk">
+    <unjar src="${api_jar_name}" dest="${api_extraxt_dir}" />
+  	<copy file="${api_factoryprovider_file}" todir="${api_extraxt_dir}/META-INF/services"/>
+  	<copy file="${api_localrpcservice_file}" todir="${api_extraxt_dir}/META-INF/services"/>
+  	<touch file="${api_extraxt_dir}/META-INF/services/${api_factoryprovider_file}"/>
+  	<touch file="${api_extraxt_dir}/META-INF/services/${api_localrpcservice_file}"/>
+  </target>
+
+  <target name="update-api-jar" depends="extract-api">
+  	<jar destfile="${gae_dist}/lib/impl/appengine-api.jar" basedir="${api_extraxt_dir}" update="true">
+  		<include name="META-INF/services/${api_factoryprovider_file}"/> 
+  		<include name="com/google/apphosting/api/*.class"/> 
+  		<include name="com/google/appengine/api/iotsys/**/*"/>
+  		<exclude name="com/google/appengine/api/iotsys/dev/**"/>
+  	</jar>
+  </target>
+
+  <target name="update-api-jar-user" depends="extract-api">
+  	<jar destfile="${gae_dist}/lib/user/appengine-api-1.0-sdk-${gae_version}.jar" basedir="${api_extraxt_dir}" update="true">
+  		<include name="META-INF/services/${api_factoryprovider_file}"/>  
+  		<include name="com/google/apphosting/api/*.class"/> 
+  		<include name="com/google/appengine/api/iotsys/**/*"/>
+  		<exclude name="com/google/appengine/api/iotsys/dev/**"/>
+  	</jar>
+  </target>
+  
+  <target name="update-api-labs-jar" depends="extract-api">
+    <jar destfile="${gae_dist}/lib/impl/appengine-api-labs.jar" basedir="${api_extraxt_dir}" update="true">
+    	<include name="com/google/appengine/api/iotsys/dev/**/*"/> 
+    	<include name="org/**/*"/>
+    	<include name="obix/**/*"/>
+    	<include name="junit/**/*"/>
+    	<include name="gnu/**/*"/>
+    	<include name="at/**/*"/>
+    	<include name="ch/**/*"/>
+    </jar>
+  </target>
+
+  <target name="update-api-labs-jar-user" depends="extract-api">
+  	<jar destfile="${gae_dist}/lib/user/appengine-api-labs-${gae_version}.jar" basedir="${api_extraxt_dir}" update="true">
+  	  	<include name="com/google/appengine/api/iotsys/dev/**/*"/> 
+  	    <include name="org/**/*"/>
+  	    <include name="obix/**/*"/>
+  	    <include name="junit/**/*"/>
+  	    <include name="gnu/**/*"/>
+  	    <include name="at/**/*"/>
+  	    <include name="ch/**/*"/>
+  	</jar>
+  </target>
+
+  <target name="update-api-stubs-jar" depends="extract-api">
+  	<jar destfile="${gae_dist}/lib/impl/appengine-api-stubs.jar" basedir="${api_extraxt_dir}" update="true">
+  		<include name="META-INF/services/${api_localrpcservice_file}"/>
+  	  	<include name="com/google/appengine/api/iotsys/dev/**/*"/> 
+  	 	<include name="org/**/*"/>
+  	    <include name="obix/**/*"/>
+  	  	<include name="junit/**/*"/>
+  	  	<include name="gnu/**/*"/>
+  	  	<include name="at/**/*"/>
+  	  	<include name="ch/**/*"/>
+  	</jar>
+  </target>
+ 
+  <target name="update-jars" depends="update-api-jar, update-api-jar-user, update-api-labs-jar, update-api-labs-jar-user, update-api-stubs-jar" />
+
+  <target name="update-testserver" depends="update-jars">
+  	<delete dir="${api_extraxt_dir}"/>
+  </target>
+
+</project>
