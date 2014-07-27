@@ -1,7 +1,6 @@
 package org.opencean.core.packets;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.logging.Logger;
 
 /**
  * eep D2-01-08
@@ -16,7 +15,7 @@ import org.slf4j.LoggerFactory;
  * 
  */
 public class RadioPacketVLD extends RadioPacket {
-    private static Logger logger = LoggerFactory.getLogger(RadioPacketVLD.class);
+    private static Logger logger = Logger.getLogger(RadioPacketVLD.class.getName());
 
     public static final byte RADIO_TYPE = (byte) 0xD2;
     private byte CMDByte;

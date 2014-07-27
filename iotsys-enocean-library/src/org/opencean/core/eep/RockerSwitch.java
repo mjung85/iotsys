@@ -8,12 +8,11 @@ import org.opencean.core.common.values.ButtonState;
 import org.opencean.core.common.values.Value;
 import org.opencean.core.packets.RadioPacketRPS;
 import org.opencean.core.utils.Bits;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.logging.Logger;
 
 public class RockerSwitch extends RadioPacketRPSParser {
 
-    private static Logger logger = LoggerFactory.getLogger(RockerSwitch.class);
+    private static Logger logger = Logger.getLogger(RockerSwitch.class.getName());
 
     public static final String CHANNEL_A = "A";
     public static final String CHANNEL_B = "B";
