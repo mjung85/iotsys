@@ -1,11 +1,10 @@
 package org.opencean.core.utils;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.logging.Logger;
 
 
 public class RLC {
-	private static Logger logger = LoggerFactory.getLogger(CircularByteBuffer.class);
+	private static Logger logger = Logger.getLogger(CircularByteBuffer.class.getName());
 
 	private int value = 0;
 	private int overflow = 255;

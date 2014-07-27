@@ -367,7 +367,7 @@
     </connector>     
     <connector>
       <name>EnOcean</name>
-      <enabled>false</enabled>
+      <enabled>true</enabled>
 	  <senderAddress>01:23:45:67</senderAddress>
       <serialPort>COM5</serialPort>
       <device>

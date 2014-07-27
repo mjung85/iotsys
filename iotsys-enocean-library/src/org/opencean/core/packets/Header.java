@@ -3,11 +3,11 @@ package org.opencean.core.packets;
 import org.opencean.core.common.ProtocolConnector;
 import org.opencean.core.utils.ByteArray;
 import org.opencean.core.utils.CRC8;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Header {
-    private static Logger logger = LoggerFactory.getLogger(Header.class);
+    private static Logger logger = Logger.getLogger(Header.class.getName());
 
     private byte packetType;
     private short dataLength;
@@ -15,13 +15,13 @@ public class Header {
     private byte crc8;
 
     public static Header from(ProtocolConnector connector) {
-        logger.debug("Reading header...");
+        logger.finest("Reading header...");
         Header header = new Header();
         header.setDataLength(connector.getShort());
         header.setOptionalDataLength(connector.get());
         header.setPacketType(connector.get());
         header.crc8 = connector.get();
-        logger.debug(header.toString());
+        logger.finest(header.toString());
         return header;
     }
 

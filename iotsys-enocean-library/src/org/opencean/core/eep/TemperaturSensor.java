@@ -10,12 +10,11 @@ import org.opencean.core.common.values.Unit;
 import org.opencean.core.common.values.Value;
 import org.opencean.core.packets.LearnButtonState;
 import org.opencean.core.packets.RadioPacket4BS;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.logging.Logger;
 
 public class TemperaturSensor extends RadioPacket4BSParser {
 
-    private static Logger logger = LoggerFactory.getLogger(TemperaturSensor.class);
+    private static Logger logger = Logger.getLogger(TemperaturSensor.class.getName());
 
     private static final int RANGE_MIN = 255;
     private static final int RANGE_MAX = 0;

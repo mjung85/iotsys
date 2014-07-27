@@ -1,6 +1,5 @@
 package org.opencean.core;
 
-import gnu.io.CommPort;
 import gnu.io.CommPortIdentifier;
 import gnu.io.SerialPort;
 
@@ -11,9 +10,8 @@ import java.util.Enumeration;
 
 import org.opencean.core.common.ProtocolConnector;
 import org.opencean.core.utils.CircularByteBuffer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
 /**
  * EnOcean connector for serial port communication.
  * 
@@ -22,7 +20,7 @@ import org.slf4j.LoggerFactory;
  */
 public class EnoceanSerialConnector implements ProtocolConnector {
 
-    private static final Logger logger = LoggerFactory.getLogger(EnoceanSerialConnector.class);
+    private static final Logger logger = Logger.getLogger(EnoceanSerialConnector.class.getName());
 
     InputStream in = null;
     DataOutputStream out = null;
@@ -84,19 +82,19 @@ public class EnoceanSerialConnector implements ProtocolConnector {
 
     @Override
     public void disconnect() {
-        logger.debug("Interrupt serial connection");
+        logger.info("Interrupt serial connection");
         byteStreamPipe.stop();
 
-        logger.debug("Close serial stream");
+        logger.info("Close serial stream");
         try {
             out.close();
             serialPort.close();
             buffer.stop();
         } catch (IOException e) {
-            logger.warn("Could not fully shut down EnOcean driver", e);
+        	logger.log(Level.WARNING, "Could not fully shut down EnOcean driver", e);            
         }
 
-        logger.debug("Ready");
+        logger.info("Ready");
     }
 
     @Override

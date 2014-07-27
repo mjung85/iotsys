@@ -1,12 +1,8 @@
 package org.opencean.core;
 
-import gnu.io.CommPortIdentifier;
-import gnu.io.SerialPort;
-
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import org.opencean.core.address.EnoceanId;
 import org.opencean.core.common.EEPId;
@@ -14,14 +10,14 @@ import org.opencean.core.common.ParameterValueChangeListener;
 import org.opencean.core.common.ProtocolConnector;
 import org.opencean.core.packets.BasicPacket;
 import org.opencean.core.packets.RadioPacket;
-import org.opencean.core.packets.RadioPacketRPS;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import at.ac.tuwien.auto.iotsys.commons.Connector;
 
 public class ESP3Host extends Thread implements Connector{
-    private static Logger logger = LoggerFactory.getLogger(ESP3Host.class);
+    private static Logger logger = Logger.getLogger(ESP3Host.class.getName());
     private static byte[] DEFAULT_SENDERID = {(byte)0x00, (byte)0x25, (byte)0xA2, (byte)0xDC};
     
     private List<EnoceanReceiver> receivers = new ArrayList<EnoceanReceiver>();
@@ -104,19 +100,19 @@ public class ESP3Host extends Thread implements Connector{
 
     @Override
     public void run() {
-        logger.info("starting receiveRadio.. ");
+        logger.finest("Starting receiveRadio.. ");
         PacketStreamReader receiver = new PacketStreamReader(connector);
         while (true) {
             try {
                 BasicPacket receivedPacket = receiver.read();
                 if (receivedPacket != null) {
-                    logger.info(receivedPacket.toString());
+                    logger.finest(receivedPacket.toString());
                     notifyReceivers(receivedPacket);
                 } else {
-                    logger.debug("Sync byte received, but header not valid.");
+                    logger.info("Sync byte received, but header not valid.");
                 }
             } catch (Exception e) {
-                logger.error("Error", e);
+            	logger.log(Level.SEVERE, e.getMessage(), e);
             }
         }
     }
