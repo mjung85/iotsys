@@ -10,14 +10,12 @@ import org.opencean.core.common.values.ContactState;
 import org.opencean.core.common.values.Value;
 import org.opencean.core.packets.BasicPacket;
 import org.opencean.core.packets.RadioPacket1BS;
-import org.opencean.core.packets.RadioPacketRPS;
 import org.opencean.core.utils.Bits;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.logging.Logger;
 
 public class SingleInputContact implements EEPParser {
 	
-	private static Logger logger = LoggerFactory.getLogger(SingleInputContact.class);
+	private static Logger logger = Logger.getLogger(SingleInputContact.class.getName());
 	
 	private ContactState contact;
 	private ButtonState learnButton;

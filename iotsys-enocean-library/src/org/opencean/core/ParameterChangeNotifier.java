@@ -14,12 +14,11 @@ import org.opencean.core.eep.EEPParser;
 import org.opencean.core.eep.EEPParserFactory;
 import org.opencean.core.packets.BasicPacket;
 import org.opencean.core.packets.RadioPacket;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.logging.Logger;
 
 public class ParameterChangeNotifier implements EnoceanReceiver {
 
-    private static Logger logger = LoggerFactory.getLogger(ParameterChangeNotifier.class);
+    private static Logger logger = Logger.getLogger(ParameterChangeNotifier.class.getName());
 
     private List<ParameterValueChangeListener> valueChangeListeners = new ArrayList<ParameterValueChangeListener>();
     private Map<EnoceanId, EEPId> deviceToEEP = new HashMap<EnoceanId, EEPId>();
