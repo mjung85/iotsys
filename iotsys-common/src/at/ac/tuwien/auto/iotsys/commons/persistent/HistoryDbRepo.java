@@ -101,8 +101,7 @@ public class HistoryDbRepo extends CouchDbRepositorySupport<DbHistoryFeedRecord>
 
 	@Override
 	public List<DbHistoryFeedRecord> getHistoryFeed(String href, long start, long end, int limit) {
-		if (end == 0)
-			// today
+		if (end == 0) // today
 			end = (new Date()).getTime();
 		ComplexKey startKey = ComplexKey.of(href, start);
 		ComplexKey endKey = ComplexKey.of(href, end);
