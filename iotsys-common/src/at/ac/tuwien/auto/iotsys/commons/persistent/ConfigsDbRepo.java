@@ -59,19 +59,19 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 public class ConfigsDbRepo extends CouchDbRepositorySupport<Connector> implements ConfigsDb{
 
 	private static ConfigsDbRepo INSTANCE;
+	private static final Logger log = Logger.getLogger(ConfigsDbRepo.class.getName());
 	private ObjectMapper om = new ObjectMapper();
+	
 	private List<JsonNode> allConnectors = new ArrayList<JsonNode>();
 	private List<Device> allDevices = new ArrayList<Device>();
 	private DeviceLoaders deviceLoaders = new DeviceLoaders();
 	
 	// Transition step
-	private boolean migrating = false;//PropertiesLoader.getInstance().getProperties().getProperty("iotsys.gateway.dbmigrating", "false").equals("true");
+	private boolean migrating = false;
 	private boolean connectorsMigrated = false;
 	private List<String> allDeviceLoadersFromXML = new ArrayList<String>();
 	private List<Connector> allConnectorsFromXML = new ArrayList<Connector>();
 	private List<Device> allDevicesFromXML = new ArrayList<Device>();
-	
-	private static final Logger log = Logger.getLogger(ConfigsDbRepo.class.getName());
 	
 	private ConfigsDbRepo(CouchDbConnector db) throws Exception {
 		super(Connector.class, db);
