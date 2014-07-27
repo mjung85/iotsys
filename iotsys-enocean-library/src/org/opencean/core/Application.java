@@ -11,8 +11,8 @@ import org.opencean.core.packets.RadioPacket;
 import org.opencean.core.packets.RadioPacket4BS;
 import org.opencean.core.utils.ByteArray;
 import org.opencean.core.utils.RLC;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Stand-alone Application for reading EnOcean packages
@@ -22,7 +22,7 @@ import org.slf4j.LoggerFactory;
  */
 public class Application {
 
-    private static Logger logger = LoggerFactory.getLogger(Application.class);
+    private static Logger logger = Logger.getLogger(Application.class.getName());
 
     public static void main(String[] args) throws Exception {
         logger.info("starting..");

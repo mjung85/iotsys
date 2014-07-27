@@ -3,12 +3,12 @@ package org.opencean.core.utils;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class CircularByteBuffer {
 
-    private static Logger logger = LoggerFactory.getLogger(CircularByteBuffer.class);
+    private static Logger logger = Logger.getLogger(CircularByteBuffer.class.getName());
 
     private static final int WAIT_MS = 10;
 
@@ -47,7 +47,7 @@ public class CircularByteBuffer {
             try {
                 Thread.sleep(WAIT_MS);
             } catch (Exception e) {
-                logger.error("Error while waiting for new data", e);
+            	logger.log(Level.SEVERE, "Error while waiting for new data", e);                
             }
         }
     }

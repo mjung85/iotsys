@@ -3,12 +3,11 @@ package org.opencean.core;
 import org.opencean.core.common.ProtocolConnector;
 import org.opencean.core.packets.BasicPacket;
 import org.opencean.core.packets.RawPacket;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.logging.Logger;
 
 public class PacketStreamReader {
 
-    private static Logger logger = LoggerFactory.getLogger(PacketStreamReader.class);
+    private static Logger logger = Logger.getLogger(PacketStreamReader.class.getName());
 
     private ProtocolConnector connector;
 
@@ -30,14 +29,14 @@ public class PacketStreamReader {
         rawPacket.readHeader(connector);
         if (!rawPacket.getHeader().isValid()) {
             connector.reset();
-            logger.debug("Header not valid. Resetting.");
+            logger.finest("Header not valid. Resetting.");
             return null;
         }
         rawPacket.readPayload(connector);
-        if (!rawPacket.getPayload().isValid()) {
-            logger.warn("Payload CRC not correct! Package received: " + rawPacket);
+        if (!rawPacket.getPayload().isValid()) {        	
+            logger.finest("Payload CRC not correct! Package received: " + rawPacket);
             connector.reset();
-            logger.debug("Payload not valid. Resetting.");
+            logger.finest("Payload not valid. Resetting.");
             return null;
         }
         BasicPacket packet = PacketFactory.createFrom(rawPacket);
@@ -46,7 +45,7 @@ public class PacketStreamReader {
 
     private void seekTillSyncByte() {
         while (!(connector.get() == BasicPacket.SYNC_BYTE)) {
-            logger.debug("Waiting for sync byte");
+            logger.finest("Waiting for sync byte");
         }
     }
 

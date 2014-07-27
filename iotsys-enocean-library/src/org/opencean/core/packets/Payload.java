@@ -3,25 +3,24 @@ package org.opencean.core.packets;
 import org.opencean.core.common.ProtocolConnector;
 import org.opencean.core.utils.ByteArray;
 import org.opencean.core.utils.CRC8;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.logging.Logger;
 
 public class Payload {
-    private static Logger logger = LoggerFactory.getLogger(Payload.class);
+    private static Logger logger = Logger.getLogger(Payload.class.getName());
 
     private byte[] data;
     private byte[] optionalData;
     private byte crc8;
 
     public static Payload from(Header header, ProtocolConnector connector) {
-        logger.debug("Reading payload...");
+        logger.finest("Reading payload...");
         Payload payload = new Payload();
         payload.setData(new byte[header.getDataLength()]);
         connector.get(payload.getData());
         payload.setOptionalData(new byte[header.getOptionalDataLength()]);
         connector.get(payload.getOptionalData());
         payload.crc8 = connector.get();
-        logger.debug(payload.toString());
+        logger.finest(payload.toString());
         return payload;
     }
 

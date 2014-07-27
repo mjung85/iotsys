@@ -12,12 +12,11 @@ import org.opencean.core.common.values.Value;
 import org.opencean.core.packets.BasicPacket;
 import org.opencean.core.packets.LearnButtonState;
 import org.opencean.core.packets.RadioPacket4BS;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.logging.Logger;
 
 public class OccupancySensor implements EEPParser {
 
-    private static Logger logger = LoggerFactory.getLogger(OccupancySensor.class);
+    private static Logger logger = Logger.getLogger(OccupancySensor.class.getName());
 
     private LearnButtonState learnButton;
 

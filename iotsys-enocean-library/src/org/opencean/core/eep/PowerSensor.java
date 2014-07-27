@@ -14,12 +14,11 @@ import org.opencean.core.common.values.Unit;
 import org.opencean.core.common.values.Value;
 import org.opencean.core.packets.BasicPacket;
 import org.opencean.core.packets.RadioPacketVLD;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.logging.Logger;
 
 public class PowerSensor implements EEPParser {
 
-    private static Logger logger = LoggerFactory.getLogger(PowerSensor.class);
+    private static Logger logger = Logger.getLogger(PowerSensor.class.getName());
     private BigDecimal currentValue;
     private EEPId eep;
 
