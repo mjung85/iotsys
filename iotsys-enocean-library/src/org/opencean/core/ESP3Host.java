@@ -14,9 +14,10 @@ import org.opencean.core.packets.RadioPacket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import at.ac.tuwien.auto.iotsys.commons.Connector;
+//import at.ac.tuwien.auto.iotsys.commons.Connector;
+import at.ac.tuwien.auto.iotsys.commons.persistent.models.Connector;
 
-public class ESP3Host extends Thread implements Connector{
+public class ESP3Host extends Connector implements Runnable{
     private static Logger logger = Logger.getLogger(ESP3Host.class.getName());
     private static byte[] DEFAULT_SENDERID = {(byte)0x00, (byte)0x25, (byte)0xA2, (byte)0xDC};
     
