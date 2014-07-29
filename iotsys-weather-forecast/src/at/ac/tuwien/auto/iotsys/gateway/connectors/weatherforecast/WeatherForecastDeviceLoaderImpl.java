@@ -32,25 +32,30 @@
 
 package at.ac.tuwien.auto.iotsys.gateway.connectors.weatherforecast;
 
-import org.apache.commons.configuration.HierarchicalConfiguration;
-import org.apache.commons.configuration.XMLConfiguration;
-
 import java.lang.reflect.Constructor;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import obix.Obj;
 import obix.Uri;
 
-import at.ac.tuwien.auto.iotsys.commons.Connector;
+import org.apache.commons.configuration.HierarchicalConfiguration;
+import org.apache.commons.configuration.XMLConfiguration;
+
 import at.ac.tuwien.auto.iotsys.commons.DeviceLoader;
 import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.weatherforecast.impl.WeatherForecastLocationImpl;
+import at.ac.tuwien.auto.iotsys.commons.persistent.ConfigsDbImpl;
+import at.ac.tuwien.auto.iotsys.commons.persistent.models.Connector;
+import at.ac.tuwien.auto.iotsys.commons.persistent.models.Device;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.weatherforecast.objects.WeatherControlImpl;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.weatherforecast.objects.WeatherObjectImplYR_NO;
+
+import com.fasterxml.jackson.databind.JsonNode;
 
 public class WeatherForecastDeviceLoaderImpl implements DeviceLoader {
 
@@ -63,45 +68,70 @@ public class WeatherForecastDeviceLoaderImpl implements DeviceLoader {
 	@Override
 	public ArrayList<Connector> initDevices(ObjectBroker objectBroker) {
 		setConfiguration(devicesConfig);
+		objectBroker.getConfigDb().prepareDeviceLoader(getClass().getName());
 		
 		// Hard-coded connections and object creation
 		ArrayList<Connector> connectors = new ArrayList<Connector>();
 
+		List<JsonNode> connectorsFromDb = objectBroker.getConfigDb().getConnectors("weather-forecast");
 		int connectorsSize = 0;
-		Object configuredConnectors = devicesConfig.getProperty("weather-forecast.connector.name");
-		if (configuredConnectors != null) {
-			connectorsSize = 1;
-		} else {
-			connectorsSize = 0;
-		}
-
-		if (configuredConnectors instanceof Collection<?>) {
-			connectorsSize = ((Collection<?>) configuredConnectors).size();
-		}
 		
+		if (connectorsFromDb.size() <= 0) {
+			Object configuredConnectors = devicesConfig
+					.getProperty("weather-forecast.connector.name");
+			if (configuredConnectors != null) {
+				connectorsSize = 1;
+			} else {
+				connectorsSize = 0;
+			}
+
+			if (configuredConnectors instanceof Collection<?>) {
+				connectorsSize = ((Collection<?>) configuredConnectors).size();
+			}
+		} else
+			connectorsSize = connectorsFromDb.size();
 		log.info("Found " + connectorsSize + " weather forecast connectors.");
 		for (int connector = 0; connector < connectorsSize; connector++) {
 			HierarchicalConfiguration subConfig = devicesConfig.configurationAt("weather-forecast.connector(" + connector + ")");
 
 			Object configuredDevices = subConfig.getProperty("device.type");
+			String connectorId = "";
 			String connectorName = subConfig.getString("name");
 			Boolean enabled = subConfig.getBoolean("enabled", false);
 
+			try {
+				connectorId = connectorsFromDb.get(connector).get("_id").asText();
+				connectorName = connectorsFromDb.get(connector).get("name").asText();
+				enabled =  connectorsFromDb.get(connector).get("enabled").asBoolean();
+			} catch (Exception e){
+				log.info("Cannot fetch configuration from Database, using devices.xml");
+			}
+			
+			
 			if (enabled) {
 				try {
 					log.info("Creating weather forecast connector.");
 					WeatherForecastConnector forecastConnector = new WeatherForecastConnector();
-
+					forecastConnector.setName(connectorName);
+					forecastConnector.setTechnology("weather-forecast");
+					forecastConnector.setEnabled(enabled);
+					
 					connectors.add(forecastConnector);
 
 					int numberOfDevices = 0;
-					if (configuredDevices != null) {
-						numberOfDevices = 1; // there is at least one device.
-						if (configuredDevices instanceof Collection<?>) {
-							Collection<?> devices = (Collection<?>) configuredDevices;
-							numberOfDevices = devices.size();
+					List<Device> devicesFromDb = objectBroker.getConfigDb().getDevices(connectorId);
+
+					if (connectorsFromDb.size() <= 0) {
+						if (configuredDevices != null) {
+							numberOfDevices = 1; // there is at least one
+													// device.
+							if (configuredDevices instanceof Collection<?>) {
+								Collection<?> devices = (Collection<?>) configuredDevices;
+								numberOfDevices = devices.size();
+							}
 						}
-					}
+					} else
+						numberOfDevices = devicesFromDb.size();
 
 					log.info(numberOfDevices
 							+ " weather forecast devices found in configuration for connector "
@@ -123,6 +153,24 @@ public class WeatherForecastDeviceLoaderImpl implements DeviceLoader {
 								"device(" + i + ").groupCommEnabled", false);
 						Integer historyCount = subConfig.getInt("device("
 								+ i + ").historyCount", 0);
+						
+						Device deviceFromDb;
+						try {
+							deviceFromDb = devicesFromDb.get(i);
+							type = deviceFromDb.getType();
+							href = deviceFromDb.getHref();
+							name = deviceFromDb.getName();
+							historyEnabled = deviceFromDb.isHistoryEnabled();
+							groupCommEnabled = deviceFromDb.isGroupcommEnabled();
+							refreshEnabled = deviceFromDb.isRefreshEnabled();
+							historyCount = deviceFromDb.getHistoryCount();
+						} 
+						catch (Exception e) {
+						}
+						
+						// Transition step: comment when done
+						Device d = new Device(type, null, null, href, name, null, historyCount, historyEnabled, groupCommEnabled, refreshEnabled);
+						objectBroker.getConfigDb().prepareDevice(connectorName, d);
 						
 						if (type != null && name != null) {
 							try {
@@ -191,7 +239,6 @@ public class WeatherForecastDeviceLoaderImpl implements DeviceLoader {
 							}
 						}
 					}
-					
 					// add weather control for manual overwriting of weather
 					WeatherControlImpl weatherControl = new WeatherControlImpl("weatherControl",forecastConnector);
 					weatherControl.setHref(new Uri(URLEncoder.encode(connectorName, "UTF-8") + "/weatherControl"));

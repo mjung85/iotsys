@@ -1,4 +1,3 @@
-// Variables
 description = 'IoTSyS Gateway'
 
 eclipse{
@@ -19,11 +18,11 @@ eclipse{
 				node.appendNode('classpathentry', [kind: 'src', path: '/iotsys-enocean', exported:'true'])
 				node.appendNode('classpathentry', [kind: 'src', path: '/iotsys-demoapp', exported:'true'])
 				node.appendNode('classpathentry', [kind: 'src', path: '/iotsys-xacml', exported:'true'])
-				node.appendNode('classpathentry', [kind: 'lib', path: '/iotsys-xacml/res', exported:'true'])
 				node.appendNode('classpathentry', [kind: 'src', path: '/iotsys-osgi', exported:'true'])
 				node.appendNode('classpathentry', [kind: 'src', path: '/iotsys-weather-forecast', exported:'true'])
 				node.appendNode('classpathentry', [kind: 'src', path: '/iotsys-rfid', exported:'true'])
 				node.appendNode('classpathentry', [kind: 'src', path: '/iotsys-coap', exported:'true'])
+				node.appendNode('classpathentry', [kind: 'lib', path: '/iotsys-xacml/res', exported:'true'])
 			}
 		}
 	}
@@ -63,28 +62,156 @@ jar {
 				   "Bundle-Version": "0.1", 
 				   "Bundle-Classpath": ".",
 				   "Bundle-Activator": "at.ac.tuwien.auto.iotsys.gateway.IoTSySGatewayActivator",
-				   "Import-Package":   "at.ac.tuwien.auto.iotsys.commons.obix.objects.weatherforecast, org.osgi.framework, at.ac.tuwien.auto.iotsys.commons, at.ac.tuwien.auto.iotsys.commons.interceptor, org.json, obix, obix.asm, obix.contracts, obix.contracts.impl, " +
-				   					   "obix.io, obix.net, obix.test, obix.toos, obix.ui, obix.ui.fields, obix.ui.views, obix.xml, obix.units, " +
-									   "at.ac.tuwien.auto.iotsys.obix.observer, at.ac.tuwien.auto.iotsys.obix, at.ac.tuwien.auto.iotsys.commons.obix.objects.bacnet, at.ac.tuwien.auto.iotsys.commons.obix.objects.iot," +
-									   "at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.general.impl,"+
-									   "at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators, at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators.impl, " +
-									   "at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.sensors, at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.sensors.impl, at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.logic, at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.logic.impl,at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.sim,at.ac.tuwien.auto.iotsys.commons.obix.objects.knx.datapoint," +
-									   "org.xml.sax, org.xml.sax.helpers, org.xml.sax.ext,  com.sun.org.apache.xalan.internal, com.sun.org.apache.xalan.internal.res, " +
-									   "org.w3c.dom, org.w3c.dom.traversal, org.w3c.dom.ls, javax.xml.parsers,  javax.xml.xpath, javax.xml.transform.sax, javax.xml.transform.dom, " +
-									   "javax.xml.namespace, javax.xml.transform, javax.xml.transform.stream, javax.xml.validation, javax.xml.datatype, "+
-									   "org.apache.commons.beanutils, org.apache.commons.beanutils.converters,org.apache.commons.beanutils.expression, org.apache.commons.beanutils.locale,org.apache.commons.beanutils.locale.converters,org.apache.commons.collections, " +
-									   "org.apache.commons.codec, org.apache.commons.codec.binary, org.apache.commons.codec.digest, org.apache.commons.codec.language, org.apache.commons.codec.language.bm, org.apache.commons.codec.net, " +
-									   "org.apache.commons.collections.bag, org.apache.commons.collections.bidimap, org.apache.commons.collections.buffer, org.apache.commons.collections.collection, org.apache.commons.collections.comparators, org.apache.commons.collections.functors, org.apache.commons.collections.iterators, org.apache.commons.collections.keyvalue, org.apache.commons.collections.list, org.apache.commons.collections.map, org.apache.commons.collections.set, " +
-									   "org.apache.commons.configuration, org.apache.commons.configuration.beanutils, org.apache.commons.configuration.event, org.apache.commons.configuration.interpol, org.apache.commons.configuration.plist, org.apache.commons.configuration.reloading, org.apache.commons.configuration.resolver, org.apache.commons.configuration.tree, org.apache.commons.configuration.tree.xpath, org.apache.commons.configuration.web, " +
-									   "org.apache.commons.digester, org.apache.commons.digester.parser, org.apache.commons.digester.plugins, org.apache.commons.digester.plugins.strategies, org.apache.commons.digester.substitution, org.apache.commons.digester.xmlrules, " +
-									   "org.apache.commons.jexl2, org.apache.commons.jexl2.internal, org.apache.commons.jexl2.internal.introspection, org.apache.commons.jexl2.introspection, org.apache.commons.jexl2.parser, org.apache.commons.jexl2.scripting, " +
-									   "org.apache.commons.jxpath, org.apache.commons.jxpath.functions, org.apache.commons.jxpath.ri, org.apache.commons.jxpath.ri.axes, org.apache.commons.jxpath.ri.compiler, org.apache.commons.jxpath.ri.model, org.apache.commons.jxpath.ri.model.beans, org.apache.commons.jxpath.ri.model.container, org.apache.commons.jxpath.ri.model.dom, org.apache.commons.jxpath.ri.model.dynabeans, org.apache.commons.jxpath.ri.model.dynamic, org.apache.commons.jxpath.ri.model.jdom, org.apache.commons.jxpath.ri.parser,org.apache.commons.jxpath.servlet, org.apache.commons.jxpath.util, org.apache.commons.jxpath.xml, " +
-									   "org.apache.commons.lang, org.apache.commons.lang.builder, org.apache.commons.lang.enums, org.apache.commons.lang.exception, org.apache.commons.lang.math, org.apache.commons.lang.mutable, org.apache.commons.lang.text, org.apache.commons.lang.time, " +
-									   "org.apache.commons.logging, org.apache.commons.logging.impl," +
-									   "at.ac.tuwien.auto.iotsys.commons.obix.objects, at.ac.tuwien.auto.iotsys.commons.obix.objects.general.contracts.impl, at.ac.tuwien.auto.iotsys.commons.obix.objects.general.datapoint, at.ac.tuwien.auto.iotsys.commons.obix.objects.general.datapoint.impl, at.ac.tuwien.auto.iotsys.commons.obix.objects.general.encoding, at.ac.tuwien.auto.iotsys.commons.obix.objects.general.encoding.impl, at.ac.tuwien.auto.iotsys.commons.obix.objects.general.entity, at.ac.tuwien.auto.iotsys.commons.obix.objects.general.entity.impl, at.ac.tuwien.auto.iotsys.commons.obix.objects.general.enumeration, at.ac.tuwien.auto.iotsys.commons.obix.objects.general.enumeration.impl, at.ac.tuwien.auto.iotsys.commons.obix.objects.general.language, at.ac.tuwien.auto.iotsys.commons.obix.objects.general.language.impl," +
-									   "at.ac.tuwien.auto.iotsys.commons.obix.objects.general.network,at.ac.tuwien.auto.iotsys.commons.obix.objects.general.network.impl, at.ac.tuwien.auto.iotsys.commons.obix.objects.general.parameter, at.ac.tuwien.auto.iotsys.commons.obix.objects.general.parameter.impl, at.ac.tuwien.auto.iotsys.commons.obix.objects.general.unit, at.ac.tuwien.auto.iotsys.commons.obix.objects.general.unit.impl, at.ac.tuwien.auto.iotsys.commons.obix.objects.general.view, at.ac.tuwien.auto.iotsys.commons.obix.objects.general.view.impl, at.ac.tuwien.auto.iotsys.commons.obix.objects.general.internals.impl," +
-									   "ch.ethz.inf.vs.californium.coap, ch.ethz.inf.vs.californium.coap.registries, ch.ethz.inf.vs.californium.dtls, ch.ethz.inf.vs.californium.endpoint, ch.ethz.inf.vs.californium.endpoint.resources, ch.ethz.inf.vs.californium.layers, ch.ethz.inf.vs.californium.util"
-									   
+				   "Import-Package": "at.ac.tuwien.auto.iotsys.commons," +
+									 "at.ac.tuwien.auto.iotsys.commons.interceptor," +
+									 "at.ac.tuwien.auto.iotsys.commons.obix.objects," +
+									 "at.ac.tuwien.auto.iotsys.commons.obix.objects.bacnet," +
+									 "at.ac.tuwien.auto.iotsys.commons.obix.objects.general.contracts.impl," +
+									 "at.ac.tuwien.auto.iotsys.commons.obix.objects.general.datapoint," +
+									 "at.ac.tuwien.auto.iotsys.commons.obix.objects.general.datapoint.impl," +
+									 "at.ac.tuwien.auto.iotsys.commons.obix.objects.general.encoding," +
+									 "at.ac.tuwien.auto.iotsys.commons.obix.objects.general.encoding.impl," +
+									 "at.ac.tuwien.auto.iotsys.commons.obix.objects.general.entity," +
+									 "at.ac.tuwien.auto.iotsys.commons.obix.objects.general.entity.impl," +
+									 "at.ac.tuwien.auto.iotsys.commons.obix.objects.general.enumeration," +
+									 "at.ac.tuwien.auto.iotsys.commons.obix.objects.general.enumeration.impl," +
+									 "at.ac.tuwien.auto.iotsys.commons.obix.objects.general.internals.impl," +
+									 "at.ac.tuwien.auto.iotsys.commons.obix.objects.general.network," +
+									 "at.ac.tuwien.auto.iotsys.commons.obix.objects.general.network.impl," +
+									 "at.ac.tuwien.auto.iotsys.commons.obix.objects.general.parameter," +
+									 "at.ac.tuwien.auto.iotsys.commons.obix.objects.general.parameter.impl," +
+									 "at.ac.tuwien.auto.iotsys.commons.obix.objects.general.unit," +
+									 "at.ac.tuwien.auto.iotsys.commons.obix.objects.general.unit.impl," +
+									 "at.ac.tuwien.auto.iotsys.commons.obix.objects.general.view," +
+									 "at.ac.tuwien.auto.iotsys.commons.obix.objects.general.view.impl," +
+									 "at.ac.tuwien.auto.iotsys.commons.obix.objects.iot," +
+									 "at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators," +
+									 "at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators.impl," +
+									 "at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.general.impl," +
+									 "at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.logic," +
+									 "at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.logic.impl," +
+									 "at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.sensors," +
+									 "at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.sensors.impl," +
+									 "at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.sim," +
+									 "at.ac.tuwien.auto.iotsys.commons.obix.objects.weatherforecast," +
+									 "at.ac.tuwien.auto.iotsys.commons.persistent," +
+									 "at.ac.tuwien.auto.iotsys.commons.persistent.models," +
+									 "at.ac.tuwien.auto.iotsys.gateway.connectors.coap,"	+
+									 "at.ac.tuwien.auto.iotsys.obix," +
+									 "at.ac.tuwien.auto.iotsys.obix.observer," +
+									 "ch.ethz.inf.vs.californium.coap," +
+									 "ch.ethz.inf.vs.californium.coap.registries," +
+									 "ch.ethz.inf.vs.californium.dtls," +
+									 "ch.ethz.inf.vs.californium.endpoint," +
+									 "ch.ethz.inf.vs.californium.endpoint.resources," +
+									 "ch.ethz.inf.vs.californium.layers," +
+									 "ch.ethz.inf.vs.californium.util," +
+									 "com.fasterxml.jackson.databind," +
+									 "com.fasterxml.jackson.databind.node," +
+									 "org.apache.xalan," +
+									 "org.apache.xalan.res," +
+									 "javax.xml.datatype," +
+									 "javax.xml.namespace," +
+									 "javax.xml.parsers," +
+									 "javax.xml.transform," +
+									 "javax.xml.transform.dom," +
+									 "javax.xml.transform.sax," +
+									 "javax.xml.transform.stream," +
+									 "javax.xml.validation," +
+									 "javax.xml.xpath," +
+									 "obix," +
+									 "obix.asm," +
+									 "obix.contracts," +
+									 "obix.contracts.impl," +
+									 "obix.io," +
+									 "obix.net," +
+									 "obix.test," +
+									 "obix.tools," +
+									 "obix.ui," +
+									 "obix.ui.fields," +
+									 "obix.ui.views," +
+									 "obix.units," +
+									 "obix.xml," +
+									 "org.apache.commons.beanutils," +
+									 "org.apache.commons.beanutils.converters," +
+									 "org.apache.commons.beanutils.expression," +
+									 "org.apache.commons.beanutils.locale," +
+									 "org.apache.commons.beanutils.locale.converters," +
+									 "org.apache.commons.codec," +
+									 "org.apache.commons.codec.binary," +
+									 "org.apache.commons.codec.digest," +
+									 "org.apache.commons.codec.language," +
+									 "org.apache.commons.codec.language.bm," +
+									 "org.apache.commons.codec.net," +
+									 "org.apache.commons.collections," +
+									 "org.apache.commons.collections.bag," +
+									 "org.apache.commons.collections.bidimap," +
+									 "org.apache.commons.collections.buffer," +
+									 "org.apache.commons.collections.collection," +
+									 "org.apache.commons.collections.comparators," +
+									 "org.apache.commons.collections.functors," +
+									 "org.apache.commons.collections.iterators," +
+									 "org.apache.commons.collections.keyvalue," +
+									 "org.apache.commons.collections.list," +
+									 "org.apache.commons.collections.map," +
+									 "org.apache.commons.collections.set," +
+									 "org.apache.commons.configuration," +
+									 "org.apache.commons.configuration.beanutils," +
+									 "org.apache.commons.configuration.event," +
+									 "org.apache.commons.configuration.interpol," +
+									 "org.apache.commons.configuration.plist," +
+									 "org.apache.commons.configuration.reloading," +
+									 "org.apache.commons.configuration.resolver," +
+									 "org.apache.commons.configuration.tree," +
+									 "org.apache.commons.configuration.tree.xpath," +
+									 "org.apache.commons.configuration.web," +
+									 "org.apache.commons.digester," +
+									 "org.apache.commons.digester.parser," +
+									 "org.apache.commons.digester.plugins," +
+									 "org.apache.commons.digester.plugins.strategies," +
+									 "org.apache.commons.digester.substitution," +
+									 "org.apache.commons.digester.xmlrules," +
+									 "org.apache.commons.io," +
+									 "org.apache.commons.jexl2," +
+									 "org.apache.commons.jexl2.internal," +
+									 "org.apache.commons.jexl2.internal.introspection," +
+									 "org.apache.commons.jexl2.introspection," +
+									 "org.apache.commons.jexl2.parser," +
+									 "org.apache.commons.jexl2.scripting," +
+									 "org.apache.commons.jxpath," +
+									 "org.apache.commons.jxpath.functions," +
+									 "org.apache.commons.jxpath.ri," +
+									 "org.apache.commons.jxpath.ri.axes," +
+									 "org.apache.commons.jxpath.ri.compiler," +
+									 "org.apache.commons.jxpath.ri.model," +
+									 "org.apache.commons.jxpath.ri.model.beans," +
+									 "org.apache.commons.jxpath.ri.model.container," +
+									 "org.apache.commons.jxpath.ri.model.dom," +
+									 "org.apache.commons.jxpath.ri.model.dynabeans," +
+									 "org.apache.commons.jxpath.ri.model.dynamic," +
+									 "org.apache.commons.jxpath.ri.model.jdom," +
+									 "org.apache.commons.jxpath.ri.parser," +
+									 "org.apache.commons.jxpath.servlet," +
+									 "org.apache.commons.jxpath.util," +
+									 "org.apache.commons.jxpath.xml," +
+									 "org.apache.commons.lang," +
+									 "org.apache.commons.lang.builder," +
+									 "org.apache.commons.lang.enums," +
+									 "org.apache.commons.lang.exception," +
+									 "org.apache.commons.lang.math," +
+									 "org.apache.commons.lang.mutable," +
+									 "org.apache.commons.lang.text," +
+									 "org.apache.commons.lang.time," +
+									 "org.apache.commons.logging," +
+									 "org.apache.commons.logging.impl," +
+									 "org.json," +
+									 "org.osgi.framework," +
+									 "org.w3c.dom," +
+									 "org.w3c.dom.ls," +
+									 "org.w3c.dom.traversal," +
+									 "org.xml.sax," +
+									 "org.xml.sax.ext," +
+									 "org.xml.sax.helpers"
 				   )
 	}
 }
@@ -125,6 +252,9 @@ dependencies {
 	testProvided project(':iotsys-mdnssd')
 	testProvided project(':iotsys-weather-forecast')
 	testCompile group: 'junit',name:'junit',version: '4.8+' 
-	testCompile group: 'com.jayway.restassured', name: 'rest-assured', version: '1.2.1'
+	testCompile ('com.jayway.restassured:rest-assured:1.2.1'){
+        exclude group: 'org.apache.httpcomponents', module:'httpclient'
+    }
 	testCompile "org.hamcrest:hamcrest-library:1.3"
+	
 }

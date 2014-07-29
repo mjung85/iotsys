@@ -46,9 +46,14 @@ import obix.Uri;
 import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.commons.configuration.XMLConfiguration;
 
-import at.ac.tuwien.auto.iotsys.commons.Connector;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import at.ac.tuwien.auto.iotsys.commons.DeviceLoader;
 import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
+import at.ac.tuwien.auto.iotsys.commons.persistent.ConfigsDbImpl;
+import at.ac.tuwien.auto.iotsys.commons.persistent.models.Connector;
+import at.ac.tuwien.auto.iotsys.commons.persistent.models.Device;
 
 public class MBusDeviceLoaderImpl implements DeviceLoader {
 	
@@ -62,48 +67,72 @@ public class MBusDeviceLoaderImpl implements DeviceLoader {
 	@Override
 	public ArrayList<Connector> initDevices(ObjectBroker objectBroker) {
 		setConfiguration(devicesConfig);
+		objectBroker.getConfigDb().prepareDeviceLoader(getClass().getName());
 		
 		ArrayList<Connector> connectors = new ArrayList<Connector>();
 
+		List<JsonNode> connectorsFromDb = objectBroker.getConfigDb()
+				.getConnectors("mbus");
 		int connectorsSize = 0;
 		// WMBus
-		Object mbusConnectors = devicesConfig
-				.getProperty("mbus.connector.name");
-		if (mbusConnectors != null) {
-			connectorsSize = 1;
-		} else {
-			connectorsSize = 0;
-		}
+		if (connectorsFromDb.size() <= 0) {
+			Object mbusConnectors = devicesConfig
+					.getProperty("mbus.connector.name");
+			if (mbusConnectors != null) {
+				connectorsSize = 1;
+			} else {
+				connectorsSize = 0;
+			}
 
-		if (mbusConnectors instanceof Collection<?>) {
-			connectorsSize = ((Collection<?>) mbusConnectors).size();
-		}
-
+			if (mbusConnectors instanceof Collection<?>) {
+				connectorsSize = ((Collection<?>) mbusConnectors).size();
+			}
+		} else
+			connectorsSize = connectorsFromDb.size();
 		for (int connector = 0; connector < connectorsSize; connector++) {
 			HierarchicalConfiguration subConfig = devicesConfig
 					.configurationAt("mbus.connector(" + connector + ")");
 
 			Object mbusConfiguredDevices = subConfig
 					.getProperty("device.type");
+			String connectorId = "";
 			String connectorName = subConfig.getString("name");
 			String serialPort = subConfig.getString("serialPort");
 			Boolean enabled = subConfig.getBoolean("enabled", false);
 
+			try {
+				connectorId = connectorsFromDb.get(connector).get("_id").asText();
+				connectorName = connectorsFromDb.get(connector).get("name").asText();
+				enabled =  connectorsFromDb.get(connector).get("enabled").asBoolean();
+			} catch (Exception e){
+				log.info("Cannot fetch configuration from Database, using devices.xml");
+			}
+			
+			
 			if (enabled) {
 				try {
 					MBusConnector mbusConnector = new MBusConnector(
 							serialPort);
-					mbusConnector.connect();
+					mbusConnector.setEnabled(enabled);
+					mbusConnector.setName(connectorName);
+					mbusConnector.setTechnology("mbus");
+					mbusConnector.setSerialPort(serialPort);
+					//mbusConnector.connect();
 					connectors.add(mbusConnector);
 
 					int mbusDevicesCount = 0;
-					if (mbusConfiguredDevices instanceof Collection<?>) {
-						Collection<?> mbusDevice = (Collection<?>) mbusConfiguredDevices;
-						mbusDevicesCount = mbusDevice.size();
+					List<Device> devicesFromDb = objectBroker.getConfigDb().getDevices(connectorId);
 
-					} else if (mbusConfiguredDevices != null) {
-						mbusDevicesCount = 1;
-					}
+					if (connectorsFromDb.size() <= 0) {
+						if (mbusConfiguredDevices instanceof Collection<?>) {
+							Collection<?> mbusDevice = (Collection<?>) mbusConfiguredDevices;
+							mbusDevicesCount = mbusDevice.size();
+
+						} else if (mbusConfiguredDevices != null) {
+							mbusDevicesCount = 1;
+						}
+					} else
+						mbusDevicesCount = devicesFromDb.size();
 
 					log.info(mbusDevicesCount
 							+ " MBus devices found in configuration for connector "
@@ -114,6 +143,7 @@ public class MBusDeviceLoaderImpl implements DeviceLoader {
 								+ ").type");
 						Integer address = subConfig.getInteger("device(" + i
 								+ ").address",0);
+						String addressString = address.toString();
 						Integer interval = subConfig.getInteger("device(" + i
 								+ ").interval", 0);
 						String serialnr = subConfig.getString("device(" + i
@@ -125,14 +155,33 @@ public class MBusDeviceLoaderImpl implements DeviceLoader {
 						String name = subConfig.getString("device(" + i
 								+ ").name");
 
-						Boolean historyEnabled = subConfig.getBoolean("device("
+						boolean historyEnabled = subConfig.getBoolean("device("
 								+ i + ").historyEnabled", false);
 						
-						Boolean groupCommEnabled = subConfig.getBoolean("device("
+						boolean groupCommEnabled = subConfig.getBoolean("device("
 								+ i + ").groupCommEnabled", false);
 
 						Integer historyCount = subConfig.getInt("device(" + i
 								+ ").historyCount", 0);						
+						
+						Device deviceFromDb;
+						try {
+							deviceFromDb = devicesFromDb.get(i);
+							type = deviceFromDb.getType();
+							addressString = deviceFromDb.getAddress();
+							ipv6 = deviceFromDb.getIpv6();
+							href = deviceFromDb.getHref();
+							name = deviceFromDb.getName();
+							historyEnabled = deviceFromDb.isHistoryEnabled();
+							groupCommEnabled = deviceFromDb.isGroupcommEnabled();
+							historyCount = deviceFromDb.getHistoryCount();
+						} 
+						catch (Exception e) {
+						}
+						
+						// Transition step: comment when done
+						Device d = new Device(type, ipv6, addressString, href, name, historyCount, historyEnabled, groupCommEnabled);
+						objectBroker.getConfigDb().prepareDevice(connectorName, d);	
 						
 						if(interval > 0){
 							mbusConnector.setInterval(interval);
@@ -196,8 +245,7 @@ public class MBusDeviceLoaderImpl implements DeviceLoader {
 										}
 										smartMeter.initialize();
 									
-										if (historyEnabled != null
-												&& historyEnabled) {
+										if (historyEnabled) {
 											if (historyCount != null
 													&& historyCount != 0) {
 												objectBroker
@@ -210,7 +258,7 @@ public class MBusDeviceLoaderImpl implements DeviceLoader {
 											}
 										}
 										
-										if(groupCommEnabled != null && groupCommEnabled){
+										if(groupCommEnabled){
 											objectBroker.enableGroupComm(smartMeter);
 										}
 									}
@@ -222,7 +270,6 @@ public class MBusDeviceLoaderImpl implements DeviceLoader {
 							}
 						}
 					}
-
 				} catch (Exception e) {
 					e.printStackTrace();
 				}

@@ -39,9 +39,9 @@ import java.util.logging.Logger;
 
 import org.apache.commons.configuration.XMLConfiguration;
 
-import at.ac.tuwien.auto.iotsys.commons.Connector;
 import at.ac.tuwien.auto.iotsys.commons.DeviceLoader;
 import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
+import at.ac.tuwien.auto.iotsys.commons.persistent.models.Connector;
 
 public class DeviceLoaderImpl implements DeviceLoader {
 	private static Logger log = Logger.getLogger(DeviceLoaderImpl.class.getName());
@@ -76,9 +76,12 @@ public class DeviceLoaderImpl implements DeviceLoader {
 			deviceLoadersSize = ((Collection<?>) deviceLoaders).size();
 		}
 		
+		// Transition step: replace deviceLoadersSize with DeviceConfigs.getInstance().getAllDeviceLoader().length when done
 		for(int i = 0; i< deviceLoadersSize; i++){
 		
+			// Transition step: change to DeviceConfigs.getInstance().getAllDeviceLoader()[i] when done
 			String deviceLoaderName = devicesConfig.getString("deviceloaders.device-loader(" + i + ")");
+
 			log.info("Found device loader: " + deviceLoaderName);
 			
 			try {
@@ -92,8 +95,9 @@ public class DeviceLoaderImpl implements DeviceLoader {
 			} catch (IllegalAccessException e) {
 				e.printStackTrace();
 			} catch (ClassNotFoundException e) {
+				// Be caught on OSGi deployment, connectors be empty
 				log.severe("Could not instantiate device loader " + deviceLoaderName + " - not found on classpath!");
-				log.severe(" Debug Info:" + e.getMessage());
+				log.severe("Debug Info:" + e.getMessage());
 			}
 		}
 	

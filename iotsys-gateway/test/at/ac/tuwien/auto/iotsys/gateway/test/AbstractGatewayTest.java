@@ -40,6 +40,9 @@ public class AbstractGatewayTest {
 		}
 		
 		gateway.startGateway("config/devices.test.xml");
+		org.junit.Assume.assumeTrue(gateway.getObjectBroker().getConfigDb() != null);
+		gateway.getObjectBroker().getConfigDb().setMigrating(false);
+
 	}
 	
 	@AfterClass

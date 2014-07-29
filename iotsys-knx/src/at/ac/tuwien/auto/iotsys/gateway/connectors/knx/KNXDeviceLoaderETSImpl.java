@@ -56,7 +56,6 @@ import org.apache.commons.io.filefilter.IOFileFilter;
 
 import at.ac.tuwien.auto.calimero.GroupAddress;
 import at.ac.tuwien.auto.calimero.exception.KNXException;
-import at.ac.tuwien.auto.iotsys.commons.Connector;
 import at.ac.tuwien.auto.iotsys.commons.DeviceLoader;
 import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.datapoint.impl.DatapointImpl;
@@ -73,6 +72,7 @@ import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.view.impl.ViewBuild
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.view.impl.ViewDomainsImpl;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.view.impl.ViewFunctionalImpl;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.view.impl.ViewTopologyImpl;
+import at.ac.tuwien.auto.iotsys.commons.persistent.models.Connector;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.knx.datapoint.impl.DataPointInit;
 
 public class KNXDeviceLoaderETSImpl implements DeviceLoader

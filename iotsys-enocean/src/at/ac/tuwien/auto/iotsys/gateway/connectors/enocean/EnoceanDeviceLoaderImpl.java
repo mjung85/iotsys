@@ -51,9 +51,13 @@ import org.opencean.core.EnoceanSerialConnector;
 import org.opencean.core.address.EnoceanId;
 import org.opencean.core.common.ProtocolConnector;
 
-import at.ac.tuwien.auto.iotsys.commons.Connector;
 import at.ac.tuwien.auto.iotsys.commons.DeviceLoader;
 import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
+import at.ac.tuwien.auto.iotsys.commons.persistent.ConfigsDbImpl;
+import at.ac.tuwien.auto.iotsys.commons.persistent.models.Connector;
+import at.ac.tuwien.auto.iotsys.commons.persistent.models.Device;
+
+import com.fasterxml.jackson.databind.JsonNode;
 
 public class EnoceanDeviceLoaderImpl implements DeviceLoader {
 
@@ -76,34 +80,53 @@ public class EnoceanDeviceLoaderImpl implements DeviceLoader {
 
 	@Override
 	public ArrayList<Connector> initDevices(ObjectBroker objectBroker) {
+        setConfiguration(devicesConfig);
+		objectBroker.getConfigDb().prepareDeviceLoader(getClass().getName());
 		// Hard-coded connections and object creation
 
 		ArrayList<Connector> connectors = new ArrayList<Connector>();
 
+		List<JsonNode> connectorsFromDb = objectBroker.getConfigDb().getConnectors("enocean");
 		int connectorsSize = 0;
+		// Enocean
 		
-		Object enoceanConnectors = devicesConfig.getProperty("enocean.connector.name");
-		if (enoceanConnectors != null) {
-			connectorsSize = 1;
-		} else {
-			connectorsSize = 0;
-		}
+		if (connectorsFromDb.size() <= 0) {
+			Object enoceanConnectors = devicesConfig
+					.getProperty("enocean.connector.name");
+			if (enoceanConnectors != null) {
+				connectorsSize = 1;
+			} else {
+				connectorsSize = 0;
+			}
 
-		if (enoceanConnectors instanceof Collection<?>) {
-			connectorsSize = ((Collection<?>) enoceanConnectors).size();
-		}
+			if (enoceanConnectors instanceof Collection<?>) {
+				connectorsSize = ((Collection<?>) enoceanConnectors).size();
+			}
+		} else
+			connectorsSize = connectorsFromDb.size();
 		
 		log.info("Found " + connectorsSize + " EnOcean connectors.");
 		for (int connector = 0; connector < connectorsSize; connector++) {
 			HierarchicalConfiguration subConfig = devicesConfig.configurationAt("enocean.connector(" + connector + ")");
 
 			Object enoceanConfiguredDevices = subConfig.getProperty("device.type");
+			String connectorId = "";
 			String connectorName = subConfig.getString("name");
 			String senderAddress = subConfig.getString("senderAddress");
 			String serialPort = subConfig.getString("serialPort");
 			Boolean enabled = subConfig.getBoolean("enabled", false);
 			ProtocolConnector protocolConnector = new EnoceanSerialConnector();			
 
+			try {
+				connectorId = connectorsFromDb.get(connector).get("_id").asText();
+				connectorName = connectorsFromDb.get(connector).get("name").asText();
+				enabled =  connectorsFromDb.get(connector).get("enabled").asBoolean();
+			} catch (Exception e){
+				log.info("Cannot fetch configuration from Database, using devices.xml");
+			}
+			
+			
+			// PropertyConfigurator.configure("log4j.properties");
 			if (enabled) {
 				try {
 					log.info("Connecting EnOcean connector to COM Port: "+ serialPort);
@@ -120,13 +143,17 @@ public class EnoceanDeviceLoaderImpl implements DeviceLoader {
 					esp3Host.start();
 
 					int numberOfDevices = 0;
-					
-					if (enoceanConfiguredDevices instanceof Collection<?>) {
-						Collection<?> enoceanDevices = (Collection<?>) enoceanConfiguredDevices;
-						numberOfDevices = enoceanDevices.size();
-					} else if (enoceanConfiguredDevices != null) {
-						numberOfDevices = 1;
-					}
+					List<Device> devicesFromDb = objectBroker.getConfigDb().getDevices(connectorId);
+
+					if (connectorsFromDb.size() <= 0) {
+						if (enoceanConfiguredDevices instanceof Collection<?>) {
+							Collection<?> enoceanDevices = (Collection<?>) enoceanConfiguredDevices;
+							numberOfDevices = enoceanDevices.size();
+						} else if (enoceanConfiguredDevices != null) {
+							numberOfDevices = 1;
+						}
+					} else
+						numberOfDevices = devicesFromDb.size();
 
 					log.info(numberOfDevices
 							+ " EnOcean devices found in configuration for connector "
@@ -134,7 +161,7 @@ public class EnoceanDeviceLoaderImpl implements DeviceLoader {
 					
 					// add devices
 					for (int i = 0; i < numberOfDevices; i++) {
-						String type = subConfig.getString("device(" + i + ").type");
+						String type = subConfig.getString("device(" + i + ").type");	
 						//List<Object> address = subConfig.getList("device(" + i + ").address");
 						String address = subConfig.getString("device(" + i + ").address");
 						String name = subConfig.getString("device(" + i + ").name");
@@ -142,15 +169,35 @@ public class EnoceanDeviceLoaderImpl implements DeviceLoader {
 						String displayName = subConfig.getString("device(" + i + ").displayName");
 						String display = subConfig.getString("device(" + i + ").display");
 						String manufacturer = subConfig.getString("device(" + i + ").manufacturer");
+						String addressString = address.toString();
 						String ipv6 = subConfig.getString("device(" + i + ").ipv6");
 						String href = subConfig.getString("device(" + i + ").href");
 
-						
 						Boolean historyEnabled = subConfig.getBoolean("device(" + i + ").historyEnabled", false);
 						Boolean groupCommEnabled = subConfig.getBoolean( "device(" + i + ").groupCommEnabled", false);
 						Integer historyCount = subConfig.getInt("device(" + i + ").historyCount", 0);
 
 						Boolean refreshEnabled = subConfig.getBoolean("device(" + i + ").refreshEnabled", false);
+						
+						// TODO change the database parameters
+						Device deviceFromDb;
+						try {
+							deviceFromDb = devicesFromDb.get(i);
+							type = deviceFromDb.getType();
+							addressString = deviceFromDb.getAddress();
+							ipv6 = deviceFromDb.getIpv6();
+							href = deviceFromDb.getHref();
+							name = deviceFromDb.getName();
+							historyEnabled = deviceFromDb.isHistoryEnabled();
+							groupCommEnabled = deviceFromDb.isGroupcommEnabled();
+							refreshEnabled = deviceFromDb.isRefreshEnabled();
+							historyCount = deviceFromDb.getHistoryCount();
+						} 
+						catch (Exception e) {}
+						
+						// Transition step: comment when done
+						Device d = new Device(type, ipv6, addressString, href, name, null, historyCount, historyEnabled, groupCommEnabled, refreshEnabled);
+						objectBroker.getConfigDb().prepareDevice(connectorName, d);		
 						
 						log.info("type: " + type);
 						
@@ -219,12 +266,12 @@ public class EnoceanDeviceLoaderImpl implements DeviceLoader {
 										} catch (InvocationTargetException e) {
 											e.printStackTrace();
 										}
-									}									
+									}
 								}
 							} catch (SecurityException e) {
-								e.printStackTrace();
+								e.getMessage();//.printStackTrace();
 							} catch (ClassNotFoundException e) {
-								e.printStackTrace();
+								e.getMessage();//.printStackTrace();
 							}
 						}
 					}
@@ -244,7 +291,7 @@ public class EnoceanDeviceLoaderImpl implements DeviceLoader {
 				objectBroker.removeObj(obj.getFullContextPath());
 			}
 		}
-	}	
+	}
 
 	@Override
 	public void setConfiguration(XMLConfiguration devicesConfiguration) {
