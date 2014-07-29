@@ -33,9 +33,9 @@
 
 package at.ac.tuwien.auto.iotsys.gateway.connectors.coap;
 
-import java.util.logging.Logger;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.logging.Logger;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -45,20 +45,21 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import at.ac.tuwien.auto.iotsys.commons.persistent.models.Connector;
 import ch.ethz.inf.vs.californium.coap.GETRequest;
-import ch.ethz.inf.vs.californium.coap.PUTRequest;
-import ch.ethz.inf.vs.californium.coap.POSTRequest;
+import ch.ethz.inf.vs.californium.coap.Message.messageType;
 import ch.ethz.inf.vs.californium.coap.Option;
-import ch.ethz.inf.vs.californium.coap.registries.MediaTypeRegistry;
-import ch.ethz.inf.vs.californium.coap.registries.OptionNumberRegistry;
+import ch.ethz.inf.vs.californium.coap.POSTRequest;
+import ch.ethz.inf.vs.californium.coap.PUTRequest;
 import ch.ethz.inf.vs.californium.coap.Request;
 import ch.ethz.inf.vs.californium.coap.Response;
 import ch.ethz.inf.vs.californium.coap.ResponseHandler;
-import ch.ethz.inf.vs.californium.coap.Message.messageType;
+import ch.ethz.inf.vs.californium.coap.registries.MediaTypeRegistry;
+import ch.ethz.inf.vs.californium.coap.registries.OptionNumberRegistry;
 
-import at.ac.tuwien.auto.iotsys.commons.Connector;
-
-public class CoapConnector implements Connector {
+public class CoapConnector extends Connector {
 	private static final Logger log = Logger.getLogger(CoapConnector.class.getName());
 
 	@Override
@@ -232,6 +233,7 @@ public class CoapConnector implements Connector {
 	}
 
 	@Override
+	@JsonIgnore
 	public boolean isCoap() {
 		return true;
 	}

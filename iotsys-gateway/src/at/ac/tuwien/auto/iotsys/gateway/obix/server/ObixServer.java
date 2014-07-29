@@ -69,6 +69,7 @@ public interface ObixServer
 	 * @return XML representation of the written object.
 	 */
 	public Obj writeObj(URI href, String xmlStream);
+	public Obj applyObj(URI uri, String dataStream);
 
 	/**
 	 * The operation specified via the URI is invoked by pushing it to the

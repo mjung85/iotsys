@@ -15,9 +15,13 @@ import obix.Uri;
 import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.commons.configuration.XMLConfiguration;
 
-import at.ac.tuwien.auto.iotsys.commons.Connector;
 import at.ac.tuwien.auto.iotsys.commons.DeviceLoader;
 import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
+import at.ac.tuwien.auto.iotsys.commons.persistent.ConfigsDbImpl;
+import at.ac.tuwien.auto.iotsys.commons.persistent.models.Connector;
+import at.ac.tuwien.auto.iotsys.commons.persistent.models.Device;
+
+import com.fasterxml.jackson.databind.JsonNode;
 
 public class RfidDeviceLoaderImpl implements DeviceLoader {
 	
@@ -43,55 +47,76 @@ public class RfidDeviceLoaderImpl implements DeviceLoader {
 
 	@Override
 	public ArrayList<Connector> initDevices(ObjectBroker objectBroker) {
+        setConfiguration(devicesConfig);
+		objectBroker.getConfigDb().prepareDeviceLoader(getClass().getName());
 		// Hard-coded connections and object creation
 
 		ArrayList<Connector> connectors = new ArrayList<Connector>();
 
+		List<JsonNode> connectorsFromDb = objectBroker.getConfigDb().getConnectors("rfid");
 		int connectorsSize = 0;
-	
-		Object rfidConnectors = devicesConfig
-				.getProperty("rfid.connector.name");
-		if (rfidConnectors != null) {
-			connectorsSize = 1;
-		} else {
-			connectorsSize = 0;
-		}
 
-		if (rfidConnectors instanceof Collection<?>) {
-			connectorsSize = ((Collection<?>) rfidConnectors).size();
-		}
+		if (connectorsFromDb.size() <= 0) {
+			Object rfidConnectors = devicesConfig
+					.getProperty("rfid.connector.name");
+			if (rfidConnectors != null) {
+				connectorsSize = 1;
+			} else {
+				connectorsSize = 0;
+			}
+
+			if (rfidConnectors instanceof Collection<?>) {
+				connectorsSize = ((Collection<?>) rfidConnectors).size();
+			}
+		} else
+			connectorsSize = connectorsFromDb.size();
 		log.info("Found " + connectorsSize + " RFID connectors.");
 		for (int connector = 0; connector < connectorsSize; connector++) {
 			HierarchicalConfiguration subConfig = devicesConfig
 					.configurationAt("rfid.connector(" + connector + ")");
 
 			Object rfidConfiguredDevices = subConfig.getProperty("device.type");
+			String connectorId = "";
 			String connectorName = subConfig.getString("name");
 			String serialPort = subConfig.getString("serialPort");
 			Boolean enabled = subConfig.getBoolean("enabled", false);
 			
-			Boolean enableGroupComm = subConfig.getBoolean("enableGroupComm", false);
-
-			Boolean enableHistories = subConfig.getBoolean("enableHistories", false);
-
+			try {
+				connectorId = connectorsFromDb.get(connector).get("_id").asText();
+				connectorName = connectorsFromDb.get(connector).get("name").asText();
+				enabled =  connectorsFromDb.get(connector).get("enabled").asBoolean();
+			} catch (Exception e){
+				log.info("Cannot fetch configuration from Database, using devices.xml");
+			}
+			
 			// PropertyConfigurator.configure("log4j.properties");
 			if (enabled) {
 				try {
 					log.info("Connecting RFID connector to COM Port: "
 							+ serialPort);
 					RfidConnector rfidConnector = new RfidConnector(serialPort);
-					rfidConnector.connect();
+					rfidConnector.setName(connectorName);
+					rfidConnector.setEnabled(enabled);
+					rfidConnector.setTechnology("rfid");
+					
+					//rfidConnector.connect();
 
 					connectors.add(rfidConnector);
 
 					int numberOfDevices = 0;
-					if (rfidConfiguredDevices instanceof Collection<?>) {
-						Collection<?> rfidDevices = (Collection<?>) rfidConfiguredDevices;
-						numberOfDevices = rfidDevices.size();
-					
-					} else if (rfidConfiguredDevices != null) {
-						numberOfDevices = 1; // there is at least one device.
-					}
+					List<Device> devicesFromDb = objectBroker.getConfigDb().getDevices(connectorId);
+
+					if (connectorsFromDb.size() <= 0) {
+						if (rfidConfiguredDevices instanceof Collection<?>) {
+							Collection<?> rfidDevices = (Collection<?>) rfidConfiguredDevices;
+							numberOfDevices = rfidDevices.size();
+
+						} else if (rfidConfiguredDevices != null) {
+							numberOfDevices = 1; // there is at least one
+													// device.
+						}
+					} else
+						numberOfDevices = devicesFromDb.size();
 
 					log.info(numberOfDevices
 							+ " RFID devices found in configuration for connector "
@@ -113,15 +138,34 @@ public class RfidDeviceLoaderImpl implements DeviceLoader {
 						Boolean historyEnabled = subConfig.getBoolean("device("
 								+ i + ").historyEnabled", false);
 
-						Boolean groupCommEnabled = subConfig.getBoolean(
+						boolean groupCommEnabled = subConfig.getBoolean(
 								"device(" + i + ").groupCommEnabled", false);
+
+						boolean refreshEnabled = subConfig.getBoolean("device("
+								+ i + ").refreshEnabled", false);
 
 						Integer historyCount = subConfig.getInt("device(" + i
 								+ ").historyCount", 0);
 
-						Boolean refreshEnabled = subConfig.getBoolean("device("
-								+ i + ").refreshEnabled", false);
-
+						Device deviceFromDb;
+						try {
+							deviceFromDb = devicesFromDb.get(i);
+							type = deviceFromDb.getType();
+							ipv6 = deviceFromDb.getIpv6();
+							href = deviceFromDb.getHref();
+							name = deviceFromDb.getName();
+							historyEnabled = deviceFromDb.isHistoryEnabled();
+							groupCommEnabled = deviceFromDb.isGroupcommEnabled();
+							refreshEnabled = deviceFromDb.isRefreshEnabled();
+							historyCount = deviceFromDb.getHistoryCount();
+						} 
+						catch (Exception e) {
+						}
+						
+						// Transition step: comment when done
+						Device d = new Device(type, ipv6, null, href, name, null, historyCount, historyEnabled, groupCommEnabled, refreshEnabled);
+						objectBroker.getConfigDb().prepareDevice(connectorName, d);
+						
 						if (type != null) {
 							
 							try {
@@ -189,8 +233,7 @@ public class RfidDeviceLoaderImpl implements DeviceLoader {
 														.enableGroupComm(rfidDevice);
 											}
 
-											if (refreshEnabled != null
-													&& refreshEnabled) {
+											if (refreshEnabled) {
 												objectBroker
 														.enableObjectRefresh(rfidDevice);
 											}
@@ -213,7 +256,6 @@ public class RfidDeviceLoaderImpl implements DeviceLoader {
 							}
 						}
 					}
-
 //					TemperatureSensorImplXBee xBeeTemperatureSensor = new TemperatureSensorImplXBee(
 //							xBeeConnector, "0013a200407c1715");
 //					xBeeTemperatureSensor.setHref(new Uri("temperature"));

@@ -32,6 +32,10 @@
 
 package at.ac.tuwien.auto.iotsys.gateway.connectors.weatherforecast;
 
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -42,30 +46,27 @@ import java.util.List;
 import java.util.TimeZone;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.MalformedURLException;
-import java.io.IOException;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.FactoryConfigurationError;
 import javax.xml.parsers.ParserConfigurationException;
 
-//import obix.WeatherForcastObject;
-
-
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import at.ac.tuwien.auto.iotsys.commons.Connector;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.weatherforecast.WeatherForcastObject;
+import at.ac.tuwien.auto.iotsys.commons.persistent.models.Connector;
 import at.ac.tuwien.auto.iotsys.obix.observer.Observer;
 import at.ac.tuwien.auto.iotsys.obix.observer.Subject;
 
-public class WeatherForecastConnector implements Connector, Subject{
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+//import obix.WeatherForcastObject;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+
+public class WeatherForecastConnector extends Connector implements Subject{
 	
 	private static final HashSet<Observer> observers = new HashSet<Observer>();
 	private static final Logger log = Logger.getLogger(WeatherForecastConnector.class.getName());
@@ -96,11 +97,11 @@ public class WeatherForecastConnector implements Connector, Subject{
 		this.overwrite = overwrite;
 		this.notifyObservers();
 	}
-	
+	@JsonIgnore
 	public ManualOverwrite getManualOverwrite(){
 		return this.overwrite;
 	}
-	
+	@JsonIgnore
 	public Document getWeatherForecastAsXML(String serviceURL) throws IOException, MalformedURLException, SAXException
 	{ 
         log.info("Retrieving weather forecast from " + serviceURL + ".");
@@ -118,7 +119,7 @@ public class WeatherForecastConnector implements Connector, Subject{
         } 
         return result;
 	}
-	
+	@JsonIgnore
 	public List<WeatherForcastObject> getWeatherForecast(String serviceURL){
 		
 		
@@ -387,7 +388,7 @@ public class WeatherForecastConnector implements Connector, Subject{
 		return resultWeatherList;
 	}
 	
-	
+	@JsonIgnore
 	public WeatherForcastObject getUpcomingWeather (String serviceURL){
 		
 		log.info("Retrieving upcoming weather forecast from " + serviceURL + ".");
@@ -446,12 +447,14 @@ public class WeatherForecastConnector implements Connector, Subject{
 	}
 
 	@Override
+	@JsonIgnore
 	public Object getCurrentState() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 	
 	@Override
+	@JsonIgnore
 	public boolean isCoap() {
 		return false;
 	}

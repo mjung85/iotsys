@@ -1499,5 +1499,36 @@ public class Obj implements IObj, Subject, AlarmSource, Cloneable
 
 		return needs;
 	}
+	
+	public ArrayList<Val> getValChilds(){
+		Obj[] childs = this.list();
+		ArrayList<Val> result = new ArrayList<Val>();
+		
+		if (this instanceof Val){
+			System.out.println(this.getFullContextPath() + ": " + this.toString());
+			result.add((Val)this);
+			return result;
+		}
+		
+		for (Obj o : childs){
+			result.addAll(o.getValChilds());
+		}
+		
+		return result;
+	}
 
+	public void getValChilds(ArrayList<Val> result){
+		Obj[] childs = this.list();
+		
+		if (this instanceof Val){
+			System.out.println(this.getFullContextPath() + ": " + this.toString());
+			result.add((Val)this);
+			return;
+		}
+		
+		for (Obj o : childs){
+			o.getValChilds(result);
+		}
+		
+	}
 }

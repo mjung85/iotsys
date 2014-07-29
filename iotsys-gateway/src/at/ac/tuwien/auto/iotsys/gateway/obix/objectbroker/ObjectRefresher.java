@@ -32,6 +32,7 @@
 
 package at.ac.tuwien.auto.iotsys.gateway.obix.objectbroker;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 
@@ -55,7 +56,11 @@ public class ObjectRefresher implements Runnable {
 				
 				if (obj.needsRefresh()) {
 					obj.refreshObject();
-					
+					//ArrayList<Val> vals = new ArrayList<Val>();// obj.getValChilds();
+					//obj.getValChilds(vals);
+					//System.out.println(vals.toString());
+//					for (Val v : vals)
+//						System.out.println(v.getFullContextPath() + ": " + v.toString());
 					// set refresh timestamp
 					obj.setLastRefresh(System.currentTimeMillis());
 				}

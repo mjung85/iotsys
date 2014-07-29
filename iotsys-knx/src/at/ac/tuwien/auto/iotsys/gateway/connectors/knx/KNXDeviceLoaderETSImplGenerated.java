@@ -8,16 +8,19 @@ import obix.Obj;
 import obix.Str;
 import obix.Uri;
 import obix.Contract;
+
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
+
 import at.ac.tuwien.auto.calimero.GroupAddress;
 import at.ac.tuwien.auto.calimero.exception.KNXException;
-import at.ac.tuwien.auto.iotsys.commons.Connector;
 import at.ac.tuwien.auto.iotsys.commons.DeviceLoader;
 import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
+import at.ac.tuwien.auto.iotsys.commons.persistent.models.Connector;
 import at.ac.tuwien.auto.iotsys.gateway.connectors.knx.KNXConnector;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.knx.datapoint.impl.*;
+
 import org.apache.commons.configuration.XMLConfiguration;
 
 public class KNXDeviceLoaderETSImplGenerated implements DeviceLoader {

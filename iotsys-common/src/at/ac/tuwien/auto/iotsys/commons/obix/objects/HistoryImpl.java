@@ -51,10 +51,13 @@ import obix.Ref;
 import obix.Reltime;
 import obix.Str;
 import obix.Uri;
+import obix.Val;
 import obix.contracts.History;
 import obix.contracts.HistoryAppendIn;
 import obix.contracts.HistoryRecord;
 import obix.contracts.HistoryRollupIn;
+import at.ac.tuwien.auto.iotsys.commons.persistent.HistoryDbImpl;
+import at.ac.tuwien.auto.iotsys.commons.persistent.models.DbHistoryFeedRecord;
 import at.ac.tuwien.auto.iotsys.obix.OperationHandler;
 import at.ac.tuwien.auto.iotsys.obix.observer.Observer;
 import at.ac.tuwien.auto.iotsys.obix.observer.Subject;
@@ -76,6 +79,7 @@ public class HistoryImpl extends Obj implements History, Observer {
 	private Op append = new Op();
 
 	private Obj observedDatapoint;
+	private int cachedRecordsCount = 0;
 	
 	public HistoryImpl(Obj observedDatapoint, int historyCountMax){
 		this("history", observedDatapoint, historyCountMax, true, true);
@@ -430,8 +434,28 @@ public class HistoryImpl extends Obj implements History, Observer {
 			historyRecordImpl = new HistoryRecordImpl(new Str(
 					((Str) obj).get()), timestamp);
 		}
-		feed.addEvent(historyRecordImpl);
 
+		cachedRecordsCount++;
+		if (cachedRecordsCount == feed.getMaxEvents()) {
+			// flush the feed to database
+			List<DbHistoryFeedRecord> dhfs = new ArrayList<DbHistoryFeedRecord>();
+			for (Obj o : feed.getEvents()) {
+				HistoryRecordImpl feedRecord = (HistoryRecordImpl) o;
+				// Only persisting the value
+				if (feedRecord.value() instanceof Val) {
+					DbHistoryFeedRecord hf = new DbHistoryFeedRecord(
+							feed.getFullContextPath(), 
+							feedRecord.timestamp().getMillis(), 
+							feedRecord.value().getElement(),
+							((Val) feedRecord.value()).toString());
+					dhfs.add(hf);
+				}
+			}
+			HistoryDbImpl.getInstance().addBulkFeedRecords(dhfs);
+			cachedRecordsCount = 0;
+		}
+
+		feed.addEvent(historyRecordImpl);
 		updateKids();
 	}
 	

@@ -77,5 +77,9 @@ public class HistoryRecordImpl extends Obj implements HistoryRecord {
 	public Obj value() {
 		return value;
 	}
+	
+	public String getValue(){
+		return value.toString();
+	}
 
 }
