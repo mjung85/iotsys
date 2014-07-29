@@ -35,9 +35,12 @@ package at.ac.tuwien.auto.iotsys.gateway.connectors.virtual;
 
 import java.util.logging.Logger;
 
-import at.ac.tuwien.auto.iotsys.commons.Connector;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
-public class VirtualConnector implements Connector {
+import at.ac.tuwien.auto.iotsys.commons.persistent.models.Connector;
+
+public class VirtualConnector extends Connector {
+
 	private static final Logger log = Logger.getLogger(VirtualConnector.class
 			.getName());
 
@@ -69,6 +72,7 @@ public class VirtualConnector implements Connector {
 	}
 	
 	@Override
+	@JsonIgnore
 	public boolean isCoap() {
 		return false;
 	}

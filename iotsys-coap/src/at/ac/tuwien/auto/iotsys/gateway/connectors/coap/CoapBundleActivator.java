@@ -41,9 +41,10 @@ import org.osgi.framework.ServiceEvent;
 import org.osgi.framework.ServiceListener;
 import org.osgi.framework.ServiceReference;
 
-import at.ac.tuwien.auto.iotsys.commons.Connector;
 import at.ac.tuwien.auto.iotsys.commons.DeviceLoader;
 import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
+import at.ac.tuwien.auto.iotsys.commons.persistent.ConfigsDbImpl;
+import at.ac.tuwien.auto.iotsys.commons.persistent.models.Connector;
 
 public class CoapBundleActivator implements ServiceListener, BundleActivator {
 	private static final Logger log = Logger.getLogger(CoapBundleActivator.class
@@ -63,13 +64,13 @@ public class CoapBundleActivator implements ServiceListener, BundleActivator {
 				.getServiceReference(ObjectBroker.class.getName());
 		if (serviceReference == null) {
 			log.severe("Could not find a running object broker to register devices!");
-
 		} else {
 			synchronized (this) {
 				log.info("Initiating Coap devices.");
 				ObjectBroker objectBroker = (ObjectBroker) context
 						.getService(serviceReference);
 				connectors = deviceLoader.initDevices(objectBroker);
+				objectBroker.addConnectors(connectors);
 				registered = true;
 			}
 
@@ -90,6 +91,7 @@ public class CoapBundleActivator implements ServiceListener, BundleActivator {
 					.getService(serviceReference);
 			deviceLoader.removeDevices(objectBroker);
 			if (connectors != null) {
+				objectBroker.removeConnectors(connectors);
 				for (Connector connector : connectors) {
 					try {
 						connector.disconnect();
@@ -117,6 +119,7 @@ public class CoapBundleActivator implements ServiceListener, BundleActivator {
 								.getService(event.getServiceReference());
 						try {
 							connectors = deviceLoader.initDevices(objectBroker);
+							objectBroker.addConnectors(connectors);
 							registered = true;
 						} catch (Exception e) {
 							e.printStackTrace();

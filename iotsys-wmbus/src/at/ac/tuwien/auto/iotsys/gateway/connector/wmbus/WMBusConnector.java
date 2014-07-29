@@ -38,16 +38,16 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.logging.Logger;
 
-import at.ac.tuwien.auto.iotsys.commons.Connector;
-import at.ac.tuwien.auto.iotsys.gateway.connector.wmbus.WMBusWatchDog;
-import at.ac.tuwien.auto.iotsys.gateway.connector.wmbus.TelegramManagerInterface;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import at.ac.tuwien.auto.iotsys.commons.persistent.models.Connector;
+import at.ac.tuwien.auto.iotsys.gateway.connector.wmbus.reader.ComPortReader;
 import at.ac.tuwien.auto.iotsys.gateway.connector.wmbus.telegrams.SimpleTelegram;
+import at.ac.tuwien.auto.iotsys.gateway.connector.wmbus.telegrams.Telegram;
 import at.ac.tuwien.auto.iotsys.gateway.connector.wmbus.telegrams.util.Measure_Unit;
 import at.ac.tuwien.auto.iotsys.gateway.connector.wmbus.test.SmartMeterTestTelegrams;
-import at.ac.tuwien.auto.iotsys.gateway.connector.wmbus.reader.ComPortReader;
-import at.ac.tuwien.auto.iotsys.gateway.connector.wmbus.telegrams.Telegram;
 
-public class WMBusConnector implements TelegramManagerInterface, Connector{
+public class WMBusConnector extends Connector implements TelegramManagerInterface{
 	private static final Logger log = Logger.getLogger(WMBusConnector.class.getName());
 	
 	private final Hashtable<String, ArrayList<WMBusWatchDog>> watchDogs = new Hashtable<String, ArrayList<WMBusWatchDog>>();	
@@ -175,7 +175,18 @@ public class WMBusConnector implements TelegramManagerInterface, Connector{
 	}
 	
 	@Override
+	@JsonIgnore
 	public boolean isCoap() {
 		return false;
 	}
+
+	public String getSerialPort() {
+		return serialPort;
+	}
+
+	public void setSerialPort(String serialPort) {
+		this.serialPort = serialPort;
+	}
+	
+	
 }

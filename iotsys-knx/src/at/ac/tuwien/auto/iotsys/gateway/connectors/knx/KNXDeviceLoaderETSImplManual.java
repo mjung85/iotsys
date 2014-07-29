@@ -32,7 +32,6 @@ import obix.Uri;
 import org.apache.commons.configuration.XMLConfiguration;
 
 import at.ac.tuwien.auto.calimero.GroupAddress;
-import at.ac.tuwien.auto.iotsys.commons.Connector;
 import at.ac.tuwien.auto.iotsys.commons.DeviceLoader;
 import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.entity.impl.EntityImpl;
@@ -44,6 +43,7 @@ import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.view.impl.AreaImpl;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.view.impl.DomainImpl;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.view.impl.GroupImpl;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.view.impl.PartImpl;
+import at.ac.tuwien.auto.iotsys.commons.persistent.models.Connector;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.knx.datapoint.impl.DPST_1_1_ImplKnx;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.knx.datapoint.impl.DPST_3_7_ImplKnx;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objects.knx.datapoint.impl.DPST_5_1_ImplKnx;

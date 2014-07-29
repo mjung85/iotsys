@@ -1,9 +1,12 @@
 package at.ac.tuwien.auto.iotsys.commons;
 
 import java.util.HashMap;
+import java.util.List;
 
 import obix.Obj;
 import obix.Uri;
+import at.ac.tuwien.auto.iotsys.commons.persistent.ConfigsDb;
+import at.ac.tuwien.auto.iotsys.commons.persistent.models.Connector;
 
 public interface ObjectBroker
 {
@@ -48,4 +51,14 @@ public interface ObjectBroker
 	public MdnsResolver getMDnsResolver();
 
 	public void setMdnsResolver(MdnsResolver resolver);
+	
+	public void initDevices(String devicesConfigFile);
+	
+	public void addConnectors(List<Connector> connectors);
+
+	public void removeConnectors(List<Connector> connectors);
+
+	public ConfigsDb getConfigDb();
+
+	public void setConfigDb(ConfigsDb configDb);
 }

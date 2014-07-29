@@ -34,7 +34,9 @@ package at.ac.tuwien.auto.iotsys.gateway.obix.objectbroker;
 
 import java.net.Inet6Address;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.logging.Logger;
 
 import obix.Contract;
@@ -44,7 +46,6 @@ import obix.Obj;
 import obix.Op;
 import obix.Ref;
 import obix.Uri;
-import at.ac.tuwien.auto.iotsys.commons.Connector;
 import at.ac.tuwien.auto.iotsys.commons.MdnsResolver;
 import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.AboutImpl;
@@ -54,6 +55,10 @@ import at.ac.tuwien.auto.iotsys.commons.obix.objects.WatchImpl;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.WatchServiceImpl;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.internals.impl.InternalsImpl;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.general.impl.LobbyImpl;
+import at.ac.tuwien.auto.iotsys.commons.persistent.ConfigsDb;
+import at.ac.tuwien.auto.iotsys.commons.persistent.ConfigsDbImpl;
+import at.ac.tuwien.auto.iotsys.commons.persistent.models.Connector;
+import at.ac.tuwien.auto.iotsys.gateway.DeviceLoaderImpl;
 import at.ac.tuwien.auto.iotsys.gateway.service.GroupCommHelper;
 
 public class ObjectBrokerImpl implements ObjectBroker
@@ -77,6 +82,12 @@ public class ObjectBrokerImpl implements ObjectBroker
 	private ObjectRefresher objectRefresher = new ObjectRefresher();
 
 	private MdnsResolver resolver;
+	
+	private ConfigsDb configsDb;
+	
+	private DeviceLoaderImpl deviceLoader;
+	
+	private ArrayList<Connector> connectors = new ArrayList<Connector>();
 
 	static
 	{
@@ -116,6 +127,8 @@ public class ObjectBrokerImpl implements ObjectBroker
 
 		Thread t = new Thread(objectRefresher);
 		t.start();
+		
+		setConfigDb(ConfigsDbImpl.getInstance());
 	}
 
 	@Override
@@ -215,6 +228,19 @@ public class ObjectBrokerImpl implements ObjectBroker
 			ref.setDisplayName(o.getDisplayName());
 			iotLobby.addReference(o.getFullContextPath(), ref);
 		}
+		
+		// TODO: Re-apply written object from database, currently not work in OSGi model
+//		WritableObject wo = WriteableObjectDbImpl.getInstance().getPersistedObject(o.getFullContextPath());
+//		if (wo != null){
+//			try {
+//				Obj input = ObixDecoder.fromString(wo.getDataStream());
+//				pushObj(new Uri(wo.getHref()), input, false);
+//			} catch (XException ex) {
+//				ex.printStackTrace();
+//			} catch (Exception ex) {
+//				ex.printStackTrace();
+//			}
+//		}
 	}
 
 	@Override
@@ -302,6 +328,7 @@ public class ObjectBrokerImpl implements ObjectBroker
 	public synchronized void shutdown()
 	{
 		objectRefresher.stop();
+		closeConnectors();
 	}
 
 	@Override
@@ -329,10 +356,63 @@ public class ObjectBrokerImpl implements ObjectBroker
 	}
 
 	@Override
+	public ConfigsDb getConfigDb() {
+		return configsDb;
+	}
+
+	@Override
+	public void setConfigDb(ConfigsDb configDb) {
+		this.configsDb = configDb;
+	}
+
+	@Override
 	public synchronized void enableObjectRefresh(Obj obj, long interval)
 	{
 		obj.setRefreshInterval(interval);
 
 		objectRefresher.addObject(obj);
+	}
+	/**
+	 * Should only be called when not running in OSGi
+	 */
+	@Override
+	public void initDevices(String devicesConfigFile){
+		// add initial objects to the database
+		if (devicesConfigFile == null) {
+			deviceLoader = new DeviceLoaderImpl();
+		} else {
+			deviceLoader = new DeviceLoaderImpl(devicesConfigFile);
+		}
+		connectors = deviceLoader.initDevices(this); // will be empty if run in OSGi!
+		
+		// Transition step: migrate configs from devices.xml to DB, remove when done
+		configsDb.migrate(connectors);
+	}
+	
+	@Override
+	public void addConnectors(List<Connector> connectors){
+		this.connectors.addAll(connectors);
+		// Transition step: migrate configs from devices.xml to DB, remove when done
+		configsDb.prepareConnectors(connectors);
+	}
+
+	@Override
+	public void removeConnectors(List<Connector> connectors){
+		connectors.removeAll(connectors);
+	}
+	
+	private void closeConnectors()
+	{
+		for (Connector connector : connectors)
+		{
+			try
+			{
+				connector.disconnect();
+				log.info("Shutting down connector " + connector.toString());
+			} catch (Exception e)
+			{
+				e.printStackTrace();
+			}
+		}
 	}
 }
