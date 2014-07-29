@@ -140,7 +140,7 @@ public class EnoceanDeviceLoaderImpl implements DeviceLoader {
 					connectors.add(esp3Host);
 					
 					// start ESP3Host
-					esp3Host.start();
+					new Thread(esp3Host).start();
 
 					int numberOfDevices = 0;
 					List<Device> devicesFromDb = objectBroker.getConfigDb().getDevices(connectorId);

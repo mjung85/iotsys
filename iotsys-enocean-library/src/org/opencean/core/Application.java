@@ -11,6 +11,7 @@ import org.opencean.core.packets.RadioPacket;
 import org.opencean.core.packets.RadioPacket4BS;
 import org.opencean.core.utils.ByteArray;
 import org.opencean.core.utils.RLC;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -34,7 +35,7 @@ public class Application {
         esp3Host.addDeviceProfile(EnoceanId.fromInt(0x0025A2DC), EEPId.EEP_F6_02_01);
         esp3Host.addDeviceProfile(EnoceanId.fromInt(0x0181DCDD), EEPId.EEP_D5_00_01);
         
-        esp3Host.start();          
+        new Thread(esp3Host).start();         
         
 // ++++++++++ TEST Start light actuator 2 ++++++++++++++
         final String ON = "ON";
