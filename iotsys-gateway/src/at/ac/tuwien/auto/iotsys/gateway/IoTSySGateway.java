@@ -37,10 +37,11 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.List;
 import java.util.logging.Logger;
 
-import at.ac.tuwien.auto.iotsys.commons.Connector;
 import at.ac.tuwien.auto.iotsys.commons.DeviceLoader;
 import at.ac.tuwien.auto.iotsys.commons.MdnsResolver;
 import at.ac.tuwien.auto.iotsys.commons.Named;
@@ -51,6 +52,8 @@ import at.ac.tuwien.auto.iotsys.commons.interceptor.ClassAlreadyRegisteredExcept
 import at.ac.tuwien.auto.iotsys.commons.interceptor.Interceptor;
 import at.ac.tuwien.auto.iotsys.commons.interceptor.InterceptorBroker;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.ContractInit;
+import at.ac.tuwien.auto.iotsys.commons.persistent.WriteableObjectDbImpl;
+import at.ac.tuwien.auto.iotsys.commons.persistent.models.WriteableObject;
 import at.ac.tuwien.auto.iotsys.gateway.interceptor.InterceptorBrokerImpl;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objectbroker.ObjectBrokerImpl;
 import at.ac.tuwien.auto.iotsys.gateway.obix.server.CoAPServer;
@@ -69,12 +72,10 @@ import at.ac.tuwien.auto.iotsys.xacml.pdp.PDPInterceptorSettings;
 public class IoTSySGateway
 {
 	private ObjectBroker objectBroker;
-	private DeviceLoaderImpl deviceLoader;
+	
 	private InterceptorBroker interceptorBroker;
 
 	private boolean osgiEnvironment = false;
-
-	private ArrayList<Connector> connectors = new ArrayList<Connector>();
 
 	private static final Logger log = Logger.getLogger(IoTSySGateway.class.getName());
 
@@ -111,7 +112,6 @@ public class IoTSySGateway
 		// initialize object broker
 		objectBroker = ObjectBrokerImpl.getInstance();
 		obixServer = new ObixServerImpl(objectBroker);
-		
 
 		boolean enableServiceDiscovery = Boolean.parseBoolean(PropertiesLoader.getInstance().getProperties().getProperty("iotsys.gateway.servicediscovery.enabled", "false"));
 		// set object broker to a shared global variable
@@ -121,16 +121,36 @@ public class IoTSySGateway
 			objectBroker.setMdnsResolver(mdnsResolver);
 		}
 
+		// the following commented code block does not have any effect if running in OSGi environment
+		// --> suggestion is to move to objectBroker
+		
 		// add initial objects to the database
-		if (devicesConfigFile == null)
-		{
-			deviceLoader = new DeviceLoaderImpl();
-		} else
-		{
-			deviceLoader = new DeviceLoaderImpl(devicesConfigFile);
+//		if (devicesConfigFile == null)
+//		{
+//			deviceLoader = new DeviceLoaderImpl();
+//		} else
+//		{
+//			deviceLoader = new DeviceLoaderImpl(devicesConfigFile);
+//		}
+//		connectors = deviceLoader.initDevices(objectBroker);
+		// Transition step: migrate configs from devices.xml to DB, remove when done
+//		ConfigsDbImpl.getInstance().migrate(connectors);
+		
+		if (!osgiEnvironment){
+			objectBroker.initDevices(devicesConfigFile);
+			// TODO: Re-apply written object from database, not work yet in osgi bundle
+			// Be careful, this is causing some tests to fail due to object broker state is not fresh as 
+			// there are objects fetched from DB
+//			List<WritableObject> wos = WriteableObjectDbImpl.getInstance().getPersistedObjects();
+//			for (WritableObject o : wos){
+//				try {
+//					obixServer.applyObj(new URI(o.getHref()), o.getDataStream());
+//				} catch (URISyntaxException e) {
+//					e.printStackTrace();
+//				}
+//			}
 		}
-		connectors = deviceLoader.initDevices(objectBroker);
-
+		
 		if (objectBroker.getMDnsResolver() != null)
 		{
 			log.info("No of records built: " + objectBroker.getMDnsResolver().getNumberOfRecord());
@@ -164,7 +184,6 @@ public class IoTSySGateway
 					log.info("Class found: " + pdpSettingsClazz.getName());
 				} catch (ClassNotFoundException e2)
 				{
-					// TODO Auto-generated catch block
 					e2.printStackTrace();
 				}
 
@@ -180,23 +199,18 @@ public class IoTSySGateway
 						settings.setRemotePdp(remotePdp);
 					} catch (NoSuchMethodException e)
 					{
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					} catch (SecurityException e)
 					{
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					} catch (IllegalAccessException e)
 					{
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					} catch (IllegalArgumentException e)
 					{
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					} catch (InvocationTargetException e)
 					{
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 
@@ -208,7 +222,6 @@ public class IoTSySGateway
 					clazz = Class.forName("at.ac.tuwien.auto.iotsys.xacml.pdp.PDPInterceptor");
 				} catch (ClassNotFoundException e1)
 				{
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 
@@ -221,11 +234,9 @@ public class IoTSySGateway
 						interceptorBroker.register(interceptor);
 					} catch (InstantiationException e)
 					{
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					} catch (IllegalAccessException e)
 					{
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 
@@ -252,7 +263,7 @@ public class IoTSySGateway
 	{
 		objectBroker.shutdown();
 		// CsvCreator.instance.close();
-		closeConnectors();
+//		closeConnectors();
 	}
 
 	public static void main(String[] args)
@@ -269,24 +280,18 @@ public class IoTSySGateway
 				n.startNamedService();
 				iotsys.setMdnsResolver(m);
 			} catch (InstantiationException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (IllegalAccessException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (ClassNotFoundException e) {
 				log.info("Mdnssd service not found");
 			} catch (IllegalArgumentException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (InvocationTargetException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (NoSuchMethodException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (SecurityException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -307,20 +312,7 @@ public class IoTSySGateway
 		System.exit(0);
 	}
 
-	private void closeConnectors()
-	{
-		for (Connector connector : connectors)
-		{
-			try
-			{
-				connector.disconnect();
-				log.info("Shutting down connector " + connector.toString());
-			} catch (Exception e)
-			{
-				e.printStackTrace();
-			}
-		}
-	}
+	
 
 	public boolean isOsgiEnvironment()
 	{

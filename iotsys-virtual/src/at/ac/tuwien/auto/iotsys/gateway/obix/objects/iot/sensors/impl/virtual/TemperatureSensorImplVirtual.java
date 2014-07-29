@@ -72,14 +72,14 @@ public class TemperatureSensorImplVirtual extends TemperatureSensorImpl {
 	public void refreshObject(){
 		// value is the protected instance variable of the base class (TemperatureSensorImpl)
 //		if(value != null){
-//			Double value = virtualConnector.readDouble(busAddress);
+			Double value = virtualConnector.readDouble(busAddress);
 //			
 //			// this calls the implementation of the base class, which triggers also
 //			// oBIX services (e.g. watches, history) and CoAP observe!
 //			
-//			this.value().set(value); 
+			this.value().set(value); 
 //		}	
-		if(HVACSimulationImpl.instance != null)
-			this.value().set(HVACSimulationImpl.instance.getTemp()); 
+//		if(HVACSimulationImpl.instance != null)
+//			this.value().set(HVACSimulationImpl.instance.getTemp()); 
 	}
 }

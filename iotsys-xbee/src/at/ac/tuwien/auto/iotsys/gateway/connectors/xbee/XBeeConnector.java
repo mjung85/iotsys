@@ -4,19 +4,20 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.logging.Logger;
 
+import at.ac.tuwien.auto.iotsys.commons.persistent.models.Connector;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.rapplogic.xbee.api.ApiId;
 import com.rapplogic.xbee.api.PacketListener;
 import com.rapplogic.xbee.api.XBee;
 import com.rapplogic.xbee.api.XBeeResponse;
 import com.rapplogic.xbee.api.zigbee.ZNetRxIoSampleResponse;
 
-import at.ac.tuwien.auto.iotsys.commons.Connector;
-
-public class XBeeConnector implements Connector{
+public class XBeeConnector extends Connector{
 	private static final Logger log = Logger.getLogger(XBeeConnector.class.getName());
 
-	String port;
-	int baudRate;
+	private String port;
+	private int baudRate;
 	private XBee xbee;
 	
 	private final Hashtable<String, ArrayList<XBeeWatchdog>> watchDogs = new Hashtable<String, ArrayList<XBeeWatchdog>>();
@@ -82,7 +83,26 @@ public class XBeeConnector implements Connector{
 	}
 	
 	@Override
+	@JsonIgnore
 	public boolean isCoap() {
 		return false;
 	}
+
+	public String getPort() {
+		return port;
+	}
+
+	public void setPort(String port) {
+		this.port = port;
+	}
+
+	public int getBaudRate() {
+		return baudRate;
+	}
+
+	public void setBaudRate(int baudRate) {
+		this.baudRate = baudRate;
+	}
+	
+	
 }
