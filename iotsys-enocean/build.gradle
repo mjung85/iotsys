@@ -192,8 +192,7 @@ dependencies {
 	provided group: 'commons-codec', name: 'commons-codec', version: '1.6'
 	provided group: 'commons-collections', name: 'commons-collections', version: '3.2.1'
 	provided group: 'commons-configuration', name: 'commons-configuration', version: '1.9'
-	provided group: 'commons-digester', name: 'commons-digester', version: '1.8.1'
-	
+	provided group: 'commons-digester', name: 'commons-digester', version: '1.8.1'	
 	
 	provided group: 'org.apache.commons', name: 'commons-jexl', version: '2.1.1'
 	provided group: 'commons-jxpath', name: 'commons-jxpath', version: '1.3'

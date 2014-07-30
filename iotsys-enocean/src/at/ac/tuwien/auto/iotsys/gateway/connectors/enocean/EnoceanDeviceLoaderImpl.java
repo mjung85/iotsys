@@ -88,8 +88,7 @@ public class EnoceanDeviceLoaderImpl implements DeviceLoader {
 
 		List<JsonNode> connectorsFromDb = objectBroker.getConfigDb().getConnectors("enocean");
 		int connectorsSize = 0;
-		// Enocean
-		
+		// Enocean		
 		if (connectorsFromDb.size() <= 0) {
 			Object enoceanConnectors = devicesConfig
 					.getProperty("enocean.connector.name");
