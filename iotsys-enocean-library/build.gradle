@@ -44,9 +44,18 @@ jar {
 				   "Bundle-Vendor": "Vienna University of Technology, Automation Systems Group, www.auto.tuwien.ac.at",
 				   "Bundle-Version": "0.1", 
 				   "Bundle-Classpath": ".",
-				   "Export-Package": "org.opencean.core, org.opencean.core.address, org.opencean.core.common, org.opencean.core.common.values, org.opencean.core.eep, " +
-									"org.opencean.core.packets, org.opencean.core.utils",
-				   "Import-Package": "at.ac.tuwien.auto.iotsys.commons, org.apache.commons.logging, org.apache.commons.logging.impl, gnu.io"
+				   "Export-Package": "org.opencean.core," +
+									 "org.opencean.core.address," +
+									 "org.opencean.core.common," +
+									 "org.opencean.core.common.values," + 
+									 "org.opencean.core.eep," +
+									 "org.opencean.core.packets," +
+									 "org.opencean.core.utils",
+				   "Import-Package": "at.ac.tuwien.auto.iotsys.commons," +
+									 "at.ac.tuwien.auto.iotsys.commons.persistent.models," +
+									 "gnu.io," +
+									 "org.apache.commons.logging," +
+									 "org.apache.commons.logging.impl" 									 
 				   )
 	}
 }
