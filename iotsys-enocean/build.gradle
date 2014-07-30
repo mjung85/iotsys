@@ -44,8 +44,7 @@ jar {
 									 "at.ac.tuwien.auto.iotsys.commons.obix.objects.enocean.datapoint," +
 									 "at.ac.tuwien.auto.iotsys.commons.obix.objects.enocean.datapoint.impl," +
 									 "at.ac.tuwien.auto.iotsys.commons.obix.objects.enocean.entity," +
-									 "at.ac.tuwien.auto.iotsys.commons.obix.objects.enocean.entity.impl,"+
-									 "at.ac.tuwien.auto.iotsys.commons.obix.objects.general," +
+									 "at.ac.tuwien.auto.iotsys.commons.obix.objects.enocean.entity.impl,"+									
 									 "at.ac.tuwien.auto.iotsys.commons.obix.objects.general.contracts.impl," +
 									 "at.ac.tuwien.auto.iotsys.commons.obix.objects.general.datapoint, " +
 									 "at.ac.tuwien.auto.iotsys.commons.obix.objects.general.datapoint.impl," +
@@ -54,10 +53,7 @@ jar {
 									 "at.ac.tuwien.auto.iotsys.commons.obix.objects.general.entity," +
 									 "at.ac.tuwien.auto.iotsys.commons.obix.objects.general.entity.impl," +
 									 "at.ac.tuwien.auto.iotsys.commons.obix.objects.general.enumeration," +
-									 "at.ac.tuwien.auto.iotsys.commons.obix.objects.general.enumeration.impl,"+
-									 "at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators.impl," +
-									 "at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.sensors," +
-									 "at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.sensors.impl," +
+									 "at.ac.tuwien.auto.iotsys.commons.obix.objects.general.enumeration.impl,"+								 
 									 "at.ac.tuwien.auto.iotsys.commons.obix.objects.iot," +
 									 "at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators," +
 									 "at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators.impl," +
@@ -164,15 +160,20 @@ jar {
 									 "org.apache.commons.logging.impl," +
 									 "org.apache.xalan," +
 									 "org.apache.xalan.res," +
+									 "org.opencean.core," +
+									 "org.opencean.core.address," +
+									 "org.opencean.core.common," +
+									 "org.opencean.core.common.values," +
+									 "org.opencean.core.eep, " +
+									 "org.opencean.core.packets," +
+									 "org.opencean.core.utils," +
 									 "org.osgi.framework," +
 									 "org.w3c.dom," +
 									 "org.w3c.dom.ls," +
 									 "org.w3c.dom.traversal," +
 									 "org.xml.sax," +
 									 "org.xml.sax.ext," +
-									 "org.xml.sax.helpers"
-									 
-			 
+									 "org.xml.sax.helpers"			 
 				)
 	}
 }
