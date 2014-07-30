@@ -42,7 +42,6 @@ import org.osgi.framework.ServiceReference;
 
 import at.ac.tuwien.auto.iotsys.commons.DeviceLoader;
 import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
-import at.ac.tuwien.auto.iotsys.commons.persistent.ConfigsDbImpl;
 import at.ac.tuwien.auto.iotsys.commons.persistent.models.Connector;
 
 public class EnoceanBundleActivator implements BundleActivator, ServiceListener {
@@ -58,6 +57,7 @@ public class EnoceanBundleActivator implements BundleActivator, ServiceListener 
 
 	public void start(BundleContext context) throws Exception {
 		log.info("Starting EnOcean connector");
+		System.out.println("DEBUG: Starting EnOcean connector");
 		this.context = context;
 		ServiceReference serviceReference = context
 				.getServiceReference(ObjectBroker.class.getName());

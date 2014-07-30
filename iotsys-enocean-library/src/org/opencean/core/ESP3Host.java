@@ -11,8 +11,11 @@ import org.opencean.core.common.ProtocolConnector;
 import org.opencean.core.packets.BasicPacket;
 import org.opencean.core.packets.RadioPacket;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 
 //import at.ac.tuwien.auto.iotsys.commons.Connector;
 import at.ac.tuwien.auto.iotsys.commons.persistent.models.Connector;
@@ -152,6 +155,7 @@ public class ESP3Host extends Connector implements Runnable{
 	}
     
     @Override
+    @JsonIgnore
 	public boolean isCoap() {
 		return false;
 	}

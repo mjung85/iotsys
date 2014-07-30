@@ -57,7 +57,7 @@ public class WeatherForecastBundleActivator implements BundleActivator, ServiceL
 	private BundleContext context = null;
 
 	public void start(BundleContext context) throws Exception {
-		log.info("Starting Enocean connector");
+		log.info("Starting WeatherForecast connector");
 		this.context = context;
 		ServiceReference serviceReference = context.getServiceReference(ObjectBroker.class.getName());
 		if (serviceReference == null) {
