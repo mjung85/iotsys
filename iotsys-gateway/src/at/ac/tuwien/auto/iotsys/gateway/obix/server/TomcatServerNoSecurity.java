@@ -1,10 +1,14 @@
 package at.ac.tuwien.auto.iotsys.gateway.obix.server;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
@@ -42,6 +46,7 @@ import at.ac.tuwien.auto.iotsys.commons.interceptor.InterceptorResponse;
 import at.ac.tuwien.auto.iotsys.commons.interceptor.InterceptorResponse.StatusCode;
 import at.ac.tuwien.auto.iotsys.commons.interceptor.Parameter;
 import at.ac.tuwien.auto.iotsys.gateway.interceptor.InterceptorBrokerImpl;
+import at.ac.tuwien.auto.iotsys.gateway.obix.server.NanoHTTPD.Response;
 import at.ac.tuwien.auto.iotsys.gateway.util.ExiUtil;
 import at.ac.tuwien.auto.iotsys.gateway.util.JsonUtil;
 
@@ -188,6 +193,8 @@ public class TomcatServerNoSecurity {
 			} else {
 
 				try {
+					log.info("ResourcePath : " + resourcePath);
+					log.info("data : " + data);
 					responseObj = obixServer.invokeOp(new URI(resourcePath),
 							data);
 					obixResponse = getObixResponse(req, ipv6Address,
@@ -246,14 +253,47 @@ public class TomcatServerNoSecurity {
 					MIME_X_OBIX_BINARY);
 			boolean jsonRequested = contains(req.getHeader("Accept"), MIME_JSON);
 
+			log.info("encodeResponse " + exiRequested);
+			log.info("header : " + req.getHeader("Accept"));
+
 			if (exiRequested || exiSchemaRequested) {
 				try {
 					byte[] exiData = ExiUtil.getInstance().encodeEXI(
 							XML_HEADER + obixResponse, exiSchemaRequested);
+
+					try {
+						log.info("decodeExi : "
+								+ ExiUtil.getInstance().decodeEXI(exiData));
+					} catch (Exception e2) {
+						e2.printStackTrace();
+					}
+
 					// try to decode it immediately
 					resp.setStatus(HttpStatus.SC_OK);
 					resp.setContentType(MIME_EXI);
-					response = new String(exiData, "UTF-8");
+					InputStream in = new ByteArrayInputStream(exiData);
+
+					int pending = in.available();
+
+					OutputStream out = resp.getOutputStream();
+			                
+					byte[] buff = new byte[exiData.length];
+					while (pending > 0) {
+						int read = in.read(buff, 0,
+								((pending > exiData.length) ? exiData.length
+										: pending));
+						if (read <= 0)
+							break;
+						out.write(buff, 0, read); 
+						pending -= read;
+					}
+					
+					PrintWriter w = new PrintWriter(out);
+
+					w.flush();
+					w.close();
+					
+
 				} catch (Exception e1) {
 					e1.printStackTrace();
 					// fall back
@@ -383,7 +423,7 @@ public class TomcatServerNoSecurity {
 				log.info("[serveStatic] path : " + path);
 
 				return serveFile(req, resp, path, new File("res/obelix"), false);
-			} 
+			}
 
 			return null;
 		}
@@ -865,6 +905,13 @@ public class TomcatServerNoSecurity {
 			while (st.hasMoreTokens())
 				theMimeTypes.put(st.nextToken(), st.nextToken());
 		}
+	}
 
+	public void shutdown() {
+		try {
+			this.tomcat.stop();
+		} catch (LifecycleException e) {
+			e.printStackTrace();
+		}
 	}
 }

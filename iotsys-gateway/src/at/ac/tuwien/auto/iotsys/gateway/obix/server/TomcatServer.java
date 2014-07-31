@@ -954,4 +954,12 @@ public class TomcatServer {
 		}
 
 	}
+	
+	public void shutdown() {
+		try {
+			this.tomcat.stop();
+		} catch (LifecycleException e) {
+			e.printStackTrace();
+		}
+	}
 }

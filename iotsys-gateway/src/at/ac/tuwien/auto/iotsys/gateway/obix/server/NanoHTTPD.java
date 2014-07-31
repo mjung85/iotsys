@@ -417,8 +417,8 @@ public class NanoHTTPD {
 			try {
 				byte[] exiData = ExiUtil.getInstance().encodeEXI(
 						XML_HEADER + obixResponse, exiSchemaRequested);
+				
 				// try to decode it immediately
-	
 				response = new Response(HTTP_OK, MIME_EXI,
 						new ByteArrayInputStream(exiData), exiData.length);
 			} catch (Exception e1) {
