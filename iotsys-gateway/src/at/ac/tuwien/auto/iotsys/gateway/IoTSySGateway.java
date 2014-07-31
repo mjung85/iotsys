@@ -86,6 +86,9 @@ public class IoTSySGateway {
 
 	private MdnsResolver mdnsResolver;
 
+	private Thread tomcat;
+	private Thread tomcatNoSec;
+
 	public IoTSySGateway() {
 
 	}
@@ -105,10 +108,10 @@ public class IoTSySGateway {
 		// init contracts
 		ContractInit.init();
 
-		String httpPort = PropertiesLoader.getInstance().getProperties()
+		final String httpPort = PropertiesLoader.getInstance().getProperties()
 				.getProperty("iotsys.gateway.http.port", "8080");
-		
-		String httpsPort = PropertiesLoader.getInstance().getProperties()
+
+		final String httpsPort = PropertiesLoader.getInstance().getProperties()
 				.getProperty("iotsys.gateway.https.port", "8443");
 
 		log.info("HTTP-Port: " + httpPort);
@@ -240,38 +243,83 @@ public class IoTSySGateway {
 		ObixObservingManager.getInstance().setObixServer(obixServer);
 
 		new CoAPServer(obixServer);
-		
+
 		boolean enableSecurity = Boolean.parseBoolean(PropertiesLoader
 				.getInstance().getProperties()
 				.getProperty("iotsys.gateway.security.enable", "false"));
-		
-		try {
-			if (enableSecurity) {
-				new TomcatServer(Integer.parseInt(httpsPort), obixServer);
-			} else {
-				new TomcatServerNoSecurity(Integer.parseInt(httpPort), obixServer);
-			}
-		} catch (NumberFormatException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (ServletException e) {
-			e.printStackTrace();
+
+		// try {
+		// if (enableSecurity) {
+		// new TomcatServer(Integer.parseInt(httpsPort), obixServer);
+		// } else {
+		// new TomcatServerNoSecurity(Integer.parseInt(httpPort),
+		// obixServer);
+		// }
+		// } catch (NumberFormatException e) {
+		// e.printStackTrace();
+		// } catch (IOException e) {
+		// e.printStackTrace();
+		// } catch (ServletException e) {
+		// e.printStackTrace();
+		// }
+
+		if (enableSecurity) {
+			tomcat = new Thread(new Runnable() {
+
+				@Override
+				public void run() {
+					try {
+						new TomcatServer(Integer.parseInt(httpsPort),
+								obixServer);
+					} catch (NumberFormatException e) {
+						e.printStackTrace();
+					} catch (IOException e) {
+						e.printStackTrace();
+					} catch (ServletException e) {
+						e.printStackTrace();
+					}
+				}
+
+			});
+			tomcat.start();
+
+		} else {
+			tomcatNoSec = new Thread(new Runnable() {
+				@Override
+				public void run() {
+					try {
+						new TomcatServerNoSecurity(Integer.parseInt(httpPort),
+								obixServer);
+					} catch (NumberFormatException e) {
+						e.printStackTrace();
+					} catch (IOException e) {
+						e.printStackTrace();
+					} catch (ServletException e) {
+						e.printStackTrace();
+					}
+				}
+			});
+			tomcatNoSec.start();
 		}
 
-//		 try
-//		 {
-//		 new NanoHTTPD(Integer.parseInt(httpPort), obixServer);
-//		 } catch (IOException ioe)
-//		 {
-//		 ioe.printStackTrace();
-//		 }
+		// try
+		// {
+		// new NanoHTTPD(Integer.parseInt(httpPort), obixServer);
+		// } catch (IOException ioe)
+		// {
+		// ioe.printStackTrace();
+		// }
 	}
 
 	public void stopGateway() {
 		objectBroker.shutdown();
 		// CsvCreator.instance.close();
 		closeConnectors();
+
+		if (tomcat != null)
+			tomcat.interrupt();
+		else if (tomcatNoSec != null)
+			tomcatNoSec.interrupt();
 	}
 
 	public static void main(String[] args) {
