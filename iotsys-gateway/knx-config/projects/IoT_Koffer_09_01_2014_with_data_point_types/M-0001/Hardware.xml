@@ -1,0 +1,132 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<KNX xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" CreatedBy="ETS4" ToolVersion="ETS 4.1.5 (Build 3246)" xmlns="http://knx.org/xml/project/11">
+  <ManufacturerData>
+    <Manufacturer RefId="M-0001">
+      <Hardware>
+        <Hardware Id="M-0001_H-hp.5F00156-1" Name="#IP-Router N 146" SerialNumber="hp_00156" VersionNumber="1" BusCurrent="6.0000000e+000" IsAccessory="0" HasIndividualAddress="1" HasApplicationProgram="1" HasApplicationProgram2="0" IsPowerSupply="0" IsChoke="0" IsCoupler="1" IsPowerLineRepeater="0" IsPowerLineSignalFilter="0" IsCable="0" NonRegRelevantDataVersion="0" IsIPEnabled="1">
+          <Products>
+            <Product Id="M-0001_H-hp.5F00156-1_P-5WG1.20146.2D1AB02" Text="IP-Router N 146/02" OrderNumber="5WG1 146-1AB02" IsRailMounted="1" VisibleDescription="Productinfo - see file:   1461ab02_tpi_e.pdf" DefaultLanguage="en-US" Hash="7kqvh5EyJPx/vYFayLqdE58VOKE=" NonRegRelevantDataVersion="0">
+              <RegistrationInfo RegistrationStatus="Registered" RegistrationSignature="WCPQkudwCt1zdj2c5/bTeMt5GNZq5UcP5QzMPFq1ijdof6wH8dS+K2sz/0gUucf5Vd52y7mVJZvFQMjnqKgc8hDRHRlGYTo8UCFyxIQKs7FoO5UPmZ0wrTjep7sRmdQTbBujHIH1LAJP/cxReE098dULa9t7bdSQT3it5v7G3jw=" />
+            </Product>
+          </Products>
+          <Hardware2Programs>
+            <Hardware2Program Id="M-0001_H-hp.5F00156-1_HP-0010-02-3D95" MediumTypes="MT-0" Hash="prvibFUweYQ/ChihiCWzD1MhyCY=">
+              <ApplicationProgramRef RefId="M-0001_A-0010-02-3D95" />
+              <RegistrationInfo RegistrationSignature="n9m0Ti7pzMZ1Mohl99KZyeFw0KFMdDPiEPX2TAOj3SWmjWwfAENOrLvJn6f56pgfgf70xdsL0PEMj4SJ/gmKlapKO+rJXTZYLcI2y/zTD3OJmYKFiXmCp1a8aQ5l+lwZtD2zSVdDb9MgsZ7JOcudA7bVOTAV/B3+hgnxalJ5gy0=" OriginalRegistrationNumber="1900/0" RegistrationNumber="2005/7243" RegistrationStatus="Registered" />
+            </Hardware2Program>
+          </Hardware2Programs>
+        </Hardware>
+        <Hardware Id="M-0001_H-hp.5F00197-1" Name="#Fan Coil Bedieneinheit UP25x Büro" SerialNumber="hp_00197" VersionNumber="1" BusCurrent="7.0000000e+000" IsAccessory="0" HasIndividualAddress="1" HasApplicationProgram="1" HasApplicationProgram2="0" IsPowerSupply="0" IsChoke="0" IsCoupler="0" IsPowerLineRepeater="0" IsPowerLineSignalFilter="0" IsCable="0" NonRegRelevantDataVersion="0" IsIPEnabled="0">
+          <Products>
+            <Product Id="M-0001_H-hp.5F00197-1_P-5WG1.20237.2D2EB.5F1" Text="FCU Operator Panel Office UP 237E DELTA i-system" OrderNumber="5WG1 237-2EB_1" IsRailMounted="0" DefaultLanguage="en-US" Hash="Hf58RCZ89jJkC7R/4v80RukowmY=" NonRegRelevantDataVersion="0">
+              <RegistrationInfo RegistrationStatus="Registered" RegistrationSignature="kqdbZanx1wXZHPUix+Cp2KJdurHHUPUNgXD/IQQNx2S2IzCJrCqB/Xb/+8N+m2k9vOQ6SHR/vp1WuYCm4hWn2dWnavXjYrz/i/FcWBt8TshLlUzptUfA6kjqFbCsIoivuvu+vlrj1ZiC3webNCd1tAaUfx+LWYZR7r0F6Vh2pZI=" />
+            </Product>
+          </Products>
+          <Hardware2Programs>
+            <Hardware2Program Id="M-0001_H-hp.5F00197-1_HP-8025-01-C29E" MediumTypes="MT-0" Hash="NVjF4X8agdD+Gayd5EUgmUjUw6U=">
+              <ApplicationProgramRef RefId="M-0001_A-8025-01-C29E" />
+              <RegistrationInfo RegistrationSignature="yYvRc8H0B0HHbEelaCDzFxwqtMShM4tLMmf1Zm6/AhkhaaR8cW0aJP1LWVgWSwDruUTrxORaF4G7/kgAUfQ2zhvyzaip0eeMMPlGPFGS205bR2hHntlK5jq+yOIZF/OH/pcYZhB4XzQ/TLE3cXKeWewwfQ1MWiyIlqmnU4uGwqE=" OriginalRegistrationNumber="1900/0" RegistrationNumber="2006/7455" RegistrationStatus="Registered" />
+            </Hardware2Program>
+          </Hardware2Programs>
+        </Hardware>
+        <Hardware Id="M-0001_H-hp.5F00209-1" Name="#Textdisplay DELTA i-system UP587/01" SerialNumber="hp_00209" VersionNumber="1" BusCurrent="1.6000000e+001" IsAccessory="0" HasIndividualAddress="1" HasApplicationProgram="1" HasApplicationProgram2="0" IsPowerSupply="0" IsChoke="0" IsCoupler="0" IsPowerLineRepeater="0" IsPowerLineSignalFilter="0" IsCable="0" NonRegRelevantDataVersion="0" IsIPEnabled="0">
+          <Products>
+            <Product Id="M-0001_H-hp.5F00209-1_P-5WG1.20587.202AB.5F1" Text="Text display UP 587/01" OrderNumber="5WG1 587 2AB_1" IsRailMounted="0" DefaultLanguage="en-US" Hash="r1cqYaljxnTV4LEIlnTFdXTVyr8=" NonRegRelevantDataVersion="0">
+              <RegistrationInfo RegistrationStatus="Registered" RegistrationSignature="CdEifLMzZOfHHcnfT+doNVr6ZC4ezxjC/7Yv3N+4mtAuhbS4vHiFp6fX/NyQ/x/quTxY08iM7Pb5ytbh0d9oj2yFRNReRdTaLLkikh5bLz5/EZz3NdNXkOw1hWrfM48HUuaKDc7L3taERzfDOciSCazGNRWz7qYBiCcMf07xiIk=" />
+            </Product>
+          </Products>
+          <Hardware2Programs>
+            <Hardware2Program Id="M-0001_H-hp.5F00209-1_HP-9089-10-FC09" MediumTypes="MT-0" Hash="jtoOTF1DvG/mG1DaZaeJm6unUbE=">
+              <ApplicationProgramRef RefId="M-0001_A-9089-10-FC09" />
+              <RegistrationInfo RegistrationSignature="hYANty6b9uIdLF6tVG8uwHSJ9fb3lhZZSLoZNtcLwPNYMThGVtubEUX19BmOzcrNDwplp5Q14OS5z3QmJeX3HqZQwlf4DQkDkq5xdFW1RDtEFUVWqqAlL8fKdKwxTTY8u7tPyDZPOYD6wH7KM68s2RJN1h8KIK6jlQ9qPQ4Fya0=" OriginalRegistrationNumber="1900/0" RegistrationNumber="2006/7650" RegistrationStatus="Registered" />
+            </Hardware2Program>
+          </Hardware2Programs>
+        </Hardware>
+        <Hardware Id="M-0001_H-hp.5F00264-1" Name="#BTM-Taster" SerialNumber="hp_00264" VersionNumber="1" BusCurrent="9.0000000e+000" IsAccessory="0" HasIndividualAddress="1" HasApplicationProgram="1" HasApplicationProgram2="0" IsPowerSupply="0" IsChoke="0" IsCoupler="0" IsPowerLineRepeater="0" IsPowerLineSignalFilter="0" IsCable="0" NonRegRelevantDataVersion="0" IsIPEnabled="0">
+          <Products>
+            <Product Id="M-0001_H-hp.5F00264-1_P-5WG1.202xx.2D2AB.5F.5F" Text="BTM Wall Switch UP22x / UP24x / UP28x" OrderNumber="5WG1 2xx-2AB__" IsRailMounted="0" DefaultLanguage="en-US" Hash="+plZ+yirkJChc7PPbz1aG9dskHw=" NonRegRelevantDataVersion="0">
+              <RegistrationInfo RegistrationStatus="Registered" RegistrationSignature="qoeV5S+GbBOGw8NAT6JyJpmguw0vSHNGSWZ/csVACyKNrYT6K5ap8AihU1rDeRWBMhxr52kodssU7RcgP6fOk2jKCL4uphQPjbcgoWRmLnsA4J8nP//E04EWRHdw7NQiCvLNppSPxcgA4Gd7kNawES6+O4GeejXI3l6VurVsvzI=" />
+            </Product>
+          </Products>
+          <Hardware2Programs>
+            <Hardware2Program Id="M-0001_H-hp.5F00264-1_HP-9093-01-EFC1" MediumTypes="MT-0" Hash="P5nMYoAXGZbOtYIiZtBASU+WqTw=">
+              <ApplicationProgramRef RefId="M-0001_A-9093-01-EFC1" />
+              <RegistrationInfo RegistrationSignature="A/SVUz3pLbbrWUjfPGgjFF5v0J0tql7lz4VjWGINAeaGMvwX5PZEfiZbjdF9zfxEjvV6nPeS6ln8E/dcfmpDHlkwb7pVTh762r/jTabriPPfnYl+mtZar4x/lkIWVat9DPO66buIxfOALDmdYWHVP6biJgfrzHhY37L8Fe1SJx8=" RegistrationNumber="2010/8947" RegistrationStatus="Registered" />
+            </Hardware2Program>
+          </Hardware2Programs>
+        </Hardware>
+        <Hardware Id="M-0001_H-hp.5F00271-1" Name="#Universaldimmer UP 525" SerialNumber="hp_00271" VersionNumber="1" BusCurrent="1.0000000e+001" IsAccessory="0" HasIndividualAddress="1" HasApplicationProgram="1" HasApplicationProgram2="0" IsPowerSupply="0" IsChoke="0" IsCoupler="0" IsPowerLineRepeater="0" IsPowerLineSignalFilter="0" IsCable="0" NonRegRelevantDataVersion="0" IsIPEnabled="0">
+          <Products>
+            <Product Id="M-0001_H-hp.5F00271-1_P-5WG1.20525.2D2AB03" Text="Universal Dimmer UP 525/03" OrderNumber="5WG1 525-2AB03" IsRailMounted="0" DefaultLanguage="en-US" Hash="4oCQfTmYK34pNWPwkViIW9EnrNU=" NonRegRelevantDataVersion="0">
+              <RegistrationInfo RegistrationStatus="Registered" RegistrationSignature="Ks70abHgQcRazxLv1zQtG61PT3vkz6mQNkZkPPd/7ca3QshPRrncmj7I+D4CToceyyakPUVQl3iPdS4QItYzfQZtZ/vaNgtBp4v+Ij5d0O6Mv6r35EwjWyojLl2BcHf23kJSO85jivp1KMFhFGkusfr8uze7TZpaJE9x5ryrWAU=" RegistrationDate="2012-04-10" />
+            </Product>
+          </Products>
+          <Hardware2Programs>
+            <Hardware2Program Id="M-0001_H-hp.5F00271-1_HP-982C-01-F5C9" MediumTypes="MT-0" Hash="xQLyEvIPj+6gjZNhzqxSUy3o9TU=">
+              <ApplicationProgramRef RefId="M-0001_A-982C-01-F5C9" />
+              <RegistrationInfo RegistrationSignature="KixwKw0BnQtdFxj53iCJCR4KtSNf14pLUszx9Hwy3HpHRbiVGuQJOgXqGVmytHyb5gHj3VzUzDPr2r1Ra8dgmEOiEktCsy6Bgn6H1wW6TIDZARvK8JnuKiYaAjDj+xX5SyOeJhrz0+ayK2QnmvE4srwd3S9arJ6yAKZBnc2qMbo=" RegistrationDate="2012-04-10" RegistrationNumber="2012/9980" RegistrationStatus="Registered" />
+            </Hardware2Program>
+          </Hardware2Programs>
+        </Hardware>
+      </Hardware>
+      <Languages>
+        <Language Identifier="de-DE">
+          <TranslationUnit RefId="M-0001_H-hp.5F00156-1_P-5WG1.20146.2D1AB02" Version="0">
+            <TranslationElement RefId="M-0001_H-hp.5F00156-1_P-5WG1.20146.2D1AB02">
+              <Translation AttributeName="Text" Text="IP-Router N 146/02" />
+              <Translation AttributeName="VisibleDescription" Text="Produktinfo - siehe Datei:   1461ab02_tpi.pdf" />
+            </TranslationElement>
+          </TranslationUnit>
+          <TranslationUnit RefId="M-0001_H-hp.5F00197-1_P-5WG1.20237.2D2EB.5F1" Version="0">
+            <TranslationElement RefId="M-0001_H-hp.5F00197-1_P-5WG1.20237.2D2EB.5F1">
+              <Translation AttributeName="Text" Text="Bediengerät Büro UP 237E DELTA i-system" />
+            </TranslationElement>
+          </TranslationUnit>
+          <TranslationUnit RefId="M-0001_H-hp.5F00209-1_P-5WG1.20587.202AB.5F1" Version="0">
+            <TranslationElement RefId="M-0001_H-hp.5F00209-1_P-5WG1.20587.202AB.5F1">
+              <Translation AttributeName="Text" Text="Textdisplay DELTA i-system UP 587/01" />
+            </TranslationElement>
+          </TranslationUnit>
+          <TranslationUnit RefId="M-0001_H-hp.5F00264-1_P-5WG1.202xx.2D2AB.5F.5F" Version="0">
+            <TranslationElement RefId="M-0001_H-hp.5F00264-1_P-5WG1.202xx.2D2AB.5F.5F">
+              <Translation AttributeName="Text" Text="BTM-Taster UP22x / UP24x / UP28x" />
+            </TranslationElement>
+          </TranslationUnit>
+          <TranslationUnit RefId="M-0001_H-hp.5F00271-1_P-5WG1.20525.2D2AB03" Version="0">
+            <TranslationElement RefId="M-0001_H-hp.5F00271-1_P-5WG1.20525.2D2AB03">
+              <Translation AttributeName="Text" Text="Universaldimmer UP 525/03" />
+            </TranslationElement>
+          </TranslationUnit>
+        </Language>
+        <Language Identifier="en-US">
+          <TranslationUnit RefId="M-0001_H-hp.5F00156-1_P-5WG1.20146.2D1AB02" Version="0">
+            <TranslationElement RefId="M-0001_H-hp.5F00156-1_P-5WG1.20146.2D1AB02">
+              <Translation AttributeName="Text" Text="IP-Router N 146/02" />
+              <Translation AttributeName="VisibleDescription" Text="Productinfo - see file:   1461ab02_tpi_e.pdf" />
+            </TranslationElement>
+          </TranslationUnit>
+          <TranslationUnit RefId="M-0001_H-hp.5F00197-1_P-5WG1.20237.2D2EB.5F1" Version="0">
+            <TranslationElement RefId="M-0001_H-hp.5F00197-1_P-5WG1.20237.2D2EB.5F1">
+              <Translation AttributeName="Text" Text="FCU Operator Panel Office UP 237E DELTA i-system" />
+            </TranslationElement>
+          </TranslationUnit>
+          <TranslationUnit RefId="M-0001_H-hp.5F00209-1_P-5WG1.20587.202AB.5F1" Version="0">
+            <TranslationElement RefId="M-0001_H-hp.5F00209-1_P-5WG1.20587.202AB.5F1">
+              <Translation AttributeName="Text" Text="Text display UP 587/01" />
+            </TranslationElement>
+          </TranslationUnit>
+          <TranslationUnit RefId="M-0001_H-hp.5F00264-1_P-5WG1.202xx.2D2AB.5F.5F" Version="0">
+            <TranslationElement RefId="M-0001_H-hp.5F00264-1_P-5WG1.202xx.2D2AB.5F.5F">
+              <Translation AttributeName="Text" Text="BTM Wall Switch UP22x / UP24x / UP28x" />
+            </TranslationElement>
+          </TranslationUnit>
+          <TranslationUnit RefId="M-0001_H-hp.5F00271-1_P-5WG1.20525.2D2AB03" Version="0">
+            <TranslationElement RefId="M-0001_H-hp.5F00271-1_P-5WG1.20525.2D2AB03">
+              <Translation AttributeName="Text" Text="Universal Dimmer UP 525/03" />
+            </TranslationElement>
+          </TranslationUnit>
+        </Language>
+      </Languages>
+    </Manufacturer>
+  </ManufacturerData>
+</KNX>
