@@ -433,6 +433,7 @@
 		<manufacturer>PEHA</manufacturer>
         <href>EasyclickWindowContact</href>
         <historyEnabled>false</historyEnabled>
+		<groupCommEnabled>true</groupCommEnabled>
       </device> 
 	  <device>        
         <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.enocean.entity.impl.EntityEEP_A52001Impl
@@ -444,6 +445,7 @@
 		<manufacturer>Loxone</manufacturer>
         <href>WirelessValveActuator</href>
         <historyEnabled>false</historyEnabled>
+		<groupCommEnabled>true</groupCommEnabled>
       </device>   
     </connector>     
     <connector>
@@ -473,6 +475,7 @@
 		<manufacturer>PEHA</manufacturer>
         <href>EasyclickWindowContact</href>
         <historyEnabled>false</historyEnabled>
+		<groupCommEnabled>true</groupCommEnabled>
       </device> 
 	  <device>        
         <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.enocean.entity.impl.EntityEEP_A52001Impl
@@ -484,6 +487,7 @@
 		<manufacturer>Loxone</manufacturer>
         <href>WirelessValveActuator</href>
         <historyEnabled>false</historyEnabled>
+		<groupCommEnabled>true</groupCommEnabled>
       </device> 
     </connector>   
   </enocean>

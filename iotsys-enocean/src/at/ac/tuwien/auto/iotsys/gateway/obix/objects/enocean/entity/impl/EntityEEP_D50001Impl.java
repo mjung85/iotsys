@@ -69,7 +69,7 @@ public class EntityEEP_D50001Impl extends EnoceanEntityImpl implements EntityEEP
 		this.setWritable(false);
 		this.setReadable(true);
 		
-		datapoint_openclosed = new EnoceanDPTBoolOpenClosedImpl("SingleInputContact", "Single Input Contact", "Open/Closed", true, false);
+		datapoint_openclosed = new EnoceanDPTBoolOpenClosedImpl("SingleInputContact", "Single Input Contact", "Open/Closed", true, true);
 		datapoint_openclosed.addTranslation("de-DE", TranslationAttribute.displayName, "Kontaktsensor");
 		this.addDatapoint(datapoint_openclosed);		
 		
@@ -88,7 +88,7 @@ public class EntityEEP_D50001Impl extends EnoceanEntityImpl implements EntityEEP
 		            		            
 		            log.info("EnOcean device with ID " +radioPacket1BS.getSenderId().toString() + ": Contact " 
 		            		+EncodingsImpl.getInstance().getEncoding(EncodingOpenClosed.HREF).getName(contactbit));
-		            datapoint_openclosed.writeObject(contactbit);		            
+		            datapoint_openclosed.writeObject(contactbit);
 		            
 		            log.info("EnOcean device with ID " +radioPacket1BS.getSenderId().toString() + ": TeachIn Mode " 
 		            		+EncodingsImpl.getInstance().getEncoding(EncodingOnOff.HREF).getName(learnbit)); 

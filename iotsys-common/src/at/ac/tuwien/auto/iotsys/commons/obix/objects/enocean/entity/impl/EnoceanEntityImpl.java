@@ -81,6 +81,12 @@ public class EnoceanEntityImpl extends Obj implements EnoceanEntity
 
 		this.list.add(datapoint);
 		this.list.add(datapoint.getReference());
-		this.datapoints.add(datapoint);				
+
+		for (Obj child:datapoint.list()){
+			if(child!=null){				
+				this.add(child);		
+			}
+		}
+		this.datapoints.add(datapoint);		
 	}
 }
