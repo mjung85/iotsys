@@ -37,17 +37,10 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.List;
 import java.util.logging.Logger;
 
-<<<<<<< local
-=======
 import javax.servlet.ServletException;
 
-import at.ac.tuwien.auto.iotsys.commons.Connector;
->>>>>>> other
 import at.ac.tuwien.auto.iotsys.commons.DeviceLoader;
 import at.ac.tuwien.auto.iotsys.commons.MdnsResolver;
 import at.ac.tuwien.auto.iotsys.commons.Named;
@@ -58,12 +51,9 @@ import at.ac.tuwien.auto.iotsys.commons.interceptor.ClassAlreadyRegisteredExcept
 import at.ac.tuwien.auto.iotsys.commons.interceptor.Interceptor;
 import at.ac.tuwien.auto.iotsys.commons.interceptor.InterceptorBroker;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.ContractInit;
-import at.ac.tuwien.auto.iotsys.commons.persistent.WriteableObjectDbImpl;
-import at.ac.tuwien.auto.iotsys.commons.persistent.models.WriteableObject;
 import at.ac.tuwien.auto.iotsys.gateway.interceptor.InterceptorBrokerImpl;
 import at.ac.tuwien.auto.iotsys.gateway.obix.objectbroker.ObjectBrokerImpl;
 import at.ac.tuwien.auto.iotsys.gateway.obix.server.CoAPServer;
-import at.ac.tuwien.auto.iotsys.gateway.obix.server.NanoHTTPD;
 import at.ac.tuwien.auto.iotsys.gateway.obix.server.ObixObservingManager;
 import at.ac.tuwien.auto.iotsys.gateway.obix.server.ObixServer;
 import at.ac.tuwien.auto.iotsys.gateway.obix.server.ObixServerImpl;
@@ -84,14 +74,7 @@ public class IoTSySGateway {
 
 	private boolean osgiEnvironment = false;
 
-<<<<<<< local
 	private static final Logger log = Logger.getLogger(IoTSySGateway.class.getName());
-=======
-	private ArrayList<Connector> connectors = new ArrayList<Connector>();
-
-	private static final Logger log = Logger.getLogger(IoTSySGateway.class
-			.getName());
->>>>>>> other
 
 	private ObixServer obixServer = null;
 
@@ -148,7 +131,6 @@ public class IoTSySGateway {
 		// --> suggestion is to move to objectBroker
 		
 		// add initial objects to the database
-<<<<<<< local
 //		if (devicesConfigFile == null)
 //		{
 //			deviceLoader = new DeviceLoaderImpl();
@@ -173,28 +155,13 @@ public class IoTSySGateway {
 //					e.printStackTrace();
 //				}
 //			}
-=======
-		if (devicesConfigFile == null) {
-			deviceLoader = new DeviceLoaderImpl();
-		} else {
-			deviceLoader = new DeviceLoaderImpl(devicesConfigFile);
->>>>>>> other
 		}
-<<<<<<< local
 		
 		if (objectBroker.getMDnsResolver() != null)
 		{
 			log.info("No of records built: " + objectBroker.getMDnsResolver().getNumberOfRecord());
 		} else
 		{
-=======
-		connectors = deviceLoader.initDevices(objectBroker);
-
-		if (objectBroker.getMDnsResolver() != null) {
-			log.info("No of records built: "
-					+ objectBroker.getMDnsResolver().getNumberOfRecord());
-		} else {
->>>>>>> other
 			log.info("No MDNS resolver service found.");
 		}
 
@@ -228,13 +195,8 @@ public class IoTSySGateway {
 					pdpSettingsClazz = Class
 							.forName("at.ac.tuwien.auto.iotsys.xacml.pdp.PDPInterceptorSettings");
 					log.info("Class found: " + pdpSettingsClazz.getName());
-<<<<<<< local
 				} catch (ClassNotFoundException e2)
 				{
-=======
-				} catch (ClassNotFoundException e2) {
-					// TODO Auto-generated catch block
->>>>>>> other
 					e2.printStackTrace();
 				}
 
@@ -248,64 +210,31 @@ public class IoTSySGateway {
 								.invoke(null, null);
 						settings.setRemotePdpWsdl(remotePdpWsdl);
 						settings.setRemotePdp(remotePdp);
-<<<<<<< local
 					} catch (NoSuchMethodException e)
 					{
-=======
-					} catch (NoSuchMethodException e) {
-						// TODO Auto-generated catch block
->>>>>>> other
 						e.printStackTrace();
-<<<<<<< local
 					} catch (SecurityException e)
 					{
-=======
-					} catch (SecurityException e) {
-						// TODO Auto-generated catch block
->>>>>>> other
 						e.printStackTrace();
-<<<<<<< local
 					} catch (IllegalAccessException e)
 					{
-=======
-					} catch (IllegalAccessException e) {
-						// TODO Auto-generated catch block
->>>>>>> other
 						e.printStackTrace();
-<<<<<<< local
 					} catch (IllegalArgumentException e)
 					{
-=======
-					} catch (IllegalArgumentException e) {
-						// TODO Auto-generated catch block
->>>>>>> other
 						e.printStackTrace();
-<<<<<<< local
 					} catch (InvocationTargetException e)
 					{
-=======
-					} catch (InvocationTargetException e) {
-						// TODO Auto-generated catch block
->>>>>>> other
 						e.printStackTrace();
 					}
 
 				}
 
 				Class clazz = null;
-<<<<<<< local
 				try
 				{
 					clazz = Class.forName("at.ac.tuwien.auto.iotsys.xacml.pdp.PDPInterceptor");
 				} catch (ClassNotFoundException e1)
 				{
-=======
-				try {
-					clazz = Class
-							.forName("at.ac.tuwien.auto.iotsys.xacml.pdp.PDPInterceptor");
-				} catch (ClassNotFoundException e1) {
-					// TODO Auto-generated catch block
->>>>>>> other
 					e1.printStackTrace();
 				}
 
@@ -314,21 +243,11 @@ public class IoTSySGateway {
 					try {
 						interceptor = (Interceptor) clazz.newInstance();
 						interceptorBroker.register(interceptor);
-<<<<<<< local
 					} catch (InstantiationException e)
 					{
-=======
-					} catch (InstantiationException e) {
-						// TODO Auto-generated catch block
->>>>>>> other
 						e.printStackTrace();
-<<<<<<< local
 					} catch (IllegalAccessException e)
 					{
-=======
-					} catch (IllegalAccessException e) {
-						// TODO Auto-generated catch block
->>>>>>> other
 						e.printStackTrace();
 					}
 
@@ -383,6 +302,7 @@ public class IoTSySGateway {
 
 		} else {
 			tomcatNoSec = new Thread(new Runnable() {
+				
 				@Override
 				public void run() {
 					try {
@@ -412,16 +332,12 @@ public class IoTSySGateway {
 	public void stopGateway() {
 		objectBroker.shutdown();
 		// CsvCreator.instance.close();
-<<<<<<< local
 //		closeConnectors();
-=======
-		closeConnectors();
 
 		if (tomcat != null)
 			tomcat.interrupt();
 		else if (tomcatNoSec != null)
 			tomcatNoSec.interrupt();
->>>>>>> other
 	}
 
 	public static void main(String[] args) {
@@ -475,21 +391,6 @@ public class IoTSySGateway {
 		}
 		System.exit(0);
 	}
-
-<<<<<<< local
-	
-=======
-	private void closeConnectors() {
-		for (Connector connector : connectors) {
-			try {
-				connector.disconnect();
-				log.info("Shutting down connector " + connector.toString());
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-	}
->>>>>>> other
 
 	public boolean isOsgiEnvironment() {
 		return osgiEnvironment;
