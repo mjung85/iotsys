@@ -69,12 +69,13 @@ import at.ac.tuwien.auto.iotsys.xacml.pdp.PDPInterceptorSettings;
  */
 public class IoTSySGateway {
 	private ObjectBroker objectBroker;
-	
+
 	private InterceptorBroker interceptorBroker;
 
 	private boolean osgiEnvironment = false;
 
-	private static final Logger log = Logger.getLogger(IoTSySGateway.class.getName());
+	private static final Logger log = Logger.getLogger(IoTSySGateway.class
+			.getName());
 
 	private ObixServer obixServer = null;
 
@@ -127,41 +128,45 @@ public class IoTSySGateway {
 			objectBroker.setMdnsResolver(mdnsResolver);
 		}
 
-		// the following commented code block does not have any effect if running in OSGi environment
+		// the following commented code block does not have any effect if
+		// running in OSGi environment
 		// --> suggestion is to move to objectBroker
-		
+
 		// add initial objects to the database
-//		if (devicesConfigFile == null)
-//		{
-//			deviceLoader = new DeviceLoaderImpl();
-//		} else
-//		{
-//			deviceLoader = new DeviceLoaderImpl(devicesConfigFile);
-//		}
-//		connectors = deviceLoader.initDevices(objectBroker);
-		// Transition step: migrate configs from devices.xml to DB, remove when done
-//		ConfigsDbImpl.getInstance().migrate(connectors);
-		
-		if (!osgiEnvironment){
+		// if (devicesConfigFile == null)
+		// {
+		// deviceLoader = new DeviceLoaderImpl();
+		// } else
+		// {
+		// deviceLoader = new DeviceLoaderImpl(devicesConfigFile);
+		// }
+		// connectors = deviceLoader.initDevices(objectBroker);
+		// Transition step: migrate configs from devices.xml to DB, remove when
+		// done
+		// ConfigsDbImpl.getInstance().migrate(connectors);
+
+		if (!osgiEnvironment) {
 			objectBroker.initDevices(devicesConfigFile);
-			// TODO: Re-apply written object from database, not work yet in osgi bundle
-			// Be careful, this is causing some tests to fail due to object broker state is not fresh as 
+			// TODO: Re-apply written object from database, not work yet in osgi
+			// bundle
+			// Be careful, this is causing some tests to fail due to object
+			// broker state is not fresh as
 			// there are objects fetched from DB
-//			List<WritableObject> wos = WriteableObjectDbImpl.getInstance().getPersistedObjects();
-//			for (WritableObject o : wos){
-//				try {
-//					obixServer.applyObj(new URI(o.getHref()), o.getDataStream());
-//				} catch (URISyntaxException e) {
-//					e.printStackTrace();
-//				}
-//			}
+			// List<WritableObject> wos =
+			// WriteableObjectDbImpl.getInstance().getPersistedObjects();
+			// for (WritableObject o : wos){
+			// try {
+			// obixServer.applyObj(new URI(o.getHref()), o.getDataStream());
+			// } catch (URISyntaxException e) {
+			// e.printStackTrace();
+			// }
+			// }
 		}
-		
-		if (objectBroker.getMDnsResolver() != null)
-		{
-			log.info("No of records built: " + objectBroker.getMDnsResolver().getNumberOfRecord());
-		} else
-		{
+
+		if (objectBroker.getMDnsResolver() != null) {
+			log.info("No of records built: "
+					+ objectBroker.getMDnsResolver().getNumberOfRecord());
+		} else {
 			log.info("No MDNS resolver service found.");
 		}
 
@@ -195,8 +200,7 @@ public class IoTSySGateway {
 					pdpSettingsClazz = Class
 							.forName("at.ac.tuwien.auto.iotsys.xacml.pdp.PDPInterceptorSettings");
 					log.info("Class found: " + pdpSettingsClazz.getName());
-				} catch (ClassNotFoundException e2)
-				{
+				} catch (ClassNotFoundException e2) {
 					e2.printStackTrace();
 				}
 
@@ -210,31 +214,25 @@ public class IoTSySGateway {
 								.invoke(null, null);
 						settings.setRemotePdpWsdl(remotePdpWsdl);
 						settings.setRemotePdp(remotePdp);
-					} catch (NoSuchMethodException e)
-					{
+					} catch (NoSuchMethodException e) {
 						e.printStackTrace();
-					} catch (SecurityException e)
-					{
+					} catch (SecurityException e) {
 						e.printStackTrace();
-					} catch (IllegalAccessException e)
-					{
+					} catch (IllegalAccessException e) {
 						e.printStackTrace();
-					} catch (IllegalArgumentException e)
-					{
+					} catch (IllegalArgumentException e) {
 						e.printStackTrace();
-					} catch (InvocationTargetException e)
-					{
+					} catch (InvocationTargetException e) {
 						e.printStackTrace();
 					}
 
 				}
 
 				Class clazz = null;
-				try
-				{
-					clazz = Class.forName("at.ac.tuwien.auto.iotsys.xacml.pdp.PDPInterceptor");
-				} catch (ClassNotFoundException e1)
-				{
+				try {
+					clazz = Class
+							.forName("at.ac.tuwien.auto.iotsys.xacml.pdp.PDPInterceptor");
+				} catch (ClassNotFoundException e1) {
 					e1.printStackTrace();
 				}
 
@@ -243,11 +241,9 @@ public class IoTSySGateway {
 					try {
 						interceptor = (Interceptor) clazz.newInstance();
 						interceptorBroker.register(interceptor);
-					} catch (InstantiationException e)
-					{
+					} catch (InstantiationException e) {
 						e.printStackTrace();
-					} catch (IllegalAccessException e)
-					{
+					} catch (IllegalAccessException e) {
 						e.printStackTrace();
 					}
 
@@ -265,28 +261,27 @@ public class IoTSySGateway {
 				.getInstance().getProperties()
 				.getProperty("iotsys.gateway.security.enable", "false"));
 
-		// try {
-		// if (enableSecurity) {
-		// new TomcatServer(Integer.parseInt(httpsPort), obixServer);
-		// } else {
-		// new TomcatServerNoSecurity(Integer.parseInt(httpPort),
-		// obixServer);
-		// }
-		// } catch (NumberFormatException e) {
-		// e.printStackTrace();
-		// } catch (IOException e) {
-		// e.printStackTrace();
-		// } catch (ServletException e) {
-		// e.printStackTrace();
-		// }
-
 		if (enableSecurity) {
 			tomcat = new Thread(new Runnable() {
+
+				boolean enableClientCert = Boolean
+						.parseBoolean(PropertiesLoader
+								.getInstance()
+								.getProperties()
+								.getProperty(
+										"iotsys.gateway.security.clientCert",
+										"false"));
+				boolean enableAuth = Boolean.parseBoolean(PropertiesLoader
+						.getInstance()
+						.getProperties()
+						.getProperty("iotsys.gateway.security.authentication",
+								"false"));
 
 				@Override
 				public void run() {
 					try {
 						new TomcatServer(Integer.parseInt(httpsPort),
+								enableClientCert, enableAuth,
 								obixServer);
 					} catch (NumberFormatException e) {
 						e.printStackTrace();
@@ -299,10 +294,9 @@ public class IoTSySGateway {
 
 			});
 			tomcat.start();
-
 		} else {
 			tomcatNoSec = new Thread(new Runnable() {
-				
+
 				@Override
 				public void run() {
 					try {
@@ -332,7 +326,7 @@ public class IoTSySGateway {
 	public void stopGateway() {
 		objectBroker.shutdown();
 		// CsvCreator.instance.close();
-//		closeConnectors();
+		// closeConnectors();
 
 		if (tomcat != null)
 			tomcat.interrupt();

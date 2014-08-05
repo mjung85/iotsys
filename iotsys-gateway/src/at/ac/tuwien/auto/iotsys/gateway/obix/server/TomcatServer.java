@@ -64,7 +64,8 @@ public class TomcatServer {
 	private String keyStorePath = "ssl/certs/tomcatkey.jks";
 	private String keyStoreType = "JKS";
 
-	public TomcatServer(int port, ObixServer obixServer) throws IOException,
+	public TomcatServer(int port, boolean enableClientCert,
+			boolean enableAuthen, ObixServer obixServer) throws IOException,
 			ServletException {
 
 		this.tomcat = new Tomcat();
@@ -77,17 +78,21 @@ public class TomcatServer {
 
 		Connector connector = new Connector();
 		connector.setPort(8443);
-		connector.setSecure(true);
 		connector.setScheme("https");
-		connector.setAttribute("clientAuth", "true");
+		connector.setAttribute("SSLEnabled", true);
+		connector.setAttribute("sslProtocol", "TLS");
+
+		connector.setSecure(true);
 		connector.setAttribute("keyAlias", alias);
 		connector.setAttribute("keystorePass", password);
 		connector.setAttribute("keystoreFile", keyStorePath);
 		connector.setAttribute("keystoreType", keyStoreType);
-		connector.setAttribute("truststorePass", password);
-		connector.setAttribute("truststoreFile", keyStorePath);
-		connector.setAttribute("sslProtocol", "TLS");
-		connector.setAttribute("SSLEnabled", true);
+
+		if (enableClientCert) {
+			connector.setAttribute("clientAuth", "true");
+			connector.setAttribute("truststorePass", password);
+			connector.setAttribute("truststoreFile", keyStorePath);
+		}
 
 		Service service = tomcat.getService();
 		service.addConnector(connector);
@@ -95,7 +100,8 @@ public class TomcatServer {
 		Connector defaultConnector = tomcat.getConnector();
 		defaultConnector.setRedirectPort(8443);
 
-		Tomcat.addServlet(ctx, "obix", new ObixServlet(obixServer));
+		Tomcat.addServlet(ctx, "obix",
+				new ObixServlet(enableAuthen, obixServer));
 		ctx.addServletMapping("/*", "obix");
 
 		try {
@@ -126,10 +132,13 @@ public class TomcatServer {
 		private InterceptorBroker interceptorBroker = InterceptorBrokerImpl
 				.getInstance();
 
+		private boolean enableAuthen = false;
+
 		String hostAddress = "127.0.0.1";
 		String hostName = "localhost";
 
-		public ObixServlet(ObixServer obixServer) throws IOException {
+		public ObixServlet(boolean enableAuthen, ObixServer obixServer)
+				throws IOException {
 			try {
 				this.exiUtil = ExiUtil.getInstance();
 			} catch (Exception e) {
@@ -137,6 +146,7 @@ public class TomcatServer {
 			}
 			this.obixServer = obixServer;
 			soapHandler = new SOAPHandler(this.obixServer);
+			this.enableAuthen = enableAuthen;
 		}
 
 		@Override
@@ -149,29 +159,32 @@ public class TomcatServer {
 			// Get subject host address
 			String subject = req.getRemoteAddr();
 
-			if (uri.endsWith("authenticate")) {
-				String username = req.getParameter("username");
-				String password = req.getParameter("password");
+			if (enableAuthen) {
+				if (uri.endsWith("authenticate")) {
+					String username = req.getParameter("username");
+					String password = req.getParameter("password");
 
-				log.info("Service username : " + username);
+					log.info("Service username : " + username);
 
-				if (username != null && password != null
-						&& username.equals("test") && password.equals("test")) {
+					if (username != null && password != null
+							&& username.equals("test")
+							&& password.equals("test")) {
+						HttpSession session = req.getSession(true);
+						session.setAttribute("authenticated", true);
+
+						resp.sendRedirect("/");
+						return;
+					} else {
+						resp.sendRedirect("/login_error");
+						return;
+					}
+				} else if (uri.endsWith("logout")) {
 					HttpSession session = req.getSession(true);
-					session.setAttribute("authenticated", true);
+					session.setAttribute("authenticated", false);
 
 					resp.sendRedirect("/");
 					return;
-				} else {
-					resp.sendRedirect("/login_error");
-					return;
 				}
-			} else if (uri.endsWith("logout")) {
-				HttpSession session = req.getSession(true);
-				session.setAttribute("authenticated", false);
-
-				resp.sendRedirect("/");
-				return;
 			}
 
 			super.service(req, resp);
@@ -186,15 +199,17 @@ public class TomcatServer {
 			String ipv6Address = "/" + getIPv6Address(req);
 			String uri = req.getRequestURI();
 
-			HttpSession session = req.getSession(true);
-			if ((session.getAttribute("authenticated") == null || Boolean
-					.parseBoolean(session.getAttribute("authenticated")
-							.toString()) != true)
-					&& !uri.endsWith("login_error")) {
-				if (uri.endsWith("/")) {
-					uri += "login";
-				} else {
-					uri += "/login";
+			if (enableAuthen) {
+				HttpSession session = req.getSession(true);
+				if ((session.getAttribute("authenticated") == null || Boolean
+						.parseBoolean(session.getAttribute("authenticated")
+								.toString()) != true)
+						&& !uri.endsWith("login_error")) {
+					if (uri.endsWith("/")) {
+						uri += "login";
+					} else {
+						uri += "/login";
+					}
 				}
 			}
 
@@ -256,22 +271,33 @@ public class TomcatServer {
 
 			} else {
 
-				HttpSession session = req.getSession(true);
-				if (session.getAttribute("authenticated") != null
-						&& Boolean.parseBoolean(session.getAttribute(
-								"authenticated").toString()) == true) {
+				if (enableAuthen) {
+					HttpSession session = req.getSession(true);
+					if (session.getAttribute("authenticated") != null
+							&& Boolean.parseBoolean(session.getAttribute(
+									"authenticated").toString()) == true) {
 
+						try {
+							responseObj = obixServer.invokeOp(new URI(
+									resourcePath), data);
+							obixResponse = getObixResponse(req, ipv6Address,
+									responseObj, resourcePath);
+						} catch (URISyntaxException e) {
+							e.printStackTrace();
+						}
+					} else {
+						resp.sendRedirect("/");
+						return;
+					}
+				} else {
 					try {
-						responseObj = obixServer.invokeOp(
-								new URI(resourcePath), data);
+						responseObj = obixServer.invokeOp(new URI(
+								resourcePath), data);
 						obixResponse = getObixResponse(req, ipv6Address,
 								responseObj, resourcePath);
 					} catch (URISyntaxException e) {
 						e.printStackTrace();
 					}
-				} else {
-					resp.sendRedirect("/");
-					return;
 				}
 			}
 
@@ -336,7 +362,7 @@ public class TomcatServer {
 					int pending = in.available();
 
 					OutputStream out = resp.getOutputStream();
-			                
+
 					byte[] buff = new byte[exiData.length];
 					while (pending > 0) {
 						int read = in.read(buff, 0,
@@ -344,15 +370,15 @@ public class TomcatServer {
 										: pending));
 						if (read <= 0)
 							break;
-						out.write(buff, 0, read); 
+						out.write(buff, 0, read);
 						pending -= read;
 					}
-					
+
 					PrintWriter w = new PrintWriter(out);
 
 					w.flush();
 					w.close();
-					
+
 				} catch (Exception e1) {
 					e1.printStackTrace();
 					// fall back
@@ -978,7 +1004,7 @@ public class TomcatServer {
 		}
 
 	}
-	
+
 	public void shutdown() {
 		try {
 			this.tomcat.stop();
