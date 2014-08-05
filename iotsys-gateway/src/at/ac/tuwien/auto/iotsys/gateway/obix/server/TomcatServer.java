@@ -70,16 +70,16 @@ public class TomcatServer {
 
 		this.tomcat = new Tomcat();
 
-		tomcat.setPort(port);
+//		tomcat.setPort(port);
 
 		tomcat.setBaseDir(".");
 
 		Context ctx = tomcat.addContext("/", new File(".").getAbsolutePath());
 
 		Connector connector = new Connector();
-		connector.setPort(8443);
+		connector.setPort(port);
 		connector.setProtocol("HTTP/1.1");
-		connector.setScheme("http");
+		connector.setScheme("https");
 		connector.setAttribute("SSLEnabled", true);
 		connector.setAttribute("sslProtocol", "TLS");
 
