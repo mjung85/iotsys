@@ -30,6 +30,7 @@ eclipse{
 
 repositories {	
 	flatDir { dirs "lib/exi"}
+	flatDir { dirs "lib/tomcat"}
 }
 
 configurations {
@@ -245,6 +246,14 @@ dependencies {
 	provided group: 'net.sourceforge.javacsv', name: 'javacsv', version: '2.0'
 		
 	compile ":nagasena:"	
+	compile ":ecj-P20140317-1600:"
+	compile ":tomcat-dbcp:"
+	compile ":tomcat-embed-core:"
+	compile ":tomcat-embed-el:"
+	compile ":tomcat-embed-jasper:"
+	compile ":tomcat-embed-logging-juli:"
+	compile ":tomcat-embed-logging-log4j:"
+	compile ":tomcat7-embed-websocket:"
 
 	testProvided project(':iotsys-obix')
 	testProvided project(':iotsys-common')
