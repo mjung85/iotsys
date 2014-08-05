@@ -1,0 +1,428 @@
+<devices>
+
+  <deviceloaders>
+    <device-loader>at.ac.tuwien.auto.iotsys.gateway.connectors.virtual.VirtualDeviceLoaderImpl
+    </device-loader>
+  </deviceloaders>
+
+  <virtual>
+    <connector>
+      <name>testDevices</name>
+      <enabled>true</enabled>
+      
+      
+      <device>
+        <type>at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.sensors.impl.IndoorBrightnessSensorImpl
+        </type>
+        <address>5/2/0</address>
+        <href>brightnessSensor1</href>
+        <ipv6>2001:629:2500:570::10d</ipv6>
+        <historyEnabled>false</historyEnabled>
+      </device>
+      
+      <!-- ACTUATORS -->
+      <device>
+        <type>at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators.impl.SunblindActuatorImpl
+        </type>
+        <address>null, 5/3/7, 5/3/8</address>
+        <href>sunblind1</href>
+        <ipv6>2001:629:2500:570::11b</ipv6>
+        <historyEnabled>false</historyEnabled>
+        <historyCount>200</historyCount>
+        <groupCommEnabled>true</groupCommEnabled>
+      </device>
+      
+      <device>
+        <type>at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators.impl.FanSpeedActuatorImpl
+        </type>
+        <address>null, 5/3/6</address>
+        <href>fanSpeed1</href>
+        <historyEnabled>true</historyEnabled>
+        <historyCount>20</historyCount>
+      </device>
+      
+      <device>
+        <type>at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators.impl.FanSpeedActuatorImpl
+        </type>
+        <address>null, 5/3/7</address>
+        <href>fanSpeed2</href>
+        <historyEnabled>true</historyEnabled>
+        <historyCount>20</historyCount>
+      </device>
+      
+      <device>
+        <type>at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators.impl.LightSwitchActuatorImpl
+        </type>
+        <href>switch1</href>
+        <historyEnabled>true</historyEnabled>
+        <refreshEnabled>false</refreshEnabled>
+        <groupCommEnabled>true</groupCommEnabled>
+      </device>
+      
+      <device>
+        <type>at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators.impl.LightSwitchActuatorImpl
+        </type>
+        <href>switch2</href>
+        <refreshEnabled>false</refreshEnabled>
+      </device>
+      
+      <device>
+        <type>at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators.impl.LightSwitchActuatorImpl
+        </type>
+        <href>switch3</href>
+        <refreshEnabled>false</refreshEnabled>
+      </device>
+      
+       
+      <device>
+        <type>at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators.impl.LightSwitchActuatorImpl
+        </type>
+        <href>switch4</href>
+        <refreshEnabled>false</refreshEnabled>
+        <groupCommEnabled>true</groupCommEnabled>
+      </device>
+    </connector>
+    <connector>
+      <name>testDevicesWatch</name>
+      <enabled>true</enabled>
+	  
+	  <device>
+        <type>at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators.impl.LightSwitchActuatorImpl
+        </type>
+        <href>switchWatch1</href>
+        <refreshEnabled>false</refreshEnabled>
+      </device>
+      
+      <device>
+        <type>at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators.impl.LightSwitchActuatorImpl
+        </type>
+        <href>switchWatch2</href>
+        <refreshEnabled>false</refreshEnabled>
+      </device>
+      
+      <device>
+        <type>at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators.impl.FanSpeedActuatorImpl
+        </type>
+        <address>null, 1/2/3</address>
+        <href>fanSpeedWatchAdd</href>
+        <historyEnabled>true</historyEnabled>
+        <historyCount>50</historyCount>
+      </device>
+      
+      <device>
+        <type>at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators.impl.FanSpeedActuatorImpl
+        </type>
+        <address>null, 1/2/3</address>
+        <href>fanSpeedWatchPollRefresh</href>
+        <historyEnabled>true</historyEnabled>
+        <historyCount>50</historyCount>
+      </device>
+      
+      <device>
+        <type>at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators.impl.FanSpeedActuatorImpl
+        </type>
+        <address>null, 1/2/3</address>
+        <href>fanSpeedWatchPollChanges</href>
+        <historyEnabled>true</historyEnabled>
+        <historyCount>50</historyCount>
+      </device>
+      
+      <device>
+        <type>at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators.impl.FanSpeedActuatorImpl
+        </type>
+        <address>null, 1/2/3</address>
+        <href>fanSpeedWatchExtent</href>
+        <historyEnabled>true</historyEnabled>
+      </device>
+      
+      <device>
+        <type>at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators.impl.FanSpeedActuatorImpl
+        </type>
+        <address>null, 1/2/3</address>
+        <href>fanSpeedWatchFilter</href>
+        <historyEnabled>true</historyEnabled>
+        <historyCount>50</historyCount>
+      </device>
+      
+    </connector>
+    
+    <connector>
+      <name>testDevicesHistory</name>
+      <enabled>true</enabled>
+	  
+	  <device>
+        <type>at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators.impl.BrightnessActuatorImpl
+        </type>
+        <href>brightnessHistoryQuery</href>
+        <historyEnabled>true</historyEnabled>
+      </device>
+      
+      <device>
+        <type>at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators.impl.BrightnessActuatorImpl
+        </type>
+        <href>brightnessHistoryStartEnd</href>
+        <historyEnabled>true</historyEnabled>
+      </device>
+      
+      <device>
+        <type>at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators.impl.BrightnessActuatorImpl
+        </type>
+        <href>brightnessHistory1</href>
+        <historyEnabled>true</historyEnabled>
+        <historyCount>100</historyCount>
+      </device>
+      
+      <device>
+        <type>at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators.impl.BrightnessActuatorImpl
+        </type>
+        <href>brightnessHistory2</href>
+        <historyEnabled>true</historyEnabled>
+        <historyCount>10</historyCount>
+      </device>
+      
+      <device>
+        <type>at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators.impl.BrightnessActuatorImpl
+        </type>
+        <href>brightnessHistory3</href>
+        <historyEnabled>true</historyEnabled>
+        <historyCount>10</historyCount>
+      </device>
+      
+      <device>
+        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.virtual.TemperatureSensorImplVirtual
+        </type>
+        <href>tempHistory</href>
+        <historyEnabled>true</historyEnabled>
+        <groupCommEnabled>true</groupCommEnabled>
+        <historyCount>100</historyCount>
+      </device>
+      
+      <device>
+        <type>at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators.impl.BrightnessActuatorImpl
+        </type>
+        <href>brightnessHistoryAppendOutOfOrder</href>
+        <historyEnabled>true</historyEnabled>
+      </device>
+      
+      <device>
+        <type>at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators.impl.BrightnessActuatorImpl
+        </type>
+        <href>brightnessHistoryAppendNothing</href>
+        <historyEnabled>true</historyEnabled>
+      </device>
+      
+      <device>
+        <type>at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators.impl.BrightnessActuatorImpl
+        </type>
+        <href>brightnessHistoryAppendFuture</href>
+        <historyEnabled>true</historyEnabled>
+      </device>
+      
+      <device>
+        <type>at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators.impl.BrightnessActuatorImpl
+        </type>
+        <href>brightnessHistoryFeedFuture</href>
+        <historyEnabled>true</historyEnabled>
+      </device>
+      
+      <device>
+        <type>at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators.impl.BrightnessActuatorImpl
+        </type>
+        <href>brightnessHistoryRollup</href>
+        <historyEnabled>true</historyEnabled>
+      </device>
+      
+      <device>
+        <type>at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators.impl.BrightnessActuatorImpl
+        </type>
+        <href>HistoryTimezones</href>
+        <historyEnabled>true</historyEnabled>
+      </device>
+      
+   </connector>
+   
+   <connector>
+      <name>testDevicesAlarm</name>
+      <enabled>true</enabled>
+      
+      <device>
+         <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.virtual.AlarmingFanSpeedActuatorImplVirtual
+         </type>
+         <href>fanSpeed1</href>
+         <historyEnabled>false</historyEnabled>
+      </device>
+      
+      <device>
+         <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.virtual.AlarmingFanSpeedActuatorImplVirtual
+         </type>
+         <href>fanSpeed2</href>
+         <historyEnabled>false</historyEnabled>
+      </device>
+      
+      <device>
+         <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.virtual.AlarmingFanSpeedActuatorImplVirtual
+         </type>
+         <href>fanSpeed3</href>
+         <historyEnabled>false</historyEnabled>
+      </device>
+    </connector>
+    
+    <connector>
+      <name>HVAC Simulation</name>
+      <enabled>false</enabled>
+
+      <!-- SENSOREN -->
+      <device>
+        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.virtual.TemperatureSensorImplVirtual
+        </type>
+        <href>simTemp</href>
+        <historyEnabled>true</historyEnabled>
+        <refreshEnabled>true</refreshEnabled>
+        <groupCommEnabled>true</groupCommEnabled>
+        <historyCount>200</historyCount>
+      </device>
+      
+       <device>
+        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.virtual.TemperatureSensorImplVirtual
+        </type>
+        <href>simTemp2</href>
+        <historyEnabled>true</historyEnabled>
+        <refreshEnabled>true</refreshEnabled>
+        <groupCommEnabled>true</groupCommEnabled>
+      </device>
+
+      <device>
+        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.virtual.BoilerActuatorImplVirtual
+        </type>
+        <href>simBoiler</href>
+        <historyEnabled>true</historyEnabled>
+        <refreshEnabled>false</refreshEnabled>
+        <groupCommEnabled>true</groupCommEnabled>
+      </device>
+
+      <device>
+        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.virtual.CoolerActuatorImplVirtual
+        </type>
+        <href>simCooler</href>
+        <historyEnabled>true</historyEnabled>
+        <refreshEnabled>false</refreshEnabled>
+        <groupCommEnabled>true</groupCommEnabled>
+      </device>
+
+      <device>
+        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.virtual.FanSpeedActuatorImplVirtual
+        </type>
+        <href>simFanSpeedIn</href>
+        <historyEnabled>true</historyEnabled>
+        <refreshEnabled>false</refreshEnabled>
+        <groupCommEnabled>true</groupCommEnabled>
+      </device>
+
+      <device>
+        <type>at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators.impl.virtual.FanSpeedActuatorImplVirtual
+        </type>
+        <href>simFanSpeedOut</href>
+        <historyEnabled>true</historyEnabled>
+        <refreshEnabled>false</refreshEnabled>
+        <groupCommEnabled>true</groupCommEnabled>
+      </device>
+
+      <device>
+        <type>at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators.impl.virtual.PumpActuatorImplVirtual
+        </type>
+        <href>simHeatPump</href>
+        <historyEnabled>true</historyEnabled>
+        <refreshEnabled>false</refreshEnabled>
+        <groupCommEnabled>true</groupCommEnabled>
+      </device>
+      <device>
+        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.virtual.PumpActuatorImplVirtual
+        </type>
+        <href>simCoolPump</href>
+        <historyEnabled>true</historyEnabled>
+        <refreshEnabled>false</refreshEnabled>
+        <groupCommEnabled>true</groupCommEnabled>
+      </device>
+      <device>
+        <type>at.ac.tuwien.auto.iotsys.gateway.connectors.virtual.simulation.HVACSimulationImpl
+        </type>
+        <href>hvacSim</href>
+        <historyEnabled>false</historyEnabled>
+        <refreshEnabled>false</refreshEnabled>
+        <groupCommEnabled>false</groupCommEnabled>
+      </device>
+      <device>
+        <type>at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.sensors.impl.virtual.SmartMeterImplVirtual
+        </type>
+        <href>simMeter</href>
+        <historyEnabled>true</historyEnabled>
+        <refreshEnabled>true</refreshEnabled>
+        <groupCommEnabled>false</groupCommEnabled>
+      </device>
+    </connector>
+
+    <connector>
+      <name>IoTSyS Logic</name>
+      <enabled>true</enabled>
+
+      <!-- Logic components -->
+      <device>
+        <type>at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.logic.impl.BinaryOperationImpl
+        </type>
+        <href>binOp1</href>
+        <historyEnabled>false</historyEnabled>
+        <refreshEnabled>false</refreshEnabled>
+        <groupCommEnabled>true</groupCommEnabled>
+      </device>
+
+      <device>
+        <type>at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.logic.impl.ComparatorImpl
+        </type>
+        <href>comp1</href>
+        <historyEnabled>false</historyEnabled>
+        <refreshEnabled>false</refreshEnabled>
+        <groupCommEnabled>true</groupCommEnabled>
+      </device>
+
+      <device>
+        <type>at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.logic.impl.LogicBinaryOperationImpl
+        </type>
+        <href>logicBinOp1</href>
+        <historyEnabled>false</historyEnabled>
+        <refreshEnabled>false</refreshEnabled>
+        <groupCommEnabled>true</groupCommEnabled>
+      </device>
+     
+      <device>
+        <type>at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.logic.impl.TemperatureControllerImpl
+        </type>
+        <href>tempControl1</href>
+        <historyEnabled>false</historyEnabled>
+        <refreshEnabled>false</refreshEnabled>
+        <groupCommEnabled>true</groupCommEnabled>
+      </device>
+    </connector>
+    
+		<connector>
+			<name>testDevicesWeatherForecast</name>
+			<enabled>true</enabled>
+			
+			<device>
+				<type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.weatherforecast.devices.WeatherForecastCrawlerYR_NO
+				</type>
+				<name>testServiceYrNo</name>
+				<location>
+					<description>Vienna</description>
+					<latitude>48.21</latitude>
+					<longitude>16.37</longitude>
+					<height>171</height>
+				</location>
+				<href>testServiceYrNo</href>
+				<refreshEnabled>false</refreshEnabled>
+			</device>
+			
+		</connector>
+
+  </virtual>
+</devices>
+	

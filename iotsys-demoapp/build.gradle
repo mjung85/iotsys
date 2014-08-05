@@ -1,0 +1,93 @@
+// Variables
+description = 'IoTSyS Demo App'
+
+eclipse{
+	classpath{
+		file {
+			withXml {
+				def node = it.asNode()				
+				node.appendNode('classpathentry', [kind: 'src', path: '/iotsys-common', exported:'true'])
+				node.appendNode('classpathentry', [kind: 'src', path: '/iotsys-obix', exported:'true'])
+				node.appendNode('classpathentry', [kind: 'src', path: '/iotsys-xacml', exported:'true'])					
+			}
+		}
+	}
+}
+
+repositories {	
+	
+}
+
+configurations {
+	provided
+}
+
+sourceSets{
+	main { compileClasspath += configurations.provided }
+}
+
+jar {
+	from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+	
+	manifest {
+		attributes("Main-Class": "at.ac.tuwien.auto.iotsys.demoapp.DemoApp",
+				   "Manifest-Version": "1.0",
+				   "Bundle-Name": "IoTSyS-DemoApp", 
+				   "Bundle-SymbolicName": "at.ac.tuwien.auto.iotsys.demoapp",
+				   "Bundle-Description": "OSGI Demo App",
+				   "Bundle-Vendor": "Vienna University of Technology, Automation Systems Group, www.auto.tuwien.ac.at",
+				   "Bundle-Version": "0.1", 
+				   "Bundle-Classpath": ".",
+				   "Bundle-Activator":  "at.ac.tuwien.auto.iotsys.demoapp.DemoAppActivator",
+				   "Import-Package": "at.ac.tuwien.auto.iotsys.commons," +
+									 "at.ac.tuwien.auto.iotsys.commons.obix.objects.iot," +
+									 "at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators," +
+									 "at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators.impl," +
+									 "at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.logic," +
+									 "at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.logic.impl," +
+									 "at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.sensors," +
+									 "at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.sensors.impl," +
+									 "at.ac.tuwien.auto.iotsys.obix.observer," +
+									 "at.ac.tuwien.auto.iotsys.xacml.pdp," +
+									 "javax.xml.datatype," +
+									 "javax.xml.namespace," +
+									 "javax.xml.parsers," +
+									 "javax.xml.transform," +
+									 "javax.xml.transform.dom," +
+									 "javax.xml.transform.sax," +
+									 "javax.xml.transform.stream," +
+									 "javax.xml.validation," +
+									 "javax.xml.xpath," +
+									 "obix," +
+									 "obix.asm," +
+									 "obix.contracts," +
+									 "obix.contracts.impl," +
+									 "obix.io," +
+									 "obix.net," +
+									 "obix.test," +
+									 "obix.tools," +
+									 "obix.ui," +
+									 "obix.ui.fields," +
+									 "obix.ui.views," +
+									 "obix.units," +
+									 "obix.xml," +
+									 "org.apache.xalan," +
+									 "org.apache.xalan.res," +
+									 "org.osgi.framework," +
+									 "org.w3c.dom," +
+									 "org.w3c.dom.ls," +
+									 "org.w3c.dom.traversal," +
+									 "org.xml.sax," +
+									 "org.xml.sax.ext," +
+									 "org.xml.sax.helpers"
+									 
+				   )
+	}
+}
+
+dependencies {
+	provided project(':iotsys-obix')
+	provided project(':iotsys-common')
+	provided project(':iotsys-xacml')
+	provided project(':iotsys-osgi')
+}

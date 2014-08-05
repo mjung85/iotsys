@@ -1,0 +1,5 @@
+<obj href="iot:WeatherForecastFilter">
+	<int name="limit" null="true"/>
+	<abstime name="start" null="true"/>
+	<abstime name="end" null="true"/>
+</obj>
