@@ -1,10 +1,13 @@
 package at.ac.tuwien.auto.iotsys.gateway.test;
 import static com.jayway.restassured.RestAssured.expect;
 import static com.jayway.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.hasXPath;
-import static org.hamcrest.Matchers.equalTo;
 import static com.jayway.restassured.path.xml.XmlPath.from;
-import static org.junit.Assert.*;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasXPath;
+import static org.junit.Assert.assertEquals;
+
+import java.util.logging.Logger;
+
 import obix.Bool;
 import obix.Int;
 import obix.Obj;
@@ -18,6 +21,10 @@ import at.ac.tuwien.auto.iotsys.gateway.obix.objectbroker.ObjectBrokerImpl;
 import at.ac.tuwien.auto.iotsys.gateway.util.ExiUtil;
 
 public class GatewayTest extends AbstractGatewayTest {
+	
+	private static final Logger log = Logger
+			.getLogger(GatewayTest.class.getName());
+	
 	@Test
 	public void testLobbyHasAbout() {
 		expect().body(hasXPath("/obj/ref[@href='about']")).
@@ -106,8 +113,11 @@ public class GatewayTest extends AbstractGatewayTest {
 	
 	@Test
 	public void testAcceptEXI() throws Exception {
-		byte[] response = given().header("Accept", "application/exi").
-		get("/testDevices/switch1/").asByteArray();
+		
+		byte[] response = given().header("accept", "application/exi").
+				get("/testDevices/switch1/").asByteArray();
+		
+		log.info("resposne : " + response.length);
 		
 		ExiUtil exiUtil = ExiUtil.getInstance();
 		String xml = exiUtil.decodeEXI(response);

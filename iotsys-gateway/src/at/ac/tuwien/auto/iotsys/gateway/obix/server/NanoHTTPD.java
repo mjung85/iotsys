@@ -146,6 +146,8 @@ public class NanoHTTPD {
 	public Response serve(String requestUri, String uri, String method,
 			Properties header, Properties parms, Properties files,
 			Socket mySocket, String socketHostname, String hostAddress) {
+		
+		log.info("method : " + method + " RequestURI : " + requestUri);
 
 		String subject = mySocket.getInetAddress().getHostAddress();
 		String ipv6Address = "/" + getIPv6Address(mySocket);
@@ -154,11 +156,17 @@ public class NanoHTTPD {
 		
 		// serve static files
 		Response response = serveStatic(uri, header, parms, ipv6Address);
-		if (response != null) return response;
-		
+		if (response != null) {
+			log.info("serve static");
+			return response;
+		}
+
 		// call interceptors
 		response = intercept(uri, method, header, parms, mySocket, socketHostname, hostAddress);
-		if (response != null) return response;
+		if (response != null) {
+			log.info("intercept");
+			return response;
+		}
 
 		
 		String data = getData(header, parms);
@@ -170,6 +178,7 @@ public class NanoHTTPD {
 		try {
 			StringBuffer obixResponse = getObixResponse(requestUri, ipv6Address, data, method, header);
 			response = encodeResponse(uri, header, obixResponse);
+			log.info("serve obix");
 		} catch (URISyntaxException usex) {
 			response = new Response(HTTP_BADREQUEST, MIME_PLAINTEXT, "URI Syntax Exception");
 		}
@@ -181,6 +190,8 @@ public class NanoHTTPD {
 	private Response serveStatic(String uri, Properties header, Properties parms, String ipv6Address) {
 		String host = header.getProperty("host");
 		String path = getResourcePath(uri, ipv6Address);
+		log.info("host : " + host);
+		log.info("path : " + path);
 		
 		if (path.endsWith("soap") && parms.containsKey("wsdl")) {
 			// serve wsdl file
@@ -211,6 +222,8 @@ public class NanoHTTPD {
 				|| path.endsWith(".js") || path.endsWith(".css")) {
 			if (path.isEmpty())
 				path = "/index.html";
+			
+			log.info("[serveStatic] path : " + path);
 			
 			return serveFile(path, header, new File("res/obelix"), false);
 		}
@@ -404,8 +417,8 @@ public class NanoHTTPD {
 			try {
 				byte[] exiData = ExiUtil.getInstance().encodeEXI(
 						XML_HEADER + obixResponse, exiSchemaRequested);
+				
 				// try to decode it immediately
-	
 				response = new Response(HTTP_OK, MIME_EXI,
 						new ByteArrayInputStream(exiData), exiData.length);
 			} catch (Exception e1) {
@@ -1254,7 +1267,7 @@ public class NanoHTTPD {
 	public Response serveFile(String uri, Properties header, File homeDir,
 			boolean allowDirectoryListing) {
 		Response res = null;
-
+		
 		// Make sure we won't die of an exception later
 		if (!homeDir.isDirectory())
 			res = new Response(HTTP_INTERNALERROR, MIME_PLAINTEXT,
