@@ -78,7 +78,8 @@ public class TomcatServer {
 
 		Connector connector = new Connector();
 		connector.setPort(8443);
-		connector.setScheme("https");
+		connector.setProtocol("HTTP/1.1");
+		connector.setScheme("http");
 		connector.setAttribute("SSLEnabled", true);
 		connector.setAttribute("sslProtocol", "TLS");
 
@@ -158,7 +159,7 @@ public class TomcatServer {
 
 			// Get subject host address
 			String subject = req.getRemoteAddr();
-
+			
 			if (enableAuthen) {
 				if (uri.endsWith("authenticate")) {
 					String username = req.getParameter("username");

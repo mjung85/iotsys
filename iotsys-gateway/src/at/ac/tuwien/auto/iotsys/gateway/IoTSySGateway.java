@@ -106,9 +106,6 @@ public class IoTSySGateway {
 		final String httpPort = PropertiesLoader.getInstance().getProperties()
 				.getProperty("iotsys.gateway.http.port", "8080");
 
-		final String httpsPort = PropertiesLoader.getInstance().getProperties()
-				.getProperty("iotsys.gateway.https.port", "8443");
-
 		log.info("HTTP-Port: " + httpPort);
 
 		// initialize object broker
@@ -280,9 +277,8 @@ public class IoTSySGateway {
 				@Override
 				public void run() {
 					try {
-						new TomcatServer(Integer.parseInt(httpsPort),
-								enableClientCert, enableAuth,
-								obixServer);
+						new TomcatServer(Integer.parseInt(httpPort),
+								enableClientCert, enableAuth, obixServer);
 					} catch (NumberFormatException e) {
 						e.printStackTrace();
 					} catch (IOException e) {
