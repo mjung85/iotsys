@@ -16,21 +16,22 @@
     You should have received a copy of the GNU General Public License
     along with this program; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- */
-package at.ac.tuwien.auto.iotsys.commons.persistent.models;
+*/
+package at.ac.tuwien.auto.iotsys.commons.persistent;
+
+import java.util.List;
+
+import at.ac.tuwien.auto.iotsys.commons.persistent.models.CanvasObject;
 
 /**
  * @author Nam Giang - zang at kaist dot ac dot kr
- * 
+ *
  */
-public class Canvas {
+public interface UIDb {
 
-	// A canvas should have a unique name (or instead a name + unique
-	// identifier). In a first version it is fine if the UI only provides one
-	// canvas named "default". However, the REST API + persitence scheme should
-	// already support multiple canvas. The objects are identified through the
-	// oBIX URI and the x and y position are simple integers
-	
-	String name;
-	
+	public List<CanvasObject> getCanvasObjects();
+	public void deleteCanvasObject(String uri);
+	public void updateCanvasObject(String uri, CanvasObject co);
+	public void addCanvasObject(CanvasObject co);
+	public void addCanvasObjects(List<CanvasObject> cos);
 }
