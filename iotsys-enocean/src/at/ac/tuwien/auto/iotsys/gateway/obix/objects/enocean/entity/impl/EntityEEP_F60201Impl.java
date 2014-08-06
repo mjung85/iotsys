@@ -39,6 +39,7 @@ import org.opencean.core.EnoceanWatchdog;
 import org.opencean.core.StateChanger;
 import org.opencean.core.address.EnoceanId;
 import org.opencean.core.common.EEPId;
+import org.opencean.core.common.values.ByteStateAndStatus;
 import org.opencean.core.packets.BasicPacket;
 import org.opencean.core.packets.RadioPacketRPS;
 import org.opencean.core.utils.Bits;
@@ -54,6 +55,7 @@ import at.ac.tuwien.auto.iotsys.commons.obix.objects.enocean.entity.impl.Enocean
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.encoding.EncodingPressedReleased;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.encoding.impl.EncodingsImpl;
 
+//constructor
 public class EntityEEP_F60201Impl extends EnoceanEntityImpl implements EntityEEP_F60201
 {	
 	private static Logger log = Logger.getLogger(EntityEEP_F60201Impl.class.getName());
@@ -73,14 +75,17 @@ public class EntityEEP_F60201Impl extends EnoceanEntityImpl implements EntityEEP
 		this.setReadable(true);
 		
 		// add datapoints of the EEP
+		// Create and add new datapoint for the switch, channel B
 		datapoint_lightonoff = new EnoceanDPTBoolOnOffImpl("WallTransmitterChB", "Switch, Channel B", "On/Off", true, false);
 		datapoint_lightonoff.addTranslation("de-DE", TranslationAttribute.displayName, "Schalter, Kanal B");
 		this.addDatapoint(datapoint_lightonoff);
 		
+		// Create and add new datapoint for the teach in mode
 		datapoint_energybow = new EnoceanDPTBoolPressedReleasedImpl("WallTransmitterEnergyBow", "Energy Bow", "Pressed/Released", true, false);
 		datapoint_energybow.addTranslation("de-DE", TranslationAttribute.displayName, "Energieart");
 		this.addDatapoint(datapoint_energybow);	
 		
+		// Add a new watchdog for value changes
 		esp3Host.addWatchDog(id, new EnoceanWatchdog() {
 			
 			@Override
@@ -88,11 +93,11 @@ public class EntityEEP_F60201Impl extends EnoceanEntityImpl implements EntityEEP
 				if (packet instanceof RadioPacketRPS) {
 		            RadioPacketRPS radioPacketRPS = (RadioPacketRPS) packet;
 		            Bool pressbit = new Bool(Bits.isBitSet(radioPacketRPS.getDataByte(), 4));
-		            if (radioPacketRPS.getDataByte() == (byte)0x50 ) { // TODO change to ByteStateAndStatus
+		            if (radioPacketRPS.getDataByte() == ByteStateAndStatus.ON ) { 
 						log.info("EnOcean device with ID " +radioPacketRPS.getSenderId().toString() + ": switch on");
 		            	// set datapoint_lightonoff to ON 
 		            	datapoint_lightonoff.writeObject(new Bool(true));		            	
-					} else if (radioPacketRPS.getDataByte() == (byte)0x70 ) { // TODO change to ByteStateAndStatus
+					} else if (radioPacketRPS.getDataByte() == ByteStateAndStatus.OFF ) { 
 						log.info("EnOcean device with ID " +radioPacketRPS.getSenderId().toString() + ": switch off");
 		            	// set datapoint_lightonoff to OFF 
 						datapoint_lightonoff.writeObject(new Bool(false));			            	

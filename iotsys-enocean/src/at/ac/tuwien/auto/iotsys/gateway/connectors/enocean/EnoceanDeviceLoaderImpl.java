@@ -42,7 +42,6 @@ import java.util.logging.Logger;
 
 import obix.Obj;
 import obix.Uri;
-import obix.Obj.TranslationAttribute;
 
 import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.commons.configuration.XMLConfiguration;
@@ -53,7 +52,6 @@ import org.opencean.core.common.ProtocolConnector;
 
 import at.ac.tuwien.auto.iotsys.commons.DeviceLoader;
 import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
-import at.ac.tuwien.auto.iotsys.commons.persistent.ConfigsDbImpl;
 import at.ac.tuwien.auto.iotsys.commons.persistent.models.Connector;
 import at.ac.tuwien.auto.iotsys.commons.persistent.models.Device;
 
@@ -168,7 +166,6 @@ public class EnoceanDeviceLoaderImpl implements DeviceLoader {
 						String displayName = subConfig.getString("device(" + i + ").displayName");
 						String display = subConfig.getString("device(" + i + ").display");
 						String manufacturer = subConfig.getString("device(" + i + ").manufacturer");
-						String addressString = address.toString();
 						String ipv6 = subConfig.getString("device(" + i + ").ipv6");
 						String href = subConfig.getString("device(" + i + ").href");
 
@@ -178,8 +175,9 @@ public class EnoceanDeviceLoaderImpl implements DeviceLoader {
 
 						Boolean refreshEnabled = subConfig.getBoolean("device(" + i + ").refreshEnabled", false);
 						
-						// TODO change the database parameters
-						Device deviceFromDb;
+						String addressString = address.toString();
+						
+						Device deviceFromDb;						
 						try {
 							deviceFromDb = devicesFromDb.get(i);
 							type = deviceFromDb.getType();
@@ -223,9 +221,7 @@ public class EnoceanDeviceLoaderImpl implements DeviceLoader {
 
 											if (name != null && name.length() > 0) {
 												enoceanDevice.setName(name);
-											}
-
-											ArrayList<String> assignedHrefs = null;
+											}											
 
 											if (ipv6 != null) 
 											{
