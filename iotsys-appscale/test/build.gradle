@@ -1,0 +1,239 @@
+defaultTasks 'updateTestserver'
+
+ext {
+	gaeVersion 				= "1.8.0"
+	gaeZipFile				= "appengine-java-sdk-" + gaeVersion + ".zip"
+	gaeUrl 					= "http://googleappengine.googlecode.com/files/" + gaeZipFile
+	gaeUnpacked				= "appengine-java-sdk-" + gaeVersion
+	gaeRepacked				= "appengine-java-sdk-repacked"
+	
+	apiJarName				= "iotsys-appscale-0.1.jar"
+	apiFactoryproviderFile	= "com.google.appengine.spi.FactoryProvider"
+	apiLocalrpcserviceFile	= "com.google.appengine.tools.development.LocalRpcService"
+	apiExtractDir			= "tempapi"
+	
+	jarExtractDir			= "tempjar"
+}
+
+task clean() {
+	doLast {
+		project.delete(gaeRepacked)
+		project.delete(apiJarName)
+		project.delete(apiFactoryproviderFile)
+		project.delete(apiLocalrpcserviceFile)
+	}
+}
+
+task cleanAll(dependsOn: clean) {
+	doLast {
+		project.delete(gaeZipFile)
+		project.delete(gaeUnpacked)
+	}
+}
+
+//downloads the GAE testserver
+task downloadGae() {
+	outputs.dir gaeUnpacked
+	doLast {
+		if(!file(gaeUnpacked).isDirectory()) {
+			ant.get(verbose: true, src: gaeUrl, dest: gaeZipFile)
+		}
+	}
+}
+
+//unpacks the GAE testserver from the zip file and
+//deletes the zip file
+task extractGae(dependsOn: downloadGae) {
+	outputs.dir gaeUnpacked
+	doLast {
+		if(!file(gaeUnpacked).isDirectory()) {
+			project.copy {
+				from zipTree(file(gaeZipFile))
+				into "."
+			}
+		}
+		project.delete(gaeZipFile)
+	}
+}
+
+//copies relevant directories from the GAE testserver
+//into a new directory, this new directory will get 
+//modified with the API code
+task repackSDK(dependsOn: extractGae) {
+	inputs.dir gaeUnpacked
+	outputs.dir gaeRepacked
+	doLast {
+		if(!file(gaeRepacked).isDirectory()) {
+			def srcDir = fileTree(gaeUnpacked)
+			srcDir.exclude "demos"
+			srcDir.exclude "docs"
+			srcDir.exclude "src"
+			project.copy {
+				from srcDir
+				into file(gaeRepacked)
+			}
+			def binDir = fileTree(gaeUnpacked)
+			binDir.include "bin/**"
+			project.copy {
+				from binDir
+				into file(gaeRepacked)
+				fileMode 0777					//maybe change that
+			}
+		}
+	}
+}
+
+//extracts the API jar file into a temporary directory
+task extractApi(type: Copy, dependsOn: repackSDK) {
+	inputs.file apiJarName
+	outputs.dir apiExtractDir
+	
+	from zipTree(file(apiJarName))
+	into apiExtractDir
+}
+
+task updateApiJar(dependsOn: extractApi) {
+	ext.jarFile = gaeRepacked + "/lib/impl/appengine-api.jar"
+	outputs.file jarFile
+	doLast {
+		project.copy {
+			from zipTree(file(jarFile))
+			into jarExtractDir
+		}
+		project.copy {
+			from "."
+			into jarExtractDir + "/META-INF/services/"
+			include apiFactoryproviderFile
+		}
+		project.copy {
+			from apiExtractDir
+			into jarExtractDir
+			include "com/google/apphosting/api/*.class"
+			include "com/google/appengine/api/iotsys/**"
+			exclude "com/google/appengine/api/iotsys/dev/**"
+		}
+		ant.jar(update: true, destfile: jarFile) {
+			fileset(dir: jarExtractDir)
+		}
+		project.delete(jarExtractDir)
+	}
+}
+
+task updateApiJarUser(dependsOn: extractApi) {
+	ext.jarFile = gaeRepacked + "/lib/user/appengine-api-1.0-sdk-" + gaeVersion + ".jar"
+	outputs.file jarFile
+	doLast {
+		project.copy {
+			from zipTree(file(jarFile))
+			into jarExtractDir
+		}
+		project.copy {
+			from "."
+			into jarExtractDir + "/META-INF/services/"
+			include apiFactoryproviderFile
+		}
+		project.copy {
+			from apiExtractDir
+			into jarExtractDir
+			include "com/google/apphosting/api/*.class"
+			include "com/google/appengine/api/iotsys/**"
+			exclude "com/google/appengine/api/iotsys/dev/**"
+		}
+		ant.jar(update: true, destfile: jarFile) {
+			fileset(dir: jarExtractDir)
+		}
+		project.delete(jarExtractDir)
+	}
+}
+
+task updateApiLabsJar(dependsOn: extractApi) {
+	ext.jarFile = gaeRepacked + "/lib/impl/appengine-api-labs.jar"
+	outputs.file jarFile
+	doLast {
+		project.copy {
+			from zipTree(file(jarFile))
+			into jarExtractDir
+		}
+		project.copy {
+			from apiExtractDir
+			into jarExtractDir
+			include "com/google/appengine/api/iotsys/dev/**"
+			include "org/**"
+			include "obix/**"
+			include "junit/**"
+			include "gnu/**"
+			include "at/**"
+			include "ch/**"
+		}
+		ant.jar(update: true, destfile: jarFile) {
+			fileset(dir: jarExtractDir)
+		}
+		project.delete(jarExtractDir)
+	}
+}
+
+task updateApiLabsJarUser(dependsOn: extractApi) {
+	ext.jarFile = gaeRepacked + "/lib/user/appengine-api-labs-" + gaeVersion + ".jar"
+	outputs.file jarFile
+	doLast {
+		project.copy {
+			from zipTree(file(jarFile))
+			into jarExtractDir
+		}
+		project.copy {
+			from apiExtractDir
+			into jarExtractDir
+			include "com/google/appengine/api/iotsys/dev/**"
+			include "org/**"
+			include "obix/**"
+			include "junit/**"
+			include "gnu/**"
+			include "at/**"
+			include "ch/**"
+		}
+		ant.jar(update: true, destfile: jarFile) {
+			fileset(dir: jarExtractDir)
+		}
+		project.delete(jarExtractDir)
+	}
+}
+
+task updateApiStubsJar(dependsOn: extractApi) {
+	ext.jarFile = gaeRepacked + "/lib/impl/appengine-api-stubs.jar"
+	outputs.file jarFile
+	doLast {
+		project.copy {
+			from zipTree(file(jarFile))
+			into jarExtractDir
+		}
+		project.copy {
+			from "."
+			into jarExtractDir + "/META-INF/services/"
+			include apiLocalrpcserviceFile
+		}
+		project.copy {
+			from apiExtractDir
+			into jarExtractDir
+			include "com/google/appengine/api/iotsys/dev/**"
+			include "org/**"
+			include "obix/**"
+			include "junit/**"
+			include "gnu/**"
+			include "at/**"
+			include "ch/**"
+		}
+		ant.jar(update: true, destfile: jarFile) {
+			fileset(dir: jarExtractDir)
+		}
+		project.delete(jarExtractDir)
+	}
+}
+
+task updateJars(dependsOn: [updateApiJar, updateApiJarUser, updateApiLabsJar, updateApiLabsJarUser, updateApiStubsJar]) << {
+}
+
+task updateTestserver(type: Delete, dependsOn: updateJars) {
+	delete apiExtractDir
+	delete "build"
+}
+
