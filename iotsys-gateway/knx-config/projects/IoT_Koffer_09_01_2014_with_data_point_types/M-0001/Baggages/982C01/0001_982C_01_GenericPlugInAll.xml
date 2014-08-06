@@ -1,0 +1,1045 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ApplicationProgram Id="id-0001_982C_01" InternalVersion="0" LastModified="2011-07-15T00:00:00.000" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="I:\Projekte\_TDD\TDD_Config\Schema\GenericPlugIn_4.xsd">
+  <Static>
+    <!--Parameterblock Modulfunktionen-->
+    <DeviceDownloadCompatibility>
+      <HardwareTypes>
+        <HwType Data="000000000061" />
+      </HardwareTypes>
+    </DeviceDownloadCompatibility>
+    <CodeSegments>
+      <CodeSegment Id="M-0001-982C-01-CodeSegment1" Address="0xB600" AllocLength="0x5600" UseRelDownloadSubThisOffset="0xA600" />
+    </CodeSegments>
+    <ParameterTypes>
+      <!--Parameterblock Kanal x, Funktionen, Objekte-->
+      <ParameterType Id="M-0001-982C-01-id_DPT_NoYes" Name="DPT_NoYes">
+        <TypeRestriction Size="8">
+          <Enumeration Id="M-0001-982C-01-id_DPT_NoYes_0" Name="No" Text="No" Value="0" />
+          <Enumeration Id="M-0001-982C-01-id_DPT_NoYes_1" Name="Yes" Text="Yes" Value="1" />
+        </TypeRestriction>
+      </ParameterType>
+      <ParameterType Id="M-0001-982C-01-id_SendesperrzeitStatusobjekte" Name="SendesperrzeitStatusobjekte">
+        <!--TimePeriod SEC-->
+        <TypeNumber Size="8" Type="unsigned" minInclusive="1" maxInclusive="60" />
+      </ParameterType>
+      <ParameterType Id="M-0001-982C-01-id_IdlePeriodSendingStatusObjects" Name="IdlePeriodSendingStatusObject">
+        <!--DPT_TimePeriod100MSEC-->
+        <TypeNumber Size="16" Type="unsigned" minInclusive="1" maxInclusive="60" />
+      </ParameterType>
+      <ParameterType Id="M-0001-982C-01-id_GlobalIdlePeriodSendingStatusObjects" Name="GlobalIdlePeriodSendingStatusObject">
+        <!--DPT_TimePeriod100MSEC-->
+        <TypeNumber Size="16" Type="unsigned" minInclusive="0" maxInclusive="10" />
+      </ParameterType>
+      <ParameterType Id="M-0001-982C-01-id_EinschaltdauerNachtbetrieb" Name="EinschaltdauerNachtbetrieb">
+        <TypeNumber Size="16" Type="unsigned" minInclusive="1" maxInclusive="255" />
+      </ParameterType>
+      <ParameterType Id="M-0001-982C-01-id_Warnen_vor_ausschalten" Name="Warnen_vor_ausschalten">
+        <TypeNumber Size="16" Type="unsigned" minInclusive="0" maxInclusive="255" />
+      </ParameterType>
+      <ParameterType Id="M-0001-982C-01-id_Statusobjekt_Sichtbarkeit" Name="Statusobjekte_Sichtbarkeit">
+        <TypeRestriction Size="8">
+          <Enumeration Id="M-0001-982C-01-id_Statusobjekt_Sichtbarkeit_0" Name="senden_nur_über_Leseanforderung" Text="send on read request only" Value="0" />
+          <Enumeration Id="M-0001-982C-01-id_Statusobjekt_Sichtbarkeit_1" Name="senden_bei_Statusänderung" Text="send on change and on read request" Value="1" />
+          <Enumeration Id="M-0001-982C-01-id_Statusobjekt_Sichtbarkeit_2" Name="nein" Text="No" Value="2" />
+        </TypeRestriction>
+      </ParameterType>
+      <ParameterType Id="M-0001-982C-01-id_Statusobjekt_senden" Name="Statusobjekte_senden">
+        <TypeRestriction Size="8">
+          <Enumeration Id="M-0001-982C-01-id_Statusobjekte_0" Name="senden_nur_über_Leseanforderung" Text="send on read request only" Value="0" />
+          <Enumeration Id="M-0001-982C-01-id_Statusobjekte_1" Name="senden_bei_Statusänderung" Text="send on change" Value="1" />
+        </TypeRestriction>
+      </ParameterType>
+      <ParameterType Id="M-0001-982C-01-id_CycleStatusSending" Name="CycleStatusSending">
+        <!--DPT_TimePeriodMin-->
+        <TypeNumber Size="16" Type="unsigned" minInclusive="0" maxInclusive="1440" />
+      </ParameterType>
+      <ParameterType Id="M-0001-982C-01-id_PowerFailureMode" Name="Power_Failure_Mode">
+        <TypeRestriction Size="8">
+          <Enumeration Id="M-0001-982C-01-id_PowerValueMode_0" Name="alle_Kanäle_AUS" Text="switch off" Value="0" />
+          <Enumeration Id="M-0001-982C-01-id_PowerValueMode_1" Name="alle_Kanäle_auf_Einschaltwert" Text="switch on to maximum dimming value" Value="1" />
+          <Enumeration Id="M-0001-982C-01-id_PowerValueMode_2" Name="keine_Aktion" Text="no change" Value="2" />
+        </TypeRestriction>
+      </ParameterType>
+      <ParameterType Id="M-0001-982C-01-id_PowerReturnMode" Name="Power_Return_Mode">
+        <TypeRestriction Size="8">
+          <Enumeration Id="M-0001-982C-01-id_PowerReturnMode_0" Name="alle_Kanäle_AUS" Text="switch off" Value="0" />
+          <Enumeration Id="M-0001-982C-01-id_PowerReturnMode_1" Name="alle_Kanäle_auf_Einschaltwert" Text="switch on" Value="1" />
+          <Enumeration Id="M-0001-982C-01-id_PowerReturnMode_3" Name="wie_Parameter" Text="switch on to &amp;quot;dimming value on bus voltage recovery&amp;quot;" Value="3" />
+          <Enumeration Id="M-0001-982C-01-id_PowerReturnMode_4" Name="wie_vor_Ausfall" Text="as before voltage failure" Value="4" />
+        </TypeRestriction>
+      </ParameterType>
+      <ParameterType Id="M-0001-982C-01-id_Schaltspielzählung" Name="Schaltspielzählung">
+        <TypeRestriction Size="8">
+          <Enumeration Id="M-0001-982C-01-id_Schaltspielzählung_0" Name="No" Text="No" Value="0" />
+          <Enumeration Id="M-0001-982C-01-id_Schaltspielzählung_1" Name="ohne_Grenzwertüberwachung" Text="No limit monitoring" Value="1" />
+          <Enumeration Id="M-0001-982C-01-id_Schaltspielzählung_2" Name="mit_Grenzwertüberwachung" Text="with limit monitoring" Value="2" />
+          <Enumeration Id="M-0001-982C-01-id_Schaltspielzählung_3" Name="mit_Grenzwertüberwachung_und_automatischer_Meldung" Text="with limit monitoring and automatic notification" Value="3" />
+        </TypeRestriction>
+      </ParameterType>
+      <ParameterType Id="M-0001-982C-01-id_Betriebsstundenzählung" Name="Betriebsstundenzählung">
+        <TypeRestriction Size="8">
+          <Enumeration Id="M-0001-982C-01-id_Betriebsstundenzählung_0" Name="No" Text="No" Value="0" />
+          <Enumeration Id="M-0001-982C-01-id_Betriebsstundenzählung_1" Name="ohne_Grenzwertüberwachung" Text="No limit monitoring" Value="1" />
+          <Enumeration Id="M-0001-982C-01-id_Betriebsstundenzählung_2" Name="mit_Grenzwertüberwachung" Text="with limit monitoring" Value="2" />
+          <Enumeration Id="M-0001-982C-01-id_Betriebsstundenzählung_3" Name="mit_Grenzwertüberwachung_und_automatischer_Meldung" Text="with limit monitoring and automatic notification" Value="3" />
+        </TypeRestriction>
+      </ParameterType>
+      <ParameterType Id="M-0001-982C-01-id_Dimmzeit_bei_Szenensteuerung" Name="Dimmzeit_bei_Szenensteuerung">
+        <TypeNumber Size="16" Type="unsigned" minInclusive="0" maxInclusive="255" />
+      </ParameterType>
+      <ParameterType Id="M-0001-982C-01-id_8bitValue">
+        <TypeNumber Size="8" Type="unsigned" />
+      </ParameterType>
+      <ParameterType Id="M-0001-982C-01-id_Betriebsart" Name="Betriebsart">
+        <TypeRestriction Size="8">
+          <Enumeration Id="M-0001-982C-01-id_Betriebsart_0" Name="Normalbetrieb" Text="Normal Mode" Value="0" />
+          <Enumeration Id="M-0001-982C-01-id_Betriebsart_1" Name="Zeitschalterbetrieb_1-stufig" Text="1-level time switch mode" Value="1" />
+          <Enumeration Id="M-0001-982C-01-id_Betriebsart_2" Name="Zeitschalterbetrieb_2-stufig" Text="2-level time switch mode" Value="2" />
+          <Enumeration Id="M-0001-982C-01-id_Betriebsart_3" Name="Blinken" Text="Flashing" Value="3" />
+        </TypeRestriction>
+      </ParameterType>
+      <ParameterType Id="M-0001-982C-01-id_Lastanpassung" Name="Lastanpassung">
+        <TypeRestriction Size="8">
+          <Enumeration Id="M-0001-982C-01-id_Lastanpassung_0" Name="Automatische_Lasterkennung" Text="Automatic detection of load type" Value="0" />
+          <Enumeration Id="M-0001-982C-01-id_Lastanpassung_1" Name="Phasenanschnittbetrieb" Text="Leading edge principle " Value="1" />
+          <Enumeration Id="M-0001-982C-01-id_Lastanpassung_2" Name="Phasenabschnittbetrieb" Text="Trailing edge principle " Value="2" />
+        </TypeRestriction>
+      </ParameterType>
+      <ParameterType Id="M-0001-982C-01-id_Min_Dimmwert" Name="Min_Dimmwert">
+        <TypeNumber Size="8" Type="unsigned" />
+      </ParameterType>
+      <ParameterType Id="M-0001-982C-01-id_Max_Dimmwert" Name="Max_Dimmwert">
+        <TypeNumber Size="8" Type="unsigned" />
+      </ParameterType>
+      <ParameterType Id="M-0001-982C-01-id_16bitwert_0_999" Name="t_wert_0_999">
+        <TypeNumber Size="16" Type="unsigned" minInclusive="0" maxInclusive="999" />
+      </ParameterType>
+      <ParameterType Id="M-0001-982C-01-id_16bitwert_0_255" Name="t_wert_0_255">
+        <TypeNumber Size="16" Type="unsigned" minInclusive="0" maxInclusive="255" />
+      </ParameterType>
+      <ParameterType Id="M-0001-982C-01-id_16bitwert" Name="t_wert_0_65535">
+        <TypeNumber Size="16" Type="unsigned" />
+      </ParameterType>
+      <ParameterType Id="M-0001-982C-01-id_16bitwert_1_255" Name="t_wert_1_255">
+        <TypeNumber Size="16" Type="unsigned" minInclusive="1" maxInclusive="255" />
+      </ParameterType>
+      <ParameterType Id="M-0001-982C-01-id_wert_1_255" Name="t_wert_1_255">
+        <TypeNumber Size="8" Type="unsigned" minInclusive="1" maxInclusive="255" />
+      </ParameterType>
+      <ParameterType Id="M-0001-982C-01-id_Einschalten_auf" Name="Einschalten_auf">
+        <TypeRestriction Size="8">
+          <!--<Enumeration Id="M-0001-982C-01-id_Einschalten_auf_3" Name="zuletzt_empfangenen_Dimmwert_2" Text="last received dimming value 2" Value="3" />-->
+          <Enumeration Id="M-0001-982C-01-id_Einschalten_auf_0" Name="Dimmwert_1_beim_Ausschalten" Text="Dimming value at switching Off" Value="0" />
+          <Enumeration Id="M-0001-982C-01-id_Einschalten_auf_1" Name="ParameterSwitchOnValue" Text="switch On value according to parameter" Value="1" />
+          <Enumeration Id="M-0001-982C-01-id_Einschalten_auf_2" Name="zuletzt_empfangenen_Dimmwert_1" Text="Last received dimming value" Value="2" />
+        </TypeRestriction>
+      </ParameterType>
+      <ParameterType Id="M-0001-982C-01-id_Schalten_über_Dimmwert" Name="Schalten_über_Dimmwert">
+        <TypeRestriction Size="8">
+          <Enumeration Id="M-0001-982C-01-id_Schalten_über_Dimmwert_0" Name="nicht_möglich" Text="not possible" Value="0" />
+          <Enumeration Id="M-0001-982C-01-id_Schalten_über_Dimmwert_1" Name="Ein_bei_Dimmwert____min._Dimmwert" Text="On if dimming value &amp;gt;= min. dimming value" Value="4" />
+          <Enumeration Id="M-0001-982C-01-id_Schalten_über_Dimmwert_2" Name="Aus_bei_Dimmwert___min._Dimmwert" Text="Off if dimming value &amp;lt; min. dimming value" Value="5" />
+          <Enumeration Id="M-0001-982C-01-id_Schalten_über_Dimmwert_3" Name="Ein-_und_Ausschalten_möglich" Text="Switching On and switching Off possible" Value="3" />
+          <Enumeration Id="M-0001-982C-01-id_Schalten_über_Dimmwert_4" Name="Ein_bei_Dimmwert___0____Aus_bei_Dimmwert___0_" Text="On if dimming value &amp;gt; 0% / Off if dimming value = 0%" Value="6" />
+        </TypeRestriction>
+      </ParameterType>
+    </ParameterTypes>
+    <Parameters>
+      <!-- common hidden parameter-leider noch nicht supported vom generic plugin -->
+      <Parameter Id="M-0001-982C-01-ParId_id_SendesperrzeitStatusobjekte" Value="15" RefId="M-0001-982C-01-id_SendesperrzeitStatusobjekte" Text="Transmission blocking period for status objects after \nsupply/bus voltage recovery [1...60 seconds]">
+        <Memory CodeSegment="M-0001-982C-01-CodeSegment1" Offset="0x01" />
+      </Parameter>
+      <Parameter Id="M-0001-982C-01-ParId_id_SendeverzögerungStatusobjekte" Value="2" RefId="M-0001-982C-01-id_GlobalIdlePeriodSendingStatusObjects" Text="Delay status objects [0…10 in 1/10 sec]">
+        <Memory CodeSegment="M-0001-982C-01-CodeSegment1" Offset="0x02" />
+      </Parameter>
+      <Parameter Id="M-0001-982C-01-ParId_Scene_Learning_Mode_Enabled" Value="1" RefId="M-0001-982C-01-id_DPT_NoYes" Text="8-bit scenes configurable by user">
+        <Memory CodeSegment="M-0001-982C-01-CodeSegment1" Offset="0x10" />
+      </Parameter>
+      <Parameter Id="M-0001-982C-01-ParId_SceneInfoA1" Value="64" RefId="M-0001-982C-01-id_8bitValue" Text="Assignment 1 to scene [1...64] (0=not used)" Format="SceneNumber">
+        <Memory CodeSegment="M-0001-982C-01-CodeSegment1" Offset="0x12" />
+      </Parameter>
+      <Parameter Id="M-0001-982C-01-ParId_SceneInfoA2" Value="64" RefId="M-0001-982C-01-id_8bitValue" Text="Assignment 2 to scene [1...64] (0=not used)" Format="SceneNumber">
+        <Memory CodeSegment="M-0001-982C-01-CodeSegment1" Offset="0x13" />
+      </Parameter>
+      <Parameter Id="M-0001-982C-01-ParId_SceneInfoA3" Value="64" RefId="M-0001-982C-01-id_8bitValue" Text="Assignment 3 to scene [1...64] (0=not used)" Format="SceneNumber">
+        <Memory CodeSegment="M-0001-982C-01-CodeSegment1" Offset="0x14" />
+      </Parameter>
+      <Parameter Id="M-0001-982C-01-ParId_SceneInfoA4" Value="64" RefId="M-0001-982C-01-id_8bitValue" Text="Assignment 4 to scene [1...64] (0=not used)" Format="SceneNumber">
+        <Memory CodeSegment="M-0001-982C-01-CodeSegment1" Offset="0x15" />
+      </Parameter>
+      <Parameter Id="M-0001-982C-01-ParId_SceneInfoA5" Value="64" RefId="M-0001-982C-01-id_8bitValue" Text="Assignment 5 to scene [1...64] (0=not used)" Format="SceneNumber">
+        <Memory CodeSegment="M-0001-982C-01-CodeSegment1" Offset="0x16" />
+      </Parameter>
+      <Parameter Id="M-0001-982C-01-ParId_SceneInfoA6" Value="64" RefId="M-0001-982C-01-id_8bitValue" Text="Assignment 6 to scene [1...64] (0=not used)" Format="SceneNumber">
+        <Memory CodeSegment="M-0001-982C-01-CodeSegment1" Offset="0x17" />
+      </Parameter>
+      <Parameter Id="M-0001-982C-01-ParId_SceneInfoA7" Value="64" RefId="M-0001-982C-01-id_8bitValue" Text="Assignment 7 to scene [1...64] (0=not used)" Format="SceneNumber">
+        <Memory CodeSegment="M-0001-982C-01-CodeSegment1" Offset="0x18" />
+      </Parameter>
+      <Parameter Id="M-0001-982C-01-ParId_SceneInfoA8" Value="64" RefId="M-0001-982C-01-id_8bitValue" Text="Assignment 8 to scene [1...64] (0=not used)" Format="SceneNumber">
+        <Memory CodeSegment="M-0001-982C-01-CodeSegment1" Offset="0x19" />
+      </Parameter>
+      <Parameter Id="M-0001-982C-01-ParId_Scene_PredefinedA1" Value="0" RefId="M-0001-982C-01-id_DPT_NoYes" Text="     Predefine" DownloadIfParameterRefId="M-0001-982C-01-ParRefId_DeleteTeachedInSceneA1">
+        <Memory CodeSegment="M-0001-982C-01-CodeSegment1" Offset="0x1a" />
+      </Parameter>
+      <Parameter Id="M-0001-982C-01-ParId_Scene_PredefinedA2" Value="0" RefId="M-0001-982C-01-id_DPT_NoYes" Text="     Predefine" DownloadIfParameterRefId="M-0001-982C-01-ParRefId_DeleteTeachedInSceneA2">
+        <Memory CodeSegment="M-0001-982C-01-CodeSegment1" Offset="0x1b" />
+      </Parameter>
+      <Parameter Id="M-0001-982C-01-ParId_Scene_PredefinedA3" Value="0" RefId="M-0001-982C-01-id_DPT_NoYes" Text="     Predefine" DownloadIfParameterRefId="M-0001-982C-01-ParRefId_DeleteTeachedInSceneA3">
+        <Memory CodeSegment="M-0001-982C-01-CodeSegment1" Offset="0x1c" />
+      </Parameter>
+      <Parameter Id="M-0001-982C-01-ParId_Scene_PredefinedA4" Value="0" RefId="M-0001-982C-01-id_DPT_NoYes" Text="     Predefine" DownloadIfParameterRefId="M-0001-982C-01-ParRefId_DeleteTeachedInSceneA4">
+        <Memory CodeSegment="M-0001-982C-01-CodeSegment1" Offset="0x1d" />
+      </Parameter>
+      <Parameter Id="M-0001-982C-01-ParId_Scene_PredefinedA5" Value="0" RefId="M-0001-982C-01-id_DPT_NoYes" Text="     Predefine" DownloadIfParameterRefId="M-0001-982C-01-ParRefId_DeleteTeachedInSceneA5">
+        <Memory CodeSegment="M-0001-982C-01-CodeSegment1" Offset="0x1e" />
+      </Parameter>
+      <Parameter Id="M-0001-982C-01-ParId_Scene_PredefinedA6" Value="0" RefId="M-0001-982C-01-id_DPT_NoYes" Text="     Predefine" DownloadIfParameterRefId="M-0001-982C-01-ParRefId_DeleteTeachedInSceneA6">
+        <Memory CodeSegment="M-0001-982C-01-CodeSegment1" Offset="0x1f" />
+      </Parameter>
+      <Parameter Id="M-0001-982C-01-ParId_Scene_PredefinedA7" Value="0" RefId="M-0001-982C-01-id_DPT_NoYes" Text="     Predefine" DownloadIfParameterRefId="M-0001-982C-01-ParRefId_DeleteTeachedInSceneA7">
+        <Memory CodeSegment="M-0001-982C-01-CodeSegment1" Offset="0x20" />
+      </Parameter>
+      <Parameter Id="M-0001-982C-01-ParId_Scene_PredefinedA8" Value="0" RefId="M-0001-982C-01-id_DPT_NoYes" Text="     Predefine" DownloadIfParameterRefId="M-0001-982C-01-ParRefId_DeleteTeachedInSceneA8">
+        <Memory CodeSegment="M-0001-982C-01-CodeSegment1" Offset="0x21" />
+      </Parameter>
+      <Parameter Id="M-0001-982C-01-ParId_SceneValueA1" Value="255" RefId="M-0001-982C-01-id_8bitValue" Text="     Dimming Value [0...100%]" Format="Percent" DownloadIfParameterRefId="M-0001-982C-01-ParRefId_DeleteTeachedInSceneA1">
+        <Memory CodeSegment="M-0001-982C-01-CodeSegment1" Offset="0x22" />
+      </Parameter>
+      <Parameter Id="M-0001-982C-01-ParId_SceneValueA2" Value="255" RefId="M-0001-982C-01-id_8bitValue" Text="     Dimming Value [0...100%]" Format="Percent" DownloadIfParameterRefId="M-0001-982C-01-ParRefId_DeleteTeachedInSceneA2">
+        <Memory CodeSegment="M-0001-982C-01-CodeSegment1" Offset="0x23" />
+      </Parameter>
+      <Parameter Id="M-0001-982C-01-ParId_SceneValueA3" Value="255" RefId="M-0001-982C-01-id_8bitValue" Text="     Dimming Value [0...100%]" Format="Percent" DownloadIfParameterRefId="M-0001-982C-01-ParRefId_DeleteTeachedInSceneA3">
+        <Memory CodeSegment="M-0001-982C-01-CodeSegment1" Offset="0x24" />
+      </Parameter>
+      <Parameter Id="M-0001-982C-01-ParId_SceneValueA4" Value="255" RefId="M-0001-982C-01-id_8bitValue" Text="     Dimming Value [0...100%]" Format="Percent" DownloadIfParameterRefId="M-0001-982C-01-ParRefId_DeleteTeachedInSceneA4">
+        <Memory CodeSegment="M-0001-982C-01-CodeSegment1" Offset="0x25" />
+      </Parameter>
+      <Parameter Id="M-0001-982C-01-ParId_SceneValueA5" Value="255" RefId="M-0001-982C-01-id_8bitValue" Text="     Dimming Value [0...100%]" Format="Percent" DownloadIfParameterRefId="M-0001-982C-01-ParRefId_DeleteTeachedInSceneA5">
+        <Memory CodeSegment="M-0001-982C-01-CodeSegment1" Offset="0x26" />
+      </Parameter>
+      <Parameter Id="M-0001-982C-01-ParId_SceneValueA6" Value="255" RefId="M-0001-982C-01-id_8bitValue" Text="     Dimming Value [0...100%]" Format="Percent" DownloadIfParameterRefId="M-0001-982C-01-ParRefId_DeleteTeachedInSceneA6">
+        <Memory CodeSegment="M-0001-982C-01-CodeSegment1" Offset="0x27" />
+      </Parameter>
+      <Parameter Id="M-0001-982C-01-ParId_SceneValueA7" Value="255" RefId="M-0001-982C-01-id_8bitValue" Text="     Dimming Value [0...100%]" Format="Percent" DownloadIfParameterRefId="M-0001-982C-01-ParRefId_DeleteTeachedInSceneA7">
+        <Memory CodeSegment="M-0001-982C-01-CodeSegment1" Offset="0x28" />
+      </Parameter>
+      <Parameter Id="M-0001-982C-01-ParId_SceneValueA8" Value="255" RefId="M-0001-982C-01-id_8bitValue" Text="     Dimming Value [0...100%]" Format="Percent" DownloadIfParameterRefId="M-0001-982C-01-ParRefId_DeleteTeachedInSceneA8">
+        <Memory CodeSegment="M-0001-982C-01-CodeSegment1" Offset="0x29" />
+      </Parameter>
+      <Parameter Id="M-0001-982C-01-ParId_Dimmzeit_bei_SzenensteuerungA1" Value="20" RefId="M-0001-982C-01-id_Dimmzeit_bei_Szenensteuerung" Text="     Dimming time [0...255 seconds])" Format="MultiplyFormatValue" FormatValue="10">
+        <Memory CodeSegment="M-0001-982C-01-CodeSegment1" Offset="0x2a" />
+      </Parameter>
+      <Parameter Id="M-0001-982C-01-ParId_Dimmzeit_bei_SzenensteuerungA2" Value="20" RefId="M-0001-982C-01-id_Dimmzeit_bei_Szenensteuerung" Text="     Dimming time [0...255 seconds])" Format="MultiplyFormatValue" FormatValue="10">
+        <Memory CodeSegment="M-0001-982C-01-CodeSegment1" Offset="0x2c" />
+      </Parameter>
+      <Parameter Id="M-0001-982C-01-ParId_Dimmzeit_bei_SzenensteuerungA3" Value="20" RefId="M-0001-982C-01-id_Dimmzeit_bei_Szenensteuerung" Text="     Dimming time [0...255 seconds])" Format="MultiplyFormatValue" FormatValue="10">
+        <Memory CodeSegment="M-0001-982C-01-CodeSegment1" Offset="0x2e" />
+      </Parameter>
+      <Parameter Id="M-0001-982C-01-ParId_Dimmzeit_bei_SzenensteuerungA4" Value="20" RefId="M-0001-982C-01-id_Dimmzeit_bei_Szenensteuerung" Text="     Dimming time [0...255 seconds])" Format="MultiplyFormatValue" FormatValue="10">
+        <Memory CodeSegment="M-0001-982C-01-CodeSegment1" Offset="0x30" />
+      </Parameter>
+      <Parameter Id="M-0001-982C-01-ParId_Dimmzeit_bei_SzenensteuerungA5" Value="20" RefId="M-0001-982C-01-id_Dimmzeit_bei_Szenensteuerung" Text="     Dimming time [0...255 seconds])" Format="MultiplyFormatValue" FormatValue="10">
+        <Memory CodeSegment="M-0001-982C-01-CodeSegment1" Offset="0x32" />
+      </Parameter>
+      <Parameter Id="M-0001-982C-01-ParId_Dimmzeit_bei_SzenensteuerungA6" Value="20" RefId="M-0001-982C-01-id_Dimmzeit_bei_Szenensteuerung" Text="     Dimming time [0...255 seconds])" Format="MultiplyFormatValue" FormatValue="10">
+        <Memory CodeSegment="M-0001-982C-01-CodeSegment1" Offset="0x34" />
+      </Parameter>
+      <Parameter Id="M-0001-982C-01-ParId_Dimmzeit_bei_SzenensteuerungA7" Value="20" RefId="M-0001-982C-01-id_Dimmzeit_bei_Szenensteuerung" Text="     Dimming time [0...255 seconds])" Format="MultiplyFormatValue" FormatValue="10">
+        <Memory CodeSegment="M-0001-982C-01-CodeSegment1" Offset="0x36" />
+      </Parameter>
+      <Parameter Id="M-0001-982C-01-ParId_Dimmzeit_bei_SzenensteuerungA8" Value="20" RefId="M-0001-982C-01-id_Dimmzeit_bei_Szenensteuerung" Text="     Dimming time [0...255 seconds])" Format="MultiplyFormatValue" FormatValue="10">
+        <Memory CodeSegment="M-0001-982C-01-CodeSegment1" Offset="0x38" />
+      </Parameter>
+      <Parameter Id="M-0001-982C-01-ParId_DeleteTeachedInSceneA1" Value="1" RefId="M-0001-982C-01-id_DPT_NoYes" Text="     Delete saved scene value">
+        <Memory CodeSegment="M-0001-982C-01-CodeSegment1" Offset="0x3a" />
+      </Parameter>
+      <Parameter Id="M-0001-982C-01-ParId_DeleteTeachedInSceneA2" Value="1" RefId="M-0001-982C-01-id_DPT_NoYes" Text="     Delete saved scene value">
+        <Memory CodeSegment="M-0001-982C-01-CodeSegment1" Offset="0x3b" />
+      </Parameter>
+      <Parameter Id="M-0001-982C-01-ParId_DeleteTeachedInSceneA3" Value="1" RefId="M-0001-982C-01-id_DPT_NoYes" Text="     Delete saved scene value">
+        <Memory CodeSegment="M-0001-982C-01-CodeSegment1" Offset="0x3c" />
+      </Parameter>
+      <Parameter Id="M-0001-982C-01-ParId_DeleteTeachedInSceneA4" Value="1" RefId="M-0001-982C-01-id_DPT_NoYes" Text="     Delete saved scene value">
+        <Memory CodeSegment="M-0001-982C-01-CodeSegment1" Offset="0x3d" />
+      </Parameter>
+      <Parameter Id="M-0001-982C-01-ParId_DeleteTeachedInSceneA5" Value="1" RefId="M-0001-982C-01-id_DPT_NoYes" Text="     Delete saved scene value">
+        <Memory CodeSegment="M-0001-982C-01-CodeSegment1" Offset="0x3e" />
+      </Parameter>
+      <Parameter Id="M-0001-982C-01-ParId_DeleteTeachedInSceneA6" Value="1" RefId="M-0001-982C-01-id_DPT_NoYes" Text="     Delete saved scene value">
+        <Memory CodeSegment="M-0001-982C-01-CodeSegment1" Offset="0x3f" />
+      </Parameter>
+      <Parameter Id="M-0001-982C-01-ParId_DeleteTeachedInSceneA7" Value="1" RefId="M-0001-982C-01-id_DPT_NoYes" Text="     Delete saved scene value">
+        <Memory CodeSegment="M-0001-982C-01-CodeSegment1" Offset="0x40" />
+      </Parameter>
+      <Parameter Id="M-0001-982C-01-ParId_DeleteTeachedInSceneA8" Value="1" RefId="M-0001-982C-01-id_DPT_NoYes" Text="     Delete saved scene value">
+        <Memory CodeSegment="M-0001-982C-01-CodeSegment1" Offset="0x41" />
+      </Parameter>
+      <Parameter Id="M-0001-982C-01-ParId_id_LDABModeA" Value="0" RefId="M-0001-982C-01-id_DPT_NoYes" Text="LDAB mode">
+        <Memory CodeSegment="M-0001-982C-01-CodeSegment1" Offset="0x42" />
+      </Parameter>
+      <Parameter Id="M-0001-982C-01-ParId_id_8bit_Szenensteuerung" Value="0" RefId="M-0001-982C-01-id_DPT_NoYes" Text="8-bit scene control">
+        <Memory CodeSegment="M-0001-982C-01-CodeSegment1" Offset="0x43" />
+      </Parameter>
+      <Parameter Id="M-0001-982C-01-ParId_id_StatusSchaltenA" Value="0" RefId="M-0001-982C-01-id_Statusobjekt_Sichtbarkeit" Text="Status object switching">
+        <Memory CodeSegment="M-0001-982C-01-CodeSegment1" Offset="0x44" />
+      </Parameter>
+      <Parameter Id="M-0001-982C-01-ParId_id_StatusSchaltenSendenA" Value="0" RefId="M-0001-982C-01-id_Statusobjekt_senden" Text="  transmit object">
+        <Memory CodeSegment="M-0001-982C-01-CodeSegment1" Offset="0x45" />
+      </Parameter>
+      <Parameter Id="M-0001-982C-01-ParId_id_StatusSchaltenHeartbeatA" Value="0" RefId="M-0001-982C-01-id_CycleStatusSending" Text="  Heartbeat time">
+        <Memory CodeSegment="M-0001-982C-01-CodeSegment1" Offset="0x46" />
+      </Parameter>
+      <Parameter Id="M-0001-982C-01-ParId_id_StatusSchaltenIdlePeriodA" Value="0" RefId="M-0001-982C-01-id_IdlePeriodSendingStatusObjects" Text="  Idle Period [in seconds]" Format="MultiplyFormatValue" FormatValue="10">
+        <Memory CodeSegment="M-0001-982C-01-CodeSegment1" Offset="0x48" />
+      </Parameter>
+      <Parameter Id="M-0001-982C-01-ParId_id_StatusDimmwertA" Value="0" RefId="M-0001-982C-01-id_Statusobjekt_Sichtbarkeit" Text="Status object dimming">
+        <Memory CodeSegment="M-0001-982C-01-CodeSegment1" Offset="0x4A" />
+      </Parameter>
+      <Parameter Id="M-0001-982C-01-ParId_id_StatusDimmwertSendenA" Value="0" RefId="M-0001-982C-01-id_Statusobjekt_senden" Text="  transmit object">
+        <Memory CodeSegment="M-0001-982C-01-CodeSegment1" Offset="0x4B" />
+      </Parameter>
+      <Parameter Id="M-0001-982C-01-ParId_id_StatusDimmwertHeartbeatA" Value="0" RefId="M-0001-982C-01-id_CycleStatusSending" Text="  Heartbeat time">
+        <Memory CodeSegment="M-0001-982C-01-CodeSegment1" Offset="0x4C" />
+      </Parameter>
+      <Parameter Id="M-0001-982C-01-ParId_id_StatusDimmwertIdlePeriodA" Value="30" RefId="M-0001-982C-01-id_IdlePeriodSendingStatusObjects" Text="     Idle Period [in seconds]" Format="MultiplyFormatValue" FormatValue="10">
+        <Memory CodeSegment="M-0001-982C-01-CodeSegment1" Offset="0x4E" />
+      </Parameter>
+      <Parameter Id="M-0001-982C-01-ParId_id_StatusActuatorA" Value="0" RefId="M-0001-982C-01-id_Statusobjekt_Sichtbarkeit" Text="Status object actuator">
+        <Memory CodeSegment="M-0001-982C-01-CodeSegment1" Offset="0x50" />
+      </Parameter>
+      <Parameter Id="M-0001-982C-01-ParId_id_StatusActuatorSendenA" Value="0" RefId="M-0001-982C-01-id_Statusobjekt_senden" Text="  transmit object">
+        <Memory CodeSegment="M-0001-982C-01-CodeSegment1" Offset="0x51" />
+      </Parameter>
+      <Parameter Id="M-0001-982C-01-ParId_id_StatusActuatorHeartbeatA" Value="0" RefId="M-0001-982C-01-id_CycleStatusSending" Text="  Heartbeat time">
+        <Memory CodeSegment="M-0001-982C-01-CodeSegment1" Offset="0x52" />
+      </Parameter>
+      <Parameter Id="M-0001-982C-01-ParId_id_StatusActuatorIdlePeriodA" Value="0" RefId="M-0001-982C-01-id_IdlePeriodSendingStatusObjects" Text="  Idle Period [in seconds]" Format="MultiplyFormatValue" FormatValue="10">
+        <Memory CodeSegment="M-0001-982C-01-CodeSegment1" Offset="0x54" />
+      </Parameter>
+      <Parameter Id="M-0001-982C-01-ParId_id_StatusActuatorErrorA" Value="0" RefId="M-0001-982C-01-id_Statusobjekt_Sichtbarkeit" Text="Status object errorinformation">
+        <Memory CodeSegment="M-0001-982C-01-CodeSegment1" Offset="0x56" />
+      </Parameter>
+      <Parameter Id="M-0001-982C-01-ParId_id_StatusActuatorErrorSendenA" Value="0" RefId="M-0001-982C-01-id_Statusobjekt_senden" Text="  transmit object">
+        <Memory CodeSegment="M-0001-982C-01-CodeSegment1" Offset="0x57" />
+      </Parameter>
+      <Parameter Id="M-0001-982C-01-ParId_id_StatusActuatorErrorHeartbeatA" Value="0" RefId="M-0001-982C-01-id_CycleStatusSending" Text="  Heartbeat time">
+        <Memory CodeSegment="M-0001-982C-01-CodeSegment1" Offset="0x58" />
+      </Parameter>
+      <Parameter Id="M-0001-982C-01-ParId_id_StatusActuatorErrorIdlePeriodA" Value="0" RefId="M-0001-982C-01-id_IdlePeriodSendingStatusObjects" Text="  Idle Period [in seconds]" Format="MultiplyFormatValue" FormatValue="10">
+        <Memory CodeSegment="M-0001-982C-01-CodeSegment1" Offset="0x5A" />
+      </Parameter>
+      <Parameter Id="M-0001-982C-01-ParId_id_StatusDetectedLoadtypeA" Value="0" RefId="M-0001-982C-01-id_Statusobjekt_Sichtbarkeit" Text="Status object loadtype">
+        <Memory CodeSegment="M-0001-982C-01-CodeSegment1" Offset="0x5C" />
+      </Parameter>
+      <Parameter Id="M-0001-982C-01-ParId_id_StatusDetectedLoadtypeSendenA" Value="0" RefId="M-0001-982C-01-id_Statusobjekt_senden" Text="  transmit object">
+        <Memory CodeSegment="M-0001-982C-01-CodeSegment1" Offset="0x5D" />
+      </Parameter>
+      <Parameter Id="M-0001-982C-01-ParId_id_StatusDetectedLoadtypeHeartbeatA" Value="0" RefId="M-0001-982C-01-id_CycleStatusSending" Text="  Heartbeat time">
+        <Memory CodeSegment="M-0001-982C-01-CodeSegment1" Offset="0x5E" />
+      </Parameter>
+      <Parameter Id="M-0001-982C-01-ParId_id_StatusDetectedLoadtypeIdlePeriodA" Value="0" RefId="M-0001-982C-01-id_IdlePeriodSendingStatusObjects" Text="  Idle Period [in seconds]" Format="MultiplyFormatValue" FormatValue="10">
+        <Memory CodeSegment="M-0001-982C-01-CodeSegment1" Offset="0x60" />
+      </Parameter>
+      <Parameter Id="M-0001-982C-01-ParId_id_SperrObjektA" Value="0" RefId="M-0001-982C-01-id_DPT_NoYes" Text="Blocking object">
+        <Memory CodeSegment="M-0001-982C-01-CodeSegment1" Offset="0x62" />
+      </Parameter>
+      <Parameter Id="M-0001-982C-01-ParId_id_NachtbetriebA" Value="0" RefId="M-0001-982C-01-id_DPT_NoYes" Text="Night mode">
+        <Memory CodeSegment="M-0001-982C-01-CodeSegment1" Offset="0x63" />
+      </Parameter>
+      <Parameter Id="M-0001-982C-01-ParId_id_EinschaltdauerNachtbetriebA" Value="1800" RefId="M-0001-982C-01-id_EinschaltdauerNachtbetrieb" Text="ON period during night mode [1...255 minutes]" Format="MultiplyFormatValue" FormatValue="60">
+        <Memory CodeSegment="M-0001-982C-01-CodeSegment1" Offset="0x64" />
+      </Parameter>
+      <Parameter Id="M-0001-982C-01-ParId_id_Warnen_vor_AusschaltenA" Value="30" RefId="M-0001-982C-01-id_Warnen_vor_ausschalten" Text="Warning before switching Off [0...255 seconds]">
+        <Memory CodeSegment="M-0001-982C-01-CodeSegment1" Offset="0x66" />
+      </Parameter>
+      <Parameter Id="M-0001-982C-01-ParId_id_SchaltspielzählungA" Value="0" RefId="M-0001-982C-01-id_Schaltspielzählung" Text="Counting of switching cycles">
+        <Memory CodeSegment="M-0001-982C-01-CodeSegment1" Offset="0x68" />
+      </Parameter>
+      <Parameter Id="M-0001-982C-01-ParId_id_BetriebsstundenzählungA" Value="0" RefId="M-0001-982C-01-id_Betriebsstundenzählung" Text="Counting of operating hours">
+        <Memory CodeSegment="M-0001-982C-01-CodeSegment1" Offset="0x69" />
+      </Parameter>
+      <Parameter Id="M-0001-982C-01-ParId_id_PowerFailureMode" Value="2" RefId="M-0001-982C-01-id_PowerFailureMode" Text="Behaviour on KNX power voltage failure">
+        <Memory CodeSegment="M-0001-982C-01-CodeSegment1" Offset="0x6A" />
+      </Parameter>
+      <Parameter Id="M-0001-982C-01-ParId_id_PowerReturnMode" Value="4" RefId="M-0001-982C-01-id_PowerReturnMode" Text="Behaviour on KNX power voltage recovery">
+        <Memory CodeSegment="M-0001-982C-01-CodeSegment1" Offset="0x6B" />
+      </Parameter>
+      <Parameter Id="M-0001-982C-01-ParId_id_PowerReturnValue" Value="4" RefId="M-0001-982C-01-id_8bitValue" Text="Value on power voltage recovery [0...100%]" Format="Percent">
+        <Memory CodeSegment="M-0001-982C-01-CodeSegment1" Offset="0x6C" />
+      </Parameter>
+      <Parameter Id="M-0001-982C-01-ParId_id_BetriebsartA" Value="0" RefId="M-0001-982C-01-id_Betriebsart" Text="Operating mode">
+        <Memory CodeSegment="M-0001-982C-01-CodeSegment1" Offset="0x6D" />
+      </Parameter>
+      <Parameter Id="M-0001-982C-01-ParId_id_LastanpassungA" Value="0" RefId="M-0001-982C-01-id_Lastanpassung" Text="Load adaptation: Dimmer operation according to">
+        <Memory CodeSegment="M-0001-982C-01-CodeSegment1" Offset="0x6E" />
+      </Parameter>
+      <Parameter Id="M-0001-982C-01-ParId_id_RippleControlA" Value="1" RefId="M-0001-982C-01-id_DPT_NoYes" Text="compensation ripple control">
+        <Memory CodeSegment="M-0001-982C-01-CodeSegment1" Offset="0x6F" />
+      </Parameter>
+      <Parameter Id="M-0001-982C-01-ParId_id_Min_DimmwertA" Value="3" RefId="M-0001-982C-01-id_Min_Dimmwert" Text="Minimum dimming value [1...50%]" Format="Percent">
+        <MinInclusive Id="M-0001-982C-01-ParId_id_Min_DimmwertA_MinInclusive" FixedValue="1" />
+        <MaxInclusive Id="M-0001-982C-01-ParId_id_Min_DimmwertA_MaxInclusive" FixedValue="50" />
+        <Memory CodeSegment="M-0001-982C-01-CodeSegment1" Offset="0x70" />
+      </Parameter>
+      <Parameter Id="M-0001-982C-01-ParId_id_Max_DimmwertA" Value="255" RefId="M-0001-982C-01-id_Max_Dimmwert" Text="Maximum dimming value [10...100%]" Format="Percent">
+        <MinInclusive Id="M-0001-982C-01-ParId_id_Max_DimmwertA_MinInclusive" FixedValue="10" />
+        <MaxInclusive Id="M-0001-982C-01-ParId_id_Max_DimmwertA_MaxInclusive" FixedValue="100" />
+        <Memory CodeSegment="M-0001-982C-01-CodeSegment1" Offset="0x71" />
+      </Parameter>
+      <Parameter Id="M-0001-982C-01-ParId_DimmzeitSchaltenA" Value="0" RefId="M-0001-982C-01-id_16bitwert_0_255" Text="Dimming time for switching On/Off [0...255 seconds]" Format="MultiplyFormatValue" FormatValue="10">
+        <Memory CodeSegment="M-0001-982C-01-CodeSegment1" Offset="0x74" />
+      </Parameter>
+      <Parameter Id="M-0001-982C-01-ParId_DimmzeitDimmenA" Value="50" RefId="M-0001-982C-01-id_16bitwert_1_255" Text="Dimming time for dimming darker / brighter \nfrom 0% to 100% [0...255 seconds]" Format="MultiplyFormatValue" FormatValue="10">
+        <Memory CodeSegment="M-0001-982C-01-CodeSegment1" Offset="0x76" />
+      </Parameter>
+      <Parameter Id="M-0001-982C-01-ParId_DimmzeitDimmwertA" Value="0" RefId="M-0001-982C-01-id_16bitwert_0_255" Text="Dimming time for setting dimming value \nfrom 0% to 100% [0...255 seconds]" Format="MultiplyFormatValue" FormatValue="10">
+        <Memory CodeSegment="M-0001-982C-01-CodeSegment1" Offset="0x78" />
+      </Parameter>
+      <Parameter Id="M-0001-982C-01-ParId_id_Einschalten_aufA" Value="1" RefId="M-0001-982C-01-id_Einschalten_auf" Text="Starting value">
+        <Memory CodeSegment="M-0001-982C-01-CodeSegment1" Offset="0x7C" />
+      </Parameter>
+      <Parameter Id="M-0001-982C-01-ParId_ParameterEinschaltwertA" Value="255" RefId="M-0001-982C-01-id_8bitValue" Text="Switch On value [1...100%]" Format="Percent">
+        <MinInclusive Id="M-0001-982C-01-ParId_ParameterEinschaltwertA_Min" FixedValue="1" />
+        <Memory CodeSegment="M-0001-982C-01-CodeSegment1" Offset="0x7D" />
+      </Parameter>
+      <Parameter Id="M-0001-982C-01-ParId_id_RelativeOffEnableA" Value="1" RefId="M-0001-982C-01-id_DPT_NoYes" Text="Switching off via dimming darker">
+        <Memory CodeSegment="M-0001-982C-01-CodeSegment1" Offset="0x7E" />
+      </Parameter>
+      <Parameter Id="M-0001-982C-01-ParId_id_RelativeOnEnableA" Value="1" RefId="M-0001-982C-01-id_DPT_NoYes" Text="Switching on via dimming brighter">
+        <Memory CodeSegment="M-0001-982C-01-CodeSegment1" Offset="0x7F" />
+      </Parameter>
+      <Parameter Id="M-0001-982C-01-ParId_id_Schalten_über_DimmwertA" Value="4" RefId="M-0001-982C-01-id_Schalten_über_Dimmwert" Text="Switching via dimming value">
+        <Memory CodeSegment="M-0001-982C-01-CodeSegment1" Offset="0x80" />
+      </Parameter>
+      <Parameter Id="M-0001-982C-01-ParId_id_EinschaltverzögerungA" Value="0" RefId="M-0001-982C-01-id_16bitwert" Text="ON delay [0…600 seconds]" Format="MultiplyFormatValue" FormatValue="100">
+        <MaxInclusive Id="M-0001-982C-01-ParId_id_EinschaltverzögerungA_max" FixedValue="600" />
+        <Memory CodeSegment="M-0001-982C-01-CodeSegment1" Offset="0x82" />
+      </Parameter>
+      <Parameter Id="M-0001-982C-01-ParId_id_AusschaltverzögerungA" Value="0" RefId="M-0001-982C-01-id_16bitwert" Text="OFF-delay [0…600 seconds]" Format="MultiplyFormatValue" FormatValue="100">
+        <MaxInclusive Id="M-0001-982C-01-ParId_id_AusschaltverzögerungA_max" FixedValue="600" />
+        <Memory CodeSegment="M-0001-982C-01-CodeSegment1" Offset="0x84" />
+      </Parameter>
+      <Parameter Id="M-0001-982C-01-ParId_Einschaltdauer1A" Value="15" RefId="M-0001-982C-01-id_wert_1_255" Text="ON period 1 [1...255 minutes]">
+        <Memory CodeSegment="M-0001-982C-01-CodeSegment1" Offset="0x86" />
+      </Parameter>
+      <Parameter Id="M-0001-982C-01-ParId_Einschaltdauer2A" Value="15" RefId="M-0001-982C-01-id_wert_1_255" Text="ON period 2 [1...255 minutes]">
+        <Memory CodeSegment="M-0001-982C-01-CodeSegment1" Offset="0x87" />
+      </Parameter>
+      <Parameter Id="M-0001-982C-01-ParId_nDimmwertEinschaltdauer2A" Value="128" RefId="M-0001-982C-01-id_8bitValue" Text="Dimming value during ON period 2 [0...100%]" Format="Percent">
+        <Memory CodeSegment="M-0001-982C-01-CodeSegment1" Offset="0x88" />
+      </Parameter>
+      <Parameter Id="M-0001-982C-01-ParId_EinschaltzeitBlinkenA" Value="1" RefId="M-0001-982C-01-id_wert_1_255" Text="ON period Flashing [1...255 seconds]">
+        <Memory CodeSegment="M-0001-982C-01-CodeSegment1" Offset="0x89" />
+      </Parameter>
+      <Parameter Id="M-0001-982C-01-ParId_AusschaltzeitBlinkenA" Value="1" RefId="M-0001-982C-01-id_wert_1_255" Text="OFF period Flashing [1...255 seconds]">
+        <Memory CodeSegment="M-0001-982C-01-CodeSegment1" Offset="0x8A" />
+      </Parameter>
+    </Parameters>
+    <ParameterRefs>
+      <!--Parameterblock Modulfunktionen-->
+      <ParameterRef Id="M-0001-982C-01-ParRefId_SendesperrzeitStatusobjekte" RefId="M-0001-982C-01-ParId_id_SendesperrzeitStatusobjekte" Value="15" />
+      <ParameterRef Id="M-0001-982C-01-ParRefId_SendeverzögerungStatusobjekte" RefId="M-0001-982C-01-ParId_id_SendeverzögerungStatusobjekte" Value="2" />
+      <ParameterRef Id="M-0001-982C-01-ParRefId_Scene_Learning_Mode_Enabled" RefId="M-0001-982C-01-ParId_Scene_Learning_Mode_Enabled" Value="1" />
+      <ParameterRef Id="M-0001-982C-01-ParRefId_SzenenzuordnungA1" RefId="M-0001-982C-01-ParId_SceneInfoA1" Value="64" />
+      <ParameterRef Id="M-0001-982C-01-ParRefId_SzenenzuordnungA2" RefId="M-0001-982C-01-ParId_SceneInfoA2" Value="64" />
+      <ParameterRef Id="M-0001-982C-01-ParRefId_SzenenzuordnungA3" RefId="M-0001-982C-01-ParId_SceneInfoA3" Value="64" />
+      <ParameterRef Id="M-0001-982C-01-ParRefId_SzenenzuordnungA4" RefId="M-0001-982C-01-ParId_SceneInfoA4" Value="64" />
+      <ParameterRef Id="M-0001-982C-01-ParRefId_SzenenzuordnungA5" RefId="M-0001-982C-01-ParId_SceneInfoA5" Value="64" />
+      <ParameterRef Id="M-0001-982C-01-ParRefId_SzenenzuordnungA6" RefId="M-0001-982C-01-ParId_SceneInfoA6" Value="64" />
+      <ParameterRef Id="M-0001-982C-01-ParRefId_SzenenzuordnungA7" RefId="M-0001-982C-01-ParId_SceneInfoA7" Value="64" />
+      <ParameterRef Id="M-0001-982C-01-ParRefId_SzenenzuordnungA8" RefId="M-0001-982C-01-ParId_SceneInfoA8" Value="64" />
+      <ParameterRef Id="M-0001-982C-01-ParRefId_Scene_PredefinedA1" RefId="M-0001-982C-01-ParId_Scene_PredefinedA1" Value="0" />
+      <ParameterRef Id="M-0001-982C-01-ParRefId_Scene_PredefinedA2" RefId="M-0001-982C-01-ParId_Scene_PredefinedA2" Value="0" />
+      <ParameterRef Id="M-0001-982C-01-ParRefId_Scene_PredefinedA3" RefId="M-0001-982C-01-ParId_Scene_PredefinedA3" Value="0" />
+      <ParameterRef Id="M-0001-982C-01-ParRefId_Scene_PredefinedA4" RefId="M-0001-982C-01-ParId_Scene_PredefinedA4" Value="0" />
+      <ParameterRef Id="M-0001-982C-01-ParRefId_Scene_PredefinedA5" RefId="M-0001-982C-01-ParId_Scene_PredefinedA5" Value="0" />
+      <ParameterRef Id="M-0001-982C-01-ParRefId_Scene_PredefinedA6" RefId="M-0001-982C-01-ParId_Scene_PredefinedA6" Value="0" />
+      <ParameterRef Id="M-0001-982C-01-ParRefId_Scene_PredefinedA7" RefId="M-0001-982C-01-ParId_Scene_PredefinedA7" Value="0" />
+      <ParameterRef Id="M-0001-982C-01-ParRefId_Scene_PredefinedA8" RefId="M-0001-982C-01-ParId_Scene_PredefinedA8" Value="0" />
+      <ParameterRef Id="M-0001-982C-01-ParRefId_SceneValueA1" RefId="M-0001-982C-01-ParId_SceneValueA1" Value="255" />
+      <ParameterRef Id="M-0001-982C-01-ParRefId_SceneValueA2" RefId="M-0001-982C-01-ParId_SceneValueA2" Value="255" />
+      <ParameterRef Id="M-0001-982C-01-ParRefId_SceneValueA3" RefId="M-0001-982C-01-ParId_SceneValueA3" Value="255" />
+      <ParameterRef Id="M-0001-982C-01-ParRefId_SceneValueA4" RefId="M-0001-982C-01-ParId_SceneValueA4" Value="255" />
+      <ParameterRef Id="M-0001-982C-01-ParRefId_SceneValueA5" RefId="M-0001-982C-01-ParId_SceneValueA5" Value="255" />
+      <ParameterRef Id="M-0001-982C-01-ParRefId_SceneValueA6" RefId="M-0001-982C-01-ParId_SceneValueA6" Value="255" />
+      <ParameterRef Id="M-0001-982C-01-ParRefId_SceneValueA7" RefId="M-0001-982C-01-ParId_SceneValueA7" Value="255" />
+      <ParameterRef Id="M-0001-982C-01-ParRefId_SceneValueA8" RefId="M-0001-982C-01-ParId_SceneValueA8" Value="255" />
+      <ParameterRef Id="M-0001-982C-01-ParRefId_Dimmzeit_bei_SzenensteuerungA1" RefId="M-0001-982C-01-ParId_Dimmzeit_bei_SzenensteuerungA1" Value="20" />
+      <ParameterRef Id="M-0001-982C-01-ParRefId_Dimmzeit_bei_SzenensteuerungA2" RefId="M-0001-982C-01-ParId_Dimmzeit_bei_SzenensteuerungA2" Value="20" />
+      <ParameterRef Id="M-0001-982C-01-ParRefId_Dimmzeit_bei_SzenensteuerungA3" RefId="M-0001-982C-01-ParId_Dimmzeit_bei_SzenensteuerungA3" Value="20" />
+      <ParameterRef Id="M-0001-982C-01-ParRefId_Dimmzeit_bei_SzenensteuerungA4" RefId="M-0001-982C-01-ParId_Dimmzeit_bei_SzenensteuerungA4" Value="20" />
+      <ParameterRef Id="M-0001-982C-01-ParRefId_Dimmzeit_bei_SzenensteuerungA5" RefId="M-0001-982C-01-ParId_Dimmzeit_bei_SzenensteuerungA5" Value="20" />
+      <ParameterRef Id="M-0001-982C-01-ParRefId_Dimmzeit_bei_SzenensteuerungA6" RefId="M-0001-982C-01-ParId_Dimmzeit_bei_SzenensteuerungA6" Value="20" />
+      <ParameterRef Id="M-0001-982C-01-ParRefId_Dimmzeit_bei_SzenensteuerungA7" RefId="M-0001-982C-01-ParId_Dimmzeit_bei_SzenensteuerungA7" Value="20" />
+      <ParameterRef Id="M-0001-982C-01-ParRefId_Dimmzeit_bei_SzenensteuerungA8" RefId="M-0001-982C-01-ParId_Dimmzeit_bei_SzenensteuerungA8" Value="20" />
+      <ParameterRef Id="M-0001-982C-01-ParRefId_DeleteTeachedInSceneA1" RefId="M-0001-982C-01-ParId_DeleteTeachedInSceneA1" Value="0" />
+      <ParameterRef Id="M-0001-982C-01-ParRefId_DeleteTeachedInSceneA2" RefId="M-0001-982C-01-ParId_DeleteTeachedInSceneA2" Value="0" />
+      <ParameterRef Id="M-0001-982C-01-ParRefId_DeleteTeachedInSceneA3" RefId="M-0001-982C-01-ParId_DeleteTeachedInSceneA3" Value="0" />
+      <ParameterRef Id="M-0001-982C-01-ParRefId_DeleteTeachedInSceneA4" RefId="M-0001-982C-01-ParId_DeleteTeachedInSceneA4" Value="0" />
+      <ParameterRef Id="M-0001-982C-01-ParRefId_DeleteTeachedInSceneA5" RefId="M-0001-982C-01-ParId_DeleteTeachedInSceneA5" Value="0" />
+      <ParameterRef Id="M-0001-982C-01-ParRefId_DeleteTeachedInSceneA6" RefId="M-0001-982C-01-ParId_DeleteTeachedInSceneA6" Value="0" />
+      <ParameterRef Id="M-0001-982C-01-ParRefId_DeleteTeachedInSceneA7" RefId="M-0001-982C-01-ParId_DeleteTeachedInSceneA7" Value="0" />
+      <ParameterRef Id="M-0001-982C-01-ParRefId_DeleteTeachedInSceneA8" RefId="M-0001-982C-01-ParId_DeleteTeachedInSceneA8" Value="0" />
+      <ParameterRef Id="M-0001-982C-01-ParRefId_LDABModeA" RefId="M-0001-982C-01-ParId_id_LDABModeA" Value="0" />
+      <ParameterRef Id="M-0001-982C-01-ParRefId_8bit_Szenensteuerung" RefId="M-0001-982C-01-ParId_id_8bit_Szenensteuerung" Value="0" />
+      <ParameterRef Id="M-0001-982C-01-ParRefId_StatusSchaltenA" RefId="M-0001-982C-01-ParId_id_StatusSchaltenA" Value="2" />
+      <ParameterRef Id="M-0001-982C-01-ParRefId_StatusSchaltenSendenA" RefId="M-0001-982C-01-ParId_id_StatusSchaltenSendenA" Value="0" />
+      <ParameterRef Id="M-0001-982C-01-ParRefId_StatusSchaltenHeartbeatA" RefId="M-0001-982C-01-ParId_id_StatusSchaltenHeartbeatA" Value="0" />
+      <ParameterRef Id="M-0001-982C-01-ParRefId_StatusSchaltenIdlePeriodA" RefId="M-0001-982C-01-ParId_id_StatusSchaltenIdlePeriodA" Value="0" />
+      <ParameterRef Id="M-0001-982C-01-ParRefId_StatusDimmwertA" RefId="M-0001-982C-01-ParId_id_StatusDimmwertA" Value="2" />
+      <ParameterRef Id="M-0001-982C-01-ParRefId_StatusDimmwertSendenA" RefId="M-0001-982C-01-ParId_id_StatusDimmwertSendenA" Value="0" />
+      <ParameterRef Id="M-0001-982C-01-ParRefId_StatusDimmwertHeartbeatA" RefId="M-0001-982C-01-ParId_id_StatusDimmwertHeartbeatA" Value="0" />
+      <ParameterRef Id="M-0001-982C-01-ParRefId_StatusDimmwertIdlePeriodA" RefId="M-0001-982C-01-ParId_id_StatusDimmwertIdlePeriodA" Value="30" />
+      <ParameterRef Id="M-0001-982C-01-ParRefId_StatusActuatorA" RefId="M-0001-982C-01-ParId_id_StatusActuatorA" Value="2" />
+      <ParameterRef Id="M-0001-982C-01-ParRefId_StatusActuatorSendenA" RefId="M-0001-982C-01-ParId_id_StatusActuatorSendenA" Value="0" />
+      <ParameterRef Id="M-0001-982C-01-ParRefId_StatusActuatorHeartbeatA" RefId="M-0001-982C-01-ParId_id_StatusActuatorHeartbeatA" Value="0" />
+      <ParameterRef Id="M-0001-982C-01-ParRefId_StatusActuatorIdlePeriodA" RefId="M-0001-982C-01-ParId_id_StatusActuatorIdlePeriodA" Value="0" />
+      <ParameterRef Id="M-0001-982C-01-ParRefId_StatusActuatorErrorA" RefId="M-0001-982C-01-ParId_id_StatusActuatorErrorA" Value="2" />
+      <ParameterRef Id="M-0001-982C-01-ParRefId_StatusActuatorErrorSendenA" RefId="M-0001-982C-01-ParId_id_StatusActuatorErrorSendenA" Value="0" />
+      <ParameterRef Id="M-0001-982C-01-ParRefId_StatusActuatorErrorHeartbeatA" RefId="M-0001-982C-01-ParId_id_StatusActuatorErrorHeartbeatA" Value="0" />
+      <ParameterRef Id="M-0001-982C-01-ParRefId_StatusActuatorErrorIdlePeriodA" RefId="M-0001-982C-01-ParId_id_StatusActuatorErrorIdlePeriodA" Value="0" />
+      <ParameterRef Id="M-0001-982C-01-ParRefId_StatusDetectedLoadtypeA" RefId="M-0001-982C-01-ParId_id_StatusDetectedLoadtypeA" Value="2" />
+      <ParameterRef Id="M-0001-982C-01-ParRefId_StatusDetectedLoadtypeSendenA" RefId="M-0001-982C-01-ParId_id_StatusDetectedLoadtypeSendenA" Value="0" />
+      <ParameterRef Id="M-0001-982C-01-ParRefId_StatusDetectedLoadtypeHeartbeatA" RefId="M-0001-982C-01-ParId_id_StatusDetectedLoadtypeHeartbeatA" Value="0" />
+      <ParameterRef Id="M-0001-982C-01-ParRefId_StatusDetectedLoadtypeIdlePeriodA" RefId="M-0001-982C-01-ParId_id_StatusDetectedLoadtypeIdlePeriodA" Value="0" />
+      <ParameterRef Id="M-0001-982C-01-ParRefId_SperrObjektA" RefId="M-0001-982C-01-ParId_id_SperrObjektA" Value="0" />
+      <ParameterRef Id="M-0001-982C-01-ParRefId_NachtbetriebA" RefId="M-0001-982C-01-ParId_id_NachtbetriebA" Value="0" />
+      <ParameterRef Id="M-0001-982C-01-ParRefId_EinschaltdauerNachtbetriebA" RefId="M-0001-982C-01-ParId_id_EinschaltdauerNachtbetriebA" Value="1800" />
+      <ParameterRef Id="M-0001-982C-01-ParRefId_Warnen_vor_AusschaltenA" RefId="M-0001-982C-01-ParId_id_Warnen_vor_AusschaltenA" Value="30" />
+      <ParameterRef Id="M-0001-982C-01-ParRefId_SchaltspielzählungA" RefId="M-0001-982C-01-ParId_id_SchaltspielzählungA" Value="0" />
+      <ParameterRef Id="M-0001-982C-01-ParRefId_BetriebsstundenzählungA" RefId="M-0001-982C-01-ParId_id_BetriebsstundenzählungA" Value="0" />
+      <ParameterRef Id="M-0001-982C-01-ParRefId_PowerFailureMode" RefId="M-0001-982C-01-ParId_id_PowerFailureMode" Value="2" />
+      <ParameterRef Id="M-0001-982C-01-ParRefId_PowerReturnMode" RefId="M-0001-982C-01-ParId_id_PowerReturnMode" Value="4" />
+      <ParameterRef Id="M-0001-982C-01-ParRefId_PowerReturnModeBlinking" RefId="M-0001-982C-01-ParId_id_PowerReturnMode" Value="4" HiddenEnumValues="3" />
+      <ParameterRef Id="M-0001-982C-01-ParRefId_PowerReturnValue" RefId="M-0001-982C-01-ParId_id_PowerReturnValue" Value="255" />
+      <ParameterRef Id="M-0001-982C-01-ParRefId_BetriebsartA" RefId="M-0001-982C-01-ParId_id_BetriebsartA" Value="0" />
+      <ParameterRef Id="M-0001-982C-01-ParRefId_LastanpassungA" RefId="M-0001-982C-01-ParId_id_LastanpassungA" Value="0" />
+      <ParameterRef Id="M-0001-982C-01-ParRefId_RippleControlA" RefId="M-0001-982C-01-ParId_id_RippleControlA" Value="1" />
+      <ParameterRef Id="M-0001-982C-01-ParRefId_Min_DimmwertA" RefId="M-0001-982C-01-ParId_id_Min_DimmwertA" Value="3" />
+      <ParameterRef Id="M-0001-982C-01-ParRefId_Max_DimmwertA" RefId="M-0001-982C-01-ParId_id_Max_DimmwertA" Value="255" />
+      <ParameterRef Id="M-0001-982C-01-ParRefId_DimmzeitSchaltenA" RefId="M-0001-982C-01-ParId_DimmzeitSchaltenA" Value="0" />
+      <ParameterRef Id="M-0001-982C-01-ParRefId_DimmzeitDimmenA" RefId="M-0001-982C-01-ParId_DimmzeitDimmenA" Value="50" />
+      <ParameterRef Id="M-0001-982C-01-ParRefId_DimmzeitDimmwertA" RefId="M-0001-982C-01-ParId_DimmzeitDimmwertA" Value="0" />
+      <ParameterRef Id="M-0001-982C-01-ParRefId_Einschalten_aufA" RefId="M-0001-982C-01-ParId_id_Einschalten_aufA" Value="1" />
+      <ParameterRef Id="M-0001-982C-01-ParRefId_ParameterEinschaltwertA" RefId="M-0001-982C-01-ParId_ParameterEinschaltwertA" Value="255" />
+      <ParameterRef Id="M-0001-982C-01-ParRefId_RelativeOffEnableA" RefId="M-0001-982C-01-ParId_id_RelativeOffEnableA" Value="1" />
+      <ParameterRef Id="M-0001-982C-01-ParRefId_RelativeOnEnableA" RefId="M-0001-982C-01-ParId_id_RelativeOnEnableA" Value="1" />
+      <ParameterRef Id="M-0001-982C-01-ParRefId_Schalten_über_DimmwertA" RefId="M-0001-982C-01-ParId_id_Schalten_über_DimmwertA" Value="4" />
+      <ParameterRef Id="M-0001-982C-01-ParRefId_EinschaltverzögerungA" RefId="M-0001-982C-01-ParId_id_EinschaltverzögerungA" Value="0" />
+      <ParameterRef Id="M-0001-982C-01-ParRefId_AusschaltverzögerungA" RefId="M-0001-982C-01-ParId_id_AusschaltverzögerungA" Value="0" />
+      <ParameterRef Id="M-0001-982C-01-ParRefId_Einschaltdauer1A" RefId="M-0001-982C-01-ParId_Einschaltdauer1A" Value="15" />
+      <ParameterRef Id="M-0001-982C-01-ParRefId_Einschaltdauer2A" RefId="M-0001-982C-01-ParId_Einschaltdauer2A" Value="15" />
+      <ParameterRef Id="M-0001-982C-01-ParRefId_DimmwertEinschaltdauer2A" RefId="M-0001-982C-01-ParId_nDimmwertEinschaltdauer2A" Value="128" />
+      <ParameterRef Id="M-0001-982C-01-ParRefId_EinschaltzeitBlinkenA" RefId="M-0001-982C-01-ParId_EinschaltzeitBlinkenA" Value="1" />
+      <ParameterRef Id="M-0001-982C-01-ParRefId_AusschaltzeitBlinkenA" RefId="M-0001-982C-01-ParId_AusschaltzeitBlinkenA" Value="1" />
+    </ParameterRefs>
+    <ComObjectTable>
+      <!--<ComObject Id="M-0001-982C-01-ComObjId_Dummy_A" Number="7" Size="1 Byte" Text="A, Dimming value 2" WriteFlag="Enabled" CommunicationFlag="Enabled" />-->
+      <ComObject Id="M-0001-982C-01-ComObjId_8_bit_Szene" Number="1" Size="1 Byte" Text="8-bit scene" WriteFlag="Enabled" CommunicationFlag="Enabled" />
+      <ComObject Id="M-0001-982C-01-ComObjId_Sperren_A" Number="2" Size="1 Bit" Text="A, Locking" WriteFlag="Enabled" CommunicationFlag="Enabled" />
+      <ComObject Id="M-0001-982C-01-ComObjId_Nachtbetrieb_A" Number="3" Size="1 Bit" Text="A, Night mode" WriteFlag="Enabled" CommunicationFlag="Enabled" />
+      <ComObject Id="M-0001-982C-01-ComObjId_Schalten_A" Number="4" Size="1 Bit" Text="A, Switching" WriteFlag="Enabled" CommunicationFlag="Enabled" />
+      <ComObject Id="M-0001-982C-01-ComObjId_Dimmen_A" Number="5" Size="4 Bit" Text="A, Dimming" WriteFlag="Enabled" CommunicationFlag="Enabled" />
+      <ComObject Id="M-0001-982C-01-ComObjId_Dimmwert_A" Number="6" Size="1 Byte" Text="A, Dimming value" WriteFlag="Enabled" CommunicationFlag="Enabled" />
+      <ComObject Id="M-0001-982C-01-ComObjId_Status_Schalten_A" Number="8" Size="1 Bit" Text="A, Status switching" ReadFlag="Enabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" />
+      <ComObject Id="M-0001-982C-01-ComObjId_Status_Dimmwert_A" Number="9" Size="1 Byte" Text="A, Status dimming value" ReadFlag="Enabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" />
+      <ComObject Id="M-0001-982C-01-ComObjId_Schaltspielzahl_A" Number="10" Size="4 Bytes" Text="A, switching cycle counter" ReadFlag="Enabled" CommunicationFlag="Enabled" />
+      <ComObject Id="M-0001-982C-01-ComObjId_Schaltspielgrenzwert_A" Number="11" Size="4 Bytes" Text="A, switching cycle threshold" ReadFlag="Enabled" WriteFlag="Enabled" CommunicationFlag="Enabled" />
+      <ComObject Id="M-0001-982C-01-ComObjId_SchaltspielgrenzwertÜberschreitung_A" Number="12" Size="1 Bit" Text="A, switching cycle threshold overrun" ReadFlag="Enabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" />
+      <ComObject Id="M-0001-982C-01-ComObjId_Betriebsstunden_A" Number="13" Size="4 Bytes" Text="A, Operating hours counter" ReadFlag="Enabled" CommunicationFlag="Enabled" />
+      <ComObject Id="M-0001-982C-01-ComObjId_Betriebsstundengrenzwert_A" Number="14" Size="4 Bytes" Text="A, Operating hours threshold" ReadFlag="Enabled" WriteFlag="Enabled" CommunicationFlag="Enabled" />
+      <ComObject Id="M-0001-982C-01-ComObjId_BetriebsstundengrenzwertÜberschreitung_A" Number="15" Size="1 Bit" Text="A, Operating hours threshold overrun" ReadFlag="Enabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" />
+    </ComObjectTable>
+    <ComObjectRefs>
+      <!--<ComObjectRef Id="M-0001-982C-01-ComObjRefId_Dummy_A" RefId="M-0001-982C-01-ComObjId_Dummy_A" ParentValue="1" FunctionText="8-bit Wert" />-->
+      <ComObjectRef Id="M-0001-982C-01-ComObjRefId_8_bit_Szene" RefId="M-0001-982C-01-ComObjId_8_bit_Szene" ParentValue="1" FunctionText="recall / save" />
+      <ComObjectRef Id="M-0001-982C-01-ComObjRefId_Sperren_A" RefId="M-0001-982C-01-ComObjId_Sperren_A" ParentValue="1" FunctionText="On / Off" />
+      <ComObjectRef Id="M-0001-982C-01-ComObjRefId_Nachtbetrieb_A" RefId="M-0001-982C-01-ComObjId_Nachtbetrieb_A" ParentValue="1" FunctionText="On / Off" />
+      <ComObjectRef Id="M-0001-982C-01-ComObjRefId_Schalten_A" RefId="M-0001-982C-01-ComObjId_Schalten_A" ParentValue="1" FunctionText="On / Off" />
+      <ComObjectRef Id="M-0001-982C-01-ComObjRefId_Dimmen_A" RefId="M-0001-982C-01-ComObjId_Dimmen_A" ParentValue="1" FunctionText="brighter / darker" />
+      <ComObjectRef Id="M-0001-982C-01-ComObjRefId_Dimmwert_A" RefId="M-0001-982C-01-ComObjId_Dimmwert_A" ParentValue="1" FunctionText="8-bit value" />
+      <ComObjectRef Id="M-0001-982C-01-ComObjRefId_Status_Schalten_A" RefId="M-0001-982C-01-ComObjId_Status_Schalten_A" ParentValue="1" FunctionText="On / Off" />
+      <ComObjectRef Id="M-0001-982C-01-ComObjRefId_Status_Dimmwert_A" RefId="M-0001-982C-01-ComObjId_Status_Dimmwert_A" ParentValue="1" FunctionText="8-bit value" />
+      <ComObjectRef Id="M-0001-982C-01-ComObjRefId_Schaltspielzahl_A" RefId="M-0001-982C-01-ComObjId_Schaltspielzahl_A" ParentValue="1" FunctionText="4-byte value" />
+      <ComObjectRef Id="M-0001-982C-01-ComObjRefId_Schaltspielgrenzwert_A" RefId="M-0001-982C-01-ComObjId_Schaltspielgrenzwert_A" ParentValue="1" FunctionText="4-byte value" />
+      <ComObjectRef Id="M-0001-982C-01-ComObjRefId_SchaltspielgrenzwertÜberschreitung_A" RefId="M-0001-982C-01-ComObjId_SchaltspielgrenzwertÜberschreitung_A" ParentValue="1" FunctionText="1 = yes / 0 = no" />
+      <ComObjectRef Id="M-0001-982C-01-ComObjRefId_Betriebsstunden_A" RefId="M-0001-982C-01-ComObjId_Betriebsstunden_A" ParentValue="1" FunctionText="4-byte value" />
+      <ComObjectRef Id="M-0001-982C-01-ComObjRefId_Betriebsstundengrenzwert_A" RefId="M-0001-982C-01-ComObjId_Betriebsstundengrenzwert_A" ParentValue="1" FunctionText="4-byte value" />
+      <ComObjectRef Id="M-0001-982C-01-ComObjRefId_BetriebsstundengrenzwertÜberschreitung_A" RefId="M-0001-982C-01-ComObjId_BetriebsstundengrenzwertÜberschreitung_A" ParentValue="1" FunctionText="1 = yes / 0 = no" />
+    </ComObjectRefs>
+  </Static>
+  <Dynamic>
+    <Channel Id="M-0001-982C-01-Channel_Module" Number="1">
+      <!--*****************************************************************************************************************-->
+      <ParameterBlock Id="M-0001-982C-01-ParameterBlockID_Module" Text="Modul functions">
+        <ParameterRefRef RefId="M-0001-982C-01-ParRefId_SendesperrzeitStatusobjekte" />
+        <ParameterRefRef RefId="M-0001-982C-01-ParRefId_SendeverzögerungStatusobjekte" />
+      </ParameterBlock>
+    </Channel>
+    <Channel Id="M-0001-982C-01-Channel_A" Number="1">
+      <!--*****************************************************************************************************************-->
+      <ComObjectRefRef RefId="M-0001-982C-01-ComObjRefId_Schalten_A" />
+      <ParameterBlock Id="M-0001-982C-01-ParameterBlockID_FunktionenObjekteA" Text="A, Functions, Objects">
+        <ParameterRefRef RefId="M-0001-982C-01-ParRefId_BetriebsartA" />
+        <choose ParamRefId="M-0001-982C-01-ParRefId_BetriebsartA">
+          <when test="Normalbetrieb">
+            <!--<ComObjectRefRef RefId="M-0001-982C-01-ComObjRefId_FadeToControlCommand_A" />-->
+            <ComObjectRefRef RefId="M-0001-982C-01-ComObjRefId_Dimmen_A" />
+            <ComObjectRefRef RefId="M-0001-982C-01-ComObjRefId_Dimmwert_A" />
+            <ParameterRefRef RefId="M-0001-982C-01-ParRefId_8bit_Szenensteuerung" />
+            <choose ParamRefId="M-0001-982C-01-ParRefId_8bit_Szenensteuerung">
+              <when test="1">
+                <ComObjectRefRef RefId="M-0001-982C-01-ComObjRefId_8_bit_Szene" />
+              </when>
+            </choose>
+            <ParameterRefRef RefId="M-0001-982C-01-ParRefId_NachtbetriebA" />
+            <choose ParamRefId="M-0001-982C-01-ParRefId_NachtbetriebA">
+              <when test="1">
+                <ComObjectRefRef RefId="M-0001-982C-01-ComObjRefId_Nachtbetrieb_A" />
+                <ParameterRefRef RefId="M-0001-982C-01-ParRefId_EinschaltdauerNachtbetriebA" />
+                <ParameterRefRef RefId="M-0001-982C-01-ParRefId_Warnen_vor_AusschaltenA" />
+              </when>
+            </choose>
+          </when>
+          <when test="Zeitschalterbetrieb_1-stufig">
+            <!--<ComObjectRefRef RefId="M-0001-982C-01-ComObjRefId_FadeToControlCommand_A" />-->
+            <ComObjectRefRef RefId="M-0001-982C-01-ComObjRefId_Dimmen_A" />
+            <ComObjectRefRef RefId="M-0001-982C-01-ComObjRefId_Dimmwert_A" />
+            <ParameterRefRef RefId="M-0001-982C-01-ParRefId_8bit_Szenensteuerung" />
+            <choose ParamRefId="M-0001-982C-01-ParRefId_8bit_Szenensteuerung">
+              <when test="1">
+                <ComObjectRefRef RefId="M-0001-982C-01-ComObjRefId_8_bit_Szene" />
+              </when>
+            </choose>
+            <ParameterRefRef RefId="M-0001-982C-01-ParRefId_Warnen_vor_AusschaltenA" />
+          </when>
+          <when test="Zeitschalterbetrieb_2-stufig">
+            <!--<ComObjectRefRef RefId="M-0001-982C-01-ComObjRefId_FadeToControlCommand_A" />-->
+            <ComObjectRefRef RefId="M-0001-982C-01-ComObjRefId_Dimmen_A" />
+            <ComObjectRefRef RefId="M-0001-982C-01-ComObjRefId_Dimmwert_A" />
+            <ParameterRefRef RefId="M-0001-982C-01-ParRefId_8bit_Szenensteuerung" />
+            <choose ParamRefId="M-0001-982C-01-ParRefId_8bit_Szenensteuerung">
+              <when test="1">
+                <ComObjectRefRef RefId="M-0001-982C-01-ComObjRefId_8_bit_Szene" />
+              </when>
+            </choose>
+          </when>
+        </choose>
+        <ParameterRefRef RefId="M-0001-982C-01-ParRefId_SchaltspielzählungA" />
+        <choose ParamRefId="M-0001-982C-01-ParRefId_SchaltspielzählungA">
+          <when test="ohne_Grenzwertüberwachung">
+            <ComObjectRefRef RefId="M-0001-982C-01-ComObjRefId_Schaltspielzahl_A" />
+          </when>
+          <when test="mit_Grenzwertüberwachung;mit_Grenzwertüberwachung_und_automatischer_Meldung">
+            <ComObjectRefRef RefId="M-0001-982C-01-ComObjRefId_Schaltspielzahl_A" />
+            <ComObjectRefRef RefId="M-0001-982C-01-ComObjRefId_Schaltspielgrenzwert_A" />
+            <ComObjectRefRef RefId="M-0001-982C-01-ComObjRefId_SchaltspielgrenzwertÜberschreitung_A" />
+          </when>
+        </choose>
+        <ParameterRefRef RefId="M-0001-982C-01-ParRefId_BetriebsstundenzählungA" />
+        <choose ParamRefId="M-0001-982C-01-ParRefId_BetriebsstundenzählungA">
+          <when test="ohne_Grenzwertüberwachung">
+            <ComObjectRefRef RefId="M-0001-982C-01-ComObjRefId_Betriebsstunden_A" />
+          </when>
+          <when test="mit_Grenzwertüberwachung;mit_Grenzwertüberwachung_und_automatischer_Meldung">
+            <ComObjectRefRef RefId="M-0001-982C-01-ComObjRefId_Betriebsstunden_A" />
+            <ComObjectRefRef RefId="M-0001-982C-01-ComObjRefId_Betriebsstundengrenzwert_A" />
+            <ComObjectRefRef RefId="M-0001-982C-01-ComObjRefId_BetriebsstundengrenzwertÜberschreitung_A" />
+          </when>
+        </choose>
+        <ParameterRefRef RefId="M-0001-982C-01-ParRefId_PowerFailureMode" />
+        <choose ParamRefId="M-0001-982C-01-ParRefId_BetriebsartA">
+          <when test="Blinken">
+            <ParameterRefRef RefId="M-0001-982C-01-ParRefId_PowerReturnModeBlinking" />
+          </when>
+          <when test="Normalbetrieb;Zeitschalterbetrieb_1-stufig;Zeitschalterbetrieb_2-stufig">
+            <ParameterRefRef RefId="M-0001-982C-01-ParRefId_PowerReturnMode" />
+            <choose ParamRefId="M-0001-982C-01-ParRefId_PowerReturnMode">
+              <when test="wie_Parameter">
+                <ParameterRefRef RefId="M-0001-982C-01-ParRefId_PowerReturnValue" />
+              </when>
+            </choose>
+          </when>
+        </choose>
+        <ParameterRefRef RefId="M-0001-982C-01-ParRefId_StatusSchaltenA" />
+        <choose ParamRefId="M-0001-982C-01-ParRefId_StatusSchaltenA">
+          <when test="0">
+            <ComObjectRefRef RefId="M-0001-982C-01-ComObjRefId_Status_Schalten_A" />
+            <Assign TargetParamRefRef="M-0001-982C-01-ParRefId_StatusSchaltenSendenA" Value="0" />
+          </when>
+          <when test="1">
+            <ComObjectRefRef RefId="M-0001-982C-01-ComObjRefId_Status_Schalten_A" />
+            <Assign TargetParamRefRef="M-0001-982C-01-ParRefId_StatusSchaltenSendenA" Value="1" />
+          </when>
+        </choose>
+        <choose ParamRefId="M-0001-982C-01-ParRefId_BetriebsartA">
+          <when test="Normalbetrieb;Zeitschalterbetrieb_1-stufig;Zeitschalterbetrieb_2-stufig">
+            <!--<ParameterRefRef RefId="M-0001-982C-01-ParRefId_StatusActuatorA" />
+            <choose ParamRefId="M-0001-982C-01-ParRefId_StatusActuatorA">
+              <when test="0">
+                <ComObjectRefRef RefId="M-0001-982C-01-ComObjRefId_ActuatorStatus_A" />
+                <Assign TargetParamRefRef="M-0001-982C-01-ParRefId_StatusActuatorSendenA" Value="0" />
+              </when>
+              <when test="1">
+                <ComObjectRefRef RefId="M-0001-982C-01-ComObjRefId_ActuatorStatus_A" />
+                <Assign TargetParamRefRef="M-0001-982C-01-ParRefId_StatusActuatorSendenA" Value="1" />
+              </when>
+            </choose>
+            <ParameterRefRef RefId="M-0001-982C-01-ParRefId_StatusActuatorErrorA" />
+            <choose ParamRefId="M-0001-982C-01-ParRefId_StatusActuatorErrorA">
+              <when test="0">
+                <ComObjectRefRef RefId="M-0001-982C-01-ComObjRefId_ErrorInformation_A" />
+                <Assign TargetParamRefRef="M-0001-982C-01-ParRefId_StatusActuatorErrorSendenA" Value="0" />
+              </when>
+              <when test="1">
+                <ComObjectRefRef RefId="M-0001-982C-01-ComObjRefId_ErrorInformation_A" />
+                <Assign TargetParamRefRef="M-0001-982C-01-ParRefId_StatusActuatorErrorSendenA" Value="1" />
+              </when>
+            </choose>
+            <ParameterRefRef RefId="M-0001-982C-01-ParRefId_StatusDetectedLoadtypeA" />
+            <choose ParamRefId="M-0001-982C-01-ParRefId_StatusDetectedLoadtypeA">
+              <when test="0">
+                <ComObjectRefRef RefId="M-0001-982C-01-ComObjRefId_Loadtype_A" />
+                <Assign TargetParamRefRef="M-0001-982C-01-ParRefId_StatusDetectedLoadtypeSendenA" Value="0" />
+              </when>
+              <when test="1">
+                <ComObjectRefRef RefId="M-0001-982C-01-ComObjRefId_Loadtype_A" />
+                <Assign TargetParamRefRef="M-0001-982C-01-ParRefId_StatusDetectedLoadtypeSendenA" Value="1" />
+              </when>
+            </choose>-->
+            <ParameterRefRef RefId="M-0001-982C-01-ParRefId_StatusDimmwertA" />
+            <choose ParamRefId="M-0001-982C-01-ParRefId_StatusDimmwertA">
+              <when test="0">
+                <ComObjectRefRef RefId="M-0001-982C-01-ComObjRefId_Status_Dimmwert_A" />
+                <Assign TargetParamRefRef="M-0001-982C-01-ParRefId_StatusDimmwertSendenA" Value="0" />
+              </when>
+              <when test="1">
+                <ComObjectRefRef RefId="M-0001-982C-01-ComObjRefId_Status_Dimmwert_A" />
+                <Assign TargetParamRefRef="M-0001-982C-01-ParRefId_StatusDimmwertSendenA" Value="1" />
+                <ParameterRefRef RefId="M-0001-982C-01-ParRefId_StatusDimmwertIdlePeriodA" />
+              </when>
+            </choose>
+          </when>
+        </choose>
+        <ParameterRefRef RefId="M-0001-982C-01-ParRefId_SperrObjektA" />
+        <choose ParamRefId="M-0001-982C-01-ParRefId_SperrObjektA">
+          <when test="1">
+            <ComObjectRefRef RefId="M-0001-982C-01-ComObjRefId_Sperren_A" />
+          </when>
+        </choose>
+      </ParameterBlock>
+      <ParameterBlock Id="M-0001-982C-01-ParameterBlockID_DimmenA" Text="A, Dimming">
+        <ParameterRefRef RefId="M-0001-982C-01-ParRefId_LastanpassungA" />
+        <ParameterRefRef RefId="M-0001-982C-01-ParRefId_RippleControlA" />
+        <ParameterRefRef RefId="M-0001-982C-01-ParRefId_Min_DimmwertA" />
+        <ParameterRefRef RefId="M-0001-982C-01-ParRefId_Max_DimmwertA" />
+        <ParameterRefRef RefId="M-0001-982C-01-ParRefId_DimmzeitSchaltenA" />
+        <choose ParamRefId="M-0001-982C-01-ParRefId_BetriebsartA">
+          <when test="Normalbetrieb">
+            <ParameterRefRef RefId="M-0001-982C-01-ParRefId_DimmzeitDimmenA" />
+            <ParameterRefRef RefId="M-0001-982C-01-ParRefId_DimmzeitDimmwertA" />
+            <ParameterRefRef RefId="M-0001-982C-01-ParRefId_Einschalten_aufA" />
+            <choose ParamRefId="M-0001-982C-01-ParRefId_Einschalten_aufA">
+              <when test="ParameterSwitchOnValue">
+                <ParameterRefRef RefId="M-0001-982C-01-ParRefId_ParameterEinschaltwertA" />
+              </when>
+            </choose>
+            <ParameterRefRef RefId="M-0001-982C-01-ParRefId_RelativeOffEnableA" />
+            <ParameterRefRef RefId="M-0001-982C-01-ParRefId_RelativeOnEnableA" />
+            <ParameterRefRef RefId="M-0001-982C-01-ParRefId_Schalten_über_DimmwertA" />
+            <ParameterRefRef RefId="M-0001-982C-01-ParRefId_EinschaltverzögerungA" />
+            <ParameterRefRef RefId="M-0001-982C-01-ParRefId_AusschaltverzögerungA" />
+          </when>
+        </choose>
+        <choose ParamRefId="M-0001-982C-01-ParRefId_BetriebsartA">
+          <when test="Zeitschalterbetrieb_1-stufig">
+            <ParameterRefRef RefId="M-0001-982C-01-ParRefId_DimmzeitDimmenA" />
+            <ParameterRefRef RefId="M-0001-982C-01-ParRefId_DimmzeitDimmwertA" />
+            <ParameterRefRef RefId="M-0001-982C-01-ParRefId_Einschalten_aufA" />
+            <choose ParamRefId="M-0001-982C-01-ParRefId_Einschalten_aufA">
+              <when test="ParameterSwitchOnValue">
+                <ParameterRefRef RefId="M-0001-982C-01-ParRefId_ParameterEinschaltwertA" />
+              </when>
+            </choose>
+            <ParameterRefRef RefId="M-0001-982C-01-ParRefId_RelativeOffEnableA" />
+            <ParameterRefRef RefId="M-0001-982C-01-ParRefId_RelativeOnEnableA" />
+            <ParameterRefRef RefId="M-0001-982C-01-ParRefId_Schalten_über_DimmwertA" />
+            <ParameterRefRef RefId="M-0001-982C-01-ParRefId_Einschaltdauer1A" />
+            <ParameterRefRef RefId="M-0001-982C-01-ParRefId_EinschaltverzögerungA" />
+            <ParameterRefRef RefId="M-0001-982C-01-ParRefId_AusschaltverzögerungA" />
+          </when>
+        </choose>
+        <choose ParamRefId="M-0001-982C-01-ParRefId_BetriebsartA">
+          <when test="Zeitschalterbetrieb_2-stufig">
+            <ParameterRefRef RefId="M-0001-982C-01-ParRefId_DimmzeitDimmenA" />
+            <ParameterRefRef RefId="M-0001-982C-01-ParRefId_DimmzeitDimmwertA" />
+            <ParameterRefRef RefId="M-0001-982C-01-ParRefId_Einschalten_aufA" />
+            <choose ParamRefId="M-0001-982C-01-ParRefId_Einschalten_aufA">
+              <when test="ParameterSwitchOnValue">
+                <ParameterRefRef RefId="M-0001-982C-01-ParRefId_ParameterEinschaltwertA" />
+              </when>
+            </choose>
+            <ParameterRefRef RefId="M-0001-982C-01-ParRefId_RelativeOffEnableA" />
+            <ParameterRefRef RefId="M-0001-982C-01-ParRefId_RelativeOnEnableA" />
+            <ParameterRefRef RefId="M-0001-982C-01-ParRefId_Schalten_über_DimmwertA" />
+            <ParameterRefRef RefId="M-0001-982C-01-ParRefId_Einschaltdauer1A" />
+            <ParameterRefRef RefId="M-0001-982C-01-ParRefId_Einschaltdauer2A" />
+            <ParameterRefRef RefId="M-0001-982C-01-ParRefId_DimmwertEinschaltdauer2A" />
+            <ParameterRefRef RefId="M-0001-982C-01-ParRefId_EinschaltverzögerungA" />
+            <ParameterRefRef RefId="M-0001-982C-01-ParRefId_AusschaltverzögerungA" />
+          </when>
+        </choose>
+        <choose ParamRefId="M-0001-982C-01-ParRefId_BetriebsartA">
+          <when test="Blinken">
+            <ParameterRefRef RefId="M-0001-982C-01-ParRefId_EinschaltzeitBlinkenA" />
+            <ParameterRefRef RefId="M-0001-982C-01-ParRefId_AusschaltzeitBlinkenA" />
+          </when>
+        </choose>
+      </ParameterBlock>
+      <choose ParamRefId="M-0001-982C-01-ParRefId_8bit_Szenensteuerung">
+        <when test="1">
+          <choose ParamRefId="M-0001-982C-01-ParRefId_BetriebsartA">
+            <when test="Normalbetrieb;Zeitschalterbetrieb_1-stufig;Zeitschalterbetrieb_2-stufig">
+              <ParameterBlock Id="M-0001-982C-01-ParameterBlockID_SzenensteuerungA" Text="A, Scenes">
+                <ParameterRefRef RefId="M-0001-982C-01-ParRefId_Scene_Learning_Mode_Enabled" />
+                <ParameterRefRef RefId="M-0001-982C-01-ParRefId_SzenenzuordnungA1" />
+                <choose ParamRefId="M-0001-982C-01-ParRefId_SzenenzuordnungA1">
+                  <when test="0x40">
+                    <Assign TargetParamRefRef="M-0001-982C-01-ParRefId_Scene_PredefinedA1" Value="0" />
+                  </when>
+                  <when default="true">
+                    <ParameterRefRef RefId="M-0001-982C-01-ParRefId_Dimmzeit_bei_SzenensteuerungA1" />
+                    <choose ParamRefId="M-0001-982C-01-ParRefId_Scene_Learning_Mode_Enabled">
+                      <when test="0">
+                        <Assign TargetParamRefRef="M-0001-982C-01-ParRefId_DeleteTeachedInSceneA1" Value="1" />
+                        <Assign TargetParamRefRef="M-0001-982C-01-ParRefId_Scene_PredefinedA1" Value="1" />
+                        <ParameterRefRef RefId="M-0001-982C-01-ParRefId_SceneValueA1" />
+                      </when>
+                      <when default="true">
+                        <ParameterRefRef RefId="M-0001-982C-01-ParRefId_DeleteTeachedInSceneA1" />
+                        <choose ParamRefId="M-0001-982C-01-ParRefId_DeleteTeachedInSceneA1">
+                          <when test="1">
+                            <ParameterRefRef RefId="M-0001-982C-01-ParRefId_Scene_PredefinedA1" />
+                            <choose ParamRefId="M-0001-982C-01-ParRefId_Scene_PredefinedA1">
+                              <when test="1">
+                                <ParameterRefRef RefId="M-0001-982C-01-ParRefId_SceneValueA1" />
+                              </when>
+                            </choose>
+                          </when>
+                        </choose>
+                      </when>
+                    </choose>
+                  </when>
+                </choose>
+                <ParameterRefRef RefId="M-0001-982C-01-ParRefId_SzenenzuordnungA2" />
+                <choose ParamRefId="M-0001-982C-01-ParRefId_SzenenzuordnungA2">
+                  <when test="0x40">
+                    <Assign TargetParamRefRef="M-0001-982C-01-ParRefId_Scene_PredefinedA2" Value="0" />
+                  </when>
+                  <when default="true">
+                    <ParameterRefRef RefId="M-0001-982C-01-ParRefId_Dimmzeit_bei_SzenensteuerungA2" />
+                    <choose ParamRefId="M-0001-982C-01-ParRefId_Scene_Learning_Mode_Enabled">
+                      <when test="0">
+                        <Assign TargetParamRefRef="M-0001-982C-01-ParRefId_DeleteTeachedInSceneA2" Value="1" />
+                        <Assign TargetParamRefRef="M-0001-982C-01-ParRefId_Scene_PredefinedA2" Value="1" />
+                        <ParameterRefRef RefId="M-0001-982C-01-ParRefId_SceneValueA2" />
+                      </when>
+                      <when default="true">
+                        <ParameterRefRef RefId="M-0001-982C-01-ParRefId_DeleteTeachedInSceneA2" />
+                        <choose ParamRefId="M-0001-982C-01-ParRefId_DeleteTeachedInSceneA2">
+                          <when test="1">
+                            <ParameterRefRef RefId="M-0001-982C-01-ParRefId_Scene_PredefinedA2" />
+                            <choose ParamRefId="M-0001-982C-01-ParRefId_Scene_PredefinedA2">
+                              <when test="1">
+                                <ParameterRefRef RefId="M-0001-982C-01-ParRefId_SceneValueA2" />
+                              </when>
+                            </choose>
+                          </when>
+                        </choose>
+                      </when>
+                    </choose>
+                  </when>
+                </choose>
+                <ParameterRefRef RefId="M-0001-982C-01-ParRefId_SzenenzuordnungA3" />
+                <choose ParamRefId="M-0001-982C-01-ParRefId_SzenenzuordnungA3">
+                  <when test="0x40">
+                    <Assign TargetParamRefRef="M-0001-982C-01-ParRefId_Scene_PredefinedA3" Value="0" />
+                  </when>
+                  <when default="true">
+                    <ParameterRefRef RefId="M-0001-982C-01-ParRefId_Dimmzeit_bei_SzenensteuerungA3" />
+                    <choose ParamRefId="M-0001-982C-01-ParRefId_Scene_Learning_Mode_Enabled">
+                      <when test="0">
+                        <Assign TargetParamRefRef="M-0001-982C-01-ParRefId_DeleteTeachedInSceneA3" Value="1" />
+                        <Assign TargetParamRefRef="M-0001-982C-01-ParRefId_Scene_PredefinedA3" Value="1" />
+                        <ParameterRefRef RefId="M-0001-982C-01-ParRefId_SceneValueA3" />
+                      </when>
+                      <when default="true">
+                        <ParameterRefRef RefId="M-0001-982C-01-ParRefId_DeleteTeachedInSceneA3" />
+                        <choose ParamRefId="M-0001-982C-01-ParRefId_DeleteTeachedInSceneA3">
+                          <when test="1">
+                            <ParameterRefRef RefId="M-0001-982C-01-ParRefId_Scene_PredefinedA3" />
+                            <choose ParamRefId="M-0001-982C-01-ParRefId_Scene_PredefinedA3">
+                              <when test="1">
+                                <ParameterRefRef RefId="M-0001-982C-01-ParRefId_SceneValueA3" />
+                              </when>
+                            </choose>
+                          </when>
+                        </choose>
+                      </when>
+                    </choose>
+                  </when>
+                </choose>
+                <ParameterRefRef RefId="M-0001-982C-01-ParRefId_SzenenzuordnungA4" />
+                <choose ParamRefId="M-0001-982C-01-ParRefId_SzenenzuordnungA4">
+                  <when test="0x40">
+                    <Assign TargetParamRefRef="M-0001-982C-01-ParRefId_Scene_PredefinedA4" Value="0" />
+                  </when>
+                  <when default="true">
+                    <ParameterRefRef RefId="M-0001-982C-01-ParRefId_Dimmzeit_bei_SzenensteuerungA4" />
+                    <choose ParamRefId="M-0001-982C-01-ParRefId_Scene_Learning_Mode_Enabled">
+                      <when test="0">
+                        <Assign TargetParamRefRef="M-0001-982C-01-ParRefId_DeleteTeachedInSceneA4" Value="1" />
+                        <Assign TargetParamRefRef="M-0001-982C-01-ParRefId_Scene_PredefinedA4" Value="1" />
+                        <ParameterRefRef RefId="M-0001-982C-01-ParRefId_SceneValueA4" />
+                      </when>
+                      <when default="true">
+                        <ParameterRefRef RefId="M-0001-982C-01-ParRefId_DeleteTeachedInSceneA4" />
+                        <choose ParamRefId="M-0001-982C-01-ParRefId_DeleteTeachedInSceneA4">
+                          <when test="1">
+                            <ParameterRefRef RefId="M-0001-982C-01-ParRefId_Scene_PredefinedA4" />
+                            <choose ParamRefId="M-0001-982C-01-ParRefId_Scene_PredefinedA4">
+                              <when test="1">
+                                <ParameterRefRef RefId="M-0001-982C-01-ParRefId_SceneValueA4" />
+                              </when>
+                            </choose>
+                          </when>
+                        </choose>
+                      </when>
+                    </choose>
+                  </when>
+                </choose>
+                <ParameterRefRef RefId="M-0001-982C-01-ParRefId_SzenenzuordnungA5" />
+                <choose ParamRefId="M-0001-982C-01-ParRefId_SzenenzuordnungA5">
+                  <when test="0x40">
+                    <Assign TargetParamRefRef="M-0001-982C-01-ParRefId_Scene_PredefinedA5" Value="0" />
+                  </when>
+                  <when default="true">
+                    <ParameterRefRef RefId="M-0001-982C-01-ParRefId_Dimmzeit_bei_SzenensteuerungA5" />
+                    <choose ParamRefId="M-0001-982C-01-ParRefId_Scene_Learning_Mode_Enabled">
+                      <when test="0">
+                        <Assign TargetParamRefRef="M-0001-982C-01-ParRefId_DeleteTeachedInSceneA5" Value="1" />
+                        <Assign TargetParamRefRef="M-0001-982C-01-ParRefId_Scene_PredefinedA5" Value="1" />
+                        <ParameterRefRef RefId="M-0001-982C-01-ParRefId_SceneValueA5" />
+                      </when>
+                      <when default="true">
+                        <ParameterRefRef RefId="M-0001-982C-01-ParRefId_DeleteTeachedInSceneA5" />
+                        <choose ParamRefId="M-0001-982C-01-ParRefId_DeleteTeachedInSceneA5">
+                          <when test="1">
+                            <ParameterRefRef RefId="M-0001-982C-01-ParRefId_Scene_PredefinedA5" />
+                            <choose ParamRefId="M-0001-982C-01-ParRefId_Scene_PredefinedA5">
+                              <when test="1">
+                                <ParameterRefRef RefId="M-0001-982C-01-ParRefId_SceneValueA5" />
+                              </when>
+                            </choose>
+                          </when>
+                        </choose>
+                      </when>
+                    </choose>
+                  </when>
+                </choose>
+                <ParameterRefRef RefId="M-0001-982C-01-ParRefId_SzenenzuordnungA6" />
+                <choose ParamRefId="M-0001-982C-01-ParRefId_SzenenzuordnungA6">
+                  <when test="0x40">
+                    <Assign TargetParamRefRef="M-0001-982C-01-ParRefId_Scene_PredefinedA6" Value="0" />
+                  </when>
+                  <when default="true">
+                    <ParameterRefRef RefId="M-0001-982C-01-ParRefId_Dimmzeit_bei_SzenensteuerungA6" />
+                    <choose ParamRefId="M-0001-982C-01-ParRefId_Scene_Learning_Mode_Enabled">
+                      <when test="0">
+                        <Assign TargetParamRefRef="M-0001-982C-01-ParRefId_DeleteTeachedInSceneA6" Value="1" />
+                        <Assign TargetParamRefRef="M-0001-982C-01-ParRefId_Scene_PredefinedA6" Value="1" />
+                        <ParameterRefRef RefId="M-0001-982C-01-ParRefId_SceneValueA6" />
+                      </when>
+                      <when default="true">
+                        <ParameterRefRef RefId="M-0001-982C-01-ParRefId_DeleteTeachedInSceneA6" />
+                        <choose ParamRefId="M-0001-982C-01-ParRefId_DeleteTeachedInSceneA6">
+                          <when test="1">
+                            <ParameterRefRef RefId="M-0001-982C-01-ParRefId_Scene_PredefinedA6" />
+                            <choose ParamRefId="M-0001-982C-01-ParRefId_Scene_PredefinedA6">
+                              <when test="1">
+                                <ParameterRefRef RefId="M-0001-982C-01-ParRefId_SceneValueA6" />
+                              </when>
+                            </choose>
+                          </when>
+                        </choose>
+                      </when>
+                    </choose>
+                  </when>
+                </choose>
+                <ParameterRefRef RefId="M-0001-982C-01-ParRefId_SzenenzuordnungA7" />
+                <choose ParamRefId="M-0001-982C-01-ParRefId_SzenenzuordnungA7">
+                  <when test="0x40">
+                    <Assign TargetParamRefRef="M-0001-982C-01-ParRefId_Scene_PredefinedA7" Value="0" />
+                  </when>
+                  <when default="true">
+                    <ParameterRefRef RefId="M-0001-982C-01-ParRefId_Dimmzeit_bei_SzenensteuerungA7" />
+                    <choose ParamRefId="M-0001-982C-01-ParRefId_Scene_Learning_Mode_Enabled">
+                      <when test="0">
+                        <Assign TargetParamRefRef="M-0001-982C-01-ParRefId_DeleteTeachedInSceneA7" Value="1" />
+                        <Assign TargetParamRefRef="M-0001-982C-01-ParRefId_Scene_PredefinedA7" Value="1" />
+                        <ParameterRefRef RefId="M-0001-982C-01-ParRefId_SceneValueA7" />
+                      </when>
+                      <when default="true">
+                        <ParameterRefRef RefId="M-0001-982C-01-ParRefId_DeleteTeachedInSceneA7" />
+                        <choose ParamRefId="M-0001-982C-01-ParRefId_DeleteTeachedInSceneA7">
+                          <when test="1">
+                            <ParameterRefRef RefId="M-0001-982C-01-ParRefId_Scene_PredefinedA7" />
+                            <choose ParamRefId="M-0001-982C-01-ParRefId_Scene_PredefinedA7">
+                              <when test="1">
+                                <ParameterRefRef RefId="M-0001-982C-01-ParRefId_SceneValueA7" />
+                              </when>
+                            </choose>
+                          </when>
+                        </choose>
+                      </when>
+                    </choose>
+                  </when>
+                </choose>
+                <ParameterRefRef RefId="M-0001-982C-01-ParRefId_SzenenzuordnungA8" />
+                <choose ParamRefId="M-0001-982C-01-ParRefId_SzenenzuordnungA8">
+                  <when test="0x40">
+                    <Assign TargetParamRefRef="M-0001-982C-01-ParRefId_Scene_PredefinedA8" Value="0" />
+                  </when>
+                  <when default="true">
+                    <ParameterRefRef RefId="M-0001-982C-01-ParRefId_Dimmzeit_bei_SzenensteuerungA8" />
+                    <choose ParamRefId="M-0001-982C-01-ParRefId_Scene_Learning_Mode_Enabled">
+                      <when test="0">
+                        <Assign TargetParamRefRef="M-0001-982C-01-ParRefId_DeleteTeachedInSceneA8" Value="1" />
+                        <Assign TargetParamRefRef="M-0001-982C-01-ParRefId_Scene_PredefinedA8" Value="1" />
+                        <ParameterRefRef RefId="M-0001-982C-01-ParRefId_SceneValueA8" />
+                      </when>
+                      <when default="true">
+                        <ParameterRefRef RefId="M-0001-982C-01-ParRefId_DeleteTeachedInSceneA8" />
+                        <choose ParamRefId="M-0001-982C-01-ParRefId_DeleteTeachedInSceneA8">
+                          <when test="1">
+                            <ParameterRefRef RefId="M-0001-982C-01-ParRefId_Scene_PredefinedA8" />
+                            <choose ParamRefId="M-0001-982C-01-ParRefId_Scene_PredefinedA8">
+                              <when test="1">
+                                <ParameterRefRef RefId="M-0001-982C-01-ParRefId_SceneValueA8" />
+                              </when>
+                            </choose>
+                          </when>
+                        </choose>
+                      </when>
+                    </choose>
+                  </when>
+                </choose>
+              </ParameterBlock>
+            </when>
+          </choose>
+        </when>
+      </choose>
+    </Channel>
+  </Dynamic>
+</ApplicationProgram><!--H01(1bd1d55a)-->
