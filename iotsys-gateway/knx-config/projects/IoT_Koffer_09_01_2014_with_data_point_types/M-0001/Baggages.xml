@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<KNX xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" CreatedBy="ETS4" ToolVersion="ETS 4.1.5 (Build 3246)" xmlns="http://knx.org/xml/project/11">
+  <ManufacturerData>
+    <Manufacturer RefId="M-0001">
+      <Baggages>
+        <Baggage Id="M-0001_BG-982C01-0001.5F982C.5F01.5Fde.2DDE.2Exml" Name="0001_982C_01_de-DE.xml" TargetPath="982C01" InstallOnImport="0">
+          <FileInfo TimeInfo="2012-01-18T11:15:08" />
+        </Baggage>
+        <Baggage Id="M-0001_BG-982C01-0001.5F982C.5F01.5Fen.2DUS.2Exml" Name="0001_982C_01_en-US.xml" TargetPath="982C01" InstallOnImport="0">
+          <FileInfo TimeInfo="2012-01-18T11:15:08" />
+        </Baggage>
+        <Baggage Id="M-0001_BG-982C01-0001.5F982C.5F01.5FGenericPlugInAll.2Exml" Name="0001_982C_01_GenericPlugInAll.xml" TargetPath="982C01" InstallOnImport="0">
+          <FileInfo TimeInfo="2012-01-18T11:15:08" />
+        </Baggage>
+        <Baggage Id="M-0001_BG-982C01-ETS3GenericPlugInSetup.5FV2.5F0.5F33.2Emsi" Name="ETS3GenericPlugInSetup_V2_0_33.msi" TargetPath="982C01" InstallOnImport="1">
+          <FileInfo Version="2.0.33.0" TimeInfo="2011-10-19T05:14:14" />
+        </Baggage>
+        <Baggage Id="M-0001_BG-982C01-PlugIn.5FID.5FV2.5F0.5F33.2Etxt" Name="PlugIn_ID_V2_0_33.txt" TargetPath="982C01" InstallOnImport="0">
+          <FileInfo TimeInfo="2011-10-19T05:14:14" />
+        </Baggage>
+      </Baggages>
+    </Manufacturer>
+  </ManufacturerData>
+</KNX>
