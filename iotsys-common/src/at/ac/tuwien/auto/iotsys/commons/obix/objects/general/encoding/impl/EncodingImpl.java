@@ -36,9 +36,8 @@ import obix.Int;
 import obix.Obj;
 import obix.Uri;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.contracts.impl.RangeImpl;
-import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.encoding.EncodingOnOff;
 
-public abstract class EncodingImpl extends RangeImpl implements EncodingOnOff
+public abstract class EncodingImpl extends RangeImpl // implements EncodingOnOff
 {
 	public EncodingImpl(Uri href)
 	{

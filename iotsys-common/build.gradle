@@ -28,6 +28,10 @@ jar {
 									 "at.ac.tuwien.auto.iotsys.commons.interceptor," +
 									 "at.ac.tuwien.auto.iotsys.commons.obix.objects," +
 									 "at.ac.tuwien.auto.iotsys.commons.obix.objects.bacnet," +
+									 "at.ac.tuwien.auto.iotsys.commons.obix.objects.enocean.datapoint,"+
+									 "at.ac.tuwien.auto.iotsys.commons.obix.objects.enocean.datapoint.impl," +
+									 "at.ac.tuwien.auto.iotsys.commons.obix.objects.enocean.entity," +
+									 "at.ac.tuwien.auto.iotsys.commons.obix.objects.enocean.entity.impl, " +
 									 "at.ac.tuwien.auto.iotsys.commons.obix.objects.general.contracts.impl," +
 									 "at.ac.tuwien.auto.iotsys.commons.obix.objects.general.datapoint," +
 									 "at.ac.tuwien.auto.iotsys.commons.obix.objects.general.datapoint.impl," +

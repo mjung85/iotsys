@@ -17,6 +17,7 @@ import obix.Obj;
 import obix.Str;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.IoTSySDevice;
 import at.ac.tuwien.auto.iotsys.gateway.service.GroupCommService;
+import at.ac.tuwien.auto.iotsys.gateway.service.impl.GroupCommServiceImpl;
 
 
 public class CoapGroupCommImpl extends GroupCommImpl{
@@ -27,10 +28,10 @@ public class CoapGroupCommImpl extends GroupCommImpl{
 	}
 	
 	public synchronized Obj joinGroup(Obj in){
-		System.out.println("CoAP join group.");
+		log.info("CoAP join group.");
 		
 		if(datapoint.getParent() instanceof IoTSySDevice){
-			final String tempUri = ((IoTSySDevice) datapoint.getParent()).getBusAddress() + "/" + datapoint.getHref() + "/groupComm/joinGroup";
+			final String busUri = ((IoTSySDevice) datapoint.getParent()).getBusAddress() + "/" + datapoint.getHref() + "/groupComm/joinGroup";
 			
 			Str str = (Str) in;
 			try {
@@ -39,18 +40,23 @@ public class CoapGroupCommImpl extends GroupCommImpl{
 				String formatted = String.format("%04X:%04X:%04X:%04X:%04X:%04X:%04X:%04X", (((short) inet6.getAddress()[0]) *256 + inet6.getAddress()[1]) & 0XFFFF, (((short) inet6.getAddress()[2]) *256 + inet6.getAddress()[3]) & 0XFFFF, (((short) inet6.getAddress()[4]) *256 + inet6.getAddress()[5]) & 0XFFFF,
 																							(((short) inet6.getAddress()[6]) *256 + inet6.getAddress()[7]) & 0XFFFF, (((short) inet6.getAddress()[8]) *256 + inet6.getAddress()[9]) & 0XFFFF, (((short) inet6.getAddress()[10]) *256 + inet6.getAddress()[11]) & 0XFFFF,
 																							(((short) inet6.getAddress()[12]) *256 + inet6.getAddress()[13]) & 0XFFFF, (((short) inet6.getAddress()[14]) *256 + inet6.getAddress()[15]) & 0XFFFF  );
+				
+				
+				GroupCommServiceImpl.getInstance().registerAsReceiver(inet6, this.datapoint);
+				
 				String payload = "<str val=\"" + formatted + "\">";
 				
 				Request request = new POSTRequest();
-				System.out.println("Adresse: " + tempUri + "\nPayload: " + payload);
+				System.out.println("Adresse: " + busUri + "\nPayload: " + payload);
 				request.setPayload(payload);
-				request.setType(messageType.NON);
+				request.setType(messageType.CON);
 				request.setOption(new Option(MediaTypeRegistry.APPLICATION_XML,OptionNumberRegistry.ACCEPT));
+				request.setOption(new Option(16, OptionNumberRegistry.SIZE));
 			
 				// specify URI of target endpoint
-				request.setURI(tempUri);
+				request.setURI(busUri);
 				// enable response queue for blocking I/O
-				request.enableResponseQueue(true);
+				request.enableResponseQueue(true);						
 				
 				try {
 					request.execute();
@@ -80,7 +86,7 @@ public class CoapGroupCommImpl extends GroupCommImpl{
 	}
 	
 	public synchronized Obj leaveGroup(Obj in){
-System.out.println("CoAP join group.");
+		log.info("CoAP leave group.");
 		
 		if(datapoint.getParent() instanceof IoTSySDevice){
 			final String tempUri = ((IoTSySDevice) datapoint.getParent()).getBusAddress() + "/" + datapoint.getHref() + "/groupComm/leaveGroup";
@@ -93,11 +99,11 @@ System.out.println("CoAP join group.");
 																							(((short) inet6.getAddress()[6]) *256 + inet6.getAddress()[7]) & 0XFFFF, (((short) inet6.getAddress()[8]) *256 + inet6.getAddress()[9]) & 0XFFFF, (((short) inet6.getAddress()[10]) *256 + inet6.getAddress()[11]) & 0XFFFF,
 																							(((short) inet6.getAddress()[12]) *256 + inet6.getAddress()[13]) & 0XFFFF, (((short) inet6.getAddress()[14]) *256 + inet6.getAddress()[15]) & 0XFFFF  );
 				String payload = "<str val=\"" + formatted + "\">";
-				
+				GroupCommServiceImpl.getInstance().unregisterReceiverObject(inet6, this.datapoint);
 				Request request = new POSTRequest();
 				System.out.println("Adresse: " + tempUri + "\nPayload: " + payload);
 			
-				request.setType(messageType.NON);
+				request.setType(messageType.CON);
 				request.setOption(new Option(MediaTypeRegistry.APPLICATION_XML,OptionNumberRegistry.ACCEPT));
 			
 				// specify URI of target endpoint

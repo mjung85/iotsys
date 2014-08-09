@@ -74,7 +74,7 @@ public class CoapConnector extends Connector {
 	
 	private String send(String busAddress, String datapoint, String rType, String payload, ResponseHandler handler) {
 		
-		final String tempUri = busAddress + "/" + datapoint;
+		final String busUri = busAddress + "/" + datapoint;
 		
 		Request request = null;
 		
@@ -86,7 +86,7 @@ public class CoapConnector extends Connector {
 			request.setPayload(payload);	
 		} else if(rType.equals("POST")){
 			request = new POSTRequest();
-			System.out.println("Adresse: " + tempUri + "\nPayload: " + payload);
+			System.out.println("Adresse: " + busUri + "\nPayload: " + payload);
 			return null;
 			/*	
 		} else if(rType.equals("DELETE")){
@@ -106,7 +106,7 @@ public class CoapConnector extends Connector {
 		request.setOption(new Option(MediaTypeRegistry.APPLICATION_XML,OptionNumberRegistry.ACCEPT));
 	
 		// specify URI of target endpoint
-		request.setURI(tempUri);
+		request.setURI(busUri);
 		// enable response queue for blocking I/O
 		request.enableResponseQueue(true);
 		
@@ -114,7 +114,7 @@ public class CoapConnector extends Connector {
 		// request.setAccept(MediaTypeRegistry.APPLICATION_XML);
 		
 		try {
-			log.info("Requesting tempUri: " + tempUri);
+			log.info("Requesting busUri: " + busUri);
 			request.execute();
 			
 		} catch (IOException e) {

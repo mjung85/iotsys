@@ -64,41 +64,41 @@ public class ActivitySensorImplCoap extends ActivitySensorImpl implements IoTSyS
 	public void initialize(){
 		super.initialize();
 		// But stuff here that should be executed after object creation
-		if(shouldObserve)
+		if(shouldObserve && !forwardGroupAddress)
 			addWatchDog();
 	}
 	
 	public void addWatchDog(){
-		coapConnector.createWatchDog(busAddress, ACTIVE_CONTRACT_HREF, new ResponseHandler() {
-			public void handleResponse(Response response) {	
-					String payload = response.getPayloadString().trim();
-					
-					if(payload.equals("") || payload.equals("TooManyObservers")) return;
-					
-					if(payload.startsWith("Added")) {
-						isObserved = true;
-						return;
-					}
-					
-					String bool = CoapConnector.extractAttribute("bool", "val", payload);
-					ActivitySensorImplCoap.this.activeValue().set(Boolean.valueOf(bool));
-			}
-		});	
-		coapConnector.createWatchDog(busAddress, FREEFALL_CONTRACT_HREF, new ResponseHandler() {
-			public void handleResponse(Response response) {	
-					String payload = response.getPayloadString().trim();
-					
-					if(payload.equals("") || payload.equals("TooManyObservers")) return;
-					
-					if(payload.startsWith("Added")) {
-						isObserved = true;
-						return;
-					}
-					
-					String bool = CoapConnector.extractAttribute("bool", "val", payload);
-					ActivitySensorImplCoap.this.freefallValue().set(Boolean.valueOf(bool));
-			}
-		});	
+//		coapConnector.createWatchDog(busAddress, ACTIVE_CONTRACT_HREF, new ResponseHandler() {
+//			public void handleResponse(Response response) {	
+//					String payload = response.getPayloadString().trim();
+//					
+//					if(payload.equals("") || payload.equals("TooManyObservers")) return;
+//					
+//					if(payload.startsWith("Added")) {
+//						isObserved = true;
+//						return;
+//					}
+//					
+//					String bool = CoapConnector.extractAttribute("bool", "val", payload);
+//					ActivitySensorImplCoap.this.activeValue().set(Boolean.valueOf(bool));
+//			}
+//		});	
+//		coapConnector.createWatchDog(busAddress, FREEFALL_CONTRACT_HREF, new ResponseHandler() {
+//			public void handleResponse(Response response) {	
+//					String payload = response.getPayloadString().trim();
+//					
+//					if(payload.equals("") || payload.equals("TooManyObservers")) return;
+//					
+//					if(payload.startsWith("Added")) {
+//						isObserved = true;
+//						return;
+//					}
+//					
+//					String bool = CoapConnector.extractAttribute("bool", "val", payload);
+//					ActivitySensorImplCoap.this.freefallValue().set(Boolean.valueOf(bool));
+//			}
+//		});	
 	}
 	
 	@Override

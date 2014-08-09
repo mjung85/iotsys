@@ -70,7 +70,7 @@ public class TemperatureSensorImplCoap extends TemperatureSensorImpl implements 
 	public void initialize() {
 		super.initialize();
 		// But stuff here that should be executed after object creation
-		if(shouldObserve)
+		if(shouldObserve && !forwardGroupAddress)
 			addWatchDog();
 	}
 
@@ -104,7 +104,7 @@ public class TemperatureSensorImplCoap extends TemperatureSensorImpl implements 
 	@Override
 	public void refreshObject() {
 		// value is the protected instance variable of the base class (TemperatureSensorImpl)
-		if (value != null && !isObserved) {
+		if (value != null && !isObserved && !forwardGroupAddress) {
 		
 			Double value = coapConnector.readDouble(busAddress, "value");
 			// this calls the implementation of the base class, which triggers also

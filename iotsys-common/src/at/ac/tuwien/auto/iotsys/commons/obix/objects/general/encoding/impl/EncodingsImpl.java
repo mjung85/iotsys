@@ -56,6 +56,8 @@ public class EncodingsImpl extends List implements IObj
 		encodings = new TreeMap<String, EncodingImpl>();
 
 		encodings.put(EncodingOnOffImpl.HREF, new EncodingOnOffImpl());
+		encodings.put(EncodingOpenClosedImpl.HREF, new EncodingOpenClosedImpl());
+		encodings.put(EncodingPressedReleasedImpl.HREF, new EncodingPressedReleasedImpl());
 
 		// Add enumerations
 		for (RangeImpl e : encodings.values())

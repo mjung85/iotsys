@@ -19,94 +19,117 @@
 */
 package at.ac.tuwien.auto.iotsys.commons.persistent;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Logger;
 
 import org.ektorp.CouchDbConnector;
-import org.ektorp.ViewQuery;
 import org.ektorp.impl.StdCouchDbConnector;
-import org.ektorp.support.*;
-import org.ektorp.util.Assert;
+import org.ektorp.support.CouchDbRepositorySupport;
+import org.ektorp.support.View;
+import org.ektorp.support.Views;
 
-import at.ac.tuwien.auto.iotsys.commons.persistent.models.CanvasObject;
+import at.ac.tuwien.auto.iotsys.commons.persistent.models.User;
 
 /**
  * @author Nam Giang - zang at kaist dot ac dot kr
  *
  */
 @Views({
-	@View(name = "allCanvasObjects", map = "function(doc) {if (doc.technology) emit(doc.name, doc);}"),
-	@View(name = "allConnections", map = "function(doc) {if (doc.href) emit(doc.href, doc);}"),
+	@View(name = "allKeyValues", map = "function(doc) {if (doc.key) emit(doc.key, doc);}"),
+	@View(name = "allUsers", map = "function(doc) {if (doc.name && doc.password) emit(doc.name, doc);}"),
 })
-public class UIDbRepo extends CouchDbRepositorySupport<CanvasObject> implements UIDb {
+public class UIDbRepo extends CouchDbRepositorySupport<User> implements UIDb {
 	
 	private static UIDbRepo INSTANCE;
 	private static final Logger log = Logger.getLogger(UIDbRepo.class.getName());
 	
-	private List<CanvasObject> allCanvasObjects = new ArrayList<CanvasObject>();
+	private Map<String, String> uiStorageMap = new HashMap<String, String>();
 	
 	protected UIDbRepo(CouchDbConnector db) {
-		super(CanvasObject.class, db);
+		super(User.class, db);
 		initStandardDesignDocument();
 		
-		loadAllCanvasObjects();
-	}
-
-	private void loadAllCanvasObjects(){
-		ViewQuery query = new ViewQuery().designDocId("_design/Connector")
-				.viewName("allCanvasObjects");
-		allCanvasObjects = db.queryView(query, CanvasObject.class);
+		loadAllKeyValues();
 	}
 	
 	public static UIDb getInstance(){
 		if (INSTANCE == null){ 
-			CouchDbConnector db = new StdCouchDbConnector("canvasobjects", DbConnection.getCouchInstance());
+			CouchDbConnector db = new StdCouchDbConnector("uidb", DbConnection.getCouchInstance());
 			try {
 				INSTANCE = new UIDbRepo(db);
 			} catch (Exception e) {
-				log.severe("FATAL: Canvas Object DB not connected!");
+				log.severe("FATAL: UI DB not connected!");
 			}
 		}
 		return INSTANCE;
 	}
 
-	@Override
-	public List<CanvasObject> getCanvasObjects() {
-		// TODO Auto-generated method stub
-		return null;
+	private void loadAllKeyValues(){
+		try {
+			uiStorageMap = db.get(Map.class, "uistorage");
+		} catch (Exception e){
+			uiStorageMap.put("_id", "uistorage");
+		}
 	}
 
 	@Override
-	public void deleteCanvasObject(String uri) {
-		// TODO Auto-generated method stub
-
+	public String getValue(String key) {
+		return uiStorageMap.get(key);
 	}
 
 	@Override
-	public void updateCanvasObject(String uri, CanvasObject co) {
-		// TODO Auto-generated method stub
-
+	public void updateBulkKeyValue(Map<String, String> uiKeyValues) {
+		// Clean input
+		uiKeyValues.remove("_id");
+		uiKeyValues.remove("_rev");
+		// Check existing
+		loadAllKeyValues();
+		if (uiStorageMap.get("_rev") != null){
+			uiKeyValues.put("_id", uiStorageMap.get("_id"));
+			uiKeyValues.put("_rev", uiStorageMap.get("_rev"));
+			db.update(uiKeyValues);
+			uiStorageMap = uiKeyValues;
+		} else {
+			// create new
+			uiKeyValues.put("_id", "uistorage");
+			db.update(uiKeyValues);
+			uiStorageMap = uiKeyValues;
+		}
 	}
 
 	@Override
-	public void addCanvasObject(CanvasObject co) {
-		Assert.hasText(co.getObjUri(), "A canvas object must have a uri");
-		add(co);
+	public User getUser(String name) {
+		User u = null;
+		try {
+			u = db.get(User.class, name);
+		} catch(Exception e){}
+		return u;
 	}
 
 	@Override
-	public void addCanvasObjects(List<CanvasObject> cos) {
-		for (CanvasObject co : cos)
-			addCanvasObject(co);
-	}
-	
-	@GenerateView @Override
-	public List<CanvasObject> getAll() {
-		ViewQuery q = createQuery("all")
-						.descending(true)
-						.includeDocs(true);
-		return db.queryView(q, CanvasObject.class);
+	public void addUser(User u) {
+		db.create(u);
 	}
 
+	@Override
+	public void deleteUser(String name) {
+		User u = getUser(name);
+		db.delete(u);
+	}
+
+	@Override
+	public void updateUser(String name, User u) {
+		User oldU = getUser(name);
+		oldU.setPassword(u.getPassword());
+		oldU.setRole(u.getRole());
+		db.update(oldU);
+	}
+
+	@Override
+	public Map<String, String> getUiStorage() {
+		uiStorageMap.remove("_rev");
+		uiStorageMap.remove("_id");
+		return uiStorageMap;
+	}
 }

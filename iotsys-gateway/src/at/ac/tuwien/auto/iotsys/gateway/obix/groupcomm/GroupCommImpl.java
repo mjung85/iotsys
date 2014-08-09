@@ -137,13 +137,23 @@ public class GroupCommImpl extends Obj implements GroupComm, Observer{
 		log.finest("Joining group comm endpoint.");
 		if(in instanceof Str){
 			Str str = (Str) in;
-			groups.add(str);
-			try {
-				Inet6Address groupAddr = (Inet6Address) Inet6Address.getByName(str.get());
-				GroupCommServiceImpl.getInstance().registerObject(groupAddr, this.datapoint);
-			} catch (UnknownHostException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			Obj[] list = groups.list();
+			
+			for(int i = 0 ; i < list.length; i++){
+				if(((Str) list[i]).get().equals(str.get())){
+					// group address is already here
+					return groups;
+				}
+			}
+			if(!groups.has(str.get())){
+				groups.add(str);
+				try {
+					Inet6Address groupAddr = (Inet6Address) Inet6Address.getByName(str.get());
+					GroupCommServiceImpl.getInstance().registerObject(groupAddr, this.datapoint);
+				} catch (UnknownHostException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 			
 		}
