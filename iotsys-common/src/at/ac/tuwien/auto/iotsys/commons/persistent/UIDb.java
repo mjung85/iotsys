@@ -19,9 +19,9 @@
 */
 package at.ac.tuwien.auto.iotsys.commons.persistent;
 
-import java.util.List;
+import java.util.Map;
 
-import at.ac.tuwien.auto.iotsys.commons.persistent.models.CanvasObject;
+import at.ac.tuwien.auto.iotsys.commons.persistent.models.User;
 
 /**
  * @author Nam Giang - zang at kaist dot ac dot kr
@@ -29,9 +29,12 @@ import at.ac.tuwien.auto.iotsys.commons.persistent.models.CanvasObject;
  */
 public interface UIDb {
 
-	public List<CanvasObject> getCanvasObjects();
-	public void deleteCanvasObject(String uri);
-	public void updateCanvasObject(String uri, CanvasObject co);
-	public void addCanvasObject(CanvasObject co);
-	public void addCanvasObjects(List<CanvasObject> cos);
+	public String getValue(String key);
+	public Map<String, String> getUiStorage();
+	public void updateBulkKeyValue(Map<String, String> uiKeyValues);
+	
+	public User getUser(String name);
+	public void addUser(User u);
+	public void deleteUser(String name);
+	public void updateUser(String name, User u);
 }

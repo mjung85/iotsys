@@ -54,7 +54,7 @@ import com.serotonin.bacnet4j.type.primitive.UnsignedInteger;
 import com.serotonin.bacnet4j.util.PropertyReferences;
 import com.serotonin.bacnet4j.util.PropertyValues;
 
-public class BACnetConnector extends Connector{
+public class BACnetConnector extends Connector {
 	private static final Logger log = Logger.getLogger(BACnetConnector.class.getName());
 	public static void main(String[] args) {
 		new BACnetConnector();

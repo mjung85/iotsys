@@ -19,11 +19,11 @@
 */
 package at.ac.tuwien.auto.iotsys.commons.persistent;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Logger;
 
-import at.ac.tuwien.auto.iotsys.commons.persistent.models.CanvasObject;
+import at.ac.tuwien.auto.iotsys.commons.persistent.models.User;
 
 /**
  * @author Nam Giang - zang at kaist dot ac dot kr
@@ -40,35 +40,48 @@ public class UIDbImpl implements UIDb {
 			INSTANCE = new UIDbImpl();
 		return INSTANCE;
 	}
-	
+
 	@Override
-	public List<CanvasObject> getCanvasObjects() {
+	public String getValue(String key) {
 		// TODO Auto-generated method stub
-		return new ArrayList<CanvasObject>();
+		return null;
 	}
 
 	@Override
-	public void deleteCanvasObject(String uri) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void updateCanvasObject(String uri, CanvasObject co) {
+	public void updateBulkKeyValue(Map<String, String> uiKeyValues) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void addCanvasObject(CanvasObject co) {
+	public User getUser(String name) {
+		// TODO Auto-generated method stub
+		return new User(name, "password", "admin");
+	}
+
+	@Override
+	public void addUser(User u) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void addCanvasObjects(List<CanvasObject> cos) {
+	public void deleteUser(String name) {
 		// TODO Auto-generated method stub
 		
 	}
 
+	@Override
+	public void updateUser(String name, User u) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Map<String, String> getUiStorage() {
+		Map<String, String> sample = new HashMap<String, String>();
+		sample.put("_id", "uikeyval");
+		sample.put("device_name", "awefjawei");
+		return sample;
+	}
 }

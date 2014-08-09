@@ -7,17 +7,76 @@
     <device-loader>at.ac.tuwien.auto.iotsys.gateway.connectors.xbee.XBeeDeviceLoaderImpl</device-loader>
     <device-loader>at.ac.tuwien.auto.iotsys.gateway.connectors.virtual.VirtualDeviceLoaderImpl</device-loader>
     <device-loader>at.ac.tuwien.auto.iotsys.gateway.connectors.enocean.EnoceanDeviceLoaderImpl</device-loader>
+    <device-loader>at.ac.tuwien.auto.iotsys.demoapp.DemoAppLoaderImpl</device-loader>
     <device-loader>at.ac.tuwien.auto.iotsys.gateway.connectors.knx.KNXDeviceLoaderETSImpl</device-loader>
     <device-loader>at.ac.tuwien.auto.iotsys.gateway.connectors.weatherforecast.WeatherForecastDeviceLoaderImpl</device-loader>
 	<device-loader>at.ac.tuwien.auto.iotsys.gateway.connectors.coap.CoapDeviceLoaderImpl</device-loader>
-	<device-loader>at.ac.tuwien.auto.iotsys.gateway.connectors.rfid.RfidDeviceLoaderImpl</device-loader>
-    <device-loader>at.ac.tuwien.auto.iotsys.demoapp.DemoAppLoaderImpl</device-loader>
   </deviceloaders>
   
   <coap>
+    	<connector>
+            <name>IoTSyS Devices2</name>
+            <enabled>false</enabled>
+            <device>  
+           		<type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.coap.TemperatureSensorImplCoap
+          		</type>
+	            <address>coap://[aaaa::c30c:0:0:daf]:5683/temp</address>
+	            <href>dev1/leds</href>
+	            <historyEnabled>true</historyEnabled>
+	            <refreshEnabled>false</refreshEnabled>
+	            <groupCommEnabled>true</groupCommEnabled>
+	            <forwardGroupAddress>true</forwardGroupAddress>
+	            <observe>false</observe>
+	        </device>
+            <!--<device>  
+           		<type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.coap.LedsActuatorImplCoap
+          		</type>
+	            <address>coap://[aaaa::c30c:0:0:3]:5683/leds</address>
+	            <href>dev1/leds</href>
+	            <historyEnabled>true</historyEnabled>
+	            <refreshEnabled>false</refreshEnabled>
+	            <groupCommEnabled>true</groupCommEnabled>
+	            <forwardGroupAddress>true</forwardGroupAddress>
+	            <observe>false</observe>
+	        </device>-->
+	        <!--<device>  
+           		<type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.coap.LedsActuatorImplCoap
+          		</type>
+	            <address>coap://[aaaa::c30c:0:0:51f]:5683/leds</address>
+	            <href>dev2/leds</href>
+	            <historyEnabled>true</historyEnabled>
+	            <refreshEnabled>false</refreshEnabled>
+	            <groupCommEnabled>true</groupCommEnabled>
+	            <forwardGroupAddress>true</forwardGroupAddress>
+	            <observe>false</observe>
+	        </device>
+	        <device>  
+           		<type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.coap.ActivitySensorImplCoap
+          		</type>
+	            <address>coap://[aaaa::c30c:0:0:51f]:5683/acc</address>
+	            <href>dev3/acc</href>
+	            <historyEnabled>true</historyEnabled>
+	            <refreshEnabled>false</refreshEnabled>
+	            <groupCommEnabled>true</groupCommEnabled>
+	            <forwardGroupAddress>true</forwardGroupAddress>
+	            <observe>false</observe>
+	        </device>
+	        <device>  
+           		<type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.coap.PushButtonImplCoap
+          		</type>
+	            <address>coap://[aaaa::c30c:0:0:519]:5683/button</address>
+	            <href>dev3/button</href>
+	            <historyEnabled>true</historyEnabled>
+	            <refreshEnabled>false</refreshEnabled>
+	            <groupCommEnabled>true</groupCommEnabled>
+	            <forwardGroupAddress>true</forwardGroupAddress>
+	            <observe>false</observe>
+	        </device>-->
+	        
+        </connector>
        <connector>
             <name>IoTSyS Devices</name>
-            <enabled>true</enabled>
+            <enabled>false</enabled>
 
                 <!--<device>
                                 <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.coap.TemperatureSensorImplCoap
@@ -135,7 +194,7 @@
                 
                 <!-- LEDS demo -->
                 
-                <device>
+                <!--<device>
                                 <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.coap.LedsActuatorImplCoap
                                 </type>
                                 <address>coap://[aaaa::c30c:0:0:51d]:5683/leds</address>
@@ -193,7 +252,7 @@
                                 <groupCommEnabled>true</groupCommEnabled>
                                 <forwardGroupAddress>false</forwardGroupAddress>
                                 <observe>false</observe>
-                </device>
+                </device>-->
                 
                 <!--<device>
                                 <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.coap.TemperatureSensorImplCoap
@@ -205,11 +264,32 @@
                                 <groupCommEnabled>true</groupCommEnabled>
                                 <forwardGroupAddress>false</forwardGroupAddress>
                 </device>-->
-                                  
+                
+                <!--<device>
+                	<type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.coap.TemperatureSensorImplCoap</type>
+                    <address>coap://[aaaa::c30c:0:0:3]:5683/temp</address>
+                    <href>temp</href>
+                    <historyEnabled>true</historyEnabled>
+                    <observe>true</observe>
+                    <groupCommEnabled>true</groupCommEnabled>
+                    <forwardGroupAddress>true</forwardGroupAddress>                
+                </device>-->
+                <!--<device>
+                                <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.coap.LedsActuatorImplCoap
+                                </type>
+                                <address>coap://[aaaa::c30c:0:0:3]:5683/leds</address>
+                                <href>dev3/leds</href>
+                                <historyEnabled>true</historyEnabled>
+                                <refreshEnabled>true</refreshEnabled>
+                                <groupCommEnabled>true</groupCommEnabled>
+                                <forwardGroupAddress>true</forwardGroupAddress>
+                                <observe>true</observe>
+                </device>-->                    
          </connector>
+       
          <connector>
             <name>CoAP Cooja</name>
-            <enabled>true</enabled>
+            <enabled>false</enabled>
 
 			<device>
 					<type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.coap.TemperatureSensorImplCoap
@@ -224,7 +304,7 @@
         
         <connector>
             <name>CoapDevices</name>
-            <enabled>true</enabled>
+            <enabled>false</enabled>
 
 			<device>
 					<type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.coap.TemperatureSensorImplCoap
@@ -259,7 +339,7 @@
         
         <connector>
             <name>CoAP</name>
-            <enabled>true</enabled>
+            <enabled>false</enabled>
 			
 			<device>
 					<type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.coap.TemperatureSensorImplCoap
@@ -286,7 +366,7 @@
   <rfid>
     <connector>
       <name>RFID</name>
-      <enabled>true</enabled>
+      <enabled>false</enabled>
       <serialPort>/dev/ttyUSB0</serialPort>
        <device>
         <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.rfid.CommandImplRFID</type>      
@@ -304,7 +384,7 @@
     
     <connector>
       <name>RFID-Windows</name>
-      <enabled>true</enabled>
+      <enabled>false</enabled>
       <serialPort>COM1</serialPort>
        <device>
         <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.actuators.impl.rfid.CommandImplRFID
@@ -325,89 +405,93 @@
     </connector>
   </rfid>
   
-  <enocean>
-    <connector>
+  <enocean>    
+	<connector>
       <name>EnOcean Linux</name>
-      <enabled>true</enabled>
+      <enabled>false</enabled>
+	  <senderAddress>01:23:45:67</senderAddress>
       <serialPort>/dev/ttyS80</serialPort>
       <device>
-        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.enocean.PushButtonImplEnocean
+        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.enocean.entity.impl.EntityEEP_F60201Impl
         </type>
-        <address>0x0010202B</address>
-        <href>buttonEnocean</href>
+        <address>00:25:A2:DC</address>
+		<deviceName>EasyClickWallTransmitter</deviceName>
+		<displayName>Switching actuator</displayName>
+		<display>null</display>
+		<manufacturer>PEHA</manufacturer>
+        <href>EasyClickWallTransmitter</href>
         <historyEnabled>false</historyEnabled>
-        <groupCommEnabled>true</groupCommEnabled>
-      </device>
-      <device>
-        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.enocean.WindowSwitchImplEnocean
+		<groupCommEnabled>true</groupCommEnabled>
+      </device>	  
+	 <device>        
+        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.enocean.entity.impl.EntityEEP_D50001Impl
         </type>
-        <address>0x00000E5C</address>
-        <href>buttonEnocean1</href>
+        <address>01:81:DC:DD</address>
+		<deviceName>EasyclickWindowContact</deviceName>
+		<displayName>Window contact</displayName>
+		<display>null</display>
+		<manufacturer>PEHA</manufacturer>
+        <href>EasyclickWindowContact</href>
         <historyEnabled>false</historyEnabled>
-        <groupCommEnabled>true</groupCommEnabled>
-      </device>
-      <device>
-        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.enocean.LightSwitchActuatorImplEnocean
+      </device> 
+	  <device>        
+        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.enocean.entity.impl.EntityEEP_A52001Impl
         </type>
-        <address>0x01</address>
-        <href>ligthSwitchEnocean</href>
+        <address>00:85:7A:08</address>
+		<deviceName>WirelessValveActuator</deviceName>
+		<displayName>Wireless Valve Actuator</displayName>
+		<display>null</display>
+		<manufacturer>Loxone</manufacturer>
+        <href>WirelessValveActuator</href>
         <historyEnabled>false</historyEnabled>
-        <groupCommEnabled>true</groupCommEnabled>
-      </device>
-      <device>
-        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.enocean.LightSwitchActuatorImplEnocean
-        </type>
-        <address>0x01807AEB</address>
-        <href>ligthSwitchEnocean1</href>
-        <historyEnabled>false</historyEnabled>
-        <groupCommEnabled>true</groupCommEnabled>
-      </device>      
-    </connector>
-    
+      </device>   
+    </connector>     
     <connector>
       <name>EnOcean</name>
-      <enabled>true</enabled>
-      <serialPort>COM6</serialPort>
+      <enabled>false</enabled>
+	  <senderAddress>01:23:45:67</senderAddress>
+      <serialPort>COM5</serialPort>
       <device>
-        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.enocean.WindowSensorImplEnocean
+        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.enocean.entity.impl.EntityEEP_F60201Impl
         </type>
-        <address>0x01820AE7</address>
-        <href>window</href>
+        <address>00:25:A2:DC</address>
+		<deviceName>EasyClickWallTransmitter</deviceName>
+		<displayName>Switching actuator</displayName>
+		<display>null</display>
+		<manufacturer>PEHA</manufacturer>
+        <href>EasyClickWallTransmitter</href>
         <historyEnabled>false</historyEnabled>
-        <groupCommEnabled>true</groupCommEnabled>
-      </device>
-    </connector>
-    
-    <connector>
-      <name>EnOcean2</name>
-      <enabled>true</enabled>
-      <serialPort>/dev/ttyUSB1</serialPort>
-      <device>
-        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.enocean.WindowSensorImplEnocean
+		<groupCommEnabled>true</groupCommEnabled>
+      </device>	  
+	 <device>        
+        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.enocean.entity.impl.EntityEEP_D50001Impl
         </type>
-        <address>0x008AF207</address>
-        <href>window</href>
+        <address>01:81:DC:DD</address>
+		<deviceName>EasyclickWindowContact</deviceName>
+		<displayName>Window contact</displayName>
+		<display>null</display>
+		<manufacturer>PEHA</manufacturer>
+        <href>EasyclickWindowContact</href>
         <historyEnabled>false</historyEnabled>
-        <groupCommEnabled>true</groupCommEnabled>
-      </device>
-      
-       <device>
-        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.enocean.PushButtonImplEnocean
+      </device> 
+	  <device>        
+        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.enocean.entity.impl.EntityEEP_A52001Impl
         </type>
-        <address>0x0010202B</address>
-        <href>buttonEnocean</href>
+        <address>00:85:7A:08</address>
+		<deviceName>WirelessValveActuator</deviceName>
+		<displayName>Wireless Valve Actuator</displayName>
+		<display>null</display>
+		<manufacturer>Loxone</manufacturer>
+        <href>WirelessValveActuator</href>
         <historyEnabled>false</historyEnabled>
-        <groupCommEnabled>true</groupCommEnabled>
-      </device>
-    </connector>
+      </device> 
+    </connector>   
   </enocean>
-
-
 
   <xbee>
     <connector>
       <name>XBee</name>
-      <enabled>true</enabled>
+      <enabled>false</enabled>
       <serialPort>COM9</serialPort>
       <device>
         <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.xbee.TemperatureSensorImplXBee
@@ -421,8 +505,8 @@
     </connector>
 
     <connector>
-      <name>XBee2</name>
-      <enabled>true</enabled>
+      <name>XBee</name>
+      <enabled>false</enabled>
       <serialPort>COM3</serialPort>
       <device>
         <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.xbee.TemperatureSensorImplXBee
@@ -448,7 +532,7 @@
   <!-- <enocean>
     <connector>
       <name>EnOcean</name>
-      <enabled>true</enabled>
+      <enabled>false</enabled>
       <serialPort>COM13</serialPort>
       <device>
         <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.enocean.PushButtonImplEnocean
@@ -521,7 +605,7 @@
    <weather-forecast>
     <connector>
       <name>weather-forecast</name>
-      <enabled>true</enabled>
+      <enabled>false</enabled>
       <device>
         <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.weatherforecast.objects.WeatherObjectImplYR_NO
         </type>
@@ -545,7 +629,7 @@
   <knx>
       <connector>
       	<name>KNX IoT Suitcase</name>
-      	<enabled>true</enabled>
+      	<enabled>false</enabled>
       	<router>
         	<ip>192.168.1.14</ip>
         	<port>3671</port>
@@ -565,7 +649,7 @@
       
     <connector>
       <name>KNX TP1 Suitcase</name>
-      <enabled>true</enabled>
+      <enabled>false</enabled>
       <router>
         <ip>192.168.1.101</ip>
         <port>3671</port>
@@ -611,7 +695,7 @@
 
     <connector>
       <name>IPSO Challenge</name>
-      <enabled>true</enabled>
+      <enabled>false</enabled>
       <router>
         <ip>192.168.1.13</ip>
         <port>3671</port>
@@ -699,7 +783,7 @@
     </connector>
     <connector>
       <name>KNX EIBD</name>
-      <enabled>true</enabled>
+      <enabled>false</enabled>
       <router>
         <ip>128.130.56.77</ip>
         <port>3671</port>
@@ -772,7 +856,7 @@
     </connector>
     <connector>
       <name>KNX E-Lab</name>
-      <enabled>true</enabled>
+      <enabled>false</enabled>
       <router>
         <ip>192.168.161.53</ip>
         <port>3671</port>
@@ -913,7 +997,7 @@
 
     <connector>
       <name>KNX A-Lab</name>
-      <enabled>true</enabled>
+      <enabled>false</enabled>
       <router>
         <ip>128.130.56.51</ip>
         <port>3671</port>
@@ -1032,7 +1116,7 @@
   <bacnet>
     <connector>
       <name>BACnet E-Lab</name>
-      <enabled>true</enabled>
+      <enabled>false</enabled>
       <discovery-enabled>true</discovery-enabled>
       <localDeviceID>23345</localDeviceID>
       <broadcastAddress>192.168.161.255</broadcastAddress>
@@ -1066,7 +1150,7 @@
 
     <connector>
       <name>BACnet A-Lab</name>
-      <enabled>true</enabled>
+      <enabled>false</enabled>
       <discovery-enabled>true</discovery-enabled>
       <localDeviceID>12346</localDeviceID>
       <broadcastAddress>128.130.56.255</broadcastAddress>
@@ -1141,7 +1225,7 @@
 
     <connector>
       <name>BACnet A-Lab (Auto)</name>
-      <enabled>true</enabled>
+      <enabled>false</enabled>
       <discovery-enabled>true</discovery-enabled>
       <localDeviceID>12345</localDeviceID>
       <broadcastAddress>128.130.56.255</broadcastAddress>
@@ -1152,7 +1236,7 @@
     
     <connector>
       <name>BACnet IoT Suitcase</name>
-      <enabled>true</enabled>
+      <enabled>false</enabled>
       <discovery-enabled>true</discovery-enabled>
       <localDeviceID>12345</localDeviceID>
       <broadcastAddress>192.168.1.255</broadcastAddress>
@@ -1167,7 +1251,7 @@
   <wmbus>
     <connector>
       <name>W-MBus Smart Meter Linux</name>
-      <enabled>true</enabled>
+      <enabled>false</enabled>
       <serialPort>/dev/ttyUSB2</serialPort>
       <device>
         <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.wmbus.SmartMeterImplWMBus
@@ -1183,7 +1267,7 @@
 
     <connector>
       <name>W-MBus Smart Meter Windows</name>
-      <enabled>true</enabled>
+      <enabled>false</enabled>
       <serialPort>COM6</serialPort>
       <device>
         <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.wmbus.SmartMeterImplWMBus
@@ -1201,7 +1285,7 @@
  <mbus>
  <connector>
   <name>MBus Smart Meter Linux</name>
-  <enabled>true</enabled>
+  <enabled>false</enabled>
   <serialPort>/dev/ttyAMA0</serialPort>
   <device>
      <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.mbus.SmartMeterImplMBus</type>
@@ -1216,7 +1300,7 @@
 
 <connector>
   <name>MBus Smart Meter Windows</name>
-  <enabled>true</enabled>
+  <enabled>false</enabled>
   <serialPort>COM17</serialPort>
   <device>
         <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.mbus.SmartMeterImplMBus</type>
@@ -1413,7 +1497,7 @@
         <href>virtualLight</href>
         <historyEnabled>false</historyEnabled>
         <historyCount>10</historyCount>
-          <groupCommEnabled>true</groupCommEnabled>
+        <groupCommEnabled>true</groupCommEnabled>
       </device>
 
       <device>
@@ -1421,29 +1505,33 @@
         </type>
         <href>virtualPumpActuatorImpl</href>
         <historyEnabled>false</historyEnabled>
+         <groupCommEnabled>true</groupCommEnabled>
       </device>
       <device>
         <type>at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators.impl.DimmingActuatorImpl
         </type>
         <href>virtualDimmingActuatorImpl</href>
         <historyEnabled>false</historyEnabled>
+        <groupCommEnabled>true</groupCommEnabled>
       </device>
       <device>
         <type>at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators.impl.CoolerActuatorImpl
         </type>
         <href>virtualCoolerActuatorImpl</href>
         <historyEnabled>false</historyEnabled>
+        <groupCommEnabled>true</groupCommEnabled>
       </device>
       <device>
         <type>at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators.impl.BoilerActuatorImpl
         </type>
         <href>virtualBoilerActuatorImpl</href>
         <historyEnabled>false</historyEnabled>
+        <groupCommEnabled>true</groupCommEnabled>
       </device>
     </connector>
     <connector>
       <name>Virtual Devices 2</name>
-      <enabled>true</enabled>
+      <enabled>false</enabled>
 
       <!-- SENSOREN -->
       <device>

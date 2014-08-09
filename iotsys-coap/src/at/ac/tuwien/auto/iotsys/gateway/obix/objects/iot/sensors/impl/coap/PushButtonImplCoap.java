@@ -37,8 +37,10 @@ package at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.coap;
 import ch.ethz.inf.vs.californium.coap.Response;
 import ch.ethz.inf.vs.californium.coap.ResponseHandler;
 
+import obix.Bool;
 import obix.Obj;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.IoTSySDevice;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators.LedsActuator;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.sensors.impl.PushButtonImpl;
 import at.ac.tuwien.auto.iotsys.gateway.connectors.coap.CoapConnector;
 
@@ -87,13 +89,14 @@ public class PushButtonImplCoap extends PushButtonImpl implements IoTSySDevice {
 	
 	@Override
 	public void writeObject(Obj input){
-		//Sensor not writable
+		// Update on group communication change
+		super.writeObject(input);		
 	}
 	
 	@Override
 	public void refreshObject(){
-		//value is the protected instance variable of the base class (TemperatureSensorImpl)
-		if(value != null && !isObserved){
+		//value is the protected instance variable of the base class (PushButtonImpl)
+		if(value != null && !isObserved && !forwardGroupAddress){ // if the group address is forwarded then there is no need to read from the device
 			Boolean value = coapConnector.readBoolean(busAddress, "value");
 			
 			// this calls the implementation of the base class, which triggers also
