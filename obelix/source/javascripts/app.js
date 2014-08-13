@@ -950,6 +950,21 @@ app.directive('obelixSplashScreen', [function() {
   };
 }]);
 
+app.directive('obelixLogoutStarter', ['$window', function($window) {
+  return {
+    restrict: 'A',
+    link: function(scope, elem, attrs) {
+      elem
+        .addClass('enabled')
+        .attr('title', 'Logout')
+        .click(function(){
+          $window.location = '/logout';
+        });
+    }
+  };
+}]);
+
+
 app.directive('obelixAboutStarter', [function() {
   var aboutClone;
   return {
@@ -957,6 +972,7 @@ app.directive('obelixAboutStarter', [function() {
     link: function(scope, elem, attrs) {
       elem
         .addClass('enabled')
+        .attr('title', 'About')
         .click(function(){
           jQuery('body').qtip({
             content: {
@@ -1090,7 +1106,7 @@ app.directive('obelixTourStarter', ['$timeout', 'Sidebar', 'Storage', function($
           jQuery(elem)
             .off()
             .on('click', obelixTour.start)
-            .attr('title', 'Start the UI tour!')
+            .attr('title', 'Start the UI tour')
             .addClass('enabled')
             .removeClass('disabled')
         } else {
