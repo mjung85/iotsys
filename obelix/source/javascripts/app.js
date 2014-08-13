@@ -1319,7 +1319,20 @@ app.directive('obelixTourStarter', ['$timeout', 'Sidebar', 'Storage', function($
            jQuery('#canvas ._jsPlumb_endpoint.virtuallight, #canvas ._jsPlumb_endpoint.virtualpushbutton')
              .removeClass('tour-highlight');
          }
-        }];
+        }, {
+          title: 'Logout',
+          content: '<p>Click this symbol to end the current oBeliX session.</p>',
+          nextButton: true,
+          closeButton: true,
+          my: 'top right',
+          at: 'bottom left',
+          setup: function(tour, options) {
+            obelixTour.step = this;
+            return {
+              target: jQuery('#logoutStarter')
+            }
+          }
+         }];
       
       var tourStarterRebindStep = {
         title: 'End Of Tour',
