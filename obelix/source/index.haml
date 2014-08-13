@@ -52,6 +52,8 @@
             .clear
         %div(ng-show="sidebar.segment==0" ng-if="directory" include-directory-template="directory")
     #canvas(ng-click="sidebar.expanded = false" droppable="placeDevice" jsplumb-container)
+      #logoutStarter.obelix-starter(obelix-logout-starter)
+        .icon-color
       #aboutStarter.obelix-starter(obelix-about-starter)
         .icon-color
       #tourFirstTimeVisitor(obelix-tour-first-time-visitor)
