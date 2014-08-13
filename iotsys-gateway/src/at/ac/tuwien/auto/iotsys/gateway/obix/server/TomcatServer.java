@@ -430,18 +430,17 @@ public class TomcatServer {
 			return response;
 		}
 
-		public boolean contains(String hearder, String element) {
-
-			StringTokenizer st = new StringTokenizer(hearder, ",");
-
-			while (st.hasMoreTokens()) {
-				String s = st.nextToken();
-
-				if (s.equalsIgnoreCase(element)) {
-					return true;
-				}
+		public boolean contains(String header, String element) {
+			String[] separatorTokens = {",", ";"};
+			for (String separatorToken : separatorTokens) {
+				StringTokenizer st = new StringTokenizer(header, separatorToken);
+				while (st.hasMoreTokens()) {
+					String s = st.nextToken();
+					if (s.equalsIgnoreCase(element)) {
+						return true;
+					}
+				}				
 			}
-
 			return false;
 		}
 
