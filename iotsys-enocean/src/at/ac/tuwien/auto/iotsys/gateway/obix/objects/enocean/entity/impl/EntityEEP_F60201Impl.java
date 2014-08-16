@@ -76,12 +76,12 @@ public class EntityEEP_F60201Impl extends EnoceanEntityImpl implements EntityEEP
 		
 		// add datapoints of the EEP
 		// Create and add new datapoint for the switch, channel B
-		datapoint_lightonoff = new EnoceanDPTBoolOnOffImpl("WallTransmitterChB", "Switch, Channel B", "On/Off", true, false);
+		datapoint_lightonoff = new EnoceanDPTBoolOnOffImpl("WallTransmitterChB", "Switch, Channel B", "On/Off", this, true, true);
 		datapoint_lightonoff.addTranslation("de-DE", TranslationAttribute.displayName, "Schalter, Kanal B");
 		this.addDatapoint(datapoint_lightonoff);
 		
 		// Create and add new datapoint for the teach in mode
-		datapoint_energybow = new EnoceanDPTBoolPressedReleasedImpl("WallTransmitterEnergyBow", "Energy Bow", "Pressed/Released", true, false);
+		datapoint_energybow = new EnoceanDPTBoolPressedReleasedImpl("WallTransmitterEnergyBow", "Energy Bow", "Pressed/Released", this, false, false);
 		datapoint_energybow.addTranslation("de-DE", TranslationAttribute.displayName, "Energieart");
 		this.addDatapoint(datapoint_energybow);	
 		
@@ -96,16 +96,16 @@ public class EntityEEP_F60201Impl extends EnoceanEntityImpl implements EntityEEP
 		            if (radioPacketRPS.getDataByte() == ByteStateAndStatus.ON ) { 
 						log.info("EnOcean device with ID " +radioPacketRPS.getSenderId().toString() + ": switch on");
 		            	// set datapoint_lightonoff to ON 
-		            	datapoint_lightonoff.writeObject(new Bool(true));		            	
+		            	datapoint_lightonoff.setValue(new Bool(true));		            	
 					} else if (radioPacketRPS.getDataByte() == ByteStateAndStatus.OFF ) { 
 						log.info("EnOcean device with ID " +radioPacketRPS.getSenderId().toString() + ": switch off");
 		            	// set datapoint_lightonoff to OFF 
-						datapoint_lightonoff.writeObject(new Bool(false));			            	
+						datapoint_lightonoff.setValue(new Bool(false));				            	
 					}
 		            
 		            log.info("EnOcean device with ID " +radioPacketRPS.getSenderId().toString() + ": Energy bow: " 
 		            		+EncodingsImpl.getInstance().getEncoding(EncodingPressedReleased.HREF).getName(pressbit)); 
-		            datapoint_energybow.writeObject(pressbit);
+		            datapoint_energybow.setValue(pressbit);
 		            EntityEEP_F60201Impl.this.notifyObservers();
 		        }					
 			}
@@ -120,7 +120,7 @@ public class EntityEEP_F60201Impl extends EnoceanEntityImpl implements EntityEEP
 
 	@Override
 	public void writeObject(Obj input){
-		super.writeObject(input);			
+		super.writeObject(input);				
 		
 		// check if it's possible to write a new value to the object
 		if (this.isWritable())

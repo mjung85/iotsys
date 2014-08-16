@@ -71,12 +71,12 @@ public class EntityEEP_D50001Impl extends EnoceanEntityImpl implements EntityEEP
 		this.setReadable(true);
 		
 		// Create and add new datapoint for the single input contact
-		datapoint_openclosed = new EnoceanDPTBoolOpenClosedImpl("SingleInputContact", "Single Input Contact", "Open/Closed", true, true);
+		datapoint_openclosed = new EnoceanDPTBoolOpenClosedImpl("SingleInputContact", "Single Input Contact", "Open/Closed", this, false, false);
 		datapoint_openclosed.addTranslation("de-DE", TranslationAttribute.displayName, "Kontaktsensor");
 		this.addDatapoint(datapoint_openclosed);		
 		
 		// Create and add new datapoint for the teach in mode
-		datapoint_learnonoff = new EnoceanDPTBoolOnOffImpl("TeachIn", "TeachIn mode", "On/Off", true, false);
+		datapoint_learnonoff = new EnoceanDPTBoolOnOffImpl("TeachIn", "TeachIn mode", "On/Off", this, false, false);
 		datapoint_learnonoff.addTranslation("de-DE", TranslationAttribute.displayName, "Lernmodus");
 		this.addDatapoint(datapoint_learnonoff);		
 		
@@ -88,15 +88,15 @@ public class EntityEEP_D50001Impl extends EnoceanEntityImpl implements EntityEEP
 				if (packet instanceof RadioPacket1BS) {
 					RadioPacket1BS radioPacket1BS = (RadioPacket1BS) packet;
 		            Bool contactbit = new Bool(Bits.isBitSet(radioPacket1BS.getDataByte(), 0));
-		            Bool learnbit = new Bool(!Bits.isBitSet(radioPacket1BS.getDataByte(), 3)); // TODO take care of inverse order of bit
+		            Bool learnbit = new Bool(!Bits.isBitSet(radioPacket1BS.getDataByte(), 3)); 
 		            		            
 		            log.info("EnOcean device with ID " +radioPacket1BS.getSenderId().toString() + ": Contact " 
 		            		+EncodingsImpl.getInstance().getEncoding(EncodingOpenClosed.HREF).getName(contactbit));
-		            datapoint_openclosed.writeObject(contactbit);
+		            datapoint_openclosed.setValue(contactbit); 
 		            
 		            log.info("EnOcean device with ID " +radioPacket1BS.getSenderId().toString() + ": TeachIn Mode " 
 		            		+EncodingsImpl.getInstance().getEncoding(EncodingOnOff.HREF).getName(learnbit)); 
-		            datapoint_learnonoff.writeObject(learnbit);
+		            datapoint_learnonoff.setValue(learnbit); 
 		            EntityEEP_D50001Impl.this.notifyObservers();		            
 		        }					
 			}

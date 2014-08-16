@@ -37,6 +37,7 @@ import obix.Enum;
 import obix.Obj;
 import obix.Uri;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.enocean.datapoint.EnoceanDPTBoolOnOff;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.enocean.entity.impl.EnoceanEntityImpl;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.encoding.EncodingOnOff;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.encoding.impl.EncodingsImpl;
 
@@ -44,10 +45,10 @@ public class EnoceanDPTBoolOnOffImpl extends EnoceanDPTBoolImpl implements Enoce
 {
 	private Enum encoding = new Enum();
 
-	public EnoceanDPTBoolOnOffImpl(String name, String displayName, String display, boolean writable, boolean readable)
+	public EnoceanDPTBoolOnOffImpl(String name, String displayName, String display, EnoceanEntityImpl entity, boolean writable, boolean readable)
 	{
 		// constructor
-		super(name, displayName, display, writable, readable);
+		super(name, displayName, display, entity, writable, readable);
 
 		// contract
 		this.addIs(new Contract(EnoceanDPTBoolOnOff.CONTRACT));
@@ -79,5 +80,16 @@ public class EnoceanDPTBoolOnOffImpl extends EnoceanDPTBoolImpl implements Enoce
 	public obix.Enum encoding()
 	{
 		return encoding;
+	}
+	
+	@Override
+	public void setValue(Obj value){
+		super.setValue(value);
+		this.refreshObject();
+	}
+	
+	@Override
+	public Obj getValue(){
+		return super.getValue();
 	}
 }
