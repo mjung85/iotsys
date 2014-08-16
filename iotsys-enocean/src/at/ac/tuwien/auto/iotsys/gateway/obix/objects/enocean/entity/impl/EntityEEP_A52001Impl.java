@@ -77,27 +77,27 @@ public class EntityEEP_A52001Impl extends EnoceanEntityImpl implements EntityEEP
 		this.setReadable(true);
 		
 		// Create and add new datapoint for the percentage value of the set point
-		datapoint_percent = new EnoceanDPTIntPercImpl("BatteryPoweredActuatorSetPointPercentage", "Set Point Percantage", "0-100%", true, true);
+		datapoint_percent = new EnoceanDPTIntPercImpl("BatteryPoweredActuatorSetPointPercentage", "Set Point Percantage", "0-100%", this, true, true);
 		datapoint_percent.addTranslation("de-DE", TranslationAttribute.displayName, "Sollwert Prozent");
 		this.addDatapoint(datapoint_percent);
 		
 		// Create and add new datapoint for the temperature set point
-		datapoint_temp = new EnoceanDPTRealTempImpl("BatteryPoweredActuatorSetPointTemperature", "Set Point Temperature", "0-40°C", true, true);
+		datapoint_temp = new EnoceanDPTRealTempImpl("BatteryPoweredActuatorSetPointTemperature", "Set Point Temperature", "0-40°C", this, true, true);
 		datapoint_temp.addTranslation("de-DE", TranslationAttribute.displayName, "Sollwert Temperatur");
 		this.addDatapoint(datapoint_temp);
 		
 		// Create and add new datapoint for current temperature
-		datapoint_currenttemp = new EnoceanDPTRealTempImpl("BatteryPoweredActuatorCurrentTemperature", "Current Temperature", "0-40°C", true, false);
+		datapoint_currenttemp = new EnoceanDPTRealTempImpl("BatteryPoweredActuatorCurrentTemperature", "Current Temperature", "0-40°C", this, true, false);
 		datapoint_currenttemp.addTranslation("de-DE", TranslationAttribute.displayName, "Istwert Temperatur");
 		this.addDatapoint(datapoint_currenttemp);
 		
 		// Create and add new datapoint for set point mode
-		datapoint_setpoint = new EnoceanDPTBoolOnOffImpl("BatteryPoweredActuatorSetPointMode", "Set Point Selection", "0=Percatage/1=Termperature", true, true);
+		datapoint_setpoint = new EnoceanDPTBoolOnOffImpl("BatteryPoweredActuatorSetPointMode", "Set Point Selection", "0=Percatage/1=Termperature", this, true, true);
 		datapoint_setpoint.addTranslation("de-DE", TranslationAttribute.displayName, "Sollwert Modus");
 		this.addDatapoint(datapoint_setpoint);
 		
 		// Create and add new datapoint for teach in mode
-		datapoint_learnonoff = new EnoceanDPTBoolOnOffImpl("TeachIn", "TeachIn mode", "On/Off", true, true);
+		datapoint_learnonoff = new EnoceanDPTBoolOnOffImpl("TeachIn", "TeachIn mode", "On/Off", this, true, true);
 		datapoint_learnonoff.addTranslation("de-DE", TranslationAttribute.displayName, "Lernmodus");
 		this.addDatapoint(datapoint_learnonoff);
 		
@@ -121,9 +121,9 @@ public class EntityEEP_A52001Impl extends EnoceanEntityImpl implements EntityEEP
 		            log.info("EnOcean device with ID " +radioPacket4BS.getSenderId().toString() + ": Current Temperature " 
 		            		+percentage.toString());
 		            // write the received values to the datapoints
-		            datapoint_learnonoff.writeObject(learnbit);
-		            datapoint_percent.writeObject(percentage);
-		            datapoint_currenttemp.writeObject(temperature);
+		            datapoint_learnonoff.setValue(learnbit);
+		            datapoint_percent.setValue(percentage);
+		            datapoint_currenttemp.setValue(temperature);
 		            EntityEEP_A52001Impl.this.notifyObservers();
 		        }					
 			}

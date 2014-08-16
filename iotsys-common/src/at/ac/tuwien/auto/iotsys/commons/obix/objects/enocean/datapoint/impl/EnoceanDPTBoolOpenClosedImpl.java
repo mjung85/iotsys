@@ -32,11 +32,16 @@
 
 package at.ac.tuwien.auto.iotsys.commons.obix.objects.enocean.datapoint.impl;
 
+import obix.Bool;
 import obix.Contract;
 import obix.Enum;
+import obix.Int;
 import obix.Obj;
+import obix.Real;
 import obix.Uri;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.enocean.datapoint.EnoceanDPTBool;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.enocean.datapoint.EnoceanDPTBoolOpenClosed;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.enocean.entity.impl.EnoceanEntityImpl;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.encoding.EncodingOpenClosed;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.encoding.impl.EncodingsImpl;
 
@@ -44,10 +49,10 @@ public class EnoceanDPTBoolOpenClosedImpl extends EnoceanDPTBoolImpl implements 
 {
 	private Enum encoding = new Enum();
 
-	public EnoceanDPTBoolOpenClosedImpl(String name, String displayName, String display, boolean writable, boolean readable)
+	public EnoceanDPTBoolOpenClosedImpl(String name, String displayName, String display, EnoceanEntityImpl entity, boolean writable, boolean readable)
 	{
 		// constructor
-		super(name, displayName, display, writable, readable);
+		super(name, displayName, display, entity, writable, readable);
 
 		// contract
 		this.addIs(new Contract(EnoceanDPTBoolOpenClosed.CONTRACT));
@@ -79,5 +84,16 @@ public class EnoceanDPTBoolOpenClosedImpl extends EnoceanDPTBoolImpl implements 
 	public obix.Enum encoding()
 	{
 		return encoding;
+	}
+	
+	@Override
+	public void setValue(Obj value){
+		super.setValue(value);
+		this.refreshObject();
+	}
+	
+	@Override
+	public Obj getValue(){
+		return super.getValue();
 	}
 }

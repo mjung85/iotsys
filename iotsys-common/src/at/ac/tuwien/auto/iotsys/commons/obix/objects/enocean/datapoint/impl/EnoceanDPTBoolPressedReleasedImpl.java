@@ -37,6 +37,7 @@ import obix.Enum;
 import obix.Obj;
 import obix.Uri;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.enocean.datapoint.EnoceanDPTBoolPressedReleased;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.enocean.entity.impl.EnoceanEntityImpl;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.encoding.EncodingOpenClosed;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.encoding.EncodingPressedReleased;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.encoding.impl.EncodingsImpl;
@@ -45,10 +46,10 @@ public class EnoceanDPTBoolPressedReleasedImpl extends EnoceanDPTBoolImpl implem
 {
 	private Enum encoding = new Enum();
 
-	public EnoceanDPTBoolPressedReleasedImpl(String name, String displayName, String display, boolean writable, boolean readable)
+	public EnoceanDPTBoolPressedReleasedImpl(String name, String displayName, String display, EnoceanEntityImpl entity, boolean writable, boolean readable)
 	{
 		// constructor
-		super(name, displayName, display, writable, readable);
+		super(name, displayName, display, entity, writable, readable);
 
 		// contract
 		this.addIs(new Contract(EnoceanDPTBoolPressedReleased.CONTRACT));
@@ -80,5 +81,16 @@ public class EnoceanDPTBoolPressedReleasedImpl extends EnoceanDPTBoolImpl implem
 	public obix.Enum encoding()
 	{
 		return encoding;
+	}
+	
+	@Override
+	public void setValue(Obj value){
+		super.setValue(value);
+		this.refreshObject();
+	}
+	
+	@Override
+	public Obj getValue(){
+		return super.getValue();
 	}
 }
