@@ -30,56 +30,43 @@
  * This file is part of the IoTSyS project.
  ******************************************************************************/
 
-package org.opencean.core;
+package org.opencean.core.packets;
 
-import org.opencean.core.address.EnoceanId;
-import org.opencean.core.address.EnoceanParameterAddress;
-import org.opencean.core.common.EEPId;
-import org.opencean.core.common.ParameterAddress;
+import static org.junit.Assert.assertEquals;
+
+import org.junit.Assert;
+import org.junit.Test;
 import org.opencean.core.common.values.ByteStateAndStatus;
-import org.opencean.core.packets.DataGenerator;
+import org.opencean.core.packets.BasicPacket;
+import org.opencean.core.packets.Header;
+import org.opencean.core.packets.Payload;
 import org.opencean.core.packets.RadioPacket;
 import org.opencean.core.packets.RadioPacketRPS;
+import org.opencean.core.packets.RawPacket;
+import org.opencean.core.utils.Bits;
 
-public class StateChanger {
+public class RadioPacketRPSTest {
 
-    public StateChanger() {
-
-    }
-
-    public byte[] changeState(String newState, ParameterAddress parameterAddress, String eep) {
-
-        if (eep.equals(EEPId.EEP_F6_02_02.toString()) || eep.equals(EEPId.EEP_F6_02_01.toString())) {
-            RadioPacket packet = new RadioPacket();
-            DataGenerator dataGen;
-            byte[] data;
-
-            if (ByteStateAndStatus.getByteFor(newState) != ByteStateAndStatus.ERROR) {
-                dataGen = new DataGenerator(RadioPacketRPS.RADIO_TYPE, ByteStateAndStatus.getByteFor(newState),
-                        (EnoceanParameterAddress) parameterAddress, ByteStateAndStatus.PRESSED);
-                data = dataGen.getData();
-                packet = new RadioPacket(data, (byte) 0x03, 0xFFFFFFFF, (byte) 0xFF, (byte) 0x00);
-            }
-            return packet.toBytes();
-        }
-        return null;
+    @Test
+    public void testRadioPacketRPSparse() {
+    	BasicPacket packet = createRawPacket(ByteStateAndStatus.ON);
+    	if (packet instanceof RadioPacketRPS) {
+            RadioPacketRPS radioPacketRPS = (RadioPacketRPS) packet;
+            boolean pressbit = Bits.isBitSet(radioPacketRPS.getDataByte(), 4);
+            assertEquals(true, pressbit);
+            assertEquals(ByteStateAndStatus.ON, radioPacketRPS.getDataByte());           
+        } else{
+        	Assert.fail();
+        }    	
     }
     
-    public RadioPacket changeState(String newState, EnoceanId parameterAddress, String eep) {
+    private BasicPacket createRawPacket(byte dataByte) {
+        Header header = new Header(RadioPacket.PACKET_TYPE, (short) 7, (byte) 0);
+        Payload payload = new Payload();
+        payload.setData(new byte[] { RadioPacketRPS.RADIO_TYPE, dataByte, 0, 0, 0, 0, (byte) 0x03 });
+        RawPacket rawPacket = new RawPacket(header, payload);
+        BasicPacket basicPacket = new RadioPacketRPS(rawPacket);
+        return basicPacket;
+    }
 
-        if (eep.equals(EEPId.EEP_F6_02_02.toString()) || eep.equals(EEPId.EEP_F6_02_01.toString())) {
-            RadioPacket packet = new RadioPacket();
-            DataGenerator dataGen;
-            byte[] data;
-
-            if (ByteStateAndStatus.getByteFor(newState) != ByteStateAndStatus.ERROR) {
-                dataGen = new DataGenerator(RadioPacketRPS.RADIO_TYPE, ByteStateAndStatus.getByteFor(newState),
-                        parameterAddress, ByteStateAndStatus.PRESSED);
-                data = dataGen.getData();
-                packet = new RadioPacket(data, (byte) 0x03, 0xFFFFFFFF, (byte) 0xFF, (byte) 0x00);
-            }
-            return packet;
-        }
-        return null;
-    }      
 }
