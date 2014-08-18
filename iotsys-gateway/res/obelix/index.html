@@ -24,7 +24,24 @@
         <li class='subdirectory' include-directory-template='subdirectory' ng-class='{expanded:subdirectory.expanded}' ng-repeat='subdirectory in directory.subdirectories'></li>
       </ul>
     </script>
-    <div class='btn' id='toggleSidebar' ng-click='sidebar.toggle(); $event.stopPropagation();'></div>
+    <script id='statistics_template' type='text/ng-template'>
+      <ul>
+        <li ng-repeat='device in statistics.devices'>
+          <div class='statistics-box'>
+            <div class='icon-label'>
+              <div class='icon' ng-class='{expanded:device.statistics.statisticBox.expanded}' ng-click='device.toggleStatisticBox()'></div>
+              <div class='label' ng-class='{expanded:device.statistics.statisticBox.expanded}' ng-click='device.toggleStatisticBox()'>{{device.name}}</div>
+            </div>
+            <div class='device-charts-container-container' ng-show='device.statistics.statisticBox.expanded'>
+              <div class='chart_container' id='{{property.chartContainerID}}' ng-repeat='property in device.statistics.history.properties'>
+                Please wait while the data is being fetched.
+              </div>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </script>
+    <div class='btn' id='toggleSidebar' ng-class='{disabled:sidebar.locked}' ng-click='sidebar.toggle(); $event.stopPropagation();'></div>
     <div id='sidebar-sublayer'></div>
     <div id='sidebar' ng-class='{expanded:sidebar.expanded}'>
       <div class='header'>
@@ -33,11 +50,14 @@
         </a>
         <div class='segmented_control'>
           <div class='segment' id='segmentDevices' ng-class='{active: sidebar.segment==0}' ng-click='sidebar.segment=0'>Devices</div>
-          <div class='segment' id='segmentSettings' ng-class='{active: sidebar.segment==1}' ng-click='sidebar.segment=1'>Settings</div>
+          <div class='segment' id='segmentStatistics' ng-class='{active: sidebar.segment==1}' ng-click='sidebar.segment=1'>Statistics</div>
+          <div class='segment' id='segmentSettings' ng-class='{active: sidebar.segment==2}' ng-click='sidebar.segment=2'>Settings</div>
         </div>
       </div>
       <div class='content'>
-        <div id='settings' ng-show='sidebar.segment==1'>
+        <div include-directory-template='directory' ng-if='directory' ng-show='sidebar.segment==0'></div>
+        <div include-statistics-template='statistics' ng-if='statistics' ng-show='sidebar.segment==1'></div>
+        <div id='settings' ng-show='sidebar.segment==2'>
           <div class='section'>
             <div class='section-title'>
               <h3>Watch</h3>
@@ -69,7 +89,6 @@
             <div class='clear'></div>
           </div>
         </div>
-        <div include-directory-template='directory' ng-if='directory' ng-show='sidebar.segment==0'></div>
       </div>
     </div>
     <div droppable='placeDevice' id='canvas' jsplumb-container ng-click='sidebar.expanded = false'>
@@ -90,7 +109,8 @@
         <div class='device' draggable-distance='5' draggable-helper='original' draggable-via-jsplumb='true' draggable='device' ng-class='device.name.toLowerCase()' ng-style='{left: device.placement.left, top: device.placement.top}'>
           <header ng-switch='device.editing'>
             <div class='block_control'>
-              <div class='close' ng-click='destroyDevice(device)' title='Delete device from current configuration'>x</div>
+              <div class='control close' ng-click='destroyDevice(device)' title='Delete device from current configuration'>x</div>
+              <div class='control statistics' toggle-device-statistic='device'>%</div>
               <div class='clear'></div>
             </div>
             <input inline-editor='device.rename(); device.editing = false' ng-model='device.name' ng-switch-when='true' type='text'>
