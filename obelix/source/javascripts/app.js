@@ -9,6 +9,7 @@
 //= require 'backbone'
 //= require 'jquery.qtip'
 //= require 'tourist'
+//= require 'canvasjs'
 //= require_self
 
 var app = angular.module('Obelix', []);
@@ -393,7 +394,7 @@ app.factory('Connection', ['Storage', function(Storage) {
   return Connection;
 }]);
 
-app.factory('Device', ['$http', '$q', 'Storage', 'Property', 'Watch', 'Connection',function($http, $q, Storage, Property, Watch, Connection) {
+app.factory('Device', ['$http', '$q', '$timeout', 'Storage', 'Property', 'Watch', 'Connection',function($http, $q, $timeout, Storage, Property, Watch, Connection) {
   var Device = function(href, name) {
     this.loadedDefer = $q.defer();
     this.href = href;
@@ -415,6 +416,16 @@ app.factory('Device', ['$http', '$q', 'Storage', 'Property', 'Watch', 'Connectio
           'of': null,
           'in': null,
           'out': null
+        }
+    };
+    this.statistics = {
+        history: {
+          enabled: false,
+          properties: []
+        },
+        statisticBox: {
+            expanded: false,
+            chartsContainerContainer: null
         }
     };
     
@@ -448,6 +459,7 @@ app.factory('Device', ['$http', '$q', 'Storage', 'Property', 'Watch', 'Connectio
     },
 
     parse: function(response) {
+      // console.log(response);
       if (response['is']) {
         this.obix.contractList['is'] = response['is'];
       }
@@ -477,8 +489,28 @@ app.factory('Device', ['$http', '$q', 'Storage', 'Property', 'Watch', 'Connectio
           node['href'] = URI(node['href']).absoluteTo(this.href).toString();
           return new Property(node);
         }
+        
+        
       }.bind(this)).filter({valid:true});
+      
+      var _self = this;
+      // Retrieve the links to history enabled values
+      response['nodes'].map(function(node) {
+        if (node['is'] == 'obix:History') {
+          var _href = _self.href + node.href.substring(node.href.indexOf('/'));
+          _self.statistics.history.enabled = true;
+          _self.statistics.history.properties.push({
+            name: node.name.substring(0, node.name.lastIndexOf(' history')),
+            href: _href,
+            chart: null,
+            chartDataPoints: [],
+            chartContainerID: _href.replace(/\//g, '-').toLowerCase(),
+            chartLineColor: null
+          });
+        }  
+      });
 
+      console.log(_self);
       // Set .groupCommEnabled=true for properties specified in the <ref>s
       propertiesWithGroupCommEnabled.each(function(name) {
         var p = this.properties.find({name:name});
@@ -488,7 +520,7 @@ app.factory('Device', ['$http', '$q', 'Storage', 'Property', 'Watch', 'Connectio
 
     // Updates property values from a watch response
     refresh: function(response) {
-      // console.log("Updating",this.href);
+      console.log("Updating",this.href);
       response['nodes'].each(function(node) {
         // console.log("Searching",node['href']);
         var property = this.properties.find({href:node['href']});
@@ -499,6 +531,10 @@ app.factory('Device', ['$http', '$q', 'Storage', 'Property', 'Watch', 'Connectio
       }.bind(this));
     },
 
+    toggleStatisticBox: function() {
+      this.statistics.statisticBox.expanded = !this.statistics.statisticBox.expanded;
+    },
+    
     destroy: function() {
       // Remove from watch
       var href = this.href;
@@ -525,11 +561,16 @@ app.factory('Device', ['$http', '$q', 'Storage', 'Property', 'Watch', 'Connectio
   return Device;
 }]);
 
-app.factory('Sidebar', function() {
-  var _toggleButton = jQuery('#toggleSidebar');
-  var _expanded = false;
-  var _locked = false;
-  var _segment = 0;
+app.factory('Sidebar', ['Storage', function(Storage) {
+  var _expandedStorage = new Storage('sidebar_expanded');
+  var _expanded = ('true' === _expandedStorage.get());
+  var _lockedStorage = new Storage('sidebar_locked');
+  var _locked = ('true' === _lockedStorage.get());
+  var _segmentStorage = new Storage('sidebar_segment');
+  var _segment = parseInt(_segmentStorage.get(), 10);
+  if (Number.isNaN(_segment)) {
+    _segment = 0
+  }
   
   return {
     get expanded() {
@@ -538,11 +579,13 @@ app.factory('Sidebar', function() {
     set expanded(newValue) {
       if (! _locked) {
         _expanded = newValue;
+        _expandedStorage.set(newValue);
       }
     },
     toggle: function() {
       if (! _locked) {
-        _expanded = !_expanded;        
+        _expanded = !_expanded;
+        _expandedStorage.set(_expanded);
       }
     },
     get locked() {
@@ -550,20 +593,116 @@ app.factory('Sidebar', function() {
     }, 
     set locked(newValue) {
       _locked = newValue;
-      if (newValue) {
-        _toggleButton.addClass('disabled');
-      } else {
-        _toggleButton.removeClass('disabled');
-      }
+      _lockedStorage.set(newValue);
     },
     get segment() {
       return _segment;
     }, 
     set segment(newValue) {
       _segment = newValue;
+      _segmentStorage.set(newValue)
     }
   };
-});
+}]);
+
+app.factory('DeviceStatistics', ['$http', '$interval', function($http, $interval) {
+  var _devices = [];
+  var _additionalDevicesData =  [];
+  
+  var lineColors = ['#C7A317', '#E41B17', '#7E354D', '#FF00FF', '#893BFF', '#F88017', '#F88017', '#F88017'];
+  var lineColorIndex = 0;
+  var lineColorsLength = lineColors.length;
+  
+  function getHistoryQueryPayload() {
+    var xmlQueryString = '<obj is="obix:HistoryFilter">'
+      + '<int name="limit" val="10"/>'
+      + '<abstime name="start" val="1970-01-01T00:00:00.000Z"/>'
+      + '<abstime name="end" val="' + new Date().toISOString() + '"/>'
+      + '</obj>';
+    return xmlQueryString;
+  }
+  
+  return {
+    devices: _devices,
+    isRegisteredDevice: function(device) {
+      return _devices.indexOf(device) >= 0;
+    },
+    addDevice: function(device) {
+      if (this.isRegisteredDevice(device)) {
+        return;
+      }
+      _devices.push(device);
+    },
+    removeDevice: function(device) {
+      var deviceIndex = _devices.indexOf(device);
+      if (-1 == deviceIndex) {
+        return;
+      }
+      _devices.splice(deviceIndex, 1);
+      device.statistics.history.properties.each(function(property) {
+        property.chart = null;
+      });
+    },
+    query: function() {
+      $interval(function() {
+        _devices.forEach(function(_device) {
+          _device.statistics.history.properties.forEach(function(property){
+            if (null == property.lineColor) {
+              property.lineColor = lineColors[lineColorIndex % lineColorsLength];
+              lineColorIndex++;
+            }
+            $http({
+              method: 'POST',
+              url: property.href + '/query',
+              headers: {
+                'Content-Type': 'text/xml',
+                'Accept': 'application/json'
+              },
+              data: getHistoryQueryPayload()
+            }).success(function(data, status, headers, config) {
+              /* A chart object is created only once for each property and also 
+               * the data source containing the values of the property is created 
+               * once. 
+               * After the creation of the chart object, it remembers its data source
+               * and therefore splice() is used to operate on the array created initially 
+               * as the data source of the chart. Assiging a new empty array to 
+               * property.chartDataPoints does not change the reference the chart uses for 
+               * its data source. Avoid creating a new array object! 
+               */
+              property.chartDataPoints.splice(0);
+              data.nodes[3].nodes.each(function(nodes){
+                property.chartDataPoints.push({
+                  x: new Date(nodes.nodes[0].val),
+                  y: nodes.nodes[1].val
+                });
+              });
+              if (null == property.chart) {
+                property.chart = new CanvasJS.Chart(property.chartContainerID, {
+                  theme: "theme2",
+                  title:{
+                    text: property.name
+                  },
+                  width: 260,
+                  height: 200,
+                  axisY: {
+                    interval: 25
+                  },
+                  data: [{        
+                    type: "line",
+                    lineThickness: 2,  
+                    dataPoints: property.chartDataPoints,
+                    color: property.lineColor
+                  }]
+                });
+              }
+              property.chart.render();
+              });
+            });
+        });
+      }, 5000);
+    }
+  }
+}]);
 
 app.factory('ProjectMembers', [function() {
   var ProjectMember = function(firstName, lastName, website) {
@@ -590,13 +729,14 @@ app.factory('ProjectMembers', [function() {
   }
 }]);
 
-app.controller('MainCtrl', ['$scope','$q','$timeout', '$interval', 'Lobby','Watch','Connection', 'Sidebar', 'ProjectMembers', function($scope, $q, $timeout, $interval, Lobby, Watch, Connection, Sidebar, ProjectMembers) {
+app.controller('MainCtrl', ['$scope','$q','$timeout', '$interval', 'Lobby','Watch','Connection', 'Sidebar', 'DeviceStatistics', 'ProjectMembers', function($scope, $q, $timeout, $interval, Lobby, Watch, Connection, Sidebar, DeviceStatistics, ProjectMembers) {
   // Modal-specific z-index
   jQuery.fn.qtip.modal_zindex = jQuery.fn.qtip.zindex + 1000;
   
   $scope.directory = null;
   $scope.allDevices = [];
   $scope.watch = null;
+  $scope.statistics = DeviceStatistics;
   $scope.projectMembers = ProjectMembers;
 
   var devicesInstantiatedDefer = $q.defer();
@@ -609,6 +749,7 @@ app.controller('MainCtrl', ['$scope','$q','$timeout', '$interval', 'Lobby','Watc
     if (rectsVisible === expectedJsPlumbEndpointRects) {
       $interval.cancel(jsPlumbEndpointRectsVisibleCheckIntervalTimerPromise);
       jsPlumbEndpointRectsRendereredDefer.resolve();
+      $scope.statistics.query();
     }
   }, 250);
   
@@ -726,7 +867,11 @@ app.controller('MainCtrl', ['$scope','$q','$timeout', '$interval', 'Lobby','Watc
   };
   
   $scope.destroyDevice = function(device) {
-    $scope.tourInProgress || device.destroy();
+    if ($scope.tourInProgress) {
+      return;
+    }
+    device.destroy();
+    $scope.statistics.removeDevice(device);
   }
 
   $scope.clear = function() {
@@ -788,6 +933,19 @@ app.directive('draggable', function() {
 // }
 // });
 
+
+app.directive('includeStatisticsTemplate', ['$compile','$templateCache',function($compile, $templateCache) {
+  return {
+    restrict: 'A',
+    terminal: true,
+    scope: {statistics:'=includeStatisticsTemplate'},
+    link: function(scope, element, attrs) {
+      var template = $templateCache.get('statistics_template');
+      element.append(template);
+      $compile(element.contents())(scope.$new());
+    }
+  };
+}]);
 
 app.directive('includeDirectoryTemplate', ['$compile','$templateCache',function($compile, $templateCache) {
   return {
@@ -1088,7 +1246,7 @@ app.directive('obelixTourStarter', ['$timeout', 'Sidebar', 'Storage', function($
   }
   
   function showSidebarSegmentSettings() {
-    Sidebar.segment = 1;
+    Sidebar.segment = 2;
   }
   
   return {
@@ -1412,6 +1570,40 @@ app.directive('obelixTourStarter', ['$timeout', 'Sidebar', 'Storage', function($
       toggleTourStarter(true);
     }
   }
+}]);
+
+app.directive('toggleDeviceStatistic', ['DeviceStatistics', function(DeviceStatistics) {
+  var inStatisticsHTMLClass = 'in-statistic';
+  return {
+    restrict: 'A',
+    link: function(scope, elem, attrs) {
+      var device = scope.$eval(attrs['toggleDeviceStatistic']);
+      if (elem.hasClass(inStatisticsHTMLClass)) {
+        elem.attr('title', 'Remove device from the statistics menu');
+      } else {
+        elem.attr('title', 'Add device to the statistics menu');        
+      }
+      elem.click(function(){
+          if (! device.statistics.history.enabled) {
+            elem
+              .addClass('no-statistic')
+              .attr('title', 'History function is not enabled on this device');
+            return;
+          }
+          if (elem.hasClass(inStatisticsHTMLClass)) {
+            DeviceStatistics.removeDevice(device);
+            elem
+              .removeClass(inStatisticsHTMLClass)
+              .attr('title', 'Add device to the statistics menu');
+          } else {
+            DeviceStatistics.addDevice(device);
+            elem
+              .addClass(inStatisticsHTMLClass)
+              .attr('title', 'Remove device from the statistics menu');
+          }
+        });
+    }
+  };
 }]);
 
 app.filter('comparatorOpEnc', function() {

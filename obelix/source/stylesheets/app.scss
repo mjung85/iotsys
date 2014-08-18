@@ -165,10 +165,13 @@ $gridWidth: 25px;
       margin-bottom: 6px;
     }
   
-    .subdirectory .icon-label {
+    .subdirectory .icon-label,
+    .statistics-box .icon-label {
       padding: 2px 0;
     }
-    .subdirectory .icon-label .icon {
+    
+    .subdirectory .icon-label .icon,
+    .statistics-box .icon-label .icon {
       cursor: pointer;
       background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAQAAAC1+jfqAAAAAmJLR0QAAKqNIzIAAAAJcEhZcwAACxMAAAsTAQCanBgAAAAHdElNRQfeBxMJOy772SrmAAAAHWlUWHRDb21tZW50AAAAAABDcmVhdGVkIHdpdGggR0lNUGQuZQcAAAAiSURBVCjPY2CgO/jP8B9VgImQDsoVMMLtxiHHNBR8QQcAABILBQzycBSgAAAAAElFTkSuQmCC");
       background-position: 0 16px;
@@ -187,7 +190,8 @@ $gridWidth: 25px;
       -webkit-transform: rotate(90deg);
     }
   
-    .subdirectory .icon-label .label {
+    .subdirectory .icon-label .label,
+    .statistics-box .icon-label .label {
       font-weight: bold;
       cursor: pointer;
       display: block;
@@ -197,6 +201,16 @@ $gridWidth: 25px;
       &:hover {
         background-color: #CADEE7;
         color: #6490A3;
+      }
+    }
+    
+    .device-charts-container-container {
+      width: 260px;
+      margin-left: 7px;
+      
+      & .chart_container {
+        height: 200px;
+        margin-bottom: 10px;
       }
     }
   }
@@ -286,17 +300,39 @@ $gridWidth: 25px;
         padding-bottom: 3px;
       }
       
+      .block_control .control {
+        margin-left: 5px;
+        width: 30px;
+      }
+      
       .block_control .close {
         cursor: pointer;
         color: #000000;
         background-color: #ffff00;//rgba(255, 255, 0, 0.6);
         float: right;
         font-size: 13px;
-        padding: 0 11px;
         
         &:hover {
           color: #ffffff;
           background-color: rgba(255,0,0,0.60);
+        }
+      }
+      
+      .block_control .statistics {
+        cursor: pointer;
+        color: #000000;
+        background-color: #ffff00;
+        float: right;
+        font-size: 13px;
+        
+        &:hover, &.in-statistic {
+          color: #ffffff;
+          background-color: rgba(0,255,0,0.60);
+        }
+        
+        &.no-statistic {
+          color: #ffffff;
+          background-color: rgba(200,200,200,0.60);
         }
       }
       
@@ -392,17 +428,18 @@ $gridWidth: 25px;
       padding-top: 4px;
       padding-bottom: 4px;
       border-bottom: 1px solid #fff;
-      width: 50%;
+      width: 33%;
       
       &:hover {
-        text-decoration: underline;
+        background: yellow;
+        color: #000;
+        font-weight: bold;
       }
       
       &.active {
         background: #fff;
         color: #6490A3;
         font-weight: bold;
-        text-decoration: underline;
       }
       
   }
