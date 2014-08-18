@@ -37,4 +37,6 @@ public interface UIDb {
 	public void addUser(User u);
 	public void deleteUser(String name);
 	public void updateUser(String name, User u);
+	
+	public boolean authenticateUser(String name, String password);
 }

@@ -37,8 +37,6 @@ import org.apache.catalina.LifecycleException;
 import org.apache.catalina.Service;
 import org.apache.catalina.connector.Connector;
 import org.apache.catalina.startup.Tomcat;
-import org.apache.http.HttpRequest;
-import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.json.JSONException;
 
@@ -49,7 +47,6 @@ import at.ac.tuwien.auto.iotsys.commons.interceptor.InterceptorRequestImpl;
 import at.ac.tuwien.auto.iotsys.commons.interceptor.InterceptorResponse;
 import at.ac.tuwien.auto.iotsys.commons.interceptor.InterceptorResponse.StatusCode;
 import at.ac.tuwien.auto.iotsys.commons.interceptor.Parameter;
-import at.ac.tuwien.auto.iotsys.commons.persistent.models.User;
 import at.ac.tuwien.auto.iotsys.gateway.interceptor.InterceptorBrokerImpl;
 import at.ac.tuwien.auto.iotsys.gateway.util.ExiUtil;
 import at.ac.tuwien.auto.iotsys.gateway.util.JsonUtil;
@@ -172,8 +169,7 @@ public class TomcatServer {
 
 					log.info("Service username : " + username);
 
-					User u = obixServer.getUidb().getUser(username);
-					if ((u != null) && u.getRole().equals("admin")){
+					if (obixServer.getUidb().authenticateUser(username, password)){
 						HttpSession session = req.getSession(true);
 						session.setAttribute("authenticated", true);
 						resp.sendRedirect("/");

@@ -32,6 +32,7 @@ public class User extends CouchDbDocument {
 	@JsonProperty("_id")
 	String name;
 	String password;
+	String salt;
 	String role;
 	
 	public User(){}
@@ -62,4 +63,11 @@ public class User extends CouchDbDocument {
 	public void setRole(String role) {
 		this.role = role;
 	}
+	public String getSalt() {
+		return salt;
+	}
+	public void setSalt(String salt) {
+		this.salt = salt;
+	}
+	
 }
