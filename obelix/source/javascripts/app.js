@@ -669,6 +669,10 @@ app.factory('DeviceStatistics', ['$http', '$interval', function($http, $interval
                * its data source. Avoid creating a new array object! 
                */
               property.chartDataPoints.splice(0);
+              if (! data.nodes[3].nodes) {
+                jQuery('#'+property.chartContainerID).text('Currently no data available.');
+                return;
+              }
               data.nodes[3].nodes.each(function(nodes){
                 property.chartDataPoints.push({
                   x: new Date(nodes.nodes[0].val),
