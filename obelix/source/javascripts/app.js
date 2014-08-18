@@ -510,7 +510,6 @@ app.factory('Device', ['$http', '$q', '$timeout', 'Storage', 'Property', 'Watch'
         }  
       });
 
-      console.log(_self);
       // Set .groupCommEnabled=true for properties specified in the <ref>s
       propertiesWithGroupCommEnabled.each(function(name) {
         var p = this.properties.find({name:name});
