@@ -84,4 +84,10 @@ public class UIDbImpl implements UIDb {
 		sample.put("device_name", "awefjawei");
 		return sample;
 	}
+
+	@Override
+	public boolean authenticateUser(String name, String password) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }

@@ -19,10 +19,20 @@
 */
 package at.ac.tuwien.auto.iotsys.commons.persistent;
 
+import java.math.BigInteger;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.KeySpec;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 import java.util.logging.Logger;
 
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.PBEKeySpec;
+
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.collections.map.HashedMap;
 import org.ektorp.CouchDbConnector;
 import org.ektorp.impl.StdCouchDbConnector;
 import org.ektorp.support.CouchDbRepositorySupport;
@@ -109,6 +119,24 @@ public class UIDbRepo extends CouchDbRepositorySupport<User> implements UIDb {
 
 	@Override
 	public void addUser(User u) {
+		byte[] salt = new byte[16];
+		(new Random()).nextBytes(salt);
+		KeySpec spec = new PBEKeySpec(u.getPassword().toCharArray(), salt, 65536, 128);
+		SecretKeyFactory f;
+		try {
+			f = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
+			byte[] hash = f.generateSecret(spec).getEncoded();
+			String saltStr = new BigInteger(1, salt).toString(16);
+			String hasedPassword = new BigInteger(1, hash).toString(16);
+			u.setSalt(saltStr);
+			u.setPassword(hasedPassword);
+		} catch (NoSuchAlgorithmException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InvalidKeySpecException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		db.create(u);
 	}
 
@@ -131,5 +159,25 @@ public class UIDbRepo extends CouchDbRepositorySupport<User> implements UIDb {
 		uiStorageMap.remove("_rev");
 		uiStorageMap.remove("_id");
 		return uiStorageMap;
+	}
+
+	@Override
+	public boolean authenticateUser(String name, String plainPassword) {
+		User u = getUser(name);
+		
+		byte[] salt = new BigInteger(u.getSalt(), 16).toByteArray();
+		KeySpec spec = new PBEKeySpec(plainPassword.toCharArray(), salt, 65536, 128);
+		SecretKeyFactory f;
+		try {
+			f = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
+			byte[] hash = f.generateSecret(spec).getEncoded();
+			String hasedPassword = new BigInteger(1, hash).toString(16);
+			return hasedPassword.equals(u.getPassword()) ? true : false;
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		} catch (InvalidKeySpecException e) {
+			e.printStackTrace();
+		}
+		return false;
 	}
 }
