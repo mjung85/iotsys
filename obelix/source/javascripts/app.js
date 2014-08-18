@@ -1550,6 +1550,10 @@ app.directive('obelixTourStarter', ['$timeout', 'Sidebar', 'Storage', function($
           at: 'center right',
           setup: function(tour, options) {
             obelixTour.step = this;
+            $timeout(function() {
+              jQuery('#sidebar > .content:first').scrollTop(0);
+              showSidebarSegmentStatistics();
+            }, 0);
             return {
               target: options.droppedDevices[2]
             }
