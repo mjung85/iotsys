@@ -1184,9 +1184,11 @@ app.directive('tourDevice', function() {
     link: function(scope, el, attrs) {
       var deviceName = scope.$eval(attrs['tourDevice']).name.toLowerCase();
       if (deviceName === 'virtualpushbutton') {
-        jQuery(el).attr('id', 'tourDeviceButton');
+        el.attr('id', 'tourDeviceButton');
       } else if (deviceName === 'virtuallight') {
-        jQuery(el).attr('id', 'tourDeviceLight');
+        el.attr('id', 'tourDeviceLight');
+      } else if (deviceName === 'vcomplexsunblind') {
+        el.attr('id', 'tourDeviceHistory')
       }
     }
   };
@@ -1245,6 +1247,10 @@ app.directive('obelixTourStarter', ['$timeout', 'Sidebar', 'Storage', function($
     Sidebar.segment = 0;
   }
   
+  function showSidebarSegmentStatistics() {
+    Sidebar.segment = 1;
+  }
+  
   function showSidebarSegmentSettings() {
     Sidebar.segment = 2;
   }
@@ -1279,84 +1285,107 @@ app.directive('obelixTourStarter', ['$timeout', 'Sidebar', 'Storage', function($
       var obelixTour = {};
       
       var tourSteps = [{
-        title: 'Menu Button',
-        content: '<p>This is the menu toggle button. Click it to open/close the menu.</p>',
-        closeButton: true,
-        highlightTarget: true,
-        target: jQuery('div#toggleSidebar'),
-        my: 'left center',
-        at: 'right center',
-        bind: ['onToggleButtonClick'],
-        onToggleButtonClick: function(tour, options, view, element) {
-          tour.next();
-        },
-        setup: function(tour, options) {
-          obelixTour.step = this;
-          toggleSidebarButton(true);
-          showSidebar(false);
-          this.target.bind('click', this.onToggleButtonClick);
-        },
-        teardown: function(tour, options) {
-          this.target.unbind('click', this.onToggleButtonClick);
-          toggleSidebarButton(false);
-        }
+          title: 'Menu Button',
+          content: '<p>This is the menu toggle button. Click it to open/close the menu.</p>',
+          closeButton: true,
+          highlightTarget: true,
+          target: jQuery('div#toggleSidebar'),
+          my: 'left center',
+          at: 'right center',
+          bind: ['onToggleButtonClick'],
+          onToggleButtonClick: function(tour, options, view, element) {
+            tour.next();
+          },
+          setup: function(tour, options) {
+            obelixTour.step = this;
+            toggleSidebarButton(true);
+            showSidebar(false);
+            this.target.bind('click', this.onToggleButtonClick);
+          },
+          teardown: function(tour, options) {
+            this.target.unbind('click', this.onToggleButtonClick);
+            toggleSidebarButton(false);
+          }
         }, {
-        title: 'Menu', 
-        content: '<p>The menu contains two main sections: "Devices" and "Settings".</p>',
-        closeButton:true,
-        highlightTarget: false,
-        nextButton: true,
-        target: jQuery('div#sidebar-sublayer'),
-        my: 'left center',
-        at: 'right center',
-        setup: function(tour, options) {
-          obelixTour.step = this;
-          jQuery('#sidebar')
-            .addClass('tour-highlight')
-            .children('.content:first')
-              .scrollTop(0);
-        },
-        teardown: function(tour, options) {
-          jQuery('#sidebar').removeClass('tour-highlight');
-        }
+          title: 'Menu', 
+          content: '<p>The menu contains three main sections: "Devices", "Statistics" and "Settings".</p>',
+          closeButton:true,
+          highlightTarget: false,
+          nextButton: true,
+          target: jQuery('div#sidebar-sublayer'),
+          my: 'left center',
+          at: 'right center',
+          setup: function(tour, options) {
+            obelixTour.step = this;
+            jQuery('#sidebar')
+              .addClass('tour-highlight')
+              .children('.content:first')
+                .scrollTop(0);
+          },
+          teardown: function(tour, options) {
+            jQuery('#sidebar').removeClass('tour-highlight');
+          }
         }, {
-        title: 'Section "Settings"', 
-        content: '<p>This section provides the possibility to control some aspects of this client. </p>',
-        closeButton:true,
-        highlightTarget: true,
-        nextButton: true,
-        target: jQuery('div#segmentSettings'),
-        my: 'top left',
-        at: 'bottom right',
-        setup: function(tour, options) {
-          obelixTour.step = this;
-          jQuery('#sidebar > .content:first')
-            .scrollTop(0);
-          showSidebarSegmentSettings();
-        },
-        teardown: function(tour, options) {
-          showSidebarSegmentDevices();
-          $timeout(function() {
-            scope.directory.subdirectories[1].expanded=true;
-          }, 0);
-        }
+          title: 'Section "Settings"', 
+          content: '<p>This section provides the possibility to control some aspects of this client. </p>',
+          closeButton:true,
+          highlightTarget: true,
+          nextButton: true,
+          target: jQuery('div#segmentSettings'),
+          my: 'top left',
+          at: 'bottom right',
+          setup: function(tour, options) {
+            obelixTour.step = this;
+            $timeout(function() {
+              jQuery('#sidebar > .content:first').scrollTop(0);
+              showSidebarSegmentSettings();
+            }, 0);
+          },
+          teardown: function(tour, options) {
+            $timeout(function() {
+              showSidebarSegmentStatistics();
+              scope.directory.subdirectories[1].expanded=true;
+            }, 0);
+          }
         }, {
-        title: 'Section "Devices"', 
-        content: '<p>This section contains the list of all known devices (represented as blocks), which are organized in lists (a list may contain sublists). A list can be opened/closed by clicking on it.</p>',
-        closeButton:true,
-        highlightTarget: true,
-        nextButton: true,
-        target: jQuery('div#segmentDevices'),
-        my: 'top left',
-        at: 'bottom right',
-        setup: function(tour, options) {
-          obelixTour.step = this;
-          showSidebarSegmentDevices();
-          // document.getElementById('#canvas
-          // .content').scrollIntoView(false);
-        },
-        teardown: function(tour, options) {
-        }
+          title: 'Section "Statistics"', 
+          content: '<p>This section displays some statistics of devices (e. g. value history). </p>',
+          closeButton:true,
+          highlightTarget: true,
+          nextButton: true,
+          target: jQuery('div#segmentStatistics'),
+          my: 'top left',
+          at: 'bottom right',
+          setup: function(tour, options) {
+            obelixTour.step = this;
+            $timeout(function() {
+              jQuery('#sidebar > .content:first').scrollTop(0);
+              showSidebarSegmentStatistics();
+            }, 0);
+          },
+          teardown: function(tour, options) {
+            $timeout(function() {
+              scope.directory.subdirectories[1].expanded=true;
+              showSidebarSegmentDevices();
+            }, 0);
+          }  
+        }, {
+          title: 'Section "Devices"', 
+          content: '<p>This section contains the list of all known devices (represented as blocks), which are organized in lists (a list may contain sublists). A list can be opened/closed by clicking on it.</p>',
+          closeButton:true,
+          highlightTarget: true,
+          nextButton: true,
+          target: jQuery('div#segmentDevices'),
+          my: 'top left',
+          at: 'bottom right',
+          setup: function(tour, options) {
+            obelixTour.step = this;
+            showSidebarSegmentDevices();
+            // document.getElementById('#canvas
+            // .content').scrollIntoView(false);
+          },
+          teardown: function(tour, options) {
+          }
         }, {
          title: 'Virtual Push Button',
          content: '<p>Drag and drop the virtual push button device block onto the grid.</p>',
@@ -1426,8 +1455,8 @@ app.directive('obelixTourStarter', ['$timeout', 'Sidebar', 'Storage', function($
            options.droppedDevices.push(jQuery('#canvas .device.virtuallight').draggable('disable'));
          }
         }, {
-         title: 'Device Box',
-         content: '<p>A device box can be deleted from the configuration by clicking on the button "x" (during the tour the button\'s functionality has been disabled). A device box contains interactive elements to modify its behaviour. It can also be  moved around using the mouse (but during the tour it is not possible to move around the device boxes of the virtual push button and virtual light).</p>',
+         title: 'Device Box (1/2)',
+         content: '<p>A device box can be deleted from the configuration by clicking on the button "x" (during the tour the button\'s functionality has been disabled). A device box contains interactive elements to modify its behaviour. It can also be  moved around using the mouse (but during the tour it is not possible to move around the device boxes of the virtual push button, virtual light and virtual complex sun blind).</p>',
          closeButton: true,
          highlightTarget: true,
          nextButton: true,
@@ -1478,6 +1507,56 @@ app.directive('obelixTourStarter', ['$timeout', 'Sidebar', 'Storage', function($
              .removeClass('tour-highlight');
          }
         }, {
+          title: 'Statistics',
+          content: '<p>Drag and drop the virtual complex sun blind device block onto the grid.</p>',
+          closeButton: true,
+          highlightTarget: true,
+          nextButton: false,
+          my: 'bottom left',
+          at: 'top right',
+          setup: function(tour, options) {
+            obelixTour.step = this;
+            document.getElementById('tourDeviceHistory').scrollIntoView(false);
+            options.tourDeviceDropZone
+              .css({'top': '280px', 'left': '60%'})
+              .addClass('tour-highlight')
+              .droppable()
+              .droppable({
+                accept: 'label#tourDeviceHistory',
+                drop: function( event, ui ) {
+                  options.droppedDeviceHistory = jQuery(event.target)
+                  options.droppedDeviceHistory
+                    .droppable()
+                    .droppable('destroy');
+                  tour.next();
+                }
+              });
+            return {
+              target: jQuery('label#tourDeviceHistory')
+            }
+          },
+          teardown: function(tour, options) {
+            options.tourDeviceDropZone
+              .removeClass('tour-highlight')
+            options.droppedDevices.push(jQuery('#canvas .device.vcomplexsunblind').draggable('disable'));
+          }
+        }, {
+          title: 'Device Box (2/2)',
+          content: '<p>Statistics of a device box can be displayed in the sidebar section "Statistics" by clicking on the button "%". If a device has its statistical functionality enabled the button will turn and stay green until the button is clicked again. Clicking a second time, removes the device from the statistic. If the statistical functionality is not enabled for a device the button will turn and stay gray. Click on the button "%" to add this device to the statistic and set the sliders to a few different positions. Clicking on the device name in the statistic section will toggle the statistic information display of a device. The charts are interactive (tooltips are displayed when the mouse pointer is hovered over a datapoint) and redrawn every 5 seconds and the latest 10 values are dislpayed.</p>',
+          closeButton: true,
+          highlightTarget: true,
+          nextButton: true,
+          my: 'center left',
+          at: 'center right',
+          setup: function(tour, options) {
+            obelixTour.step = this;
+            return {
+              target: options.droppedDevices[2]
+            }
+          },
+          teardown: function(tour, options) {
+          }
+         }, {
           title: 'Logout',
           content: '<p>Click this symbol to end the current oBeliX session.</p>',
           nextButton: true,
