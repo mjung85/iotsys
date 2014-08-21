@@ -72,7 +72,6 @@ public class TomcatServer {
 			boolean enableAuthen, ObixServer obixServer) throws IOException,
 			ServletException {
 
-		URIs_TO_NON_CRITICAL_RESOURCES.add("/stylesheets/jquery.qtip.css");
 		URIs_TO_NON_CRITICAL_RESOURCES.add("/stylesheets/app.css");
 		
 		this.tomcat = new Tomcat();
