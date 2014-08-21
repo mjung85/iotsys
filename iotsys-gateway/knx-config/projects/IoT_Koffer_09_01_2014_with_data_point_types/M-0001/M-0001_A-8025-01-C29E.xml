@@ -1,0 +1,1041 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<KNX xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" CreatedBy="ETS4" ToolVersion="ETS 4.1.5 (Build 3246)" xmlns="http://knx.org/xml/project/11">
+  <ManufacturerData>
+    <Manufacturer RefId="M-0001">
+      <ApplicationPrograms>
+        <ApplicationProgram Id="M-0001_A-8025-01-C29E" Name="0701 FCU Operator Panel Office 802501" ApplicationNumber="32805" ApplicationVersion="1" ProgramType="ApplicationProgram" MaskVersion="MV-0701" LoadProcedureStyle="ProductProcedure" PeiType="1" HelpFile="" DefaultLanguage="en-US" DynamicTableManagement="0" Linkable="0" PreEts4Style="1" NonRegRelevantDataVersion="0" Hash="wnccp224mNaWzez6aecZng==" ConvertedFromPreEts4Data="1" Broken="0" IPConfig="Tool" AdditionalAddressesCount="0" DownloadInfoIncomplete="0" CreatedFromLegacySchemaVersion="0">
+          <Static>
+            <Code>
+              <AbsoluteSegment Id="M-0001_A-8025-01-C29E_AS-0700" Address="1792" Size="36" UserMemory="0">
+                <Data>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</Data>
+                <Mask>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</Mask>
+              </AbsoluteSegment>
+              <AbsoluteSegment Id="M-0001_A-8025-01-C29E_AS-0724" Address="1828" Size="1" UserMemory="0">
+                <Data>AA==</Data>
+                <Mask>AA==</Mask>
+              </AbsoluteSegment>
+              <AbsoluteSegment Id="M-0001_A-8025-01-C29E_AS-4000" Address="16384" Size="85" UserMemory="0">
+                <Data>AQAA//8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==</Data>
+                <Mask>/wAA/////////////////////////////////////////////////////////////////////////////////////////////////////////////w==</Mask>
+              </AbsoluteSegment>
+              <AbsoluteSegment Id="M-0001_A-8025-01-C29E_AS-4055" Address="16469" Size="81" UserMemory="0">
+                <Data>AAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</Data>
+              </AbsoluteSegment>
+              <AbsoluteSegment Id="M-0001_A-8025-01-C29E_AS-40A6" Address="16550" Size="114" UserMemory="0">
+                <Data>DwcABxBPCAcS1wgHFE8ABxXXAAcW1wAHF9cABxjXAAcZRwAHGtcABxtHBwcc1wAHHk8IByADAAchAwAHIgMAAP8AABQAAFWq/wIADwItAgoPDzcKBgP+1AEsAB4AAAEAABQACgwDCwEACgAAAAAAAAAA</Data>
+              </AbsoluteSegment>
+            </Code>
+            <ParameterTypes>
+              <ParameterType Id="M-0001_A-8025-01-C29E_PT-en.5Factivate.5Fdeactivate" Name="en_activate_deactivate" Plugin="">
+                <TypeRestriction Base="Value" SizeInBit="8">
+                  <Enumeration Id="M-0001_A-8025-01-C29E_PT-en.5Factivate.5Fdeactivate_EN-0" DisplayOrder="0" Text="activated" Value="0" />
+                  <Enumeration Id="M-0001_A-8025-01-C29E_PT-en.5Factivate.5Fdeactivate_EN-1" DisplayOrder="1" Text="$" Value="1" />
+                </TypeRestriction>
+              </ParameterType>
+              <ParameterType Id="M-0001_A-8025-01-C29E_PT-en.5FbitIndex" Name="en_bitIndex" Plugin="">
+                <TypeRestriction Base="Value" SizeInBit="8">
+                  <Enumeration Id="M-0001_A-8025-01-C29E_PT-en.5FbitIndex_EN-2" DisplayOrder="0" Text="$" Value="2" />
+                  <Enumeration Id="M-0001_A-8025-01-C29E_PT-en.5FbitIndex_EN-6" DisplayOrder="1" Text="$" Value="6" />
+                  <Enumeration Id="M-0001_A-8025-01-C29E_PT-en.5FbitIndex_EN-3" DisplayOrder="2" Text="$" Value="3" />
+                  <Enumeration Id="M-0001_A-8025-01-C29E_PT-en.5FbitIndex_EN-0" DisplayOrder="3" Text="$" Value="0" />
+                  <Enumeration Id="M-0001_A-8025-01-C29E_PT-en.5FbitIndex_EN-10" DisplayOrder="4" Text="$" Value="10" />
+                  <Enumeration Id="M-0001_A-8025-01-C29E_PT-en.5FbitIndex_EN-15" DisplayOrder="6" Text="$" Value="15" />
+                  <Enumeration Id="M-0001_A-8025-01-C29E_PT-en.5FbitIndex_EN-12" DisplayOrder="7" Text="$" Value="12" />
+                </TypeRestriction>
+              </ParameterType>
+              <ParameterType Id="M-0001_A-8025-01-C29E_PT-en.5FCommObject" Name="en_CommObject" Plugin="">
+                <TypeRestriction Base="Value" SizeInBit="8">
+                  <Enumeration Id="M-0001_A-8025-01-C29E_PT-en.5FCommObject_EN-11" DisplayOrder="0" Text="$" Value="11" />
+                </TypeRestriction>
+              </ParameterType>
+              <ParameterType Id="M-0001_A-8025-01-C29E_PT-en.5FdevType" Name="en_devType" Plugin="">
+                <TypeRestriction Base="Value" SizeInBit="8">
+                  <Enumeration Id="M-0001_A-8025-01-C29E_PT-en.5FdevType_EN-0" DisplayOrder="0" Text="$" Value="0" />
+                  <Enumeration Id="M-0001_A-8025-01-C29E_PT-en.5FdevType_EN-1" DisplayOrder="1" Text="$" Value="1" />
+                </TypeRestriction>
+              </ParameterType>
+              <ParameterType Id="M-0001_A-8025-01-C29E_PT-en.5Fdrehzahlstufen" Name="en_drehzahlstufen" Plugin="">
+                <TypeRestriction Base="Value" SizeInBit="8">
+                  <Enumeration Id="M-0001_A-8025-01-C29E_PT-en.5Fdrehzahlstufen_EN-1" DisplayOrder="0" Text="1" Value="1" />
+                  <Enumeration Id="M-0001_A-8025-01-C29E_PT-en.5Fdrehzahlstufen_EN-2" DisplayOrder="1" Text="2" Value="2" />
+                  <Enumeration Id="M-0001_A-8025-01-C29E_PT-en.5Fdrehzahlstufen_EN-3" DisplayOrder="2" Text="3" Value="3" />
+                </TypeRestriction>
+              </ParameterType>
+              <ParameterType Id="M-0001_A-8025-01-C29E_PT-en.5Fkomfortumschaltung" Name="en_komfortumschaltung" Plugin="">
+                <TypeRestriction Base="Value" SizeInBit="8">
+                  <Enumeration Id="M-0001_A-8025-01-C29E_PT-en.5Fkomfortumschaltung_EN-0" DisplayOrder="0" Text="local push button" Value="0" />
+                  <Enumeration Id="M-0001_A-8025-01-C29E_PT-en.5Fkomfortumschaltung_EN-1" DisplayOrder="1" Text="presence detector" Value="1" />
+                </TypeRestriction>
+              </ParameterType>
+              <ParameterType Id="M-0001_A-8025-01-C29E_PT-en.5FlangeTaste" Name="en_langeTaste" Plugin="">
+                <TypeRestriction Base="Value" SizeInBit="16">
+                  <Enumeration Id="M-0001_A-8025-01-C29E_PT-en.5FlangeTaste_EN-10" DisplayOrder="0" Text="1 s" Value="10" />
+                  <Enumeration Id="M-0001_A-8025-01-C29E_PT-en.5FlangeTaste_EN-15" DisplayOrder="1" Text="1,5 s" Value="15" />
+                  <Enumeration Id="M-0001_A-8025-01-C29E_PT-en.5FlangeTaste_EN-20" DisplayOrder="2" Text="2 s" Value="20" />
+                </TypeRestriction>
+              </ParameterType>
+              <ParameterType Id="M-0001_A-8025-01-C29E_PT-en.5FshortIndex" Name="en_shortIndex" Plugin="">
+                <TypeRestriction Base="Value" SizeInBit="8">
+                  <Enumeration Id="M-0001_A-8025-01-C29E_PT-en.5FshortIndex_EN-0" DisplayOrder="0" Text="$" Value="0" />
+                  <Enumeration Id="M-0001_A-8025-01-C29E_PT-en.5FshortIndex_EN-1" DisplayOrder="1" Text="$" Value="1" />
+                  <Enumeration Id="M-0001_A-8025-01-C29E_PT-en.5FshortIndex_EN-3" DisplayOrder="2" Text="$" Value="3" />
+                </TypeRestriction>
+              </ParameterType>
+              <ParameterType Id="M-0001_A-8025-01-C29E_PT-en.5Fsollwertversch" Name="en_sollwertversch" Plugin="">
+                <TypeRestriction Base="Value" SizeInBit="8">
+                  <Enumeration Id="M-0001_A-8025-01-C29E_PT-en.5Fsollwertversch_EN-0" DisplayOrder="0" Text="-1 ... +1 K" Value="0" />
+                  <Enumeration Id="M-0001_A-8025-01-C29E_PT-en.5Fsollwertversch_EN-1" DisplayOrder="1" Text="-2 ... +2 K" Value="1" />
+                  <Enumeration Id="M-0001_A-8025-01-C29E_PT-en.5Fsollwertversch_EN-2" DisplayOrder="2" Text="-3 ... +3 K" Value="2" />
+                  <Enumeration Id="M-0001_A-8025-01-C29E_PT-en.5Fsollwertversch_EN-3" DisplayOrder="3" Text="-4 ... +4 K" Value="3" />
+                </TypeRestriction>
+              </ParameterType>
+              <ParameterType Id="M-0001_A-8025-01-C29E_PT-en.5Fumschalttyp" Name="en_umschalttyp" Plugin="">
+                <TypeRestriction Base="Value" SizeInBit="8">
+                  <Enumeration Id="M-0001_A-8025-01-C29E_PT-en.5Fumschalttyp_EN-0" DisplayOrder="0" Text="Standby mode" Value="0" />
+                  <Enumeration Id="M-0001_A-8025-01-C29E_PT-en.5Fumschalttyp_EN-1" DisplayOrder="1" Text="Night mode" Value="1" />
+                </TypeRestriction>
+              </ParameterType>
+              <ParameterType Id="M-0001_A-8025-01-C29E_PT-n.5Fdummy" Name="n_dummy" Plugin="">
+                <TypeNone />
+              </ParameterType>
+              <ParameterType Id="M-0001_A-8025-01-C29E_PT-si.5Ftemp" Name="si_temp" Plugin="">
+                <TypeNumber maxInclusive="32767" minInclusive="-32768" SizeInBit="16" Type="signedInt" />
+              </ParameterType>
+              <ParameterType Id="M-0001_A-8025-01-C29E_PT-si.5Ftime" Name="si_time" Plugin="">
+                <TypeNumber maxInclusive="65535" minInclusive="0" SizeInBit="16" Type="unsignedInt" />
+              </ParameterType>
+              <ParameterType Id="M-0001_A-8025-01-C29E_PT-ui.5Fdiff" Name="ui_diff" Plugin="">
+                <TypeNumber maxInclusive="65535" minInclusive="0" SizeInBit="16" Type="unsignedInt" />
+              </ParameterType>
+              <ParameterType Id="M-0001_A-8025-01-C29E_PT-ui.5Fflags" Name="ui_flags" Plugin="">
+                <TypeNumber maxInclusive="255" minInclusive="0" SizeInBit="8" Type="unsignedInt" />
+              </ParameterType>
+              <ParameterType Id="M-0001_A-8025-01-C29E_PT-ui.5FluefterDrehzahl" Name="ui_luefterDrehzahl" Plugin="">
+                <TypeNumber maxInclusive="255" minInclusive="1" SizeInBit="8" Type="unsignedInt" />
+              </ParameterType>
+              <ParameterType Id="M-0001_A-8025-01-C29E_PT-ui.5Fdummy" Name="ui_dummy" Plugin="">
+                <TypeNumber maxInclusive="255" minInclusive="0" SizeInBit="8" Type="unsignedInt" />
+              </ParameterType>
+              <ParameterType Id="M-0001_A-8025-01-C29E_PT-ui.5Ftime" Name="ui_time" Plugin="">
+                <TypeNumber maxInclusive="65535" minInclusive="0" SizeInBit="16" Type="unsignedInt" />
+              </ParameterType>
+              <ParameterType Id="M-0001_A-8025-01-C29E_PT-ui.5FluefterDrehzahl0" Name="ui_luefterDrehzahl0" Plugin="">
+                <TypeNumber maxInclusive="0" minInclusive="0" SizeInBit="8" Type="unsignedInt" />
+              </ParameterType>
+            </ParameterTypes>
+            <Parameters>
+              <Parameter Id="M-0001_A-8025-01-C29E_P-1" Name="reserved_4" Text="" ParameterType="M-0001_A-8025-01-C29E_PT-ui.5Fdummy" Access="ReadWrite" Value="0" LegacyPatchAlways="0" SuffixText="">
+                <Memory CodeSegment="M-0001_A-8025-01-C29E_AS-40A6" BitOffset="0" Offset="110" />
+              </Parameter>
+              <Parameter Id="M-0001_A-8025-01-C29E_P-10" Name="APPL_FB_TasterEdgeShort_set_setCyclicMask" Text="" ParameterType="M-0001_A-8025-01-C29E_PT-ui.5Fflags" Access="None" Value="10" LegacyPatchAlways="0" SuffixText="">
+                <Memory CodeSegment="M-0001_A-8025-01-C29E_AS-40A6" BitOffset="0" Offset="83" />
+              </Parameter>
+              <Parameter Id="M-0001_A-8025-01-C29E_P-11" Name="APPL_FB_SollwertDeb_set_s_inputValueIndex" Text="" ParameterType="M-0001_A-8025-01-C29E_PT-en.5FshortIndex" Access="None" Value="0" LegacyPatchAlways="0" SuffixText="">
+                <Memory CodeSegment="M-0001_A-8025-01-C29E_AS-40A6" BitOffset="0" Offset="93" />
+              </Parameter>
+              <Parameter Id="M-0001_A-8025-01-C29E_P-12" Name="APPL_FB_TasterEdge_set_bit_outputCyclicIndex" Text="" ParameterType="M-0001_A-8025-01-C29E_PT-en.5FbitIndex" Access="None" Value="15" LegacyPatchAlways="0" SuffixText="">
+                <Memory CodeSegment="M-0001_A-8025-01-C29E_AS-40A6" BitOffset="0" Offset="80" />
+              </Parameter>
+              <Parameter Id="M-0001_A-8025-01-C29E_P-13" Name="luefterStufen" Text="Number of fan rotational speed steps" ParameterType="M-0001_A-8025-01-C29E_PT-en.5Fdrehzahlstufen" Access="ReadWrite" Value="3" LegacyPatchAlways="0" SuffixText="">
+                <Memory CodeSegment="M-0001_A-8025-01-C29E_AS-40A6" BitOffset="0" Offset="73" />
+              </Parameter>
+              <Parameter Id="M-0001_A-8025-01-C29E_P-14" Name="APPL_sendTempCycle" Text="$" ParameterType="M-0001_A-8025-01-C29E_PT-ui.5Ftime" Access="ReadWrite" Value="0" LegacyPatchAlways="0" SuffixText="">
+                <Memory CodeSegment="M-0001_A-8025-01-C29E_AS-40A6" BitOffset="0" Offset="104" />
+              </Parameter>
+              <Parameter Id="M-0001_A-8025-01-C29E_P-15" Name="untereTemperatur" Text="" ParameterType="M-0001_A-8025-01-C29E_PT-si.5Ftemp" Access="None" Value="-100" LegacyPatchAlways="0" SuffixText="">
+                <Memory CodeSegment="M-0001_A-8025-01-C29E_AS-40A6" BitOffset="0" Offset="86" />
+              </Parameter>
+              <Parameter Id="M-0001_A-8025-01-C29E_P-16" Name="APPL_FB_TasterEdgeShort_set_bit_outputEdgeIndex" Text="" ParameterType="M-0001_A-8025-01-C29E_PT-en.5FbitIndex" Access="None" Value="6" LegacyPatchAlways="0" SuffixText="">
+                <Memory CodeSegment="M-0001_A-8025-01-C29E_AS-40A6" BitOffset="0" Offset="84" />
+              </Parameter>
+              <Parameter Id="M-0001_A-8025-01-C29E_P-17" Name="APPL_FB_TasterEdgeShort_set_bit_inputValueIndex" Text="" ParameterType="M-0001_A-8025-01-C29E_PT-en.5FbitIndex" Access="None" Value="15" LegacyPatchAlways="0" SuffixText="">
+                <Memory CodeSegment="M-0001_A-8025-01-C29E_AS-40A6" BitOffset="0" Offset="81" />
+              </Parameter>
+              <Parameter Id="M-0001_A-8025-01-C29E_P-18" Name="langerTastendruck" Text="Long push button action min." ParameterType="M-0001_A-8025-01-C29E_PT-en.5FlangeTaste" Access="ReadWrite" Value="10" LegacyPatchAlways="0" SuffixText="">
+                <Memory CodeSegment="M-0001_A-8025-01-C29E_AS-40A6" BitOffset="0" Offset="74" />
+              </Parameter>
+              <Parameter Id="M-0001_A-8025-01-C29E_P-19" Name="startupTime" Text="" ParameterType="M-0001_A-8025-01-C29E_PT-si.5Ftime" Access="None" Value="20" LegacyPatchAlways="0" SuffixText="">
+                <Memory CodeSegment="M-0001_A-8025-01-C29E_AS-40A6" BitOffset="0" Offset="66" />
+              </Parameter>
+              <Parameter Id="M-0001_A-8025-01-C29E_P-2" Name="APPL_FB_TasterEdge_set_bit_outputEdgeIndex" Text="" ParameterType="M-0001_A-8025-01-C29E_PT-en.5FbitIndex" Access="None" Value="10" LegacyPatchAlways="0" SuffixText="">
+                <Memory CodeSegment="M-0001_A-8025-01-C29E_AS-40A6" BitOffset="0" Offset="79" />
+              </Parameter>
+              <Parameter Id="M-0001_A-8025-01-C29E_P-20" Name="luefterDrehzahl_0" Text="" ParameterType="M-0001_A-8025-01-C29E_PT-ui.5FluefterDrehzahl0" Access="None" Value="0" LegacyPatchAlways="0" SuffixText="">
+                <Memory CodeSegment="M-0001_A-8025-01-C29E_AS-40A6" BitOffset="0" Offset="69" />
+              </Parameter>
+              <Parameter Id="M-0001_A-8025-01-C29E_P-21" Name="APPL_FB_sendTemp_set_s_inputValueIndex" Text="" ParameterType="M-0001_A-8025-01-C29E_PT-en.5FshortIndex" Access="None" Value="3" LegacyPatchAlways="0" SuffixText="">
+                <Memory CodeSegment="M-0001_A-8025-01-C29E_AS-40A6" BitOffset="0" Offset="101" />
+              </Parameter>
+              <Parameter Id="M-0001_A-8025-01-C29E_P-22" Name="obereTemperatur" Text="" ParameterType="M-0001_A-8025-01-C29E_PT-si.5Ftemp" Access="None" Value="100" LegacyPatchAlways="0" SuffixText="">
+                <Memory CodeSegment="M-0001_A-8025-01-C29E_AS-40A6" BitOffset="0" Offset="88" />
+              </Parameter>
+              <Parameter Id="M-0001_A-8025-01-C29E_P-23" Name="APPL_FB_SollwertDeb_set_sendDifference" Text="" ParameterType="M-0001_A-8025-01-C29E_PT-ui.5Fdiff" Access="None" Value="10" LegacyPatchAlways="0" SuffixText="">
+                <Memory CodeSegment="M-0001_A-8025-01-C29E_AS-40A6" BitOffset="0" Offset="90" />
+              </Parameter>
+              <Parameter Id="M-0001_A-8025-01-C29E_P-24" Name="luefterDrehzahl_1" Text="Fan speed at step 1&#xD;&#xA; (value 1 ... 255)" ParameterType="M-0001_A-8025-01-C29E_PT-ui.5FluefterDrehzahl" Access="ReadWrite" Value="85" LegacyPatchAlways="0" SuffixText="">
+                <Memory CodeSegment="M-0001_A-8025-01-C29E_AS-40A6" BitOffset="0" Offset="70" />
+              </Parameter>
+              <Parameter Id="M-0001_A-8025-01-C29E_P-25" Name="APPL_FB_SollwertDeb_set_flags" Text="" ParameterType="M-0001_A-8025-01-C29E_PT-ui.5Fflags" Access="None" Value="0" LegacyPatchAlways="0" SuffixText="">
+                <Memory CodeSegment="M-0001_A-8025-01-C29E_AS-40A6" BitOffset="0" Offset="95" />
+              </Parameter>
+              <Parameter Id="M-0001_A-8025-01-C29E_P-26" Name="luefterDrehzahl_2" Text="Fan speed at step 2&#xD;&#xA; (value 1 ... 255)" ParameterType="M-0001_A-8025-01-C29E_PT-ui.5FluefterDrehzahl" Access="ReadWrite" Value="170" LegacyPatchAlways="0" SuffixText="">
+                <Memory CodeSegment="M-0001_A-8025-01-C29E_AS-40A6" BitOffset="0" Offset="71" />
+              </Parameter>
+              <Parameter Id="M-0001_A-8025-01-C29E_P-27" Name="APPL_FB_SollwertDeb_set_s_outputValueIndex" Text="" ParameterType="M-0001_A-8025-01-C29E_PT-en.5FshortIndex" Access="None" Value="1" LegacyPatchAlways="0" SuffixText="">
+                <Memory CodeSegment="M-0001_A-8025-01-C29E_AS-40A6" BitOffset="0" Offset="94" />
+              </Parameter>
+              <Parameter Id="M-0001_A-8025-01-C29E_P-28" Name="APPL_FB_TasterEdgeShort_set_setEdgeMask" Text="" ParameterType="M-0001_A-8025-01-C29E_PT-ui.5Fflags" Access="None" Value="55" LegacyPatchAlways="0" SuffixText="">
+                <Memory CodeSegment="M-0001_A-8025-01-C29E_AS-40A6" BitOffset="0" Offset="82" />
+              </Parameter>
+              <Parameter Id="M-0001_A-8025-01-C29E_P-29" Name="luefterDrehzahl_3" Text="Fan speed at step 3&#xD;&#xA; (value 1 ... 255)" ParameterType="M-0001_A-8025-01-C29E_PT-ui.5FluefterDrehzahl" Access="ReadWrite" Value="255" LegacyPatchAlways="0" SuffixText="">
+                <Memory CodeSegment="M-0001_A-8025-01-C29E_AS-40A6" BitOffset="0" Offset="72" />
+              </Parameter>
+              <Parameter Id="M-0001_A-8025-01-C29E_P-3" Name="reserved_5" Text="" ParameterType="M-0001_A-8025-01-C29E_PT-ui.5Fdummy" Access="ReadWrite" Value="0" LegacyPatchAlways="0" SuffixText="">
+                <Memory CodeSegment="M-0001_A-8025-01-C29E_AS-40A6" BitOffset="0" Offset="111" />
+              </Parameter>
+              <Parameter Id="M-0001_A-8025-01-C29E_P-30" Name="APPL_FB_sendTemp_set_outputObject" Text="" ParameterType="M-0001_A-8025-01-C29E_PT-en.5FCommObject" Access="None" Value="11" LegacyPatchAlways="0" SuffixText="">
+                <Memory CodeSegment="M-0001_A-8025-01-C29E_AS-40A6" BitOffset="0" Offset="102" />
+              </Parameter>
+              <Parameter Id="M-0001_A-8025-01-C29E_P-31" Name="APPL_FB_sendTemp_set_flags" Text="" ParameterType="M-0001_A-8025-01-C29E_PT-ui.5Fflags" Access="None" Value="1" LegacyPatchAlways="0" SuffixText="">
+                <Memory CodeSegment="M-0001_A-8025-01-C29E_AS-40A6" BitOffset="0" Offset="103" />
+              </Parameter>
+              <Parameter Id="M-0001_A-8025-01-C29E_P-32" Name="APPL_FB_SollwertDeb_set_bit_outputUpdatedIndex" Text="" ParameterType="M-0001_A-8025-01-C29E_PT-en.5FbitIndex" Access="None" Value="0" LegacyPatchAlways="0" SuffixText="">
+                <Memory CodeSegment="M-0001_A-8025-01-C29E_AS-40A6" BitOffset="0" Offset="92" />
+              </Parameter>
+              <Parameter Id="M-0001_A-8025-01-C29E_P-33" Name="reserved_0" Text="" ParameterType="M-0001_A-8025-01-C29E_PT-ui.5Fdummy" Access="ReadWrite" Value="0" LegacyPatchAlways="0" SuffixText="">
+                <Memory CodeSegment="M-0001_A-8025-01-C29E_AS-40A6" BitOffset="0" Offset="106" />
+              </Parameter>
+              <Parameter Id="M-0001_A-8025-01-C29E_P-34" Name="APPL_FB_sendTemp_set_sendDifference" Text="$" ParameterType="M-0001_A-8025-01-C29E_PT-ui.5Fdiff" Access="ReadWrite" Value="10" LegacyPatchAlways="0" SuffixText="">
+                <Memory CodeSegment="M-0001_A-8025-01-C29E_AS-40A6" BitOffset="0" Offset="98" />
+              </Parameter>
+              <Parameter Id="M-0001_A-8025-01-C29E_P-35" Name="reserved_1" Text="" ParameterType="M-0001_A-8025-01-C29E_PT-ui.5Fdummy" Access="ReadWrite" Value="0" LegacyPatchAlways="0" SuffixText="">
+                <Memory CodeSegment="M-0001_A-8025-01-C29E_AS-40A6" BitOffset="0" Offset="107" />
+              </Parameter>
+              <Parameter Id="M-0001_A-8025-01-C29E_P-36" Name="reserved_2" Text="" ParameterType="M-0001_A-8025-01-C29E_PT-ui.5Fdummy" Access="ReadWrite" Value="0" LegacyPatchAlways="0" SuffixText="">
+                <Memory CodeSegment="M-0001_A-8025-01-C29E_AS-40A6" BitOffset="0" Offset="108" />
+              </Parameter>
+              <Parameter Id="M-0001_A-8025-01-C29E_P-37" Name="APPL_defaultDelay" Text="" ParameterType="M-0001_A-8025-01-C29E_PT-si.5Ftime" Access="None" Value="20" LegacyPatchAlways="0" SuffixText="">
+                <Memory CodeSegment="M-0001_A-8025-01-C29E_AS-40A6" BitOffset="0" Offset="96" />
+              </Parameter>
+              <Parameter Id="M-0001_A-8025-01-C29E_P-38" Name="APPL_FB_TasterEdge_set_setCyclicMask" Text="" ParameterType="M-0001_A-8025-01-C29E_PT-ui.5Fflags" Access="None" Value="2" LegacyPatchAlways="0" SuffixText="">
+                <Memory CodeSegment="M-0001_A-8025-01-C29E_AS-40A6" BitOffset="0" Offset="78" />
+              </Parameter>
+              <Parameter Id="M-0001_A-8025-01-C29E_P-39" Name="reserved_3" Text="" ParameterType="M-0001_A-8025-01-C29E_PT-ui.5Fdummy" Access="ReadWrite" Value="0" LegacyPatchAlways="0" SuffixText="">
+                <Memory CodeSegment="M-0001_A-8025-01-C29E_AS-40A6" BitOffset="0" Offset="109" />
+              </Parameter>
+              <Parameter Id="M-0001_A-8025-01-C29E_P-4" Name="APPL_FB_TasterEdge_set_bit_inputValueIndex" Text="" ParameterType="M-0001_A-8025-01-C29E_PT-en.5FbitIndex" Access="None" Value="2" LegacyPatchAlways="0" SuffixText="">
+                <Memory CodeSegment="M-0001_A-8025-01-C29E_AS-40A6" BitOffset="0" Offset="76" />
+              </Parameter>
+              <Parameter Id="M-0001_A-8025-01-C29E_P-40" Name="umschalttyp" Text="If room is left, switch to" ParameterType="M-0001_A-8025-01-C29E_PT-en.5Fumschalttyp" Access="ReadWrite" Value="1" LegacyPatchAlways="0" SuffixText="">
+                <Memory CodeSegment="M-0001_A-8025-01-C29E_AS-40A6" BitOffset="0" Offset="68" />
+              </Parameter>
+              <Parameter Id="M-0001_A-8025-01-C29E_P-41" Name="APPL_FB_sendTemp_set_bit_sendEnableIndex" Text="" ParameterType="M-0001_A-8025-01-C29E_PT-en.5FbitIndex" Access="None" Value="12" LegacyPatchAlways="0" SuffixText="">
+                <Memory CodeSegment="M-0001_A-8025-01-C29E_AS-40A6" BitOffset="0" Offset="100" />
+              </Parameter>
+              <Parameter Id="M-0001_A-8025-01-C29E_P-5" Name="deviceType" Text="" ParameterType="M-0001_A-8025-01-C29E_PT-en.5FdevType" Access="None" Value="1" LegacyPatchAlways="0" SuffixText="">
+                <Memory CodeSegment="M-0001_A-8025-01-C29E_AS-40A6" BitOffset="0" Offset="64" />
+              </Parameter>
+              <Parameter Id="M-0001_A-8025-01-C29E_P-6" Name="reserved_6" Text="" ParameterType="M-0001_A-8025-01-C29E_PT-ui.5Fdummy" Access="ReadWrite" Value="0" LegacyPatchAlways="0" SuffixText="">
+                <Memory CodeSegment="M-0001_A-8025-01-C29E_AS-40A6" BitOffset="0" Offset="112" />
+              </Parameter>
+              <Parameter Id="M-0001_A-8025-01-C29E_P-7" Name="APPL_FB_TasterEdge_set_setEdgeMask" Text="" ParameterType="M-0001_A-8025-01-C29E_PT-ui.5Fflags" Access="None" Value="45" LegacyPatchAlways="0" SuffixText="">
+                <Memory CodeSegment="M-0001_A-8025-01-C29E_AS-40A6" BitOffset="0" Offset="77" />
+              </Parameter>
+              <Parameter Id="M-0001_A-8025-01-C29E_P-8" Name="reserved_7" Text="" ParameterType="M-0001_A-8025-01-C29E_PT-ui.5Fdummy" Access="ReadWrite" Value="0" LegacyPatchAlways="0" SuffixText="">
+                <Memory CodeSegment="M-0001_A-8025-01-C29E_AS-40A6" BitOffset="0" Offset="113" />
+              </Parameter>
+              <Parameter Id="M-0001_A-8025-01-C29E_P-9" Name="APPL_FB_TasterEdgeShort_set_bit_outputCyclicIndex" Text="" ParameterType="M-0001_A-8025-01-C29E_PT-en.5FbitIndex" Access="None" Value="3" LegacyPatchAlways="0" SuffixText="">
+                <Memory CodeSegment="M-0001_A-8025-01-C29E_AS-40A6" BitOffset="0" Offset="85" />
+              </Parameter>
+              <Parameter Id="M-0001_A-8025-01-C29E_P-77" Name="Allgemein" Text="General" ParameterType="M-0001_A-8025-01-C29E_PT-n.5Fdummy" Access="ReadWrite" Value="" LegacyPatchAlways="0" SuffixText="" />
+              <Parameter Id="M-0001_A-8025-01-C29E_P-78" Name="Ventilator" Text="Fan" ParameterType="M-0001_A-8025-01-C29E_PT-n.5Fdummy" Access="ReadWrite" Value="" LegacyPatchAlways="0" SuffixText="" />
+              <Parameter Id="M-0001_A-8025-01-C29E_P-80" Name="Temperatursensor" Text="Temperature sensor" ParameterType="M-0001_A-8025-01-C29E_PT-n.5Fdummy" Access="ReadWrite" Value="" LegacyPatchAlways="0" SuffixText="" />
+              <Parameter Id="M-0001_A-8025-01-C29E_P-42" Name="invisible" Text="" ParameterType="M-0001_A-8025-01-C29E_PT-n.5Fdummy" Access="None" Value="" LegacyPatchAlways="0" SuffixText="" />
+              <Parameter Id="M-0001_A-8025-01-C29E_P-43" Name="Reserved" Text="" ParameterType="M-0001_A-8025-01-C29E_PT-ui.5Fdummy" Access="None" Value="0" LegacyPatchAlways="0" SuffixText="" />
+              <Parameter Id="M-0001_A-8025-01-C29E_P-45" Name="Invisible" Text="" ParameterType="M-0001_A-8025-01-C29E_PT-n.5Fdummy" Access="None" Value="" LegacyPatchAlways="0" SuffixText="" />
+              <Parameter Id="M-0001_A-8025-01-C29E_P-46" Name="Komfortumschaltung" Text="Switch-over between comfort&#xD;&#xA;and energy-saving mode via" ParameterType="M-0001_A-8025-01-C29E_PT-en.5Fkomfortumschaltung" Access="ReadWrite" Value="0" LegacyPatchAlways="0" SuffixText="" />
+              <Parameter Id="M-0001_A-8025-01-C29E_P-47" Name="Taster" Text="" ParameterType="M-0001_A-8025-01-C29E_PT-n.5Fdummy" Access="None" Value="" LegacyPatchAlways="0" SuffixText="" />
+              <Parameter Id="M-0001_A-8025-01-C29E_P-48" Name="Präsenzmelder" Text="" ParameterType="M-0001_A-8025-01-C29E_PT-n.5Fdummy" Access="None" Value="" LegacyPatchAlways="0" SuffixText="" />
+              <Parameter Id="M-0001_A-8025-01-C29E_P-50" Name="2 Stufen" Text="" ParameterType="M-0001_A-8025-01-C29E_PT-n.5Fdummy" Access="None" Value="" LegacyPatchAlways="0" SuffixText="" />
+              <Parameter Id="M-0001_A-8025-01-C29E_P-51" Name="1 Stufe" Text="" ParameterType="M-0001_A-8025-01-C29E_PT-n.5Fdummy" Access="None" Value="" LegacyPatchAlways="0" SuffixText="" />
+              <Parameter Id="M-0001_A-8025-01-C29E_P-52" Name="3 Stufen" Text="" ParameterType="M-0001_A-8025-01-C29E_PT-n.5Fdummy" Access="None" Value="" LegacyPatchAlways="0" SuffixText="" />
+              <Parameter Id="M-0001_A-8025-01-C29E_P-56" Name="Sollwertverschiebung" Text="Setpoint shift" ParameterType="M-0001_A-8025-01-C29E_PT-en.5Fsollwertversch" Access="ReadWrite" Value="2" LegacyPatchAlways="0" SuffixText="" />
+              <Parameter Id="M-0001_A-8025-01-C29E_P-57" Name="+-1" Text="" ParameterType="M-0001_A-8025-01-C29E_PT-n.5Fdummy" Access="None" Value="" LegacyPatchAlways="0" SuffixText="" />
+              <Parameter Id="M-0001_A-8025-01-C29E_P-58" Name="+-2" Text="" ParameterType="M-0001_A-8025-01-C29E_PT-n.5Fdummy" Access="None" Value="" LegacyPatchAlways="0" SuffixText="" />
+              <Parameter Id="M-0001_A-8025-01-C29E_P-59" Name="+-4" Text="" ParameterType="M-0001_A-8025-01-C29E_PT-n.5Fdummy" Access="None" Value="" LegacyPatchAlways="0" SuffixText="" />
+              <Parameter Id="M-0001_A-8025-01-C29E_P-60" Name="+-3" Text="" ParameterType="M-0001_A-8025-01-C29E_PT-n.5Fdummy" Access="None" Value="" LegacyPatchAlways="0" SuffixText="" />
+              <Parameter Id="M-0001_A-8025-01-C29E_P-79" Name="Temperatursensor" Text="" ParameterType="M-0001_A-8025-01-C29E_PT-n.5Fdummy" Access="None" Value="" LegacyPatchAlways="0" SuffixText="" />
+              <Parameter Id="M-0001_A-8025-01-C29E_P-81" Name="TempSensor" Text="$" ParameterType="M-0001_A-8025-01-C29E_PT-en.5Factivate.5Fdeactivate" Access="None" Value="1" LegacyPatchAlways="0" SuffixText="" />
+              <Parameter Id="M-0001_A-8025-01-C29E_P-82" Name="Deactivated" Text="" ParameterType="M-0001_A-8025-01-C29E_PT-n.5Fdummy" Access="ReadWrite" Value="" LegacyPatchAlways="0" SuffixText="" />
+              <Parameter Id="M-0001_A-8025-01-C29E_P-83" Name="Activated" Text="" ParameterType="M-0001_A-8025-01-C29E_PT-n.5Fdummy" Access="ReadWrite" Value="" LegacyPatchAlways="0" SuffixText="" />
+              <Parameter Id="M-0001_A-8025-01-C29E_P-84" Name="Leerzeile" Text="" ParameterType="M-0001_A-8025-01-C29E_PT-n.5Fdummy" Access="ReadWrite" Value="" LegacyPatchAlways="0" SuffixText="" />
+            </Parameters>
+            <ParameterRefs>
+              <ParameterRef Id="M-0001_A-8025-01-C29E_P-1_R-1" DisplayOrder="0" RefId="M-0001_A-8025-01-C29E_P-1" Tag="1" />
+              <ParameterRef Id="M-0001_A-8025-01-C29E_P-2_R-2" DisplayOrder="1" RefId="M-0001_A-8025-01-C29E_P-2" Tag="2" />
+              <ParameterRef Id="M-0001_A-8025-01-C29E_P-2_R-74" DisplayOrder="1" RefId="M-0001_A-8025-01-C29E_P-2" Tag="74" Value="6" />
+              <ParameterRef Id="M-0001_A-8025-01-C29E_P-3_R-3" DisplayOrder="2" RefId="M-0001_A-8025-01-C29E_P-3" Tag="3" />
+              <ParameterRef Id="M-0001_A-8025-01-C29E_P-4_R-4" DisplayOrder="3" RefId="M-0001_A-8025-01-C29E_P-4" Tag="4" />
+              <ParameterRef Id="M-0001_A-8025-01-C29E_P-4_R-76" DisplayOrder="3" RefId="M-0001_A-8025-01-C29E_P-4" Tag="76" />
+              <ParameterRef Id="M-0001_A-8025-01-C29E_P-5_R-5" DisplayOrder="4" RefId="M-0001_A-8025-01-C29E_P-5" Tag="5" />
+              <ParameterRef Id="M-0001_A-8025-01-C29E_P-6_R-6" DisplayOrder="5" RefId="M-0001_A-8025-01-C29E_P-6" Tag="6" />
+              <ParameterRef Id="M-0001_A-8025-01-C29E_P-77_R-77" DisplayOrder="5" RefId="M-0001_A-8025-01-C29E_P-77" Tag="77" />
+              <ParameterRef Id="M-0001_A-8025-01-C29E_P-7_R-7" DisplayOrder="6" RefId="M-0001_A-8025-01-C29E_P-7" Tag="7" />
+              <ParameterRef Id="M-0001_A-8025-01-C29E_P-7_R-72" DisplayOrder="6" RefId="M-0001_A-8025-01-C29E_P-7" Tag="72" Value="55" />
+              <ParameterRef Id="M-0001_A-8025-01-C29E_P-8_R-8" DisplayOrder="7" RefId="M-0001_A-8025-01-C29E_P-8" Tag="8" />
+              <ParameterRef Id="M-0001_A-8025-01-C29E_P-9_R-9" DisplayOrder="8" RefId="M-0001_A-8025-01-C29E_P-9" Tag="9" />
+              <ParameterRef Id="M-0001_A-8025-01-C29E_P-9_R-70" DisplayOrder="8" RefId="M-0001_A-8025-01-C29E_P-9" Tag="70" Value="0" />
+              <ParameterRef Id="M-0001_A-8025-01-C29E_P-10_R-10" DisplayOrder="9" RefId="M-0001_A-8025-01-C29E_P-10" Tag="10" />
+              <ParameterRef Id="M-0001_A-8025-01-C29E_P-10_R-68" DisplayOrder="9" RefId="M-0001_A-8025-01-C29E_P-10" Tag="68" Value="0" />
+              <ParameterRef Id="M-0001_A-8025-01-C29E_P-11_R-11" DisplayOrder="10" RefId="M-0001_A-8025-01-C29E_P-11" Tag="11" />
+              <ParameterRef Id="M-0001_A-8025-01-C29E_P-56_R-56" DisplayOrder="10" RefId="M-0001_A-8025-01-C29E_P-56" Tag="56" />
+              <ParameterRef Id="M-0001_A-8025-01-C29E_P-12_R-12" DisplayOrder="11" RefId="M-0001_A-8025-01-C29E_P-12" Tag="12" />
+              <ParameterRef Id="M-0001_A-8025-01-C29E_P-12_R-75" DisplayOrder="11" RefId="M-0001_A-8025-01-C29E_P-12" Tag="75" Value="0" />
+              <ParameterRef Id="M-0001_A-8025-01-C29E_P-15_R-15" DisplayOrder="14" RefId="M-0001_A-8025-01-C29E_P-15" Tag="15" />
+              <ParameterRef Id="M-0001_A-8025-01-C29E_P-15_R-61" DisplayOrder="14" RefId="M-0001_A-8025-01-C29E_P-15" Tag="61" Value="-200" />
+              <ParameterRef Id="M-0001_A-8025-01-C29E_P-15_R-63" DisplayOrder="14" RefId="M-0001_A-8025-01-C29E_P-15" Tag="63" Value="-400" />
+              <ParameterRef Id="M-0001_A-8025-01-C29E_P-15_R-65" DisplayOrder="14" RefId="M-0001_A-8025-01-C29E_P-15" Tag="65" Value="-300" />
+              <ParameterRef Id="M-0001_A-8025-01-C29E_P-16_R-16" DisplayOrder="15" RefId="M-0001_A-8025-01-C29E_P-16" Tag="16" />
+              <ParameterRef Id="M-0001_A-8025-01-C29E_P-16_R-69" DisplayOrder="15" RefId="M-0001_A-8025-01-C29E_P-16" Tag="69" Value="3" />
+              <ParameterRef Id="M-0001_A-8025-01-C29E_P-17_R-17" DisplayOrder="16" RefId="M-0001_A-8025-01-C29E_P-17" Tag="17" />
+              <ParameterRef Id="M-0001_A-8025-01-C29E_P-17_R-71" DisplayOrder="16" RefId="M-0001_A-8025-01-C29E_P-17" Tag="71" Value="2" />
+              <ParameterRef Id="M-0001_A-8025-01-C29E_P-19_R-19" DisplayOrder="18" RefId="M-0001_A-8025-01-C29E_P-19" Tag="19" />
+              <ParameterRef Id="M-0001_A-8025-01-C29E_P-20_R-20" DisplayOrder="19" RefId="M-0001_A-8025-01-C29E_P-20" Tag="20" />
+              <ParameterRef Id="M-0001_A-8025-01-C29E_P-21_R-21" DisplayOrder="20" RefId="M-0001_A-8025-01-C29E_P-21" Tag="21" />
+              <ParameterRef Id="M-0001_A-8025-01-C29E_P-46_R-46" DisplayOrder="20" RefId="M-0001_A-8025-01-C29E_P-46" Tag="46" />
+              <ParameterRef Id="M-0001_A-8025-01-C29E_P-22_R-22" DisplayOrder="21" RefId="M-0001_A-8025-01-C29E_P-22" Tag="22" />
+              <ParameterRef Id="M-0001_A-8025-01-C29E_P-22_R-62" DisplayOrder="21" RefId="M-0001_A-8025-01-C29E_P-22" Tag="62" Value="200" />
+              <ParameterRef Id="M-0001_A-8025-01-C29E_P-22_R-64" DisplayOrder="21" RefId="M-0001_A-8025-01-C29E_P-22" Tag="64" Value="400" />
+              <ParameterRef Id="M-0001_A-8025-01-C29E_P-22_R-66" DisplayOrder="21" RefId="M-0001_A-8025-01-C29E_P-22" Tag="66" Value="300" />
+              <ParameterRef Id="M-0001_A-8025-01-C29E_P-23_R-23" DisplayOrder="22" RefId="M-0001_A-8025-01-C29E_P-23" Tag="23" />
+              <ParameterRef Id="M-0001_A-8025-01-C29E_P-25_R-25" DisplayOrder="24" RefId="M-0001_A-8025-01-C29E_P-25" Tag="25" />
+              <ParameterRef Id="M-0001_A-8025-01-C29E_P-27_R-27" DisplayOrder="26" RefId="M-0001_A-8025-01-C29E_P-27" Tag="27" />
+              <ParameterRef Id="M-0001_A-8025-01-C29E_P-28_R-28" DisplayOrder="27" RefId="M-0001_A-8025-01-C29E_P-28" Tag="28" />
+              <ParameterRef Id="M-0001_A-8025-01-C29E_P-28_R-67" DisplayOrder="27" RefId="M-0001_A-8025-01-C29E_P-28" Tag="67" Value="61" />
+              <ParameterRef Id="M-0001_A-8025-01-C29E_P-30_R-30" DisplayOrder="29" RefId="M-0001_A-8025-01-C29E_P-30" Tag="30" />
+              <ParameterRef Id="M-0001_A-8025-01-C29E_P-31_R-31" DisplayOrder="30" RefId="M-0001_A-8025-01-C29E_P-31" Tag="31" />
+              <ParameterRef Id="M-0001_A-8025-01-C29E_P-40_R-40" DisplayOrder="30" RefId="M-0001_A-8025-01-C29E_P-40" Tag="40" />
+              <ParameterRef Id="M-0001_A-8025-01-C29E_P-32_R-32" DisplayOrder="31" RefId="M-0001_A-8025-01-C29E_P-32" Tag="32" />
+              <ParameterRef Id="M-0001_A-8025-01-C29E_P-33_R-33" DisplayOrder="32" RefId="M-0001_A-8025-01-C29E_P-33" Tag="33" />
+              <ParameterRef Id="M-0001_A-8025-01-C29E_P-35_R-35" DisplayOrder="34" RefId="M-0001_A-8025-01-C29E_P-35" Tag="35" />
+              <ParameterRef Id="M-0001_A-8025-01-C29E_P-36_R-36" DisplayOrder="35" RefId="M-0001_A-8025-01-C29E_P-36" Tag="36" />
+              <ParameterRef Id="M-0001_A-8025-01-C29E_P-37_R-37" DisplayOrder="36" RefId="M-0001_A-8025-01-C29E_P-37" Tag="37" />
+              <ParameterRef Id="M-0001_A-8025-01-C29E_P-38_R-38" DisplayOrder="37" RefId="M-0001_A-8025-01-C29E_P-38" Tag="38" />
+              <ParameterRef Id="M-0001_A-8025-01-C29E_P-38_R-73" DisplayOrder="37" RefId="M-0001_A-8025-01-C29E_P-38" Tag="73" Value="0" />
+              <ParameterRef Id="M-0001_A-8025-01-C29E_P-39_R-39" DisplayOrder="38" RefId="M-0001_A-8025-01-C29E_P-39" Tag="39" />
+              <ParameterRef Id="M-0001_A-8025-01-C29E_P-18_R-18" DisplayOrder="40" RefId="M-0001_A-8025-01-C29E_P-18" Tag="18" />
+              <ParameterRef Id="M-0001_A-8025-01-C29E_P-41_R-41" DisplayOrder="40" RefId="M-0001_A-8025-01-C29E_P-41" Tag="41" />
+              <ParameterRef Id="M-0001_A-8025-01-C29E_P-45_R-45" DisplayOrder="42" RefId="M-0001_A-8025-01-C29E_P-45" Tag="45" />
+              <ParameterRef Id="M-0001_A-8025-01-C29E_P-47_R-47" DisplayOrder="42" RefId="M-0001_A-8025-01-C29E_P-47" Tag="47" />
+              <ParameterRef Id="M-0001_A-8025-01-C29E_P-48_R-48" DisplayOrder="42" RefId="M-0001_A-8025-01-C29E_P-48" Tag="48" />
+              <ParameterRef Id="M-0001_A-8025-01-C29E_P-57_R-57" DisplayOrder="42" RefId="M-0001_A-8025-01-C29E_P-57" Tag="57" />
+              <ParameterRef Id="M-0001_A-8025-01-C29E_P-58_R-58" DisplayOrder="42" RefId="M-0001_A-8025-01-C29E_P-58" Tag="58" />
+              <ParameterRef Id="M-0001_A-8025-01-C29E_P-59_R-59" DisplayOrder="42" RefId="M-0001_A-8025-01-C29E_P-59" Tag="59" />
+              <ParameterRef Id="M-0001_A-8025-01-C29E_P-60_R-60" DisplayOrder="42" RefId="M-0001_A-8025-01-C29E_P-60" Tag="60" />
+              <ParameterRef Id="M-0001_A-8025-01-C29E_P-84_R-84" DisplayOrder="51" RefId="M-0001_A-8025-01-C29E_P-84" Tag="84" />
+              <ParameterRef Id="M-0001_A-8025-01-C29E_P-82_R-82" DisplayOrder="52" RefId="M-0001_A-8025-01-C29E_P-82" Tag="82" />
+              <ParameterRef Id="M-0001_A-8025-01-C29E_P-83_R-83" DisplayOrder="52" RefId="M-0001_A-8025-01-C29E_P-83" Tag="83" />
+              <ParameterRef Id="M-0001_A-8025-01-C29E_P-81_R-81" DisplayOrder="54" RefId="M-0001_A-8025-01-C29E_P-81" Tag="81" />
+              <ParameterRef Id="M-0001_A-8025-01-C29E_P-78_R-78" DisplayOrder="100" RefId="M-0001_A-8025-01-C29E_P-78" Tag="78" />
+              <ParameterRef Id="M-0001_A-8025-01-C29E_P-13_R-13" DisplayOrder="110" RefId="M-0001_A-8025-01-C29E_P-13" Tag="13" />
+              <ParameterRef Id="M-0001_A-8025-01-C29E_P-50_R-50" DisplayOrder="110" RefId="M-0001_A-8025-01-C29E_P-50" Tag="50" />
+              <ParameterRef Id="M-0001_A-8025-01-C29E_P-51_R-51" DisplayOrder="110" RefId="M-0001_A-8025-01-C29E_P-51" Tag="51" />
+              <ParameterRef Id="M-0001_A-8025-01-C29E_P-52_R-52" DisplayOrder="110" RefId="M-0001_A-8025-01-C29E_P-52" Tag="52" />
+              <ParameterRef Id="M-0001_A-8025-01-C29E_P-24_R-24" DisplayOrder="112" RefId="M-0001_A-8025-01-C29E_P-24" Tag="24" />
+              <ParameterRef Id="M-0001_A-8025-01-C29E_P-24_R-53" DisplayOrder="112" RefId="M-0001_A-8025-01-C29E_P-24" Tag="53" />
+              <ParameterRef Id="M-0001_A-8025-01-C29E_P-24_R-54" DisplayOrder="112" RefId="M-0001_A-8025-01-C29E_P-24" Tag="54" />
+              <ParameterRef Id="M-0001_A-8025-01-C29E_P-26_R-26" DisplayOrder="114" RefId="M-0001_A-8025-01-C29E_P-26" Tag="26" />
+              <ParameterRef Id="M-0001_A-8025-01-C29E_P-26_R-55" DisplayOrder="114" RefId="M-0001_A-8025-01-C29E_P-26" Tag="55" />
+              <ParameterRef Id="M-0001_A-8025-01-C29E_P-29_R-29" DisplayOrder="116" RefId="M-0001_A-8025-01-C29E_P-29" Tag="29" />
+              <ParameterRef Id="M-0001_A-8025-01-C29E_P-43_R-43" DisplayOrder="200" RefId="M-0001_A-8025-01-C29E_P-43" Tag="43" />
+              <ParameterRef Id="M-0001_A-8025-01-C29E_P-79_R-79" DisplayOrder="200" RefId="M-0001_A-8025-01-C29E_P-79" Tag="79" />
+              <ParameterRef Id="M-0001_A-8025-01-C29E_P-80_R-80" DisplayOrder="200" RefId="M-0001_A-8025-01-C29E_P-80" Tag="80" />
+              <ParameterRef Id="M-0001_A-8025-01-C29E_P-14_R-14" DisplayOrder="210" RefId="M-0001_A-8025-01-C29E_P-14" Tag="14" />
+              <ParameterRef Id="M-0001_A-8025-01-C29E_P-34_R-34" DisplayOrder="220" RefId="M-0001_A-8025-01-C29E_P-34" Tag="34" />
+              <ParameterRef Id="M-0001_A-8025-01-C29E_P-42_R-42" DisplayOrder="300" RefId="M-0001_A-8025-01-C29E_P-42" Tag="42" />
+            </ParameterRefs>
+            <ComObjectTable CodeSegment="M-0001_A-8025-01-C29E_AS-40A6" Offset="0">
+              <ComObject Id="M-0001_A-8025-01-C29E_O-0" FunctionText="EIS 5001" Name="Sollwertverschiebung" Number="0" ObjectSize="2 Bytes" Priority="Low" CommunicationFlag="Enabled" ReadFlag="Enabled" ReadOnInitFlag="Disabled" TransmitFlag="Enabled" UpdateFlag="Disabled" WriteFlag="Disabled" Text="Setpoint shifting" VisibleDescription="" />
+              <ComObject Id="M-0001_A-8025-01-C29E_O-1" FunctionText="Positioning value of PI regulator" Name="Status Heiz-/ Kühlbetrieb" Number="1" ObjectSize="2 Bytes" Priority="Low" CommunicationFlag="Enabled" ReadFlag="Disabled" ReadOnInitFlag="Disabled" TransmitFlag="Enabled" UpdateFlag="Enabled" WriteFlag="Enabled" Text="Status heating / cooling mode" VisibleDescription="" />
+              <ComObject Id="M-0001_A-8025-01-C29E_O-10" FunctionText="1=open / 0=closed" Name="Fensterstatus" Number="10" ObjectSize="1 Bit" Priority="Low" CommunicationFlag="Enabled" ReadFlag="Disabled" ReadOnInitFlag="Disabled" TransmitFlag="Enabled" UpdateFlag="Enabled" WriteFlag="Enabled" Text="Status of window" VisibleDescription="" />
+              <ComObject Id="M-0001_A-8025-01-C29E_O-11" FunctionText="Temperature" Name="Lokaler Temperatursensor" Number="11" ObjectSize="2 Bytes" Priority="Low" CommunicationFlag="Enabled" ReadFlag="Enabled" ReadOnInitFlag="Disabled" TransmitFlag="Enabled" UpdateFlag="Disabled" WriteFlag="Disabled" Text="Local temperature sensor" VisibleDescription="" />
+              <ComObject Id="M-0001_A-8025-01-C29E_O-12" FunctionText="" Name="$Object 13" Number="12" ObjectSize="1 Bit" Priority="Low" CommunicationFlag="Disabled" ReadFlag="Disabled" ReadOnInitFlag="Disabled" TransmitFlag="Disabled" UpdateFlag="Disabled" WriteFlag="Disabled" Text="$" VisibleDescription="" />
+              <ComObject Id="M-0001_A-8025-01-C29E_O-13" FunctionText="" Name="$Object 14" Number="13" ObjectSize="1 Bit" Priority="Low" CommunicationFlag="Disabled" ReadFlag="Disabled" ReadOnInitFlag="Disabled" TransmitFlag="Disabled" UpdateFlag="Disabled" WriteFlag="Disabled" Text="$" VisibleDescription="" />
+              <ComObject Id="M-0001_A-8025-01-C29E_O-14" FunctionText="" Name="$Object 15" Number="14" ObjectSize="1 Bit" Priority="Low" CommunicationFlag="Disabled" ReadFlag="Disabled" ReadOnInitFlag="Disabled" TransmitFlag="Disabled" UpdateFlag="Disabled" WriteFlag="Disabled" Text="$" VisibleDescription="" />
+              <ComObject Id="M-0001_A-8025-01-C29E_O-2" FunctionText="On / Off" Name="Komfortbetrieb" Number="2" ObjectSize="1 Bit" Priority="Low" CommunicationFlag="Enabled" ReadFlag="Enabled" ReadOnInitFlag="Disabled" TransmitFlag="Enabled" UpdateFlag="Disabled" WriteFlag="Disabled" Text="Comfort mode" VisibleDescription="" />
+              <ComObject Id="M-0001_A-8025-01-C29E_O-3" FunctionText="On / Off" Name="Status Komfortbetrieb" Number="3" ObjectSize="1 Bit" Priority="Low" CommunicationFlag="Enabled" ReadFlag="Disabled" ReadOnInitFlag="Disabled" TransmitFlag="Enabled" UpdateFlag="Enabled" WriteFlag="Enabled" Text="Status of comfort mode" VisibleDescription="" />
+              <ComObject Id="M-0001_A-8025-01-C29E_O-4" FunctionText="On / Off" Name="Standbybetrieb" Number="4" ObjectSize="1 Bit" Priority="Low" CommunicationFlag="Enabled" ReadFlag="Disabled" ReadOnInitFlag="Disabled" TransmitFlag="Enabled" UpdateFlag="Enabled" WriteFlag="Enabled" Text="Standby mode" VisibleDescription="" />
+              <ComObject Id="M-0001_A-8025-01-C29E_O-5" FunctionText="On / Off" Name="Nachtbetrieb" Number="5" ObjectSize="1 Bit" Priority="Low" CommunicationFlag="Enabled" ReadFlag="Disabled" ReadOnInitFlag="Disabled" TransmitFlag="Enabled" UpdateFlag="Enabled" WriteFlag="Enabled" Text="Night mode" VisibleDescription="" />
+              <ComObject Id="M-0001_A-8025-01-C29E_O-6" FunctionText="On / Off" Name="Frost-/ Hitzeschutzbetrieb" Number="6" ObjectSize="1 Bit" Priority="Low" CommunicationFlag="Enabled" ReadFlag="Disabled" ReadOnInitFlag="Disabled" TransmitFlag="Enabled" UpdateFlag="Enabled" WriteFlag="Enabled" Text="Frost/heat protection" VisibleDescription="" />
+              <ComObject Id="M-0001_A-8025-01-C29E_O-7" FunctionText="On / Off" Name="Ventilator Automatikbetrieb" Number="7" ObjectSize="1 Bit" Priority="Low" CommunicationFlag="Enabled" ReadFlag="Disabled" ReadOnInitFlag="Disabled" TransmitFlag="Enabled" UpdateFlag="Disabled" WriteFlag="Disabled" Text="Fan automatic mode" VisibleDescription="" />
+              <ComObject Id="M-0001_A-8025-01-C29E_O-8" FunctionText="Automatic / manual mode" Name="Ventilator-Status" Number="8" ObjectSize="1 Bit" Priority="Low" CommunicationFlag="Enabled" ReadFlag="Disabled" ReadOnInitFlag="Disabled" TransmitFlag="Enabled" UpdateFlag="Enabled" WriteFlag="Enabled" Text="Fan status" VisibleDescription="" />
+              <ComObject Id="M-0001_A-8025-01-C29E_O-9" FunctionText="0% ... 100%" Name="Ventilatordrehzahl" Number="9" ObjectSize="1 Byte" Priority="Low" CommunicationFlag="Enabled" ReadFlag="Disabled" ReadOnInitFlag="Disabled" TransmitFlag="Enabled" UpdateFlag="Disabled" WriteFlag="Disabled" Text="Fan rotational speed" VisibleDescription="" />
+            </ComObjectTable>
+            <ComObjectRefs>
+              <ComObjectRef Id="M-0001_A-8025-01-C29E_O-0_R-1" RefId="M-0001_A-8025-01-C29E_O-0" Tag="1" />
+              <ComObjectRef Id="M-0001_A-8025-01-C29E_O-1_R-2" RefId="M-0001_A-8025-01-C29E_O-1" Tag="2" />
+              <ComObjectRef Id="M-0001_A-8025-01-C29E_O-2_R-3" RefId="M-0001_A-8025-01-C29E_O-2" Tag="3" />
+              <ComObjectRef Id="M-0001_A-8025-01-C29E_O-3_R-4" RefId="M-0001_A-8025-01-C29E_O-3" Tag="4" />
+              <ComObjectRef Id="M-0001_A-8025-01-C29E_O-4_R-5" RefId="M-0001_A-8025-01-C29E_O-4" Tag="5" />
+              <ComObjectRef Id="M-0001_A-8025-01-C29E_O-5_R-6" RefId="M-0001_A-8025-01-C29E_O-5" Tag="6" />
+              <ComObjectRef Id="M-0001_A-8025-01-C29E_O-6_R-7" RefId="M-0001_A-8025-01-C29E_O-6" Tag="7" />
+              <ComObjectRef Id="M-0001_A-8025-01-C29E_O-7_R-8" RefId="M-0001_A-8025-01-C29E_O-7" Tag="8" />
+              <ComObjectRef Id="M-0001_A-8025-01-C29E_O-8_R-9" RefId="M-0001_A-8025-01-C29E_O-8" Tag="9" />
+              <ComObjectRef Id="M-0001_A-8025-01-C29E_O-9_R-10" RefId="M-0001_A-8025-01-C29E_O-9" Tag="10" />
+              <ComObjectRef Id="M-0001_A-8025-01-C29E_O-10_R-11" RefId="M-0001_A-8025-01-C29E_O-10" Tag="11" />
+              <ComObjectRef Id="M-0001_A-8025-01-C29E_O-11_R-12" RefId="M-0001_A-8025-01-C29E_O-11" Tag="12" />
+              <ComObjectRef Id="M-0001_A-8025-01-C29E_O-12_R-13" RefId="M-0001_A-8025-01-C29E_O-12" Tag="13" />
+              <ComObjectRef Id="M-0001_A-8025-01-C29E_O-13_R-14" RefId="M-0001_A-8025-01-C29E_O-13" Tag="14" />
+              <ComObjectRef Id="M-0001_A-8025-01-C29E_O-14_R-15" RefId="M-0001_A-8025-01-C29E_O-14" Tag="15" />
+            </ComObjectRefs>
+            <AddressTable CodeSegment="M-0001_A-8025-01-C29E_AS-4000" Offset="0" MaxEntries="40" />
+            <AssociationTable CodeSegment="M-0001_A-8025-01-C29E_AS-4055" Offset="0" MaxEntries="40" />
+            <LoadProcedures>
+              <LoadProcedure>
+                <LdCtrlConnect AppliesTo="auto" />
+                <LdCtrlCompareProp ObjIdx="0" PropId="78" InlineData="00000000001400000000" Occurrence="0" StartElement="1" Count="1" AppliesTo="auto" />
+                <LdCtrlUnload LsmIdx="1" Occurrence="0" AppliesTo="auto" />
+                <LdCtrlUnload LsmIdx="2" Occurrence="0" AppliesTo="auto" />
+                <LdCtrlUnload LsmIdx="3" Occurrence="0" AppliesTo="auto" />
+                <LdCtrlLoad LsmIdx="1" Occurrence="0" AppliesTo="auto" />
+                <LdCtrlAbsSegment LsmIdx="1" SegType="0" Address="16384" Size="85" Access="255" MemType="3" SegFlags="128" Occurrence="0" AppliesTo="auto" />
+                <LdCtrlTaskSegment LsmIdx="1" Address="16384" Occurrence="0" AppliesTo="auto" />
+                <LdCtrlLoadCompleted LsmIdx="1" Occurrence="0" AppliesTo="auto" />
+                <LdCtrlLoad LsmIdx="2" Occurrence="0" AppliesTo="auto" />
+                <LdCtrlAbsSegment LsmIdx="2" SegType="0" Address="16469" Size="81" Access="255" MemType="3" SegFlags="128" Occurrence="0" AppliesTo="auto" />
+                <LdCtrlTaskSegment LsmIdx="2" Address="16469" Occurrence="0" AppliesTo="auto" />
+                <LdCtrlLoadCompleted LsmIdx="2" Occurrence="0" AppliesTo="auto" />
+                <LdCtrlLoad LsmIdx="3" Occurrence="0" AppliesTo="auto" />
+                <LdCtrlAbsSegment LsmIdx="3" SegType="0" Address="1792" Size="36" Access="0" MemType="2" SegFlags="0" Occurrence="0" AppliesTo="auto" />
+                <LdCtrlAbsSegment LsmIdx="3" SegType="1" Address="1828" Size="1" Access="0" MemType="2" SegFlags="0" Occurrence="0" AppliesTo="auto" />
+                <LdCtrlAbsSegment LsmIdx="3" SegType="0" Address="16550" Size="114" Access="255" MemType="3" SegFlags="128" Occurrence="0" AppliesTo="auto" />
+                <LdCtrlTaskSegment LsmIdx="3" Address="16550" Occurrence="0" AppliesTo="auto" />
+                <LdCtrlTaskSegment LsmIdx="5" Address="16550" Occurrence="0" AppliesTo="auto" />
+                <LdCtrlLoadCompleted LsmIdx="3" Occurrence="0" AppliesTo="auto" />
+                <LdCtrlRestart AppliesTo="auto" />
+                <LdCtrlDisconnect AppliesTo="auto" />
+              </LoadProcedure>
+            </LoadProcedures>
+            <Extension RequiresExternalSoftware="0" />
+            <Options PreferPartialDownloadIfApplicationLoaded="0" EasyCtrlModeModeStyleEmptyGroupComTables="0" SetObjectTableLengthAlwaysToOne="0" TextParameterEncoding="iso-8859-1" TextParameterZeroTerminate="0" ParameterByteOrder="BigEndian" LegacyNoPartialDownload="0" LegacyNoMemoryVerifyMode="0" LegacyNoOptimisticWrite="0" LegacyDoNotReportPropertyWriteErrors="0" LegacyNoBackgroundDownload="0" LegacyDoNotCheckManufacturerId="0" LegacyAlwaysReloadAppIfCoVisibilityChanged="0" LegacyNeverReloadAppIfCoVisibilityChanged="0" LegacyDoNotSupportUndoDelete="0" LegacyAllowPartialDownloadIfAp2Mismatch="1" LegacyKeepObjectTableGaps="0" PartialDownloadOnlyVisibleParameters="0" LegacyProxyCommunicationObjects="0" DeviceInfoIgnoreRunState="0" DeviceInfoIgnoreLoadedState="0" DeviceCompareAllowCompatibleManufacturerId="0" LineCoupler0912NewProgrammingStyle="0" Comparable="0" Reconstructable="0" />
+          </Static>
+          <Dynamic>
+            <Channel Name="Generic" Text="" Number="0" Id="M-0001_A-8025-01-C29E_CH-0">
+              <ComObjectRefRef RefId="M-0001_A-8025-01-C29E_O-0_R-1" />
+              <ComObjectRefRef RefId="M-0001_A-8025-01-C29E_O-1_R-2" />
+              <ComObjectRefRef RefId="M-0001_A-8025-01-C29E_O-3_R-4" />
+              <ComObjectRefRef RefId="M-0001_A-8025-01-C29E_O-4_R-5" />
+              <ComObjectRefRef RefId="M-0001_A-8025-01-C29E_O-5_R-6" />
+              <ComObjectRefRef RefId="M-0001_A-8025-01-C29E_O-6_R-7" />
+              <ComObjectRefRef RefId="M-0001_A-8025-01-C29E_O-7_R-8" />
+              <ComObjectRefRef RefId="M-0001_A-8025-01-C29E_O-8_R-9" />
+              <ComObjectRefRef RefId="M-0001_A-8025-01-C29E_O-9_R-10" />
+              <ComObjectRefRef RefId="M-0001_A-8025-01-C29E_O-10_R-11" />
+              <ParameterBlock Id="M-0001_A-8025-01-C29E_PB-81" Name="Added by Converter" Text="">
+                <choose ParamRefId="M-0001_A-8025-01-C29E_P-43_R-43">
+                  <when test="1">
+                    <choose ParamRefId="M-0001_A-8025-01-C29E_P-45_R-45">
+                      <when default="true">
+                        <ParameterRefRef RefId="M-0001_A-8025-01-C29E_P-1_R-1" />
+                        <ParameterRefRef RefId="M-0001_A-8025-01-C29E_P-3_R-3" />
+                      </when>
+                    </choose>
+                  </when>
+                </choose>
+              </ParameterBlock>
+              <ParameterBlock Id="M-0001_A-8025-01-C29E_PB-77" Name="Allgemein" ParamRefId="M-0001_A-8025-01-C29E_P-77_R-77">
+                <choose ParamRefId="M-0001_A-8025-01-C29E_P-46_R-46">
+                  <when test="0">
+                    <choose ParamRefId="M-0001_A-8025-01-C29E_P-47_R-47">
+                      <when default="true">
+                        <ParameterRefRef RefId="M-0001_A-8025-01-C29E_P-2_R-2" />
+                        <ParameterRefRef RefId="M-0001_A-8025-01-C29E_P-4_R-4" />
+                        <ParameterRefRef RefId="M-0001_A-8025-01-C29E_P-7_R-7" />
+                        <ParameterRefRef RefId="M-0001_A-8025-01-C29E_P-9_R-9" />
+                        <ParameterRefRef RefId="M-0001_A-8025-01-C29E_P-10_R-10" />
+                        <ParameterRefRef RefId="M-0001_A-8025-01-C29E_P-12_R-12" />
+                        <ParameterRefRef RefId="M-0001_A-8025-01-C29E_P-16_R-16" />
+                        <ParameterRefRef RefId="M-0001_A-8025-01-C29E_P-17_R-17" />
+                        <ParameterRefRef RefId="M-0001_A-8025-01-C29E_P-28_R-28" />
+                        <ParameterRefRef RefId="M-0001_A-8025-01-C29E_P-38_R-38" />
+                        <ParameterRefRef RefId="M-0001_A-8025-01-C29E_P-18_R-18" />
+                      </when>
+                    </choose>
+                    <ComObjectRefRef RefId="M-0001_A-8025-01-C29E_O-2_R-3" />
+                    <ParameterRefRef RefId="M-0001_A-8025-01-C29E_P-40_R-40" />
+                    <ParameterRefRef RefId="M-0001_A-8025-01-C29E_P-47_R-47" />
+                  </when>
+                  <when test="1">
+                    <choose ParamRefId="M-0001_A-8025-01-C29E_P-48_R-48">
+                      <when default="true">
+                        <ParameterRefRef RefId="M-0001_A-8025-01-C29E_P-2_R-74" />
+                        <ParameterRefRef RefId="M-0001_A-8025-01-C29E_P-4_R-76" />
+                        <ParameterRefRef RefId="M-0001_A-8025-01-C29E_P-7_R-72" />
+                        <ParameterRefRef RefId="M-0001_A-8025-01-C29E_P-9_R-70" />
+                        <ParameterRefRef RefId="M-0001_A-8025-01-C29E_P-10_R-68" />
+                        <ParameterRefRef RefId="M-0001_A-8025-01-C29E_P-12_R-75" />
+                        <ParameterRefRef RefId="M-0001_A-8025-01-C29E_P-16_R-69" />
+                        <ParameterRefRef RefId="M-0001_A-8025-01-C29E_P-17_R-71" />
+                        <ParameterRefRef RefId="M-0001_A-8025-01-C29E_P-28_R-67" />
+                        <ParameterRefRef RefId="M-0001_A-8025-01-C29E_P-38_R-73" />
+                      </when>
+                    </choose>
+                    <ParameterRefRef RefId="M-0001_A-8025-01-C29E_P-48_R-48" />
+                  </when>
+                </choose>
+                <choose ParamRefId="M-0001_A-8025-01-C29E_P-42_R-42">
+                  <when default="true">
+                    <ParameterRefRef RefId="M-0001_A-8025-01-C29E_P-5_R-5" />
+                    <ParameterRefRef RefId="M-0001_A-8025-01-C29E_P-11_R-11" />
+                    <ParameterRefRef RefId="M-0001_A-8025-01-C29E_P-19_R-19" />
+                    <ParameterRefRef RefId="M-0001_A-8025-01-C29E_P-20_R-20" />
+                    <ParameterRefRef RefId="M-0001_A-8025-01-C29E_P-23_R-23" />
+                    <ParameterRefRef RefId="M-0001_A-8025-01-C29E_P-25_R-25" />
+                    <ParameterRefRef RefId="M-0001_A-8025-01-C29E_P-27_R-27" />
+                    <ParameterRefRef RefId="M-0001_A-8025-01-C29E_P-32_R-32" />
+                    <ParameterRefRef RefId="M-0001_A-8025-01-C29E_P-37_R-37" />
+                  </when>
+                </choose>
+                <choose ParamRefId="M-0001_A-8025-01-C29E_P-43_R-43">
+                  <when test="1">
+                    <choose ParamRefId="M-0001_A-8025-01-C29E_P-45_R-45">
+                      <when default="true">
+                        <ParameterRefRef RefId="M-0001_A-8025-01-C29E_P-6_R-6" />
+                        <ParameterRefRef RefId="M-0001_A-8025-01-C29E_P-8_R-8" />
+                        <ParameterRefRef RefId="M-0001_A-8025-01-C29E_P-33_R-33" />
+                        <ParameterRefRef RefId="M-0001_A-8025-01-C29E_P-35_R-35" />
+                        <ParameterRefRef RefId="M-0001_A-8025-01-C29E_P-36_R-36" />
+                        <ParameterRefRef RefId="M-0001_A-8025-01-C29E_P-39_R-39" />
+                        <ComObjectRefRef RefId="M-0001_A-8025-01-C29E_O-12_R-13" />
+                        <ComObjectRefRef RefId="M-0001_A-8025-01-C29E_O-13_R-14" />
+                        <ComObjectRefRef RefId="M-0001_A-8025-01-C29E_O-14_R-15" />
+                      </when>
+                    </choose>
+                    <ParameterRefRef RefId="M-0001_A-8025-01-C29E_P-45_R-45" />
+                  </when>
+                </choose>
+                <ParameterRefRef RefId="M-0001_A-8025-01-C29E_P-56_R-56" />
+                <choose ParamRefId="M-0001_A-8025-01-C29E_P-56_R-56">
+                  <when test="0">
+                    <choose ParamRefId="M-0001_A-8025-01-C29E_P-57_R-57">
+                      <when default="true">
+                        <ParameterRefRef RefId="M-0001_A-8025-01-C29E_P-15_R-15" />
+                        <ParameterRefRef RefId="M-0001_A-8025-01-C29E_P-22_R-22" />
+                      </when>
+                    </choose>
+                    <ParameterRefRef RefId="M-0001_A-8025-01-C29E_P-57_R-57" />
+                  </when>
+                  <when test="1">
+                    <choose ParamRefId="M-0001_A-8025-01-C29E_P-58_R-58">
+                      <when default="true">
+                        <ParameterRefRef RefId="M-0001_A-8025-01-C29E_P-15_R-61" />
+                        <ParameterRefRef RefId="M-0001_A-8025-01-C29E_P-22_R-62" />
+                      </when>
+                    </choose>
+                    <ParameterRefRef RefId="M-0001_A-8025-01-C29E_P-58_R-58" />
+                  </when>
+                  <when test="3">
+                    <choose ParamRefId="M-0001_A-8025-01-C29E_P-59_R-59">
+                      <when default="true">
+                        <ParameterRefRef RefId="M-0001_A-8025-01-C29E_P-15_R-63" />
+                        <ParameterRefRef RefId="M-0001_A-8025-01-C29E_P-22_R-64" />
+                      </when>
+                    </choose>
+                    <ParameterRefRef RefId="M-0001_A-8025-01-C29E_P-59_R-59" />
+                  </when>
+                  <when test="2">
+                    <choose ParamRefId="M-0001_A-8025-01-C29E_P-60_R-60">
+                      <when default="true">
+                        <ParameterRefRef RefId="M-0001_A-8025-01-C29E_P-15_R-65" />
+                        <ParameterRefRef RefId="M-0001_A-8025-01-C29E_P-22_R-66" />
+                      </when>
+                    </choose>
+                    <ParameterRefRef RefId="M-0001_A-8025-01-C29E_P-60_R-60" />
+                  </when>
+                </choose>
+                <choose ParamRefId="M-0001_A-8025-01-C29E_P-81_R-81">
+                  <when test="0">
+                    <choose ParamRefId="M-0001_A-8025-01-C29E_P-83_R-83">
+                      <when default="true">
+                        <choose ParamRefId="M-0001_A-8025-01-C29E_P-79_R-79">
+                          <when default="true">
+                            <choose ParamRefId="M-0001_A-8025-01-C29E_P-80_R-80">
+                              <when default="true">
+                                <ParameterRefRef RefId="M-0001_A-8025-01-C29E_P-21_R-21" />
+                                <ParameterRefRef RefId="M-0001_A-8025-01-C29E_P-30_R-30" />
+                                <ParameterRefRef RefId="M-0001_A-8025-01-C29E_P-31_R-31" />
+                                <ParameterRefRef RefId="M-0001_A-8025-01-C29E_P-41_R-41" />
+                              </when>
+                            </choose>
+                          </when>
+                        </choose>
+                      </when>
+                    </choose>
+                    <ParameterRefRef RefId="M-0001_A-8025-01-C29E_P-83_R-83" />
+                  </when>
+                  <when test="1">
+                    <ParameterRefRef RefId="M-0001_A-8025-01-C29E_P-82_R-82" />
+                  </when>
+                </choose>
+                <ParameterRefRef RefId="M-0001_A-8025-01-C29E_P-46_R-46" />
+                <ParameterRefRef RefId="M-0001_A-8025-01-C29E_P-84_R-84" />
+                <ParameterRefRef RefId="M-0001_A-8025-01-C29E_P-81_R-81" />
+              </ParameterBlock>
+              <ParameterBlock Id="M-0001_A-8025-01-C29E_PB-78" Name="Ventilator" ParamRefId="M-0001_A-8025-01-C29E_P-78_R-78">
+                <ParameterRefRef RefId="M-0001_A-8025-01-C29E_P-13_R-13" />
+                <choose ParamRefId="M-0001_A-8025-01-C29E_P-13_R-13">
+                  <when test="2">
+                    <ParameterRefRef RefId="M-0001_A-8025-01-C29E_P-50_R-50" />
+                    <choose ParamRefId="M-0001_A-8025-01-C29E_P-50_R-50">
+                      <when default="true">
+                        <ParameterRefRef RefId="M-0001_A-8025-01-C29E_P-24_R-54" />
+                        <ParameterRefRef RefId="M-0001_A-8025-01-C29E_P-26_R-55" />
+                      </when>
+                    </choose>
+                  </when>
+                  <when test="1">
+                    <ParameterRefRef RefId="M-0001_A-8025-01-C29E_P-51_R-51" />
+                    <choose ParamRefId="M-0001_A-8025-01-C29E_P-51_R-51">
+                      <when default="true">
+                        <ParameterRefRef RefId="M-0001_A-8025-01-C29E_P-24_R-53" />
+                      </when>
+                    </choose>
+                  </when>
+                  <when test="3">
+                    <ParameterRefRef RefId="M-0001_A-8025-01-C29E_P-52_R-52" />
+                    <choose ParamRefId="M-0001_A-8025-01-C29E_P-52_R-52">
+                      <when default="true">
+                        <ParameterRefRef RefId="M-0001_A-8025-01-C29E_P-24_R-24" />
+                        <ParameterRefRef RefId="M-0001_A-8025-01-C29E_P-26_R-26" />
+                        <ParameterRefRef RefId="M-0001_A-8025-01-C29E_P-29_R-29" />
+                      </when>
+                    </choose>
+                  </when>
+                </choose>
+                <ParameterRefRef RefId="M-0001_A-8025-01-C29E_P-43_R-43" />
+                <choose ParamRefId="M-0001_A-8025-01-C29E_P-81_R-81">
+                  <when test="0">
+                    <choose ParamRefId="M-0001_A-8025-01-C29E_P-83_R-83">
+                      <when default="true">
+                        <ParameterRefRef RefId="M-0001_A-8025-01-C29E_P-79_R-79" />
+                      </when>
+                    </choose>
+                  </when>
+                </choose>
+                <ParameterRefRef RefId="M-0001_A-8025-01-C29E_P-42_R-42" />
+              </ParameterBlock>
+              <choose ParamRefId="M-0001_A-8025-01-C29E_P-81_R-81">
+                <when test="0">
+                  <choose ParamRefId="M-0001_A-8025-01-C29E_P-83_R-83">
+                    <when default="true">
+                      <choose ParamRefId="M-0001_A-8025-01-C29E_P-79_R-79">
+                        <when default="true">
+                          <ParameterBlock Id="M-0001_A-8025-01-C29E_PB-80" Name="Temperatursensor" ParamRefId="M-0001_A-8025-01-C29E_P-80_R-80">
+                            <choose ParamRefId="M-0001_A-8025-01-C29E_P-80_R-80">
+                              <when default="true">
+                                <ParameterRefRef RefId="M-0001_A-8025-01-C29E_P-14_R-14" />
+                                <ParameterRefRef RefId="M-0001_A-8025-01-C29E_P-34_R-34" />
+                                <ComObjectRefRef RefId="M-0001_A-8025-01-C29E_O-11_R-12" />
+                              </when>
+                            </choose>
+                          </ParameterBlock>
+                        </when>
+                      </choose>
+                    </when>
+                  </choose>
+                </when>
+              </choose>
+            </Channel>
+          </Dynamic>
+        </ApplicationProgram>
+      </ApplicationPrograms>
+      <Languages>
+        <Language Identifier="de-DE">
+          <TranslationUnit RefId="M-0001_A-8025-01-C29E">
+            <TranslationElement RefId="M-0001_A-8025-01-C29E">
+              <Translation AttributeName="Name" Text="0701 FCU Bediengerät Büro  802501" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-8025-01-C29E_O-0">
+              <Translation AttributeName="Text" Text="Sollwertverschiebung" />
+              <Translation AttributeName="FunctionText" Text="EIS 5001" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-8025-01-C29E_O-1">
+              <Translation AttributeName="Text" Text="Status Heiz-/ Kühlbetrieb" />
+              <Translation AttributeName="FunctionText" Text="Stellgröße PI-Regler" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-8025-01-C29E_O-10">
+              <Translation AttributeName="Text" Text="Fensterstatus" />
+              <Translation AttributeName="FunctionText" Text="1=geöffnet / 0=geschlossen" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-8025-01-C29E_O-11">
+              <Translation AttributeName="Text" Text="Lokaler Temperatursensor" />
+              <Translation AttributeName="FunctionText" Text="Temperatur" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-8025-01-C29E_O-12">
+              <Translation AttributeName="Text" Text="$Object 13" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-8025-01-C29E_O-13">
+              <Translation AttributeName="Text" Text="$Object 14" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-8025-01-C29E_O-14">
+              <Translation AttributeName="Text" Text="$Object 15" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-8025-01-C29E_O-2">
+              <Translation AttributeName="Text" Text="Komfortbetrieb" />
+              <Translation AttributeName="FunctionText" Text="Ein / Aus" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-8025-01-C29E_O-3">
+              <Translation AttributeName="Text" Text="Status Komfortbetrieb" />
+              <Translation AttributeName="FunctionText" Text="Ein / Aus" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-8025-01-C29E_O-4">
+              <Translation AttributeName="Text" Text="Standbybetrieb" />
+              <Translation AttributeName="FunctionText" Text="Ein / Aus" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-8025-01-C29E_O-5">
+              <Translation AttributeName="Text" Text="Nachtbetrieb" />
+              <Translation AttributeName="FunctionText" Text="Ein / Aus" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-8025-01-C29E_O-6">
+              <Translation AttributeName="Text" Text="Frost-/ Hitzeschutzbetrieb" />
+              <Translation AttributeName="FunctionText" Text="Ein / Aus" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-8025-01-C29E_O-7">
+              <Translation AttributeName="Text" Text="Ventilator Automatikbetrieb" />
+              <Translation AttributeName="FunctionText" Text="Ein / Aus" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-8025-01-C29E_O-8">
+              <Translation AttributeName="Text" Text="Ventilator-Status" />
+              <Translation AttributeName="FunctionText" Text="Automatik- /Handbetrieb" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-8025-01-C29E_O-9">
+              <Translation AttributeName="Text" Text="Ventilatordrehzahl" />
+              <Translation AttributeName="FunctionText" Text="0% ... 100%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-8025-01-C29E_P-77">
+              <Translation AttributeName="Text" Text="Allgemein" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-8025-01-C29E_P-78">
+              <Translation AttributeName="Text" Text="Ventilator" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-8025-01-C29E_P-80">
+              <Translation AttributeName="Text" Text="Temperatursensor" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-8025-01-C29E_P-46">
+              <Translation AttributeName="Text" Text="Umschaltung Komfortbetrieb/&#xD;&#xA;Energiesparbetrieb über" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-8025-01-C29E_P-56">
+              <Translation AttributeName="Text" Text="Sollwert-Verschiebung" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-8025-01-C29E_P-81">
+              <Translation AttributeName="Text" Text="$Verwendung Temperatursensor" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-8025-01-C29E_P-40">
+              <Translation AttributeName="Text" Text="Beim Verlassen des Raums&#xD;&#xA;umschalten auf" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-8025-01-C29E_P-24">
+              <Translation AttributeName="Text" Text="Ventilator Drehzahl in Stufe 1&#xD;&#xA;(als Wert von 1 bis 255)" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-8025-01-C29E_P-26">
+              <Translation AttributeName="Text" Text="Ventilator Drehzahl in Stufe 2&#xD;&#xA;(als Wert von 1 bis 255)" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-8025-01-C29E_P-29">
+              <Translation AttributeName="Text" Text="Ventilator Drehzahl in Stufe 3&#xD;&#xA;(als Wert von 1 bis 255)" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-8025-01-C29E_P-13">
+              <Translation AttributeName="Text" Text="Anzahl Drehzahlstufen" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-8025-01-C29E_P-18">
+              <Translation AttributeName="Text" Text="Langer Tastendruck ab" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-8025-01-C29E_P-34">
+              <Translation AttributeName="Text" Text="$Sendedifferenz&#xD;&#xA;in 1/100 °C" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-8025-01-C29E_P-14">
+              <Translation AttributeName="Text" Text="$Temperatur zyklisch senden&#xD;&#xA;[0=disabled, in 100ms]" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-8025-01-C29E_PT-en.5Factivate.5Fdeactivate_EN-0">
+              <Translation AttributeName="Text" Text="aktiviert" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-8025-01-C29E_PT-en.5Factivate.5Fdeactivate_EN-1">
+              <Translation AttributeName="Text" Text="$Deaktiviert" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-8025-01-C29E_PT-en.5FbitIndex_EN-2">
+              <Translation AttributeName="Text" Text="$DXb_Taster" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-8025-01-C29E_PT-en.5FbitIndex_EN-6">
+              <Translation AttributeName="Text" Text="$DXb_LuefterSenden" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-8025-01-C29E_PT-en.5FbitIndex_EN-3">
+              <Translation AttributeName="Text" Text="$DXb_LuefterSchalten" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-8025-01-C29E_PT-en.5FbitIndex_EN-0">
+              <Translation AttributeName="Text" Text="$DXb_DefaultZero" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-8025-01-C29E_PT-en.5FbitIndex_EN-10">
+              <Translation AttributeName="Text" Text="$DXb_KomfortSenden" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-8025-01-C29E_PT-en.5FbitIndex_EN-15">
+              <Translation AttributeName="Text" Text="$DXb_TasterLang" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-8025-01-C29E_PT-en.5FbitIndex_EN-12">
+              <Translation AttributeName="Text" Text="$DXb_TemperatureError" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-8025-01-C29E_PT-en.5FCommObject_EN-11">
+              <Translation AttributeName="Text" Text="$CO_LocalTemp" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-8025-01-C29E_PT-en.5FdevType_EN-0">
+              <Translation AttributeName="Text" Text="$Hotel-Bediengerät" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-8025-01-C29E_PT-en.5FdevType_EN-1">
+              <Translation AttributeName="Text" Text="$Büro-Bediengerät" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-8025-01-C29E_PT-en.5Fdrehzahlstufen_EN-1">
+              <Translation AttributeName="Text" Text="1" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-8025-01-C29E_PT-en.5Fdrehzahlstufen_EN-2">
+              <Translation AttributeName="Text" Text="2" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-8025-01-C29E_PT-en.5Fdrehzahlstufen_EN-3">
+              <Translation AttributeName="Text" Text="3" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-8025-01-C29E_PT-en.5Fkomfortumschaltung_EN-0">
+              <Translation AttributeName="Text" Text="Taster des Bediengerätes" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-8025-01-C29E_PT-en.5Fkomfortumschaltung_EN-1">
+              <Translation AttributeName="Text" Text="Präsenzmelder" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-8025-01-C29E_PT-en.5FlangeTaste_EN-10">
+              <Translation AttributeName="Text" Text="1 s" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-8025-01-C29E_PT-en.5FlangeTaste_EN-15">
+              <Translation AttributeName="Text" Text="1,5 s" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-8025-01-C29E_PT-en.5FlangeTaste_EN-20">
+              <Translation AttributeName="Text" Text="2 s" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-8025-01-C29E_PT-en.5FshortIndex_EN-0">
+              <Translation AttributeName="Text" Text="$DXS_ADCPoti" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-8025-01-C29E_PT-en.5FshortIndex_EN-1">
+              <Translation AttributeName="Text" Text="$DXS_ADCPotiEntprellt" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-8025-01-C29E_PT-en.5FshortIndex_EN-3">
+              <Translation AttributeName="Text" Text="$DXS_LokaleTemperatur" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-8025-01-C29E_PT-en.5Fsollwertversch_EN-0">
+              <Translation AttributeName="Text" Text="-1 ... +1 K" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-8025-01-C29E_PT-en.5Fsollwertversch_EN-1">
+              <Translation AttributeName="Text" Text="-2 ... +2 K" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-8025-01-C29E_PT-en.5Fsollwertversch_EN-2">
+              <Translation AttributeName="Text" Text="-3 ... +3 K" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-8025-01-C29E_PT-en.5Fsollwertversch_EN-3">
+              <Translation AttributeName="Text" Text="-4 ... +4 K" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-8025-01-C29E_PT-en.5Fumschalttyp_EN-0">
+              <Translation AttributeName="Text" Text="Standbybetrieb" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-8025-01-C29E_PT-en.5Fumschalttyp_EN-1">
+              <Translation AttributeName="Text" Text="Nachtbetrieb" />
+            </TranslationElement>
+          </TranslationUnit>
+        </Language>
+        <Language Identifier="en-US">
+          <TranslationUnit RefId="M-0001_A-8025-01-C29E">
+            <TranslationElement RefId="M-0001_A-8025-01-C29E">
+              <Translation AttributeName="Name" Text="0701 FCU Operator Panel Office 802501" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-8025-01-C29E_O-0">
+              <Translation AttributeName="Text" Text="Setpoint shifting" />
+              <Translation AttributeName="FunctionText" Text="EIS 5001" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-8025-01-C29E_O-1">
+              <Translation AttributeName="Text" Text="Status heating / cooling mode" />
+              <Translation AttributeName="FunctionText" Text="Positioning value of PI regulator" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-8025-01-C29E_O-10">
+              <Translation AttributeName="Text" Text="Status of window" />
+              <Translation AttributeName="FunctionText" Text="1=open / 0=closed" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-8025-01-C29E_O-11">
+              <Translation AttributeName="Text" Text="Local temperature sensor" />
+              <Translation AttributeName="FunctionText" Text="Temperature" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-8025-01-C29E_O-12">
+              <Translation AttributeName="Text" Text="$" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-8025-01-C29E_O-13">
+              <Translation AttributeName="Text" Text="$" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-8025-01-C29E_O-14">
+              <Translation AttributeName="Text" Text="$" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-8025-01-C29E_O-2">
+              <Translation AttributeName="Text" Text="Comfort mode" />
+              <Translation AttributeName="FunctionText" Text="On / Off" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-8025-01-C29E_O-3">
+              <Translation AttributeName="Text" Text="Status of comfort mode" />
+              <Translation AttributeName="FunctionText" Text="On / Off" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-8025-01-C29E_O-4">
+              <Translation AttributeName="Text" Text="Standby mode" />
+              <Translation AttributeName="FunctionText" Text="On / Off" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-8025-01-C29E_O-5">
+              <Translation AttributeName="Text" Text="Night mode" />
+              <Translation AttributeName="FunctionText" Text="On / Off" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-8025-01-C29E_O-6">
+              <Translation AttributeName="Text" Text="Frost/heat protection" />
+              <Translation AttributeName="FunctionText" Text="On / Off" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-8025-01-C29E_O-7">
+              <Translation AttributeName="Text" Text="Fan automatic mode" />
+              <Translation AttributeName="FunctionText" Text="On / Off" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-8025-01-C29E_O-8">
+              <Translation AttributeName="Text" Text="Fan status" />
+              <Translation AttributeName="FunctionText" Text="Automatic / manual mode" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-8025-01-C29E_O-9">
+              <Translation AttributeName="Text" Text="Fan rotational speed" />
+              <Translation AttributeName="FunctionText" Text="0% ... 100%" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-8025-01-C29E_P-77">
+              <Translation AttributeName="Text" Text="General" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-8025-01-C29E_P-78">
+              <Translation AttributeName="Text" Text="Fan" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-8025-01-C29E_P-80">
+              <Translation AttributeName="Text" Text="Temperature sensor" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-8025-01-C29E_P-46">
+              <Translation AttributeName="Text" Text="Switch-over between comfort&#xD;&#xA;and energy-saving mode via" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-8025-01-C29E_P-56">
+              <Translation AttributeName="Text" Text="Setpoint shift" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-8025-01-C29E_P-81">
+              <Translation AttributeName="Text" Text="$" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-8025-01-C29E_P-40">
+              <Translation AttributeName="Text" Text="If room is left, switch to" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-8025-01-C29E_P-24">
+              <Translation AttributeName="Text" Text="Fan speed at step 1&#xD;&#xA; (value 1 ... 255)" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-8025-01-C29E_P-26">
+              <Translation AttributeName="Text" Text="Fan speed at step 2&#xD;&#xA; (value 1 ... 255)" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-8025-01-C29E_P-29">
+              <Translation AttributeName="Text" Text="Fan speed at step 3&#xD;&#xA; (value 1 ... 255)" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-8025-01-C29E_P-13">
+              <Translation AttributeName="Text" Text="Number of fan rotational speed steps" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-8025-01-C29E_P-18">
+              <Translation AttributeName="Text" Text="Long push button action min." />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-8025-01-C29E_P-34">
+              <Translation AttributeName="Text" Text="$" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-8025-01-C29E_P-14">
+              <Translation AttributeName="Text" Text="$" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-8025-01-C29E_PT-en.5Factivate.5Fdeactivate_EN-0">
+              <Translation AttributeName="Text" Text="activated" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-8025-01-C29E_PT-en.5Factivate.5Fdeactivate_EN-1">
+              <Translation AttributeName="Text" Text="$" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-8025-01-C29E_PT-en.5FbitIndex_EN-2">
+              <Translation AttributeName="Text" Text="$" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-8025-01-C29E_PT-en.5FbitIndex_EN-6">
+              <Translation AttributeName="Text" Text="$" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-8025-01-C29E_PT-en.5FbitIndex_EN-3">
+              <Translation AttributeName="Text" Text="$" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-8025-01-C29E_PT-en.5FbitIndex_EN-0">
+              <Translation AttributeName="Text" Text="$" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-8025-01-C29E_PT-en.5FbitIndex_EN-10">
+              <Translation AttributeName="Text" Text="$" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-8025-01-C29E_PT-en.5FbitIndex_EN-15">
+              <Translation AttributeName="Text" Text="$" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-8025-01-C29E_PT-en.5FbitIndex_EN-12">
+              <Translation AttributeName="Text" Text="$" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-8025-01-C29E_PT-en.5FCommObject_EN-11">
+              <Translation AttributeName="Text" Text="$" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-8025-01-C29E_PT-en.5FdevType_EN-0">
+              <Translation AttributeName="Text" Text="$" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-8025-01-C29E_PT-en.5FdevType_EN-1">
+              <Translation AttributeName="Text" Text="$" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-8025-01-C29E_PT-en.5Fdrehzahlstufen_EN-1">
+              <Translation AttributeName="Text" Text="1" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-8025-01-C29E_PT-en.5Fdrehzahlstufen_EN-2">
+              <Translation AttributeName="Text" Text="2" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-8025-01-C29E_PT-en.5Fdrehzahlstufen_EN-3">
+              <Translation AttributeName="Text" Text="3" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-8025-01-C29E_PT-en.5Fkomfortumschaltung_EN-0">
+              <Translation AttributeName="Text" Text="local push button" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-8025-01-C29E_PT-en.5Fkomfortumschaltung_EN-1">
+              <Translation AttributeName="Text" Text="presence detector" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-8025-01-C29E_PT-en.5FlangeTaste_EN-10">
+              <Translation AttributeName="Text" Text="1 s" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-8025-01-C29E_PT-en.5FlangeTaste_EN-15">
+              <Translation AttributeName="Text" Text="1,5 s" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-8025-01-C29E_PT-en.5FlangeTaste_EN-20">
+              <Translation AttributeName="Text" Text="2 s" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-8025-01-C29E_PT-en.5FshortIndex_EN-0">
+              <Translation AttributeName="Text" Text="$" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-8025-01-C29E_PT-en.5FshortIndex_EN-1">
+              <Translation AttributeName="Text" Text="$" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-8025-01-C29E_PT-en.5FshortIndex_EN-3">
+              <Translation AttributeName="Text" Text="$" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-8025-01-C29E_PT-en.5Fsollwertversch_EN-0">
+              <Translation AttributeName="Text" Text="-1 ... +1 K" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-8025-01-C29E_PT-en.5Fsollwertversch_EN-1">
+              <Translation AttributeName="Text" Text="-2 ... +2 K" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-8025-01-C29E_PT-en.5Fsollwertversch_EN-2">
+              <Translation AttributeName="Text" Text="-3 ... +3 K" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-8025-01-C29E_PT-en.5Fsollwertversch_EN-3">
+              <Translation AttributeName="Text" Text="-4 ... +4 K" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-8025-01-C29E_PT-en.5Fumschalttyp_EN-0">
+              <Translation AttributeName="Text" Text="Standby mode" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-8025-01-C29E_PT-en.5Fumschalttyp_EN-1">
+              <Translation AttributeName="Text" Text="Night mode" />
+            </TranslationElement>
+          </TranslationUnit>
+        </Language>
+      </Languages></Manufacturer>
+  </ManufacturerData>
+</KNX>
