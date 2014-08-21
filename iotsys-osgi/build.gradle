@@ -12,6 +12,7 @@ jar {
 				   "Bundle-Vendor": "Vienna University of Technology, Automation Systems Group, www.auto.tuwien.ac.at",
 				   "Bundle-Version": "0.1",
 				   "Bundle-Classpath": ".",
+				   
 				)
 	}	
 }

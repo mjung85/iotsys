@@ -23,6 +23,7 @@ eclipse{
 				node.appendNode('classpathentry', [kind: 'src', path: '/iotsys-rfid', exported:'true'])
 				node.appendNode('classpathentry', [kind: 'src', path: '/iotsys-coap', exported:'true'])
 				node.appendNode('classpathentry', [kind: 'lib', path: '/iotsys-xacml/res', exported:'true'])
+				node.appendNode('classpathentry', [kind: 'src', path: '/iotsys-tomcat', exported:'true'])
 			}
 		}
 	}
@@ -30,7 +31,7 @@ eclipse{
 
 repositories {	
 	flatDir { dirs "lib/exi"}
-	flatDir { dirs "lib/tomcat"}
+	flatDir { dirs "../iotsys-tomcat/lib"}
 }
 
 configurations {
@@ -209,10 +210,31 @@ jar {
 									 "org.osgi.framework," +
 									 "org.w3c.dom," +
 									 "org.w3c.dom.ls," +
-									 "org.w3c.dom.traversal," +
-									 "org.xml.sax," +
-									 "org.xml.sax.ext," +
-									 "org.xml.sax.helpers"
+									 "org.w3c.dom.traversal," +	
+									 "org.xml.sax," +						 									
+									 "org.apache.catalina," +
+									 "org.apache.catalina.startup," +
+									 "org.apache.catalina.connector," +		
+									 "javax.naming.directory," +
+									 "javax.naming," +									 
+               						 "javax.servlet.http," +
+									 "javax.servlet,"+
+									 //"org.apache.http," +
+									 "javax.management," +	
+									 "org.apache.catalina.mbeans," +
+									 "org.apache.tomcat.util.modeler.modules," +
+									 "org.apache.tomcat.util.modeler," +
+									 "org.apache.catalina.util," +
+									 "org.apache.catalina.core," +
+									 "org.apache.catalina.authenticator,"+
+									 "org.apache.catalina.deploy,"+
+									 "org.apache.catalina.loader,"+
+									 "org.apache.catalina.realm,"+
+									 "org.apache.catalina.security,"+
+									 "org.apache.catalina.session,"+
+									 "org.apache.catalina.users,"+
+									 "org.apache.catalina.valves",
+						"DynamicImport-package": "*",		 			 									 					
 				   )
 	}
 }
@@ -227,6 +249,7 @@ dependencies {
 	provided project(':iotsys-xacml')
 	provided project(':iotsys-mdnssd')
 	provided project(':iotsys-weather-forecast')
+	provided project(':iotsys-tomcat')	
 	
 	//provided group: 'org.apache.felix', name: 'org.apache.felix.framework', version: '4.2.0'
 	provided group: 'org.apache.felix', name: 'org.osgi.core', version: '1.4.0'
@@ -244,22 +267,24 @@ dependencies {
 	provided group: 'commons-logging', name: 'commons-logging', version: '1.1.1'
 	
 	provided group: 'net.sourceforge.javacsv', name: 'javacsv', version: '2.0'
+
+	//provided ":ecj-P20140317-1600:"
+	//provided ":tomcat-dbcp:"
+	//provided ":tomcat-embed-core:"
+	//provided ":tomcat-embed-el:"
+	//provided ":tomcat-embed-jasper:"
+	//provided ":tomcat-embed-logging-juli:"
+	//provided ":tomcat-embed-logging-log4j:"
+	//provided ":tomcat7-embed-websocket:"	
 		
 	compile ":nagasena:"	
-	compile ":ecj-P20140317-1600:"
-	compile ":tomcat-dbcp:"
-	compile ":tomcat-embed-core:"
-	compile ":tomcat-embed-el:"
-	compile ":tomcat-embed-jasper:"
-	compile ":tomcat-embed-logging-juli:"
-	compile ":tomcat-embed-logging-log4j:"
-	compile ":tomcat7-embed-websocket:"
 
 	testProvided project(':iotsys-obix')
 	testProvided project(':iotsys-common')
 	testProvided project(':iotsys-virtual')
 	testProvided project(':iotsys-mdnssd')
 	testProvided project(':iotsys-weather-forecast')
+	testProvided project(':iotsys-tomcat')
 	testCompile group: 'junit',name:'junit',version: '4.8+' 
 	testCompile ('com.jayway.restassured:rest-assured:1.2.1'){
         exclude group: 'org.apache.httpcomponents', module:'httpclient'

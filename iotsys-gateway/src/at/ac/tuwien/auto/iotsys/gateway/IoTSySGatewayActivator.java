@@ -82,7 +82,7 @@ public class IoTSySGatewayActivator implements BundleActivator, ServiceListener{
 		ServiceReference serviceReference = bundleContext
 				.getServiceReference(MdnsResolver.class.getName());
 		if (serviceReference == null) {
-			log.severe("Could not find mDNS-SD Service!");
+			//log.severe("Could not find mDNS-SD Service!");
 		} else {
 			resolver = (MdnsResolver) bundleContext
 					.getService(serviceReference);

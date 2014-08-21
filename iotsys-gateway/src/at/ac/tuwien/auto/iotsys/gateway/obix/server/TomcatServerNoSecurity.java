@@ -7,7 +7,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
@@ -46,7 +45,6 @@ import at.ac.tuwien.auto.iotsys.commons.interceptor.InterceptorResponse;
 import at.ac.tuwien.auto.iotsys.commons.interceptor.InterceptorResponse.StatusCode;
 import at.ac.tuwien.auto.iotsys.commons.interceptor.Parameter;
 import at.ac.tuwien.auto.iotsys.gateway.interceptor.InterceptorBrokerImpl;
-import at.ac.tuwien.auto.iotsys.gateway.obix.server.NanoHTTPD.Response;
 import at.ac.tuwien.auto.iotsys.gateway.util.ExiUtil;
 import at.ac.tuwien.auto.iotsys.gateway.util.JsonUtil;
 
@@ -65,9 +63,9 @@ public class TomcatServerNoSecurity {
 		tomcat.setPort(port);
 
 		tomcat.setBaseDir(".");
-
+		
 		Context ctx = tomcat.addContext("/", new File(".").getAbsolutePath());
-
+		
 		Tomcat.addServlet(ctx, "obix", new ObixServlet(obixServer));
 		ctx.addServletMapping("/*", "obix");
 
