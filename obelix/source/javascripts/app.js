@@ -1,3 +1,40 @@
+/*
+ * Naming convention (apply if possible):
+ * 
+ * .use-dashes-for-a-self-defined-multi-word-class
+ * #use-dashes-for-a-self-defined-multi-word-id
+ */
+
+/*
+ * AngularJS v1.2.1 is used.
+ * https://code.angularjs.org/1.2.1/docs/api
+ * 
+ * Sugar v1.4.0 is used
+ * If, at any point, you encounter code which might not look like ECMAScript, 
+ * check out the sugar.js API: http://sugarjs.com/api
+ * 
+ * jQuery v2.0.3 is used (SizzleJS is included)
+ * http://jquery.com/
+ * 
+ * jQuery UI v1.10.3 is used
+ * http://jqueryui.com
+ * 
+ * jsPlumb v1.5.2 is usded for drawing connection endpoints and connections 
+ * between devices.
+ * http://jsplumb.org/doc/home.html
+ * https://github.com/sporritt/jsplumb/
+ * 
+ * tourist.js is used for the UI tour (it uses qTip2)
+ * https://easelinc.github.io/tourist/
+ * 
+ * CanvasJS v1.4.1 is used for drawing the statistic charts.
+ * http://canvasjs.com/
+ * 
+ * qTip2 v2.2.0 is used by tourist.js and it is used for the splash and about modal 
+ * dialog.
+ * http://qtip2.com
+ * 
+ */
 //= require 'sugar'
 //= require 'jquery'
 //= require 'jquery-ui'
@@ -410,6 +447,9 @@ app.factory('Device', ['$http', '$q', '$timeout', 'Storage', 'Property', 'Watch'
           return String.fromCharCode(num);
     });
     this.originalName = name;
+    this.htmlClassName = (function(deviceName) {
+      return deviceName.toLowerCase().replace(/ /g, '');
+    })(this.name);
     this.obix = {
         contractList: {
           'is': null,
@@ -560,6 +600,12 @@ app.factory('Device', ['$http', '$q', '$timeout', 'Storage', 'Property', 'Watch'
   return Device;
 }]);
 
+/*
+ * AngularJS service Sidebar
+ * 
+ * The object returned by this factory represents the current state 
+ * of the sidebar. Its state is persisted in the localStorage of the browser. 
+ */
 app.factory('Sidebar', ['Storage', function(Storage) {
   var _expandedStorage = new Storage('sidebar_expanded');
   var _expanded = ('true' === _expandedStorage.get());
@@ -604,6 +650,22 @@ app.factory('Sidebar', ['Storage', function(Storage) {
   };
 }]);
 
+/*
+ * AngularJS service DeviceStatistics
+ * 
+ * This service is used to eventually add/remove devices to the statistic menu. 
+ * 
+ * lineColors[] contains the hex codes of the chart lines. Once a property has 
+ * a line color assigned for its chart, it is not changed.
+ *  
+ * It provides the following methods:
+ * .) bool isRegisteredDevice(device)
+ * .) void addDevice(device)
+ * .) void removeDevice(device)
+ * .) void query()
+ *    The historical values of each property of each registered device are 
+ *    queried ca. every 5000 msec
+ */
 app.factory('DeviceStatistics', ['$http', '$interval', function($http, $interval) {
   var _devices = [];
   var _additionalDevicesData =  [];
@@ -613,6 +675,7 @@ app.factory('DeviceStatistics', ['$http', '$interval', function($http, $interval
   var lineColorsLength = lineColors.length;
   
   function getHistoryQueryPayload() {
+    //TODO: var xmlQueryString = ['..',..].join('')
     var xmlQueryString = '<obj is="obix:HistoryFilter">'
       + '<int name="limit" val="10"/>'
       + '<abstime name="start" val="1970-01-01T00:00:00.000Z"/>'
@@ -707,6 +770,13 @@ app.factory('DeviceStatistics', ['$http', '$interval', function($http, $interval
   }
 }]);
 
+/*
+ * AngularJS service ProjectMembers
+ * 
+ * This service provide the names and other details of the project members. It is 
+ * put in the scope of the controller MainCtrl (see app.controller('MainCtrl')). Its 
+ * usage can be seen in index.haml.
+ */
 app.factory('ProjectMembers', [function() {
   var ProjectMember = function(firstName, lastName, website) {
     this.firstName = firstName;
@@ -732,6 +802,12 @@ app.factory('ProjectMembers', [function() {
   }
 }]);
 
+/*
+ * AngularJS controller MainCtrl
+ * 
+ * Read https://code.google.com/p/iotsys/w/list to understand the communication 
+ * between client and server.
+ */
 app.controller('MainCtrl', ['$scope','$q','$timeout', '$interval', 'Lobby','Watch','Connection', 'Sidebar', 'DeviceStatistics', 'ProjectMembers', function($scope, $q, $timeout, $interval, Lobby, Watch, Connection, Sidebar, DeviceStatistics, ProjectMembers) {
   // Modal-specific z-index
   jQuery.fn.qtip.modal_zindex = jQuery.fn.qtip.zindex + 1000;
@@ -746,6 +822,7 @@ app.controller('MainCtrl', ['$scope','$q','$timeout', '$interval', 'Lobby','Watc
   var devicesInstantiatedWithPropertiesDefer = $q.defer();
   var jsPlumbEndpointRectsRendereredDefer = $q.defer();
   
+  // The rects are the connection endpoints (yellow rectangles).
   var expectedJsPlumbEndpointRects = null;
   var jsPlumbEndpointRectsVisibleCheckIntervalTimerPromise = $interval(function() {
     var rectsVisible = jQuery('rect:visible').length;
@@ -760,7 +837,7 @@ app.controller('MainCtrl', ['$scope','$q','$timeout', '$interval', 'Lobby','Watc
     Watch.watchRecreatedDefer.promise,
     devicesInstantiatedDefer.promise
   ]).then(function(values) {
-    // Promises resolved. We now have both watch and devices and can re-add them
+    // Promises resolved. Watch and devices are available; re-add them
     // to the new watch
     console.log("Re-adding placed devices to new watch");
     var watch = values[0];
@@ -768,7 +845,7 @@ app.controller('MainCtrl', ['$scope','$q','$timeout', '$interval', 'Lobby','Watc
     placedDevices.each(function(device) { watch.add(device.href); });
   });
 
-  // When devices are known, we want to restore connections
+  // When devices are known, restore connections
   devicesInstantiatedWithPropertiesDefer.promise.then(function(placedDevices) {
     placedDevices.map(function(device){
       device.properties.map(function(property){
@@ -794,7 +871,7 @@ app.controller('MainCtrl', ['$scope','$q','$timeout', '$interval', 'Lobby','Watc
     
    $timeout(function(){
       jQuery('body').trigger('hideSplashScreen');
-      jQuery('#tourFirstTimeVisitor').trigger('showTourHelp');
+      jQuery('#tour-first-time-visitor').trigger('showTourHelp');
     }, 0);
   });
 
@@ -943,7 +1020,7 @@ app.directive('includeStatisticsTemplate', ['$compile','$templateCache',function
     terminal: true,
     scope: {statistics:'=includeStatisticsTemplate'},
     link: function(scope, element, attrs) {
-      var template = $templateCache.get('statistics_template');
+      var template = $templateCache.get('statistics-template');
       element.append(template);
       $compile(element.contents())(scope.$new());
     }
@@ -956,7 +1033,7 @@ app.directive('includeDirectoryTemplate', ['$compile','$templateCache',function(
     terminal: true,
     scope: {directory:'=includeDirectoryTemplate'},
     link: function(scope, element, attrs) {
-      var template = $templateCache.get('directory_template');
+      var template = $templateCache.get('directory-template');
       element.append(template);
       $compile(element.contents())(scope.$new());
     }
@@ -1066,6 +1143,14 @@ app.directive('jsplumbEndpoint', ['$timeout', function($timeout) {
   };
 }]);
 
+/*
+ * AngularJS directive obelix-about-starter
+ * 
+ * This directive is responsible for displaying a splash screen (modal dialog) 
+ * during the initialization of the web UI.
+ * The directive uses the qtip2 library.
+ * Check out their website: http://qtip2.com/
+ */
 app.directive('obelixSplashScreen', [function() {
   return {
     restrict: 'A',
@@ -1111,6 +1196,11 @@ app.directive('obelixSplashScreen', [function() {
   };
 }]);
 
+/*
+ * AngularJS directive obelix-logout-starter
+ * 
+ * This directive is responsible for terminating the current UI session.
+ */
 app.directive('obelixLogoutStarter', ['$window', function($window) {
   return {
     restrict: 'A',
@@ -1125,7 +1215,13 @@ app.directive('obelixLogoutStarter', ['$window', function($window) {
   };
 }]);
 
-
+/*
+ * AngularJS directive obelix-about-starter
+ * 
+ * This directive is responsible for displaying an 'About' modal dialog.
+ * The directive uses the qtip2 library.
+ * Check out their website: http://qtip2.com/
+ */
 app.directive('obelixAboutStarter', [function() {
   var aboutClone;
   return {
@@ -1181,22 +1277,37 @@ app.directive('obelixAboutStarter', [function() {
   };
 }]);
 
+/*
+ * AngularJS directive tour-device
+ * 
+ * This directive marks device boxes in the device menu of the sidebar with 
+ * an unique id so that they can be referenced/highlighted during the website 
+ * tour.
+ */
 app.directive('tourDevice', function() {
   return {
     restrict: 'A',
     link: function(scope, el, attrs) {
       var deviceName = scope.$eval(attrs['tourDevice']).name.toLowerCase();
       if (deviceName === 'virtualpushbutton') {
-        el.attr('id', 'tourDeviceButton');
+        el.attr('id', 'tour-device-button');
       } else if (deviceName === 'virtuallight') {
-        el.attr('id', 'tourDeviceLight');
+        el.attr('id', 'tour-device-light');
       } else if (deviceName === 'vcomplexsunblind') {
-        el.attr('id', 'tourDeviceHistory')
+        el.attr('id', 'tour-device-history')
       }
     }
   };
 });
 
+/*
+ * AngularJS directive obelix-tour-first-time-visitor
+ * 
+ * This directive is responsible for displaying a hint bubble for first time 
+ * visitors to take the website tour.
+ * The directive uses the same tour library as the directive obelix-tour-starter.
+ * Check out the comment of that directive.
+ */
 app.directive('obelixTourFirstTimeVisitor', ['Storage', function(Storage) {
   return {
     restrict: 'A',
@@ -1236,6 +1347,34 @@ app.directive('obelixTourFirstTimeVisitor', ['Storage', function(Storage) {
   };
 }]);
 
+/*
+ * AngularJS directive obelix-tour-starter
+ * 
+ * This directive is responsible for the website tour.
+ * Although it is a little bit long, it is relative simply.
+ * It uses the tour library https://easelinc.github.io/tourist/.
+ * Check out the doc/examples/FAQs!
+ * 
+ * -> Inside and outside the object that is returned, there are 
+ * some helper functions.
+ * 
+ * -> The object tourSteps contains the text and configuration of 
+ * each tour step/bubble.
+ * 
+ * -> A tour step has several options and most are self-explanatory.
+ * 
+ * -> For every tour step the property "setup" has to reference a function which 
+ * contains at least:  
+ *        function(tour, options) {
+ *          obelixTour.step = this;
+ *        }
+ * Otherwise the title of a step of is not displayed in the bubble header.
+ * 
+ * -> Try to make each step as independent as possible, so that when reordering 
+ * of the steps is required, it can be done easily (i. e. think about the functions 
+ * referenced by the properties 'setup' and 'teardown').
+ * 
+ */
 app.directive('obelixTourStarter', ['$timeout', 'Sidebar', 'Storage', function($timeout, Sidebar, Storage) {
   
   function toggleSidebarButton(enableToggle) {
@@ -1292,7 +1431,7 @@ app.directive('obelixTourStarter', ['$timeout', 'Sidebar', 'Storage', function($
           content: '<p>This is the menu toggle button. Click it to open/close the menu.</p>',
           closeButton: true,
           highlightTarget: true,
-          target: jQuery('div#toggleSidebar'),
+          target: jQuery('div#toggle-sidebar'),
           my: 'left center',
           at: 'right center',
           bind: ['onToggleButtonClick'],
@@ -1334,7 +1473,7 @@ app.directive('obelixTourStarter', ['$timeout', 'Sidebar', 'Storage', function($
           closeButton:true,
           highlightTarget: true,
           nextButton: true,
-          target: jQuery('div#segmentSettings'),
+          target: jQuery('div#segment-settings'),
           my: 'top left',
           at: 'bottom right',
           setup: function(tour, options) {
@@ -1356,7 +1495,7 @@ app.directive('obelixTourStarter', ['$timeout', 'Sidebar', 'Storage', function($
           closeButton:true,
           highlightTarget: true,
           nextButton: true,
-          target: jQuery('div#segmentStatistics'),
+          target: jQuery('div#segment-statistics'),
           my: 'top left',
           at: 'bottom right',
           setup: function(tour, options) {
@@ -1378,7 +1517,7 @@ app.directive('obelixTourStarter', ['$timeout', 'Sidebar', 'Storage', function($
           closeButton:true,
           highlightTarget: true,
           nextButton: true,
-          target: jQuery('div#segmentDevices'),
+          target: jQuery('div#segment-devices'),
           my: 'top left',
           at: 'bottom right',
           setup: function(tour, options) {
@@ -1399,13 +1538,13 @@ app.directive('obelixTourStarter', ['$timeout', 'Sidebar', 'Storage', function($
          at: 'top center',
          setup: function(tour, options) {
            obelixTour.step = this;
-           document.getElementById('tourDeviceButton').scrollIntoView(false);
+           document.getElementById('tour-device-button').scrollIntoView(false);
            options.tourDeviceDropZone
              .css({'top': '30px', 'left': '50%'})
              .addClass('tour-highlight')
              .droppable()
              .droppable({
-               accept: 'label#tourDeviceButton',
+               accept: 'label#tour-device-button',
                drop: function( event, ui ) {
                  options.droppedDeviceButton = jQuery(event.target);
                  options.droppedDeviceButton
@@ -1415,7 +1554,7 @@ app.directive('obelixTourStarter', ['$timeout', 'Sidebar', 'Storage', function($
                }
              });
            return {
-             target: jQuery('label#tourDeviceButton')
+             target: jQuery('label#tour-device-button')
            }
          },
          teardown: function(tour, options) {
@@ -1433,13 +1572,13 @@ app.directive('obelixTourStarter', ['$timeout', 'Sidebar', 'Storage', function($
          at: 'top right',
          setup: function(tour, options) {
            obelixTour.step = this;
-           document.getElementById('tourDeviceLight').scrollIntoView(false);
+           document.getElementById('tour-device-light').scrollIntoView(false);
            options.tourDeviceDropZone
              .css({'top': '280px', 'left': '30%'})
              .addClass('tour-highlight')
              .droppable()
              .droppable({
-               accept: 'label#tourDeviceLight',
+               accept: 'label#tour-device-light',
                drop: function( event, ui ) {
                  options.droppedDeviceLight = jQuery(event.target)
                  options.droppedDeviceLight
@@ -1449,7 +1588,7 @@ app.directive('obelixTourStarter', ['$timeout', 'Sidebar', 'Storage', function($
                }
              });
            return {
-             target: jQuery('label#tourDeviceLight')
+             target: jQuery('label#tour-device-light')
            }
          },
          teardown: function(tour, options) {
@@ -1519,13 +1658,13 @@ app.directive('obelixTourStarter', ['$timeout', 'Sidebar', 'Storage', function($
           at: 'top right',
           setup: function(tour, options) {
             obelixTour.step = this;
-            document.getElementById('tourDeviceHistory').scrollIntoView(false);
+            document.getElementById('tour-device-history').scrollIntoView(false);
             options.tourDeviceDropZone
               .css({'top': '280px', 'left': '60%'})
               .addClass('tour-highlight')
               .droppable()
               .droppable({
-                accept: 'label#tourDeviceHistory',
+                accept: 'label#tour-device-history',
                 drop: function( event, ui ) {
                   options.droppedDeviceHistory = jQuery(event.target)
                   options.droppedDeviceHistory
@@ -1535,7 +1674,7 @@ app.directive('obelixTourStarter', ['$timeout', 'Sidebar', 'Storage', function($
                 }
               });
             return {
-              target: jQuery('label#tourDeviceHistory')
+              target: jQuery('label#tour-device-history')
             }
           },
           teardown: function(tour, options) {
@@ -1573,7 +1712,7 @@ app.directive('obelixTourStarter', ['$timeout', 'Sidebar', 'Storage', function($
           setup: function(tour, options) {
             obelixTour.step = this;
             return {
-              target: jQuery('#logoutStarter')
+              target: jQuery('#logout-starter')
             }
           }
          }];
@@ -1633,7 +1772,7 @@ app.directive('obelixTourStarter', ['$timeout', 'Sidebar', 'Storage', function($
         },
         steps: tourSteps,
         stepOptions: {
-          tourDeviceDropZone: jQuery('#canvas #tourDeviceDropZone'),
+          tourDeviceDropZone: jQuery('#canvas #tour-device-drop-zone'),
           droppedDevices: [],
           setDragOnDroppedDevices: function (boolDrag) {
             var stringDrag = boolDrag ? 'enable' : 'disable';
@@ -1658,6 +1797,12 @@ app.directive('obelixTourStarter', ['$timeout', 'Sidebar', 'Storage', function($
   }
 }]);
 
+/*
+ * AngularJS directive toggle-device-statistic
+ * 
+ * This directive implements the behaviour of the device button "%".
+ * It expects one argument: a device object.  
+ */
 app.directive('toggleDeviceStatistic', ['DeviceStatistics', function(DeviceStatistics) {
   var inStatisticsHTMLClass = 'in-statistic';
   return {
@@ -1692,26 +1837,37 @@ app.directive('toggleDeviceStatistic', ['DeviceStatistics', function(DeviceStati
   };
 }]);
 
+/*
+ * AngularJS filter comparator-op-enc
+ * 
+ * In order to not "break" the device layout because of long names 
+ * in a drop-down list, the filter comparatorOpEnc encodes the 
+ * original name with a shorter name.
+ * Hint: if you do not understand the symbols in the short names, 
+ * read a regular expression tutorial (e. g. 
+ * http://www.regular-expressions.info/tutorial.html)  
+ */
 app.filter('comparatorOpEnc', function() {
   return function(operation, device) {
     if (angular.isString(operation)) {
       var encodedOp = operation;
-      if ('iot:StringComparator' == device.obix.contractList.is) {
+      var deviceContractIs = device.obix.contractList.is;
+      if ('iot:StringComparator' == deviceContractIs) {
         switch(operation) {
-        case 'eq': encodedOp = 'eq'; break;
-        case 'startsWith': encodedOp = '^x*'; break;
-        case 'endsWith': encodedOp = '*x$'; break;
-        case 'contains': encodedOp = '*x*'; break;
-        default: encodedOp = operation; break;
+        case 'eq':          encodedOp = 'eq'; break;
+        case 'startsWith':  encodedOp = '^x*'; break;
+        case 'endsWith':    encodedOp = '*x$'; break;
+        case 'contains':    encodedOp = '*x*'; break;
+        default:            encodedOp = operation; break;
         }
-      } else if ('iot:Comparator' == device.obix.contractList.is) {
+      } else if ('iot:Comparator' == deviceContractIs) {
         switch(operation) {
-        case 'lt': encodedOp = '<'; break;
+        case 'lt':  encodedOp = '<'; break;
         case 'lte': encodedOp = '\u2264'; break;
-        case 'eq': encodedOp = '='; break;
+        case 'eq':  encodedOp = '='; break;
         case 'gte': encodedOp = '\u2265'; break;
-        case 'gt': encodedOp = '>'; break;
-        default: encodedOp = operation; break;
+        case 'gt':  encodedOp = '>'; break;
+        default:    encodedOp = operation; break;
         }
       }
       return encodedOp;

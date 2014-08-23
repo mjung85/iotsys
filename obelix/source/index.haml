@@ -1,3 +1,7 @@
+-# Naming convention for HTML class and id names (apply if possible):
+-# .use-dashes-for-a-self-defined-multi-word-class
+-# #use-dashes-for-a-self-defined-multi-word-id
+
 !!!
 %html.obelix(ng-app="Obelix" lang="en")
   %head
@@ -6,7 +10,7 @@
     = stylesheet_link_tag "app.css"
     = javascript_include_tag "app.js"
   %body(ng-controller="MainCtrl" obelix-splash-screen)
-    %script(type="text/ng-template" id="directory_template")
+    %script(type="text/ng-template" id="directory-template")
       .icon-label
         .icon(ng-click="directory.toggle()" ng-class="{expanded:directory.expanded}")
         .label(ng-click="directory.toggle()") {{directory.name}}
@@ -16,7 +20,7 @@
           %label(draggable="device" tour-device="device") {{device.name}}
       %ul.subdirectories(ng-show="directory.expanded")
         %li.subdirectory(ng-class="{expanded:subdirectory.expanded}" ng-repeat="subdirectory in directory.subdirectories" include-directory-template="subdirectory")
-    %script(type="text/ng-template" id="statistics_template")
+    %script(type="text/ng-template" id="statistics-template")
       %ul
         %li(ng-repeat="device in statistics.devices")
           .statistics-box
@@ -24,36 +28,36 @@
               .icon(ng-click="device.toggleStatisticBox()" ng-class="{expanded:device.statistics.statisticBox.expanded}")
               .label(ng-click="device.toggleStatisticBox()" ng-class="{expanded:device.statistics.statisticBox.expanded}") {{device.name}}
             .device-charts-container-container(ng-show="device.statistics.statisticBox.expanded") 
-              %div.chart_container(ng-repeat="property in device.statistics.history.properties" id="{{property.chartContainerID}}")
+              %div.chart-container(ng-repeat="property in device.statistics.history.properties" id="{{property.chartContainerID}}")
                 Please wait while the data is being fetched.
-    .btn#toggleSidebar(ng-class="{disabled:sidebar.locked}" ng-click="sidebar.toggle(); $event.stopPropagation();")
+    .btn#toggle-sidebar(ng-class="{disabled:sidebar.locked}" ng-click="sidebar.toggle(); $event.stopPropagation();")
     #sidebar-sublayer
     #sidebar(ng-class="{expanded:sidebar.expanded}")
       .header
         %a(href="https://code.google.com/p/iotsys/" target="_blank")
           #sidebar-logo(title="IoTSyS - Internet of Things System Stack")
-        .segmented_control
-          .segment#segmentDevices(ng-class="{active: sidebar.segment==0}" ng-click="sidebar.segment=0") Devices
-          .segment#segmentStatistics(ng-class="{active: sidebar.segment==1}" ng-click="sidebar.segment=1") Statistics
-          .segment#segmentSettings(ng-class="{active: sidebar.segment==2}" ng-click="sidebar.segment=2") Settings
+        .segmented-control
+          .segment#segment-devices(ng-class="{active: sidebar.segment==0}" ng-click="sidebar.segment=0") Devices
+          .segment#segment-statistics(ng-class="{active: sidebar.segment==1}" ng-click="sidebar.segment=1") Statistics
+          .segment#segment-settings(ng-class="{active: sidebar.segment==2}" ng-click="sidebar.segment=2") Settings
       .content
         %div(ng-show="sidebar.segment==0" ng-if="directory" include-directory-template="directory")
         %div(ng-show="sidebar.segment==1" ng-if="statistics" include-statistics-template="statistics")
         %div#settings(ng-show="sidebar.segment==2")
           .section
+            .section-title 
+              %h3 Sidebar
+            .section-content
+              %label(for="sidebar-lock") Always Open:
+              %input(id="sidebar-lock" type="checkbox" ng-model="sidebar.locked")
+            .clear
+          .section
             .section-title
               %h3 Watch
             .section-content
-              %label(for="watchPollInterval") Poll interval:
-              %input(id="watchPollInterval" type="text" size="5" maxlength="5" ng-model="watch.interval" inline-editor="watch.updateInterval()")
+              %label(for="watch-poll-interval") Poll interval:
+              %input(id="watch-poll-interval" type="text" size="5" maxlength="5" ng-model="watch.interval" inline-editor="watch.updateInterval()")
               %span msec
-            .clear
-          .section
-            .section-title 
-              %h3 Menu
-            .section-content
-              %label(for="sidebarLock") Always Open:
-              %input(id="sidebarLock" type="checkbox" ng-model="sidebar.locked")
             .clear
           .section
             .section-title 
@@ -62,19 +66,19 @@
               %a(href="#" ng-click="clear()") Clear Canvas
             .clear
     #canvas(ng-click="sidebar.expanded = false" droppable="placeDevice" jsplumb-container)
-      #logoutStarter.obelix-starter(obelix-logout-starter)
+      #logout-starter.obelix-starter(obelix-logout-starter)
         .icon-color
-      #aboutStarter.obelix-starter(obelix-about-starter)
+      #about-starter.obelix-starter(obelix-about-starter)
         .icon-color
-      #tourFirstTimeVisitor(obelix-tour-first-time-visitor)
+      #tour-first-time-visitor(obelix-tour-first-time-visitor)
         .icon-color
-      #tourStarter.obelix-starter(obelix-tour-starter)
+      #tour-starter.obelix-starter(obelix-tour-starter)
         .icon-color
-      #tourDeviceDropZone
+      #tour-device-drop-zone
       %div(ng-repeat="device in allDevices | filter:{placement:'!!'}")
-        .device(ng-style="{left: device.placement.left, top: device.placement.top}" ng-class="device.name.toLowerCase()" draggable="device" draggable-distance="5" draggable-helper="original" draggable-via-jsplumb="true")
+        .device(ng-style="{left: device.placement.left, top: device.placement.top}" ng-class="device.htmlClassName" draggable="device" draggable-distance="5" draggable-helper="original" draggable-via-jsplumb="true")
           %header(ng-switch="device.editing")
-            %div.block_control 
+            %div.block-control 
               %div.control.close(ng-click="destroyDevice(device)" title="Delete device from current configuration") x
               %div.control.statistics(toggle-device-statistic="device") %
               %div.clear
