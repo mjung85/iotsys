@@ -29,7 +29,7 @@
               .label(ng-click="device.toggleStatisticBox()" ng-class="{expanded:device.statistics.statisticBox.expanded}") {{device.name}}
             .device-charts-container-container(ng-show="device.statistics.statisticBox.expanded") 
               %div.chart-container(ng-repeat="property in device.statistics.history.properties" id="{{property.chartContainerID}}")
-                Please wait while the data is being fetched.
+                {{property.name}}: Please wait while the data is being fetched.
     .btn#toggle-sidebar(ng-class="{disabled:sidebar.locked}" ng-click="sidebar.toggle(); $event.stopPropagation();")
     #sidebar-sublayer
     #sidebar(ng-class="{expanded:sidebar.expanded}")
