@@ -675,13 +675,13 @@ app.factory('DeviceStatistics', ['$http', '$interval', function($http, $interval
   var lineColorsLength = lineColors.length;
   
   function getHistoryQueryPayload() {
-    //TODO: var xmlQueryString = ['..',..].join('')
-    var xmlQueryString = '<obj is="obix:HistoryFilter">'
-      + '<int name="limit" val="10"/>'
-      + '<abstime name="start" val="1970-01-01T00:00:00.000Z"/>'
-      + '<abstime name="end" val="' + new Date().toISOString() + '"/>'
-      + '</obj>';
-    return xmlQueryString;
+    return ['<obj is="obix:HistoryFilter">'
+      , '<int name="limit" val="10"/>'
+      , '<abstime name="start" val="1970-01-01T00:00:00.000Z"/>'
+      , '<abstime name="end" val="' 
+      , new Date().toISOString() 
+      , '"/>'
+      , '</obj>'].join('');
   }
   
   return {
@@ -713,14 +713,11 @@ app.factory('DeviceStatistics', ['$http', '$interval', function($http, $interval
               property.lineColor = lineColors[lineColorIndex % lineColorsLength];
               lineColorIndex++;
             }
-            $http({
-              method: 'POST',
-              url: property.href + '/query',
+            $http.post(property.href + '/query', getHistoryQueryPayload(), {
               headers: {
                 'Content-Type': 'text/xml',
                 'Accept': 'application/json'
-              },
-              data: getHistoryQueryPayload()
+              }
             }).success(function(data, status, headers, config) {
               /* A chart object is created only once for each property and also 
                * the data source containing the values of the property is created 
@@ -825,7 +822,8 @@ app.controller('MainCtrl', ['$scope','$q','$timeout', '$interval', 'Lobby','Watc
   // The rects are the connection endpoints (yellow rectangles).
   var expectedJsPlumbEndpointRects = null;
   var jsPlumbEndpointRectsVisibleCheckIntervalTimerPromise = $interval(function() {
-    var rectsVisible = jQuery('rect:visible').length;
+    //jQuery('rect:visible') always return 0 in Google Chrome. 
+    var rectsVisible = jQuery('rect:visible').length || jQuery('rect').length;
     if (rectsVisible === expectedJsPlumbEndpointRects) {
       $interval.cancel(jsPlumbEndpointRectsVisibleCheckIntervalTimerPromise);
       jsPlumbEndpointRectsRendereredDefer.resolve();
