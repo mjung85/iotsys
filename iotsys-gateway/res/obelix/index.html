@@ -32,7 +32,7 @@
             </div>
             <div class='device-charts-container-container' ng-show='device.statistics.statisticBox.expanded'>
               <div class='chart-container' id='{{property.chartContainerID}}' ng-repeat='property in device.statistics.history.properties'>
-                Please wait while the data is being fetched.
+                {{property.name}}: Please wait while the data is being fetched.
               </div>
             </div>
           </div>
