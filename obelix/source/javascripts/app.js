@@ -730,7 +730,7 @@ app.factory('DeviceStatistics', ['$http', '$interval', function($http, $interval
                */
               property.chartDataPoints.splice(0);
               if (! data.nodes[3].nodes) {
-                jQuery('#'+property.chartContainerID).text('Currently no data available.');
+                jQuery('#'+property.chartContainerID).text(property.name + ': Currently no data available.');
                 return;
               }
               data.nodes[3].nodes.each(function(nodes){
@@ -815,6 +815,8 @@ app.controller('MainCtrl', ['$scope','$q','$timeout', '$interval', 'Lobby','Watc
   $scope.statistics = DeviceStatistics;
   $scope.projectMembers = ProjectMembers;
 
+  $scope.statistics.query();
+  
   var devicesInstantiatedDefer = $q.defer();
   var devicesInstantiatedWithPropertiesDefer = $q.defer();
   var jsPlumbEndpointRectsRendereredDefer = $q.defer();
@@ -827,7 +829,6 @@ app.controller('MainCtrl', ['$scope','$q','$timeout', '$interval', 'Lobby','Watc
     if (rectsVisible === expectedJsPlumbEndpointRects) {
       $interval.cancel(jsPlumbEndpointRectsVisibleCheckIntervalTimerPromise);
       jsPlumbEndpointRectsRendereredDefer.resolve();
-      $scope.statistics.query();
     }
   }, 250);
   
