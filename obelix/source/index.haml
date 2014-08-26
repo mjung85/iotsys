@@ -76,7 +76,7 @@
         .icon-color
       #tour-device-drop-zone
       %div(ng-repeat="device in allDevices | filter:{placement:'!!'}")
-        .device(ng-style="{left: device.placement.left, top: device.placement.top}" ng-class="device.htmlClassName" draggable="device" draggable-distance="5" draggable-helper="original" draggable-via-jsplumb="true")
+        .device(ng-style="{left: device.placement.left, top: device.placement.top}" ng-class="device.name | htmlNameNormalizer" draggable="device" draggable-distance="5" draggable-helper="original" draggable-via-jsplumb="true")
           %header(ng-switch="device.editing")
             %div.block-control 
               %div.control.close(ng-click="destroyDevice(device)" title="Delete device from current configuration") x
