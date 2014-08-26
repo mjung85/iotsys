@@ -1,5 +1,5 @@
 /*
- * Naming convention (apply if possible):
+ * Naming convention (apply if possible; also see filter htmlNameNormalizer): 
  * 
  * .use-dashes-for-a-self-defined-multi-word-class
  * #use-dashes-for-a-self-defined-multi-word-id
@@ -431,7 +431,7 @@ app.factory('Connection', ['Storage', function(Storage) {
   return Connection;
 }]);
 
-app.factory('Device', ['$http', '$q', '$timeout', 'Storage', 'Property', 'Watch', 'Connection',function($http, $q, $timeout, Storage, Property, Watch, Connection) {
+app.factory('Device', ['$http', '$q', '$timeout', '$filter', 'Storage', 'Property', 'Watch', 'Connection',function($http, $q, $timeout, $filter, Storage, Property, Watch, Connection) {
   var Device = function(href, name) {
     this.loadedDefer = $q.defer();
     this.href = href;
@@ -447,9 +447,6 @@ app.factory('Device', ['$http', '$q', '$timeout', 'Storage', 'Property', 'Watch'
           return String.fromCharCode(num);
     });
     this.originalName = name;
-    this.htmlClassName = (function(deviceName) {
-      return deviceName.toLowerCase().replace(/ /g, '');
-    })(this.name);
     this.obix = {
         contractList: {
           'is': null,
@@ -544,7 +541,7 @@ app.factory('Device', ['$http', '$q', '$timeout', 'Storage', 'Property', 'Watch'
             href: _href,
             chart: null,
             chartDataPoints: [],
-            chartContainerID: _href.replace(/\//g, '-').toLowerCase(),
+            chartContainerID: $filter('htmlNameNormalizer')(_href),
             chartLineColor: null
           });
         }  
@@ -1115,7 +1112,7 @@ app.directive('jsplumbContainer', function() {
   };
 });
 
-app.directive('jsplumbEndpoint', ['$timeout', function($timeout) {
+app.directive('jsplumbEndpoint', ['$timeout', '$filter', function($timeout, $filter) {
   return {
     restrict: 'A',
     link: function(scope, el, attrs) {
@@ -1127,7 +1124,7 @@ app.directive('jsplumbEndpoint', ['$timeout', function($timeout) {
         var ep = jsPlumb.addEndpoint(el, {
           isSource: true, 
           isTarget: true,
-          cssClass: device.name.toLowerCase(),
+          cssClass: $filter('htmlNameNormalizer')(device.name),
           parent: el.parent(),
           maxConnections: -1,
           anchors: [[1, 0.5, 1, 0, 12,0], [0, 0.5, -1, 0, -12, 0]],
@@ -1559,7 +1556,7 @@ app.directive('obelixTourStarter', ['$timeout', 'Sidebar', 'Storage', function($
          teardown: function(tour, options) {
            options.tourDeviceDropZone
              .removeClass('tour-highlight');
-           options.droppedDevices.push(jQuery('#canvas .device.virtualpushbutton').draggable('disable'));
+           options.droppedDevices.push(jQuery('#canvas .device.virtual-push-button').draggable('disable'));
          }
         }, {
          title: 'Virtual Light',
@@ -1593,7 +1590,7 @@ app.directive('obelixTourStarter', ['$timeout', 'Sidebar', 'Storage', function($
          teardown: function(tour, options) {
            options.tourDeviceDropZone
              .removeClass('tour-highlight')
-           options.droppedDevices.push(jQuery('#canvas .device.virtuallight').draggable('disable'));
+           options.droppedDevices.push(jQuery('#canvas .device.virtual-light').draggable('disable'));
          }
         }, {
          title: 'Device Box (1/2)',
@@ -1622,7 +1619,7 @@ app.directive('obelixTourStarter', ['$timeout', 'Sidebar', 'Storage', function($
          setup: function(tour, options) {
            obelixTour.step = this;
            return {
-             target: jQuery('#canvas ._jsPlumb_endpoint.virtualpushbutton')
+             target: jQuery('#canvas ._jsPlumb_endpoint.virtual-push-button')
            }
          },
          teardown: function(tour, options) {
@@ -1637,14 +1634,14 @@ app.directive('obelixTourStarter', ['$timeout', 'Sidebar', 'Storage', function($
          at: 'right center',
          setup: function(tour, options) {
            obelixTour.step = this;
-           jQuery('#canvas ._jsPlumb_endpoint.virtuallight, #canvas ._jsPlumb_endpoint.virtualpushbutton')
+           jQuery('#canvas ._jsPlumb_endpoint.virtual-light, #canvas ._jsPlumb_endpoint.virtual-push-button')
                .addClass('tour-highlight');
            return {
-             target: jQuery('#canvas ._jsPlumb_endpoint.virtualpushbutton')
+             target: jQuery('#canvas ._jsPlumb_endpoint.virtual-push-button')
            }
          },
          teardown: function(tour, options) {
-           jQuery('#canvas ._jsPlumb_endpoint.virtuallight, #canvas ._jsPlumb_endpoint.virtualpushbutton')
+           jQuery('#canvas ._jsPlumb_endpoint.virtual-light, #canvas ._jsPlumb_endpoint.virtual-push-button')
              .removeClass('tour-highlight');
          }
         }, {
@@ -1679,7 +1676,7 @@ app.directive('obelixTourStarter', ['$timeout', 'Sidebar', 'Storage', function($
           teardown: function(tour, options) {
             options.tourDeviceDropZone
               .removeClass('tour-highlight')
-            options.droppedDevices.push(jQuery('#canvas .device.vcomplexsunblind').draggable('disable'));
+            options.droppedDevices.push(jQuery('#canvas .device.v-complex-sun-blind').draggable('disable'));
           }
         }, {
           title: 'Device Box (2/2)',
@@ -1837,7 +1834,7 @@ app.directive('toggleDeviceStatistic', ['DeviceStatistics', function(DeviceStati
 }]);
 
 /*
- * AngularJS filter comparator-op-enc
+ * AngularJS filter comparatorOpEnc
  * 
  * In order to not "break" the device layout because of long names 
  * in a drop-down list, the filter comparatorOpEnc encodes the 
@@ -1873,5 +1870,47 @@ app.filter('comparatorOpEnc', function() {
     } else {
       return operation;
     }
+  }
+});
+
+/*
+ * AngularJS filter htmlNameNormalizer
+ * 
+ * This filter implements the suggested name format for HTML class and ID 
+ * names: 
+ * .use-dashes-for-a-self-defined-multi-word-class
+ * #use-dashes-for-a-self-defined-multi-word-id
+ */
+app.filter('htmlNameNormalizer', function() {
+  var _uppercaseCharRe = /[A-Z]+/g;
+  var _reExecArray;
+  var _lastMatch;
+  var _convertedNameArray;
+  var _convertedName;
+  
+  function _getNormalizedName(name) {
+    _lastMatch = 0;
+    _convertedNameArray = [];
+    while ((_reExecArray = _uppercaseCharRe.exec(name)) !== null) {
+        _convertedNameArray.push(name.substring(_lastMatch, _reExecArray.index));
+        _convertedNameArray.push('-');
+        var match = _reExecArray[0];
+        _convertedNameArray.push(match.toLowerCase());
+        _lastMatch = _reExecArray.index + match.length;
+    }
+    _convertedNameArray.push(name.substring(_lastMatch));
+    _convertedName = _convertedNameArray.join('');
+    _convertedName = _convertedName.trim();
+    _convertedName = _convertedName.replace(/ +-/g, '-');
+    _convertedName = _convertedName.replace(/ +/g, '-');
+    _convertedName = _convertedName.replace(/^-/g, '');
+    return _convertedName;
+  }
+
+  return function(name) {
+    if (angular.isString(name)) {
+      return _getNormalizedName(name);
+    }
+    return name;
   }
 });
