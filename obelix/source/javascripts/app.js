@@ -1,8 +1,6 @@
 /*
  * Naming convention (apply if possible; also see filter htmlNameNormalizer): 
- * 
- * .use-dashes-for-a-self-defined-multi-word-class
- * #use-dashes-for-a-self-defined-multi-word-id
+ * see https://code.google.com/p/iotsys/wiki/HowToHTMLClassAndIDNameFormat
  */
 
 /*
