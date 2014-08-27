@@ -1124,7 +1124,7 @@ app.directive('jsplumbEndpoint', ['$timeout', '$filter', function($timeout, $fil
         var ep = jsPlumb.addEndpoint(el, {
           isSource: true, 
           isTarget: true,
-          cssClass: $filter('htmlNameNormalizer')(device.name),
+          cssClass: $filter('htmlNameNormalizer')(device.originalName),
           parent: el.parent(),
           maxConnections: -1,
           anchors: [[1, 0.5, 1, 0, 12,0], [0, 0.5, -1, 0, -12, 0]],
@@ -1280,21 +1280,21 @@ app.directive('obelixAboutStarter', [function() {
  * an unique id so that they can be referenced/highlighted during the website 
  * tour.
  */
-app.directive('tourDevice', function() {
+app.directive('tourDevice', ['$filter', function($filter) {
   return {
     restrict: 'A',
     link: function(scope, el, attrs) {
-      var deviceName = scope.$eval(attrs['tourDevice']).name.toLowerCase();
-      if (deviceName === 'virtualpushbutton') {
+      var deviceName = $filter('htmlNameNormalizer')(scope.$eval(attrs['tourDevice']).originalName);
+      if (deviceName === 'virtual-push-button') {
         el.attr('id', 'tour-device-button');
-      } else if (deviceName === 'virtuallight') {
+      } else if (deviceName === 'virtual-light') {
         el.attr('id', 'tour-device-light');
-      } else if (deviceName === 'vcomplexsunblind') {
+      } else if (deviceName === 'v-complex-sun-blind') {
         el.attr('id', 'tour-device-history')
       }
     }
   };
-});
+}]);
 
 /*
  * AngularJS directive obelix-tour-first-time-visitor
@@ -1880,13 +1880,16 @@ app.filter('comparatorOpEnc', function() {
  * names: 
  * .use-dashes-for-a-self-defined-multi-word-class
  * #use-dashes-for-a-self-defined-multi-word-id
+ * 
+ * If the input is a string, the returned string will only contain the 
+ * following characters: -|a-z|0-9
  */
 app.filter('htmlNameNormalizer', function() {
   var _uppercaseCharRe = /[A-Z]+/g;
   var _reExecArray;
   var _lastMatch;
   var _convertedNameArray;
-  var _convertedName;
+  var _match;
   
   function _getNormalizedName(name) {
     _lastMatch = 0;
@@ -1894,17 +1897,18 @@ app.filter('htmlNameNormalizer', function() {
     while ((_reExecArray = _uppercaseCharRe.exec(name)) !== null) {
         _convertedNameArray.push(name.substring(_lastMatch, _reExecArray.index));
         _convertedNameArray.push('-');
-        var match = _reExecArray[0];
-        _convertedNameArray.push(match.toLowerCase());
-        _lastMatch = _reExecArray.index + match.length;
+        _match = _reExecArray[0];
+        _convertedNameArray.push(_match.toLowerCase());
+        _lastMatch = _reExecArray.index + _match.length;
     }
     _convertedNameArray.push(name.substring(_lastMatch));
-    _convertedName = _convertedNameArray.join('');
-    _convertedName = _convertedName.trim();
-    _convertedName = _convertedName.replace(/ +-/g, '-');
-    _convertedName = _convertedName.replace(/ +/g, '-');
-    _convertedName = _convertedName.replace(/^-/g, '');
-    return _convertedName;
+    return _convertedNameArray.join('')
+      .trim()
+      .replace(/ +-/g, '-')
+      .replace(/ +/g, '-')
+      .replace(/[^-a-z0-9]/g, '')
+      .replace(/-+/g, '-')
+      .replace(/^-/g, '');
   }
 
   return function(name) {
