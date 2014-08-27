@@ -650,7 +650,7 @@ app.factory('Sidebar', ['Storage', function(Storage) {
 /*
  * AngularJS service DeviceStatistics
  * 
- * This service is used to eventually add/remove devices to the statistic menu. 
+ * This service is used to eventually add/remove devices to/from the statistic menu. 
  * 
  * lineColors[] contains the hex codes of the chart lines. Once a property has 
  * a line color assigned for its chart, it is not changed.
@@ -821,7 +821,7 @@ app.controller('MainCtrl', ['$scope','$q','$timeout', '$interval', 'Lobby','Watc
   // The rects are the connection endpoints (yellow rectangles).
   var expectedJsPlumbEndpointRects = null;
   var jsPlumbEndpointRectsVisibleCheckIntervalTimerPromise = $interval(function() {
-    //jQuery('rect:visible') always return 0 in Google Chrome. 
+    //jQuery('rect:visible') returns 0 in Google Chrome. 
     var rectsVisible = jQuery('rect:visible').length || jQuery('rect').length;
     if (rectsVisible === expectedJsPlumbEndpointRects) {
       $interval.cancel(jsPlumbEndpointRectsVisibleCheckIntervalTimerPromise);
