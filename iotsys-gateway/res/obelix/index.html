@@ -104,7 +104,7 @@
       </div>
       <div id='tour-device-drop-zone'></div>
       <div ng-repeat="device in allDevices | filter:{placement:'!!'}">
-        <div class='device' draggable-distance='5' draggable-helper='original' draggable-via-jsplumb='true' draggable='device' ng-class='device.name | htmlNameNormalizer' ng-style='{left: device.placement.left, top: device.placement.top}'>
+        <div class='device' draggable-distance='5' draggable-helper='original' draggable-via-jsplumb='true' draggable='device' ng-class='device.originalName | htmlNameNormalizer' ng-style='{left: device.placement.left, top: device.placement.top}'>
           <header ng-switch='device.editing'>
             <div class='block-control'>
               <div class='control close' ng-click='destroyDevice(device)' title='Delete device from current configuration'>x</div>
