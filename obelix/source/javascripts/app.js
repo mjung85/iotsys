@@ -1624,7 +1624,7 @@ app.directive('obelixTourStarter', ['$timeout', 'Sidebar', 'Storage', function($
          }
         }, {
          title: 'Connect Endpoints',
-         content: '<p>Connect the endpoint of the virtual push button with the endpoint of the virtual light by drawing a line. Click with the primary mouse button on a endpoint and keep the mouse button pressed. Move the mouse pointer over to the other endpoint and release the mouse button afterwards.</p><p>A connection can be deleted by double-clicking on the connection line. All connections of a device are delete when the device is deleted.</p>',
+         content: '<p>Connect the endpoint of the virtual push button with the endpoint of the virtual light by drawing a line. Click with the primary mouse button on a endpoint and keep the mouse button pressed. Move the mouse pointer over to the other endpoint and release the mouse button afterwards.</p><p>A connection can be deleted by double-clicking on the connection line. All connections of a device are deleted when the device is deleted.</p>',
          nextButton: true,
          closeButton: true,
          highlightTarget: true,
