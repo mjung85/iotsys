@@ -1906,7 +1906,8 @@ app.filter('htmlNameNormalizer', function() {
       .replace(/ +/g, '-')
       .replace(/[^-a-z0-9]/g, '')
       .replace(/-+/g, '-')
-      .replace(/^-/g, '');
+      .replace(/^-/g, '')
+	  .replace(/-$/g, '');
   }
 
   return function(name) {
