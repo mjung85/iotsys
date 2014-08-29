@@ -67,8 +67,8 @@ public class HistoryServiceTest extends AbstractGatewayTest {
 				.body(hasXPath("/obj/abstime[@name='end' and not(@null)]"))
 				.body(hasXPath("/obj/list[@of='obix:HistoryRecord']"))
 				.body(hasXPath("/obj/list[count(obj) = 2]"))
-				.body(hasXPath("/obj/list/obj[1]/int[@val=1]"))
-				.body(hasXPath("/obj/list/obj[2]/int[@val=2]"))
+				.body(hasXPath("/obj/list/obj[1]/int[@val=2]"))
+				.body(hasXPath("/obj/list/obj[2]/int[@val=3]"))
 				.post("/testDevicesHistory/brightnessHistoryQuery/value/history/query");
 	}
 

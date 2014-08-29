@@ -127,7 +127,7 @@ public class HistoryFilterImpl extends Obj implements HistoryFilter, FeedFilter 
 		}
 		
 		while (limit.get() > 0 & records.size() > limit.get())
-			records.remove(records.size()-1);// remove the latest or oldest? records.size()-1 or 0
+			records.remove(0);// remove the latest or oldest? records.size()-1 or 0
 		
 		return new ArrayList<Obj>(records);
 	}

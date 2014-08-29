@@ -13,8 +13,10 @@ import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLEncoder;
+import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.StringTokenizer;
 import java.util.logging.Logger;
@@ -58,6 +60,8 @@ public class TomcatServer {
 	private static final Logger log = Logger.getLogger(TomcatServer.class
 			.getName());
 
+	private static final Collection<String> URIs_TO_NON_CRITICAL_RESOURCES = new HashSet<String>(); 
+
 	private String password = "123456";
 	private String alias = "tomcat";
 	// private String certificatePath = "ssl/certs/tomcatcert.cer";
@@ -68,9 +72,11 @@ public class TomcatServer {
 			boolean enableAuthen, ObixServer obixServer) throws IOException,
 			ServletException {
 
+		URIs_TO_NON_CRITICAL_RESOURCES.add("/stylesheets/app.css");
+		
 		this.tomcat = new Tomcat();
 
-		// tomcat.setPort(port);
+//		tomcat.setPort(port);
 
 		tomcat.setBaseDir(".");
 
@@ -114,6 +120,11 @@ public class TomcatServer {
 		tomcat.getServer().await();
 
 	}
+	
+	public static final boolean isURIToNonCriticalResource(String uri) {
+		return URIs_TO_NON_CRITICAL_RESOURCES.contains(uri);
+	}
+	
 
 	public class ObixServlet extends HttpServlet {
 
@@ -134,7 +145,7 @@ public class TomcatServer {
 				.getInstance();
 
 		private boolean enableAuthen = false;
-
+		
 		String hostAddress = "127.0.0.1";
 		String hostName = "localhost";
 
@@ -159,7 +170,7 @@ public class TomcatServer {
 
 			// Get subject host address
 			String subject = req.getRemoteAddr();
-
+			
 			if (enableAuthen) {
 				if (uri.endsWith("authenticate")) {
 					String username = req.getParameter("username");
@@ -200,6 +211,14 @@ public class TomcatServer {
 			String ipv6Address = "/" + getIPv6Address(req);
 			String uri = req.getRequestURI();
 
+			if (enableAuthen) {
+				if ((!isClientAuthenticated(req))
+						&& !uri.endsWith("login_error")
+						&& !isURIToNonCriticalResource(uri)) {
+					uri = "/login";
+				}
+			}
+
 			String response = getDoGetResponse(req, resp, uri, ipv6Address);
 
 			PrintWriter w = resp.getWriter();
@@ -211,61 +230,28 @@ public class TomcatServer {
 
 		public String getDoGetResponse(HttpServletRequest req,
 				HttpServletResponse resp, String uri, String ipv6Address) {
-			
-			String response = null;
-			
 			StringBuffer obixResponse = null;
 			Obj responseObj = null;
 			String resourcePath = getResourcePath(uri, ipv6Address);
 
-			response = serveStatic(req, resp, uri, ipv6Address);
+			String response = serveStatic(req, resp, uri, ipv6Address);
 			if (response != null) {
 				return response;
 			}
 
-			if (enableAuthen) {
-				HttpSession session = req.getSession(true);
-				
-				Object authen = session.getAttribute("authenticated");
-				
-				if (authen != null && Boolean.parseBoolean(authen.toString()) == true) {
+			// call interceptors
+			response = intercept(req, resp, hostName, hostAddress);
+			if (response != null) {
+				return response;
+			}
 
-					// call interceptors
-					response = intercept(req, resp, hostName, hostAddress);
-					if (response != null) {
-						return response;
-					}
-
-					try {
-						responseObj = obixServer.readObj(new URI(resourcePath),
-								true);
-						obixResponse = getObixResponse(req, ipv6Address,
-								responseObj, resourcePath);
-						response = encodeResponse(req, resp, uri, obixResponse);
-					} catch (URISyntaxException e) {
-						e.printStackTrace();
-					}
-				} else {
-					resp.setStatus(HttpStatus.SC_FORBIDDEN);
-					resp.setContentType(MIME_PLAINTEXT);
-					return response = "FORBIDDEN: User non authenticated!";
-				}
-			} else {
-				// call interceptors
-				response = intercept(req, resp, hostName, hostAddress);
-				if (response != null) {
-					return response;
-				}
-
-				try {
-					responseObj = obixServer.readObj(new URI(resourcePath),
-							true);
-					obixResponse = getObixResponse(req, ipv6Address,
-							responseObj, resourcePath);
-					response = encodeResponse(req, resp, uri, obixResponse);
-				} catch (URISyntaxException e) {
-					e.printStackTrace();
-				}
+			try {
+				responseObj = obixServer.readObj(new URI(resourcePath), true);
+				obixResponse = getObixResponse(req, ipv6Address, responseObj,
+						resourcePath);
+				response = encodeResponse(req, resp, uri, obixResponse);
+			} catch (URISyntaxException e) {
+				e.printStackTrace();
 			}
 
 			return response;
@@ -292,11 +278,7 @@ public class TomcatServer {
 			} else {
 
 				if (enableAuthen) {
-					HttpSession session = req.getSession(true);
-					if (session.getAttribute("authenticated") != null
-							&& Boolean.parseBoolean(session.getAttribute(
-									"authenticated").toString()) == true) {
-
+					if (isClientAuthenticated(req)) {
 						try {
 							responseObj = obixServer.invokeOp(new URI(
 									resourcePath), data);
@@ -311,8 +293,8 @@ public class TomcatServer {
 					}
 				} else {
 					try {
-						responseObj = obixServer.invokeOp(
-								new URI(resourcePath), data);
+						responseObj = obixServer.invokeOp(new URI(
+								resourcePath), data);
 						obixResponse = getObixResponse(req, ipv6Address,
 								responseObj, resourcePath);
 					} catch (URISyntaxException e) {
@@ -447,21 +429,26 @@ public class TomcatServer {
 			return response;
 		}
 
-		public boolean contains(String hearder, String element) {
-
-			StringTokenizer st = new StringTokenizer(hearder, ",");
-
-			while (st.hasMoreTokens()) {
-				String s = st.nextToken();
-
-				if (s.equalsIgnoreCase(element)) {
-					return true;
-				}
+		public boolean contains(String header, String element) {
+			String[] separatorTokens = {",", ";"};
+			for (String separatorToken : separatorTokens) {
+				StringTokenizer st = new StringTokenizer(header, separatorToken);
+				while (st.hasMoreTokens()) {
+					String s = st.nextToken();
+					if (s.equalsIgnoreCase(element)) {
+						return true;
+					}
+				}				
 			}
-
 			return false;
 		}
 
+		private boolean isClientAuthenticated(HttpServletRequest req) {
+			HttpSession session = req.getSession(true);
+			return session.getAttribute("authenticated") != null
+					&& Boolean.parseBoolean(session.getAttribute("authenticated").toString()); 
+		}
+		
 		private String getIPv6Address(HttpServletRequest req) {
 
 			String localSocket = req.getLocalAddr().toString();
@@ -1022,7 +1009,6 @@ public class TomcatServer {
 			while (st.hasMoreTokens())
 				theMimeTypes.put(st.nextToken(), st.nextToken());
 		}
-
 	}
 
 	public void shutdown() {
