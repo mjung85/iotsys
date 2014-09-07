@@ -63,9 +63,9 @@ public class TomcatServerNoSecurity {
 		tomcat.setPort(port);
 
 		tomcat.setBaseDir(".");
-
+		
 		Context ctx = tomcat.addContext("/", new File(".").getAbsolutePath());
-
+		
 		Tomcat.addServlet(ctx, "obix", new ObixServlet(obixServer));
 		ctx.addServletMapping("/*", "obix");
 		Tomcat.addServlet(ctx, "uidb", new UIDbServlet(obixServer));
