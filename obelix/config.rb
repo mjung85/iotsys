@@ -1,7 +1,7 @@
 require 'closure-compiler'
 
 after_configuration do
-    sprockets.append_path "assets/vendor/css" 
+    sprockets.append_path "assets/vendor/stylesheets" 
 end
 
 set :images_dir, 'images'
