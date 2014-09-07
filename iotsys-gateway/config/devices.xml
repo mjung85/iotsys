@@ -1393,7 +1393,7 @@
         </type>
 
         <href>smartmeter</href>
-        <historyEnabled>false</historyEnabled>
+        <historyEnabled>true</historyEnabled>
         <historyCount>1000</historyCount>
       </device>
 
@@ -1423,7 +1423,7 @@
         <type>at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators.impl.ComplexSunblindActuatorImpl
         </type>
         <href>vComplexSunBlind</href>
-        <historyEnabled>false</historyEnabled>
+        <historyEnabled>true</historyEnabled>
         <historyCount>200</historyCount>
         <groupCommEnabled>true</groupCommEnabled>
       </device>
@@ -1504,7 +1504,7 @@
         <type>at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators.impl.PumpActuatorImpl
         </type>
         <href>virtualPumpActuatorImpl</href>
-        <historyEnabled>false</historyEnabled>
+        <historyEnabled>true</historyEnabled>
          <groupCommEnabled>true</groupCommEnabled>
       </device>
       <device>
