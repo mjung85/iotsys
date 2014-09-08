@@ -31,8 +31,6 @@ import java.util.logging.Logger;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 
-import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.collections.map.HashedMap;
 import org.ektorp.CouchDbConnector;
 import org.ektorp.impl.StdCouchDbConnector;
 import org.ektorp.support.CouchDbRepositorySupport;
@@ -243,6 +241,11 @@ public class UIDbRepo extends CouchDbRepositorySupport<User> implements UIDb {
 		System.out.println(u.toString());
 		// retrieve the stored salt
 		byte[] salt = new BigInteger(u.getSalt(), 16).toByteArray();
+		if (salt[0] == 0) {
+		    byte[] tmp = new byte[salt.length - 1];
+		    System.arraycopy(salt, 1, tmp, 0, tmp.length);
+		    salt = tmp;
+		}
 		// calculate the hash
 		KeySpec spec = new PBEKeySpec(plainPassword.toCharArray(), salt, 65536, 128);
 		SecretKeyFactory f;
