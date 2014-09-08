@@ -1,0 +1,53 @@
+// Variables
+description = 'OSGI Wrapper for Tomcat libraries'
+
+jar {
+	from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+	
+	manifest {
+		attributes("Manifest-Version": "1.0",
+				   "Bundle-Name": "IoTSyS-Tomcat",
+				   "Bundle-SymbolicName": "at.ac.tuwien.auto.iotsys.commons",
+				   "Bundle-Description": "Wrapper for Tomcat libraries",
+				   "Bundle-Vendor": "Vienna University of Technology, Automation Systems Group, www.auto.tuwien.ac.at",
+				   "Bundle-Version": "0.1",
+				   "Bundle-Classpath": ".",
+				   "Export-Package": "javax.management," +
+									 "javax.servlet.http," +
+									 "org.apache.tomcat.util.modeler.modules," +
+									 "org.apache.tomcat.util.modeler," +
+									 "org.apache.catalina," +
+									 "org.apache.catalina.startup," +
+									 "org.apache.catalina.connector," +
+									 "org.apache.catalina.mbeans," +
+									 "org.apache.catalina.util," +
+									 "org.apache.catalina.core," +
+									 "org.apache.catalina.authenticator,"+
+									 "org.apache.catalina.deploy,"+
+									 "org.apache.catalina.loader,"+
+									 "org.apache.catalina.realm,"+
+									 "org.apache.catalina.security,"+
+									 "org.apache.catalina.session,"+
+									 "org.apache.catalina.users,"+
+									 "org.apache.catalina.valves,"+
+									 "javax.naming.directory," +
+									 "javax.servlet",
+				)
+	}	
+}
+
+repositories {	
+	flatDir { dirs "lib"}
+}
+
+dependencies {
+	compile ":ecj-P20140317-1600:"
+	compile ":tomcat-dbcp:"
+	compile ":tomcat-embed-core:"
+	compile ":tomcat-embed-el:"
+	compile ":tomcat-embed-jasper:"
+	compile ":tomcat-embed-logging-juli:"
+	compile ":tomcat-embed-logging-log4j:"
+	compile ":tomcat7-embed-websocket:"	
+}
+

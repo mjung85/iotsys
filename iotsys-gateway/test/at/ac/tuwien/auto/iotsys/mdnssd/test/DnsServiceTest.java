@@ -32,20 +32,10 @@
 
 package at.ac.tuwien.auto.iotsys.mdnssd.test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
-
 import java.util.Hashtable;
-
-import javax.naming.NamingEnumeration;
-import javax.naming.NamingException;
-import javax.naming.directory.Attributes;
-import javax.naming.directory.DirContext;
-import javax.naming.directory.InitialDirContext;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Test;
 
 import at.ac.tuwien.auto.iotsys.commons.Named;
 import at.ac.tuwien.auto.iotsys.gateway.test.AbstractGatewayTest;

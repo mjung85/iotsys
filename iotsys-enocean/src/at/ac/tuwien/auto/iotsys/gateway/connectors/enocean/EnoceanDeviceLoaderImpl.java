@@ -42,7 +42,6 @@ import java.util.logging.Logger;
 
 import obix.Obj;
 import obix.Uri;
-import obix.Obj.TranslationAttribute;
 
 import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.commons.configuration.XMLConfiguration;
@@ -53,7 +52,6 @@ import org.opencean.core.common.ProtocolConnector;
 
 import at.ac.tuwien.auto.iotsys.commons.DeviceLoader;
 import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
-import at.ac.tuwien.auto.iotsys.commons.persistent.ConfigsDbImpl;
 import at.ac.tuwien.auto.iotsys.commons.persistent.models.Connector;
 import at.ac.tuwien.auto.iotsys.commons.persistent.models.Device;
 

@@ -68,6 +68,7 @@ import at.ac.tuwien.auto.iotsys.xacml.pdp.PDPInterceptorSettings;
  * 
  */
 public class IoTSySGateway {
+	
 	private ObjectBroker objectBroker;
 
 	private InterceptorBroker interceptorBroker;
@@ -333,6 +334,7 @@ public class IoTSySGateway {
 	}
 
 	public static void main(String[] args) {
+		
 		final IoTSySGateway iotsys = new IoTSySGateway();
 		boolean enableServiceDiscovery = Boolean
 				.parseBoolean(PropertiesLoader
