@@ -1,0 +1,106 @@
+option java_outer_classname = "IotsysServicePb";
+option java_package = "com.google.apphosting.api";
+
+enum ResponseStatus {
+	OK = 0;
+	ERROR = 1;
+	ERROR_HISTORY_EXISTS = 2;
+	ERROR_NO_SUCH_HISTORY = 3;
+}
+
+enum IotObjectType {
+	OBJECT = 0;
+	FEED = 1;
+	LIST = 2;
+	OPERATION = 3;
+	REFERENCE = 4;
+	ERR = 5;
+	DATAPOINT_BOOLEAN = 6;
+	DATAPOINT_INTEGER = 7;
+	DATAPOINT_REAL = 8;
+	DATAPOINT_ABS_TIME = 9;
+	DATAPOINT_REL_TIME = 10;
+	DATAPOINT_ENUM = 11;
+	DATAPOINT_DATE = 12;
+	DATAPOINT_TIME = 13;
+	DATAPOINT_STRING = 14;
+	DATAPOINT_URI = 15;
+	HISTORY = 17;
+	HISTORY_QUERY_OUT = 18;
+	HISTORY_RECORD = 19;
+	HISTORY_FILTER = 20;
+	HISTORY_ROLLUP_IN = 21;
+	HISTORY_ROLLUP_OUT = 22;
+	HISTORY_ROLLUP_RECORD = 23;
+	HISTORY_APPEND_IN = 24;
+	HISTORY_APPEND_OUT = 25;
+	WATCH = 26;	
+	WATCH_OUT = 27;	
+	WATCH_IN = 28;
+}
+
+enum IotHistoryType {
+	HISTORY_POLL = 0;
+	HISTORY_WATCH = 1;
+	HISTORY_FEED = 2;
+}
+
+message IotObjectProto {
+	repeated IotObjectProto children = 1;
+	optional IotObjectType type = 2;
+ 	optional string host = 4;
+	optional int32 port = 5;
+	optional int32 protocol = 6;
+	optional int32 format = 7;
+	optional string name = 8;
+	optional string displayName = 9;
+	optional string display = 10;
+	optional string href = 11;	
+	optional string contract = 12;
+	optional bool writable = 13;
+	optional string status = 14;
+	optional int64 intValue = 15;
+	optional double realValue = 16;
+	optional string stringValue = 17;
+	optional int64 intMin = 18;
+	optional int64 intMax = 19;
+	optional double realMin = 20;
+	optional double realMax = 21;
+	optional string elementType = 22;
+	optional string timezone = 23;
+	optional string rangeUri = 24;
+	optional string numericUnit = 25;
+	optional int32 precision = 26;
+}
+
+message IotsysRequestProto {
+	optional string host = 1;
+	optional int32 port = 2;
+	optional string uri = 3;
+	optional int32 format = 4;
+	optional int32 protocol = 5;
+	optional IotObjectProto object = 6;
+}
+
+message IotsysResponseProto {
+	optional ResponseStatus status = 1;
+	optional string errorMessage = 2;
+	optional IotObjectProto object = 3;
+}
+
+message IotsysHistoryRequestProto {
+	optional IotHistoryType recordingType = 1;
+	optional string host = 2;
+	optional int32 port = 3;
+	optional string uri = 4;
+	optional int32 format = 5;
+	optional int32 protocol = 6;
+	optional int64 timeout = 7;
+}
+
+message IotsysHistoryResponseProto {
+	optional ResponseStatus status = 1;
+	optional string errorMessage = 2;
+	repeated IotObjectProto data = 3;
+}
+

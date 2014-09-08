@@ -1,0 +1,30 @@
+// Variables
+description = 'IoTSyS Multicast Forwarder'
+
+repositories {	
+	flatDir { dirs "lib/jnetpcap"}
+}
+
+configurations {
+	provided
+	testProvided
+}
+
+sourceSets {
+	main { compileClasspath += configurations.provided }
+	
+	test {
+		java { srcDir 'test' }
+		compileClasspath += configurations.testProvided
+		runtimeClasspath += configurations.provided
+		runtimeClasspath += configurations.testProvided
+	}
+}
+
+jar {
+	from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }		
+}
+
+dependencies {			
+	compile ":jnetpcap:"	
+}
