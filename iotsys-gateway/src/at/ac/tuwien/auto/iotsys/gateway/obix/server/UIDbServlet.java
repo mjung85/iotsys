@@ -140,7 +140,15 @@ public class UIDbServlet extends HttpServlet {
 		String resource = req.getPathInfo();
 		
 		switch (resource) {
-		case "/canvasobjects":
+		case "/users":
+			User u = null;
+			try {
+				u = mapper.readValue(req.getInputStream(), User.class);
+				os.getUidb().updateUser(u.getName(), u);
+				w.println(mapper.writeValueAsString(u));
+			} catch (JsonParseException | JsonMappingException e){
+				w.println("something wrong in updating new user");
+			}
 			break;
 		default:
 			w.println("NOT FOUND!");

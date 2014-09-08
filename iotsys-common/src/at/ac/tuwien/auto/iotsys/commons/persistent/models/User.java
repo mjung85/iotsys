@@ -69,5 +69,9 @@ public class User extends CouchDbDocument {
 	public void setSalt(String salt) {
 		this.salt = salt;
 	}
+	@Override
+	public String toString(){
+		return "{\"password\":\"" + password +"\",\"salt\":\"" + salt + "\",\"_id\":\"" + name + "\"}";
+	}
 	
 }

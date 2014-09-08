@@ -39,6 +39,7 @@ import org.ektorp.support.CouchDbRepositorySupport;
 import org.ektorp.support.View;
 import org.ektorp.support.Views;
 
+import at.ac.tuwien.auto.iotsys.commons.PropertiesLoader;
 import at.ac.tuwien.auto.iotsys.commons.persistent.models.User;
 
 /**
@@ -61,6 +62,17 @@ public class UIDbRepo extends CouchDbRepositorySupport<User> implements UIDb {
 		initStandardDesignDocument();
 		
 		loadAllKeyValues();
+		
+		// Instantiate bootstrap user account?
+		String bootstrapUser = PropertiesLoader.getInstance().getProperties().getProperty("iotsys.gateway.security.bootstrapUser", "iotsys");
+		String bootstrapPassword = PropertiesLoader.getInstance().getProperties().getProperty("iotsys.gateway.security.bootstrapPassword", "s3cret");
+		
+		User u = getUser(bootstrapUser);
+		if (u != null)
+			return;
+		
+		u = new User(bootstrapUser, bootstrapPassword, "admin");
+		addUser(u);
 	}
 	
 	public static UIDb getInstance(){
@@ -113,23 +125,62 @@ public class UIDbRepo extends CouchDbRepositorySupport<User> implements UIDb {
 		User u = null;
 		try {
 			u = db.get(User.class, name);
-		} catch(Exception e){}
+		} catch(Exception e){
+			e.printStackTrace();
+		}
 		return u;
 	}
 
-	@Override
-	public void addUser(User u) {
+	private class SaltHash{
+		String salt;
+		String hash;
+		public SaltHash(String salt, String hash){
+			this.salt = salt;
+			this.hash = hash;
+		}
+		public String getSalt() {
+			return salt;
+		}
+		public void setSalt(String salt) {
+			this.salt = salt;
+		}
+		public String getHash() {
+			return hash;
+		}
+		public void setHash(String hash) {
+			this.hash = hash;
+		}
+		
+	}
+	
+	private String hashGen(String rawPassword, String salt) {
+		byte[] saltB = new BigInteger(salt, 16).toByteArray();
+		// calculate the hash
+		KeySpec spec = new PBEKeySpec(rawPassword.toCharArray(), saltB, 65536,
+				128);
+		SecretKeyFactory f;
+		try {
+			f = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
+			byte[] hash = f.generateSecret(spec).getEncoded();
+			String hasedPassword = new BigInteger(1, hash).toString(16);
+			return hasedPassword;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	private SaltHash saltHashGen(String rawPassword){
 		byte[] salt = new byte[16];
 		(new Random()).nextBytes(salt);
-		KeySpec spec = new PBEKeySpec(u.getPassword().toCharArray(), salt, 65536, 128);
+		KeySpec spec = new PBEKeySpec(rawPassword.toCharArray(), salt, 65536, 128);
 		SecretKeyFactory f;
 		try {
 			f = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
 			byte[] hash = f.generateSecret(spec).getEncoded();
 			String saltStr = new BigInteger(1, salt).toString(16);
 			String hasedPassword = new BigInteger(1, hash).toString(16);
-			u.setSalt(saltStr);
-			u.setPassword(hasedPassword);
+			return new SaltHash(saltStr, hasedPassword);
 		} catch (NoSuchAlgorithmException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -137,7 +188,20 @@ public class UIDbRepo extends CouchDbRepositorySupport<User> implements UIDb {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		db.create(u);
+		return null;
+	}
+	
+	@Override
+	public void addUser(User u) {
+		SaltHash sh = saltHashGen(u.getPassword());
+		u.setSalt(sh.getSalt());
+		u.setPassword(sh.getHash());
+		try {
+			db.create(u);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	@Override
@@ -149,9 +213,17 @@ public class UIDbRepo extends CouchDbRepositorySupport<User> implements UIDb {
 	@Override
 	public void updateUser(String name, User u) {
 		User oldU = getUser(name);
-		oldU.setPassword(u.getPassword());
+		System.out.println(oldU.toString());
+		SaltHash sh = saltHashGen(u.getPassword());
+		oldU.setPassword(sh.getHash());
+		oldU.setSalt(sh.getSalt());
 		oldU.setRole(u.getRole());
-		db.update(oldU);
+		try {
+			System.out.println(oldU.toString());
+			db.update(oldU);
+		} catch (Exception e){
+			e.printStackTrace();
+		}
 	}
 
 	@Override
@@ -165,13 +237,20 @@ public class UIDbRepo extends CouchDbRepositorySupport<User> implements UIDb {
 	public boolean authenticateUser(String name, String plainPassword) {
 		User u = getUser(name);
 		
+		if (u == null)
+			return false;
+		
+		System.out.println(u.toString());
+		// retrieve the stored salt
 		byte[] salt = new BigInteger(u.getSalt(), 16).toByteArray();
+		// calculate the hash
 		KeySpec spec = new PBEKeySpec(plainPassword.toCharArray(), salt, 65536, 128);
 		SecretKeyFactory f;
 		try {
 			f = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
 			byte[] hash = f.generateSecret(spec).getEncoded();
 			String hasedPassword = new BigInteger(1, hash).toString(16);
+			System.out.println(plainPassword + "\t" + hasedPassword);
 			return hasedPassword.equals(u.getPassword()) ? true : false;
 		} catch (NoSuchAlgorithmException e) {
 			e.printStackTrace();

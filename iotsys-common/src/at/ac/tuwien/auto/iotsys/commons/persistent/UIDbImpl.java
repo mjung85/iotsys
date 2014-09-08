@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
 
+import at.ac.tuwien.auto.iotsys.commons.PropertiesLoader;
 import at.ac.tuwien.auto.iotsys.commons.persistent.models.User;
 
 /**
@@ -87,7 +88,14 @@ public class UIDbImpl implements UIDb {
 
 	@Override
 	public boolean authenticateUser(String name, String password) {
-		// TODO Auto-generated method stub
-		return false;
+		// DB not found, proceed with bootstrap account iotsys/s3cret
+		String bootstrapUser = PropertiesLoader.getInstance().getProperties().getProperty("iotsys.gateway.security.bootstrapUser", "iotsys");
+		String bootstrapPassword = PropertiesLoader.getInstance().getProperties().getProperty("iotsys.gateway.security.bootstrapPassword", "s3cret");
+		
+		if (!name.equals(bootstrapUser))
+			return false;
+		if (!password.equals(bootstrapPassword))
+			return false;
+		return true;
 	}
 }
