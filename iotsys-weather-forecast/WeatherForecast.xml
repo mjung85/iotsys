@@ -1,0 +1,10 @@
+<obj href="iot:WeatherForecast">
+	<int name="count" min="0" val="0"/>
+	<int name="window" min="12" max="168" val="48"/>
+	<abstime name="start" null="true"/>
+	<abstime name="end" null="true/>
+	<str name="tz" null="true"/>
+	<feed name="feed" in="iot:WeatherForecastFilter" of="iot:WeatherForecastRecord"/>
+	<op name="query" href="query" in="iot:WeatherForecastFilter" out="iot:WeatherForecastQueryResult"/>
+	<op name="update" href="update" in="iot:WeatherForecastUpdateIn" out="iot:WeatherForecastUpdateOut"/>
+</obj>

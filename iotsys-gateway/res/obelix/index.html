@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html class='obelix' lang='en' ng-app='Obelix'>
+  <head>
+    <meta charset='utf-8'>
+    <title>oBeliX</title>
+    <link href="stylesheets/app.css" media="screen" rel="stylesheet" type="text/css" />
+    <script src="javascripts/app.js" type="text/javascript"></script>
+  </head>
+  <body ng-controller='MainCtrl' obelix-splash-screen>
+    <script id='directory-template' type='text/ng-template'>
+      <div class='icon-label'>
+        <div class='icon' ng-class='{expanded:directory.expanded}' ng-click='directory.toggle()'></div>
+        <div class='label' ng-click='directory.toggle()'>{{directory.name}}</div>
+        <div class='clear'></div>
+      </div>
+      <ul class='devices' ng-show='directory.expanded'>
+        <li class='device' ng-repeat='device in directory.devices'>
+          <label draggable='device' tour-device='device'>{{device.name}}</label>
+        </li>
+      </ul>
+      <ul class='subdirectories' ng-show='directory.expanded'>
+        <li class='subdirectory' include-directory-template='subdirectory' ng-class='{expanded:subdirectory.expanded}' ng-repeat='subdirectory in directory.subdirectories'></li>
+      </ul>
+    </script>
+    <script id='statistics-template' type='text/ng-template'>
+      <ul>
+        <li ng-repeat='device in statistics.devices'>
+          <div class='statistics-box'>
+            <div class='icon-label'>
+              <div class='icon' ng-class='{expanded:device.statistics.statisticBox.expanded}' ng-click='device.toggleStatisticBox()'></div>
+              <div class='label' ng-class='{expanded:device.statistics.statisticBox.expanded}' ng-click='device.toggleStatisticBox()'>{{device.name}}</div>
+            </div>
+            <div class='device-charts-container-container' ng-show='device.statistics.statisticBox.expanded'>
+              <div class='chart-container' id='{{property.chartContainerID}}' ng-repeat='property in device.statistics.history.properties'>
+                {{property.name}}: Please wait while the data is being fetched.
+              </div>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </script>
+    <div class='btn' id='toggle-sidebar' ng-class='{disabled:sidebar.locked}' ng-click='sidebar.toggle(); $event.stopPropagation();'></div>
+    <div id='sidebar-sublayer'></div>
+    <div id='sidebar' ng-class='{expanded:sidebar.expanded}'>
+      <div class='header'>
+        <a href='https://code.google.com/p/iotsys/' target='_blank'>
+          <div id='sidebar-logo' title='IoTSyS - Internet of Things System Stack'></div>
+        </a>
+        <div class='segmented-control'>
+          <div class='segment' id='segment-devices' ng-class='{active: sidebar.segment==0}' ng-click='sidebar.segment=0'>Devices</div>
+          <div class='segment' id='segment-statistics' ng-class='{active: sidebar.segment==1}' ng-click='sidebar.segment=1'>Statistics</div>
+          <div class='segment' id='segment-settings' ng-class='{active: sidebar.segment==2}' ng-click='sidebar.segment=2'>Settings</div>
+        </div>
+      </div>
+      <div class='content'>
+        <div include-directory-template='directory' ng-if='directory' ng-show='sidebar.segment==0'></div>
+        <div include-statistics-template='statistics' ng-if='statistics' ng-show='sidebar.segment==1'></div>
+        <div id='settings' ng-show='sidebar.segment==2'>
+          <div class='section'>
+            <div class='section-title'>
+              <h3>Sidebar</h3>
+            </div>
+            <div class='section-content'>
+              <label for='sidebar-lock'>Always Open:</label>
+              <input id='sidebar-lock' ng-model='sidebar.locked' type='checkbox'>
+            </div>
+            <div class='clear'></div>
+          </div>
+          <div class='section'>
+            <div class='section-title'>
+              <h3>Watch</h3>
+            </div>
+            <div class='section-content'>
+              <label for='watch-poll-interval'>Poll interval:</label>
+              <input id='watch-poll-interval' inline-editor='watch.updateInterval()' maxlength='5' ng-model='watch.interval' size='5' type='text'>
+              <span>msec</span>
+            </div>
+            <div class='clear'></div>
+          </div>
+          <div class='section'>
+            <div class='section-title'>
+              <h3>Canvas</h3>
+            </div>
+            <div class='section-content'>
+              <a href='#' ng-click='clear()'>Clear Canvas</a>
+            </div>
+            <div class='clear'></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div droppable='placeDevice' id='canvas' jsplumb-container ng-click='sidebar.expanded = false'>
+      <div class='obelix-starter' id='logout-starter' obelix-logout-starter>
+        <div class='icon-color'></div>
+      </div>
+      <div class='obelix-starter' id='about-starter' obelix-about-starter>
+        <div class='icon-color'></div>
+      </div>
+      <div id='tour-first-time-visitor' obelix-tour-first-time-visitor>
+        <div class='icon-color'></div>
+      </div>
+      <div class='obelix-starter' id='tour-starter' obelix-tour-starter>
+        <div class='icon-color'></div>
+      </div>
+      <div id='tour-device-drop-zone'></div>
+      <div ng-repeat="device in allDevices | filter:{placement:'!!'}">
+        <div class='device' draggable-distance='5' draggable-helper='original' draggable-via-jsplumb='true' draggable='device' ng-class='device.originalName | htmlNameNormalizer' ng-style='{left: device.placement.left, top: device.placement.top}'>
+          <header ng-switch='device.editing'>
+            <div class='block-control'>
+              <div class='control close' ng-click='destroyDevice(device)' title='Delete device from current configuration'>x</div>
+              <div class='control statistics' toggle-device-statistic='device'>%</div>
+              <div class='clear'></div>
+            </div>
+            <input inline-editor='device.rename(); device.editing = false' ng-model='device.name' ng-switch-when='true' type='text'>
+            <label class='name' ng-click='device.editing = true' ng-switch-default>
+              {{device.name}}
+            </label>
+          </header>
+          <div class='properties'>
+            <div class='property' device='device' jsplumb-endpoint='property' ng-class='klass' ng-repeat='property in device.properties' ng-switch='property.klass'>
+              <label>{{property.displayName}}</label>
+              <span class='bool' ng-switch-when='bool'>
+                <input ng-change='property.write()' ng-checked='property.value' ng-disabled='property.readonly' ng-model='property.value' type='checkbox'>
+              </span>
+              <span class='numeric' ng-switch-when='numeric'>
+                <input ng-change='property.write()' ng-disabled='property.readonly' ng-model-onblur ng-model='property.value' type='text'>
+                <div class='slider' ng-switch='property.range'>
+                  <div ng-switch-when='false'></div>
+                  <div ng-switch-default>
+                    <input max='{{property.range.max}}' min='{{property.range.min}}' ng-model='property.value' ng-mouseup='property.write()' step='{{property.range.step}}' type='range'>
+                  </div>
+                </div>
+              </span>
+              <span class='enum' ng-switch-when='enum'>
+                <select ng-change='property.write()' ng-model='property.value' ng-options='x | comparatorOpEnc:device for x in property.range'></select>
+              </span>
+              <span class='other' ng-switch-default>
+                <input ng-change='property.write()' ng-disabled='property.readonly' ng-model-onblur ng-model='property.value' type='text'>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class='qtip-light obelix-qtip' id='about'>
+      <div id='about-header'>
+        <div class='row-0'>
+          <div id='iotsys-logo' title='IoTSyS - Internet of Things System Stack'>
+            <a href='https://code.google.com/p/iotsys/' target='_blank'></a>
+          </div>
+        </div>
+        <div class='row-1'>
+          <div id='automation-systems-group-logo' title='Automation Systems Group - Institute of Computer Aided Automation'>
+            <a href='https://www.auto.tuwien.ac.at/' target='_blank'></a>
+          </div>
+          <div id='tu-vienna-logo' title='Vienna University of Technology'>
+            <a href='https://www.tuwien.ac.at/' target='_blank'></a>
+          </div>
+        </div>
+        <div class='clear'></div>
+      </div>
+      <div id='about-content'></div>
+    </div>
+    <div class='text' id='project-members'>
+      <div class='leads'>
+        <h2>Project Lead</h2>
+        <span class='lead' ng-repeat='lead in projectMembers.leads'>
+          <span ng-if='!$last'>
+            <a href='{{lead.website}}' ng-if='lead.website' target='_blank'>
+              <span class='name'>{{lead.firstName}} {{lead.lastName}},</span>
+            </a>
+            <span class='name' ng-if='!lead.website'>
+              {{lead.firstName}} {{lead.lastName}},
+            </span>
+          </span>
+          <span ng-if='$last'>
+            <a href='{{lead.website}}' ng-if='lead.website' target='_blank'>
+              <span class='name'>{{lead.firstName}} {{lead.lastName}}</span>
+            </a>
+            <span class='name' ng-if='!lead.website'>
+              {{lead.firstName}} {{lead.lastName}}
+            </span>
+          </span>
+        </span>
+      </div>
+      <div class='contributors'>
+        <h3>Project Contributors</h3>
+        <span class='contributor' ng-repeat='contributor in projectMembers.contributors'>
+          <span ng-if='$index &gt;= 0 &amp;&amp; !$last'>
+            <a href='{{contributor.website}}' ng-if='contributor.website' target='_blank'>
+              <span class='name'>{{contributor.firstName}} {{contributor.lastName}},</span>
+            </a>
+            <span class='name' ng-if='!contributor.website'>
+              {{contributor.firstName}} {{contributor.lastName}},
+            </span>
+          </span>
+          <span ng-if='$index &gt; 0 &amp;&amp; $last'>
+            <a href='{{contributor.website}}' ng-if='contributor.website' target='_blank'>
+              <span class='name'>{{contributor.firstName}} {{contributor.lastName}}</span>
+            </a>
+            <span class='name' ng-if='!contributor.website'>
+              {{contributor.firstName}} {{contributor.lastName}}
+            </span>
+          </span>
+        </span>
+      </div>
+      <div class='footer'>
+        <button name='button' ng-click="jQuery('body').trigger('hideAboutScreen')">OK</button>
+      </div>
+    </div>
+  </body>
+</html>

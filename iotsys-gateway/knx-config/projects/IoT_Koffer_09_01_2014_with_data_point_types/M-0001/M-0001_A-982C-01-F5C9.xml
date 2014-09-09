@@ -1,0 +1,326 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<KNX xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" CreatedBy="ETS4" ToolVersion="ETS 4.1.5 (Build 3246)" xmlns="http://knx.org/xml/project/11">
+  <ManufacturerData>
+    <Manufacturer RefId="M-0001">
+      <ApplicationPrograms>
+        <ApplicationProgram Id="M-0001_A-982C-01-F5C9" Name="07B0 A1 Universal dimmer 982C01" ApplicationNumber="38956" ApplicationVersion="1" ProgramType="ApplicationProgram" MaskVersion="MV-07B0" LoadProcedureStyle="MergedProcedure" PeiType="0" HelpFile="" DefaultLanguage="en-US" DynamicTableManagement="0" Linkable="0" MinEtsVersion="3.0f" PreEts4Style="1" NonRegRelevantDataVersion="0" Hash="9U4Kl1KII+At2PsZbCi4yQ==" ConvertedFromPreEts4Data="1" Broken="0" IPConfig="Tool" AdditionalAddressesCount="0" DownloadInfoIncomplete="0" CreatedFromLegacySchemaVersion="0">
+          <Static>
+            <Code>
+              <RelativeSegment Id="M-0001_A-982C-01-F5C9_RS-01-00000" Offset="0" Size="65536" LoadStateMachine="1" />
+              <RelativeSegment Id="M-0001_A-982C-01-F5C9_RS-02-00000" Offset="0" Size="65536" LoadStateMachine="2" />
+            </Code>
+            <ParameterTypes>
+              <ParameterType Id="M-0001_A-982C-01-F5C9_PT-Page.5Ft" Name="Page_t" Plugin="">
+                <TypeNone />
+              </ParameterType>
+              <ParameterType Id="M-0001_A-982C-01-F5C9_PT-CoShow" Name="CoShow" Plugin="">
+                <TypeNumber maxInclusive="255" minInclusive="0" SizeInBit="8" Type="unsignedInt" />
+              </ParameterType>
+            </ParameterTypes>
+            <Parameters>
+              <Parameter Id="M-0001_A-982C-01-F5C9_P-14" Name="Added by Converter" Text="" ParameterType="M-0001_A-982C-01-F5C9_PT-Page.5Ft" Access="ReadWrite" Value="" LegacyPatchAlways="0" SuffixText="" />
+              <Parameter Id="M-0001_A-982C-01-F5C9_P-0" Name="CoSwitchParameter_0001" Text="CO switching parameter" ParameterType="M-0001_A-982C-01-F5C9_PT-CoShow" Access="None" Value="0" LegacyPatchAlways="0" SuffixText="" />
+              <Parameter Id="M-0001_A-982C-01-F5C9_P-1" Name="CoSwitchParameter_0002" Text="CO switching parameter" ParameterType="M-0001_A-982C-01-F5C9_PT-CoShow" Access="None" Value="0" LegacyPatchAlways="0" SuffixText="" />
+              <Parameter Id="M-0001_A-982C-01-F5C9_P-2" Name="CoSwitchParameter_0003" Text="CO switching parameter" ParameterType="M-0001_A-982C-01-F5C9_PT-CoShow" Access="None" Value="0" LegacyPatchAlways="0" SuffixText="" />
+              <Parameter Id="M-0001_A-982C-01-F5C9_P-3" Name="CoSwitchParameter_0004" Text="CO switching parameter" ParameterType="M-0001_A-982C-01-F5C9_PT-CoShow" Access="None" Value="1" LegacyPatchAlways="0" SuffixText="" />
+              <Parameter Id="M-0001_A-982C-01-F5C9_P-4" Name="CoSwitchParameter_0005" Text="CO switching parameter" ParameterType="M-0001_A-982C-01-F5C9_PT-CoShow" Access="None" Value="1" LegacyPatchAlways="0" SuffixText="" />
+              <Parameter Id="M-0001_A-982C-01-F5C9_P-5" Name="CoSwitchParameter_0006" Text="CO switching parameter" ParameterType="M-0001_A-982C-01-F5C9_PT-CoShow" Access="None" Value="1" LegacyPatchAlways="0" SuffixText="" />
+              <Parameter Id="M-0001_A-982C-01-F5C9_P-6" Name="CoSwitchParameter_0008" Text="CO switching parameter" ParameterType="M-0001_A-982C-01-F5C9_PT-CoShow" Access="None" Value="0" LegacyPatchAlways="0" SuffixText="" />
+              <Parameter Id="M-0001_A-982C-01-F5C9_P-7" Name="CoSwitchParameter_0009" Text="CO switching parameter" ParameterType="M-0001_A-982C-01-F5C9_PT-CoShow" Access="None" Value="0" LegacyPatchAlways="0" SuffixText="" />
+              <Parameter Id="M-0001_A-982C-01-F5C9_P-8" Name="CoSwitchParameter_0010" Text="CO switching parameter" ParameterType="M-0001_A-982C-01-F5C9_PT-CoShow" Access="None" Value="0" LegacyPatchAlways="0" SuffixText="" />
+              <Parameter Id="M-0001_A-982C-01-F5C9_P-9" Name="CoSwitchParameter_0011" Text="CO switching parameter" ParameterType="M-0001_A-982C-01-F5C9_PT-CoShow" Access="None" Value="0" LegacyPatchAlways="0" SuffixText="" />
+              <Parameter Id="M-0001_A-982C-01-F5C9_P-10" Name="CoSwitchParameter_0012" Text="CO switching parameter" ParameterType="M-0001_A-982C-01-F5C9_PT-CoShow" Access="None" Value="0" LegacyPatchAlways="0" SuffixText="" />
+              <Parameter Id="M-0001_A-982C-01-F5C9_P-11" Name="CoSwitchParameter_0013" Text="CO switching parameter" ParameterType="M-0001_A-982C-01-F5C9_PT-CoShow" Access="None" Value="0" LegacyPatchAlways="0" SuffixText="" />
+              <Parameter Id="M-0001_A-982C-01-F5C9_P-12" Name="CoSwitchParameter_0014" Text="CO switching parameter" ParameterType="M-0001_A-982C-01-F5C9_PT-CoShow" Access="None" Value="0" LegacyPatchAlways="0" SuffixText="" />
+              <Parameter Id="M-0001_A-982C-01-F5C9_P-13" Name="CoSwitchParameter_0015" Text="CO switching parameter" ParameterType="M-0001_A-982C-01-F5C9_PT-CoShow" Access="None" Value="0" LegacyPatchAlways="0" SuffixText="" />
+            </Parameters>
+            <ParameterRefs>
+              <ParameterRef Id="M-0001_A-982C-01-F5C9_P-14_R-14" DisplayOrder="1" RefId="M-0001_A-982C-01-F5C9_P-14" Tag="14" />
+              <ParameterRef Id="M-0001_A-982C-01-F5C9_P-0_R-0" DisplayOrder="20" RefId="M-0001_A-982C-01-F5C9_P-0" Tag="0" />
+              <ParameterRef Id="M-0001_A-982C-01-F5C9_P-1_R-1" DisplayOrder="30" RefId="M-0001_A-982C-01-F5C9_P-1" Tag="1" />
+              <ParameterRef Id="M-0001_A-982C-01-F5C9_P-2_R-2" DisplayOrder="40" RefId="M-0001_A-982C-01-F5C9_P-2" Tag="2" />
+              <ParameterRef Id="M-0001_A-982C-01-F5C9_P-3_R-3" DisplayOrder="50" RefId="M-0001_A-982C-01-F5C9_P-3" Tag="3" />
+              <ParameterRef Id="M-0001_A-982C-01-F5C9_P-4_R-4" DisplayOrder="60" RefId="M-0001_A-982C-01-F5C9_P-4" Tag="4" />
+              <ParameterRef Id="M-0001_A-982C-01-F5C9_P-5_R-5" DisplayOrder="70" RefId="M-0001_A-982C-01-F5C9_P-5" Tag="5" />
+              <ParameterRef Id="M-0001_A-982C-01-F5C9_P-6_R-6" DisplayOrder="90" RefId="M-0001_A-982C-01-F5C9_P-6" Tag="6" />
+              <ParameterRef Id="M-0001_A-982C-01-F5C9_P-7_R-7" DisplayOrder="100" RefId="M-0001_A-982C-01-F5C9_P-7" Tag="7" />
+              <ParameterRef Id="M-0001_A-982C-01-F5C9_P-8_R-8" DisplayOrder="110" RefId="M-0001_A-982C-01-F5C9_P-8" Tag="8" />
+              <ParameterRef Id="M-0001_A-982C-01-F5C9_P-9_R-9" DisplayOrder="120" RefId="M-0001_A-982C-01-F5C9_P-9" Tag="9" />
+              <ParameterRef Id="M-0001_A-982C-01-F5C9_P-10_R-10" DisplayOrder="130" RefId="M-0001_A-982C-01-F5C9_P-10" Tag="10" />
+              <ParameterRef Id="M-0001_A-982C-01-F5C9_P-11_R-11" DisplayOrder="140" RefId="M-0001_A-982C-01-F5C9_P-11" Tag="11" />
+              <ParameterRef Id="M-0001_A-982C-01-F5C9_P-12_R-12" DisplayOrder="150" RefId="M-0001_A-982C-01-F5C9_P-12" Tag="12" />
+              <ParameterRef Id="M-0001_A-982C-01-F5C9_P-13_R-13" DisplayOrder="160" RefId="M-0001_A-982C-01-F5C9_P-13" Tag="13" />
+            </ParameterRefs>
+            <ComObjectTable>
+              <ComObject Id="M-0001_A-982C-01-F5C9_O-1" FunctionText="recall / save" Name="8-bit Szene" Number="1" ObjectSize="1 Byte" Priority="Low" CommunicationFlag="Enabled" ReadFlag="Disabled" ReadOnInitFlag="Disabled" TransmitFlag="Disabled" UpdateFlag="Disabled" WriteFlag="Enabled" Text="8-bit scene" VisibleDescription="DPT_Scene_Control" />
+              <ComObject Id="M-0001_A-982C-01-F5C9_O-10" DatapointType="DPST-12-1" FunctionText="4-byte value" Name="A, Schaltspielzähler" Number="10" ObjectSize="4 Bytes" Priority="Low" CommunicationFlag="Enabled" ReadFlag="Enabled" ReadOnInitFlag="Disabled" TransmitFlag="Disabled" UpdateFlag="Disabled" WriteFlag="Disabled" Text="A, switching cycle counter" VisibleDescription="" />
+              <ComObject Id="M-0001_A-982C-01-F5C9_O-11" DatapointType="DPST-12-1" FunctionText="4-byte value" Name="A, Schaltspielzähler-Grenzwert" Number="11" ObjectSize="4 Bytes" Priority="Low" CommunicationFlag="Enabled" ReadFlag="Enabled" ReadOnInitFlag="Disabled" TransmitFlag="Disabled" UpdateFlag="Disabled" WriteFlag="Enabled" Text="A, switching cycle threshold" VisibleDescription="" />
+              <ComObject Id="M-0001_A-982C-01-F5C9_O-12" DatapointType="DPST-1-2" FunctionText="1 = yes / 0 = no" Name="A, Schaltspielzähler-Grenzwertüberschreitung" Number="12" ObjectSize="1 Bit" Priority="Low" CommunicationFlag="Enabled" ReadFlag="Enabled" ReadOnInitFlag="Disabled" TransmitFlag="Enabled" UpdateFlag="Disabled" WriteFlag="Disabled" Text="A, switching cycle threshold overrun" VisibleDescription="" />
+              <ComObject Id="M-0001_A-982C-01-F5C9_O-13" DatapointType="DPST-12-1" FunctionText="4-byte value" Name="A, Betriebsstunden" Number="13" ObjectSize="4 Bytes" Priority="Low" CommunicationFlag="Enabled" ReadFlag="Enabled" ReadOnInitFlag="Disabled" TransmitFlag="Disabled" UpdateFlag="Disabled" WriteFlag="Disabled" Text="A, Operating hours counter" VisibleDescription="" />
+              <ComObject Id="M-0001_A-982C-01-F5C9_O-14" DatapointType="DPST-12-1" FunctionText="4-byte value" Name="A, Betriebsstunden-Grenzwert" Number="14" ObjectSize="4 Bytes" Priority="Low" CommunicationFlag="Enabled" ReadFlag="Enabled" ReadOnInitFlag="Disabled" TransmitFlag="Disabled" UpdateFlag="Disabled" WriteFlag="Enabled" Text="A, Operating hours threshold" VisibleDescription="" />
+              <ComObject Id="M-0001_A-982C-01-F5C9_O-15" DatapointType="DPST-1-2" FunctionText="1 = yes / 0 = no" Name="A, Betriebsstunden-Grenzwertüberschreitung" Number="15" ObjectSize="1 Bit" Priority="Low" CommunicationFlag="Enabled" ReadFlag="Enabled" ReadOnInitFlag="Disabled" TransmitFlag="Enabled" UpdateFlag="Disabled" WriteFlag="Disabled" Text="A, Operating hours threshold overrun" VisibleDescription="" />
+              <ComObject Id="M-0001_A-982C-01-F5C9_O-2" DatapointType="DPST-1-3" FunctionText="On / Off" Name="A, Sperren" Number="2" ObjectSize="1 Bit" Priority="Low" CommunicationFlag="Enabled" ReadFlag="Disabled" ReadOnInitFlag="Disabled" TransmitFlag="Disabled" UpdateFlag="Disabled" WriteFlag="Enabled" Text="A, Locking" VisibleDescription="" />
+              <ComObject Id="M-0001_A-982C-01-F5C9_O-3" DatapointType="DPST-1-3" FunctionText="On / Off" Name="A, Nachtbetrieb" Number="3" ObjectSize="1 Bit" Priority="Low" CommunicationFlag="Enabled" ReadFlag="Disabled" ReadOnInitFlag="Disabled" TransmitFlag="Disabled" UpdateFlag="Disabled" WriteFlag="Enabled" Text="A, Night mode" VisibleDescription="" />
+              <ComObject Id="M-0001_A-982C-01-F5C9_O-4" DatapointType="DPST-1-1" FunctionText="On / Off" Name="A, Schalten" Number="4" ObjectSize="1 Bit" Priority="Low" CommunicationFlag="Enabled" ReadFlag="Disabled" ReadOnInitFlag="Disabled" TransmitFlag="Disabled" UpdateFlag="Disabled" WriteFlag="Enabled" Text="A, Switching" VisibleDescription="" />
+              <ComObject Id="M-0001_A-982C-01-F5C9_O-5" DatapointType="DPST-3-7" FunctionText="brighter / darker" Name="A, Dimmen" Number="5" ObjectSize="4 Bit" Priority="Low" CommunicationFlag="Enabled" ReadFlag="Disabled" ReadOnInitFlag="Disabled" TransmitFlag="Disabled" UpdateFlag="Disabled" WriteFlag="Enabled" Text="A, Dimming" VisibleDescription="" />
+              <ComObject Id="M-0001_A-982C-01-F5C9_O-6" DatapointType="DPST-5-1" FunctionText="8-bit value" Name="A, Dimmwert" Number="6" ObjectSize="1 Byte" Priority="Low" CommunicationFlag="Enabled" ReadFlag="Disabled" ReadOnInitFlag="Disabled" TransmitFlag="Disabled" UpdateFlag="Disabled" WriteFlag="Enabled" Text="A, Dimming value" VisibleDescription="" />
+              <ComObject Id="M-0001_A-982C-01-F5C9_O-8" DatapointType="DPST-1-1" FunctionText="On / Off" Name="A, Status Schalten" Number="8" ObjectSize="1 Bit" Priority="Low" CommunicationFlag="Enabled" ReadFlag="Enabled" ReadOnInitFlag="Disabled" TransmitFlag="Enabled" UpdateFlag="Disabled" WriteFlag="Disabled" Text="A, Status switching" VisibleDescription="" />
+              <ComObject Id="M-0001_A-982C-01-F5C9_O-9" DatapointType="DPST-5-1" FunctionText="8-bit value" Name="A, Status Dimmwert" Number="9" ObjectSize="1 Byte" Priority="Low" CommunicationFlag="Enabled" ReadFlag="Enabled" ReadOnInitFlag="Disabled" TransmitFlag="Enabled" UpdateFlag="Disabled" WriteFlag="Disabled" Text="A, Status dimming value" VisibleDescription="" />
+            </ComObjectTable>
+            <ComObjectRefs>
+              <ComObjectRef Id="M-0001_A-982C-01-F5C9_O-1_R-1" RefId="M-0001_A-982C-01-F5C9_O-1" Tag="1" />
+              <ComObjectRef Id="M-0001_A-982C-01-F5C9_O-2_R-2" RefId="M-0001_A-982C-01-F5C9_O-2" Tag="2" />
+              <ComObjectRef Id="M-0001_A-982C-01-F5C9_O-3_R-3" RefId="M-0001_A-982C-01-F5C9_O-3" Tag="3" />
+              <ComObjectRef Id="M-0001_A-982C-01-F5C9_O-4_R-4" RefId="M-0001_A-982C-01-F5C9_O-4" Tag="4" />
+              <ComObjectRef Id="M-0001_A-982C-01-F5C9_O-5_R-5" RefId="M-0001_A-982C-01-F5C9_O-5" Tag="5" />
+              <ComObjectRef Id="M-0001_A-982C-01-F5C9_O-6_R-6" RefId="M-0001_A-982C-01-F5C9_O-6" Tag="6" />
+              <ComObjectRef Id="M-0001_A-982C-01-F5C9_O-8_R-7" RefId="M-0001_A-982C-01-F5C9_O-8" Tag="7" />
+              <ComObjectRef Id="M-0001_A-982C-01-F5C9_O-9_R-8" RefId="M-0001_A-982C-01-F5C9_O-9" Tag="8" />
+              <ComObjectRef Id="M-0001_A-982C-01-F5C9_O-10_R-9" RefId="M-0001_A-982C-01-F5C9_O-10" Tag="9" />
+              <ComObjectRef Id="M-0001_A-982C-01-F5C9_O-11_R-10" RefId="M-0001_A-982C-01-F5C9_O-11" Tag="10" />
+              <ComObjectRef Id="M-0001_A-982C-01-F5C9_O-12_R-11" RefId="M-0001_A-982C-01-F5C9_O-12" Tag="11" />
+              <ComObjectRef Id="M-0001_A-982C-01-F5C9_O-13_R-12" RefId="M-0001_A-982C-01-F5C9_O-13" Tag="12" />
+              <ComObjectRef Id="M-0001_A-982C-01-F5C9_O-14_R-13" RefId="M-0001_A-982C-01-F5C9_O-14" Tag="13" />
+              <ComObjectRef Id="M-0001_A-982C-01-F5C9_O-15_R-14" RefId="M-0001_A-982C-01-F5C9_O-15" Tag="14" />
+            </ComObjectRefs>
+            <AddressTable MaxEntries="120" />
+            <AssociationTable MaxEntries="120" />
+            <LoadProcedures>
+              <LoadProcedure MergeId="1">
+                <LdCtrlRelSegment LsmIdx="1" Size="65536" Mode="0" Fill="0" Occurrence="0" AppliesTo="auto" />
+                <LdCtrlRelSegment LsmIdx="2" Size="65536" Mode="0" Fill="0" Occurrence="0" AppliesTo="auto" />
+              </LoadProcedure>
+            </LoadProcedures>
+            <Extension EtsDownloadPlugin="{B801866D-4078-4B56-8DFA-513C23FA3627}" EtsUiPlugin="{B801866D-4078-4B56-8DFA-513C23FA3627}" EtsDataHandler="{B801866D-4078-4B56-8DFA-513C23FA3627}" RequiresExternalSoftware="0">
+              <Baggage RefId="M-0001_BG-982C01-0001.5F982C.5F01.5Fde.2DDE.2Exml" />
+              <Baggage RefId="M-0001_BG-982C01-0001.5F982C.5F01.5Fen.2DUS.2Exml" />
+              <Baggage RefId="M-0001_BG-982C01-0001.5F982C.5F01.5FGenericPlugInAll.2Exml" />
+              <Baggage RefId="M-0001_BG-982C01-ETS3GenericPlugInSetup.5FV2.5F0.5F33.2Emsi" />
+              <Baggage RefId="M-0001_BG-982C01-PlugIn.5FID.5FV2.5F0.5F33.2Etxt" />
+            </Extension>
+            <Options PreferPartialDownloadIfApplicationLoaded="0" EasyCtrlModeModeStyleEmptyGroupComTables="0" SetObjectTableLengthAlwaysToOne="0" TextParameterEncoding="iso-8859-1" TextParameterZeroTerminate="0" ParameterByteOrder="BigEndian" LegacyNoPartialDownload="0" LegacyNoMemoryVerifyMode="0" LegacyNoOptimisticWrite="0" LegacyDoNotReportPropertyWriteErrors="0" LegacyNoBackgroundDownload="0" LegacyDoNotCheckManufacturerId="0" LegacyAlwaysReloadAppIfCoVisibilityChanged="0" LegacyNeverReloadAppIfCoVisibilityChanged="0" LegacyDoNotSupportUndoDelete="0" LegacyAllowPartialDownloadIfAp2Mismatch="0" LegacyKeepObjectTableGaps="0" PartialDownloadOnlyVisibleParameters="0" LegacyProxyCommunicationObjects="0" DeviceInfoIgnoreRunState="0" DeviceInfoIgnoreLoadedState="0" DeviceCompareAllowCompatibleManufacturerId="0" LineCoupler0912NewProgrammingStyle="0" Comparable="0" Reconstructable="0" />
+          </Static>
+          <Dynamic>
+            <Channel Name="Generic" Text="" Number="0" Id="M-0001_A-982C-01-F5C9_CH-0">
+              <ParameterBlock Id="M-0001_A-982C-01-F5C9_PB-14" Name="Added by Converter" ParamRefId="M-0001_A-982C-01-F5C9_P-14_R-14">
+                <ParameterRefRef RefId="M-0001_A-982C-01-F5C9_P-0_R-0" />
+                <choose ParamRefId="M-0001_A-982C-01-F5C9_P-0_R-0">
+                  <when test="1">
+                    <ComObjectRefRef RefId="M-0001_A-982C-01-F5C9_O-1_R-1" />
+                  </when>
+                </choose>
+                <ParameterRefRef RefId="M-0001_A-982C-01-F5C9_P-1_R-1" />
+                <choose ParamRefId="M-0001_A-982C-01-F5C9_P-1_R-1">
+                  <when test="1">
+                    <ComObjectRefRef RefId="M-0001_A-982C-01-F5C9_O-2_R-2" />
+                  </when>
+                </choose>
+                <ParameterRefRef RefId="M-0001_A-982C-01-F5C9_P-2_R-2" />
+                <choose ParamRefId="M-0001_A-982C-01-F5C9_P-2_R-2">
+                  <when test="1">
+                    <ComObjectRefRef RefId="M-0001_A-982C-01-F5C9_O-3_R-3" />
+                  </when>
+                </choose>
+                <ParameterRefRef RefId="M-0001_A-982C-01-F5C9_P-3_R-3" />
+                <choose ParamRefId="M-0001_A-982C-01-F5C9_P-3_R-3">
+                  <when test="1">
+                    <ComObjectRefRef RefId="M-0001_A-982C-01-F5C9_O-4_R-4" />
+                  </when>
+                </choose>
+                <ParameterRefRef RefId="M-0001_A-982C-01-F5C9_P-4_R-4" />
+                <choose ParamRefId="M-0001_A-982C-01-F5C9_P-4_R-4">
+                  <when test="1">
+                    <ComObjectRefRef RefId="M-0001_A-982C-01-F5C9_O-5_R-5" />
+                  </when>
+                </choose>
+                <ParameterRefRef RefId="M-0001_A-982C-01-F5C9_P-5_R-5" />
+                <choose ParamRefId="M-0001_A-982C-01-F5C9_P-5_R-5">
+                  <when test="1">
+                    <ComObjectRefRef RefId="M-0001_A-982C-01-F5C9_O-6_R-6" />
+                  </when>
+                </choose>
+                <ParameterRefRef RefId="M-0001_A-982C-01-F5C9_P-6_R-6" />
+                <choose ParamRefId="M-0001_A-982C-01-F5C9_P-6_R-6">
+                  <when test="1">
+                    <ComObjectRefRef RefId="M-0001_A-982C-01-F5C9_O-8_R-7" />
+                  </when>
+                </choose>
+                <ParameterRefRef RefId="M-0001_A-982C-01-F5C9_P-7_R-7" />
+                <choose ParamRefId="M-0001_A-982C-01-F5C9_P-7_R-7">
+                  <when test="1">
+                    <ComObjectRefRef RefId="M-0001_A-982C-01-F5C9_O-9_R-8" />
+                  </when>
+                </choose>
+                <ParameterRefRef RefId="M-0001_A-982C-01-F5C9_P-8_R-8" />
+                <choose ParamRefId="M-0001_A-982C-01-F5C9_P-8_R-8">
+                  <when test="1">
+                    <ComObjectRefRef RefId="M-0001_A-982C-01-F5C9_O-10_R-9" />
+                  </when>
+                </choose>
+                <ParameterRefRef RefId="M-0001_A-982C-01-F5C9_P-9_R-9" />
+                <choose ParamRefId="M-0001_A-982C-01-F5C9_P-9_R-9">
+                  <when test="1">
+                    <ComObjectRefRef RefId="M-0001_A-982C-01-F5C9_O-11_R-10" />
+                  </when>
+                </choose>
+                <ParameterRefRef RefId="M-0001_A-982C-01-F5C9_P-10_R-10" />
+                <choose ParamRefId="M-0001_A-982C-01-F5C9_P-10_R-10">
+                  <when test="1">
+                    <ComObjectRefRef RefId="M-0001_A-982C-01-F5C9_O-12_R-11" />
+                  </when>
+                </choose>
+                <ParameterRefRef RefId="M-0001_A-982C-01-F5C9_P-11_R-11" />
+                <choose ParamRefId="M-0001_A-982C-01-F5C9_P-11_R-11">
+                  <when test="1">
+                    <ComObjectRefRef RefId="M-0001_A-982C-01-F5C9_O-13_R-12" />
+                  </when>
+                </choose>
+                <ParameterRefRef RefId="M-0001_A-982C-01-F5C9_P-12_R-12" />
+                <choose ParamRefId="M-0001_A-982C-01-F5C9_P-12_R-12">
+                  <when test="1">
+                    <ComObjectRefRef RefId="M-0001_A-982C-01-F5C9_O-14_R-13" />
+                  </when>
+                </choose>
+                <ParameterRefRef RefId="M-0001_A-982C-01-F5C9_P-13_R-13" />
+                <choose ParamRefId="M-0001_A-982C-01-F5C9_P-13_R-13">
+                  <when test="1">
+                    <ComObjectRefRef RefId="M-0001_A-982C-01-F5C9_O-15_R-14" />
+                  </when>
+                </choose>
+              </ParameterBlock>
+            </Channel>
+          </Dynamic>
+        </ApplicationProgram>
+      </ApplicationPrograms>
+      <Languages>
+        <Language Identifier="de-DE">
+          <TranslationUnit RefId="M-0001_A-982C-01-F5C9">
+            <TranslationElement RefId="M-0001_A-982C-01-F5C9">
+              <Translation AttributeName="Name" Text="07 B0 A1 Universaldimmer 982C01" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-982C-01-F5C9_O-1">
+              <Translation AttributeName="Text" Text="8-bit Szene" />
+              <Translation AttributeName="FunctionText" Text="abrufen / speichern" />
+              <Translation AttributeName="VisibleDescription" Text="DPT_Scene_Control" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-982C-01-F5C9_O-10">
+              <Translation AttributeName="Text" Text="A, Schaltspielzähler" />
+              <Translation AttributeName="FunctionText" Text="4-byte Wert" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-982C-01-F5C9_O-11">
+              <Translation AttributeName="Text" Text="A, Schaltspielzähler-Grenzwert" />
+              <Translation AttributeName="FunctionText" Text="4-byte Wert" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-982C-01-F5C9_O-12">
+              <Translation AttributeName="Text" Text="A, Schaltspielzähler-Grenzwertüberschreitung" />
+              <Translation AttributeName="FunctionText" Text="1 = Ja / 0 = Nein" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-982C-01-F5C9_O-13">
+              <Translation AttributeName="Text" Text="A, Betriebsstunden" />
+              <Translation AttributeName="FunctionText" Text="4-byte Wert" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-982C-01-F5C9_O-14">
+              <Translation AttributeName="Text" Text="A, Betriebsstunden-Grenzwert" />
+              <Translation AttributeName="FunctionText" Text="4-byte Wert" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-982C-01-F5C9_O-15">
+              <Translation AttributeName="Text" Text="A, Betriebsstunden-Grenzwertüberschreitung" />
+              <Translation AttributeName="FunctionText" Text="1 = Ja / 0 = Nein" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-982C-01-F5C9_O-2">
+              <Translation AttributeName="Text" Text="A, Sperren" />
+              <Translation AttributeName="FunctionText" Text="Ein / Aus" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-982C-01-F5C9_O-3">
+              <Translation AttributeName="Text" Text="A, Nachtbetrieb" />
+              <Translation AttributeName="FunctionText" Text="Ein / Aus" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-982C-01-F5C9_O-4">
+              <Translation AttributeName="Text" Text="A, Schalten" />
+              <Translation AttributeName="FunctionText" Text="Ein / Aus" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-982C-01-F5C9_O-5">
+              <Translation AttributeName="Text" Text="A, Dimmen" />
+              <Translation AttributeName="FunctionText" Text="heller / dunkler" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-982C-01-F5C9_O-6">
+              <Translation AttributeName="Text" Text="A, Dimmwert" />
+              <Translation AttributeName="FunctionText" Text="8-bit Wert" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-982C-01-F5C9_O-8">
+              <Translation AttributeName="Text" Text="A, Status Schalten" />
+              <Translation AttributeName="FunctionText" Text="Ein / Aus" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-982C-01-F5C9_O-9">
+              <Translation AttributeName="Text" Text="A, Status Dimmwert" />
+              <Translation AttributeName="FunctionText" Text="8-bit Wert" />
+            </TranslationElement>
+          </TranslationUnit>
+        </Language>
+        <Language Identifier="en-US">
+          <TranslationUnit RefId="M-0001_A-982C-01-F5C9">
+            <TranslationElement RefId="M-0001_A-982C-01-F5C9">
+              <Translation AttributeName="Name" Text="07B0 A1 Universal dimmer 982C01" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-982C-01-F5C9_O-1">
+              <Translation AttributeName="Text" Text="8-bit scene" />
+              <Translation AttributeName="FunctionText" Text="recall / save" />
+              <Translation AttributeName="VisibleDescription" Text="DPT_Scene_Control" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-982C-01-F5C9_O-10">
+              <Translation AttributeName="Text" Text="A, switching cycle counter" />
+              <Translation AttributeName="FunctionText" Text="4-byte value" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-982C-01-F5C9_O-11">
+              <Translation AttributeName="Text" Text="A, switching cycle threshold" />
+              <Translation AttributeName="FunctionText" Text="4-byte value" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-982C-01-F5C9_O-12">
+              <Translation AttributeName="Text" Text="A, switching cycle threshold overrun" />
+              <Translation AttributeName="FunctionText" Text="1 = yes / 0 = no" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-982C-01-F5C9_O-13">
+              <Translation AttributeName="Text" Text="A, Operating hours counter" />
+              <Translation AttributeName="FunctionText" Text="4-byte value" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-982C-01-F5C9_O-14">
+              <Translation AttributeName="Text" Text="A, Operating hours threshold" />
+              <Translation AttributeName="FunctionText" Text="4-byte value" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-982C-01-F5C9_O-15">
+              <Translation AttributeName="Text" Text="A, Operating hours threshold overrun" />
+              <Translation AttributeName="FunctionText" Text="1 = yes / 0 = no" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-982C-01-F5C9_O-2">
+              <Translation AttributeName="Text" Text="A, Locking" />
+              <Translation AttributeName="FunctionText" Text="On / Off" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-982C-01-F5C9_O-3">
+              <Translation AttributeName="Text" Text="A, Night mode" />
+              <Translation AttributeName="FunctionText" Text="On / Off" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-982C-01-F5C9_O-4">
+              <Translation AttributeName="Text" Text="A, Switching" />
+              <Translation AttributeName="FunctionText" Text="On / Off" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-982C-01-F5C9_O-5">
+              <Translation AttributeName="Text" Text="A, Dimming" />
+              <Translation AttributeName="FunctionText" Text="brighter / darker" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-982C-01-F5C9_O-6">
+              <Translation AttributeName="Text" Text="A, Dimming value" />
+              <Translation AttributeName="FunctionText" Text="8-bit value" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-982C-01-F5C9_O-8">
+              <Translation AttributeName="Text" Text="A, Status switching" />
+              <Translation AttributeName="FunctionText" Text="On / Off" />
+            </TranslationElement>
+            <TranslationElement RefId="M-0001_A-982C-01-F5C9_O-9">
+              <Translation AttributeName="Text" Text="A, Status dimming value" />
+              <Translation AttributeName="FunctionText" Text="8-bit value" />
+            </TranslationElement>
+          </TranslationUnit>
+        </Language>
+      </Languages></Manufacturer>
+  </ManufacturerData>
+</KNX>
