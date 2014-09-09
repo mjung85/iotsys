@@ -86,19 +86,19 @@ public class BACnetConnector extends Connector {
 		log.info("Creating BACnet connector - localDeviceID: " + localDeviceID + ", broadCastIP: "+ broadCastIP + ", localDevicePort: " + localDevicePort);
 		localDevice = new LocalDevice(this.localDeviceID, this.broadCastIP);
 		localDevice.setPort(this.localDevicePort);
-
-		localDevice.getEventHandler().addListener(new DeviceListener());
+		
+		try {		
+			localDevice.initialize();
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+		log.info("Initializing BACnet connector.");
+		
+		localDevice.getEventHandler().addListener(new DeviceListener());	
 	}
 	
 	public void connect() {
-		try {
-			log.info("Initializing BACnet connector.");
-			localDevice.initialize();
-
-		} catch (IOException e1) {
-
-			e1.printStackTrace();
-		}
+		
 	}
 
 	public void disconnect() {
