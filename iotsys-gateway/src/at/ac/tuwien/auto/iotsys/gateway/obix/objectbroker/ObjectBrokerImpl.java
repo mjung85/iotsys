@@ -215,11 +215,16 @@ public class ObjectBrokerImpl implements ObjectBroker
 	public synchronized void addObj(Obj o, boolean listInLobby)
 	{
 		Obj root = o.getRoot();
+		String rootHref = root.getHref().get();
+		//Do not change the order of the conditions or otherwise the e. g. about device won't be listed. 
+		if (!rootHref.contains("/") || rootHref.startsWith("/")) { 
+			//Do not list objects that have no "HREF" parents
+			listInLobby = false;
+		}
 		if (root != rootObject)
 		{
 			rootObject.add(root, false);
 		}
-
 		if (listInLobby)
 		{
 			Ref ref = new Ref(null, new Uri(o.getFullContextPath()));
