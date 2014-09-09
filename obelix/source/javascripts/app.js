@@ -339,7 +339,11 @@ app.factory('Property', ['$http', function($http) {
 
   Property.prototype = {
     write: function(property) {
-      $http.put(this.href, {'tag': this.type, 'val': this.value }).success(function(response) {
+      $http.put(this.href, {'tag': this.type, 'val': this.value }, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      }).success(function(response) {
         if(response['tag'] && response['tag'] == 'err') {
           console.log("Error updating " + this.href, response);
         }
