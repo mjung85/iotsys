@@ -12,6 +12,10 @@ eclipse{
 	}
 }
 
+//repositories {	
+//	flatDir { dirs "lib"}
+//}
+
 jar {
 	from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
 	
@@ -192,7 +196,9 @@ jar {
 									 "org.apache.xerces.jaxp.validation," +
 									 "com.csvreader," +
 									 "com.fasterxml.jackson.annotation," +
-									 "com.sun.xml.ws.api.message",
+									 "com.sun.xml.ws.api.message",																	 
+									 //"org.apache.http",
+									 
 				   "Import-Package": "obix, obix.asm, obix.contracts,  obix.contracts.impl, obix.io, obix.net, obix.test, obix.tools, obix.ui, obix.ui.fields, obix.ui.views, obix.xml,at.ac.tuwien.auto.iotsys.obix, at.ac.tuwien.auto.iotsys.obix.observer," +
 				   					 "org.xml.sax, org.xml.sax.helpers, org.xml.sax.ext,  org.apache.xalan, org.apache.xalan.res, org.w3c.dom, org.w3c.dom.traversal, org.w3c.dom.ls, javax.xml.parsers,  javax.xml.xpath, javax.xml.transform.sax, javax.xml.transform.dom, javax.xml.namespace, javax.xml.transform, javax.xml.transform.stream, javax.xml.validation, javax.xml.datatype, javax.net.ssl"
 				)
@@ -254,6 +260,8 @@ dependencies {
 	compile ":log4j-1.2.16:"
 	compile ":slf4j-api-1.6.4:"
 	compile ":slf4j-log4j12-1.6.4:"
+	//compile ":mx4j-jmx:"
+
     testCompile group: 'junit',name:'junit',version: '4.8+' 
 	testCompile ":httpclient-4.3"
 	testCompile ":httpclient-cache-4.3:"

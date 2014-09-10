@@ -16,21 +16,62 @@
     You should have received a copy of the GNU General Public License
     along with this program; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- */
+*/
 package at.ac.tuwien.auto.iotsys.commons.persistent.models;
+
+import org.ektorp.support.CouchDbDocument;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * @author Nam Giang - zang at kaist dot ac dot kr
- * 
+ *
  */
-public class Canvas {
-
-	// A canvas should have a unique name (or instead a name + unique
-	// identifier). In a first version it is fine if the UI only provides one
-	// canvas named "default". However, the REST API + persitence scheme should
-	// already support multiple canvas. The objects are identified through the
-	// oBIX URI and the x and y position are simple integers
+public class User extends CouchDbDocument {
 	
+	@JsonProperty("_id")
 	String name;
+	String password;
+	String salt;
+	String role;
+	
+	public User(){}
+	
+	public User(String n, String p, String r){
+		this.name = n;
+		this.password = p;
+		this.role = r;
+	}
+	
+	@JsonProperty("_id")
+	public String getName() {
+		return name;
+	}
+	@JsonProperty("_id")
+	public void setName(String name) {
+		this.name = name;
+	}
+	public String getPassword() {
+		return password;
+	}
+	public void setPassword(String password) {
+		this.password = password;
+	}
+	public String getRole() {
+		return role;
+	}
+	public void setRole(String role) {
+		this.role = role;
+	}
+	public String getSalt() {
+		return salt;
+	}
+	public void setSalt(String salt) {
+		this.salt = salt;
+	}
+	@Override
+	public String toString(){
+		return "{\"password\":\"" + password +"\",\"salt\":\"" + salt + "\",\"_id\":\"" + name + "\"}";
+	}
 	
 }

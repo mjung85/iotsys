@@ -110,6 +110,8 @@ public class TomcatServer {
 		Tomcat.addServlet(ctx, "obix",
 				new ObixServlet(enableAuthen, obixServer));
 		ctx.addServletMapping("/*", "obix");
+		Tomcat.addServlet(ctx, "uidb", new UIDbServlet(enableAuthen, obixServer));
+		ctx.addServletMapping("/uidb/*", "uidb");
 
 		try {
 			tomcat.start();
@@ -178,12 +180,9 @@ public class TomcatServer {
 
 					log.info("Service username : " + username);
 
-					if (username != null && password != null
-							&& username.equals("test")
-							&& password.equals("test")) {
+					if (obixServer.getUidb().authenticateUser(username, password)){
 						HttpSession session = req.getSession(true);
 						session.setAttribute("authenticated", true);
-
 						resp.sendRedirect("/");
 						return;
 					} else {
