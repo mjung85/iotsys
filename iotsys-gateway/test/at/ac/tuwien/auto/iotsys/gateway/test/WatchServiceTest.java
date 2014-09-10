@@ -6,7 +6,6 @@ import static com.jayway.restassured.RestAssured.post;
 import static org.hamcrest.Matchers.hasXPath;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.not;
-
 import groovyx.net.http.ContentType;
 
 import java.util.Calendar;
@@ -15,15 +14,19 @@ import javax.xml.bind.DatatypeConverter;
 
 import org.junit.Test;
 
+import at.ac.tuwien.auto.iotsys.gateway.obix.objectbroker.ObjectBrokerImpl;
+
 import com.jayway.restassured.path.xml.XmlPath;
 import com.jayway.restassured.path.xml.element.Node;
 
 public class WatchServiceTest extends AbstractGatewayTest {
 	@Test
 	public void testLobbyHasWatchService() {
-		expect().body(
-				hasXPath("/obj/ref[@href='watchService' and @is='obix:WatchService']"))
-				.when().get("/obix");
+		if (!ObjectBrokerImpl.getInstance().doNotListCategorylessObjs()) {
+			expect().body(
+					hasXPath("/obj/ref[@href='watchService' and @is='obix:WatchService']"))
+					.when().get("/obix");
+		}
 	}
 
 	private String makeWatch() {
