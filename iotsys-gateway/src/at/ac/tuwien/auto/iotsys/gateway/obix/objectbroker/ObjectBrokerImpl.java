@@ -216,7 +216,6 @@ public class ObjectBrokerImpl implements ObjectBroker
 	{
 		Obj root = o.getRoot();
 		String rootHref = root.getHref().get();
-		//Do not change the order of the conditions or otherwise the e. g. about device won't be listed. 
 		if (!rootHref.contains("/") || rootHref.startsWith("/")) { 
 			//Do not list objects that have no "HREF" parents
 			listInLobby = false;
