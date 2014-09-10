@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html class="obelix" lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>oBeliX Login</title>
+    <link href="/stylesheets/app.css" media="screen" rel="stylesheet" type="text/css" />
+  </head>
+  <body>
+    <div class='qtip-light obelix-qtip' id='about' style='visibility: visible; z-index: 1;'>
+      <div id='about-header'>
+        <div class='row-0'>
+          <div id='iotsys-logo' title='IoTSyS - Internet of Things System Stack'>
+            <a href='https://code.google.com/p/iotsys/' target='_blank'></a>
+          </div>
+        </div>
+        <div class='row-1'>
+          <div id='automation-systems-group-logo' title='Automation Systems Group - Institute of Computer Aided Automation'>
+            <a href='https://www.auto.tuwien.ac.at/' target='_blank'></a>
+          </div>
+          <div id='tu-vienna-logo' title='Vienna University of Technology'>
+            <a href='https://www.tuwien.ac.at/' target='_blank'></a>
+          </div>
+        </div>
+        <div class='clear'></div>
+      </div>
+      <div id='about-content'>
+        <form id="obelix-login" method="post" action="authenticate">
+          <table style="margin: 10px auto auto;">
+            <tr>
+              <td><label for="username">Username</label></td>
+              <td><input type="text" name="username" id="username" autofocus/></td>
+            </tr>
+            <tr>
+              <td><label for="password">Password</label></td>
+              <td><input type="password" name="password" id="password"/></td>
+            </tr>
+            <tr>
+              <td></td>
+              <td>
+                <input type="submit" value="Login" />
+                <input type="reset" value="Clear" />
+              </td>
+            </tr>
+          </table>
+        </form>
+      </div>
+    </div>
+    
+  </body>
+</html>

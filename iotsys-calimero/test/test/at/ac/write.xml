@@ -1,0 +1,2 @@
+<root><!--character data follows-->
+hello XML! <![CDATA[hello tags &lt; < &gt; > ]]></root>
