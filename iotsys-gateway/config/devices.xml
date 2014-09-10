@@ -404,13 +404,10 @@
       </device>
     </connector>
   </rfid>
-  
-
-	
-  
+ 
   <enocean>    
 	<connector>
-      <name>EnOcean Linux</name>
+      <name>EnOcean</name>
       <enabled>false</enabled>
 	  <senderAddress>01:23:45:67</senderAddress>
       <serialPort>/dev/ttyS80</serialPort>
@@ -419,7 +416,7 @@
         </type>
         <address>00:25:A2:DC</address>
 		<deviceName>EasyClickWallTransmitter</deviceName>
-		<displayName>Switching actuator</displayName>
+		<displayName>Push button</displayName>
 		<display>null</display>
 		<manufacturer>PEHA</manufacturer>
         <href>EasyClickWallTransmitter</href>
@@ -437,7 +434,19 @@
         <href>EasyclickWindowContact</href>
         <historyEnabled>false</historyEnabled>
       </device> 
-	  <device>        
+	  <!--<device>
+        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.enocean.entity.impl.EntityEEP_F60201Impl
+        </type>
+        <address>00:25:A2:DE</address>
+        <deviceName>EasyClickPlusReceiver</deviceName>
+        <displayName>EasyClick Plus Receiver</displayName>
+        <display>null</display>
+        <manufacturer>PEHA</manufacturer>
+        <href>EasyClickPlusReceiver</href>
+        <historyEnabled>false</historyEnabled>
+        <groupCommEnabled>true</groupCommEnabled>
+      </device>-->
+	  <!--<device>        
         <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.enocean.entity.impl.EntityEEP_A52001Impl
         </type>
         <address>00:85:7A:08</address>
@@ -447,19 +456,31 @@
 		<manufacturer>Loxone</manufacturer>
         <href>WirelessValveActuator</href>
         <historyEnabled>false</historyEnabled>
-      </device>   
+      </device> -->
     </connector>     
     <connector>
-      <name>EnOcean</name>
+      <name>EnOcean Windows</name>
       <enabled>false</enabled>
 	  <senderAddress>01:23:45:67</senderAddress>
       <serialPort>COM8</serialPort>
+	  <device>
+        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.enocean.entity.impl.EntityEEP_F60201Impl
+        </type>
+        <address>00:10:20:2B</address>
+		<deviceName>EasyClickWallTransmitterLabeled</deviceName>
+		<displayName>Push button labelled</displayName>
+		<display>null</display>
+		<manufacturer>PEHA</manufacturer>
+        <href>EasyClickWallTransmitterLabeled</href>
+        <historyEnabled>false</historyEnabled>
+		<groupCommEnabled>true</groupCommEnabled>
+      </device>	  
       <device>
         <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.enocean.entity.impl.EntityEEP_F60201Impl
         </type>
         <address>00:25:A2:DC</address>
 		<deviceName>EasyClickWallTransmitter</deviceName>
-		<displayName>Switching actuator</displayName>
+		<displayName>Push button actuator</displayName>
 		<display>null</display>
 		<manufacturer>PEHA</manufacturer>
         <href>EasyClickWallTransmitter</href>
@@ -477,6 +498,18 @@
         <href>EasyclickWindowContact</href>
         <historyEnabled>false</historyEnabled>
       </device> 
+	  <!--<device>
+        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.enocean.entity.impl.EntityEEP_F60201Impl
+        </type>
+        <address>00:25:A2:DE</address>
+        <deviceName>EasyClickPlusReceiver</deviceName>
+        <displayName>EasyClick Plus Receiver</displayName>
+        <display>null</display>
+        <manufacturer>PEHA</manufacturer>
+        <href>EasyClickPlusReceiver</href>
+        <historyEnabled>false</historyEnabled>
+        <groupCommEnabled>true</groupCommEnabled>
+      </device>-->
 	  <!-- <device>        
         <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.enocean.entity.impl.EntityEEP_A52001Impl
         </type>

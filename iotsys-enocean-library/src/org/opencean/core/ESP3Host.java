@@ -107,7 +107,8 @@ public class ESP3Host extends Connector implements Runnable{
     		
     		// check if received packet is a RadioPacket
     		if (receivedPacket instanceof RadioPacket) {
-    			EnoceanId idNr = ((RadioPacket)receivedPacket).getSenderId();    			
+    			EnoceanId idNr = ((RadioPacket)receivedPacket).getSenderId();   
+    			logger.info("EnOcean telegram received from device with EnOceanID " + idNr.toString());
 
     			synchronized(watchDogs){
     				if(watchDogs.containsKey(idNr.toString())){
