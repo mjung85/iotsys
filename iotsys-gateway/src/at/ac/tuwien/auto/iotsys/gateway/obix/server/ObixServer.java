@@ -34,6 +34,8 @@ package at.ac.tuwien.auto.iotsys.gateway.obix.server;
 
 import java.net.*;
 
+import at.ac.tuwien.auto.iotsys.commons.ObjectBroker;
+import at.ac.tuwien.auto.iotsys.commons.persistent.UIDb;
 import obix.Obj;
 
 public interface ObixServer
@@ -90,4 +92,6 @@ public interface ObixServer
 	public String getNormalizedPath(String href);
 	
 	public String getCoRELinks();
+	public ObjectBroker getObjectBroker();
+	public UIDb getUidb();
 }

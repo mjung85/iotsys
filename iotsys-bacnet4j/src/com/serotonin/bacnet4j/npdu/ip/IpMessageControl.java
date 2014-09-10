@@ -359,6 +359,7 @@ public class IpMessageControl extends Thread {
             socket.send(packet);
         }
         catch (Exception e) {
+        	e.printStackTrace();
             throw new BACnetException(e);
         }
     }
