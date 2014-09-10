@@ -1,5 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2014, Automation Systems Group, TU Wien.
+ * Copyright (c) 2014
+ * Institute of Computer Aided Automation, Automation Systems Group, TU Wien.
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -29,11 +30,43 @@
  * This file is part of the IoTSyS project.
  ******************************************************************************/
 
-package at.ac.tuwien.auto.iotsys.commons.obix.objects.enocean.entity;
+package org.opencean.core.packets;
 
-import obix.IObj;
+import static org.junit.Assert.assertEquals;
 
-public interface EnoceanEntity extends IObj
-{
-	public static final String CONTRACT = "enocean:Entity";
+import org.junit.Assert;
+import org.junit.Test;
+import org.opencean.core.common.values.ByteStateAndStatus;
+import org.opencean.core.packets.BasicPacket;
+import org.opencean.core.packets.Header;
+import org.opencean.core.packets.Payload;
+import org.opencean.core.packets.RadioPacket;
+import org.opencean.core.packets.RadioPacketRPS;
+import org.opencean.core.packets.RawPacket;
+import org.opencean.core.utils.Bits;
+
+public class RadioPacketRPSTest {
+
+    @Test
+    public void testRadioPacketRPSparse() {
+    	BasicPacket packet = createRawPacket(ByteStateAndStatus.ON);
+    	if (packet instanceof RadioPacketRPS) {
+            RadioPacketRPS radioPacketRPS = (RadioPacketRPS) packet;
+            boolean pressbit = Bits.isBitSet(radioPacketRPS.getDataByte(), 4);
+            assertEquals(true, pressbit);
+            assertEquals(ByteStateAndStatus.ON, radioPacketRPS.getDataByte());           
+        } else{
+        	Assert.fail();
+        }    	
+    }
+    
+    private BasicPacket createRawPacket(byte dataByte) {
+        Header header = new Header(RadioPacket.PACKET_TYPE, (short) 7, (byte) 0);
+        Payload payload = new Payload();
+        payload.setData(new byte[] { RadioPacketRPS.RADIO_TYPE, dataByte, 0, 0, 0, 0, (byte) 0x03 });
+        RawPacket rawPacket = new RawPacket(header, payload);
+        BasicPacket basicPacket = new RadioPacketRPS(rawPacket);
+        return basicPacket;
+    }
+
 }

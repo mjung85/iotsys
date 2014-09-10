@@ -60,23 +60,27 @@ public class EntityEEP_D50001Impl extends EnoceanEntityImpl implements EntityEEP
 	EnoceanDPTBoolOpenClosedImpl datapoint_openclosed;
 	EnoceanDPTBoolOnOffImpl datapoint_learnonoff;
 
+	// constructor
 	public EntityEEP_D50001Impl(ESP3Host esp3Host, EnoceanId id, String name, String displayName, String display, String manufacturer)
 	{
 		super(name, displayName, display, manufacturer);
 		
 		this.esp3Host = esp3Host;		
 		this.id = id;	
-		this.setWritable(false);
+		this.setWritable(true);
 		this.setReadable(true);
 		
-		datapoint_openclosed = new EnoceanDPTBoolOpenClosedImpl("SingleInputContact", "Single Input Contact", "Open/Closed", true, false);
+		// Create and add new datapoint for the single input contact
+		datapoint_openclosed = new EnoceanDPTBoolOpenClosedImpl("SingleInputContact", "Single Input Contact", "Open/Closed", this, false, false);
 		datapoint_openclosed.addTranslation("de-DE", TranslationAttribute.displayName, "Kontaktsensor");
 		this.addDatapoint(datapoint_openclosed);		
 		
-		datapoint_learnonoff = new EnoceanDPTBoolOnOffImpl("TeachIn", "TeachIn mode", "On/Off", true, false);
+		// Create and add new datapoint for the teach in mode
+		datapoint_learnonoff = new EnoceanDPTBoolOnOffImpl("TeachIn", "TeachIn mode", "On/Off", this, false, false);
 		datapoint_learnonoff.addTranslation("de-DE", TranslationAttribute.displayName, "Lernmodus");
 		this.addDatapoint(datapoint_learnonoff);		
 		
+		// Add a new watchdog for value changes
 		esp3Host.addWatchDog(id, new EnoceanWatchdog() {
 			
 			@Override
@@ -84,15 +88,15 @@ public class EntityEEP_D50001Impl extends EnoceanEntityImpl implements EntityEEP
 				if (packet instanceof RadioPacket1BS) {
 					RadioPacket1BS radioPacket1BS = (RadioPacket1BS) packet;
 		            Bool contactbit = new Bool(Bits.isBitSet(radioPacket1BS.getDataByte(), 0));
-		            Bool learnbit = new Bool(!Bits.isBitSet(radioPacket1BS.getDataByte(), 3)); // TODO take care of inverse order of bit
+		            Bool learnbit = new Bool(!Bits.isBitSet(radioPacket1BS.getDataByte(), 3)); 
 		            		            
 		            log.info("EnOcean device with ID " +radioPacket1BS.getSenderId().toString() + ": Contact " 
 		            		+EncodingsImpl.getInstance().getEncoding(EncodingOpenClosed.HREF).getName(contactbit));
-		            datapoint_openclosed.writeObject(contactbit);		            
+		            datapoint_openclosed.setValue(contactbit); 
 		            
 		            log.info("EnOcean device with ID " +radioPacket1BS.getSenderId().toString() + ": TeachIn Mode " 
 		            		+EncodingsImpl.getInstance().getEncoding(EncodingOnOff.HREF).getName(learnbit)); 
-		            datapoint_learnonoff.writeObject(learnbit);
+		            datapoint_learnonoff.setValue(learnbit); 
 		            EntityEEP_D50001Impl.this.notifyObservers();		            
 		        }					
 			}
@@ -102,16 +106,16 @@ public class EntityEEP_D50001Impl extends EnoceanEntityImpl implements EntityEEP
 	@Override
 	public void initialize(){
 		super.initialize();
-		// But stuff here that should be executed after object creation
+		// Put stuff here that should be executed after object creation
 	}
 
 	@Override
 	public void writeObject(Obj input){
 		super.writeObject(input);			
 		
-		if (this.datapoint_openclosed.isWritable())
+		if (this.isWritable())
 		{
-//			value can not be read from a wall transmitter
+//			no data can be written to the single input contact
 		}
       
 	}
@@ -119,9 +123,9 @@ public class EntityEEP_D50001Impl extends EnoceanEntityImpl implements EntityEEP
 	@Override
 	public void refreshObject(){	
 		// here we need to read from the bus, only if the read flag is set at the data point
-		if(datapoint_openclosed.value().isReadable())	
+		if(this.isReadable())	
 		{
-			//	value can not be read from a wall transmitter
+			//	value can not be read from the single input contact
 		}
 
 		// run refresh from super class

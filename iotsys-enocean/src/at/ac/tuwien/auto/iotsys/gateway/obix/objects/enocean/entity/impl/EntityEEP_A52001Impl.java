@@ -36,12 +36,9 @@ import java.util.logging.Logger;
 
 import org.opencean.core.ESP3Host;
 import org.opencean.core.EnoceanWatchdog;
-import org.opencean.core.StateChanger;
 import org.opencean.core.address.EnoceanId;
-import org.opencean.core.common.EEPId;
 import org.opencean.core.packets.BasicPacket;
 import org.opencean.core.packets.RadioPacket4BS;
-import org.opencean.core.packets.RadioPacketRPS;
 import org.opencean.core.utils.Bits;
 import org.opencean.core.utils.ByteBitSet;
 
@@ -49,13 +46,7 @@ import obix.Bool;
 import obix.Int;
 import obix.Obj;
 import obix.Real;
-import obix.Str;
-import obix.Obj.TranslationAttribute;
-import at.ac.tuwien.auto.iotsys.commons.obix.objects.enocean.datapoint.EnoceanDPTIntPerc;
-import at.ac.tuwien.auto.iotsys.commons.obix.objects.enocean.datapoint.EnoceanDPTRealTemp;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.enocean.datapoint.impl.EnoceanDPTBoolOnOffImpl;
-import at.ac.tuwien.auto.iotsys.commons.obix.objects.enocean.datapoint.impl.EnoceanDPTBoolPressedReleasedImpl;
-import at.ac.tuwien.auto.iotsys.commons.obix.objects.enocean.datapoint.impl.EnoceanDPTIntImpl;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.enocean.datapoint.impl.EnoceanDPTIntPercImpl;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.enocean.datapoint.impl.EnoceanDPTRealTempImpl;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.enocean.entity.EntityEEP_F60201;
@@ -75,7 +66,7 @@ public class EntityEEP_A52001Impl extends EnoceanEntityImpl implements EntityEEP
 	EnoceanDPTBoolOnOffImpl datapoint_setpoint; // off = valve pos (0-100), on = temp (0-40°C)
 	EnoceanDPTBoolOnOffImpl datapoint_learnonoff;
 	
-
+	// constructor
 	public EntityEEP_A52001Impl(ESP3Host esp3Host, EnoceanId id, String name, String displayName, String display, String manufacturer)
 	{
 		super(name, displayName, display, manufacturer);
@@ -85,32 +76,40 @@ public class EntityEEP_A52001Impl extends EnoceanEntityImpl implements EntityEEP
 		this.setWritable(true);
 		this.setReadable(true);
 		
-		datapoint_percent = new EnoceanDPTIntPercImpl("BatteryPoweredActuatorSetPointPercentage", "Set Point Percantage", "0-100%", true, true);
+		// Create and add new datapoint for the percentage value of the set point
+		datapoint_percent = new EnoceanDPTIntPercImpl("BatteryPoweredActuatorSetPointPercentage", "Set Point Percantage", "0-100%", this, true, true);
 		datapoint_percent.addTranslation("de-DE", TranslationAttribute.displayName, "Sollwert Prozent");
 		this.addDatapoint(datapoint_percent);
 		
-		datapoint_temp = new EnoceanDPTRealTempImpl("BatteryPoweredActuatorSetPointTemperature", "Set Point Temperature", "0-40°C", true, true);
+		// Create and add new datapoint for the temperature set point
+		datapoint_temp = new EnoceanDPTRealTempImpl("BatteryPoweredActuatorSetPointTemperature", "Set Point Temperature", "0-40°C", this, true, true);
 		datapoint_temp.addTranslation("de-DE", TranslationAttribute.displayName, "Sollwert Temperatur");
 		this.addDatapoint(datapoint_temp);
 		
-		datapoint_currenttemp = new EnoceanDPTRealTempImpl("BatteryPoweredActuatorCurrentTemperature", "Current Temperature", "0-40°C", true, false);
+		// Create and add new datapoint for current temperature
+		datapoint_currenttemp = new EnoceanDPTRealTempImpl("BatteryPoweredActuatorCurrentTemperature", "Current Temperature", "0-40°C", this, true, false);
 		datapoint_currenttemp.addTranslation("de-DE", TranslationAttribute.displayName, "Istwert Temperatur");
 		this.addDatapoint(datapoint_currenttemp);
 		
-		datapoint_setpoint = new EnoceanDPTBoolOnOffImpl("BatteryPoweredActuatorSetPointMode", "Set Point Selection", "0=Percatage/1=Termperature", true, true);
+		// Create and add new datapoint for set point mode
+		datapoint_setpoint = new EnoceanDPTBoolOnOffImpl("BatteryPoweredActuatorSetPointMode", "Set Point Selection", "0=Percatage/1=Termperature", this, true, true);
 		datapoint_setpoint.addTranslation("de-DE", TranslationAttribute.displayName, "Sollwert Modus");
 		this.addDatapoint(datapoint_setpoint);
 		
-		datapoint_learnonoff = new EnoceanDPTBoolOnOffImpl("TeachIn", "TeachIn mode", "On/Off", true, true);
+		// Create and add new datapoint for teach in mode
+		datapoint_learnonoff = new EnoceanDPTBoolOnOffImpl("TeachIn", "TeachIn mode", "On/Off", this, true, true);
 		datapoint_learnonoff.addTranslation("de-DE", TranslationAttribute.displayName, "Lernmodus");
 		this.addDatapoint(datapoint_learnonoff);
 		
+		// Add a new watchdog for value changes
 		esp3Host.addWatchDog(id, new EnoceanWatchdog() {
 			
 			@Override
 			public void notifyWatchDog(BasicPacket packet) {
-				if (packet instanceof RadioPacket4BS) {
+				// Check if the packet is of type 4BS like specified for this devices
+				if (packet instanceof RadioPacket4BS) {					
 		            RadioPacket4BS radioPacket4BS = (RadioPacket4BS) packet;
+		            // Get necessary information from the packet
 		            Bool learnbit = new Bool(!Bits.isBitSet(radioPacket4BS.getDb0(), 3));
 		            Int percentage = new Int(radioPacket4BS.getDb1());
 		            Real temperature = temperatureByteToReal(radioPacket4BS.getDb3());
@@ -121,21 +120,24 @@ public class EntityEEP_A52001Impl extends EnoceanEntityImpl implements EntityEEP
 		            		+percentage.toString());
 		            log.info("EnOcean device with ID " +radioPacket4BS.getSenderId().toString() + ": Current Temperature " 
 		            		+percentage.toString());
-		            datapoint_learnonoff.writeObject(learnbit);
-		            datapoint_percent.writeObject(percentage);
-		            datapoint_currenttemp.writeObject(temperature);
+		            // write the received values to the datapoints
+		            datapoint_learnonoff.setValue(learnbit);
+		            datapoint_percent.setValue(percentage);
+		            datapoint_currenttemp.setValue(temperature);
 		            EntityEEP_A52001Impl.this.notifyObservers();
 		        }					
 			}
 		});
 	}	
 	
+	// helper function to convert a temperature in °C to the byte format of the 4BS telegram
 	private Real temperatureByteToReal(byte temperature){
 		double real = ((double)temperature)*40/255;
 		Real temp = new Real(real);
 		return temp;		
 	}
 	
+	// helper function to convert the byte format of the 4BS telegram to a temperature in °C
 	private byte temperatureDoubleToByte(double temperature){
 		int inttemp = (int)(temperature*255/40);
 		byte temp = (byte)(inttemp&0xFF);
@@ -144,14 +146,14 @@ public class EntityEEP_A52001Impl extends EnoceanEntityImpl implements EntityEEP
 	
 	@Override
 	public void initialize(){
-		super.initialize();
-		// But stuff here that should be executed after object creation
+		super.initialize();		
 	}
 
 	@Override
 	public void writeObject(Obj input){
 		super.writeObject(input);			
 		
+		// check if the entity is writable and create a new 4BS telegram with the necessary information
 		if (this.datapoint_percent.isWritable())
 		{
 			byte value=0x00;		
@@ -181,8 +183,10 @@ public class EntityEEP_A52001Impl extends EnoceanEntityImpl implements EntityEEP
 			
 			byte data[] = {(byte) db0.getByte(), (byte) db1.getByte(), db2, db3};
 		    			
+			// create the 4BS telegram
 			RadioPacket4BS radio4BS = new RadioPacket4BS(data, this.esp3Host.getSenderId().toInt(), (byte) 0x00, (byte) 0x03, this.id.toInt(), (byte) 0xFF, (byte) 0x00);
 		        
+			// send the 4BS telegram
 		    BasicPacket packet = radio4BS;
 		    log.info("Send packet: " + packet.toString());
 		    esp3Host.sendRadio(packet);  			
@@ -194,7 +198,7 @@ public class EntityEEP_A52001Impl extends EnoceanEntityImpl implements EntityEEP
 		// here we need to read from the bus, only if the read flag is set at the data point
 		if(datapoint_percent.value().isReadable())	
 		{
-			//	value can not be read from a wall transmitter
+			// read the information of the entity
 		}
 
 		// run refresh from super class

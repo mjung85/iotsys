@@ -166,7 +166,6 @@ public class EnoceanDeviceLoaderImpl implements DeviceLoader {
 						String displayName = subConfig.getString("device(" + i + ").displayName");
 						String display = subConfig.getString("device(" + i + ").display");
 						String manufacturer = subConfig.getString("device(" + i + ").manufacturer");
-						String addressString = address.toString();
 						String ipv6 = subConfig.getString("device(" + i + ").ipv6");
 						String href = subConfig.getString("device(" + i + ").href");
 
@@ -176,8 +175,9 @@ public class EnoceanDeviceLoaderImpl implements DeviceLoader {
 
 						Boolean refreshEnabled = subConfig.getBoolean("device(" + i + ").refreshEnabled", false);
 						
-						// TODO change the database parameters
-						Device deviceFromDb;
+						String addressString = address.toString();
+						
+						Device deviceFromDb;						
 						try {
 							deviceFromDb = devicesFromDb.get(i);
 							type = deviceFromDb.getType();
@@ -221,9 +221,7 @@ public class EnoceanDeviceLoaderImpl implements DeviceLoader {
 
 											if (name != null && name.length() > 0) {
 												enoceanDevice.setName(name);
-											}
-
-											ArrayList<String> assignedHrefs = null;
+											}											
 
 											if (ipv6 != null) 
 											{

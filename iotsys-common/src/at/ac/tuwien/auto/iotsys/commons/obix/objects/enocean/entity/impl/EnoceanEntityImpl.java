@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013
+ * Copyright (c) 2014
  * Institute of Computer Aided Automation, Automation Systems Group, TU Wien.
  * All rights reserved.
  * 
@@ -81,6 +81,10 @@ public class EnoceanEntityImpl extends Obj implements EnoceanEntity
 
 		this.list.add(datapoint);
 		this.list.add(datapoint.getReference());
-		this.datapoints.add(datapoint);				
+		
+		for (Obj child:datapoint.list()){
+			this.add(child);				
+		}
+		this.datapoints.add(datapoint);		
 	}
 }

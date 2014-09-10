@@ -289,7 +289,7 @@ public class ObixEncoder extends XWriter
 		int children = 0;
 		for (Obj o : obj.list())
 		{
-			if (!o.isHidden())
+			if (o!=null && !o.isHidden())
 				children++;
 		}
 		if (children == 0)
@@ -306,7 +306,7 @@ public class ObixEncoder extends XWriter
 		Obj[] kids = obj.list();
 		for (int i = 0; i < kids.length; ++i)
 		{
-			if (!kids[i].isHidden())
+			if (kids[i]!=null && !kids[i].isHidden())
 				encode(kids[i], language);
 		}
 

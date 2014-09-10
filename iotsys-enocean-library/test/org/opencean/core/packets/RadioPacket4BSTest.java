@@ -30,45 +30,45 @@
  * This file is part of the IoTSyS project.
  ******************************************************************************/
 
-package at.ac.tuwien.auto.iotsys.commons.obix.objects.enocean.datapoint.impl;
+package org.opencean.core.packets;
 
-import obix.Contract;
-import obix.Obj;
-import obix.Uri;
-import at.ac.tuwien.auto.iotsys.commons.obix.objects.enocean.datapoint.EnoceanDPTIntPerc;
-import at.ac.tuwien.auto.iotsys.commons.obix.objects.enocean.entity.impl.EnoceanEntityImpl;
-import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.unit.UnitPercent;
+import static org.junit.Assert.assertEquals;
 
-public class EnoceanDPTIntPercImpl extends EnoceanDPTIntImpl implements EnoceanDPTIntPerc
-{
-	public EnoceanDPTIntPercImpl(String name, String displayName, String display, EnoceanEntityImpl entity, boolean writable, boolean readable)
-	{
-		// constructor
-		super(name, displayName, display, entity, writable, readable);
+import org.junit.Assert;
+import org.junit.Test;
+import org.opencean.core.packets.BasicPacket;
+import org.opencean.core.packets.Header;
+import org.opencean.core.packets.Payload;
+import org.opencean.core.packets.RadioPacket;
+import org.opencean.core.packets.RawPacket;
+import org.opencean.core.utils.Bits;
 
-		// contract
-		this.addIs(new Contract(EnoceanDPTIntPerc.CONTRACT));
+public class RadioPacket4BSTest {
 
-		// value
-		this.value().setUnit(new Uri(UnitPercent.HREF));
-		this.value().setMin(0);
-		this.value().setMax(100);
-	}
+    @Test
+    public void testRadioPacket4BSparse() {    	
+    	byte dataBytes[] = {20, (byte)0x00, 100, (byte)0x00};
+    	BasicPacket packet = createRawPacket(dataBytes[0], dataBytes[1], dataBytes[2], dataBytes[3]);
+    	if (packet instanceof RadioPacket4BS) {					
+            RadioPacket4BS radioPacket4BS = (RadioPacket4BS) packet;            
+            boolean learnbit = !Bits.isBitSet(radioPacket4BS.getDb0(), 3);
+            int percentage = radioPacket4BS.getDb1();
+            double temperature = radioPacket4BS.getDb3();    
+            assertEquals(true, learnbit);
+            assertEquals(true, (temperature==20));	
+            assertEquals(true, (percentage==100));	
+        } else{
+        	Assert.fail();
+        }    	
+    }
+    
+    private BasicPacket createRawPacket(byte db3, byte db2, byte db1, byte db0) {
+        Header header = new Header(RadioPacket.PACKET_TYPE, (short) 7, (byte) 0);
+        Payload payload = new Payload();
+        payload.setData(new byte[] { RadioPacket4BS.RADIO_TYPE, db3, db2, db1, db0, 0, 0, 0, 0, (byte) 0x00 });
+        RawPacket rawPacket = new RawPacket(header, payload);
+        BasicPacket basicPacket = new RadioPacket4BS(rawPacket);
+        return basicPacket;
+    }
 
-	@Override
-	public void writeObject(Obj input)
-	{
-		super.writeObject(input);
-	}
-	
-	@Override
-	public void setValue(Obj value){
-		super.setValue(value);
-		this.refreshObject();
-	}
-	
-	@Override
-	public Obj getValue(){
-		return super.getValue();
-	}
 }

@@ -41,6 +41,7 @@ import obix.Obj;
 import obix.Real;
 import obix.Uri;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.enocean.datapoint.EnoceanDPTBool;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.enocean.entity.impl.EnoceanEntityImpl;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.encoding.impl.EncodingImpl;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.general.encoding.impl.EncodingsImpl;
 
@@ -50,10 +51,10 @@ public abstract class EnoceanDPTBoolImpl extends EnoceanDPTImpl implements Enoce
 
 	private Bool value = new Bool();
 
-	public EnoceanDPTBoolImpl(String name, String displayName, String display, boolean writable, boolean readable)
+	public EnoceanDPTBoolImpl(String name, String displayName, String display, EnoceanEntityImpl entity, boolean writable, boolean readable)
 	{
 		// constructor
-		super(name, displayName, display);
+		super(name, displayName, display, entity);
 
 		// contract
 		this.addIs(new Contract(EnoceanDPTBool.CONTRACT));
@@ -131,6 +132,36 @@ public abstract class EnoceanDPTBoolImpl extends EnoceanDPTImpl implements Enoce
 					}
 				}
 			}
+			if(entity!=null){
+				this.entity.writeObject(this.value);
+			}
 		}
+	}	
+	
+	@Override
+	public void setValue(Obj value){
+		if (value instanceof EnoceanDPTBool)
+		{
+			EnoceanDPTBool in = (EnoceanDPTBool) value;
+			log.info("Writing on data point.");
+			this.value.set(in.value().get());
+		}
+		else if (value instanceof Bool)
+		{
+			this.value.set(((Bool) value).get());
+		}
+		else if (value instanceof Real)
+		{
+			this.value.set(((Real) value).get());
+		}
+		else if (value instanceof Int)
+		{
+			this.value.set(((Int) value));
+		} else this.value.set(((Obj) value));		
+	}
+	
+	@Override
+	public Obj getValue(){
+		return (Obj)this.value;
 	}
 }

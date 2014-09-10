@@ -40,13 +40,13 @@ public class Application {
 // ++++++++++ TEST Start light actuator 2 ++++++++++++++
         final String ON = "ON";
         final String OFF = "OFF";
-        final byte[] id={(byte)0x00, (byte)0x25 ,(byte)0xA2, (byte)0xDC};
+        final byte[] id={(byte)0x00, (byte)0x25 ,(byte)0xA2, (byte)0xDE};
         final EnoceanId enId= new EnoceanId(id);
 //        final EnoceanParameterAddress parAddress = new EnoceanParameterAddress(enId);        
         StateChanger change = new StateChanger();
 //        RLC rlc = new RLC(0x250);     
         
-        BasicPacket packet = change.changeState(OFF, enId, EEPId.EEP_F6_02_01.toString());       
+        BasicPacket packet = change.changeState(ON, enId, EEPId.EEP_F6_02_01.toString());       
         logger.info("Send packet: " + packet.toString());
         esp3Host.sendRadio(packet);
         

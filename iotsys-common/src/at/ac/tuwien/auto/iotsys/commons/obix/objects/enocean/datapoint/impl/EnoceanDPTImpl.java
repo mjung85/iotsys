@@ -37,20 +37,26 @@ import obix.Obj;
 import obix.Str;
 import obix.Uri;
 import at.ac.tuwien.auto.iotsys.commons.obix.objects.enocean.datapoint.EnoceanDPT;
+import at.ac.tuwien.auto.iotsys.commons.obix.objects.enocean.entity.impl.EnoceanEntityImpl;
 import at.ac.tuwien.auto.iotsys.commons.util.UriEncoder;
 
 public abstract class EnoceanDPTImpl extends Obj implements EnoceanDPT
 {
+	protected EnoceanEntityImpl entity;
 	protected Str function = new Str();
 	protected Str unit = new Str();
 
-	public EnoceanDPTImpl(String name, String displayName, String display)
+	public EnoceanDPTImpl(String name, String displayName, String display, EnoceanEntityImpl entity)
 	{
 		// attributes
 		this.setName(name);
 		this.setDisplay(display);
 		this.setDisplayName(displayName);
-		this.setHidden(true);
+		this.setHidden(false);
+		
+		if(entity != null){
+			this.entity = entity;
+		}
 
 		if (displayName != null)
 			this.setHref(new Uri(UriEncoder.getEscapedUri(displayName)));
@@ -95,4 +101,8 @@ public abstract class EnoceanDPTImpl extends Obj implements EnoceanDPT
 	{
 		return false;
 	}
+	
+	abstract public void setValue(Obj value);
+	
+	abstract public Obj getValue();
 }
