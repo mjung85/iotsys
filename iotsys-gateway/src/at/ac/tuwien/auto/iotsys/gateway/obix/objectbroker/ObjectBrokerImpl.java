@@ -215,13 +215,13 @@ public class ObjectBrokerImpl implements ObjectBroker
 	public synchronized void addObj(Obj o, boolean listInLobby)
 	{
 		Obj root = o.getRoot();
-		String rootHref = root.getHref().get();
-		if (doNotListCategorylessObjs()) {
-			if (!rootHref.contains("/") || rootHref.startsWith("/")) { 
-				//Do not list objects that have no "HREF" parents
-				listInLobby = false;
-			}
-		}
+//		String rootHref = root.getHref().get();
+//		if (doNotListCategorylessObjs()) {
+//			if (!rootHref.contains("/") || rootHref.startsWith("/")) { 
+//				//Do not list objects that have no "HREF" parents
+//				listInLobby = false;
+//			}
+//		}
 		if (root != rootObject)
 		{
 			rootObject.add(root, false);
@@ -422,8 +422,8 @@ public class ObjectBrokerImpl implements ObjectBroker
 		}
 	}
 
-	@Override
-	public boolean doNotListCategorylessObjs() {
-		return true;
-	}
+//	@Override
+//	public boolean doNotListCategorylessObjs() {
+//		return true;
+//	}
 }
