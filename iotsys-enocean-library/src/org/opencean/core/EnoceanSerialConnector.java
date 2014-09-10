@@ -10,6 +10,11 @@ import java.util.Enumeration;
 
 import org.opencean.core.common.ProtocolConnector;
 import org.opencean.core.utils.CircularByteBuffer;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import at.ac.tuwien.auto.iotsys.commons.persistent.models.Connector;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
 /**
@@ -18,7 +23,7 @@ import java.util.logging.Logger;
  * @author Evert van Es
  * @since 1.3.0
  */
-public class EnoceanSerialConnector implements ProtocolConnector {
+public class EnoceanSerialConnector extends Connector implements ProtocolConnector{
 
     private static final Logger logger = Logger.getLogger(EnoceanSerialConnector.class.getName());
 
@@ -102,7 +107,7 @@ public class EnoceanSerialConnector implements ProtocolConnector {
         return buffer.get();
     }
 
-    @Override
+    @Override @JsonIgnore
     public short getShort() {
         return buffer.getShort();
     }

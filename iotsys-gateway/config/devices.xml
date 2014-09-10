@@ -405,6 +405,9 @@
     </connector>
   </rfid>
   
+
+	
+  
   <enocean>    
 	<connector>
       <name>EnOcean Linux</name>
@@ -450,7 +453,7 @@
       <name>EnOcean</name>
       <enabled>false</enabled>
 	  <senderAddress>01:23:45:67</senderAddress>
-      <serialPort>COM5</serialPort>
+      <serialPort>COM8</serialPort>
       <device>
         <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.enocean.entity.impl.EntityEEP_F60201Impl
         </type>
@@ -474,7 +477,7 @@
         <href>EasyclickWindowContact</href>
         <historyEnabled>false</historyEnabled>
       </device> 
-	  <device>        
+	  <!-- <device>        
         <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.enocean.entity.impl.EntityEEP_A52001Impl
         </type>
         <address>00:85:7A:08</address>
@@ -484,7 +487,7 @@
 		<manufacturer>Loxone</manufacturer>
         <href>WirelessValveActuator</href>
         <historyEnabled>false</historyEnabled>
-      </device> 
+      </device>-->
     </connector>   
   </enocean>
 
