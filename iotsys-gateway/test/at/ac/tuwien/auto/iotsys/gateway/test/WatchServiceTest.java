@@ -22,11 +22,11 @@ import com.jayway.restassured.path.xml.element.Node;
 public class WatchServiceTest extends AbstractGatewayTest {
 	@Test
 	public void testLobbyHasWatchService() {
-		if (!ObjectBrokerImpl.getInstance().doNotListCategorylessObjs()) {
+//		if (!ObjectBrokerImpl.getInstance().doNotListCategorylessObjs()) {
 			expect().body(
 					hasXPath("/obj/ref[@href='watchService' and @is='obix:WatchService']"))
 					.when().get("/obix");
-		}
+//		}
 	}
 
 	private String makeWatch() {

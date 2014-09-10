@@ -10,7 +10,7 @@ import at.ac.tuwien.auto.iotsys.commons.persistent.models.Connector;
 
 public interface ObjectBroker
 {
-	public abstract boolean doNotListCategorylessObjs();
+	//public abstract boolean doNotListCategorylessObjs();
 	
 	public abstract HashMap<String, String> get_ipv6MappingTable();
 
