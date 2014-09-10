@@ -216,9 +216,11 @@ public class ObjectBrokerImpl implements ObjectBroker
 	{
 		Obj root = o.getRoot();
 		String rootHref = root.getHref().get();
-		if (!rootHref.contains("/") || rootHref.startsWith("/")) { 
-			//Do not list objects that have no "HREF" parents
-			listInLobby = false;
+		if (doNotListCategorylessObjs()) {
+			if (!rootHref.contains("/") || rootHref.startsWith("/")) { 
+				//Do not list objects that have no "HREF" parents
+				listInLobby = false;
+			}
 		}
 		if (root != rootObject)
 		{
@@ -418,5 +420,10 @@ public class ObjectBrokerImpl implements ObjectBroker
 				e.printStackTrace();
 			}
 		}
+	}
+
+	@Override
+	public boolean doNotListCategorylessObjs() {
+		return true;
 	}
 }
