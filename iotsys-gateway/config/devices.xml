@@ -405,24 +405,15 @@
     </connector>
   </rfid>
   
+
+	
+  
   <enocean>    
 	<connector>
       <name>EnOcean Linux</name>
       <enabled>false</enabled>
 	  <senderAddress>01:23:45:67</senderAddress>
       <serialPort>/dev/ttyS80</serialPort>
-	  <device>
-        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.enocean.entity.impl.EntityEEP_F60201Impl
-        </type>
-        <address>00:25:A2:DE</address>
-		<deviceName>EasyClickPlusReceiver</deviceName>
-		<displayName>EasyClick Plus Receiver</displayName>
-		<display>null</display>
-		<manufacturer>PEHA</manufacturer>
-        <href>EasyClickPlusReceiver</href>
-        <historyEnabled>false</historyEnabled>
-		<groupCommEnabled>true</groupCommEnabled>
-      </device>
       <device>
         <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.enocean.entity.impl.EntityEEP_F60201Impl
         </type>
@@ -445,7 +436,6 @@
 		<manufacturer>PEHA</manufacturer>
         <href>EasyclickWindowContact</href>
         <historyEnabled>false</historyEnabled>
-		<groupCommEnabled>true</groupCommEnabled>
       </device> 
 	  <device>        
         <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.enocean.entity.impl.EntityEEP_A52001Impl
@@ -457,26 +447,13 @@
 		<manufacturer>Loxone</manufacturer>
         <href>WirelessValveActuator</href>
         <historyEnabled>false</historyEnabled>
-		<groupCommEnabled>true</groupCommEnabled>
       </device>   
     </connector>     
     <connector>
       <name>EnOcean</name>
       <enabled>false</enabled>
 	  <senderAddress>01:23:45:67</senderAddress>
-      <serialPort>COM5</serialPort>
-	  <device>
-        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.enocean.entity.impl.EntityEEP_F60201Impl
-        </type>
-        <address>00:25:A2:DE</address>
-		<deviceName>EasyClickPlusReceiver</deviceName>
-		<displayName>EasyClick Plus Receiver</displayName>
-		<display>null</display>
-		<manufacturer>PEHA</manufacturer>
-        <href>EasyClickPlusReceiver</href>
-        <historyEnabled>false</historyEnabled>
-		<groupCommEnabled>true</groupCommEnabled>
-      </device>	  
+      <serialPort>COM8</serialPort>
       <device>
         <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.enocean.entity.impl.EntityEEP_F60201Impl
         </type>
@@ -499,9 +476,8 @@
 		<manufacturer>PEHA</manufacturer>
         <href>EasyclickWindowContact</href>
         <historyEnabled>false</historyEnabled>
-		<groupCommEnabled>true</groupCommEnabled>
       </device> 
-	  <device>        
+	  <!-- <device>        
         <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.enocean.entity.impl.EntityEEP_A52001Impl
         </type>
         <address>00:85:7A:08</address>
@@ -511,8 +487,7 @@
 		<manufacturer>Loxone</manufacturer>
         <href>WirelessValveActuator</href>
         <historyEnabled>false</historyEnabled>
-		<groupCommEnabled>true</groupCommEnabled>
-      </device> 
+      </device>-->
     </connector>   
   </enocean>
 
@@ -1421,7 +1396,7 @@
         </type>
 
         <href>smartmeter</href>
-        <historyEnabled>false</historyEnabled>
+        <historyEnabled>true</historyEnabled>
         <historyCount>1000</historyCount>
       </device>
 
@@ -1451,7 +1426,7 @@
         <type>at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators.impl.ComplexSunblindActuatorImpl
         </type>
         <href>vComplexSunBlind</href>
-        <historyEnabled>false</historyEnabled>
+        <historyEnabled>true</historyEnabled>
         <historyCount>200</historyCount>
         <groupCommEnabled>true</groupCommEnabled>
       </device>
@@ -1532,7 +1507,7 @@
         <type>at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.actuators.impl.PumpActuatorImpl
         </type>
         <href>virtualPumpActuatorImpl</href>
-        <historyEnabled>false</historyEnabled>
+        <historyEnabled>true</historyEnabled>
          <groupCommEnabled>true</groupCommEnabled>
       </device>
       <device>

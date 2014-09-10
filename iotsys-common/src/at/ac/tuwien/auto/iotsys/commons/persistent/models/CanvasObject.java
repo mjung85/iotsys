@@ -16,21 +16,70 @@
     You should have received a copy of the GNU General Public License
     along with this program; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- */
+*/
 package at.ac.tuwien.auto.iotsys.commons.persistent.models;
 
 /**
  * @author Nam Giang - zang at kaist dot ac dot kr
- * 
+ *
  */
-public class Canvas {
+public class CanvasObject {
 
-	// A canvas should have a unique name (or instead a name + unique
-	// identifier). In a first version it is fine if the UI only provides one
-	// canvas named "default". However, the REST API + persitence scheme should
-	// already support multiple canvas. The objects are identified through the
+	// The objects are identified through the
 	// oBIX URI and the x and y position are simple integers
 	
-	String name;
+	String objUri;
+	String objName;
+	CanvasObjectPlacement objPlacement;
 	
+	
+	public String getObjUri() {
+		return objUri;
+	}
+
+
+	public void setObjUri(String objUri) {
+		this.objUri = objUri;
+	}
+
+
+	public String getObjName() {
+		return objName;
+	}
+
+
+	public void setObjName(String objName) {
+		this.objName = objName;
+	}
+
+
+	public CanvasObjectPlacement getObjPlacement() {
+		return objPlacement;
+	}
+
+
+	public void setObjPlacement(CanvasObjectPlacement objPlacement) {
+		this.objPlacement = objPlacement;
+	}
+
+
+	private class CanvasObjectPlacement {
+		int left, top;
+
+		public int getLeft() {
+			return left;
+		}
+
+		public void setLeft(int left) {
+			this.left = left;
+		}
+
+		public int getTop() {
+			return top;
+		}
+
+		public void setTop(int top) {
+			this.top = top;
+		}
+	}
 }
