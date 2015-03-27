@@ -2,8 +2,10 @@
 description = 'IoTSyS XACML PEP/PDP'
 
 repositories {	
-	mavenRepo url: 'https://repository.jboss.org/nexus/content/repositories/releases/', name: 'JBoss Releases'
-	mavenRepo url: 'https://repository.jboss.org/nexus/content/groups/public/', name: 'JBoss Public'
+	maven{
+		url 'https://repository.jboss.org/nexus/content/repositories/releases/'
+		url 'https://repository.jboss.org/nexus/content/groups/public/'
+	}
 }
 
 eclipse{

@@ -8,8 +8,10 @@ allprojects {
 	
 	repositories(){
 		mavenCentral()
-		mavenRepo url: 'https://repository.jboss.org/nexus/content/repositories/releases/', name: 'JBoss Releases'
-		mavenRepo url: 'https://repository.jboss.org/nexus/content/groups/public/', name: 'JBoss Public'
+		maven{
+			url 'https://repository.jboss.org/nexus/content/repositories/releases/'
+			url 'https://repository.jboss.org/nexus/content/groups/public/'
+		}
 		flatDir { dirs "../lib/californium", "../lib/ektorp"}
 	}
 }
