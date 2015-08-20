@@ -32,6 +32,7 @@ jar {
 									 "org.apache.catalina.valves,"+
 									 "javax.naming.directory," +
 									 "javax.servlet",
+					"Import-Package": "javax.management.modelmbean, org.xml.sax.helpers, javax.xml.parsers, javax.net.ssl, javax.naming, org.ietf.jgss, org.xml.sax.ext, org.xml.sax"
 				)
 	}	
 }

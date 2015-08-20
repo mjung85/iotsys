@@ -72,6 +72,7 @@ jar {
 									 "javax.xml.transform.stream," +
 									 "javax.xml.validation," +
 									 "javax.xml.xpath," +
+									 "javax.naming," +
 									 "obix," +
 									 "obix.asm," +
 									 "obix.contracts," +

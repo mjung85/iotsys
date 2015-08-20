@@ -77,6 +77,7 @@ jar {
 									 "ch.ethz.inf.vs.californium.endpoint.resources," +
 									 "ch.ethz.inf.vs.californium.layers," +
 									 "ch.ethz.inf.vs.californium.util," +
+									 "com.fasterxml.jackson.core," +
 									 "com.fasterxml.jackson.databind," +
 									 "com.fasterxml.jackson.databind.node," +
 									 "gnu.io," +
@@ -199,8 +200,8 @@ jar {
 									 "com.sun.xml.ws.api.message",																	 
 									 //"org.apache.http",
 									 
-				   "Import-Package": "obix, obix.asm, obix.contracts,  obix.contracts.impl, obix.io, obix.net, obix.test, obix.tools, obix.ui, obix.ui.fields, obix.ui.views, obix.xml,at.ac.tuwien.auto.iotsys.obix, at.ac.tuwien.auto.iotsys.obix.observer," +
-				   					 "org.xml.sax, org.xml.sax.helpers, org.xml.sax.ext,  org.apache.xalan, org.apache.xalan.res, org.w3c.dom, org.w3c.dom.traversal, org.w3c.dom.ls, javax.xml.parsers,  javax.xml.xpath, javax.xml.transform.sax, javax.xml.transform.dom, javax.xml.namespace, javax.xml.transform, javax.xml.transform.stream, javax.xml.validation, javax.xml.datatype, javax.net.ssl"
+				   "Import-Package": "javax.naming, javax.net.ssl, obix, obix.asm, obix.contracts,  obix.contracts.impl, obix.io, obix.net, obix.test, obix.tools, obix.ui, obix.ui.fields, obix.ui.views, obix.xml,at.ac.tuwien.auto.iotsys.obix, at.ac.tuwien.auto.iotsys.obix.observer," +
+				   					 "org.xml.sax, org.xml.sax.helpers, org.xml.sax.ext,  org.apache.xalan, org.apache.xalan.res, org.w3c.dom, org.w3c.dom.traversal, org.w3c.dom.ls, javax.xml.parsers, javax.xml.xpath, javax.xml.transform.sax, javax.xml.transform.dom, javax.xml.namespace, javax.xml.transform, javax.xml.transform.stream, javax.xml.validation, javax.xml.datatype"
 				)
 	}
 	

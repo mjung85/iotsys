@@ -121,6 +121,7 @@ jar {
 									 "javax.xml.transform.stream," +
 									 "javax.xml.validation," +
 									 "javax.xml.xpath," +
+									 "javax.net.ssl," +
 									 "obix," +
 									 "obix.asm," +
 									 "obix.contracts," +
