@@ -1,7 +1,22 @@
-allprojects {
+configure(
+   [project(':iotsys-gateway'), 
+	project(':iotsys-bacnet'),  project(':iotsys-bacnet4j'),
+	project(':iotsys-calimero'), project(':iotsys-coap'),
+	project(':iotsys-common'),  project(':iotsys-control'),
+	project(':iotsys-demoapp'), project(':iotsys-encoding-json'),
+	project(':iotsys-enocean'), project(':iotsys-enocean-library'),
+    project(':iotsys-knx'),
+	project(':iotsys-mbus'), project(':iotsys-mcast-forwarder'),
+	project(':iotsys-mdnssd'), project(':iotsys-obix'),
+	project(':iotsys-osgi'), project(':iotsys-rfid'), 
+	project(':iotsys-tomcat'), project(':iotsys-virtual'),
+	project(':iotsys-weather-forecast'), project(':iotsys-wmbus'),
+	project(':iotsys-xacml'), project(':iotsys-xbee')]){
+	
 	apply plugin: 'java'
 	apply plugin: 'maven-publish'
 	apply plugin: 'maven'
+	apply plugin: 'eclipse'
 
 	group = 'at.ac.tuwien.auto.iotsys'
 	version = '0.1'
@@ -14,27 +29,6 @@ allprojects {
 		}
 		flatDir { dirs "../lib/californium", "../lib/ektorp"}
 	}
-}
-
-ext{
-	configDir = file('iotsys-gateway/config')
-	resDir = file('iotsys-gateway/res')
-	knxConfigDir = file('iotsys-gateway/knx-config')
-	californiumProperties = file('iotsys-gateway/Californium.properties')
-	distLib = file('dist')
-	distLibRunFile = file('dist/rungateway.bat')
-	distLibRunFileSh = file('dist/rungateway.sh')
-	
-	String felixDir = "felix-framework-4.2.1"
-	
-	felix = file(felixDir)
-	felixConfFile = file(felixDir + '/conf/config.properties')
-	felixBundle = file(felixDir + '/bundle')
-	felixCache = file(felixDir + '/felix-cache')
-}
-
-subprojects{
-	apply plugin: 'eclipse'
 	
 	sourceSets {
     		main {
@@ -60,7 +54,29 @@ subprojects{
 		}
 	}
 }
-			
+
+configure(
+   [project(':obelix')]){
+	apply plugin: 'eclipse'
+}
+
+ext{
+	configDir = file('iotsys-gateway/config')
+	resDir = file('iotsys-gateway/res')
+	knxConfigDir = file('iotsys-gateway/knx-config')
+	californiumProperties = file('iotsys-gateway/Californium.properties')
+	distLib = file('dist')
+	distLibRunFile = file('dist/rungateway.bat')
+	distLibRunFileSh = file('dist/rungateway.sh')
+	
+	String felixDir = "felix-framework-4.2.1"
+	
+	felix = file(felixDir)
+	felixConfFile = file(felixDir + '/conf/config.properties')
+	felixBundle = file(felixDir + '/bundle')
+	felixCache = file(felixDir + '/felix-cache')
+}
+	
 description = 'IoTSyS - Integration middleware for the Internet of Things'
 
 task deploy << {
