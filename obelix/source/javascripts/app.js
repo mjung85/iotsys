@@ -49,7 +49,7 @@
 
 var app = angular.module('Obelix', []);
 
-app.service('Lobby', ['$http', 'Device', 'Directory', function($http, Device, Directory) {
+app.service('Lobby', ['$http', '$log', 'Device', 'Directory', function($http, $log, Device, Directory) {
   return {
     getDeviceTree: function(callback) {
       var root = new Directory('');
@@ -59,11 +59,13 @@ app.service('Lobby', ['$http', 'Device', 'Directory', function($http, Device, Di
         response['nodes'].each(function(node) {
           var href = node['href'];
           if (!href.startsWith('/')) href = '/' + href;
-          var href_components = href.split('/').compact(true);
-          var device_name = href_components.pop();
-          if (node['displayName']) device_name = node['displayName'];
-          var device_directory = root.make(href_components);
-          device_directory.devices.push(new Device(href, device_name));
+          var href_components = href.split('/').compact(true);      
+          if(href_components.length > 1){       
+	          var device_name = href_components.pop();
+	          if (node['displayName']) device_name = node['displayName'];
+	          var device_directory = root.make(href_components);
+	          device_directory.devices.push(new Device(href, device_name));
+	      }
         });
         callback(root);
       });
@@ -107,6 +109,7 @@ app.factory('Storage', function() {
 
   return Storage;
 });
+
 
 app.factory('Directory', function() {
   var Directory = function(name) {
@@ -787,8 +790,8 @@ app.factory('ProjectMembers', [function() {
                    new ProjectMember('Esad', 'H.'),
                    new ProjectMember('Isolde', 'C.'),
                    new ProjectMember('Jomy', 'C.'),
-                   new ProjectMember('Jürgen', 'S.'),
-                   new ProjectMember('Jürgen', 'W.', 'https://www.auto.tuwien.ac.at/people/view/Juergen_Weidinger/'),
+                   new ProjectMember('J�rgen', 'S.'),
+                   new ProjectMember('J�rgen', 'W.', 'https://www.auto.tuwien.ac.at/people/view/Juergen_Weidinger/'),
                    new ProjectMember('Luyu', 'Z.'),
                    new ProjectMember('Nam', 'G.'),
                    new ProjectMember('Ralph', 'H.'),
