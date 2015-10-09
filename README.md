@@ -62,10 +62,10 @@ The gateway and the protocol bundle projects are separate applications. However,
 
 ## User and developer guide ##
 Check the user [user and developer guide](userguide.md) to find out:
-  * [How to setup the project environment](gettingstarted.md)?
-  * [How to run the gateway](gettingstarted.md)?
-  * How to access the gateway using different oBIX bindings ([HTTP](HTTPinteraction.md), [CoAP](COAPinteraction.md), [SOAP](SOAPinteraction.md))
-  * [How to add your own technology adapter](connectorhowto.md)?
+  * [How to setup the project environment](wiki/gettingstarted.md)?
+  * [How to run the gateway](wiki/gettingstarted.md)?
+  * How to access the gateway using different oBIX bindings ([HTTP](wiki/HTTPinteraction.md), [CoAP](wiki/COAPinteraction.md), [SOAP](wiki/SOAPinteraction.md))
+  * [How to add your own technology adapter](wiki/connectorhowto.md)?
 
 
 ## IoTSyS Lead ##
