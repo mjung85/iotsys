@@ -61,7 +61,7 @@ The gateway and the protocol bundle projects are separate applications. However,
 <img src='https://iotsys.googlecode.com/hg/misc/img/overview.png' />
 
 ## User and developer guide ##
-Check the user [user and developer guide](userguide.md) to find out:
+Check the user [user and developer guide](wiki/userguide.md) to find out:
   * [How to setup the project environment](wiki/gettingstarted.md)?
   * [How to run the gateway](wiki/gettingstarted.md)?
   * How to access the gateway using different oBIX bindings ([HTTP](wiki/HTTPinteraction.md), [CoAP](wiki/COAPinteraction.md), [SOAP](wiki/SOAPinteraction.md))
