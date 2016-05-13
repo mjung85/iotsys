@@ -3,20 +3,6 @@ IoTSyS is an integration middleware for the Internet of Things. It provides a co
 
 IoTSyS was started within the frame of the FP7 [IoT6](http://www.iot6.eu/) European research project and is hosted and further maintained by the [Automation Systems Group](http://www.auto.tuwien.ac.at) at the [Vienna University of Technology](http://www.tuwien.ac.at). It is also supported through the Internet Foundation Austria within the [NetIdee](https://www.netidee.at/) open source grants and further developed within the project Secure and Semantic Web of Automation (SeWoA, FFG 840206).
 
-# Google Summer of Code
-
-IoTSyS is part of the TU Wien project portfolio for Google Summer of Code 2016. If you are interested in applying for one of the [IoTSyS project ideas](http://www.iue.tuwien.ac.at/cse/index.php/gsoc/2016/ideas.html), please follow the [instructions](http://www.iue.tuwien.ac.at/cse/index.php/gsoc/2016/how-to-apply.html) and write your proposal according to the [TU Wien guidance](https://summerofcode.withgoogle.com/organizations/6221502189928448/).
-
-In order to demonstrate that you are the right candidate for contributing IoTSyS, do the following:
-
- 1. Check out the IoTSyS repository
- 2. Read the [user and developer guide](https://github.com/mjung85/iotsys#user-and-developer-guide)
- 2. Run the IoTSyS integration middleware
- 3. Open the OBIX lobby in your browser
- 3. Find the virtual brightness actuator and make a GET request
- 4. Set the value of the brightness actuator to ''70'' by sending an appropriate PUT request
- 5. Hand in the HTTP raw requests and responses for the GET (3.) and the PUT (4.) with your application
-
 # Demo - Videos #
 
 ## Intro ##
