@@ -22,7 +22,7 @@ public class ADTRadioPacket extends RadioPacket {
      * @param senderId
      *            Unique device sender Id
      * @param status
-     *            Telegram control bits – used in case of repeating, switch
+     *            Telegram control bits â used in case of repeating, switch
      *            telegram encapsulation, checksum type identification
      * @param subTelNum
      *            Number of subTelegram. Send = 3, receive = 1..x

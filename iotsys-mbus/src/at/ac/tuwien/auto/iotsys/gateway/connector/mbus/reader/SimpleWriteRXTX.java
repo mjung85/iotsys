@@ -122,7 +122,7 @@ public class SimpleWriteRXTX {
 					try {						
 						serialPort.addEventListener(new SerialPortReader());
 					} catch (TooManyListenersException e) {
-						System.out.println("TooManyListenersException für Serialport");
+						System.out.println("TooManyListenersException fÃ¼r Serialport");
 					}									
 					
 					try {

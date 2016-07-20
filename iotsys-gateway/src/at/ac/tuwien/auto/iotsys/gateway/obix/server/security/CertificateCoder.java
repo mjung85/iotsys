@@ -186,7 +186,7 @@ public class CertificateCoder {
 	}
 
 	/**
-	 * ￼￼Decrypted with public key
+	 * ï¿¼ï¿¼Decrypted with public key
 	 * 
 	 * @param data
 	 * @param certificatePath

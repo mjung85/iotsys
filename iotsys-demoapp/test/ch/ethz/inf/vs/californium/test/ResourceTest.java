@@ -68,7 +68,7 @@ public class ResourceTest {
 	public void extendedTest() {
 		System.out.println("=[ extendedTest ]==============================");
 		
-		String input = "</my/Päth>;rt=\"MyName\";if=\"/someRef/path\";ct=42;obs;sz=10";
+		String input = "</my/PÃ¤th>;rt=\"MyName\";if=\"/someRef/path\";ct=42;obs;sz=10";
 		Resource root = RemoteResource.newRoot(input);
 		
 		RemoteResource my = new RemoteResource("my");
@@ -77,18 +77,18 @@ public class ResourceTest {
 
 		root.prettyPrint();
 
-		Resource res = root.getResource("/my/Päth");
+		Resource res = root.getResource("/my/PÃ¤th");
 		assertNotNull(res);
-		res = root.getResource("my/Päth");
+		res = root.getResource("my/PÃ¤th");
 		assertNotNull(res);
 		res = root.getResource("my");
-		res = res.getResource("Päth");
+		res = res.getResource("PÃ¤th");
 		assertNotNull(res);
-		res = res.getResource("/my/Päth");
+		res = res.getResource("/my/PÃ¤th");
 		assertNotNull(res);
 
-		assertEquals("Päth", res.getName());
-		assertEquals("/my/Päth", res.getPath());
+		assertEquals("PÃ¤th", res.getName());
+		assertEquals("/my/PÃ¤th", res.getPath());
 		assertEquals("MyName", res.getResourceType().get(0));
 		assertEquals("/someRef/path", res.getInterfaceDescription().get(0));
 		assertEquals(42, res.getContentTypeCode().get(0).intValue());

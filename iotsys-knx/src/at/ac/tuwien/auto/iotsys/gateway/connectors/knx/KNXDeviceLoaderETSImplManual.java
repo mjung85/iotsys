@@ -141,12 +141,12 @@ public class KNXDeviceLoaderETSImplManual implements DeviceLoader
 
 		objectBroker.addObj(entity, true);
 
-		DPST_9_1_ImplKnx datapoint_temperature = new DPST_9_1_ImplKnx(knxConnector, new GroupAddress(1, 1, 0), "P-0341-0_DI-11_M-0001_A-9814-01-5F7E_O-0_R-2", "Temperature, Channel A", "°C-value (EIS5)", false, true);
+		DPST_9_1_ImplKnx datapoint_temperature = new DPST_9_1_ImplKnx(knxConnector, new GroupAddress(1, 1, 0), "P-0341-0_DI-11_M-0001_A-9814-01-5F7E_O-0_R-2", "Temperature, Channel A", "Â°C-value (EIS5)", false, true);
 		entity.addDatapoint(datapoint_temperature);
 
 		objectBroker.addObj(datapoint_temperature, true);
 
-		entity = new EntityImpl("P-0341-0_DI-7", "KNX CO², Humidity and Temperature Sensor", null, "Schneider Electric Industries SAS", "MTN6005-0001");
+		entity = new EntityImpl("P-0341-0_DI-7", "KNX COÂ², Humidity and Temperature Sensor", null, "Schneider Electric Industries SAS", "MTN6005-0001");
 		entity.addTranslation("de-DE", TranslationAttribute.displayName, "KNX CO2-, Feuchte- und Temperatursensor");
 		n.getEntities().addEntity(entity);
 
@@ -158,7 +158,7 @@ public class KNXDeviceLoaderETSImplManual implements DeviceLoader
 		objectBroker.addObj(datapoint_co2, true);
 
 		// Views
-		PartImpl building = new PartImpl("P-0341-0_BP-1", "Treitlstraße 1-3", null, EnumPart.KEY_BUILDING);
+		PartImpl building = new PartImpl("P-0341-0_BP-1", "TreitlstraÃŸe 1-3", null, EnumPart.KEY_BUILDING);
 		PartImpl floor = new PartImpl("P-0341-0_BP-2", "4. Stock", null, EnumPart.KEY_FLOOR);
 		PartImpl board = new PartImpl("P-0341-0_BP-4", "Suitcase", null, EnumPart.KEY_DISTRIBUTIONBOARD);
 

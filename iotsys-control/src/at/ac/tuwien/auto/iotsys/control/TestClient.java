@@ -46,12 +46,12 @@ public class TestClient implements Observer
 		if (obj instanceof TemperatureControlActuator)
 		{
 			TemperatureControlActuator kuehlhaus = (TemperatureControlActuator) obj;
-			System.out.println("\nK�hlhaus Hesselbachweg 5.");
+			System.out.println("\nKï¿½hlhaus Hesselbachweg 5.");
 
 			System.out.println("  Vorgabe Raumtemperatur-Sollwert: " + kuehlhaus.targetValue());
 			System.out.println("  Aktueller Raumtemperatur-Istwert: " + kuehlhaus.actualValue());
 			System.out.println("  Aktueller Raumtemperatur-Sollwert: " + kuehlhaus.actualTargetValue());
-			System.out.println("  Aktueller Zustand Freigabe K�ltemaschine: " + kuehlhaus.active());
+			System.out.println("  Aktueller Zustand Freigabe Kï¿½ltemaschine: " + kuehlhaus.active());
 
 			System.out.println("Setting new target temperature value for Kuehlhaus.");
 			kuehlhaus.targetValue().set(-10);
@@ -88,9 +88,9 @@ public class TestClient implements Observer
 		if (obj instanceof HeatPumpActuator)
 		{
 			HeatPumpActuator heatPump = (HeatPumpActuator) obj;
-			System.out.println("\nW�rmepumpe Lienbachstra�e 5.");
+			System.out.println("\nWï¿½rmepumpe Lienbachstraï¿½e 5.");
 
-			System.out.println("  Sperre W�rmepumpe: " + heatPump.disabled());
+			System.out.println("  Sperre Wï¿½rmepumpe: " + heatPump.disabled());
 			System.out.println("  Sollwertbeeinflussung: " + heatPump.targetValueInfluence());
 
 			System.out.println("\nDisabling heat pump and enabling target value influence.");
@@ -110,12 +110,12 @@ public class TestClient implements Observer
 			if (obj instanceof TemperatureControlActuator)
 			{
 				TemperatureControlActuator kuehlhaus = (TemperatureControlActuator) obj;
-				System.out.println("\nK�hlhaus Hesselbachweg 5 (Observed).");
+				System.out.println("\nKï¿½hlhaus Hesselbachweg 5 (Observed).");
 
 				System.out.println("  Vorgabe Raumtemperatur-Sollwert: " + kuehlhaus.targetValue());
 				System.out.println("  Aktueller Raumtemperatur-Istwert: " + kuehlhaus.actualValue());
 				System.out.println("  Aktueller Raumtemperatur-Sollwert: " + kuehlhaus.actualTargetValue());
-				System.out.println("  Aktueller Zustand Freigabe K�ltemaschine: " + kuehlhaus.active());
+				System.out.println("  Aktueller Zustand Freigabe Kï¿½ltemaschine: " + kuehlhaus.active());
 			}
 		}
 
@@ -131,7 +131,7 @@ public class TestClient implements Observer
 			if (obj instanceof TemperatureControlActuator)
 			{
 				TemperatureControlActuator kuehlhaus = (TemperatureControlActuator) obj;
-				System.out.println("\nK�hlhaus Hesselbachweg 5 (Observed).");
+				System.out.println("\nKï¿½hlhaus Hesselbachweg 5 (Observed).");
 
 				System.out.println("  Vorgabe Raumtemperatur-Sollwert: " + kuehlhaus.targetValue());
 				System.out.println("  Aktueller Raumtemperatur-Istwert: " + kuehlhaus.actualValue());
@@ -143,7 +143,7 @@ public class TestClient implements Observer
 		if (obj instanceof HeatPumpActuator)
 		{
 			HeatPumpActuator heatPump = (HeatPumpActuator) obj;
-			System.out.println("  Sperre W�rmepumpe: " + heatPump.disabled());
+			System.out.println("  Sperre Wï¿½rmepumpe: " + heatPump.disabled());
 			System.out.println("  Sollwertbeeinflussung: " + heatPump.targetValueInfluence());
 		}
 	}

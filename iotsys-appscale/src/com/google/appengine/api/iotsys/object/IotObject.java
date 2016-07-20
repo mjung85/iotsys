@@ -51,7 +51,7 @@ import com.google.apphosting.api.IotsysServicePb;
 /**
  * Class for storing the data of an obix.Obj
  * 
- * @author Clemens Pühringer
+ * @author Clemens PÃ¼hringer
  * 
  */
 public class IotObject implements Serializable {

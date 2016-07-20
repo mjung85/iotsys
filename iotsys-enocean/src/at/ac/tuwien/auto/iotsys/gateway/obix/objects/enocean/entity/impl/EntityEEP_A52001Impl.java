@@ -63,7 +63,7 @@ public class EntityEEP_A52001Impl extends EnoceanEntityImpl implements EntityEEP
 	EnoceanDPTIntPercImpl datapoint_percent;
 	EnoceanDPTRealTempImpl datapoint_temp;
 	EnoceanDPTRealTempImpl datapoint_currenttemp;
-	EnoceanDPTBoolOnOffImpl datapoint_setpoint; // off = valve pos (0-100), on = temp (0-40캜)
+	EnoceanDPTBoolOnOffImpl datapoint_setpoint; // off = valve pos (0-100), on = temp (0-40째C)
 	EnoceanDPTBoolOnOffImpl datapoint_learnonoff;
 	
 	// constructor
@@ -82,12 +82,12 @@ public class EntityEEP_A52001Impl extends EnoceanEntityImpl implements EntityEEP
 		this.addDatapoint(datapoint_percent);
 		
 		// Create and add new datapoint for the temperature set point
-		datapoint_temp = new EnoceanDPTRealTempImpl("BatteryPoweredActuatorSetPointTemperature", "Set Point Temperature", "0-40캜", this, true, true);
+		datapoint_temp = new EnoceanDPTRealTempImpl("BatteryPoweredActuatorSetPointTemperature", "Set Point Temperature", "0-40째C", this, true, true);
 		datapoint_temp.addTranslation("de-DE", TranslationAttribute.displayName, "Sollwert Temperatur");
 		this.addDatapoint(datapoint_temp);
 		
 		// Create and add new datapoint for current temperature
-		datapoint_currenttemp = new EnoceanDPTRealTempImpl("BatteryPoweredActuatorCurrentTemperature", "Current Temperature", "0-40캜", this, true, false);
+		datapoint_currenttemp = new EnoceanDPTRealTempImpl("BatteryPoweredActuatorCurrentTemperature", "Current Temperature", "0-40째C", this, true, false);
 		datapoint_currenttemp.addTranslation("de-DE", TranslationAttribute.displayName, "Istwert Temperatur");
 		this.addDatapoint(datapoint_currenttemp);
 		
@@ -130,14 +130,14 @@ public class EntityEEP_A52001Impl extends EnoceanEntityImpl implements EntityEEP
 		});
 	}	
 	
-	// helper function to convert a temperature in 캜 to the byte format of the 4BS telegram
+	// helper function to convert a temperature in 째C to the byte format of the 4BS telegram
 	private Real temperatureByteToReal(byte temperature){
 		double real = ((double)temperature)*40/255;
 		Real temp = new Real(real);
 		return temp;		
 	}
 	
-	// helper function to convert the byte format of the 4BS telegram to a temperature in 캜
+	// helper function to convert the byte format of the 4BS telegram to a temperature in 째C
 	private byte temperatureDoubleToByte(double temperature){
 		int inttemp = (int)(temperature*255/40);
 		byte temp = (byte)(inttemp&0xFF);
@@ -175,7 +175,7 @@ public class EntityEEP_A52001Impl extends EnoceanEntityImpl implements EntityEEP
 			db0.setBit(3, !datapoint_learnonoff.value().getBool());
 			db1.setBit(2 ,datapoint_setpoint.value().getBool());
 			
-			if(datapoint_setpoint.value().getBool()){ // off = valve pos (0-100), on = temp (0-40캜)
+			if(datapoint_setpoint.value().getBool()){ // off = valve pos (0-100), on = temp (0-40째C)
 				db3 = temperatureDoubleToByte(datapoint_temp.value().getReal());
 			} else {
 				db3 = (byte)(datapoint_percent.value().getInt()&0xFF);
