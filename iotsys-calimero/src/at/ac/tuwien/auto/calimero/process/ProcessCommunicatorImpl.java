@@ -34,6 +34,7 @@ import at.ac.tuwien.auto.calimero.datapoint.Datapoint;
 import at.ac.tuwien.auto.calimero.dptxlator.DPTXlator;
 import at.ac.tuwien.auto.calimero.dptxlator.DPTXlator2ByteFloat;
 import at.ac.tuwien.auto.calimero.dptxlator.DPTXlator3BitControlled;
+import at.ac.tuwien.auto.calimero.dptxlator.DPTXlator4ByteUnsigned;
 import at.ac.tuwien.auto.calimero.dptxlator.DPTXlator8BitUnsigned;
 import at.ac.tuwien.auto.calimero.dptxlator.DPTXlatorBoolean;
 import at.ac.tuwien.auto.calimero.dptxlator.DPTXlatorString;
