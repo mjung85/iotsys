@@ -322,8 +322,38 @@ public class ProcessCommunicatorImpl implements ProcessCommunicator
 		t.setValue(value);
 		write(dst, priority, t);
 	}
+	
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see tuwien.auto.calimero.process.ProcessCommunicator#readUInt
+	 * (tuwien.auto.calimero.GroupAddress)
+	 */
+	public long readUint(GroupAddress dst)
+			throws KNXTimeoutException, KNXRemoteException, KNXLinkClosedException, KNXFormatException {
+		final byte[] apdu = readFromGroup(dst, priority, 4, 4);
+		final DPTXlator4ByteUnsigned t = new DPTXlator4ByteUnsigned(DPTXlator4ByteUnsigned.DPT_VALUE_4_UCOUNT);
+		extractGroupASDU(apdu, t);
+		return t.getValueUnsigned();
+	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see tuwien.auto.calimero.process.ProcessCommunicator#write
+	 * (tuwien.auto.calimero.GroupAddress, long)
+	 */
+	public void write(GroupAddress dst, long value)
+			throws KNXTimeoutException, KNXFormatException, KNXLinkClosedException {
+		final DPTXlator4ByteUnsigned t = new DPTXlator4ByteUnsigned(DPTXlator4ByteUnsigned.DPT_VALUE_4_UCOUNT);
+		t.setValue(value);
+		write(dst, priority, t);
+	}
+
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see tuwien.auto.calimero.process.ProcessCommunicator#readString
 	 * (tuwien.auto.calimero.GroupAddress)
 	 */

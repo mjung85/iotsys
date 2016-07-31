@@ -266,6 +266,36 @@ public class KNXConnector extends Connector {
 		}
 		return 0;
 	}
+	
+	
+	public long readUint(GroupAddress a) {
+		try {
+			if (!isConnected()) {
+				return 0;
+			}
+
+			long ret = pc.readUint(a);
+			log.finest("Read " + ret + " from " + a);
+			return ret;
+		} catch (KNXException e) {
+			e.printStackTrace();
+		}
+		return 0;
+	}
+	
+	
+	public void write(GroupAddress a, long value) {
+		try {
+			if (!isConnected()) {
+				return;
+			}
+			log.finest("Writing " + value + " on " + a);
+			pc.write(a, (long)value);
+		} catch (KNXException e) {
+			e.printStackTrace();
+		}
+	}
+
 
 	public String read(Datapoint dp) {
 		try {
