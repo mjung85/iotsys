@@ -108,7 +108,7 @@ public class KNXDeviceLoaderImpl implements DeviceLoader {
 					knxConnector.setName(connectorName);
 					knxConnector.setTechnology("knx");
 					knxConnector.setEnabled(enabled);
-					//knxConnector.connect();
+					knxConnector.connect();
 					connectors.add(knxConnector);
 					
 					int numberOfDevices = 0;
