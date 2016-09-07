@@ -335,6 +335,47 @@ public interface ProcessCommunicator
 	 */
 	void write(GroupAddress dst, float value) throws KNXException;
 
+
+	/**
+	 * Reads a 4 byte KNX unsigned int datapoint value from a group destination.
+	 * <p>
+	 * 
+	 * @param dst
+	 *            group destination to read from
+	 * @return the read value of type float
+	 * @throws KNXTimeoutException
+	 *             on a timeout during send or no read response was received
+	 * @throws KNXInvalidResponseException
+	 *             on invalid read response message
+	 * @throws KNXLinkClosedException
+	 *             if network link to KNX network is closed
+	 * @throws KNXFormatException
+	 *             on translation problem of the response data
+	 * @throws KNXException
+	 *             on other read problems
+	 */
+	long readUint(GroupAddress dst) throws KNXException;
+
+	/**
+	 * Writes a 4 byte KNX unsigned int datapoint value to a group destination.
+	 * <p>
+	 * 
+	 * @param dst
+	 *            group destination to write to
+	 * @param value
+	 *            float value to write
+	 * @throws KNXTimeoutException
+	 *             on a timeout during send
+	 * @throws KNXFormatException
+	 *             on translation problem of the supplied datapoint value
+	 * @throws KNXLinkClosedException
+	 *             if network link to KNX network is closed
+	 * @throws KNXException
+	 *             on other write problems
+	 */
+	void write(GroupAddress dst, long value) throws KNXException;
+
+	
 	/**
 	 * Reads a string datapoint value from a group destination.
 	 * <p>

@@ -223,7 +223,11 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader
 
 					try
 					{
-						transformer = tfactory.newTransformer(new StreamSource("knx-config/stylesheet_knx.xsl"));
+						if ("5".equals(System.getProperty("ETS_VERSION"))){
+							transformer = tfactory.newTransformer(new StreamSource("knx-config/stylesheet_knx_12.xsl"));
+						} else {
+							transformer = tfactory.newTransformer(new StreamSource("knx-config/stylesheet_knx.xsl"));
+						}
 						Collection<File> listFiles = FileUtils.listFiles(projDir, FileFilterUtils.nameFileFilter("0.xml"), new IOFileFilter()
 						{
 
@@ -262,7 +266,7 @@ public class KNXDeviceLoaderETSImpl implements DeviceLoader
 						e.printStackTrace();
 					}					
 				}
-				
+
 				try
 				{
 					devicesConfig = new XMLConfiguration(transformFileName);
