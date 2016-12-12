@@ -1,0 +1,12 @@
+# Gradle
+# ---
+.gradle
+*/build
+
+# Felix Framework
+# ---
+felix-framework-*
+
+# General
+# ---
+*.zip

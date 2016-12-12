@@ -229,7 +229,7 @@ public class KNXDeviceLoaderETSImplGenerated implements DeviceLoader {
 		singleTranslation = new ArrayList<String>();
 		singleTranslation.add("es_ES");
 		singleTranslation.add("displayName");
-		singleTranslation.add("Regulación");
+		singleTranslation.add("RegulaciÃ³n");
 		temp.add(singleTranslation);
 
 		singleTranslation = new ArrayList<String>();
@@ -411,7 +411,7 @@ public class KNXDeviceLoaderETSImplGenerated implements DeviceLoader {
 		singleTranslation = new ArrayList<String>();
 		singleTranslation.add("de_DE");
 		singleTranslation.add("display");
-		singleTranslation.add("°C-Wert (EIS5)");
+		singleTranslation.add("Â°C-Wert (EIS5)");
 		temp.add(singleTranslation);
 
 		singleTranslation = new ArrayList<String>();
@@ -423,7 +423,7 @@ public class KNXDeviceLoaderETSImplGenerated implements DeviceLoader {
 		singleTranslation = new ArrayList<String>();
 		singleTranslation.add("en_US");
 		singleTranslation.add("display");
-		singleTranslation.add("°C-value (EIS5)");
+		singleTranslation.add("Â°C-value (EIS5)");
 		temp.add(singleTranslation);
 
 		if (!translations
@@ -443,7 +443,7 @@ public class KNXDeviceLoaderETSImplGenerated implements DeviceLoader {
 		singleTranslation = new ArrayList<String>();
 		singleTranslation.add("de_DE");
 		singleTranslation.add("display");
-		singleTranslation.add("°C-Wert (EIS5)");
+		singleTranslation.add("Â°C-Wert (EIS5)");
 		temp.add(singleTranslation);
 
 		singleTranslation = new ArrayList<String>();
@@ -455,7 +455,7 @@ public class KNXDeviceLoaderETSImplGenerated implements DeviceLoader {
 		singleTranslation = new ArrayList<String>();
 		singleTranslation.add("en_US");
 		singleTranslation.add("display");
-		singleTranslation.add("°C-value (EIS5)");
+		singleTranslation.add("Â°C-value (EIS5)");
 		temp.add(singleTranslation);
 
 		if (!translations
@@ -475,7 +475,7 @@ public class KNXDeviceLoaderETSImplGenerated implements DeviceLoader {
 		singleTranslation = new ArrayList<String>();
 		singleTranslation.add("de_DE");
 		singleTranslation.add("display");
-		singleTranslation.add("°C-Wert (EIS5)");
+		singleTranslation.add("Â°C-Wert (EIS5)");
 		temp.add(singleTranslation);
 
 		singleTranslation = new ArrayList<String>();
@@ -487,7 +487,7 @@ public class KNXDeviceLoaderETSImplGenerated implements DeviceLoader {
 		singleTranslation = new ArrayList<String>();
 		singleTranslation.add("en_US");
 		singleTranslation.add("display");
-		singleTranslation.add("°C-value (EIS5)");
+		singleTranslation.add("Â°C-value (EIS5)");
 		temp.add(singleTranslation);
 
 		if (!translations
@@ -507,7 +507,7 @@ public class KNXDeviceLoaderETSImplGenerated implements DeviceLoader {
 		singleTranslation = new ArrayList<String>();
 		singleTranslation.add("de_DE");
 		singleTranslation.add("display");
-		singleTranslation.add("°C-Wert (EIS5)");
+		singleTranslation.add("Â°C-Wert (EIS5)");
 		temp.add(singleTranslation);
 
 		singleTranslation = new ArrayList<String>();
@@ -519,7 +519,7 @@ public class KNXDeviceLoaderETSImplGenerated implements DeviceLoader {
 		singleTranslation = new ArrayList<String>();
 		singleTranslation.add("en_US");
 		singleTranslation.add("display");
-		singleTranslation.add("°C-value (EIS5)");
+		singleTranslation.add("Â°C-value (EIS5)");
 		temp.add(singleTranslation);
 
 		if (!translations
@@ -534,13 +534,13 @@ public class KNXDeviceLoaderETSImplGenerated implements DeviceLoader {
 		singleTranslation = new ArrayList<String>();
 		singleTranslation.add("da_DK");
 		singleTranslation.add("displayName");
-		singleTranslation.add("Tærskel 1 CO2");
+		singleTranslation.add("TÃ¦rskel 1 CO2");
 		temp.add(singleTranslation);
 
 		singleTranslation = new ArrayList<String>();
 		singleTranslation.add("da_DK");
 		singleTranslation.add("display");
-		singleTranslation.add("Værdisensor");
+		singleTranslation.add("VÃ¦rdisensor");
 		temp.add(singleTranslation);
 
 		singleTranslation = new ArrayList<String>();
@@ -618,13 +618,13 @@ public class KNXDeviceLoaderETSImplGenerated implements DeviceLoader {
 		singleTranslation = new ArrayList<String>();
 		singleTranslation.add("sv_SE");
 		singleTranslation.add("displayName");
-		singleTranslation.add("Tröskel 1 CO2");
+		singleTranslation.add("TrÃ¶skel 1 CO2");
 		temp.add(singleTranslation);
 
 		singleTranslation = new ArrayList<String>();
 		singleTranslation.add("sv_SE");
 		singleTranslation.add("display");
-		singleTranslation.add("Värdegivare");
+		singleTranslation.add("VÃ¤rdegivare");
 		temp.add(singleTranslation);
 
 		if (!translations
@@ -639,13 +639,13 @@ public class KNXDeviceLoaderETSImplGenerated implements DeviceLoader {
 		singleTranslation = new ArrayList<String>();
 		singleTranslation.add("da_DK");
 		singleTranslation.add("displayName");
-		singleTranslation.add("Tærskel 2 CO2");
+		singleTranslation.add("TÃ¦rskel 2 CO2");
 		temp.add(singleTranslation);
 
 		singleTranslation = new ArrayList<String>();
 		singleTranslation.add("da_DK");
 		singleTranslation.add("display");
-		singleTranslation.add("Værdisensor");
+		singleTranslation.add("VÃ¦rdisensor");
 		temp.add(singleTranslation);
 
 		singleTranslation = new ArrayList<String>();
@@ -723,13 +723,13 @@ public class KNXDeviceLoaderETSImplGenerated implements DeviceLoader {
 		singleTranslation = new ArrayList<String>();
 		singleTranslation.add("sv_SE");
 		singleTranslation.add("displayName");
-		singleTranslation.add("Tröskel 2 CO2");
+		singleTranslation.add("TrÃ¶skel 2 CO2");
 		temp.add(singleTranslation);
 
 		singleTranslation = new ArrayList<String>();
 		singleTranslation.add("sv_SE");
 		singleTranslation.add("display");
-		singleTranslation.add("Värdegivare");
+		singleTranslation.add("VÃ¤rdegivare");
 		temp.add(singleTranslation);
 
 		if (!translations
@@ -744,13 +744,13 @@ public class KNXDeviceLoaderETSImplGenerated implements DeviceLoader {
 		singleTranslation = new ArrayList<String>();
 		singleTranslation.add("da_DK");
 		singleTranslation.add("displayName");
-		singleTranslation.add("Tærskel 3 CO2");
+		singleTranslation.add("TÃ¦rskel 3 CO2");
 		temp.add(singleTranslation);
 
 		singleTranslation = new ArrayList<String>();
 		singleTranslation.add("da_DK");
 		singleTranslation.add("display");
-		singleTranslation.add("Værdisensor");
+		singleTranslation.add("VÃ¦rdisensor");
 		temp.add(singleTranslation);
 
 		singleTranslation = new ArrayList<String>();
@@ -828,13 +828,13 @@ public class KNXDeviceLoaderETSImplGenerated implements DeviceLoader {
 		singleTranslation = new ArrayList<String>();
 		singleTranslation.add("sv_SE");
 		singleTranslation.add("displayName");
-		singleTranslation.add("Tröskel 3 CO2");
+		singleTranslation.add("TrÃ¶skel 3 CO2");
 		temp.add(singleTranslation);
 
 		singleTranslation = new ArrayList<String>();
 		singleTranslation.add("sv_SE");
 		singleTranslation.add("display");
-		singleTranslation.add("Värdegivare");
+		singleTranslation.add("VÃ¤rdegivare");
 		temp.add(singleTranslation);
 
 		if (!translations
@@ -849,13 +849,13 @@ public class KNXDeviceLoaderETSImplGenerated implements DeviceLoader {
 		singleTranslation = new ArrayList<String>();
 		singleTranslation.add("da_DK");
 		singleTranslation.add("displayName");
-		singleTranslation.add("CO2-værdi");
+		singleTranslation.add("CO2-vÃ¦rdi");
 		temp.add(singleTranslation);
 
 		singleTranslation = new ArrayList<String>();
 		singleTranslation.add("da_DK");
 		singleTranslation.add("display");
-		singleTranslation.add("Fysisk værdi");
+		singleTranslation.add("Fysisk vÃ¦rdi");
 		temp.add(singleTranslation);
 
 		singleTranslation = new ArrayList<String>();
@@ -891,7 +891,7 @@ public class KNXDeviceLoaderETSImplGenerated implements DeviceLoader {
 		singleTranslation = new ArrayList<String>();
 		singleTranslation.add("es_ES");
 		singleTranslation.add("display");
-		singleTranslation.add("Valor físico");
+		singleTranslation.add("Valor fÃ­sico");
 		temp.add(singleTranslation);
 
 		singleTranslation = new ArrayList<String>();
@@ -933,13 +933,13 @@ public class KNXDeviceLoaderETSImplGenerated implements DeviceLoader {
 		singleTranslation = new ArrayList<String>();
 		singleTranslation.add("sv_SE");
 		singleTranslation.add("displayName");
-		singleTranslation.add("CO2-värde");
+		singleTranslation.add("CO2-vÃ¤rde");
 		temp.add(singleTranslation);
 
 		singleTranslation = new ArrayList<String>();
 		singleTranslation.add("sv_SE");
 		singleTranslation.add("display");
-		singleTranslation.add("Fysiskt värde");
+		singleTranslation.add("Fysiskt vÃ¤rde");
 		temp.add(singleTranslation);
 
 		if (!translations
@@ -954,13 +954,13 @@ public class KNXDeviceLoaderETSImplGenerated implements DeviceLoader {
 		singleTranslation = new ArrayList<String>();
 		singleTranslation.add("da_DK");
 		singleTranslation.add("displayName");
-		singleTranslation.add("Rel. fugtværdi");
+		singleTranslation.add("Rel. fugtvÃ¦rdi");
 		temp.add(singleTranslation);
 
 		singleTranslation = new ArrayList<String>();
 		singleTranslation.add("da_DK");
 		singleTranslation.add("display");
-		singleTranslation.add("Fysisk værdi");
+		singleTranslation.add("Fysisk vÃ¦rdi");
 		temp.add(singleTranslation);
 
 		singleTranslation = new ArrayList<String>();
@@ -996,13 +996,13 @@ public class KNXDeviceLoaderETSImplGenerated implements DeviceLoader {
 		singleTranslation = new ArrayList<String>();
 		singleTranslation.add("es_ES");
 		singleTranslation.add("display");
-		singleTranslation.add("Valor físico");
+		singleTranslation.add("Valor fÃ­sico");
 		temp.add(singleTranslation);
 
 		singleTranslation = new ArrayList<String>();
 		singleTranslation.add("fr_FR");
 		singleTranslation.add("displayName");
-		singleTranslation.add("Valeur humidité relative");
+		singleTranslation.add("Valeur humiditÃ© relative");
 		temp.add(singleTranslation);
 
 		singleTranslation = new ArrayList<String>();
@@ -1014,7 +1014,7 @@ public class KNXDeviceLoaderETSImplGenerated implements DeviceLoader {
 		singleTranslation = new ArrayList<String>();
 		singleTranslation.add("it_IT");
 		singleTranslation.add("displayName");
-		singleTranslation.add("Valore di umidità rel.");
+		singleTranslation.add("Valore di umiditÃ  rel.");
 		temp.add(singleTranslation);
 
 		singleTranslation = new ArrayList<String>();
@@ -1038,13 +1038,13 @@ public class KNXDeviceLoaderETSImplGenerated implements DeviceLoader {
 		singleTranslation = new ArrayList<String>();
 		singleTranslation.add("sv_SE");
 		singleTranslation.add("displayName");
-		singleTranslation.add("Rel. fuktvärde");
+		singleTranslation.add("Rel. fuktvÃ¤rde");
 		temp.add(singleTranslation);
 
 		singleTranslation = new ArrayList<String>();
 		singleTranslation.add("sv_SE");
 		singleTranslation.add("display");
-		singleTranslation.add("Fysiskt värde");
+		singleTranslation.add("Fysiskt vÃ¤rde");
 		temp.add(singleTranslation);
 
 		if (!translations
@@ -1059,7 +1059,7 @@ public class KNXDeviceLoaderETSImplGenerated implements DeviceLoader {
 		singleTranslation = new ArrayList<String>();
 		singleTranslation.add("de_DE");
 		singleTranslation.add("displayName");
-		singleTranslation.add("Wert links außen");
+		singleTranslation.add("Wert links auÃŸen");
 		temp.add(singleTranslation);
 
 		singleTranslation = new ArrayList<String>();
@@ -1173,7 +1173,7 @@ public class KNXDeviceLoaderETSImplGenerated implements DeviceLoader {
 		singleTranslation = new ArrayList<String>();
 		singleTranslation.add("de_DE");
 		singleTranslation.add("displayName");
-		singleTranslation.add("Jalousie rechts außen");
+		singleTranslation.add("Jalousie rechts auÃŸen");
 		temp.add(singleTranslation);
 
 		singleTranslation = new ArrayList<String>();
@@ -1230,7 +1230,7 @@ public class KNXDeviceLoaderETSImplGenerated implements DeviceLoader {
 		singleTranslation = new ArrayList<String>();
 		singleTranslation.add("de_DE");
 		singleTranslation.add("displayName");
-		singleTranslation.add("Wert rechts außen");
+		singleTranslation.add("Wert rechts auÃŸen");
 		temp.add(singleTranslation);
 
 		singleTranslation = new ArrayList<String>();
@@ -1597,7 +1597,7 @@ public class KNXDeviceLoaderETSImplGenerated implements DeviceLoader {
 		singleTranslation = new ArrayList<String>();
 		singleTranslation.add("en_US");
 		singleTranslation.add("displayName");
-		singleTranslation.add("KNX CO², Humidity and Temperature Sensor");
+		singleTranslation.add("KNX COÂ², Humidity and Temperature Sensor");
 		temp.add(singleTranslation);
 
 		singleTranslation = new ArrayList<String>();
@@ -1610,13 +1610,13 @@ public class KNXDeviceLoaderETSImplGenerated implements DeviceLoader {
 		singleTranslation.add("fr_FR");
 		singleTranslation.add("displayName");
 		singleTranslation
-				.add("Capteur de CO2, d´humidité et de temperature KNX");
+				.add("Capteur de CO2, dÂ´humiditÃ© et de temperature KNX");
 		temp.add(singleTranslation);
 
 		singleTranslation = new ArrayList<String>();
 		singleTranslation.add("it_IT");
 		singleTranslation.add("displayName");
-		singleTranslation.add("Sensore KNX per CO2 umidità e temperatura");
+		singleTranslation.add("Sensore KNX per CO2 umiditÃ  e temperatura");
 		temp.add(singleTranslation);
 
 		singleTranslation = new ArrayList<String>();
@@ -2567,7 +2567,7 @@ public class KNXDeviceLoaderETSImplGenerated implements DeviceLoader {
 			_139505167881133.setName("P-0341-0_DI-7");
 
 			_139505167881133
-					.setDisplayName("KNX CO², Humidity and Temperature Sensor");
+					.setDisplayName("KNX COÂ², Humidity and Temperature Sensor");
 
 			_139505167881133.setIs(new Contract("bas:Entity"));
 
@@ -6704,7 +6704,7 @@ public class KNXDeviceLoaderETSImplGenerated implements DeviceLoader {
 								groupAddresses
 										.get("P-0341-0_DI-11_M-0001_A-9814-01-5F7E_O-0_R-2")));
 
-			init__1395051678865203.setDisplay("°C-value (EIS5)");
+			init__1395051678865203.setDisplay("Â°C-value (EIS5)");
 
 			init__1395051678865203.setDisplayName("Temperature, Channel A");
 
@@ -7034,7 +7034,7 @@ public class KNXDeviceLoaderETSImplGenerated implements DeviceLoader {
 								groupAddresses
 										.get("P-0341-0_DI-11_M-0001_A-9814-01-5F7E_O-2_R-1")));
 
-			init__1395051678867214.setDisplay("°C-value (EIS5)");
+			init__1395051678867214.setDisplay("Â°C-value (EIS5)");
 
 			init__1395051678867214.setDisplayName("Temperature, Channel C");
 
@@ -7249,7 +7249,7 @@ public class KNXDeviceLoaderETSImplGenerated implements DeviceLoader {
 								groupAddresses
 										.get("P-0341-0_DI-11_M-0001_A-9814-01-5F7E_O-3_R-4")));
 
-			init__1395051678869221.setDisplay("°C-value (EIS5)");
+			init__1395051678869221.setDisplay("Â°C-value (EIS5)");
 
 			init__1395051678869221.setDisplayName("Temperature, Channel D");
 
@@ -7546,7 +7546,7 @@ public class KNXDeviceLoaderETSImplGenerated implements DeviceLoader {
 								groupAddresses
 										.get("P-0341-0_DI-11_M-0001_A-9814-01-5F7E_O-1_R-3")));
 
-			init__1395051678871231.setDisplay("°C-value (EIS5)");
+			init__1395051678871231.setDisplay("Â°C-value (EIS5)");
 
 			init__1395051678871231.setDisplayName("Temperature, Channel B");
 
@@ -7801,7 +7801,7 @@ public class KNXDeviceLoaderETSImplGenerated implements DeviceLoader {
 			_1395051678872237.setName("P-0341-0_DI-7");
 
 			_1395051678872237
-					.setDisplayName("KNX CO², Humidity and Temperature Sensor");
+					.setDisplayName("KNX COÂ², Humidity and Temperature Sensor");
 
 			_1395051678872237.setIs(new Contract("bas:Entity"));
 

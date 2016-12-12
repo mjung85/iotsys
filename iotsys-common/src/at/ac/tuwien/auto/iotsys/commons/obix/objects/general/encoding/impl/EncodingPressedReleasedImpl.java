@@ -49,8 +49,8 @@ public class EncodingPressedReleasedImpl extends EncodingImpl implements Encodin
 		BoolElement pressed = new BoolElement(EncodingPressedReleased.KEY_PRESSED, "Pressed", true);
 		BoolElement released = new BoolElement(EncodingPressedReleased.KEY_RELEASED, "Released", false);
 
-		pressed.addTranslation("de", TranslationAttribute.displayName, "Gedrückt");
-		released.addTranslation("de", TranslationAttribute.displayName, "Nicht gedrückt");
+		pressed.addTranslation("de", TranslationAttribute.displayName, "GedrÃ¼ckt");
+		released.addTranslation("de", TranslationAttribute.displayName, "Nicht gedrÃ¼ckt");
 
 		addElement(pressed);
 		addElement(released);

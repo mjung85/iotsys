@@ -36,7 +36,7 @@ public class ResponseExample {
 					}
 */					
 					System.err.println("Value first input pin: "+ioSample.getAnalog0());
-					System.err.println("Value first input pin Luminosità: "+ioSample.getAnalog1());
+					System.err.println("Value first input pin LuminositÃ : "+ioSample.getAnalog1());
 					
 					Integer lightMax = 1023;
 					Integer lightValue = ioSample.getAnalog1();
@@ -49,8 +49,8 @@ public class ResponseExample {
 					double temperatureCelsiusValue = (temperatureFahrenheitValue-32)*5/9;
 					
 					System.err.println("Light Intensity Value: "+lightPercentualValue+"%");
-					System.err.println("Temperature Fahrenheit Value: "+temperatureFahrenheitValue+"°F");
-					System.err.println("Temperature Celsius Value: "+temperatureCelsiusValue+"°C");
+					System.err.println("Temperature Fahrenheit Value: "+temperatureFahrenheitValue+"Â°F");
+					System.err.println("Temperature Celsius Value: "+temperatureCelsiusValue+"Â°C");
 
 /*					
 					System.err.println("Value first input pin Temperature: "+ioSample.getAnalog2());

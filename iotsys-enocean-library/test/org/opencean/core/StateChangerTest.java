@@ -11,7 +11,7 @@ import org.opencean.core.packets.RadioPacket;
 /**
  * "55, 00, 07, 07, 01, 7A, F6, 50, 00, 00, 00, 00, 30, 03, FF, FF, FF, FF, FF, 00, E8"
  * 
- * @author Jürgen Schober
+ * @author JÃ¼rgen Schober
  * 
  */
 public class StateChangerTest { 

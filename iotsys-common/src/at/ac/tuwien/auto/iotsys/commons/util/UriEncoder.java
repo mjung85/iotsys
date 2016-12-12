@@ -48,12 +48,12 @@ public abstract class UriEncoder
 		tmp = tmp.replace(" ", "_");
 		tmp = tmp.replace("-", "_");
 		tmp = tmp.replace("/", "_");
-		tmp = tmp.replace("ß", "ss");
-		tmp = tmp.replace("ä", "ae");
-		tmp = tmp.replace("ö", "oe");
-		tmp = tmp.replace("ü", "ue");
-		tmp = tmp.replace("²", "2");
-		tmp = tmp.replace("³", "3");
+		tmp = tmp.replace("ÃŸ", "ss");
+		tmp = tmp.replace("Ã¤", "ae");
+		tmp = tmp.replace("Ã¶", "oe");
+		tmp = tmp.replace("Ã¼", "ue");
+		tmp = tmp.replace("Â²", "2");
+		tmp = tmp.replace("Â³", "3");
 		tmp = tmp.replace("!", "");
 		tmp = tmp.replace("?", "");
 		tmp = tmp.replace("=", "");

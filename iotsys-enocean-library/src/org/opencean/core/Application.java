@@ -18,7 +18,7 @@ import java.util.logging.Logger;
 /**
  * Stand-alone Application for reading EnOcean packages
  * 
- * @author Jürgen Schober
+ * @author JÃ¼rgen Schober
  * 
  */
 public class Application {
