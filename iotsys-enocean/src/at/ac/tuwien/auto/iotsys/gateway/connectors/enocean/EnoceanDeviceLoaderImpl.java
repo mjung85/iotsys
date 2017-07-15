@@ -177,6 +177,8 @@ public class EnoceanDeviceLoaderImpl implements DeviceLoader {
 						
 						String addressString = address.toString();
 						
+						String location = subConfig.getString("device(" + i + ").location");
+						
 						Device deviceFromDb;						
 						try {
 							deviceFromDb = devicesFromDb.get(i);
@@ -189,11 +191,12 @@ public class EnoceanDeviceLoaderImpl implements DeviceLoader {
 							groupCommEnabled = deviceFromDb.isGroupcommEnabled();
 							refreshEnabled = deviceFromDb.isRefreshEnabled();
 							historyCount = deviceFromDb.getHistoryCount();
+							location = deviceFromDb.getLocation();
 						} 
 						catch (Exception e) {}
 						
 						// Transition step: comment when done
-						Device d = new Device(type, ipv6, addressString, href, name, null, historyCount, historyEnabled, groupCommEnabled, refreshEnabled);
+						Device d = new Device(type, ipv6, addressString, href, name, null, historyCount, historyEnabled, groupCommEnabled, refreshEnabled, location);
 						objectBroker.getConfigDb().prepareDevice(connectorName, d);		
 						
 						log.info("type: " + type);
@@ -221,7 +224,12 @@ public class EnoceanDeviceLoaderImpl implements DeviceLoader {
 
 											if (name != null && name.length() > 0) {
 												enoceanDevice.setName(name);
-											}											
+											}
+											
+											// set location of device if available (e.g. QR-Code)
+											if(location != null && location.length() > 0){
+												enoceanDevice.setLocation(location);
+											}
 
 											if (ipv6 != null) 
 											{

@@ -188,6 +188,11 @@ public class ObixEncoder extends XWriter
 			attr(" display", obj.getTranslation(language, TranslationAttribute.display));
 		if (obj.getDisplayName() != null)
 			attr(" displayName", obj.getTranslation(language, TranslationAttribute.displayName));
+		
+		//location added
+		if (obj.getLocation() != null)
+			attr(" location", obj.getTranslation(language, TranslationAttribute.location));
+		
 		if (obj.getIcon() != null)
 			attr(" icon", obj.getIcon().toString());
 		if (obj.getStatus() != Status.ok)

@@ -94,4 +94,11 @@ public interface ObixServer
 	public String getCoRELinks();
 	public ObjectBroker getObjectBroker();
 	public UIDb getUidb();
+	
+	/**
+	 * Get the hred of an obj with the corresponding qrcode
+	 * @param qrcode
+	 * @return href
+	 */
+	public String getQRCode(String qrcode);
 }

@@ -63,4 +63,6 @@ public interface ObjectBroker
 	public ConfigsDb getConfigDb();
 
 	public void setConfigDb(ConfigsDb configDb);
+	
+	public abstract String getQRCode(String qrcode);
 }
