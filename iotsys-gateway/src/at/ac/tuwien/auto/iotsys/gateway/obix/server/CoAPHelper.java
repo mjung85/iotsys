@@ -105,7 +105,8 @@ public class CoAPHelper {
 			request.respond(CodeRegistry.RESP_CONTENT,
 					obixResponse,
 					MediaTypeRegistry.APPLICATION_LINK_FORMAT);
-
+		} else if(request.getUriPath().endsWith("qrcode")){
+			request.respond(CodeRegistry.RESP_CONTENT, obixResponse, MediaTypeRegistry.TEXT_PLAIN);
 		} else {
 			request.respond(CodeRegistry.RESP_CONTENT, obixResponse, MediaTypeRegistry.TEXT_XML);
 		}

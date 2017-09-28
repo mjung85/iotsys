@@ -154,6 +154,8 @@ public class WeatherForecastDeviceLoaderImpl implements DeviceLoader {
 						Integer historyCount = subConfig.getInt("device("
 								+ i + ").historyCount", 0);
 						
+						String location = subConfig.getString("device(" + i + ").location");
+						
 						Device deviceFromDb;
 						try {
 							deviceFromDb = devicesFromDb.get(i);
@@ -164,12 +166,13 @@ public class WeatherForecastDeviceLoaderImpl implements DeviceLoader {
 							groupCommEnabled = deviceFromDb.isGroupcommEnabled();
 							refreshEnabled = deviceFromDb.isRefreshEnabled();
 							historyCount = deviceFromDb.getHistoryCount();
+							location = deviceFromDb.getLocation();
 						} 
 						catch (Exception e) {
 						}
 						
 						// Transition step: comment when done
-						Device d = new Device(type, null, null, href, name, null, historyCount, historyEnabled, groupCommEnabled, refreshEnabled);
+						Device d = new Device(type, null, null, href, name, null, historyCount, historyEnabled, groupCommEnabled, refreshEnabled, location);
 						objectBroker.getConfigDb().prepareDevice(connectorName, d);
 						
 						if (type != null && name != null) {
@@ -188,7 +191,11 @@ public class WeatherForecastDeviceLoaderImpl implements DeviceLoader {
 											Obj crawler = (Obj) declaredConstructors[k].newInstance(args);
 			
 											crawler.setHref(new Uri(URLEncoder.encode(connectorName, "UTF-8") + "/" + href));
-	
+											
+											// set location of device if available (e.g. QR-Code)
+											if(location != null && location.length() > 0){
+												crawler.setLocation(location);
+											}
 											
 											objectBroker.addObj(crawler, true);
 											

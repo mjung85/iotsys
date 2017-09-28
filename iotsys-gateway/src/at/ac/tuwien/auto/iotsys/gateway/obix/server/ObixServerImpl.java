@@ -134,5 +134,10 @@ public class ObixServerImpl implements ObixServer {
 		
 		return o.getFullContextPath();
 	}
-
+	
+	@Override
+	public String getQRCode(String qrcode)
+	{
+		return objectBroker.getQRCode(qrcode);
+	}
 }

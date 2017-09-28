@@ -34,7 +34,7 @@ public class Obj implements IObj, Subject, AlarmSource, Cloneable
 	// //////////////////////////////////////////////////////////////
 
 	public enum TranslationAttribute {
-		display, displayName,
+		display, displayName, location,
 	}
 
 	public static final String DEFAULT_LANGUAGE = "en";
@@ -52,6 +52,11 @@ public class Obj implements IObj, Subject, AlarmSource, Cloneable
 		else if (attribute.equals("description"))
 		{
 			addTranslation(language, TranslationAttribute.display, value);
+		}
+		// location Translation
+		else if (attribute.equals("location"))
+		{
+			addTranslation(language, TranslationAttribute.location, value);
 		}
 		else
 		{
@@ -101,6 +106,9 @@ public class Obj implements IObj, Subject, AlarmSource, Cloneable
 					return this.getDisplay();
 				case displayName:
 					return this.getDisplayName();
+				// add translation for location
+				case location:
+					return this.getLocation();
 			}
 		}
 
@@ -137,6 +145,7 @@ public class Obj implements IObj, Subject, AlarmSource, Cloneable
 	private boolean readable;
 	private boolean isNull;
 	private boolean isHidden;
+	private String location;
 	
 
 	private boolean isDisabled = false;
@@ -914,6 +923,24 @@ public class Obj implements IObj, Subject, AlarmSource, Cloneable
 	public void setReadable(boolean readable)
 	{
 		this.readable = readable;
+	}
+	
+	/**
+	 * Set location string
+	 * @param location
+	 */
+	public void setLocation(String location)
+	{
+		this.location = location;
+	}
+	
+	/**
+	 * Get location of obj
+	 * @return location
+	 */
+	public String getLocation()
+	{
+		return location;
 	}
 
 	// //////////////////////////////////////////////////////////////

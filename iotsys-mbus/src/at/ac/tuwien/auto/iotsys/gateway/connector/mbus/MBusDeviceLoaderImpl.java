@@ -162,7 +162,9 @@ public class MBusDeviceLoaderImpl implements DeviceLoader {
 								+ i + ").groupCommEnabled", false);
 
 						Integer historyCount = subConfig.getInt("device(" + i
-								+ ").historyCount", 0);						
+								+ ").historyCount", 0);			
+						
+						String location = subConfig.getString("device(" + i + ").location");
 						
 						Device deviceFromDb;
 						try {
@@ -175,12 +177,13 @@ public class MBusDeviceLoaderImpl implements DeviceLoader {
 							historyEnabled = deviceFromDb.isHistoryEnabled();
 							groupCommEnabled = deviceFromDb.isGroupcommEnabled();
 							historyCount = deviceFromDb.getHistoryCount();
+							location = deviceFromDb.getLocation();
 						} 
 						catch (Exception e) {
 						}
 						
 						// Transition step: comment when done
-						Device d = new Device(type, ipv6, addressString, href, name, historyCount, historyEnabled, groupCommEnabled);
+						Device d = new Device(type, ipv6, addressString, href, name, historyCount, historyEnabled, groupCommEnabled, location);
 						objectBroker.getConfigDb().prepareDevice(connectorName, d);	
 						
 						if(interval > 0){
@@ -229,6 +232,11 @@ public class MBusDeviceLoaderImpl implements DeviceLoader {
 																	// KNX
 																	// device
 										smartMeter.setHref(new Uri(URLEncoder.encode(connectorName, "UTF-8") + "/" + href));
+										
+										// set location of device if available (e.g. QR-Code)
+										if(location != null && location.length() > 0){
+											smartMeter.setLocation(location);
+										}
 										
 										if (ipv6 != null) {
 											objectBroker.addObj(smartMeter, ipv6);

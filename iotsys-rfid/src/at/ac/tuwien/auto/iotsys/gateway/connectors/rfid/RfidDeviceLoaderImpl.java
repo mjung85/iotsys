@@ -146,6 +146,8 @@ public class RfidDeviceLoaderImpl implements DeviceLoader {
 
 						Integer historyCount = subConfig.getInt("device(" + i
 								+ ").historyCount", 0);
+						
+						String location = subConfig.getString("device(" + i + ").location");
 
 						Device deviceFromDb;
 						try {
@@ -158,12 +160,13 @@ public class RfidDeviceLoaderImpl implements DeviceLoader {
 							groupCommEnabled = deviceFromDb.isGroupcommEnabled();
 							refreshEnabled = deviceFromDb.isRefreshEnabled();
 							historyCount = deviceFromDb.getHistoryCount();
+							location = deviceFromDb.getLocation();
 						} 
 						catch (Exception e) {
 						}
 						
 						// Transition step: comment when done
-						Device d = new Device(type, ipv6, null, href, name, null, historyCount, historyEnabled, groupCommEnabled, refreshEnabled);
+						Device d = new Device(type, ipv6, null, href, name, null, historyCount, historyEnabled, groupCommEnabled, refreshEnabled, location);
 						objectBroker.getConfigDb().prepareDevice(connectorName, d);
 						
 						if (type != null) {
@@ -200,7 +203,12 @@ public class RfidDeviceLoaderImpl implements DeviceLoader {
 											if (name != null
 													&& name.length() > 0) {
 												rfidDevice.setName(name);
-											}										
+											}	
+											
+											// set location of device if available (e.g. QR-Code)
+											if(location != null && location.length() > 0){
+												rfidDevice.setLocation(location);
+											}
 
 											if (ipv6 != null) {
 												objectBroker

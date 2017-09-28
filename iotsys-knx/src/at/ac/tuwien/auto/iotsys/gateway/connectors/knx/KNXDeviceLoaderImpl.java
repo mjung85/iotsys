@@ -157,6 +157,8 @@ public class KNXDeviceLoaderImpl implements DeviceLoader {
 								+ i + ").historyCount", 0);
 						
 						Boolean refreshEnabled = subConfig.getBoolean("device(" + i + ").refreshEnabled", false);
+						
+						String location = subConfig.getString("device(" + i + ").location");
 
 						Device deviceFromDb;
 						try {
@@ -173,12 +175,13 @@ public class KNXDeviceLoaderImpl implements DeviceLoader {
 							groupCommEnabled = deviceFromDb.isGroupcommEnabled();
 							refreshEnabled = deviceFromDb.isRefreshEnabled();
 							historyCount = deviceFromDb.getHistoryCount();
+							location = deviceFromDb.getLocation();
 						} 
 						catch (Exception e) {
 						}
 						
 						// Transition step: comment when done
-						Device d = new Device(type, ipv6, addressString, href, name, displayName, historyCount, historyEnabled, groupCommEnabled, refreshEnabled);
+						Device d = new Device(type, ipv6, addressString, href, name, displayName, historyCount, historyEnabled, groupCommEnabled, refreshEnabled, location);
 						objectBroker.getConfigDb().prepareDevice(connectorName, d);
 						
 						if (type != null && address != null) {
@@ -236,6 +239,11 @@ public class KNXDeviceLoaderImpl implements DeviceLoader {
 											if(displayName != null && displayName.length() > 0){
 												knxDevice.setDisplayName(displayName);
 											}
+											
+											// set location of device if available (e.g. QR-Code)
+											if(location != null && location.length() > 0){
+												knxDevice.setLocation(location);
+											}
 
 											if (ipv6 != null) {
 												objectBroker.addObj(knxDevice, ipv6);
@@ -287,13 +295,17 @@ public class KNXDeviceLoaderImpl implements DeviceLoader {
 							}
 						}
 					}
+					
+					knxConnector.connect();
+					
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 
 			}
 		}
-
+		
+		
 		return connectors;
 	}
 

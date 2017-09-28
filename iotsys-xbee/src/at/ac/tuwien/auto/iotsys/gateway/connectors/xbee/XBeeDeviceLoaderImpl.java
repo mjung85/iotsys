@@ -150,6 +150,8 @@ public class XBeeDeviceLoaderImpl implements DeviceLoader {
 
 						Boolean refreshEnabled = subConfig.getBoolean("device("
 								+ i + ").refreshEnabled", false);
+						
+						String location = subConfig.getString("device(" + i + ").location");
 
 						Device deviceFromDb;
 						try {
@@ -163,12 +165,13 @@ public class XBeeDeviceLoaderImpl implements DeviceLoader {
 							groupCommEnabled = deviceFromDb.isGroupcommEnabled();
 							refreshEnabled = deviceFromDb.isRefreshEnabled();
 							historyCount = deviceFromDb.getHistoryCount();
+							location = deviceFromDb.getLocation();
 						} 
 						catch (Exception e) {
 						}
 						
 						// Transition step: comment when done
-						Device d = new Device(type, ipv6, addressString, href, name, null, historyCount, historyEnabled, groupCommEnabled, refreshEnabled);
+						Device d = new Device(type, ipv6, addressString, href, name, null, historyCount, historyEnabled, groupCommEnabled, refreshEnabled, location);
 						objectBroker.getConfigDb().prepareDevice(connectorName, d);
 						
 						if (type != null && address != null) {
@@ -236,7 +239,10 @@ public class XBeeDeviceLoaderImpl implements DeviceLoader {
 												xBeeDevice.setName(name);
 											}
 
-											
+											// set location of device if available (e.g. QR-Code)
+											if(location != null && location.length() > 0){
+												xBeeDevice.setLocation(location);
+											}
 
 											if (ipv6 != null) {
 												objectBroker

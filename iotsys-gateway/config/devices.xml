@@ -590,7 +590,7 @@
         <forceRefresh>false</forceRefresh>              
         <router>
         <!--<ip>192.168.161.59</ip> -->
-        <ip>192.168.1.100</ip>
+        <ip>10.0.0.2</ip>
           	<!-- <ip>192.168.161.61</ip>  -->
             <port>3671</port>
         </router>
@@ -687,7 +687,7 @@
       <name>KNX TP1 Suitcase</name>
       <enabled>false</enabled>
       <router>
-        <ip>192.168.1.101</ip>
+        <ip>10.0.0.2</ip>
         <port>3671</port>
       </router>
       <localIP>auto</localIP>
@@ -718,6 +718,8 @@
         <address>null, 1/0/0</address>
         <href>light1</href>
         <historyEnabled>false</historyEnabled>
+		<groupCommEnabled>true</groupCommEnabled>
+		<location>light1QR</location>
       </device>
 
       <device>
@@ -726,7 +728,20 @@
         <address>null, 1/0/1</address>
         <href>brightness1</href>
         <historyEnabled>false</historyEnabled>
+		<location>brightness1QR</location>
       </device>
+	  
+	  <device>
+        <type>at.ac.tuwien.auto.iotsys.gateway.obix.objects.iot.sensors.impl.knx.PushButtonImplKnx
+        </type>
+        <address>1/0/4</address>
+        <href>switch1</href>
+        <displayName>Button 1</displayName>
+        <historyEnabled>false</historyEnabled>
+        <groupCommEnabled>true</groupCommEnabled>
+		<location>switch1QR</location>
+      </device>
+	  
     </connector>
 
     <connector>
@@ -1368,6 +1383,7 @@
         <historyEnabled>false</historyEnabled>
         <historyCount>200</historyCount>
          <groupCommEnabled>true</groupCommEnabled>
+		<location>virtualIndoorBrightnessSensorQR</location>
       </device>
       
      
@@ -1387,6 +1403,7 @@
         <historyEnabled>false</historyEnabled>
         <historyCount>200</historyCount> 
         <groupCommEnabled>true</groupCommEnabled>
+		<location>virtualPresenceQR</location>
       </device>
 
       <device>
@@ -1406,12 +1423,14 @@
         </type>
         <href>virtualRoomTemperatureSensor</href>
          <groupCommEnabled>true</groupCommEnabled>
+		<location>virtualRoomTemperatureSensorQR</location>
       </device>
       <device>
         <type>at.ac.tuwien.auto.iotsys.commons.obix.objects.iot.sensors.impl.TemperatureSensorImpl
         </type>
         <href>virtualTemperatureSensor</href>
         <refreshEnabled>false</refreshEnabled>
+		<location>virtualTemperatureSensorQR</location>
       </device>
 
       <device>
@@ -1484,6 +1503,7 @@
         <historyEnabled>false</historyEnabled>
         <historyCount>200</historyCount>
         <groupCommEnabled>true</groupCommEnabled>
+		<location>sunblindMiddleAQR</location>
       </device>
       
        
@@ -1534,6 +1554,7 @@
         <historyEnabled>false</historyEnabled>
         <historyCount>10</historyCount>
         <groupCommEnabled>true</groupCommEnabled>
+		<location>virtualLightQR</location>
       </device>
 
       <device>
@@ -1563,6 +1584,7 @@
         <href>virtualBoilerActuatorImpl</href>
         <historyEnabled>false</historyEnabled>
         <groupCommEnabled>true</groupCommEnabled>
+		<location>virtualBoilerActuatorImplQR</location>
       </device>
     </connector>
     <connector>
@@ -1620,6 +1642,7 @@
         <historyEnabled>false</historyEnabled>
         <refreshEnabled>false</refreshEnabled>
         <groupCommEnabled>false</groupCommEnabled>
+		<location>hvacSimSuitcaseQR</location>
       </device>
      
     </connector>

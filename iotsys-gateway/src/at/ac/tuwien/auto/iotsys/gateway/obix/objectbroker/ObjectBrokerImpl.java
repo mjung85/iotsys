@@ -422,8 +422,34 @@ public class ObjectBrokerImpl implements ObjectBroker
 		}
 	}
 
+	@Override
+	public synchronized String getQRCode(String qrcode) {
+		return getQRCode(rootObject, qrcode);
+	}
+	
+	/**
+	 * returns the href of obj with the corresponding qrcode or an empty string if the device with this qrcode does not exist
+	 * @param obj
+	 * @param qrcode
+	 * @return href
+	 */
+	private String getQRCode(Obj obj, String qrcode)
+	{
+		String qrCodeObj = "";
+		if (obj.getHref() == null)
+			return qrCodeObj;
+
+		for (Obj child : obj.list())
+		{
+			if(child.getLocation() != null && child.getLocation().equals(qrcode))
+				qrCodeObj = child.getHref().toString();
+		}
+		return qrCodeObj;
+	}
+
 //	@Override
 //	public boolean doNotListCategorylessObjs() {
 //		return true;
 //	}
+	
 }

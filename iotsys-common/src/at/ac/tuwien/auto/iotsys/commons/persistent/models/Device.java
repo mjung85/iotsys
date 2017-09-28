@@ -38,13 +38,14 @@ public class Device extends CouchDbDocument {
 	private boolean historyEnabled;
 	private boolean groupcommEnabled;
 	private boolean refreshEnabled;
+	private String location;
 	
 	public Device(){}
 	
 	public Device(String type2, String ipv62, String address2, String href2,
 			String name2, String displayName2, Integer historyCount2,
 			boolean historyEnabled2, boolean groupCommEnabled2,
-			boolean refreshEnabled2) {
+			boolean refreshEnabled2, String location) {
 		this.type = type2;
 		this.ipv6 = ipv62;
 		this.address = address2;
@@ -55,11 +56,12 @@ public class Device extends CouchDbDocument {
 		this.historyEnabled = historyEnabled2;
 		this.groupcommEnabled = groupCommEnabled2;
 		this.refreshEnabled = refreshEnabled2;
+		this.location = location;
 	}
 	public Device(String type2, String ipv62, String addressString,
 			String href2, String name2, Integer historyCount2,
-			boolean historyEnabled2, boolean groupCommEnabled2) {
-		this(type2, ipv62, addressString, href2, name2, "", historyCount2, historyEnabled2, groupCommEnabled2, false);
+			boolean historyEnabled2, boolean groupCommEnabled2, String location) {
+		this(type2, ipv62, addressString, href2, name2, "", historyCount2, historyEnabled2, groupCommEnabled2, false, location);
 	}
 
 	public String getConnectorId() {
@@ -128,5 +130,12 @@ public class Device extends CouchDbDocument {
 	public void setDisplayName(String displayName) {
 		this.displayName = displayName;
 	}	
+	
+	public String getLocation() {
+		return location;
+	}
+	public void setLocation(String location) {
+		this.location = location;
+	}
 	
 }

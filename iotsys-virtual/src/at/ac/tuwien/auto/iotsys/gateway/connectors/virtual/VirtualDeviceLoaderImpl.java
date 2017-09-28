@@ -221,6 +221,8 @@ public class VirtualDeviceLoaderImpl implements DeviceLoader {
 						Integer historyCount = subConfig.getInt("device("
 								+ i + ").historyCount", 0);
 						
+						String location = subConfig.getString("device(" + i + ").location");
+
 						Device deviceFromDb;
 						try {
 							deviceFromDb = devicesFromDb.get(i);
@@ -234,12 +236,13 @@ public class VirtualDeviceLoaderImpl implements DeviceLoader {
 							groupCommEnabled = deviceFromDb.isGroupcommEnabled();
 							refreshEnabled = deviceFromDb.isRefreshEnabled();
 							historyCount = deviceFromDb.getHistoryCount();
+							location = deviceFromDb.getLocation();
 						} 
 						catch (Exception e) {
 						}
 						
 						// Transition step: comment when done
-						Device d = new Device(type, ipv6, addressString, href, name, displayName, historyCount, historyEnabled, groupCommEnabled, refreshEnabled);
+						Device d = new Device(type, ipv6, addressString, href, name, displayName, historyCount, historyEnabled, groupCommEnabled, refreshEnabled, location);
 						objectBroker.getConfigDb().prepareDevice(connectorName, d);						
 						// for weather forcast services only
 						String description = subConfig.getString("device(" + i + ").location.description", "");
@@ -282,12 +285,18 @@ public class VirtualDeviceLoaderImpl implements DeviceLoader {
 								
 								virtualObj.setHref(new Uri(URLEncoder.encode(connectorName, "UTF-8") + "/" + href));
 								
+								
 								if(name != null && name.length() > 0 && virtualObj.getName() == null){
 									virtualObj.setName(name);
 								}
 								
 								if(displayName != null && displayName.length() > 0){
 									virtualObj.setDisplayName(displayName);
+								}
+								
+								// set location of device if available (e.g. QR-Code)
+								if(location != null && location.length() > 0){
+									virtualObj.setLocation(location);
 								}
 								
 								if (ipv6 != null) {

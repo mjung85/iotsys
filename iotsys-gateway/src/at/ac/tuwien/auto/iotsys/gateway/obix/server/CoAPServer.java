@@ -159,7 +159,12 @@ public class CoAPServer extends Endpoint {
 					obixResponse.toString(),
 					MediaTypeRegistry.APPLICATION_LINK_FORMAT);
 			
-		} else {
+		} else if(resourcePath.endsWith("qrcode"))
+		{	// entered if Coap post with /qrcode at the end
+			// payloadString contains the qrcode
+			obixResponse = new StringBuffer(obixServer.getQRCode(payloadString));
+		}
+		else {
 			Obj responseObj = null;
 			
 			if (request instanceof GETRequest) {

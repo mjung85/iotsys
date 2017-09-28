@@ -191,6 +191,8 @@ public class BacnetDeviceLoaderImpl implements DeviceLoader {
 
 						Integer historyCount = subConfig.getInt("device("
 								+ i + ").historyCount", 0);
+						
+						String location = subConfig.getString("device(" + i + ").location");
 
 						Device deviceFromDb;
 						try {
@@ -207,11 +209,12 @@ public class BacnetDeviceLoaderImpl implements DeviceLoader {
 							groupCommEnabled = deviceFromDb.isGroupcommEnabled();
 							refreshEnabled = deviceFromDb.isRefreshEnabled();
 							historyCount = deviceFromDb.getHistoryCount();
+							location = deviceFromDb.getLocation();							
 						} 
 						catch (Exception e) {
 						}
 						// Transition step: comment when done
-						Device d = new Device(type, ipv6, addressString, href, name, displayName, historyCount, historyEnabled, groupCommEnabled, refreshEnabled);
+						Device d = new Device(type, ipv6, addressString, href, name, displayName, historyCount, historyEnabled, groupCommEnabled, refreshEnabled, location);
 						objectBroker.getConfigDb().prepareDevice(connectorName, d);
 						
 						if (type != null && address != null) {
@@ -288,6 +291,11 @@ public class BacnetDeviceLoaderImpl implements DeviceLoader {
 										
 										if(displayName != null && displayName.length() > 0){
 											bacnetDevice.setDisplayName(displayName);
+										}
+										
+										// set location of device if available (e.g. QR-Code)
+										if(location != null && location.length() > 0){
+											bacnetDevice.setLocation(location);
 										}
 										
 
