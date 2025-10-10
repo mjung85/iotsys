@@ -1,3 +1,5 @@
+# Archived repository! #
+
 # Intro #
 IoTSyS is an integration middleware for the Internet of Things. It provides a communication stack for embedded devices based on IPv6, Web services and [oBIX](https://www.oasis-open.org/committees/tc_home.php?wg_abbrev=obix) to provide interoperable interfaces for smart objects. Using [6LoWPAN](http://tools.ietf.org/html/rfc4919) for constrained wireless networks and the [Constrained Application Protocol](http://datatracker.ietf.org/doc/draft-ietf-core-coap/) together with [Efficient XML Interchange](http://www.w3.org/XML/EXI/) an efficient stack is provided allowing using interoperable Web technologies in the field of sensor and actuator networks and systems while remaining nearly as efficient regarding transmission message sizes as existing automation systems. The IoTSyS middleware aims providing a gateway concept for existing sensor and actuator systems found in nowadays home and building automation systems, a stack which can be deployed directly on embedded 6LoWPAN devices and further addresses security, discovery and scalability issues.
 
